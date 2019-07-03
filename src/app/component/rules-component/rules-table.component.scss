@@ -1,0 +1,44 @@
+.rules-table-component {
+  .main-controls {
+    margin-bottom: 10px;
+  }
+  .mat-accordion {
+    .mat-expansion-panel {
+      .mat-expansion-panel-header {
+        .mat-expansion-panel-header-description {
+          display: flex;
+          .description {
+            align-self: flex-start;
+            flex-grow: 1;
+          }
+          .controls {
+            align-self: flex-end;
+            flex-grow: 0;
+            button:first-child {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+
+      .content {
+        .validate-clauses-section {
+          .validate-clauses {
+            .validate-clause {
+              color: var(--my-app-foreground-secondary-text);
+            }
+          }
+        }
+
+        .when-clauses-section {
+          .when-clauses {
+            .when-clause {
+              color: var(--my-app-foreground-secondary-text);
+            }
+          }
+        }
+      }
+    }
+
+  }
+}

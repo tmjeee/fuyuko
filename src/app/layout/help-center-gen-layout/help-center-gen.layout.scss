@@ -1,0 +1,4 @@
+@import '../abstract-gen.layout';
+.help-center-layout {
+  @include abstract-gen-layout-style();
+}

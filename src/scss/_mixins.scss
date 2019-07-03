@@ -1,0 +1,26 @@
+
+@mixin mat-theme-to-css-variables($theme) {
+  $primary-palatte: map-get($theme, primary);
+  $accent-palatte: map-get($theme, accent);
+  $warn-palatte: map-get($theme, warn);
+  $foreground-palatte: map-get($theme, foreground);
+  $background-palatte: map-get($theme, background);
+
+  @include mat-palatte-to-css-variables($primary-palatte, 'my-app-primary');
+  @include mat-palatte-to-css-variables($accent-palatte, 'my-app-accent');
+  @include mat-palatte-to-css-variables($warn-palatte, 'my-app-warn');
+  @include mat-palatte-to-css-variables($foreground-palatte, 'my-app-foreground');
+  @include mat-palatte-to-css-variables($background-palatte, 'my-app-background');
+}
+
+@mixin mat-palatte-to-css-variables($palatte, $prefix) {
+  @each $name, $value in $palatte {
+    @if $name == 'contrast' {
+      @each $cName, $cValue in $value {
+        --#{$prefix}-#{$cName}: #{$cValue};
+      }
+    }@else {
+      --#{$prefix}-#{$name}: #{$value};
+    }
+  }
+}

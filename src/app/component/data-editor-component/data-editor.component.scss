@@ -1,0 +1,15 @@
+:host {
+  width:100%;
+  display: flex;
+  align-items: stretch;
+}
+.data-editor-component {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  span {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+}

@@ -1,0 +1,50 @@
+<div class="item-search-component">
+  <mat-tab-group mat-align-tabs="start">
+    <mat-tab label="Basic Search">
+      <mat-form-field>
+        <mat-label>Search</mat-label>
+        <input type="text"
+               matInput
+               [formControl]="formControlValue"
+               (keydown.enter)="onBasicSearch($event)"
+               placeholder="Search ...">
+        <mat-hint>Type in text to search across all items and their attributes</mat-hint>
+      </mat-form-field>
+    </mat-tab>
+    <mat-tab label="Advance Search">
+      <mat-form-field>
+        <mat-label>Advance Search</mat-label>
+        <input type="text"
+               matInput
+               [formControl]="formControlValue"
+               (keydown.enter)="onAdvanceSearch($event)"
+               placeholder="Advance Search ...">
+        <mat-hint>Type in advance search syntax</mat-hint>
+      </mat-form-field>
+      <div class="advance-search-help mat-small">
+        <div class="">
+          <table>
+            <thead>
+            <tr>
+              <th>Seach Type</th>
+              <th>Syntax</th>
+            </tr>
+            </thead>
+            <tr>
+              <td>By attribute</td>
+              <td>
+                Eg. search for attibute 'description' with value 'shampoo'
+                <pre>
+                  description:'shampoo'
+                </pre>
+              </td>
+            </tr>
+            <tbody>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

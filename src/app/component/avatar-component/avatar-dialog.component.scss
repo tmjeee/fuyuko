@@ -1,0 +1,48 @@
+
+.avatar-dialog-component {
+  position: relative;
+  min-width: 300px;
+  .close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+  }
+
+  .mat-divider {
+    margin-top: 20px;
+    margin-bottom:20px;
+  }
+
+  .predefined-avatar-section {
+    .predefined-avatar-list {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      .predefined-avatar {
+        img {
+          width: 45px;
+          height: 45px;
+          border-radius: 50% 50%;
+          margin: 20px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .custom-avatar-section {
+
+    .upload-custom-avatar {
+      margin-top: 20px;
+
+      ::ng-deep {
+        mat-file-upload-queue {
+           > button {
+             margin-right: 20px;
+           }
+        }
+      }
+    }
+  }
+}

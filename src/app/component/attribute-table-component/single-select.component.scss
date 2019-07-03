@@ -1,0 +1,20 @@
+
+.single-select-component {
+  .controls {
+    margin-bottom: 10px;
+  }
+  .selection-pairs {
+    overflow-y: scroll;
+    .selection-pair {
+      .mat-icon {
+        cursor: pointer;
+      }
+      display: flex;
+      flex-direction: row;
+      .mat-form-field {
+        flex-grow: 1;
+        margin-right: 10px;
+      }
+    }
+  }
+}

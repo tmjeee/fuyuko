@@ -1,0 +1,16 @@
+@import '~@angular/material/theming';
+
+$theme-purple-green-primary: mat-palette($mat-purple);
+$theme-purple-green-accent: mat-palette($mat-green);
+$theme-purple-green-warn: mat-palette($mat-deep-orange);
+
+$theme-purple-green-light: mat-light-theme(
+    $theme-purple-green-primary,
+    $theme-purple-green-accent,
+    $theme-purple-green-warn);
+
+$theme-purple-green-dark: mat-dark-theme(
+    $theme-purple-green-primary,
+    $theme-purple-green-accent,
+    $theme-purple-green-warn);
+

@@ -1,0 +1,22 @@
+
+@mixin abstract-gen-sub-layout-style() {
+  ::ng-deep {
+    .main-side-nav-container.mat-sidenav-container {
+      .mat-sidenav-content {
+        .mat-toolbar {
+          &.secondary-toolbar {
+            position: fixed;
+            top: 64px;
+            z-index: 9;
+            .spacer {
+              flex: 1 1 auto;
+            }
+          }
+        }
+        .primary-outlet {
+          margin-top: 70px;
+        }
+      }
+    }
+  }
+}

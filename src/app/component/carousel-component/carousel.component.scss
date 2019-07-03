@@ -1,0 +1,26 @@
+
+.carousel-component {
+  position: relative;
+  .prev-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+  }
+  .next-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+  }
+ .container {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   .image {
+     background-size: contain;
+     background-position: center;
+     background-repeat: no-repeat;
+   }
+ }
+}

@@ -1,0 +1,12 @@
+.user-table-component {
+
+  .mat-table {
+    .mat-column-actions {
+      .mat-icon {
+        &.delete {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

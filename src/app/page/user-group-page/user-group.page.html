@@ -1,0 +1,30 @@
+
+
+<div class="user-group-page">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Groups</mat-card-title>
+      <mat-card-subtitle> Configure users in groups </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-accordion>
+        <ng-container *ngFor="let g of allGroups">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{g.name}}</mat-panel-title>
+              <mat-panel-description>{{g.description}}</mat-panel-description>
+            </mat-expansion-panel-header>
+            <app-user-table searchFieldPlaceholder="User to add to group"
+                            searchFieldLabel="Search for a user to add to the group"
+                            searchFieldHint="Search from auto suggest for a user to add to group"
+                            [users]="allGroupsUsers.get(g)"
+                            (events)="onUserTableEvent($event, g)"
+                            [userSearchFn]="userSearchFn(g)">
+            </app-user-table>
+          </mat-expansion-panel>
+        </ng-container>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+</div>
+

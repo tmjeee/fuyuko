@@ -1,0 +1,29 @@
+
+<div class="avatar-dialog-component">
+  <div class="close-button">
+    <mat-icon (click)="onClose($event)">clear</mat-icon>
+  </div>
+  <div mat-dialog-title>Update Avatar</div>
+  <div mat-dialog-content>
+    <div class="predefined-avatar-section">
+      Choose from some predefined avatars
+      <div class="predefined-avatar-list">
+        <div class="predefined-avatar" *ngFor="let predefinedAvatar of allPredifinedAvatars()">
+          <img [attr.src]="predefinedAvatar.url" (click)="onPredefinedAvatarClicked($event, predefinedAvatar)">
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="custom-avatar-section">
+        Or upload a custom avatar
+        <div class="upload-custom-avatar">
+          <angular-file-uploader
+            (ApiResponse)="onFileUploadResponse($event)"
+            [config]="fileUploadConfig">
+          </angular-file-uploader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+.data-thumbnail-component {
+  .search-container {
+    margin-bottom: 15px;
+  }
+  .main-control {
+    button {
+      &:not(:last-child) {
+        margin-right: 5px;
+      }
+    }
+  }
+  .container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: flex-start;
+    .grid {
+      flex-basis: 0;
+      width: 300px;
+      padding: 5px;
+      .controls {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        *:not(:last-child) {
+          margin-right: 5px;
+        }
+      }
+      .carousel {
+        margin: 10px 0 10px 0;
+      }
+      .attribute {
+
+      }
+      .show-more-link {
+        margin-top: 5px;
+        color: var(--my-app-foreground-text);
+      }
+    }
+  }
+}

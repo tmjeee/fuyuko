@@ -1,0 +1,39 @@
+.double-select-component {
+  .pair1-controls {
+    margin-bottom: 10px;
+  }
+  .pair1-selection-pairs {
+    overflow-y: scroll;
+    .selection-pair {
+      .mat-icon {
+        cursor: pointer;
+        align-self: center;
+      }
+      display: flex;
+      flex-direction: row;
+      .mat-form-field {
+        flex-grow: 1;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .pair2-controls {
+    margin-bottom: 10px;
+  }
+  .pair2-selection-pairs {
+    overflow-y: scroll;
+    .selection-pair {
+      .mat-icon {
+        cursor: pointer;
+        align-self: center;
+      }
+      display: flex;
+      flex-direction: row;
+      .mat-form-field {
+        flex-grow: 1;
+        margin-right: 10px;
+      }
+    }
+  }
+}

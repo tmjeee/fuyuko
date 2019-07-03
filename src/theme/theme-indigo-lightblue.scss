@@ -1,0 +1,17 @@
+
+@import '~@angular/material/theming';
+
+$theme-indigo-lightblue-primary: mat-palette($mat-indigo);
+$theme-indigo-lightblue-accent: mat-palette($mat-light-blue);
+$theme-indigo-lightblue-warn: mat-palette($mat-deep-orange);
+
+$theme-indigo-lightblue-light: mat-light-theme(
+    $theme-indigo-lightblue-primary,
+    $theme-indigo-lightblue-accent,
+    $theme-indigo-lightblue-warn);
+
+$theme-indigo-lightblue-dark: mat-dark-theme(
+    $theme-indigo-lightblue-primary,
+    $theme-indigo-lightblue-accent,
+    $theme-indigo-lightblue-warn);
+

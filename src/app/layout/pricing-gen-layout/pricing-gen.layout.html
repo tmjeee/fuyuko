@@ -1,0 +1,56 @@
+<div class="pricing-layout">
+  <mat-toolbar class="primary-toolbar mat-elevation-z24" color="primary">
+    <mat-toolbar-row>
+      <mat-icon class="action" (click)="onSideNavExpandCollapseButtonClicked($event)">more_horiz</mat-icon>
+      <!-- avatar -->
+      <div class="avatar-section">
+        <app-avatar [user]="myself"
+                    [editable]="false"
+                    width="45px"
+                    height="45px">
+        </app-avatar>
+      </div>
+      <div class="spacer"></div>
+      <app-notification [notifications]="notifications"></app-notification>
+      <mat-icon class="action" (click)="onHelpNavExpandCollapseButtonClicked($event)">help</mat-icon>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-sidenav-container class="main-side-nav-container">
+    <mat-sidenav mode="side" [fixedInViewport]="true" [fixedTopGap]="65" [opened]="sideNavOpened" position="start">
+      <div class="side-nav">
+        <app-side-nav (logoutEvent)="logout()"></app-side-nav>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav mode="side" [opened]="helpNavOpened" [fixedInViewport]="true" [fixedTopGap]="65" position="end">
+      <div class="help-nav">
+        <router-outlet name="help"></router-outlet>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="main-content">
+        <!-- user sub-side-nav -->
+        <mat-sidenav-container class="sub-side-nav-container">
+          <mat-sidenav [opened]="subSideBarOpened" mode="side" [fixedInViewport]="true" [fixedTopGap]="65" position="start">
+            <mat-list>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'pricing'">
+                <mat-icon>transfer_within_a_station</mat-icon>
+                <a href="#" [routerLink]="['/pricing-gen-layout', {outlets: {primary:['pricing'], help:['pricing-help']}}]">Roles</a>
+              </mat-list-item>
+            </mat-list>
+          </mat-sidenav>
+          <mat-sidenav-content>
+            <mat-toolbar class="secondary-toolbar" color="primary">
+              <mat-toolbar-row>
+                <mat-icon class="sub-sidebar-button" (click)="onSubSidebarButtonClicked($event)">menu</mat-icon>
+                <span class="spacer"></span>
+              </mat-toolbar-row>
+            </mat-toolbar>
+            <div class="primary-outlet">
+              <router-outlet name="primary"></router-outlet>
+            </div>
+          </mat-sidenav-content>
+        </mat-sidenav-container>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

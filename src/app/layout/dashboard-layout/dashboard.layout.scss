@@ -1,0 +1,6 @@
+
+@import '../abstract-gen.layout';
+
+.dashboard-layout {
+  @include abstract-gen-layout-style();
+}

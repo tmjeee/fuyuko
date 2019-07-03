@@ -1,0 +1,13 @@
+.item-data-editor-dialog-component {
+  .form {
+    height: 60vh;
+    width: 50vh;
+    overflow-y: scroll;
+  }
+  .control {
+    margin-top: 10px;
+    button:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+<div class="notification-dialog-component">
+  <div class="close-button">
+    <mat-icon (click)="onClose($event)">clear</mat-icon>
+  </div>
+  <div mat-dialog-title>Notifications</div>
+  <div mat-dialog-content>
+    <ng-container *ngFor="let notification of data">
+      <div class="notification">
+        <div class="header">
+          <mat-icon *ngIf="notification.status === 'ERROR'"     class="status">error</mat-icon>
+          <mat-icon *ngIf="notification.status === 'WARN'"      class="status">warning</mat-icon>
+          <mat-icon *ngIf="notification.status === 'INFO'"      class="status">info</mat-icon>
+          <mat-icon *ngIf="notification.status === 'SUCCESS'"   class="status">check_circle</mat-icon>
+          <span class="title">
+            {{notification.title}}
+            <span class="is-new" *ngIf="notification.isNew"> *</span>
+          </span>
+        </div>
+        <div class="content">
+          {{notification.message}}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

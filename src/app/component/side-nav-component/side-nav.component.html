@@ -1,0 +1,114 @@
+<div class="side-nav-component">
+  <!-- profile -->
+  <div [class.selected]="routeSideNavData === 'profile'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="Profile"
+              [routerLink]="['/gen-layout', {outlets: {primary:['profile'], help:['profile-help'] }}]">
+      face
+    </mat-icon>
+  </div>
+
+
+  <!-- dashboard -->
+  <div [class.selected]="routeSideNavData === 'dashboard'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="Dashboard"
+              [routerLink]="['/dashboard-layout', 'dashboard']">
+      dashboard
+    </mat-icon>
+  </div>
+
+
+  <!-- user management -->
+  <div [class.selected]="routeSideNavData === 'user'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="User Management"
+              [routerLink]="['/user-gen-layout', {outlets: {primary:['role'], help: ['user-help'] }}]">
+      supervised_user_circle
+    </mat-icon>
+  </div>
+
+  <!-- view management -->
+  <div [class.selected]="routeSideNavData === 'view'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="View Management"
+              [routerLink]="['/view-gen-layout', {outlets:{primary:['rules'], help: ['view-help'] }}]">
+      perm_media
+    </mat-icon>
+  </div>
+
+  <!-- pricing management -->
+  <div [class.selected]="routeSideNavData === 'pricing'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="Pricing Management"
+              [routerLink]="['/pricing-gen-layout', {outlets:{primary:['pricing-structure'], help: ['pricing-help'] }}]">
+      attach_money
+    </mat-icon>
+  </div>
+
+  <!-- clone -->
+  <div [class.selected]="routeSideNavData === 'clone'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="Clone Data"
+              [routerLink]="['/gen-layout', {outlets:{primary:['clone'], help:['clone-help'] }}]">
+      file_copy
+    </mat-icon>
+  </div>
+
+  <!-- bulk edit -->
+  <div [class.selected]="routeSideNavData === 'bulk-edit'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="Bulk Edit Data"
+              [routerLink]="['/gen-layout', {outlets:{primary:['bulk-edit'], help:['bulk-edit-help'] }}]">
+      shop_two
+    </mat-icon>
+  </div>
+
+  <!-- settings -->
+  <div [class.selected]="routeSideNavData === 'settings'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="Settings"
+              [routerLink]="['/gen-layout', {outlets:{primary:['settings'], help:['settings-help'] }}]" >
+      settings
+    </mat-icon>
+  </div>
+
+  <!-- import / Export -->
+  <div [class.selected]="routeSideNavData === 'import-export'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="Import / Export"
+              [routerLink]="['/import-export-gen-layout', {outlets:{primary:['import-export'], help:['import-export-help'] }}]">
+      import_export
+    </mat-icon>
+  </div>
+
+  <!-- help center -->
+  <div [class.selected]="routeSideNavData === 'help-center'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="Help Center"
+              [routerLink]="['/help-center-gen-layout', {outlets:{primary:['help-center'], help:['help-center-help'] }}]">
+      contact_support
+    </mat-icon>
+  </div>
+
+  <!-- exit / log off -->
+  <div>
+    <mat-icon class="action "
+              matTooltipPosition="after"
+              matTooltip="Exit"
+              (click)="logout($event)">
+      exit_to_app
+    </mat-icon>
+
+  </div>
+</div>

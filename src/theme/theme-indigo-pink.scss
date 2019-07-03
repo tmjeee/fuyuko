@@ -1,0 +1,16 @@
+
+@import '~@angular/material/theming';
+
+$theme-indigo-pink-primary: mat-palette($mat-indigo);
+$theme-indigo-pink-accent: mat-palette($mat-pink);
+$theme-indigo-pink-warn: mat-palette($mat-deep-orange);
+
+$theme-indigo-pink-light: mat-light-theme(
+  $theme-indigo-pink-primary,
+  $theme-indigo-pink-accent,
+  $theme-indigo-pink-warn);
+
+$theme-indigo-pink-dark: mat-dark-theme(
+    $theme-indigo-pink-primary,
+    $theme-indigo-pink-accent,
+    $theme-indigo-pink-warn);

@@ -1,0 +1,17 @@
+<div class="view-rules-page">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Rules</mat-card-title>
+      <mat-card-subtitle>Configuration of rules related the current view</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="!ready">Loading ...</div>
+      <app-rules-table *ngIf="ready"
+                       [rules]="rules"
+                       [attributes]="attributes"
+                       (events)="onRulesTableEvent($event)">
+      </app-rules-table>
+    </mat-card-content>
+  </mat-card>
+
+</div>

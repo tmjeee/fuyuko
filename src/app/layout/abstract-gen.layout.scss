@@ -1,0 +1,89 @@
+
+
+@mixin abstract-gen-layout-style() {
+  min-height: 100vh;
+  ::ng-deep {
+    .mat-toolbar {
+      &.primary-toolbar {
+        .avatar-section {
+          .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50% 50%;
+            margin: 5px;
+          }
+        }
+        position: sticky;
+        top: 0px;
+        z-index: 99;
+        .mat-toolbar-row {
+          padding-right: 0;
+          padding-left: 0;
+          .action {
+            margin: 10px;
+            cursor: pointer;
+          }
+          .spacer {
+            flex: 1 1 auto;
+          }
+        }
+      }
+    }
+
+    .main-side-nav-container.mat-sidenav-container {
+      min-height: 100vh;
+      .mat-sidenav {
+        .help-nav {
+          width: 500px;
+        }
+        .side-nav {
+        }
+        .action {
+          margin: 10px;
+          cursor: pointer;
+        }
+      }
+      .mat-sidenav-content {
+        .sub-sidebar-button {
+          cursor: pointer;
+          margin: 5px;
+        }
+
+        .mat-toolbar {
+          &.secondary-toolbar {
+            position: fixed;
+            top: 64px;
+            z-index: 9;
+            .spacer {
+              flex: 1 1 auto;
+            }
+          }
+        }
+        .primary-outlet {
+          margin-top: 70px;
+        }
+        .main-content {
+          .sub-side-nav-container.mat-sidenav-container {
+            min-height: 100vh;
+
+            .mat-sidenav {
+              .mat-icon {
+                margin-right: 10px;
+              }
+              a {
+                color: var(--my-app-foreground-text);
+                text-decoration: none;
+              }
+              .selected {
+                color: var(--my-app-primary-default);
+                a {
+                  color: var(--my-app-primary-default);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

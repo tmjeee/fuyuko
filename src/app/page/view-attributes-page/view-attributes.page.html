@@ -1,0 +1,21 @@
+<div class="view-attributes-page">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Attributes</mat-card-title>
+      <mat-card-subtitle>Add / Edit / Delete attributes related to current active view.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+      <app-attribute-table *ngIf="attributes"
+                           [attributes]="attributes"
+                           [view]="currentView"
+                           (events)="onAttributeTableEvent($event)"
+                           searchFieldHint="Search for attributes"
+                           searchFieldLabel="Search attributes"
+                           searchFieldPlaceholder="Search Attributes">
+      </app-attribute-table>
+
+    </mat-card-content>
+  </mat-card>
+
+</div>

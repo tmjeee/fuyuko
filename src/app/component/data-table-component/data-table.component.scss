@@ -1,0 +1,138 @@
+.data-table-component {
+  .search-container {
+    margin-bottom: 30px;
+  }
+  .main-controls {
+    button {
+      margin-right: 5px;
+    }
+  }
+  .filtering-container {
+    .mat-nav-list {
+      .mat-list-item {
+        .filtering-attribute {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          .name {
+            align-self: flex-start;
+            line-height: 50px;
+          }
+          .spacer {
+            flex-grow: 2;
+          }
+          .controls {
+            align-self: flex-end;
+            display: flex;
+            .mat-icon {
+                margin: 10px;
+            }
+            .mat-checkbox {
+              margin: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .table-container {
+    overflow-x: scroll;
+    ::ng-deep mat-table {
+      width: 100%;
+      mat-header-row {
+        &.item-header {
+          mat-header-cell {
+            &.selection-header {
+              min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-content: center;
+              line-height: 50px;
+            }
+
+            &.expansion-header {
+              min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-content: center;
+              line-height: 50px;
+              margin-right: 20px;
+            }
+
+            &.attribute-header {
+              min-width: 150px;
+            }
+          }
+        }
+      }
+      mat-row {
+        &.item {
+          mat-cell {
+            align-items: stretch;
+            &.selection {
+              min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              line-height: 50px;
+            }
+            &.expansion {
+              min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              line-height: 50px;
+              margin-right: 20px;
+              mat-icon {
+                &.selectable {
+                  cursor: pointer;
+                }
+              }
+              .depth-0 {
+                margin-left: 0px;
+              }
+              .depth-1 {
+                margin-left: 10px;
+              }
+              .depth-2 {
+                margin-left: 20px;
+              }
+              .depth-3 {
+                margin-left: 30px;
+              }
+              .depth-4 {
+                margin-left: 40px;
+              }
+              .depth-5 {
+                margin-left: 50px;
+
+              }
+              .depth-6 {
+                margin-left: 60px;
+
+              }
+              .depth-7 {
+                margin-left: 70px;
+
+              }
+              .depth-8 {
+                margin-left: 80px;
+
+              }
+              .depth-9 {
+                margin-left: 90px;
+
+              }
+              .depth-10 {
+                margin-left: 100px;
+              }
+            }
+            &.attribute {
+              min-width: 150px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

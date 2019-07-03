@@ -1,0 +1,12 @@
+<div class="item-data-editor-component">
+  <ng-container *ngIf="type === 'name'">
+    <span class="name" (click)="onEdit($event, 'name')">
+    &nbsp;{{item.name}}
+    </span>
+  </ng-container>
+  <ng-container *ngIf="type === 'description'">
+    <span class="description" (click)="onEdit($event, 'description')">
+    {{item.description}}
+    </span>
+  </ng-container>
+</div>

@@ -1,0 +1,13 @@
+.attribute-table-component {
+  .controls {
+    margin-top: 10px;
+  }
+
+  ::ng-deep {
+    .mat-table {
+      .mat-column-actions {
+        cursor: pointer;
+      }
+    }
+  }
+}

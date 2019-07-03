@@ -1,0 +1,32 @@
+<div class="login-page">
+  <form (ngSubmit)="onSubmmit()" [formGroup]="formGroup">
+    <mat-card class="container">
+      <mat-card-header>
+        <mat-card-title>Login</mat-card-title>
+        <mat-card-subtitle>
+          Logon, if you haven't got an account, feel free to register using the link below
+          the login button. Enjoy!
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form">
+          <mat-form-field>
+            <input matInput type="text" placeholder="Username" [formControl]="formControlUsername">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="password" placeholder="Password" [formControl]="formControlPassword">
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="control">
+          <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid">Login</button>
+          <div class="link">
+            Not registered yet?
+            <a href="#" class="register-link" routerLink="/register">Register</a> here.
+          </div>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

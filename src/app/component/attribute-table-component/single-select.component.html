@@ -1,0 +1,30 @@
+
+<div class="single-select-component">
+  <div class="controls">
+    <button type="button" mat-flat-button color="primary" (click)="onAddPairClicked($event)">Add</button>
+  </div>
+  <div class="selection-pairs">
+    <div class="selection-pair" *ngFor="let pair of pairs">
+      <mat-icon color="primary" (click)="onDeleteClicked($event, pair)">delete</mat-icon>
+      <mat-form-field>
+        <mat-label>Selection Key</mat-label>
+        <input matInput
+               type="text"
+               placeholder="Key"
+               [formControl]="formGroup.get('k-'+pair.id)">
+        <mat-hint>Enter a selection key, must be unique</mat-hint>
+        <mat-error *ngIf="formGroup.get('k-'+pair.id)?.errors?.required">Key is required</mat-error>
+        <mat-error *ngIf="formGroup.get('k-'+pair.id)?.errors?.uniqueKey">Key must be unique</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Selection Value</mat-label>
+        <input matInput
+               type="text"
+               placeholder="Value"
+               [formControl]="formGroup.get('v-'+pair.id)">
+        <mat-hint>Enter a selection value for the key</mat-hint>
+        <mat-error *ngIf="formGroup.get('v-'+pair.id)?.errors?.required">Value is required</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

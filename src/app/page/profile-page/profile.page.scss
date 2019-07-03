@@ -1,0 +1,26 @@
+.profile-page {
+   margin: 0 18px 0 20px;
+  .profile-page-card {
+    .avatar-section {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .personal-section {
+      margin-bottom: 20px
+
+    }
+
+    .password-section {
+      margin-bottom: 20px
+
+    }
+
+    .theme-section {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}

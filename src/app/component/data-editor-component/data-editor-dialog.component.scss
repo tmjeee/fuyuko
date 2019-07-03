@@ -1,0 +1,9 @@
+
+.data-editor-dialog-component {
+  .controls {
+    margin-top: 10px;
+    button:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+}

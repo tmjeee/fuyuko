@@ -1,0 +1,14 @@
+
+<div class="avatar-component">
+  <img *ngIf="user && user.avatarUrl"
+       [attr.src]="user.avatarUrl"
+       [ngStyle]="{width: width, height: height}"
+       class="avatar">
+  <img *ngIf="!(user && user.avatarUrl)"
+       class="avatar"
+       [ngStyle]="{width: width, height: height}"
+       src="assets/images/avatar/no-avatar.jpg">
+  <div class="edit" *ngIf="editable">
+    <mat-icon class="edit-icon" (click)="onEditClicked($event)">edit</mat-icon>
+  </div>
+</div>

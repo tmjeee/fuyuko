@@ -1,0 +1,32 @@
+<div class="item-data-editor-dialog-component">
+  <div class="form">
+    <div>
+      <mat-label class="mat-hint mat-small">Name</mat-label>
+      <app-item-editor [item]="item" [type]="'name'"
+                       (events)="onItemNameChange($event)">
+      </app-item-editor>
+      <mat-hint class="mat-hint mat-small">Item name</mat-hint>
+    </div>
+
+    <div>
+      <mat-label class="mat-hint mat-small">Description</mat-label>
+      <app-item-editor [item]="item" [type]="'description'"
+                       (events)="onItemDescriptionChange($event)">
+      </app-item-editor>
+      <mat-hint class="mat-hint mat-small">Item description</mat-hint>
+    </div>
+
+    <div *ngFor="let attribute of attributes; let i = index">
+      <mat-label class="mat-hint mat-small">{{attribute.name}}</mat-label>
+      <app-data-editor [itemValueAndAttribute]="{attribute: attribute, itemValue: item[attribute.id]}"
+                       (events)="onItemAttributeChange($event)">
+      </app-data-editor>
+      <mat-hint class="mat-hint mat-small">{{attribute.description}}</mat-hint>
+    </div>
+  </div>
+
+  <div class="control">
+    <button type="button" mat-flat-button color="primary" (click)="onSubmit($event)" [disabled]="!hasChange">Ok</button>
+    <button type="button" mat-flat-button color="primary" (click)="onCancel($event)">Cancel</button>
+  </div>
+</div>

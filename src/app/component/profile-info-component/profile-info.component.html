@@ -1,0 +1,30 @@
+
+<div class="profile-info-component">
+  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" class="form">
+    <mat-form-field>
+      <input matInput placeholder="First Name" required [formControl]="formControlFirstName">
+      <mat-hint align="end">Your first name</mat-hint>
+      <mat-error *ngIf="formControlFirstName.invalid">First name is invalid</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Last Name" required [formControl]="formControlLastName">
+      <mat-hint align="end">Your last name</mat-hint>
+      <mat-error *ngIf="formControlLastName.invalid">Last name is invalid</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Username" required [formControl]="formControlUsername">
+      <mat-hint align="end">Your username</mat-hint>
+      <mat-error *ngIf="formControlUsername.invalid">Username is invalid</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Email" required [formControl]="formControlEmail">
+      <mat-hint align="end">Your email address</mat-hint>
+      <mat-error *ngIf="formControlEmail.invalid">Email is invalid</mat-error>
+    </mat-form-field>
+
+    <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid">Update Profile Info</button>
+  </form>
+</div>

@@ -1,0 +1,15 @@
+<div class="carousel-component">
+  <button type="button" color="primary" class="prev-button" (click)="prevImage($event)" mat-mini-fab>
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <button type="button" color="primary" class="next-button" (click)="nextImage($event)" mat-mini-fab>
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+  <div class="container">
+    <div class="image"
+         [style.width]="imageWidth"
+         [style.height]="imageHeight"
+         [style.background-image]="'url('+imageUrl+')'">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+
+<div class="send-invite-component">
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input type="text"
+           matInput
+           [formControl]="formControlEmail"
+           placeholder="Email of invitee">
+    <mat-hint>Put in the email address of the person you wish to send access invitation to.</mat-hint>
+    <mat-error *ngIf="formControlEmail?.errors?.required">Email is Required</mat-error>
+    <mat-error *ngIf="formControlEmail?.errors?.email">Must be a valid email</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Groups</mat-label>
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let group of selectedGroups"
+        [value]="group"
+        [selectable]="false"
+        [removable]="true"
+        (removed)="onGroupChipRemoved($event)">
+        {{group.name}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input
+        #chipInput
+        matInput
+        placeholder="Groups to add to invitee"
+        [formControl]="formControlGroup"
+        (focus)="onGroupInputFocus($event)"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputAddOnBlur]="false"
+        [matChipInputSeparatorKeyCodes]="[]">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete"
+                      (optionSelected)="onGroupSelected($event)">
+      <mat-option *ngFor="let group of filteredGroups | async"
+                  [value]="group">
+        {{group.name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-hint>Groups to grant to the invitee</mat-hint>
+    <mat-error>Group assignment is required, cannot be empty</mat-error>
+  </mat-form-field>
+
+  <button mat-flat-button
+          [disabled]="!isValid()"
+          class="send-invite-button"
+          color="primary"
+          (click)="onSendInvitation($event)">Send Invitation</button>
+</div>

@@ -1,0 +1,15 @@
+.avatar-component {
+  .avatar {
+    border-radius: 50% 50%;
+    margin: 5px;
+  }
+  .edit {
+    position: relative;
+    .edit-icon {
+      position: absolute;
+      bottom:0;
+      right:0;
+      cursor: pointer
+    }
+  }
+}

@@ -1,0 +1,40 @@
+@import '~@angular/material/theming';
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .container {
+    width: 35vw;
+    opacity: 0.888;
+
+    .form, .control {
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      & > * {
+        width: 100%;
+      }
+    }
+
+    .text {
+      margin: 15px 0;
+    }
+
+    .control {
+      .link {
+        margin-top: 10px;
+        .register-link {
+          padding: 3px;
+          border-radius: 2px;
+          color: var(--my-app-accent-default-contrast);
+          background-color: var(--my-app-accent-default);
+        }
+      }
+    }
+  }
+}

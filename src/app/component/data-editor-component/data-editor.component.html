@@ -1,0 +1,8 @@
+
+<div class="data-editor-component">
+  <span (click)="onItemAttributeValueClicked($event)">
+    <ng-container *ngIf="itemValueAndAttribute?.itemValue">
+      {{itemValueAndAttribute?.itemValue | itemAttributeValueAsString:itemValueAndAttribute.attribute}}
+    </ng-container>
+  </span>
+</div>

@@ -1,0 +1,58 @@
+<div class="rules-table-component">
+  <div class="main-controls">
+    <button type="button" mat-flat-button color="primary" (click)="onAddRule($event)">Add Rule</button>
+  </div>
+  <div *ngIf="rules.length === 0">
+    No rules available.
+  </div>
+  <mat-accordion *ngIf="rules.length > 0">
+    <mat-expansion-panel *ngFor="let rule of rules; let i = index;">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{rule.name}}
+        </mat-panel-title>
+        <mat-panel-description>
+            <div class="description">
+              {{rule.description}}
+            </div>
+            <div class="controls">
+              <button type="button" mat-flat-button color="primary" (click)="onDeleteRule($event, rule)">Delete Rule</button>
+              <button type="button" mat-flat-button color="primary" (click)="onEditRule($event, rule)">Edit Rule</button>
+            </div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!-- content -->
+      <div class="content">
+        <div class="validate-clauses-section">
+          <div>Validate</div>
+          <div *ngIf="!rule?.validateClauses || rule?.validateClauses?.length === 0" class="validate-clauses">No validate clause(s)</div>
+          <ul *ngIf="rule?.validateClauses?.length > 0" class="validate-clauses">
+            <ng-container *ngFor="let validateClause of rule.validateClauses">
+              <li class="validate-clause">
+                {{validateClause.attributeName}}
+                {{validateClause.operator}}
+                {{validateClause?.condition | itemAttributeValueAsString:findAttribute(validateClause.attributeId)}}
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+
+        <div class="when-clauses-section">
+          <div>When</div>
+          <div *ngIf="!rule?.whenClauses || rule?.whenClauses?.length === 0">No when clause(s)</div>
+          <ul *ngIf="rule?.whenClauses?.length > 0" class="when-clauses">
+            <ng-container *ngFor="let whenClause of rule.whenClauses">
+              <li class="when-clause">
+                {{whenClause.attributeName}}
+                {{whenClause.operator}}
+                {{whenClause?.condition | itemAttributeValueAsString:findAttribute(whenClause.attributeId)}}
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+      </div>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

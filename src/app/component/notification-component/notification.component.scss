@@ -1,0 +1,9 @@
+
+.notification-component {
+  ::ng-deep {
+    .mat-icon {
+      margin: 10px;
+      cursor: pointer;
+    }
+  }
+}
