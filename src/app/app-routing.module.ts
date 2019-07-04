@@ -38,6 +38,7 @@ import {ViewDataThumbnailPageComponent} from './page/view-data-thumbnail-page/vi
 import {ViewDataListPageComponent} from './page/view-data-list-page/view-data-list.page';
 import {ViewViewsPageComponent} from './page/view-views-page/view-views.page';
 import {AuthGuard} from './guard/auth-guard/auth.guard';
+import {ErrorPageComponent} from './page/error-page/error.page';
 
 const routes: Routes = [
 
@@ -345,6 +346,10 @@ const routes: Routes = [
        outlet: 'help'
      } as Route,
    ]
+ } as Route,
+ {
+   path: 'error',
+   component: ErrorPageComponent
  } as Route,
  {
    path: '**',

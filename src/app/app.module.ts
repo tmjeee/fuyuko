@@ -86,6 +86,7 @@ import {DataListModule} from './component/data-list-component/data-list.module';
 import {CarouselComponent} from './component/carousel-component/carousel.component';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ProfilingInterceptor} from './interceptor/profiling.interceptor';
+import {ErrorPageComponent} from './page/error-page/error.page';
 
 @NgModule({
   declarations: [
@@ -131,6 +132,7 @@ import {ProfilingInterceptor} from './interceptor/profiling.interceptor';
     ViewDataListPageComponent,
     ViewRulesPageComponent,
     ViewViewsPageComponent,
+    ErrorPageComponent,
 
     // components
     NotificationComponent,
