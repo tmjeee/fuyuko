@@ -9,6 +9,7 @@ import {ItemValueAndAttribute, TableItemAndAttribute, TableItemAndAttributeSet} 
 import {createNewItem} from '../../utils/ui-item-value-setter.util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
+import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 
 export class DataTableDataSource extends DataSource<TableItem> {
 
@@ -126,8 +127,8 @@ export class DataTableComponent implements OnInit, OnChanges {
       .map((a: Attribute) => {
         return '' + a.id;
       });
-    this.displayedColumns = ['selection', 'actions', 'expansion'].concat(columns);
-    this.childrenDisplayedColumns = ['children-selection', 'children-actions', 'children-expansion'].concat(columns);
+    this.displayedColumns = ['selection', 'actions', 'expansion', 'name', 'description'].concat(columns);
+    this.childrenDisplayedColumns = ['children-selection', 'children-actions', 'children-expansion', 'name', 'description'].concat(columns);
   }
 
 
@@ -181,6 +182,23 @@ export class DataTableComponent implements OnInit, OnChanges {
        this.pendingSavingItems.set(tableItem.id, {...tableItem});
      }
      this.pendingSavingItems.get(tableItem.id)[$event.attribute.id] = val;
+  }
+
+  onItemEditEvent($event: ItemEditorComponentEvent, tableItem: TableItem) {
+    const eventTableItem: TableItem = $event.item as TableItem;
+    if (!this.pendingSavingItems.has(tableItem.id)) {
+      this.pendingSavingItems.set(tableItem.id, {...tableItem});
+    }
+    switch ($event.type) {
+      case 'name':
+        tableItem.name = eventTableItem.name;
+        this.pendingSavingItems.get(tableItem.id).name = eventTableItem.name;
+        break;
+      case 'description':
+        tableItem.description = eventTableItem.description;
+        this.pendingSavingItems.get(tableItem.id).description = eventTableItem.description;
+        break;
+    }
   }
 
   onAddItem($event: MouseEvent) {
@@ -305,5 +323,6 @@ export class DataTableComponent implements OnInit, OnChanges {
   onItemSearchEvent($event: ItemSearchComponentEvent) {
     this.searchEvents.emit($event);
   }
+
 }
 

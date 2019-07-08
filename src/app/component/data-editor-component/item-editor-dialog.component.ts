@@ -29,7 +29,7 @@ export class ItemEditorDialogComponent {
           name: this.formControlName
       });
     } else if (this.type === 'description') {
-      this.formControlName = formBuilder.control(this.item.description, [Validators.required]);
+      this.formControlDescription = formBuilder.control(this.item.description, [Validators.required]);
       this.formGroup = this.formBuilder.group({
         description: this.formControlDescription
       });

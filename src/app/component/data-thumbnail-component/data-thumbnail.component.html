@@ -1,17 +1,22 @@
 <div class="data-thumbnail-component">
+  <!-- search -->
   <div class="search-container">
     <app-item-search (events)="onItemSearchEvent($event)"></app-item-search>
   </div>
+
+  <!-- main control -->
   <div class="main-control">
     <button type="button" (click)="addItem($event)" color="primary" mat-flat-button>Add</button>
     <button type="button" (click)="save($event)" [disabled]="!canSave()" color="primary" mat-flat-button>Save</button>
     <button type="button" (click)="delete($event)" [disabled]="!canDelete()" color="primary" mat-flat-button>Delete</button>
     <button type="button" (click)="reload($event)" color="primary" mat-flat-button>Reload</button>
   </div>
+
+  <!-- thumbnails -->
   <div class="container">
     <div class="grid" *ngFor="let item of itemAndAttributeSet.items">
       <div class="controls">
-        <mat-checkbox></mat-checkbox>
+        <mat-checkbox (change)="onCheckboxChangeEvent($event, item)"></mat-checkbox>
         <mat-icon color="primary" (click)="editItem(item)">edit</mat-icon>
       </div>
       <div class="carousel">
@@ -19,18 +24,19 @@
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Name</mat-label>
-        <app-item-editor [item]="item" [type]="'name'"></app-item-editor>
+        <app-item-editor [item]="item" [type]="'name'" (events)="onItemEditorEvent($event)"></app-item-editor>
         <mat-hint class="mat-small mat-hint">Item name</mat-hint>
       </div>
       <div>
-        <mat-label>Description</mat-label>
-        <app-item-editor [item]="item" [type]="'description'"></app-item-editor>
-        <mat-hint>Item description</mat-hint>
+        <mat-label class="mat-small mat-hint">Description</mat-label>
+        <app-item-editor [item]="item" [type]="'description'" (events)="onItemEditorEvent($event)"></app-item-editor>
+        <mat-hint class="mat-small mat-hint">Item description</mat-hint>
       </div>
       <div class="attribute" *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index">
         <ng-container *ngIf="i < 2">
           <mat-label class="mat-caption mat-hint">{{attribute.name}}</mat-label>
-          <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute }">
+          <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute }"
+                            (events)="onDataEditorEvent($event, item)">
           </app-data-editor>
           <mat-hint class="mat-caption mat-hint">{{attribute.description}}</mat-hint>
         </ng-container>

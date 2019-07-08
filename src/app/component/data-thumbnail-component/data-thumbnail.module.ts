@@ -8,6 +8,7 @@ import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {ItemSearchModule} from '../item-search-component/item-search.module';
 import {CarouselComponent} from '../carousel-component/carousel.component';
 import {ItemDataEditorDialogComponent} from './item-data-editor-dialog.component';
+import {CarouselModule} from '../carousel-component/carousel.module';
 
 
 @NgModule({
@@ -19,15 +20,14 @@ import {ItemDataEditorDialogComponent} from './item-data-editor-dialog.component
     AppMaterialsModule,
     DataEditorModule,
     ItemSearchModule,
+    CarouselModule,
   ],
   declarations: [
     DataThumbnailComponent,
-    CarouselComponent,
     ItemDataEditorDialogComponent,
   ],
   exports: [
     DataThumbnailComponent,
-    CarouselComponent,
     ItemDataEditorDialogComponent,
   ],
   entryComponents: [

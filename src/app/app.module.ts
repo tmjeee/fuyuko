@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {APP_INITIALIZER, NgModule, Provider} from '@angular/core';
+import {APP_INITIALIZER, ErrorHandler, NgModule, Provider} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -87,6 +87,8 @@ import {CarouselComponent} from './component/carousel-component/carousel.compone
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ProfilingInterceptor} from './interceptor/profiling.interceptor';
 import {ErrorPageComponent} from './page/error-page/error.page';
+import {GlobalErrorhandler} from './error-handler/global.errorhandler';
+import {CarouselModule} from './component/carousel-component/carousel.module';
 
 @NgModule({
   declarations: [
@@ -175,6 +177,7 @@ import {ErrorPageComponent} from './page/error-page/error.page';
     RulesModule,
     DataThumbnailModule,
     DataListModule,
+    CarouselModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -191,6 +194,7 @@ import {ErrorPageComponent} from './page/error-page/error.page';
     {provide: CounterService, useClass: CounterService} as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
+    {provide: ErrorHandler, useClass: GlobalErrorhandler} as Provider,
   ],
   entryComponents: [
     NotificationDialogComponent,
@@ -198,7 +202,6 @@ import {ErrorPageComponent} from './page/error-page/error.page';
     EditAttributeDialogComponent,
   ],
   exports: [
-    CarouselComponent
   ],
   bootstrap: [AppComponent]
 })

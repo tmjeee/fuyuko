@@ -41,6 +41,20 @@
         </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="name">
+        <mat-header-cell class="attribute-header" *matHeaderCellDef>Name</mat-header-cell>
+        <mat-cell class="attribute" *matCellDef="let tableItem">
+          <app-item-editor [item]="tableItem" [type]="'name'" (events)="onItemEditEvent($event, tableItem)"></app-item-editor>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <mat-header-cell class="attribute-header" *matHeaderCellDef>Description</mat-header-cell>
+        <mat-cell class="attribute" *matCellDef="let tableItem">
+          <app-item-editor [item]="tableItem" [type]="'description'" (events)="onItemEditEvent($event, tableItem)"></app-item-editor>
+        </mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="actions" sticky>
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let tableItem">

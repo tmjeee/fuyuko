@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Item} from '../../model/item.model';
+import {Item, TableItem} from '../../model/item.model';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {ItemEditorDialogComponent} from './item-editor-dialog.component';
@@ -9,7 +9,7 @@ export type Type = 'name' | 'description';
 
 
 export interface ItemEditorComponentEvent {
-  item: Item;
+  item: Item | TableItem;
   type: Type;
 }
 
@@ -20,7 +20,7 @@ export interface ItemEditorComponentEvent {
 })
 export class ItemEditorComponent {
 
-  @Input() item: Item;
+  @Input() item: Item | TableItem;
   @Input() type: Type;
 
   @Output() events: EventEmitter<ItemEditorComponentEvent>;

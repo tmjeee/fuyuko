@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+.item-editor-component {
+  display: flex;
+  .name, .description {
+    display: flex;
+    align-items: stretch;
+  }
+}

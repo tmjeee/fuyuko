@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ItemAndAttributeSet, TableItemAndAttributeSet} from '../../model/item-attribute.model';
 import {SearchType} from '../../component/item-search-component/item-search.component';
 import {View} from '../../model/view.model';
-import {combineLatest, Subscription} from 'rxjs';
+import {combineLatest, forkJoin, Subscription} from 'rxjs';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {NotificationsService} from 'angular2-notifications';
 import {ViewService} from '../../service/view-service/view.service';
@@ -75,25 +75,20 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
 
 
   onDataThumbnailEvent($event: DataThumbnailComponentEvent) {
-    switch($event.type) {
-      case 'save':
-        this.itemService.saveItems($event.modifiedItems)
-          .pipe(
-            map((r: Item[]) => {
-              this.reload();
-            })
-          ).subscribe();
+    switch ($event.type) {
+      case 'modification':
+        combineLatest([
+          this.itemService.saveItems($event.modifiedItems),
+          this.itemService.deleteItems($event.deletedItems)
+        ]).subscribe((r: [Item[], Item[]]) => {
+            const modifiedItems: Item[] = r[0];
+            const deletedItems: Item[] = r[1];
+            this.reload();
+        });
         break;
       case 'reload':
+        console.log('data thumbnail reload');
         this.reload();
-        break;
-      case 'delete':
-        this.itemService.deleteItems($event.deletedItems)
-          .pipe(
-            map((r: Item[]) => {
-              this.reload();
-            })
-          ).subscribe();
         break;
     }
   }

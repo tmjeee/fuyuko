@@ -1,3 +1,54 @@
 <div class="data-list-component">
 
+    <!-- search -->
+    <div class="search-container">
+        <app-item-search (events)="onItemSearchEvent($event)"></app-item-search>
+    </div>
+
+    <!-- main controls -->
+    <div class="main-control">
+        <button type="button" (click)="addItem($event)" color="primary" mat-flat-button>Add</button>
+        <button type="button" (click)="save($event)" [disabled]="!canSave()" color="primary" mat-flat-button>Save</button>
+        <button type="button" (click)="delete($event)" [disabled]="!canDelete()" color="primary" mat-flat-button>Delete</button>
+        <button type="button" (click)="reload($event)" color="primary" mat-flat-button>Reload</button>
+    </div>
+
+    <!-- item list -->
+    <div class="container">
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let item of itemAndAttributeSet.items; let i = index;">
+               <mat-expansion-panel-header>
+                   <mat-panel-title>
+                       <section>
+                           <mat-checkbox (click)="$event.stopImmediatePropagation();"
+                                         (change)="onCheckboxStateChange($event, item)"></mat-checkbox>
+                       </section>
+                       <section>
+                           {{item.name}}
+                       </section>
+                   </mat-panel-title>
+                   <mat-panel-description>{{item.description}}</mat-panel-description>
+               </mat-expansion-panel-header>
+                <div>
+                    <app-carousel [images]="item.images"></app-carousel>
+                </div>
+                <div>
+                    <mat-label>Name</mat-label>
+                    <app-item-editor [item]="item" [type]="'name'" (events)="onItemDataChange($event)"></app-item-editor>
+                    <mat-hint>Item name</mat-hint>
+                </div>
+                <div>
+                    <mat-label>Description</mat-label>
+                    <app-item-editor [item]="item" [type]="'description'" (events)="onItemDataChange($event)"></app-item-editor>
+                    <mat-hint>Item description</mat-hint>
+                </div>
+                <div *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index;">
+                   <mat-label>{{attribute.name}}</mat-label>
+                   <app-data-editor [itemValueAndAttribute]="{item: item, attribute: attribute}"
+                                    (events)="onAttributeDataChange($event, item)"></app-data-editor>
+                   <mat-hint>{{attribute.description}}</mat-hint>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
 </div>

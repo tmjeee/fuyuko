@@ -1,3 +1,26 @@
 .data-list-component {
-
+  .search-container {
+    margin-bottom: 10px;
+  }
+  .main-control {
+    button:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+  .container {
+    .mat-accordion {
+      .mat-expansion-panel {
+        .mat-expansion-panel-header {
+          .mat-expansion-panel-header-title {
+            & section:first-child {
+              height: 20px;
+            }
+            .mat-checkbox {
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
 }

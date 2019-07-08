@@ -1,11 +1,11 @@
-import {ErrorHandler, Injectable, Injector} from '@angular/core';
+import {ErrorHandler, Inject, Injectable, Injector} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 
 @Injectable()
 export class GlobalErrorhandler extends ErrorHandler {
 
-    constructor(private injector: Injector) {
+    constructor(@Inject(Injector) private injector: Injector) {
         super();
     }
 

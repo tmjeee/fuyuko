@@ -6,6 +6,7 @@ import {AppMaterialsModule} from '../../app-materials.module';
 import {ItemSearchModule} from '../item-search-component/item-search.module';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {DataListComponent} from './data-list.component';
+import {CarouselModule} from '../carousel-component/carousel.module';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import {DataListComponent} from './data-list.component';
     AppMaterialsModule,
     DataEditorModule,
     ItemSearchModule,
+    CarouselModule
   ],
   declarations: [
     DataListComponent

@@ -239,6 +239,7 @@ export class ItemService {
   }
 
   saveItems(items: Item[]): Observable<Item[]> {
+    console.log('service save item', items);
     // todo:
     const newlyAddedItems: Item[] = [];
     items.forEach((i: Item) => {
@@ -246,11 +247,15 @@ export class ItemService {
         const nextId =  this.counter++;
         i.id = nextId;
         const item: Item =  {id: i.id, parentId: i.parentId, children: []} as Item;
+        item.name = i.name;
+        item.description = i.description;
         copyAttrProperties(i, item);
         ALL_ITEMS.push(item);
         newlyAddedItems.push(item);
       } else { // update existing item
         const item: Item = ALL_ITEMS.find((i2: Item) => i2.id === i.id);
+        item.name = i.name;
+        item.description = i.description;
         copyAttrProperties(i, item);
         newlyAddedItems.push(item);
       }
@@ -260,17 +265,22 @@ export class ItemService {
 
   saveTableItems(items: TableItem[]): Observable<Item[]> {
     // todo:
+    console.log('service save table item', items);
     const newlyAddedItems: Item[] = [];
     items.forEach((i: TableItem) => {
       if (i.id <  0) { // new item
         const nextId =  this.counter++;
         i.id = nextId;
         const item: Item =  {id: i.id, parentId: i.parentId, children: []} as Item;
+        item.name = i.name;
+        item.description = i.description;
         copyAttrProperties(i, item);
         ALL_ITEMS.push(item);
         newlyAddedItems.push(item);
       } else { // update existing item
         const item: Item = ALL_ITEMS.find((i2: Item) => i2.id === i.id);
+        item.name = i.name;
+        item.description = i.description;
         copyAttrProperties(i, item);
         newlyAddedItems.push(item);
       }
