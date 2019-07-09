@@ -1,0 +1,41 @@
+
+<div class="view-table-component">
+    <div class="controls">
+        <button type="button" mat-flat-button>Add</button>
+        <button type="button" mat-flat-button>Save</button>
+        <button type="button" mat-flat-button>Delete</button>
+        <button type="button" mat-flat-button>Reload</button>
+    </div>
+    <div class="table">
+        <mat-table [dataSource]="dataSource">
+            <ng-container  matColumnDef="selection" sticky>
+                <mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox></mat-checkbox>
+                </mat-header-cell>
+                <mat-header *matHeaderDef="let view">
+                    <mat-checkbox></mat-checkbox>
+                </mat-header>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                <mat-header *matHeaderDef="let view">{{view.name}}</mat-header>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+                <mat-header *matHeaderDef="let view">{{view.description}}</mat-header>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-header *matHeaderDef="let view">
+
+                </mat-header>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let view; columns: displayedColumns"></mat-row>
+        </mat-table>
+    </div>
+</div>

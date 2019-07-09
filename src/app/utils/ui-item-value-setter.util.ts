@@ -8,12 +8,23 @@ import {
   NumberValue, SelectValue,
   StringValue,
   TextValue,
-  Value, VolumeValue, WidthValue
+  Value, VolumeValue, WidthValue, Item
 } from '../model/item.model';
 import {AreaUnits, CountryCurrencyUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from '../model/unit.model';
 
-export function createNewItem(id: number, attributes: Attribute[], parentId?: number, rootParentId?: number): TableItem {
+export function createNewItem(id: number, attributes: Attribute[], parentId?: number): Item {
+  const i: Item = {id, parentId, name: '', description: ''} as Item;
+  addAttributesToItem(i, attributes);
+  return i;
+}
+
+export function createNewTableItem(id: number, attributes: Attribute[], parentId?: number, rootParentId?: number): TableItem {
   const i: TableItem = {id, parentId, rootParentId, name: '', description: ''} as TableItem;
+  addAttributesToItem(i, attributes);
+  return i;
+}
+
+export function addAttributesToItem(i: Item | TableItem, attributes: Attribute[]) {
   attributes.forEach((a: Attribute) => {
     const val: Value = { attributeId: a.id, val: undefined } as Value;
     i[a.id] = val;
@@ -59,7 +70,6 @@ export function createNewItem(id: number, attributes: Attribute[], parentId?: nu
         break;
     }
   });
-  return i;
 }
 
 function setItemValue(attribute: Attribute, value: Value, val: ItemValTypes) {

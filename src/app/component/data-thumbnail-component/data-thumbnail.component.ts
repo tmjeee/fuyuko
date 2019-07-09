@@ -7,6 +7,7 @@ import {MatCheckboxChange, MatDialog, MatDialogRef} from '@angular/material';
 import {map} from 'rxjs/operators';
 import {ItemSearchComponentEvent, SearchType} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
+import {createNewItem} from "../../utils/ui-item-value-setter.util";
 
 
 export interface DataThumbnailSearchComponentEvent {
@@ -120,12 +121,11 @@ export class DataThumbnailComponent {
 
   addItem($event: MouseEvent) {
     const id =  --this.counter;
+    const item: Item = createNewItem(id, this.itemAndAttributeSet.attributes);
     this.matDialog.open(ItemDataEditorDialogComponent, {
       data: {
         attributes: this.itemAndAttributeSet.attributes,
-        item: {
-          id: this.counter--,
-        } as Item
+        item
       }
     }).afterClosed()
       .pipe(

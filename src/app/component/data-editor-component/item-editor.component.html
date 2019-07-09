@@ -1,12 +1,8 @@
 <div class="item-editor-component">
   <ng-container *ngIf="type === 'name'">
-    <span class="name" (click)="onEdit($event, 'name')">
-    &nbsp;{{item.name}}
-    </span>
+    <input type="text" [disabled]="false" [readOnly]="true" (click)="onEdit($event, 'name')" value="{{item.name}}">
   </ng-container>
   <ng-container *ngIf="type === 'description'">
-    <span class="description" (click)="onEdit($event, 'description')">
-    {{item.description}}
-    </span>
+    <input type="text" [disabled]="false" [readOnly]="true" (click)="onEdit($event, 'description')" value="{{item.description}}">
   </ng-container>
 </div>

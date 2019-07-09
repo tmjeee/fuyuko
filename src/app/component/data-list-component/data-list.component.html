@@ -44,7 +44,7 @@
                 </div>
                 <div *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index;">
                    <mat-label>{{attribute.name}}</mat-label>
-                   <app-data-editor [itemValueAndAttribute]="{item: item, attribute: attribute}"
+                   <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute}"
                                     (events)="onAttributeDataChange($event, item)"></app-data-editor>
                    <mat-hint>{{attribute.description}}</mat-hint>
                 </div>

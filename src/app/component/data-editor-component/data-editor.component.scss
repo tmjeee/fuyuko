@@ -11,5 +11,12 @@
     width: 100%;
     display: flex;
     align-items: center;
+
+    input {
+      outline: none;
+      background-color: transparent;
+      color: var(--my-app-foreground-text);
+      border: none;
+    }
   }
 }

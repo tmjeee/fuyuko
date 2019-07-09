@@ -7,6 +7,7 @@ import {ItemDataEditorDialogComponent} from '../data-thumbnail-component/item-da
 import {MatCheckboxChange, MatDialog} from '@angular/material';
 import {map} from 'rxjs/operators';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
+import {createNewItem} from "../../utils/ui-item-value-setter.util";
 
 export interface DataListComponentEvent {
     type: 'modification' | 'reload';
@@ -38,6 +39,7 @@ export class DataListComponent {
     selectionModel: SelectionModel<Item>;
 
     constructor(private matDialog: MatDialog) {
+        this.counter = 0;
         this.selectionModel = new SelectionModel(true);
         this.pendingSaving = [];
         this.pendingDeletion = [];
@@ -73,12 +75,11 @@ export class DataListComponent {
 
     addItem($event: MouseEvent) {
         const id =  --this.counter;
+        const item: Item = createNewItem(id, this.itemAndAttributeSet.attributes);
         this.matDialog.open(ItemDataEditorDialogComponent, {
             data: {
                 attributes: this.itemAndAttributeSet.attributes,
-                item: {
-                    id: this.counter--,
-                } as Item
+                item
             }
         }).afterClosed()
             .pipe(
@@ -86,6 +87,7 @@ export class DataListComponent {
                     if (r) {
                         this.pendingSaving.push(r);
                         this.itemAndAttributeSet.items.unshift(r);
+                        console.log('**************** after add', this.itemAndAttributeSet);
                     }
                 })
             ).subscribe();

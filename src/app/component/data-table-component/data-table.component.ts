@@ -6,7 +6,7 @@ import {CollectionViewer, SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatCheckboxChange} from '@angular/material';
 import {ItemValueAndAttribute, TableItemAndAttribute, TableItemAndAttributeSet} from '../../model/item-attribute.model';
-import {createNewItem} from '../../utils/ui-item-value-setter.util';
+import {createNewTableItem} from '../../utils/ui-item-value-setter.util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
@@ -203,7 +203,7 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   onAddItem($event: MouseEvent) {
     const nextId = this.counter--;
-    const newItem: TableItem = createNewItem(nextId, this.itemAndAttributeSet.attributes);
+    const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes);
     this.pendingSavingItems.set(nextId, newItem);
     this.itemAndAttributeSet.tableItems.push(newItem);
     this.rowInfoMap.set(newItem.id, { tableItem: newItem, expanded: false } as RowInfo);
@@ -212,7 +212,7 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   onAddChildrenItem(rootParentItem: TableItem) {
     const nextId = this.counter--;
-    const newItem: TableItem = createNewItem(nextId, this.itemAndAttributeSet.attributes, rootParentItem.id, rootParentItem.rootParentId);
+    const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes, rootParentItem.id, rootParentItem.rootParentId);
     this.pendingSavingItems.set(nextId, newItem);
     const indexOfRootParentItem = this.itemAndAttributeSet.tableItems.findIndex((i: TableItem) => i.id === rootParentItem.id);
     this.itemAndAttributeSet.tableItems.splice(indexOfRootParentItem + 1, 0, newItem);

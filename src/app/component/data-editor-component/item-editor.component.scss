@@ -4,8 +4,10 @@
 }
 .item-editor-component {
   display: flex;
-  .name, .description {
-    display: flex;
-    align-items: stretch;
+  input {
+    outline: none;
+    background-color: transparent;
+    color: var(--my-app-foreground-text);
+    border: none;
   }
 }
