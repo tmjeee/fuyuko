@@ -1,37 +1,43 @@
 
 <div class="view-table-component">
     <div class="controls">
-        <button type="button" mat-flat-button>Add</button>
-        <button type="button" mat-flat-button>Save</button>
-        <button type="button" mat-flat-button>Delete</button>
-        <button type="button" mat-flat-button>Reload</button>
+        <button type="button" color="primary" mat-flat-button (click)="onAdd($event)">Add</button>
+        <button type="button" [disabled]="!canSave()" color="primary" (click)="onSave($event)" mat-flat-button>Save</button>
+        <button type="button" [disabled]="!canDelete()" color="primary" (click)="onDelete($event)" mat-flat-button>Delete</button>
+        <button type="button" color="primary" mat-flat-button (click)="onReload($event)">Reload</button>
     </div>
     <div class="table">
         <mat-table [dataSource]="dataSource">
             <ng-container  matColumnDef="selection" sticky>
                 <mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox></mat-checkbox>
+                    <mat-checkbox  #masterCheckbox
+                                  (change)="onMasterCheckboxChange($event)">
+                    </mat-checkbox>
                 </mat-header-cell>
-                <mat-header *matHeaderDef="let view">
-                    <mat-checkbox></mat-checkbox>
-                </mat-header>
+                <mat-cell *matCellDef="let view">
+                    <mat-checkbox #checkboxes (change)="onCheckboxChange($event, view)"></mat-checkbox>
+                </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="name">
                 <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-                <mat-header *matHeaderDef="let view">{{view.name}}</mat-header>
+                <mat-cell *matCellDef="let view">
+                    <app-view-editor [view]="view" [type]="'name'" (events)="onEdit($event)"></app-view-editor>
+                </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="description">
                 <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-                <mat-header *matHeaderDef="let view">{{view.description}}</mat-header>
+                <mat-cell *matCellDef="let view">
+                    <app-view-editor [view]="view" [type]="'description'" (events)="onEdit($event)"></app-view-editor>
+                </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                <mat-header *matHeaderDef="let view">
-
-                </mat-header>
+                <mat-cell *matCellDef="let view">
+                    xxx
+                </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -1,0 +1,18 @@
+<div class="view-views-page">
+    <mat-card class="mat-elevation-z20">
+        <mat-card-header>
+            <mat-card-title>Views Management</mat-card-title>
+            <mat-card-subtitle>
+                Maintain views. Create, Update, Delete of views.
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="!done">
+                Loading ...
+            </div>
+            <ng-container *ngIf="done">
+                <app-view-table [views]="views" (events)="onViewTableEvent($event)"></app-view-table>
+            </ng-container>
+        </mat-card-content>
+    </mat-card>
+</div>

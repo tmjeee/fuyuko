@@ -1,0 +1,13 @@
+:host {
+  width: 100%;
+}
+.view-editor-component {
+  width: 100%;
+  input {
+    width: 100%;
+    background-color: transparent;
+    color: var(--my-app-foreground-text);
+    border: none;
+    outline: none;
+  }
+}

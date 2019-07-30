@@ -1,4 +1,35 @@
 
-.view-table-component {
+$checkbox-width: 50px;
+$controls-width: 100px;
 
+.view-table-component {
+  .controls {
+    button {
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+    }
+  }
+  .mat-table {
+    .mat-header-row {
+      .mat-header-cell {
+        &:first-child {
+          max-width: $checkbox-width;
+        }
+        &:last-child {
+          max-width: $controls-width;
+        }
+      }
+    }
+    .mat-row {
+      .mat-cell {
+        &:first-child {
+          max-width: $checkbox-width;
+        }
+        &:last-child {
+          max-width: $controls-width;
+        }
+      }
+    }
+  }
 }
