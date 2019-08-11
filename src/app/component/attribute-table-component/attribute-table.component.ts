@@ -4,7 +4,7 @@ import {DataSource} from '@angular/cdk/table';
 import {Attribute} from '../../model/attribute.model';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {EditAttributeDialogComponent} from './edit-attribute-dialog.component';
 import {map} from 'rxjs/operators';
 import {View} from '../../model/view.model';

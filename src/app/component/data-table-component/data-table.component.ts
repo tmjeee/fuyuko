@@ -4,7 +4,7 @@ import {TableItem, ItemValTypes, StringValue, Value} from '../../model/item.mode
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer, SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {MatCheckboxChange} from '@angular/material';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import {ItemValueAndAttribute, TableItemAndAttribute, TableItemAndAttributeSet} from '../../model/item-attribute.model';
 import {createNewTableItem} from '../../utils/ui-item-value-creator.utils';
 import {animate, state, style, transition, trigger} from '@angular/animations';

@@ -6,7 +6,7 @@ import {AvatarService} from '../../service/avatar-service/avatar.service';
 import {AvatarComponentEvent} from '../../component/avatar-component/avatar.component';
 import {NotificationsService} from 'angular2-notifications';
 import {Theme, ThemeService} from '../../service/theme-service/theme.service';
-import {MatSelectChange} from '@angular/material';
+import { MatSelectChange } from '@angular/material/select';
 import {ProfileInfoComponentEvent} from '../../component/profile-info-component/profile-info.component';
 import {PasswordComponentEvent} from '../../component/password-component/password.component';
 import {AuthService} from '../../service/auth-service/auth.service';

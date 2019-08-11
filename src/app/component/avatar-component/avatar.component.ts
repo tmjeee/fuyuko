@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import {AvatarDialogComponent, AvatarDialogComponentData} from './avatar-dialog.component';
 import {map} from 'rxjs/operators';
 import {Avatar} from '../../model/avatar.model';

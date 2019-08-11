@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {ItemAndAttributes, ItemValueAndAttribute} from '../../model/item-attribute.model';
 import {Item} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';

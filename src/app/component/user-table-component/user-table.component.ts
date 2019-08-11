@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {User} from '../../model/user.model';
 import {FormBuilder, FormControl} from '@angular/forms';
-import {MatAutocompleteSelectedEvent} from '@angular/material';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {debounceTime, filter, map, startWith} from 'rxjs/operators';

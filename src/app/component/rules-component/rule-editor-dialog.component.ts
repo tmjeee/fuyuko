@@ -20,7 +20,8 @@ import {
   WhenClause,
   WIDTH_OPERATOR_TYPES
 } from '../../model/rule.model';
-import {MAT_DIALOG_DATA, MatDialogRef, MatSelectChange} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import {CounterService} from '../../service/counter-service/counter.service';
 import {ItemValueAndAttribute, TableItemAndAttribute} from '../../model/item-attribute.model';
 import {
@@ -37,7 +38,6 @@ import {
 } from '../../model/item.model';
 import {getItemStringValue} from '../../utils/ui-item-value-getter.util';
 import {HEIGHT_UNITS} from '../../model/unit.model';
-import {formGroupNameProvider} from '@angular/forms/src/directives/reactive_directives/form_group_name';
 
 export interface RuleEditorDialogComponentData {
   attributes: Attribute[];

@@ -73,7 +73,7 @@ import {AttributeTableModule} from './component/attribute-table-component/attrib
 import {DataTableModule} from './component/data-table-component/data-table.module';
 import {ItemService} from './service/item-service/item.service';
 import {DataEditorModule} from './component/data-editor-component/data-editor.module';
-import {DateAdapter, MAT_DATE_FORMATS} from '@angular/material';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {ItemSearchComponent} from './component/item-search-component/item-search.component';
 import {ItemSearchModule} from './component/item-search-component/item-search.module';

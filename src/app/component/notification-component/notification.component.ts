@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {NotificationDialogComponent} from './notification-dialog.component';
 import {AppNotificationService} from '../../service/app-notification-service/app-notification.service';
 import {map} from 'rxjs/operators';

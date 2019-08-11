@@ -1,6 +1,8 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Group} from '../../model/group.model';
-import {MatAutocompleteSelectedEvent, MatChipEvent, MatChipList, MatChipListChange, MatInput} from '@angular/material';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipEvent, MatChipList, MatChipListChange } from '@angular/material/chips';
+import { MatInput } from '@angular/material/input';
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {filter, startWith} from 'rxjs/operators';
@@ -28,8 +30,8 @@ export class SendInviteComponent implements OnInit {
   @Input() groupSearchFn: GroupSearchFn;
   @Output() events: EventEmitter<SendInviteComponentEvent>;
 
-  @ViewChild('chipList') matChipList: MatChipList;
-  @ViewChild('chipInput') chipInput: ElementRef;
+  @ViewChild('chipList', { static: true }) matChipList: MatChipList;
+  @ViewChild('chipInput', { static: true }) chipInput: ElementRef;
 
   constructor(private formBuilder: FormBuilder) {
     this.selectedGroups = [];

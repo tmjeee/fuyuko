@@ -10,7 +10,8 @@ import {
     VolumeValue,
     WidthValue
 } from '../../model/item.model';
-import {MatDatepickerInputEvent, MatSelectChange} from '@angular/material';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatSelectChange } from '@angular/material/select';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {
     AreaUnits,
@@ -21,7 +22,6 @@ import {
     WidthUnits
 } from '../../model/unit.model';
 import {convertToString} from '../../utils/ui-item-value-converters.util';
-import {SelectorType} from 'codelyzer/selectorNameBase';
 import {
     setItemAreaValue,
     setItemCurrencyValue,

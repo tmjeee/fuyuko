@@ -7,7 +7,8 @@ import {ViewService} from '../../service/view-service/view.service';
 import {tap} from 'rxjs/operators';
 import {ViewEditorComponentEvent} from './view-editor.component';
 import {ViewEditorDialogComponent} from './view-editor-dialog.component';
-import {MatCheckbox, MatCheckboxChange, MatDialog} from '@angular/material';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 
 export class ViewTableDataSource extends DataSource<View> {
 
@@ -46,7 +47,7 @@ export class ViewTableComponent implements OnInit {
 
     dataSource: ViewTableDataSource;
 
-    @ViewChild('masterCheckbox') masterCheckbox: MatCheckbox;
+    @ViewChild('masterCheckbox', { static: false }) masterCheckbox: MatCheckbox;
     @ViewChildren('checkboxes')checkboxes: QueryList<MatCheckbox>;
 
     displayedColumns: string[];

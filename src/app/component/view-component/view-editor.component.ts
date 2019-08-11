@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {View} from '../../model/view.model';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {ViewEditorDialogComponent} from './view-editor-dialog.component';
 import {tap} from 'rxjs/operators';
 

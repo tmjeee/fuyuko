@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, Inject, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef, MatSelectChange} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import {Attribute, ATTRIBUTE_TYPES} from '../../model/attribute.model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {
@@ -54,7 +55,7 @@ export class EditAttributeDialogComponent implements AfterViewInit {
   formGroupLengthAttribtue: FormGroup;
   formControlLengthAttributeFormat: FormControl;
 
-  @ViewChild('singleSelectComponent') singleSelectComponent: SingleSelectComponent;
+  @ViewChild('singleSelectComponent', { static: false }) singleSelectComponent: SingleSelectComponent;
 
 
 
