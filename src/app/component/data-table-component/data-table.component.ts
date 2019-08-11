@@ -6,7 +6,7 @@ import {CollectionViewer, SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatCheckboxChange} from '@angular/material';
 import {ItemValueAndAttribute, TableItemAndAttribute, TableItemAndAttributeSet} from '../../model/item-attribute.model';
-import {createNewTableItem} from '../../utils/ui-item-value-setter.util';
+import {createNewTableItem} from '../../utils/ui-item-value-creator.utils';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';

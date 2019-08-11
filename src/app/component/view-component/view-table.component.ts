@@ -113,8 +113,7 @@ export class ViewTableComponent implements OnInit {
 
     onDelete($event: MouseEvent) {
         const deleted: View[] = this.selectionModel.selected;
-        console.log('***** deleted', deleted);
-        let newViews: View[] =this.views;
+        let newViews: View[] = this.views;
         deleted.forEach((v: View) => {
             this.pendingDeletion.push(v);
             newViews = newViews.filter((view: View) => {

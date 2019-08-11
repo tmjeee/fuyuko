@@ -73,7 +73,7 @@ import {AttributeTableModule} from './component/attribute-table-component/attrib
 import {DataTableModule} from './component/data-table-component/data-table.module';
 import {ItemService} from './service/item-service/item.service';
 import {DataEditorModule} from './component/data-editor-component/data-editor.module';
-import {DateAdapter} from '@angular/material';
+import {DateAdapter, MAT_DATE_FORMATS} from '@angular/material';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {ItemSearchComponent} from './component/item-search-component/item-search.component';
 import {ItemSearchModule} from './component/item-search-component/item-search.module';
@@ -88,7 +88,9 @@ import {ProfilingInterceptor} from './interceptor/profiling.interceptor';
 import {ErrorPageComponent} from './page/error-page/error.page';
 import {GlobalErrorhandler} from './error-handler/global.errorhandler';
 import {CarouselModule} from './component/carousel-component/carousel.module';
-import {ViewModule} from "./component/view-component/view.module";
+import {ViewModule} from './component/view-component/view.module';
+import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
+import {DATE_FORMAT} from './model/item.model';
 
 @NgModule({
   declarations: [
@@ -180,6 +182,7 @@ import {ViewModule} from "./component/view-component/view.module";
     DataListModule,
     CarouselModule,
     ViewModule,
+    BulkEditWizardModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -195,6 +198,7 @@ import {ViewModule} from "./component/view-component/view.module";
     {provide: RuleService, useClass: RuleService} as Provider,
     {provide: CounterService, useClass: CounterService} as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
+    {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
     {provide: ErrorHandler, useClass: GlobalErrorhandler} as Provider,
   ],

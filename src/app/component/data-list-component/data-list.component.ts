@@ -7,7 +7,7 @@ import {ItemDataEditorDialogComponent} from '../data-thumbnail-component/item-da
 import {MatCheckboxChange, MatDialog} from '@angular/material';
 import {map} from 'rxjs/operators';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
-import {createNewItem} from "../../utils/ui-item-value-setter.util";
+import {createNewItem} from '../../utils/ui-item-value-creator.utils';
 
 export interface DataListComponentEvent {
     type: 'modification' | 'reload';

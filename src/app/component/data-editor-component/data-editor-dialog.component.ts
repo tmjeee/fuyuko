@@ -40,14 +40,8 @@ import {
   getItemTextValue,
   getItemVolumeValue, getItemWidthValue
 } from '../../utils/ui-item-value-getter.util';
+import {Pair2Map, doubleSelectToObjectMap} from '../../utils/doubleselect-helper.util';
 
-
-interface Pair2Map {
-  [key1: string]: {
-    key: string,
-    value: string;
-  }[];
-}
 
 
 @Component({
@@ -328,13 +322,7 @@ export class DataEditorDialogComponent {
     }
 
     if (data.attribute.type === 'doubleselect') {
-      this.pair2Map = data.attribute.pair2.reduce((o: Pair2Map, p: Pair2) => {
-        if (!o[p.key1]) {
-          o[p.key1] = [];
-        }
-        o[p.key1].push({key: p.key2, value: p.value});
-        return o;
-      }, {});
+      this.pair2Map = doubleSelectToObjectMap(data.attribute);
     }
   }
 

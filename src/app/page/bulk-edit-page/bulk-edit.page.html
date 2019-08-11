@@ -1,3 +1,25 @@
 <div class="bulk-edit-page">
-  <h1>Bulk Edit</h1>
+   <mat-card class="mat-elevation-z-20">
+       <mat-card-header>
+           <mat-card-title>Bulk Edit</mat-card-title>
+           <mat-card-subtitle>
+                Perform bulk edit on data through a wizard
+           </mat-card-subtitle>
+       </mat-card-header>
+       <mat-card-content>
+           <mat-form-field>
+               <mat-label>View</mat-label>
+               <mat-select [value]="currentView" (selectionChange)="onViewSelectionChanged($event)">
+                   <mat-option *ngFor="let view of allViews" [value]="view">
+                       {{view.name}}
+                   </mat-option>
+               </mat-select>
+               <mat-hint>Select a view for bulk editing</mat-hint>
+           </mat-form-field>
+
+           <ng-container *ngIf="attributes">
+               <app-bulk-edit-wizard [attributes]="attributes"></app-bulk-edit-wizard>
+           </ng-container>
+       </mat-card-content>
+   </mat-card>
 </div>

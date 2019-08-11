@@ -12,94 +12,80 @@ import {
 } from '../model/item.model';
 import {AreaUnits, CountryCurrencyUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from '../model/unit.model';
 
-export function createNewItem(id: number, attributes: Attribute[], parentId?: number): Item {
-  const i: Item = {id, parentId, name: '', description: ''} as Item;
-  addAttributesToItem(i, attributes);
-  return i;
+export function setItemValue(a: Attribute, val: Value) {
+  switch (a.type) {
+    case 'string':
+      setItemStringValue(a, val, '');
+      break;
+    case 'text':
+      setItemTextValue(a, val, '');
+      break;
+    case 'number':
+      setItemNumberValue(a, val, 0);
+      break;
+    case 'date':
+      setItemDateValue(a, val, '');
+      break;
+    case 'currency':
+      setItemCurrencyValue(a, val, 0);
+      break;
+    case 'area':
+      setItemAreaValue(a, val, 0, 'm2');
+      break;
+    case 'volume':
+      setItemVolumeValue(a, val, 0, 'l');
+      break;
+    case 'dimension':
+      setItemDimensionValue(a, val, 0, 0, 0, 'm');
+      break;
+    case 'width':
+      setItemWidthValue(a, val, 0, 'm');
+      break;
+    case 'height':
+      setItemHeightValue(a, val, 0, 'm');
+      break;
+    case 'length':
+      setItemLengthValue(a, val, 0, 'm');
+      break;
+    case 'select':
+      setItemSelectValue(a, val, '');
+      break;
+    case 'doubleselect':
+      setItemDoubleSelectValue(a, val, '', '');
+      break;
+  }
 }
 
-export function createNewTableItem(id: number, attributes: Attribute[], parentId?: number, rootParentId?: number): TableItem {
-  const i: TableItem = {id, parentId, rootParentId, name: '', description: ''} as TableItem;
-  addAttributesToItem(i, attributes);
-  return i;
-}
 
-export function addAttributesToItem(i: Item | TableItem, attributes: Attribute[]) {
-  attributes.forEach((a: Attribute) => {
-    const val: Value = { attributeId: a.id, val: undefined } as Value;
-    i[a.id] = val;
-    switch (a.type) {
-      case 'string':
-        setItemStringValue(a, val, '');
-        break;
-      case 'text':
-        setItemTextValue(a, val, '');
-        break;
-      case 'number':
-        setItemNumberValue(a, val, 0);
-        break;
-      case 'date':
-        setItemDateValue(a, val, '');
-        break;
-      case 'currency':
-        setItemCurrencyValue(a, val, 0);
-        break;
-      case 'area':
-        setItemAreaValue(a, val, 0, 'm2');
-        break;
-      case 'volume':
-        setItemVolumeValue(a, val, 0, 'l');
-        break;
-      case 'dimension':
-        setItemDimensionValue(a, val, 0, 0, 0, 'm');
-        break;
-      case 'width':
-        setItemWidthValue(a, val, 0, 'm');
-        break;
-      case 'height':
-        setItemHeightValue(a, val, 0, 'm');
-        break;
-      case 'length':
-        setItemLengthValue(a, val, 0, 'm');
-        break;
-      case 'select':
-        setItemSelectValue(a, val, '');
-        break;
-      case 'doubleselect':
-        setItemDoubleSelectValue(a, val, '', '');
-        break;
-    }
-  });
-}
 
-function setItemValue(attribute: Attribute, value: Value, val: ItemValTypes) {
+function _setItemValue(attribute: Attribute, value: Value, val: ItemValTypes) {
   value.val = val;
 }
 
 
 export function setItemStringValue(attribute: Attribute, value: Value, val: string) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'string',
     value: val
   } as StringValue);
 }
 
 export function setItemTextValue(attribute: Attribute, value: Value, val: string) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'text',
     value: val
   } as TextValue);
 }
 
 export function setItemNumberValue(attribute: Attribute, value: Value, val: number) {
-  setItemValue(attribute, value , {
+  _setItemValue(attribute, value , {
     type: 'number',
     value: val
   } as NumberValue);
 }
 
 export function setItemDateValue(attribute: Attribute, value: Value, val: string) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'date',
     value: val,
     format: 'DD-MM-YYYY'
@@ -107,7 +93,7 @@ export function setItemDateValue(attribute: Attribute, value: Value, val: string
 }
 
 export function setItemCurrencyValue(attribute: Attribute, value: Value, val: number, country?: CountryCurrencyUnits) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'currency',
     value: val,
     country
@@ -115,7 +101,7 @@ export function setItemCurrencyValue(attribute: Attribute, value: Value, val: nu
 }
 
 export function setItemAreaValue(attribute: Attribute, value: Value, val: number, unit: AreaUnits) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'area',
     value: val,
     unit
@@ -123,7 +109,7 @@ export function setItemAreaValue(attribute: Attribute, value: Value, val: number
 }
 
 export function setItemVolumeValue(attribute: Attribute, value: Value, val: number, unit: VolumeUnits) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'volume',
     value: val,
     unit
@@ -132,7 +118,7 @@ export function setItemVolumeValue(attribute: Attribute, value: Value, val: numb
 
 export function setItemDimensionValue(attribute: Attribute, value: Value, width: number, length: number, height: number,
                                       unit: DimensionUnits) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'dimension',
     width,
     length,
@@ -142,7 +128,7 @@ export function setItemDimensionValue(attribute: Attribute, value: Value, width:
 }
 
 export function setItemWidthValue(attribute: Attribute, value: Value, val: number, unit: WidthUnits) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'width',
     value: val,
     unit
@@ -150,7 +136,7 @@ export function setItemWidthValue(attribute: Attribute, value: Value, val: numbe
 }
 
 export function setItemHeightValue(attribute: Attribute, value: Value, val: number, unit: HeightUnits) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'height',
     value: val,
     unit
@@ -158,7 +144,7 @@ export function setItemHeightValue(attribute: Attribute, value: Value, val: numb
 }
 
 export function setItemLengthValue(attribute: Attribute, value: Value, val: number, unit: LengthUnits) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'length',
     value: val,
     unit
@@ -166,14 +152,14 @@ export function setItemLengthValue(attribute: Attribute, value: Value, val: numb
 }
 
 export function setItemSelectValue(attribute: Attribute, value: Value, key1: string) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'select',
     key: key1
   } as SelectValue);
 }
 
 export function setItemDoubleSelectValue(attribute: Attribute, value: Value, key1: string, key2: string) {
-  setItemValue(attribute, value, {
+  _setItemValue(attribute, value, {
     type: 'doubleselect',
     key1,
     key2

@@ -45,18 +45,20 @@ export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implement
             this.viewService.setCurrentView(v[0]);
           }
           this.ready = true;
+        }),
+        map(() => {
+            this.subscription = this.viewService
+                .asObserver()
+                .pipe(
+                    map((v: View) => {
+                        if (v) {
+                            this.currentView = this.allViews ? this.allViews.find((vv: View) => vv.id === v.id) : undefined;
+                        }
+                    })
+                ).subscribe();
         })
       ).subscribe();
 
-    this.subscription = this.viewService
-      .asObserver()
-      .pipe(
-        map((v: View) => {
-          if (v) {
-            this.currentView = this.allViews ? this.allViews.find((vv: View) => vv.id === v.id) : undefined;
-          }
-        })
-      ).subscribe();
   }
 
   ngOnDestroy(): void {

@@ -7,7 +7,7 @@ import {MatCheckboxChange, MatDialog, MatDialogRef} from '@angular/material';
 import {map} from 'rxjs/operators';
 import {ItemSearchComponentEvent, SearchType} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
-import {createNewItem} from "../../utils/ui-item-value-setter.util";
+import {createNewItem} from '../../utils/ui-item-value-creator.utils';
 
 
 export interface DataThumbnailSearchComponentEvent {
