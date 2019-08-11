@@ -2,67 +2,74 @@
     <mat-horizontal-stepper [linear]="false">
         <!-- 1] First step -->
         <mat-step [stepControl]="formGroupFirstStep">
+            <ng-template matStepLabel>Conditions for builk edit</ng-template>
             <form [formGroup]="formGroupFirstStep">
-                <ng-template matStepLabel>Conditions for builk edit</ng-template>
                 <mat-card>
                     <mat-card-header>
                         <mat-card-title>Change</mat-card-title>
                         <mat-card-subtitle>Configure the changes for builk edit</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <ng-container *ngFor="let itemValueAndAttribute of changeClauses; let i = index">
+                        <div class="change-clause-entry" *ngFor="let itemValueAndAttribute of changeClauses; let i = index">
+                            <div class="controls">
+                                <button mat-icon-button color="primary" (click)="deleteChangeClause(i)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
                             <app-data-editor-no-popup
                                     (events)="onChangeClauseEvent(i, $event)"
                                     [attributes]="attributes"
                                     [itemValueAndAttribute]="itemValueAndAttribute">
                             </app-data-editor-no-popup>
-                            <button mat-icon-button color="primary" (click)="deleteChangeClause(i)">
-                                <mat-icon>delete</mat-icon>
-                            </button>
-                        </ng-container>
-                        <div>
-                            <button mat-flat-button color="primary" type="button" (click)="addChangeClause()">Add</button>
+                        </div>
+                        <div class="change-clause-controls">
+                            <button mat-flat-button color="primary" type="button" (click)="addChangeClause()">Add change clause</button>
                         </div>
                     </mat-card-content>
                 </mat-card>
 
                 <mat-card>
-                <h2>Where:</h2>
-                <ng-container *ngFor="let itemValueAndAttribute of whereClauses; let i = index">
-                    <mat-form-field>
-                        <mat-label>Attribute</mat-label>
-                        <app-data-editor-no-popup
-                                (events)="onWhereClauseEvent(i, $event)"
-                                [attributes]="attributes"
-                                [itemValueAndAttribute]="itemValueAndAttribute">
-                        </app-data-editor-no-popup>
-                        <button mat-icon-button color="primary" (click)="deleteWhereClause(i)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                        <mat-hint>Conditions for bulk edit</mat-hint>
-                    </mat-form-field>
-                </ng-container>
-                <button mat-flat-button color="primary" (click)="addWhereClause()">Add</button>
-                <div>
-                    <button mat-flat-button matStepperNext type="submit" color="primary">Next</button>
-                </div>
+                    <mat-card-header>
+                        <mat-card-title>Where</mat-card-title>
+                        <mat-card-subtitle>Configure 'where' conditions where bulk edit would take place</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="where-clause-entry" *ngFor="let itemValueAndAttribute of whereClauses; let i = index">
+                            <div class="controls">
+                                <button mat-icon-button color="primary" (click)="deleteWhereClause(i)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                            <app-data-editor-no-popup
+                                    (events)="onWhereClauseEvent(i, $event)"
+                                    [attributes]="attributes"
+                                    [itemValueAndAttribute]="itemValueAndAttribute">
+                            </app-data-editor-no-popup>
+                        </div>
+                        <div class="where-clause-controls">
+                            <button mat-flat-button color="primary" type="button" (click)="addWhereClause()">Add where clause</button>
+                        </div>
+                    </mat-card-content>
                 </mat-card>
+                <div>
+                    <mat-divider></mat-divider>
+                    <div class="wizard-controls">
+                        <button [disabled]="formGroupFirstStep.invalid" mat-flat-button matStepperNext type="submit" color="primary">Next</button>
+                    </div>
+                </div>
             </form>
         </mat-step>
 
 
         <!-- 2] Second Step -->
         <mat-step>
+            <ng-template matStepLabel>Review bulk edis</ng-template>
             <form [formGroup]="formGroupSecondStep">
-                <ng-template matStepLabel>Review bulk edis</ng-template>
 
-
-
-
-
-                <div>
-                    <button mat-flat-button matStepperPrevious color="primary">Previous</button>
-                    <button mat-flat-button matStepperNext color="primary">Next</button>
+                <mat-divider></mat-divider>
+                <div class="wizard-controls">
+                    <button type="submit" mat-flat-button matStepperPrevious color="primary">Previous</button>
+                    <button type="submit" mat-flat-button matStepperNext color="primary">Next</button>
                 </div>
             </form>
         </mat-step>

@@ -18,6 +18,7 @@ export interface Item {
   images: string[];
   parentId: number;
   [attributeId: number]: Value;
+
   children: Item[];
 }
 
@@ -26,10 +27,11 @@ export interface TableItem {
   name: string;
   description: string;
   images: string[];
-  rootParentId: number;
   parentId: number;
   depth: number;
   [attributeId: number]: Value;
+
+  rootParentId: number;
 }
 
 export interface Value {

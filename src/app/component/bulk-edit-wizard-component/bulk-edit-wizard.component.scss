@@ -1,4 +1,39 @@
 
 .bulk-edit-wizard-component {
+  ::ng-deep {
+    .mat-divider-horizontal {
+      position: relative;
+      margin-bottom: 10px;
+    }
+    mat-horizontal-stepper {
+      mat-card {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        .change-clause-entry, .where-clause-entry {
+          display: flex;
+          flex-direction: row;
+          .controls {
+            flex-grow: 0;
+          }
+          app-data-editor-no-popup {
+            flex-grow: 2;
+          }
+        }
 
+        .change-clause-controls, .where-clause-controls {
+          margin-top: 15px;
+          margin-left: 5px;
+          margin-bottom: 5px;
+        }
+      }
+    }
+
+    .wizard-controls {
+      margin-top: 20px;
+      margin-bottom: 5px;
+      button {
+        margin-right: 10px;
+      }
+    }
+  }
 }

@@ -91,6 +91,7 @@ import {CarouselModule} from './component/carousel-component/carousel.module';
 import {ViewModule} from './component/view-component/view.module';
 import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
 import {DATE_FORMAT} from './model/item.model';
+import {BulkEditService} from "./service/bulk-edit-service/bulk-edit.service";
 
 @NgModule({
   declarations: [
@@ -197,6 +198,7 @@ import {DATE_FORMAT} from './model/item.model';
     {provide: ItemService, useClass: ItemService} as Provider,
     {provide: RuleService, useClass: RuleService} as Provider,
     {provide: CounterService, useClass: CounterService} as Provider,
+    {provide: BulkEditService, useClass: BulkEditService} as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,

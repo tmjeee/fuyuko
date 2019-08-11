@@ -60,6 +60,7 @@ export class DataEditorNoPopupComponent implements OnInit {
 
 
     formGroup: FormGroup;
+    formControlAttribute: FormControl;
     formControl: FormControl;
     formControl2: FormControl;
     formControl3: FormControl;
@@ -89,16 +90,17 @@ export class DataEditorNoPopupComponent implements OnInit {
     }
 
     reload() {
+       this.formGroup = this.formBuilder.group({});
        if (this.attribute) {
+           this.formControlAttribute = this.formBuilder.control(this.attribute, [Validators.required]);
+           this.formGroup.addControl('formControlAttribute', this.formControlAttribute);
            switch (this.attribute.type) {
                case 'string':
                case 'text':
                case 'number':
                case 'date': {
                    this.formControl = this.formBuilder.control(convertToString(this.attribute, this.itemValue), [Validators.required]);
-                   this.formGroup = this.formBuilder.group({
-                       formControl: this.formControl
-                   });
+                   this.formGroup.addControl('formControl', this.formControl);
                    break;
                }
                case 'currency': {
@@ -111,10 +113,8 @@ export class DataEditorNoPopupComponent implements OnInit {
                    }
                    this.formControl = this.formBuilder.control(currencyValue, [Validators.required]);
                    this.formControl2 = this.formBuilder.control(currencyCountry, [Validators.required]);
-                   this.formGroup = this.formBuilder.group({
-                       formControl: this.formControl,
-                       formControl2: this.formControl2
-                   });
+                   this.formGroup.addControl('formControl', this.formControl);
+                   this.formGroup.addControl('formControl2', this.formControl2);
                    break;
                }
                case 'area':
@@ -132,10 +132,8 @@ export class DataEditorNoPopupComponent implements OnInit {
                    }
                    this.formControl = this.formBuilder.control(v, [Validators.required]);
                    this.formControl2 = this.formBuilder.control(u, [Validators.required]);
-                   this.formGroup = this.formBuilder.group({
-                       formControl: this.formControl,
-                       formControl2: this.formControl2
-                   });
+                   this.formGroup.addControl('formControl', this.formControl);
+                   this.formGroup.addControl('formControl2', this.formControl2);
                    break;
                }
                case 'dimension': {
@@ -154,12 +152,10 @@ export class DataEditorNoPopupComponent implements OnInit {
                    this.formControl2 = this.formBuilder.control(w, [Validators.required]);
                    this.formControl3 = this.formBuilder.control(h, [Validators.required]);
                    this.formControl4 = this.formBuilder.control(u, [Validators.required]);
-                   this.formGroup = this.formBuilder.group({
-                       formControl: this.formControl,
-                       formControl2: this.formControl2,
-                       formControl3: this.formControl3,
-                       formControl4: this.formControl4,
-                   });
+                   this.formGroup.addControl('formControl', this.formControl);
+                   this.formGroup.addControl('formControl2', this.formControl2);
+                   this.formGroup.addControl('formControl3', this.formControl3);
+                   this.formGroup.addControl('formControl4', this.formControl4);
                    break;
                }
                case 'select': {
@@ -169,9 +165,7 @@ export class DataEditorNoPopupComponent implements OnInit {
                        k = itemValueType.key;
                    }
                    this.formControl = this.formBuilder.control(k, [Validators.required]);
-                   this.formGroup = this.formBuilder.group({
-                       formControl: this.formControl
-                   });
+                   this.formGroup.addControl('formControl', this.formControl);
                    break;
                }
                case 'doubleselect': {
@@ -184,10 +178,8 @@ export class DataEditorNoPopupComponent implements OnInit {
                    }
                    this.formControl = this.formBuilder.control(k1, [Validators.required]);
                    this.formControl2 = this.formBuilder.control(k2, [Validators.required]);
-                   this.formGroup = this.formBuilder.group({
-                       formControl: this.formControl,
-                       formControl2: this.formControl2
-                   });
+                   this.formGroup.addControl('formControl', this.formControl);
+                   this.formGroup.addControl('formControl2', this.formControl2);
                    break;
                }
            }
@@ -215,8 +207,7 @@ export class DataEditorNoPopupComponent implements OnInit {
     }
 
     private emitEvent() {
-        // todo : read from formControl and update itemValue
-        if (this.formGroup && this.formGroup.valid) {
+        if (this.formGroup /*&& this.formGroup.valid*/) {
             if (this.attribute) {
                 switch (this.attribute.type) {
                     case 'string':
