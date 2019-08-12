@@ -1,4 +1,13 @@
 import {Value} from './item.model';
+import {Attribute} from './attribute.model';
+
+
+export interface BulkEditPackage {
+    changeAttributes: Attribute[];
+    whenAttributes: Attribute[];
+    bulkEditItems: BulkEditItem[];
+}
+
 
 export interface BulkEditItem {
     id: number;
@@ -7,9 +16,14 @@ export interface BulkEditItem {
     images: string[];
     parentId: number;
     changes: {
+        [attributeId: number]: {
+            old: Value,
+            new: Value
+        };
+    };
+    whens: {
         [attributeId: number]: Value;
     };
-    [attributeId: number]: Value;
 
     children: BulkEditItem[];
 }
@@ -22,9 +36,14 @@ export interface BulkEditTableItem {
     parentId: number;
     depth: number;
     changes: {
+        [attributeId: number]: {
+            old: Value,
+            new: Value
+        };
+    };
+    whens: {
         [attributeId: number]: Value;
     };
-    [attributeId: number]: { old: Value, new: Value};
 
     rootParentId: number;
 }

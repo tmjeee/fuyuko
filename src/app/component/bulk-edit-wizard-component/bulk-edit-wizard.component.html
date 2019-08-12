@@ -3,7 +3,7 @@
         <!-- 1] First step -->
         <mat-step [stepControl]="formGroupFirstStep">
             <ng-template matStepLabel>Conditions for builk edit</ng-template>
-            <form [formGroup]="formGroupFirstStep">
+            <form [formGroup]="formGroupFirstStep" (ngSubmit)="onFirstStepSubmit()">
                 <mat-card>
                     <mat-card-header>
                         <mat-card-title>Change</mat-card-title>

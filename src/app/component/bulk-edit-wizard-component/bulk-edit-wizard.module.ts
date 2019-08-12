@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {BulkEditWizardComponent} from './bulk-edit-wizard.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
+import {BulkEditReviewTableComponent} from './bulk-edit-review-table.component';
 
 @NgModule({
     imports: [
@@ -16,10 +17,12 @@ import {DataEditorModule} from '../data-editor-component/data-editor.module';
         DataEditorModule,
     ],
     declarations: [
-        BulkEditWizardComponent
+        BulkEditWizardComponent,
+        BulkEditReviewTableComponent,
     ],
     exports: [
-        BulkEditWizardComponent
+        BulkEditWizardComponent,
+        BulkEditReviewTableComponent,
     ]
 })
 export class BulkEditWizardModule {

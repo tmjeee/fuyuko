@@ -1,0 +1,50 @@
+<div class="bulk-edit-review-table-component">
+    <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="when-header">
+            <th mat-header-cell *matHeaderCellDef colspan="{{whenAttribtues.length}}">When</th>
+        </ng-container>
+        <ng-container matColumnDef="change-header">
+            <th mat-header-cell *matHeaderCellDef colspan="{{(changeAttributes.length * 2)}}">Change</th>
+        </ng-container>
+
+        <ng-container *ngFor="let whenAttribute of whenAttribtues">
+            <ng-container matColumnDef="when-attributes-header">
+                <th mat-header-cell *matHeaderCellDef rowspan="2">{{whenAttribute.name}}</th>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngFor="let changeAttribute of changeAttributes">
+            <ng-container matColumnDef="change-attribtues-header">
+                <th mat-header-cell *matHeaderCellDef colspan="2">{{changeAttribute.name}}</th>
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngFor="let changeAttribute of changeAttributes">
+            <ng-container matColumnDef="change-old-new-values-header">
+                <th mat-header-cell *matHeaderCellDef>Old</th>
+                <th mat-header-cell *matHeaderCellDef>New</th>
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngFor="let whenAttribute of whenAttribtues">
+            <ng-container matColumnDef="''+whenAttribute.id">
+                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.whens[whenAttribute.id] | itemAttributeValueAsString}}</td>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngFor="let changeAttribute of changeAttributes">
+            <ng-container matColumnDef="'old-'+changeAttribute.id">
+                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.changes[changeAttribute.id].old | itemAttributeValueAsString}}</td>
+            </ng-container>
+            <ng-container matColumnDef="'new-'+changeAttribute.id">
+                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.changes[changeAttribute.id].new | itemAttributeValueAsString}}</td>
+            </ng-container>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['when-header', 'change-header']"></tr>
+        <tr mat-header-row *matHeaderRowDef="['when-attributes-header', 'change-attributes-header']"></tr>
+        <tr mat-header-row *matHeaderRowDef="['change-old-new-values-header']"></tr>
+        <tr mat-row *matRowDef="let bulkEditTableItem; columns: displayedColumns"></tr>
+
+    </table>
+
+</div>

@@ -6,6 +6,8 @@ import {NotificationsService} from 'angular2-notifications';
 import {Value} from '../../model/item.model';
 import {createNewItemValue} from '../../utils/ui-item-value-creator.utils';
 import {getItemAreaValue, hasItemValue} from '../../utils/ui-item-value-getter.util';
+import {BulkEditService} from '../../service/bulk-edit-service/bulk-edit.service';
+import {View} from '../../model/view.model';
 
 @Component({
    selector: 'app-bulk-edit-wizard',
@@ -25,9 +27,11 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     // third step
     formGroupThirdStep: FormGroup;
 
+    @Input() view: View;
     @Input() attributes: Attribute[];
 
-    constructor(private formBuilder: FormBuilder, private notificationsService: NotificationsService) { }
+    constructor(private formBuilder: FormBuilder, private notificationsService: NotificationsService,
+                private bulkEditService: BulkEditService) { }
 
     ngOnInit(): void {
         this.reset();
@@ -117,5 +121,9 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
             return ac;
         }, validationErrors);
         return error;
+    }
+
+    onFirstStepSubmit() {
+        this.bulkEditService.previewBuilEdit(this.view.id, this.changeClauses, this.whereClauses);
     }
 }
