@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {OperatorType, Rule} from '../../model/rule.model';
+import {Rule} from '../../model/rule.model';
+import {OperatorType} from '../../model/operator.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {RuleEditorDialogComponent, RuleEditorDialogComponentData} from './rule-editor-dialog.component';
 import {map} from 'rxjs/operators';

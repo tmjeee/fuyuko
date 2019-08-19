@@ -1,0 +1,44 @@
+<div class="attribute-operator-editor-component">
+    <form [formGroup]="formGroup">
+        <mat-form-field *ngIf="attributes">
+            <mat-label>Attribute</mat-label>
+            <mat-select (selectionChange)="onAttributeSelectionChange($event)" [formControl]="formControlAttribute">
+                <mat-option *ngFor="let attribute of attributes" [value]="attribute">{{attribute.name}}</mat-option>
+            </mat-select>
+            <mat-hint>Select attribute</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="operators">
+            <mat-label>Operator</mat-label>
+            <mat-select (selectionChange)="onOperatorSelectionChange($event)" [formControl]="formControlOperator">
+                <mat-option *ngFor="let operator of operators" [value]="operator">{{operator}}</mat-option>
+            </mat-select>
+            <mat-hint>Select operator</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="formControl">
+            <mat-label>Value</mat-label>
+            <input matInput [formControl]="formControl" (focusout)="onValueChange()">
+            <mat-hint>Enter value</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="formControl2">
+            <mat-label>Value</mat-label>
+            <input matInput [formControl]="formControl2" (focusout)="onValueChange()">
+            <mat-hint>Enter value</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="formControl3">
+            <mat-label>Value</mat-label>
+            <input matInput [formControl]="formControl3" (focusout)="onValueChange()">
+            <mat-hint>Enter value</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="formControl4">
+            <mat-label>Value</mat-label>
+            <input matInput [formControl]="formControl4" (focusout)="onValueChange()">
+            <mat-hint>Enter value</mat-hint>
+        </mat-form-field>
+    </form>
+
+</div>

@@ -1,13 +1,15 @@
 import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors} from '@angular/forms';
 import {Attribute} from '../../model/attribute.model';
-import {ItemValueAndAttribute} from '../../model/item-attribute.model';
+import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {NotificationsService} from 'angular2-notifications';
 import {Value} from '../../model/item.model';
 import {createNewItemValue} from '../../utils/ui-item-value-creator.utils';
 import {getItemAreaValue, hasItemValue} from '../../utils/ui-item-value-getter.util';
 import {BulkEditService} from '../../service/bulk-edit-service/bulk-edit.service';
 import {View} from '../../model/view.model';
+import {operatorNeedsItemValue, operatorsForAttribute} from '../../utils/attribute-operators.util';
+import {OperatorType} from '../../model/operator.model';
 
 @Component({
    selector: 'app-bulk-edit-wizard',
@@ -19,7 +21,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     // first step
     formGroupFirstStep: FormGroup;
     changeClauses: ItemValueAndAttribute[];
-    whereClauses: ItemValueAndAttribute[];
+    whereClauses: ItemValueOperatorAndAttribute[];
 
     // second step
     formGroupSecondStep: FormGroup;
@@ -67,7 +69,8 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
         this.formGroupFirstStep.updateValueAndValidity();
     }
 
-    onWhereClauseEvent(index: number, $event: ItemValueAndAttribute) {
+    onWhereClauseEvent(index: number, $event: ItemValueOperatorAndAttribute) {
+        console.log('************* onWhereClauseEvent', $event);
         this.whereClauses[index] = { ...$event };
         this.formGroupFirstStep.updateValueAndValidity();
     }
@@ -83,11 +86,13 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
             return;
         }
         const attribute: Attribute = this.attributes[0];
+        const operators: OperatorType[] = operatorsForAttribute(attribute);
         const val: Value = createNewItemValue(attribute);
         this.whereClauses.push({
-            attribute: this.attributes[0],
+            attribute,
+            operator: ((operators && operators.length > 0) ? operators[0] : undefined),
             itemValue: val
-        } as ItemValueAndAttribute);
+        } as ItemValueOperatorAndAttribute);
         this.formGroupFirstStep.updateValueAndValidity();
     }
 
@@ -98,8 +103,8 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
         this.formGroupFirstStep = this.formBuilder.group({});
         this.formGroupFirstStep.setValidators((control: AbstractControl): ValidationErrors | null  => {
             const errors: ValidationErrors = {};
-            this.fillErrors(this.changeClauses, errors);
-            this.fillErrors(this.whereClauses, errors);
+            this.fillErrors1(this.changeClauses, errors);
+            this.fillErrors2(this.whereClauses, errors);
             return errors;
         });
         this.formGroupSecondStep = this.formBuilder.group({});
@@ -108,8 +113,27 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
         this.addWhereClause();
     }
 
+    private fillErrors2(item: ItemValueOperatorAndAttribute[], validationErrors: ValidationErrors): ValidationErrors {
+        const error = item.reduce((ac: ValidationErrors, prev: ItemValueOperatorAndAttribute) => {
+            if (!prev.operator) {
+                ac.missingOperator = true;
+            } else {
+                const needsItemValue: boolean = operatorNeedsItemValue(prev.operator);
+                const r: boolean = hasItemValue(prev.attribute, prev.itemValue);
+                if (needsItemValue && !r) {
+                    ac.missingItemValue = true;
+                }
+            }
+            if (!prev.attribute) {
+                ac.missingAttribute = true;
+            }
+            return ac;
+        }, validationErrors);
+        return error;
+    }
 
-    private fillErrors(itemValueAndAttributes: ItemValueAndAttribute[], validationErrors: ValidationErrors): ValidationErrors {
+
+    private fillErrors1(itemValueAndAttributes: ItemValueAndAttribute[], validationErrors: ValidationErrors): ValidationErrors {
         const error = itemValueAndAttributes.reduce((ac: ValidationErrors, prev: ItemValueAndAttribute) => {
             const r: boolean = hasItemValue(prev.attribute, prev.itemValue);
             if (!r) {

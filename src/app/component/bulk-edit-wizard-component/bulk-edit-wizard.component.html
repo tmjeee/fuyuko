@@ -34,17 +34,17 @@
                         <mat-card-subtitle>Configure 'where' conditions where bulk edit would take place</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <div class="where-clause-entry" *ngFor="let itemValueAndAttribute of whereClauses; let i = index">
+                        <div class="where-clause-entry" *ngFor="let itemValueOperatorAndAttribute of whereClauses; let i = index">
                             <div class="controls">
                                 <button mat-icon-button color="primary" (click)="deleteWhereClause(i)">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </div>
-                            <app-data-editor-no-popup
-                                    (events)="onWhereClauseEvent(i, $event)"
-                                    [attributes]="attributes"
-                                    [itemValueAndAttribute]="itemValueAndAttribute">
-                            </app-data-editor-no-popup>
+                            <app-attribute-operator-editor
+                                [attributes]="attributes"
+                                [itemValueOperatorAndAttribute]="itemValueOperatorAndAttribute"
+                                (events)="onWhereClauseEvent(i, $event)">
+                            </app-attribute-operator-editor>
                         </div>
                         <div class="where-clause-controls">
                             <button mat-flat-button color="primary" type="button" (click)="addWhereClause()">Add where clause</button>

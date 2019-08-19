@@ -9,6 +9,7 @@ import {ItemAttributeValueAsStringPipe} from './item-attribute-value-as-string.p
 import {ItemEditorComponent} from './item-editor.component';
 import {ItemEditorDialogComponent} from './item-editor-dialog.component';
 import {DataEditorNoPopupComponent} from './data-editor-no-popup.component';
+import {AttributeOperatorEditorComponent} from './attribute-operator-editor.component';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import {DataEditorNoPopupComponent} from './data-editor-no-popup.component';
     ItemEditorComponent,
     ItemEditorDialogComponent,
     DataEditorNoPopupComponent,
+    AttributeOperatorEditorComponent,
   ],
   exports: [
     DataEditorComponent,
@@ -33,6 +35,7 @@ import {DataEditorNoPopupComponent} from './data-editor-no-popup.component';
     ItemEditorComponent,
     ItemEditorDialogComponent,
     DataEditorNoPopupComponent,
+    AttributeOperatorEditorComponent,
   ],
   entryComponents: [
     DataEditorDialogComponent,

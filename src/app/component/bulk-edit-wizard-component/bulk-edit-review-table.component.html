@@ -2,20 +2,20 @@
     <table mat-table [dataSource]="dataSource">
 
         <ng-container matColumnDef="when-header">
-            <th mat-header-cell *matHeaderCellDef colspan="{{whenAttribtues.length}}">When</th>
+            <th mat-header-cell *matHeaderCellDef [@attr.colspan]="whenAttribtues.length">When</th>
         </ng-container>
         <ng-container matColumnDef="change-header">
-            <th mat-header-cell *matHeaderCellDef colspan="{{(changeAttributes.length * 2)}}">Change</th>
+            <th mat-header-cell *matHeaderCellDef [@attr.colspan]="(changeAttributes.length * 2)">Change</th>
         </ng-container>
 
         <ng-container *ngFor="let whenAttribute of whenAttribtues">
             <ng-container matColumnDef="when-attributes-header">
-                <th mat-header-cell *matHeaderCellDef rowspan="2">{{whenAttribute.name}}</th>
+                <th mat-header-cell *matHeaderCellDef [@attr.rowspan]="2">{{whenAttribute.name}}</th>
             </ng-container>
         </ng-container>
         <ng-container *ngFor="let changeAttribute of changeAttributes">
             <ng-container matColumnDef="change-attribtues-header">
-                <th mat-header-cell *matHeaderCellDef colspan="2">{{changeAttribute.name}}</th>
+                <th mat-header-cell *matHeaderCellDef [@attr.colspan]="2">{{changeAttribute.name}}</th>
             </ng-container>
         </ng-container>
 

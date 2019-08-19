@@ -2,6 +2,7 @@ import {Component, Inject, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {Attribute} from '../../model/attribute.model';
 import {
+  OperatorType,
   AREA_OPERATOR_TYPES,
   CURRENCY_OPERATOR_TYPES,
   DATE_OPERATOR_TYPES,
@@ -10,16 +11,13 @@ import {
   HEIGHT_OPERATOR_TYPES,
   LENGTH_OPERATOR_TYPES,
   NUMBER_OPERATOR_TYPES,
-  OperatorType,
-  Rule,
   SELECT_OPERATOR_TYPES,
   STRING_OPERATOR_TYPES,
   TEXT_OPERATOR_TYPES,
-  ValidateClause,
   VOLUME_OPERATOR_TYPES,
-  WhenClause,
   WIDTH_OPERATOR_TYPES
-} from '../../model/rule.model';
+} from '../../model/operator.model';
+import {Rule, ValidateClause, WhenClause} from '../../model/rule.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import {CounterService} from '../../service/counter-service/counter.service';

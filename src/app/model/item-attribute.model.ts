@@ -1,5 +1,6 @@
 import {Item, TableItem, Value} from './item.model';
 import {Attribute} from './attribute.model';
+import {OperatorType} from './operator.model';
 
 export interface TableItemAndAttribute {
   attribute: Attribute;
@@ -13,6 +14,12 @@ export interface ItemAndAttributes {
 
 export interface ItemValueAndAttribute {
   itemValue: Value;
+  attribute: Attribute;
+}
+
+export interface ItemValueOperatorAndAttribute {
+  itemValue: Value;
+  operator: OperatorType;
   attribute: Attribute;
 }
 
