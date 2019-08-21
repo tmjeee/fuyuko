@@ -11,7 +11,7 @@ const ALL_RULES: Rule[] = [
     ],
     whenClauses: [
       { id: 3, attributeId: 1, attributeName: 'string attribute', attributeType: 'string', operator: 'eq',
-        condition: { type: 'string', value: 'aaaa'} as StringValue} as WhenClause
+        condition: { type: 'string', value: 'bbbb'} as StringValue} as WhenClause
     ]
   } as Rule,
 ];

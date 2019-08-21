@@ -19,41 +19,17 @@
     <div class="validate-controls">
       <button type="button" mat-flat-button color="primary" (click)="onAddRuleValidation($event)">Add Validate Clause</button>
     </div>
-    <div class="validate-clauses-section" *ngIf="formArrayValidateClauses.length > 0">
-      <div class="validate-clause-section" *ngFor="let formGroupValidateClause of formArrayValidateClauses.controls; let i = index">
-        <mat-form-field>
-          <mat-label>Attribute</mat-label>
-          <mat-select [formControl]="formGroupValidateClause.get('attribute')" (selectionChange)="onValidateAttributeChanged($event, formGroupValidateClause)">
-            <mat-option *ngFor="let attribute of attributes" [value]="attribute">
-              {{attribute.name}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="formGroupValidateClause.get('attribute')?.errors?.required">Attribute is required</mat-error>
-          <mat-hint>Attribute to validate</mat-hint>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Operator</mat-label>
-          <mat-select [formControl]="formGroupValidateClause.get('operator')">
-            <mat-option *ngFor="let operator of formGroupValidateClause['operators']" [value]="operator">
-              {{operator}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="formGroupValidateClause.get('operator')?.errors?.required">Operator is required</mat-error>
-          <mat-hint>Validation operator</mat-hint>
-        </mat-form-field>
-        <div class="mat-form-field" *ngIf="formGroupValidateClause['itemValueAndAttribute']">
-          <mat-label class="mat-caption mat-hint">Condition</mat-label>
-          <app-data-editor
-            *ngIf="formGroupValidateClause['itemValueAndAttribute']"
-            [itemValueAndAttribute]="formGroupValidateClause['itemValueAndAttribute']"
-            (events)="onValidateConditionChanged($event, formGroupValidateClause)">
-          </app-data-editor>
-          <mat-hint class="mat-hint mat-caption">Enter validate condition</mat-hint>
-        </div>
+    <div class="validate-clauses-section" *ngIf="validateClauses.length > 0">
+      <div class="validate-clause-section" *ngFor="let validateClause of validateClauses; let i = index">
+        <app-attribute-operator-editor
+                [attributes]="attributes"
+                [itemValueOperatorAndAttribute]="validateClause"
+                (events)="onValidateClauseChange($event, i)">
+        </app-attribute-operator-editor>
         <button type="button" mat-icon-button
                 matTooltip="Delete this when clause"
                 color="primary"
-                (click)="onDeleteRuleValidation($event, formGroupValidateClause)">
+                (click)="onDeleteRuleValidation($event, i, validateClause)">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
@@ -65,46 +41,26 @@
       <div class="when-controls">
         <button type="button" mat-flat-button color="primary" (click)="onAddRuleWhen($event)">Add When Clause</button>
       </div>
-      <div class="when-clauses-section" *ngIf="formArrayWhenClauses.length > 0">
-        <div class="when-clause-section" *ngFor="let formGroupWhenClause of formArrayWhenClauses.controls; let i = index">
-          <mat-form-field>
-            <mat-label>Attribute</mat-label>
-            <mat-select [formControl]="formGroupWhenClause.get('attribute')" (selectionChange)="onWhenAttributeChanged($event, formGroupWhenClause)">
-              <mat-option *ngFor="let attribute of attributes" [value]="attribute">
-                {{attribute.name}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="formGroupWhenClause.get('attribute')?.errors?.required">Attribute is required</mat-error>
-            <mat-hint>Attribute to validate</mat-hint>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Operator</mat-label>
-            <mat-select [formControl]="formGroupWhenClause.get('operator')">
-              <mat-option *ngFor="let operator of formGroupWhenClause['operators']" [value]="operator">
-                {{operator}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="formGroupWhenClause.get('operator')?.errors?.required">Operator is required</mat-error>
-            <mat-hint>Validation operator</mat-hint>
-          </mat-form-field>
-          <div class="mat-form-field" *ngIf="formGroupWhenClause['itemValueAndAttribute']">
-            <mat-label class="mat-hint mat-caption">Condition</mat-label>
-            <app-data-editor
-                             [itemValueAndAttribute]="formGroupWhenClause['itemValueAndAttribute']"
-                             (events)="onWhenConditionChanged($event, formGroupWhenClause)"></app-data-editor>
-            <mat-hint class="mat-hint mat-caption">Enter when Condition</mat-hint>
-          </div>
+      <div class="when-clauses-section" *ngIf="whenClauses.length > 0">
+        <div class="when-clause-section" *ngFor="let whenClause of whenClauses; let i = index">
+          <app-attribute-operator-editor
+              [attributes]="attributes"
+              [itemValueOperatorAndAttribute]="whenClause"
+              (events)="onWhenClauseChange($event, i)">
+          </app-attribute-operator-editor>
           <button mat-icon-button
                   matTooltip="delete this when clause"
-                  type="button" (click)="onDeleteRuleWhen($event, formGroupWhenClause)">
+                  color="primary"
+                  type="button" (click)="onDeleteRuleWhen($event, i, whenClause)">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
-    </div>
+  </div>
 
   <div class="main-controls">
     <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid">Done</button>
+    <button type="button" mat-flat-button color="primary" (click)="onCancel($event)">Cancel</button>
   </div>
   </form>
 </div>

@@ -21,7 +21,11 @@ import {Rule, ValidateClause, WhenClause} from '../../model/rule.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import {CounterService} from '../../service/counter-service/counter.service';
-import {ItemValueAndAttribute, TableItemAndAttribute} from '../../model/item-attribute.model';
+import {
+  ItemValueAndAttribute,
+  ItemValueOperatorAndAttribute,
+  TableItemAndAttribute
+} from '../../model/item-attribute.model';
 import {
   AreaValue,
   CurrencyValue,
@@ -34,12 +38,17 @@ import {
   TextValue,
   Value, VolumeValue, WidthValue
 } from '../../model/item.model';
-import {getItemStringValue} from '../../utils/ui-item-value-getter.util';
+import {getItemStringValue, hasItemValue} from '../../utils/ui-item-value-getter.util';
 import {HEIGHT_UNITS} from '../../model/unit.model';
+import {isItemValueOperatorAndAttributeValid} from "../../utils/item-value-operator-attribute.util";
 
 export interface RuleEditorDialogComponentData {
   attributes: Attribute[];
   rule: Rule;
+}
+
+export interface ItemValueOperatorAndAttributeWithId extends ItemValueOperatorAndAttribute{
+  id: number;
 }
 
 
@@ -54,37 +63,57 @@ export class RuleEditorDialogComponent implements OnInit {
   rule: Rule;
 
   formGroup: FormGroup;
-  formArrayValidateClauses: FormArray;
-  formArrayWhenClauses: FormArray;
+  validateClauses: ItemValueOperatorAndAttributeWithId[];
+  whenClauses: ItemValueOperatorAndAttributeWithId[];
 
   formControlName: FormControl;
   formControlDescription: FormControl;
 
+  counter: number;
 
   constructor(private matDialogRef: MatDialogRef<RuleEditorDialogComponent, Rule>,
               @Inject(MAT_DIALOG_DATA) data: RuleEditorDialogComponentData,
               private counterService: CounterService,
               private formBuilder: FormBuilder) {
+    this.counter = -1;
+    this.validateClauses = [];
+    this.whenClauses = [];
     this.attributes = data.attributes;
     this.rule = data.rule;
     this.formControlName = formBuilder.control('', [Validators.required]);
     this.formControlDescription = formBuilder.control('', [Validators.required]);
-    this.formArrayValidateClauses = formBuilder.array([]);
-    this.formArrayWhenClauses = formBuilder.array([]);
     this.formGroup = formBuilder.group({
       name: this.formControlName,
       description: this.formControlDescription,
-      validateClauses: this.formArrayValidateClauses,
-      whenClauses: this.formArrayWhenClauses
     });
     this.formGroup.setValidators([
       (c: AbstractControl): ValidationErrors | null => {
+        let hasError = false;
+        const validationErrors: ValidationErrors = {};
         const fg: FormGroup = (c as FormGroup);
-        if ((fg.controls.validateClauses && (fg.controls.validateClauses as FormArray)).length <= 0 ||
-            (fg.controls.whenClauses && (fg.controls.whenClauses as FormArray)).length <= 0) {
-          return { missing: true };
+        if (this.validateClauses.length <= 0) {
+          validationErrors.missingValidateClause = true;
+          hasError = true;
+        } else {
+          for (const validationClause of this.validateClauses) {
+            if (!isItemValueOperatorAndAttributeValid(validationClause)) {
+             validationErrors.badValidateClause = true;
+             hasError = true;
+            }
+          }
         }
-        return null;
+        if (this.whenClauses.length <= 0) {
+          validationErrors.missingWhenClause = true;
+          hasError = true;
+        } else {
+          for (const whenClause of this.whenClauses) {
+            if (!isItemValueOperatorAndAttributeValid(whenClause)) {
+              validationErrors.badValidateClause = true;
+              hasError = true;
+            }
+          }
+        }
+        return hasError ? validationErrors : null;
       }
     ]);
   }
@@ -94,76 +123,74 @@ export class RuleEditorDialogComponent implements OnInit {
       this.formControlName.setValue(this.rule.name);
       this.formControlDescription.setValue(this.rule.description);
       if (this.rule.validateClauses) {
-        this.rule.validateClauses.forEach((validateClause: ValidateClause) => {
-          const attribute: Attribute = this.attributes.find((a: Attribute) => a.id === validateClause.attributeId);
-          const validateClauseFormGroup: FormGroup = (this.formBuilder.group({
-            id: this.formBuilder.control(validateClause.id),
-            attribute: this.formBuilder.control(attribute, [Validators.required]),
-            operator: this.formBuilder.control(validateClause.operator, [Validators.required]),
-            condition: this.formBuilder.control(validateClause.condition, [Validators.required])
-          }));
-          this.updateOperatorsAndConditions(
+        this.rule.validateClauses.forEach((ruleValidateClause: ValidateClause) => {
+          const ruleId: number = ruleValidateClause.id;
+          const attribute: Attribute = this.attributes.find((a: Attribute) => a.id === ruleValidateClause.attributeId);
+          const operator: OperatorType = ruleValidateClause.operator;
+          const itemValue: Value = { attributeId: attribute.id, val: ruleValidateClause.condition} as Value;
+
+          this.validateClauses.push({
+            id: ruleId,
             attribute,
-            validateClause.operator,
-            validateClause.condition,
-            validateClauseFormGroup as FormGroup);
-          this.formArrayValidateClauses.push(validateClauseFormGroup);
+            operator,
+            itemValue
+          } as ItemValueOperatorAndAttributeWithId);
         });
       }
       if (this.rule.whenClauses) {
         this.rule.whenClauses.forEach((whenClause: WhenClause) => {
+          const ruleId: number = whenClause.id;
           const attribute: Attribute = this.attributes.find((a: Attribute) => a.id === whenClause.attributeId);
-          const whenClauseFormGroup: FormGroup = (this.formBuilder.group({
-            id: this.formBuilder.control(whenClause.id),
-            attribute: this.formBuilder.control(attribute, [Validators.required]),
-            operator: this.formBuilder.control(whenClause.operator, [Validators.required]),
-            condition: this.formBuilder.control(whenClause.condition, [Validators.required])
-          }));
-          this.updateOperatorsAndConditions(
+          const operator: OperatorType = whenClause.operator;
+          const itemValue: Value = { attributeId: attribute.id, val: whenClause.condition } as Value;
+
+          this.whenClauses.push({
+            id: ruleId,
             attribute,
-            whenClause.operator,
-            whenClause.condition,
-            whenClauseFormGroup as FormGroup);
-          this.formArrayWhenClauses.push(whenClauseFormGroup);
+            operator,
+            itemValue
+          } as ItemValueOperatorAndAttributeWithId);
         });
       }
     }
   }
 
   onAddRuleValidation($event: MouseEvent) {
-    this.formArrayValidateClauses.push(this.formBuilder.group({
-      id: this.counterService.nextNegativeNumber(),
-      attribute: this.formBuilder.control('', [Validators.required]),
-      operator: this.formBuilder.control('', [Validators.required]),
-      condition: this.formBuilder.control('', [Validators.required])
-    }));
+    const attribute: Attribute = null;
+    const operator: OperatorType = null;
+    const itemValue: Value = null;
+
+    this.validateClauses.push({
+      id: this.counter--,
+      attribute,
+      operator,
+      itemValue
+    } as ItemValueOperatorAndAttributeWithId);
+    this.formGroup.updateValueAndValidity();
   }
 
-  onDeleteRuleValidation($event: MouseEvent, formGroupValidateClause: AbstractControl) {
-    const index = this.formArrayValidateClauses.controls.findIndex((g: FormGroup) => {
-      return g.controls.id.value === (formGroupValidateClause as FormGroup).controls.id.value;
-    });
-    if (index !== -1) {
-      this.formArrayValidateClauses.removeAt(index);
-    }
+  onDeleteRuleValidation($event: MouseEvent, index: number, validateClause: ItemValueOperatorAndAttribute) {
+    this.validateClauses.splice(index, 1);
+    this.formGroup.updateValueAndValidity();
   }
 
   onAddRuleWhen($event: MouseEvent) {
-    this.formArrayWhenClauses.push(this.formBuilder.group({
-      id: this.counterService.nextNegativeNumber(),
-      attribute: this.formBuilder.control('', [Validators.required]),
-      operator: this.formBuilder.control('', [Validators.required]),
-      condition: this.formBuilder.control('', [Validators.required])
-    }));
+    const attribute: Attribute = null;
+    const operator: OperatorType = null;
+    const itemValue: Value = null;
+
+    this.whenClauses.push({
+      id: this.counter--,
+      attribute,
+      operator,
+      itemValue
+    } as ItemValueOperatorAndAttributeWithId);
+    this.formGroup.updateValueAndValidity();
   }
 
-  onDeleteRuleWhen($event: MouseEvent, formGroupWhenClause: AbstractControl) {
-    const index = this.formArrayWhenClauses.controls.findIndex((g: FormGroup) => {
-      return g.controls.id.value === (formGroupWhenClause as FormGroup).controls.id.value;
-    });
-    if (index !== -1) {
-      this.formArrayWhenClauses.removeAt(index);
-    }
+  onDeleteRuleWhen($event: MouseEvent, index: number, whenClause: ItemValueOperatorAndAttribute) {
+    this.whenClauses.splice(index, 1);
+    this.formGroup.updateValueAndValidity();
   }
 
   onSubmit() {
@@ -171,25 +198,25 @@ export class RuleEditorDialogComponent implements OnInit {
       id: this.rule.id,
       name: this.formControlName.value,
       description: this.formControlDescription.value,
-      validateClauses: this.formArrayValidateClauses.controls.reduce((acc: ValidateClause[], g: FormGroup) => {
+      validateClauses: this.validateClauses.reduce((acc: ValidateClause[], g: ItemValueOperatorAndAttributeWithId) => {
         acc.push({
-          id: g.controls.id.value,
-          attributeId: g.controls.attribute.value.id,
-          attributeName: g.controls.attribute.value.name,
-          attributeType: g.controls.attribute.value.type,
-          operator: g.controls.operator.value,
-          condition: (g as any).itemValueAndAttribute.itemValue.val
+          id: g.id,
+          attributeId: g.attribute.id,
+          attributeName: g.attribute.name,
+          attributeType: g.attribute.type,
+          operator: g.operator,
+          condition: g.itemValue.val
         } as ValidateClause);
         return acc;
       }, []),
-      whenClauses: this.formArrayWhenClauses.controls.reduce((acc: WhenClause[], g: FormGroup) => {
+      whenClauses: this.whenClauses.reduce((acc: WhenClause[], g: ItemValueOperatorAndAttributeWithId) => {
         acc.push({
-          id: g.controls.id.value,
-          attributeId: g.controls.attribute.value.id,
-          attributeName: g.controls.attribute.value.name,
-          attributeType: g.controls.attribute.value.type,
-          operator: g.controls.operator.value,
-          condition: (g as any).itemValueAndAttribute.itemValue.val
+          id: g.id,
+          attributeId: g.attribute.id,
+          attributeName: g.attribute.name,
+          attributeType: g.attribute.type,
+          operator: g.operator,
+          condition: g.itemValue.val
         } as ValidateClause);
         return acc;
       }, [])
@@ -197,221 +224,24 @@ export class RuleEditorDialogComponent implements OnInit {
     this.matDialogRef.close(r);
   }
 
-  onWhenAttributeChanged($event: MatSelectChange, formGroupWhenClause: AbstractControl) {
-    const attribute: Attribute = $event.value;
-    this._onWhenAttributeChanged(attribute, formGroupWhenClause);
-  }
-  _onWhenAttributeChanged(attribute: Attribute, formGroupWhenClause: AbstractControl) {
-    this.updateOperatorsAndConditions(attribute, null, null, formGroupWhenClause as FormGroup);
+
+  onWhenClauseChange($event: ItemValueOperatorAndAttribute, index: number) {
+    const i: ItemValueOperatorAndAttributeWithId = {
+      id: this.whenClauses[index].id,
+      ...$event as ItemValueOperatorAndAttribute } as ItemValueOperatorAndAttributeWithId;
+    this.whenClauses[index] = i;
+    this.formGroup.updateValueAndValidity();
   }
 
-  onValidateAttributeChanged($event: MatSelectChange, formGroupValidateClause: AbstractControl) {
-    const attribute: Attribute = $event.value;
-    this._onValidateAttributeChanged(attribute, formGroupValidateClause);
-  }
-  _onValidateAttributeChanged(attribute: Attribute, formGroupValidateClause: AbstractControl) {
-    this.updateOperatorsAndConditions(attribute, null, null, formGroupValidateClause as FormGroup);
-  }
-
-  private updateOperatorsAndConditions(attribute: Attribute, operator: OperatorType, condition: ItemValTypes, formGroup: FormGroup) {
-    (formGroup.get('operator')).setValue(operator ? operator : '');
-    (formGroup.get('condition')).setValue(condition ? condition : '');
-    switch (attribute.type) {
-      case 'string':
-        (formGroup as any).operators = STRING_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'string',
-              value: ''
-            } as StringValue
-          } as Value,
-        } as ItemValueAndAttribute;
-        break;
-      case 'text':
-        (formGroup as any).operators = TEXT_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'text',
-              value: ''
-            } as TextValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'number':
-        (formGroup as any).operators = NUMBER_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'number',
-              value: undefined,
-            } as NumberValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'date':
-        (formGroup as any).operators = DATE_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'date',
-              value: ''
-            } as DateValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'currency':
-        (formGroup as any).operators = CURRENCY_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'currency',
-              value: undefined,
-              country: undefined
-            } as CurrencyValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'area':
-        (formGroup as any).operators = AREA_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'area',
-              value: undefined,
-              unit: 'cm2'
-            } as AreaValue
-          } as Value,
-        } as ItemValueAndAttribute;
-        break;
-      case 'dimension':
-        (formGroup as any).operators = DIMENSION_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'dimension',
-              unit: undefined,
-              width: undefined,
-              height: undefined,
-              length: undefined
-            } as DimensionValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'volume':
-        (formGroup as any).operators = VOLUME_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'volume',
-              value: undefined,
-              unit: undefined
-            } as VolumeValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'width':
-        (formGroup as any).operators = WIDTH_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'width',
-              value: undefined,
-              unit: undefined
-            } as WidthValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'height':
-        (formGroup as any).operators = HEIGHT_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'height',
-              value: undefined,
-              unit: undefined,
-            } as HeightValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'length':
-        (formGroup as any).operators = LENGTH_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'length',
-              value: undefined,
-              unit: undefined
-            } as LengthValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'select':
-        (formGroup as any).operators = SELECT_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'select',
-              key: undefined,
-            } as SelectValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      case 'doubleselect':
-        (formGroup as any).operators = DOUBLE_SELECT_OPERATOR_TYPES;
-        (formGroup as any).itemValueAndAttribute = {
-          attribute,
-          itemValue: {
-            attributeId: attribute.id,
-            val: condition ? condition : {
-              type: 'doubleselect',
-              key1: undefined,
-              key2: undefined
-            } as DoubleSelectValue
-          } as Value
-        } as ItemValueAndAttribute;
-        break;
-      default:
-        throw new Error('unsupported attribute type');
-    }
+  onValidateClauseChange($event: ItemValueOperatorAndAttribute, index: number) {
+    const i: ItemValueOperatorAndAttributeWithId = {
+      id: this.validateClauses[index].id,
+      ...$event as ItemValueOperatorAndAttribute } as ItemValueOperatorAndAttributeWithId;
+    this.validateClauses[index] = i;
+    this.formGroup.updateValueAndValidity();
   }
 
-  onWhenConditionChanged($event: ItemValueAndAttribute, formGroupWhenClause: AbstractControl) {
-    const fg: FormGroup = formGroupWhenClause as FormGroup;
-    const itemValue: ItemValTypes = $event.itemValue.val;
-    (fg as any).itemValueAndAttribute = $event;
-    fg.controls.condition.setValue(itemValue);
-  }
-
-  onValidateConditionChanged($event: ItemValueAndAttribute, formGroupValidateClause: AbstractControl) {
-    const fg: FormGroup = formGroupValidateClause as FormGroup;
-    const itemValue: ItemValTypes = $event.itemValue.val;
-    (fg as any).itemValueAndAttribute = $event;
-    fg.controls.condition.setValue(itemValue);
+  onCancel($event: MouseEvent) {
+      this.matDialogRef.close(null);
   }
 }

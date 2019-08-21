@@ -54,16 +54,20 @@ export class RulesTableComponent {
     matDialogRef.afterClosed()
       .pipe(
         map((r: Rule) => {
-          this.events.emit({
-            type: 'edit',
-            rule: {...r}
-          } as RulesTableComponentEvent);
+          if (r) {
+            this.events.emit({
+              type: 'edit',
+              rule: {...r}
+            } as RulesTableComponentEvent);
+          }
         })
       ).subscribe();
   }
 
   onAddRule($event: MouseEvent) {
     const matDialogRef: MatDialogRef<RuleEditorDialogComponent, Rule> = this.matDialog.open(RuleEditorDialogComponent, {
+      minWidth: '60vw',
+      minHeight: '30vh',
       data: {
         attributes: this.attributes,
         rule: {
@@ -78,10 +82,12 @@ export class RulesTableComponent {
     matDialogRef.afterClosed()
       .pipe(
         map((r: Rule) => {
-          this.events.emit({
-            type: 'add',
-            rule: {...r}
-          } as RulesTableComponentEvent);
+          if (r) {
+            this.events.emit({
+              type: 'add',
+              rule: {...r}
+            } as RulesTableComponentEvent);
+          }
         })
       ).subscribe();
   }

@@ -88,6 +88,7 @@ export class AttributeOperatorEditorComponent implements OnInit {
     }
 
     reload() {
+        console.log('**** operator editor reload');
         this.formGroup = this.formBuilder.group({});
         this.formControlAttribute = this.formBuilder.control('', [Validators.required]);
         this.formControlOperator = this.formBuilder.control('', [Validators.required]);

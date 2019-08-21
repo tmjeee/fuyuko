@@ -44,4 +44,10 @@
       overflow-y: scroll;
     }
   }
+
+  .main-controls {
+    button:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
 }
