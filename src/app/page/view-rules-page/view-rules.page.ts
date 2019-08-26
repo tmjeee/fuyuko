@@ -88,6 +88,22 @@ export class ViewRulesPageComponent implements OnInit {
             })
           ).subscribe();
         break;
+        case 'enable':
+            this.ruleService.enableRule($event.rule)
+                .pipe(
+                    map((r: Rule) => {
+                        this.reload();
+                    })
+                ).subscribe();
+            break;
+        case 'disable':
+            this.ruleService.disableRule($event.rule)
+                .pipe(
+                    map((r: Rule) => {
+                        this.reload();
+                    })
+                ).subscribe();
+            break;
     }
   }
 }

@@ -28,7 +28,7 @@ import {
     WidthValue
 } from '../../model/item.model';
 import {convertToString} from '../../utils/ui-item-value-converters.util';
-import {MatSelectChange} from '@angular/material';
+import {MatDatepickerInputEvent, MatSelectChange} from '@angular/material';
 import {
     setItemAreaValue,
     setItemCurrencyValue,
@@ -88,7 +88,6 @@ export class AttributeOperatorEditorComponent implements OnInit {
     }
 
     reload() {
-        console.log('**** operator editor reload');
         this.formGroup = this.formBuilder.group({});
         this.formControlAttribute = this.formBuilder.control('', [Validators.required]);
         this.formControlOperator = this.formBuilder.control('', [Validators.required]);
@@ -221,6 +220,11 @@ export class AttributeOperatorEditorComponent implements OnInit {
         this.itemValue = null;
         this.reload();
         this.emitEvent();
+    }
+
+
+    onDateChange($event: MatDatepickerInputEvent<any>) {
+        this.onValueChange();
     }
 
     onValueChange() {

@@ -7,7 +7,7 @@ import {map} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
 
 export interface RulesTableComponentEvent {
-  type: 'add' | 'edit' | 'delete';
+  type: 'add' | 'edit' | 'delete' | 'enable' | 'disable';
   rule: Rule;
 }
 
@@ -94,5 +94,19 @@ export class RulesTableComponent {
 
   findAttribute(attributeId: number): Attribute {
     return this.attributes.find((a: Attribute) => a.id === attributeId);
+  }
+
+  onEnableRule($event: MouseEvent, rule: Rule) {
+      this.events.emit({
+        type: 'enable',
+        rule
+      } as RulesTableComponentEvent);
+  }
+
+  onDisableRule($event: MouseEvent, rule: Rule) {
+    this.events.emit({
+      type: 'disable',
+      rule
+    } as RulesTableComponentEvent);
   }
 }
