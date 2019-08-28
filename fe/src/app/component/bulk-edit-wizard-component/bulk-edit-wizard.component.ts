@@ -10,6 +10,10 @@ import {BulkEditService} from '../../service/bulk-edit-service/bulk-edit.service
 import {View} from '../../model/view.model';
 import {operatorNeedsItemValue, operatorsForAttribute} from '../../utils/attribute-operators.util';
 import {OperatorType} from '../../model/operator.model';
+import {BulkEditItem, BulkEditPackage, BulkEditTableItem} from '../../model/bulk-edit.model';
+import {tap} from 'rxjs/operators';
+import {toBulkEditTableItem} from '../../utils/item-to-table-items.util';
+import {StepperSelectionEvent} from '@angular/cdk/stepper';
 
 @Component({
    selector: 'app-bulk-edit-wizard',
@@ -25,6 +29,9 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     // second step
     formGroupSecondStep: FormGroup;
+    secondStepReady: boolean;
+    bulkEditPackage: BulkEditPackage;
+    bulkEditTableItems: BulkEditTableItem[];
 
     // third step
     formGroupThirdStep: FormGroup;
@@ -32,8 +39,11 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     @Input() view: View;
     @Input() attributes: Attribute[];
 
-    constructor(private formBuilder: FormBuilder, private notificationsService: NotificationsService,
-                private bulkEditService: BulkEditService) { }
+    constructor(private formBuilder: FormBuilder,
+                private notificationsService: NotificationsService,
+                private bulkEditService: BulkEditService) {
+        this.secondStepReady = false;
+    }
 
     ngOnInit(): void {
         this.reset();
@@ -148,6 +158,22 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     }
 
     onFirstStepSubmit() {
-        this.bulkEditService.previewBuilEdit(this.view.id, this.changeClauses, this.whereClauses);
+        this.secondStepReady = false;
+        this.bulkEditService
+            .previewBuilEdit(this.view.id, this.changeClauses, this.whereClauses)
+            .pipe(
+                tap((b: BulkEditPackage) => {
+                   this.bulkEditPackage = b;
+                   if (this.bulkEditPackage) {
+                       const bulkEditItems: BulkEditItem[] = this.bulkEditPackage.bulkEditItems;
+                       this.bulkEditTableItems  = toBulkEditTableItem(bulkEditItems);
+                       this.secondStepReady = true;
+                   }
+                })
+            ).subscribe();
+    }
+
+    onStepperSelectionChange($event: StepperSelectionEvent) {
+
     }
 }
