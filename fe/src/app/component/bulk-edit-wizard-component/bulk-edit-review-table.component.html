@@ -2,47 +2,49 @@
     <table mat-table [dataSource]="dataSource">
 
         <ng-container matColumnDef="when-header">
-            <th mat-header-cell *matHeaderCellDef [@attr.colspan]="whenAttribtues.length">When</th>
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="whenAttribtues.length">When</th>
         </ng-container>
         <ng-container matColumnDef="change-header">
-            <th mat-header-cell *matHeaderCellDef [@attr.colspan]="(changeAttributes.length * 2)">Change</th>
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="(changeAttributes.length * 2)">Change</th>
         </ng-container>
 
         <ng-container *ngFor="let whenAttribute of whenAttribtues">
-            <ng-container matColumnDef="when-attributes-header">
-                <th mat-header-cell *matHeaderCellDef [@attr.rowspan]="2">{{whenAttribute.name}}</th>
+            <ng-container matColumnDef="when-attributes-header-{{whenAttribute.id}}">
+                <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">{{whenAttribute.name}}</th>
             </ng-container>
         </ng-container>
         <ng-container *ngFor="let changeAttribute of changeAttributes">
-            <ng-container matColumnDef="change-attribtues-header">
-                <th mat-header-cell *matHeaderCellDef [@attr.colspan]="2">{{changeAttribute.name}}</th>
+            <ng-container matColumnDef="change-attributes-header-{{changeAttribute.id}}">
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">{{changeAttribute.name}}</th>
             </ng-container>
         </ng-container>
 
         <ng-container *ngFor="let changeAttribute of changeAttributes">
-            <ng-container matColumnDef="change-old-new-values-header">
+            <ng-container matColumnDef="change-old-values-header-{{changeAttribute.id}}">
                 <th mat-header-cell *matHeaderCellDef>Old</th>
+            </ng-container>
+            <ng-container matColumnDef="change-new-values-header-{{changeAttribute.id}}">
                 <th mat-header-cell *matHeaderCellDef>New</th>
             </ng-container>
         </ng-container>
 
         <ng-container *ngFor="let whenAttribute of whenAttribtues">
-            <ng-container matColumnDef="''+whenAttribute.id">
-                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.whens[whenAttribute.id] | itemAttributeValueAsString}}</td>
+            <ng-container matColumnDef="{{whenAttribute.id}}">
+                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.whens[whenAttribute.id] | itemAttributeValueAsString:whenAttribute}}</td>
             </ng-container>
         </ng-container>
         <ng-container *ngFor="let changeAttribute of changeAttributes">
-            <ng-container matColumnDef="'old-'+changeAttribute.id">
-                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.changes[changeAttribute.id].old | itemAttributeValueAsString}}</td>
+            <ng-container matColumnDef="old-{{changeAttribute.id}}">
+                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.changes[changeAttribute.id]?.old | itemAttributeValueAsString:changeAttribute}}</td>
             </ng-container>
-            <ng-container matColumnDef="'new-'+changeAttribute.id">
-                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.changes[changeAttribute.id].new | itemAttributeValueAsString}}</td>
+            <ng-container matColumnDef="new-{{changeAttribute.id}}">
+                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.changes[changeAttribute.id]?.new | itemAttributeValueAsString:changeAttribute}}</td>
             </ng-container>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="['when-header', 'change-header']"></tr>
-        <tr mat-header-row *matHeaderRowDef="['when-attributes-header', 'change-attributes-header']"></tr>
-        <tr mat-header-row *matHeaderRowDef="['change-old-new-values-header']"></tr>
+        <tr mat-header-row *matHeaderRowDef="attributeHeaderColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="changeOldNewValuesHeaderColumns"></tr>
         <tr mat-row *matRowDef="let bulkEditTableItem; columns: displayedColumns"></tr>
 
     </table>

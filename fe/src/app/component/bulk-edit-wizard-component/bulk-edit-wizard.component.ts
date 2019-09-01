@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors} from '@angular/forms';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
@@ -14,6 +14,7 @@ import {BulkEditItem, BulkEditPackage, BulkEditTableItem} from '../../model/bulk
 import {tap} from 'rxjs/operators';
 import {toBulkEditTableItem} from '../../utils/item-to-table-items.util';
 import {StepperSelectionEvent} from '@angular/cdk/stepper';
+import {MatStepper} from '@angular/material';
 
 @Component({
    selector: 'app-bulk-edit-wizard',
@@ -21,6 +22,10 @@ import {StepperSelectionEvent} from '@angular/cdk/stepper';
    styleUrls: ['./bulk-edit-wizard.component.scss']
 })
 export class BulkEditWizardComponent implements OnInit, OnChanges {
+
+    editable: boolean;  // when in othird steps, all other steps are not editable
+
+    @ViewChild('stepper', { static: false}) stepper: MatStepper;
 
     // first step
     formGroupFirstStep: FormGroup;
@@ -43,6 +48,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
                 private notificationsService: NotificationsService,
                 private bulkEditService: BulkEditService) {
         this.secondStepReady = false;
+        this.editable = true;
     }
 
     ngOnInit(): void {
@@ -158,6 +164,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     }
 
     onFirstStepSubmit() {
+        console.log('***************** onFirstStepSubmit');
         this.secondStepReady = false;
         this.bulkEditService
             .previewBuilEdit(this.view.id, this.changeClauses, this.whereClauses)
@@ -167,6 +174,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
                    if (this.bulkEditPackage) {
                        const bulkEditItems: BulkEditItem[] = this.bulkEditPackage.bulkEditItems;
                        this.bulkEditTableItems  = toBulkEditTableItem(bulkEditItems);
+                       console.log ('*******************', this.bulkEditTableItems);
                        this.secondStepReady = true;
                    }
                 })
@@ -174,7 +182,17 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     }
 
     onStepperSelectionChange($event: StepperSelectionEvent) {
-        console.log('********** stepperselection event', $event);
+    }
 
+    onSecondStepSubmit() {
+        this.editable = false;
+        // todo:
+        this.bulkEditService
+            .scheduleBulkEdit(this.view.id, this.changeClauses, this.whereClauses)
+            // .pipe().subscribe();
+    }
+
+    onThirdStepSubmit() {
+        this.stepper.reset();
     }
 }

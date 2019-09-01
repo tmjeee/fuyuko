@@ -32,15 +32,27 @@ export class BulkEditReviewTableComponent implements OnInit {
     @Input() changeAttributes: Attribute[];
     @Input() whenAttribtues: Attribute[];
     @Input() bulkEditTableItem: BulkEditTableItem[];
+    attributeHeaderColumns: string[];
+    changeOldNewValuesHeaderColumns: string[];
     displayedColumns: string[];
-    datasource: BulkEditReviewTableDataSource;
+    dataSource: BulkEditReviewTableDataSource;
 
     constructor() {
         this.displayedColumns = [];
-        this.datasource = new BulkEditReviewTableDataSource();
+        this.attributeHeaderColumns = [];
+        this.changeOldNewValuesHeaderColumns = [];
+        this.dataSource = new BulkEditReviewTableDataSource();
     }
 
     ngOnInit(): void {
+        this.attributeHeaderColumns = [
+            ...this.whenAttribtues.map((wa: Attribute) => `when-attributes-header-${wa.id}`),
+            ...this.changeAttributes.map((ca: Attribute) => `change-attributes-header-${ca.id}`)
+        ];
+        this.changeAttributes.forEach((ca: Attribute) => {
+            this.changeOldNewValuesHeaderColumns.push(`change-old-values-header-${ca.id}`);
+            this.changeOldNewValuesHeaderColumns.push(`change-new-values-header-${ca.id}`);
+        });
         this.displayedColumns = [
             ...this.whenAttribtues.map((wa: Attribute) => '' + wa.id),
         ];
@@ -48,7 +60,7 @@ export class BulkEditReviewTableComponent implements OnInit {
             this.displayedColumns.push(`old-${ca.id}`);
             this.displayedColumns.push(`new-${ca.id}`);
         });
-        this.datasource.update(this.bulkEditTableItem);
+        this.dataSource.update(this.bulkEditTableItem);
     }
 
 

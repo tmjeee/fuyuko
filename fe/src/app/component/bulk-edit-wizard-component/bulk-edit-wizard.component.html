@@ -1,5 +1,5 @@
 <div class="bulk-edit-wizard-component">
-    <mat-horizontal-stepper [linear]="false" (selectionChange)="onStepperSelectionChange($event)">
+    <mat-horizontal-stepper #stepper [linear]="true" (selectionChange)="onStepperSelectionChange($event)">
         <!-- 1] First step -->
         <mat-step [stepControl]="formGroupFirstStep">
             <ng-template matStepLabel>Conditions for builk edit</ng-template>
@@ -63,7 +63,7 @@
 
         <!-- 2] Second Step -->
         <mat-step>
-            <ng-template matStepLabel>Review bulk edis</ng-template>
+            <ng-template matStepLabel>Review bulk edit</ng-template>
             <ng-container *ngIf="!secondStepReady">Loading ...</ng-container>
             <ng-container *ngIf="secondStepReady">
                 <app-bulk-edit-review-table
@@ -71,11 +71,11 @@
                         [changeAttributes]="bulkEditPackage.changeAttributes"
                         [bulkEditTableItem]="bulkEditTableItems">
                 </app-bulk-edit-review-table>
-                <form [formGroup]="formGroupSecondStep">
+                <form [formGroup]="formGroupSecondStep" (ngSubmit)="onSecondStepSubmit()">
                     <mat-divider></mat-divider>
                     <div class="wizard-controls">
                         <button type="submit" mat-flat-button matStepperPrevious color="primary">Previous</button>
-                        <button type="submit" mat-flat-button matStepperNext color="primary">Next</button>
+                        <button type="button" mat-flat-button matStepperNext color="primary">Confirm</button>
                     </div>
                 </form>
             </ng-container>
@@ -83,7 +83,12 @@
 
         <!-- 3] Final Step -->
         <mat-step>
+            <ng-template matStepLabel>Run bulk edit</ng-template>
+            <form [formGroup="formGroupThirdStep" (ngSubmit)="onThirdStepSubmit()">
+                <div class="wizard-controls">
 
+                </div>
+            </form>
         </mat-step>
 
     </mat-horizontal-stepper>
