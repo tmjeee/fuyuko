@@ -1,7 +1,7 @@
 <div class="bulk-edit-wizard-component">
     <mat-horizontal-stepper #stepper [linear]="true" (selectionChange)="onStepperSelectionChange($event)">
         <!-- 1] First step -->
-        <mat-step [stepControl]="formGroupFirstStep">
+        <mat-step [stepControl]="formGroupFirstStep" [editable]="editable">
             <ng-template matStepLabel>Conditions for builk edit</ng-template>
             <form [formGroup]="formGroupFirstStep" (ngSubmit)="onFirstStepSubmit()">
                 <mat-card>
@@ -62,7 +62,7 @@
 
 
         <!-- 2] Second Step -->
-        <mat-step>
+        <mat-step [stepControl]="formGroupSecondStep" [editable]="editable">
             <ng-template matStepLabel>Review bulk edit</ng-template>
             <ng-container *ngIf="!secondStepReady">Loading ...</ng-container>
             <ng-container *ngIf="secondStepReady">
@@ -82,11 +82,11 @@
         </mat-step>
 
         <!-- 3] Final Step -->
-        <mat-step>
+        <mat-step [stepControl]="formGroupThirdStep" [editable]="false">
             <ng-template matStepLabel>Run bulk edit</ng-template>
             <form [formGroup="formGroupThirdStep" (ngSubmit)="onThirdStepSubmit()">
                 <div class="wizard-controls">
-
+                    <button type="submit" mat-flat-button matStepperPrevious color="primary">Done</button>
                 </div>
             </form>
         </mat-step>

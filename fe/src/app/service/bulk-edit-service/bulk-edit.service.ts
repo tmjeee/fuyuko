@@ -67,8 +67,4 @@ export class BulkEditService {
         Observable<BulkEditPackage> {
         return of({...BULK_EDIT_PREVIEW});
     }
-
-    scheduleBulkEdit(viewId: number, changeClauses: ItemValueAndAttribute[], whereClauses: ItemValueOperatorAndAttribute[]) {
-
-    }
 }

@@ -15,6 +15,7 @@ import {tap} from 'rxjs/operators';
 import {toBulkEditTableItem} from '../../utils/item-to-table-items.util';
 import {StepperSelectionEvent} from '@angular/cdk/stepper';
 import {MatStepper} from '@angular/material';
+import {JobsService} from '../../service/jobs-service/jobs.service';
 
 @Component({
    selector: 'app-bulk-edit-wizard',
@@ -46,7 +47,8 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     constructor(private formBuilder: FormBuilder,
                 private notificationsService: NotificationsService,
-                private bulkEditService: BulkEditService) {
+                private bulkEditService: BulkEditService,
+                private jobsService: JobsService) {
         this.secondStepReady = false;
         this.editable = true;
     }
@@ -187,8 +189,8 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     onSecondStepSubmit() {
         this.editable = false;
         // todo:
-        this.bulkEditService
-            .scheduleBulkEdit(this.view.id, this.changeClauses, this.whereClauses)
+        this.jobsService
+            .scheduleBulkEditJob(this.view.id, this.changeClauses, this.whereClauses)
             // .pipe().subscribe();
     }
 
