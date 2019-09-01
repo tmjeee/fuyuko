@@ -92,6 +92,9 @@ import {ViewModule} from './component/view-component/view.module';
 import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
 import {DATE_FORMAT} from './model/item.model';
 import {BulkEditService} from "./service/bulk-edit-service/bulk-edit.service";
+import {JobsPageComponent} from './page/jobs-page/jobs.page';
+import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
+import {JobsService} from './service/jobs-service/jobs.service';
 
 @NgModule({
   declarations: [
@@ -137,6 +140,8 @@ import {BulkEditService} from "./service/bulk-edit-service/bulk-edit.service";
     ViewDataListPageComponent,
     ViewRulesPageComponent,
     ViewViewsPageComponent,
+    JobsPageComponent,
+    JobsHelpPageComponent,
     ErrorPageComponent,
 
     // components
@@ -199,6 +204,7 @@ import {BulkEditService} from "./service/bulk-edit-service/bulk-edit.service";
     {provide: RuleService, useClass: RuleService} as Provider,
     {provide: CounterService, useClass: CounterService} as Provider,
     {provide: BulkEditService, useClass: BulkEditService} as Provider,
+    {provide: JobsService, useClass: JobsService} as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,

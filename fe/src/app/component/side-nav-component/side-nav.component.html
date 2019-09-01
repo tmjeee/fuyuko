@@ -91,6 +91,16 @@
     </mat-icon>
   </div>
 
+  <!-- jobs -->
+  <div [class.selected]="routeSideNavData === 'jobs'">
+    <mat-icon class="action"
+              matTooltipPosition="after"
+              matTooltip="Jobs"
+              [routerLink]="['/gen-layout', {outlets:{primary:['jobs'], help:['jobs-help']}}]">
+        schedule
+    </mat-icon>
+  </div>
+
   <!-- help center -->
   <div [class.selected]="routeSideNavData === 'help-center'">
     <mat-icon class="action"

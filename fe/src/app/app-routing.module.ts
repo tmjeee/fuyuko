@@ -39,6 +39,8 @@ import {ViewDataListPageComponent} from './page/view-data-list-page/view-data-li
 import {ViewViewsPageComponent} from './page/view-views-page/view-views.page';
 import {AuthGuard} from './guard/auth-guard/auth.guard';
 import {ErrorPageComponent} from './page/error-page/error.page';
+import {JobsPageComponent} from './page/jobs-page/jobs.page';
+import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
 
 const routes: Routes = [
 
@@ -345,6 +347,22 @@ const routes: Routes = [
        component: BulkEditHelpPageComponent,
        outlet: 'help'
      } as Route,
+
+     // jobs
+     {
+       path: 'jobs',
+       canActivate: [AuthGuard],
+       component: JobsPageComponent,
+       data: {
+         sideNav: 'jobs',
+       } as Route
+     },
+     {
+       path: 'jobs-help',
+       canActivate: [AuthGuard],
+       component: JobsHelpPageComponent,
+       outlet: 'help',
+     } as Route
    ]
  } as Route,
  {
