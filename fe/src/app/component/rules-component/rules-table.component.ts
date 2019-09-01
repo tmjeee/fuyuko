@@ -40,7 +40,6 @@ export class RulesTableComponent {
   }
 
   onEditRule($event: MouseEvent, rule: Rule) {
-    console.log('**** on edit rule', rule);
     $event.stopImmediatePropagation();
     $event.preventDefault();
     const matDialogRef: MatDialogRef<RuleEditorDialogComponent, Rule> = this.matDialog.open(RuleEditorDialogComponent, {
@@ -97,6 +96,8 @@ export class RulesTableComponent {
   }
 
   onEnableRule($event: MouseEvent, rule: Rule) {
+    $event.stopImmediatePropagation();
+    $event.preventDefault();
       this.events.emit({
         type: 'enable',
         rule
@@ -104,6 +105,8 @@ export class RulesTableComponent {
   }
 
   onDisableRule($event: MouseEvent, rule: Rule) {
+    $event.stopImmediatePropagation();
+    $event.preventDefault();
     this.events.emit({
       type: 'disable',
       rule

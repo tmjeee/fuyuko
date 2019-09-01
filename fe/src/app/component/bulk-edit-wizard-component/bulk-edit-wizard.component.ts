@@ -174,6 +174,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     }
 
     onStepperSelectionChange($event: StepperSelectionEvent) {
+        console.log('********** stepperselection event', $event);
 
     }
 }
