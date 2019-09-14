@@ -51,16 +51,6 @@
     </mat-icon>
   </div>
 
-  <!-- clone -->
-  <div [class.selected]="routeSideNavData === 'clone'">
-    <mat-icon class="action"
-              matTooltipPosition="after"
-              matTooltip="Clone Data"
-              [routerLink]="['/gen-layout', {outlets:{primary:['clone'], help:['clone-help'] }}]">
-      file_copy
-    </mat-icon>
-  </div>
-
   <!-- bulk edit -->
   <div [class.selected]="routeSideNavData === 'bulk-edit'">
     <mat-icon class="action"

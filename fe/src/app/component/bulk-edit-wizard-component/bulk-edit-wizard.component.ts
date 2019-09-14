@@ -16,6 +16,8 @@ import {toBulkEditTableItem} from '../../utils/item-to-table-items.util';
 import {StepperSelectionEvent} from '@angular/cdk/stepper';
 import {MatStepper} from '@angular/material';
 import {JobsService} from '../../service/jobs-service/jobs.service';
+import {Job, JobAndLogs} from '../../model/job.model';
+import {Observable} from 'rxjs';
 
 @Component({
    selector: 'app-bulk-edit-wizard',
@@ -41,6 +43,8 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     // third step
     formGroupThirdStep: FormGroup;
+    job: Job;  // bulk edit job
+    fetchFn: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
 
     @Input() view: View;
     @Input() attributes: Attribute[];
@@ -55,6 +59,11 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.reset();
+        this.fetchFn = this.f.bind(this);
+    }
+
+    f(jobId: number, lastLogId: number): Observable<JobAndLogs> {
+        return this.jobsService.jobLogs(jobId, lastLogId);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -116,6 +125,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
 
     private reset(): void {
+        this.job = undefined;
         this.changeClauses = [];
         this.whereClauses = [];
         this.formGroupFirstStep = this.formBuilder.group({});
@@ -191,7 +201,11 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
         // todo:
         this.jobsService
             .scheduleBulkEditJob(this.view.id, this.changeClauses, this.whereClauses)
-            // .pipe().subscribe();
+            .pipe(
+                tap((j: Job) => {
+                    this.job = j;
+                })
+            ).subscribe();
     }
 
     onThirdStepSubmit() {

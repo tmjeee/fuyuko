@@ -1,0 +1,22 @@
+<div class="jobs-listings-component">
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let job of jobs"
+                             (clonsed)="onExpansionPanelClosed(job)"
+                             (opened)="onExpansionPanelOpened(job)">
+            <mat-expansion-panel-header>
+                <mat-panel-title>{{job.name}} (#{{job.id}})</mat-panel-title>
+                <mat-panel-description>
+                    <div>
+                       <div>Status: {{job.status}}</div>
+                       <div>Creation Date: {{job.creationDate | date:'medium'}}</div>
+                       <div>Last Update: {{job.lastUpdate | date:'medium'}}</div>
+                    </div>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <app-job-details [job]="job"
+                             [fetchFn]="fetchFn"
+                             [fetch]="fetch(job)">
+            </app-job-details>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

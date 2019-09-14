@@ -13,13 +13,11 @@ import {BackgroundImageService} from './service/background-image-service/backgro
 import {RegisterPageComponent} from './page/register-page/register.page';
 import {GenLayoutComponent} from './layout/gen-layout/gen.layout';
 import {BulkEditPageComponent} from './page/bulk-edit-page/bulk-edit.page';
-import {ClonePageComponent} from './page/clone-page/clone.page';
 import {HelpCenterPageComponent} from './page/help-center-page/help-center.page';
 import {ProfilePageComponent} from './page/profile-page/profile.page';
 import {SettingsPageComponent} from './page/settings-page/settings.page';
 import {FileNotFoundPageComponent} from './page/file-not-found-page/file-not-found.page';
 import {BulkEditHelpPageComponent} from './page/bulk-edit-help-page/bulk-edit-help.page';
-import {CloneHelpPageComponent} from './page/clone-help-page/clone-help.page';
 import {HelpCenterHelpPageComponent} from './page/help-center-help-page/help-center-help.page';
 import {ProfileHelpPageComponent} from './page/profile-help-page/profile-help.page';
 import {SettingsHelpPageComponent} from './page/settings-help-page/settings-help.page';
@@ -95,6 +93,8 @@ import {BulkEditService} from "./service/bulk-edit-service/bulk-edit.service";
 import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
 import {JobsService} from './service/jobs-service/jobs.service';
+import {JobsModule} from './component/jobs-component/jobs.module';
+import {UtilsModule} from './utils/utils.module';
 
 @NgModule({
   declarations: [
@@ -116,8 +116,6 @@ import {JobsService} from './service/jobs-service/jobs.service';
     RegisterPageComponent,
     BulkEditPageComponent,
     BulkEditHelpPageComponent,
-    ClonePageComponent,
-    CloneHelpPageComponent,
     HelpCenterPageComponent,
     HelpCenterHelpPageComponent,
     ProfilePageComponent,
@@ -165,6 +163,7 @@ import {JobsService} from './service/jobs-service/jobs.service';
     AppRoutingModule,
     AppMaterialsModule,
     AngularFileUploaderModule,
+    UtilsModule,
     SimpleNotificationsModule.forRoot({
       position: ['bottom', 'center'],
       timeOut: 2000,
@@ -189,6 +188,7 @@ import {JobsService} from './service/jobs-service/jobs.service';
     CarouselModule,
     ViewModule,
     BulkEditWizardModule,
+    JobsModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,

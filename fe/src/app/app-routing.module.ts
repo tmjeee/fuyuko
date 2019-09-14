@@ -7,14 +7,12 @@ import {GenLayoutComponent} from './layout/gen-layout/gen.layout';
 import {FileNotFoundPageComponent} from './page/file-not-found-page/file-not-found.page';
 import {ProfilePageComponent} from './page/profile-page/profile.page';
 import {SettingsPageComponent} from './page/settings-page/settings.page';
-import {ClonePageComponent} from './page/clone-page/clone.page';
 import {BulkEditPageComponent} from './page/bulk-edit-page/bulk-edit.page';
 import {HelpCenterPageComponent} from './page/help-center-page/help-center.page';
 import {ProfileHelpPageComponent} from './page/profile-help-page/profile-help.page';
 import {UserHelpPageComponent} from './page/user-help-page/user-help.page';
 import {ViewHelpPageComponent} from './page/view-help-page/view-help.page';
 import {SettingsHelpPageComponent} from './page/settings-help-page/settings-help.page';
-import {CloneHelpPageComponent} from './page/clone-help-page/clone-help.page';
 import {BulkEditHelpPageComponent} from './page/bulk-edit-help-page/bulk-edit-help.page';
 import {HelpCenterHelpPageComponent} from './page/help-center-help-page/help-center-help.page';
 import {ImportExportHelpPageComponent} from './page/import-export-help-page/import-export-help.page';
@@ -313,22 +311,6 @@ const routes: Routes = [
        path: 'settings-help',
        canActivate: [AuthGuard],
        component: SettingsHelpPageComponent,
-       outlet: 'help'
-     } as Route,
-
-     // clone
-     {
-       path: 'clone',
-       canActivate: [AuthGuard],
-       component: ClonePageComponent,
-       data: {
-         sideNav: 'clone'
-       }
-     } as Route,
-     {
-       path: 'clone-help',
-       canActivate: [AuthGuard],
-       component: CloneHelpPageComponent,
        outlet: 'help'
      } as Route,
 

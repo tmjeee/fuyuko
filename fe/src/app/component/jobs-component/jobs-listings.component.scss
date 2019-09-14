@@ -1,0 +1,13 @@
+.jobs-listings-component {
+  ::ng-deep {
+    mat-accordion {
+      mat-expansion-panel {
+        mat-expansion-panel-header {
+          margin: 10px;
+        }
+      }
+    }
+  }
+
+}
+

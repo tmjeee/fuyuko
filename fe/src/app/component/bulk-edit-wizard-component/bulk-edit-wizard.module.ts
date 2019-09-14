@@ -6,6 +6,7 @@ import {AppMaterialsModule} from '../../app-materials.module';
 import {BulkEditWizardComponent} from './bulk-edit-wizard.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {BulkEditReviewTableComponent} from './bulk-edit-review-table.component';
+import {JobsModule} from '../jobs-component/jobs.module';
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import {BulkEditReviewTableComponent} from './bulk-edit-review-table.component';
         ReactiveFormsModule,
         AppMaterialsModule,
         DataEditorModule,
+        JobsModule,
     ],
     declarations: [
         BulkEditWizardComponent,
