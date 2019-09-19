@@ -89,12 +89,14 @@ import {CarouselModule} from './component/carousel-component/carousel.module';
 import {ViewModule} from './component/view-component/view.module';
 import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
 import {DATE_FORMAT} from './model/item.model';
-import {BulkEditService} from "./service/bulk-edit-service/bulk-edit.service";
+import {BulkEditService} from './service/bulk-edit-service/bulk-edit.service';
 import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
 import {JobsService} from './service/jobs-service/jobs.service';
 import {JobsModule} from './component/jobs-component/jobs.module';
 import {UtilsModule} from './utils/utils.module';
+import {PricingModule} from './component/pricing-component/pricing.module';
+import {PricingStructureService} from './service/pricing-structure-service/pricing-structure.service';
 
 @NgModule({
   declarations: [
@@ -163,7 +165,6 @@ import {UtilsModule} from './utils/utils.module';
     AppRoutingModule,
     AppMaterialsModule,
     AngularFileUploaderModule,
-    UtilsModule,
     SimpleNotificationsModule.forRoot({
       position: ['bottom', 'center'],
       timeOut: 2000,
@@ -189,6 +190,8 @@ import {UtilsModule} from './utils/utils.module';
     ViewModule,
     BulkEditWizardModule,
     JobsModule,
+    UtilsModule,
+    PricingModule
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -205,6 +208,8 @@ import {UtilsModule} from './utils/utils.module';
     {provide: CounterService, useClass: CounterService} as Provider,
     {provide: BulkEditService, useClass: BulkEditService} as Provider,
     {provide: JobsService, useClass: JobsService} as Provider,
+    {provide: PricingStructureService, useClass: PricingStructureService} as Provider,
+
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,

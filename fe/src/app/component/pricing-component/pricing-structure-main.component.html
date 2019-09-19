@@ -1,0 +1,87 @@
+<div class="pricing-structure-main-component">
+
+    <div class="controls">
+        <button type="button" mat-flat-button color="primary" (click)="onNewPricingStructure($event)">New Pricing Structure</button>
+    </div>
+
+    <mat-form-field>
+        <mat-label>Pricing Structure</mat-label>
+        <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)">
+            <mat-option [value]="undefined">--- Select one ---</mat-option>
+            <mat-option *ngFor="let pricingStructure of pricingStructureInput.pricingStrucutres" [value]="pricingStructure">
+                {{pricingStructure.id}} - {{pricingStructure.name}}
+            </mat-option>
+        </mat-select>
+        <mat-hint>Select a pricing structure</mat-hint>
+    </mat-form-field>
+
+    <ng-container *ngIf="pricingStructureWithItems">
+        <div class="pricing-structure-info">
+            <div class="controls">
+                <button type="button" mat-flat-button color="primary" (click)="onDeletePricingStructure($event, pricingStructureWithItems)">Delete Pricing Structure</button>
+                <button type="button" mat-flat-button color="primary" (click)="onEditPricingStructure($event, pricingStructureWithItems)">Edit Pricing Structure</button>
+            </div>
+            <div class="content">
+                <div>ID: {{pricingStructureWithItems.id}}</div>
+                <div>Name: {{pricingStructureWithItems.name}}</div>
+                <div>Description: {{pricingStructureWithItems.description}}</div>
+            </div>
+        </div>
+
+        <div class="pricing-structure-items">
+            <div class="content">
+                <table mat-table [dataSource]="dataSource">
+                    <ng-container matColumnDef="expansion" sticky>
+                        <mat-header-cell class="expansion-header" *matHeaderCellDef></mat-header-cell>
+                        <mat-cell class="expansion" *matCellDef="let pricingStructureItem">
+                            <mat-icon class="selectable" *ngIf="!isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">chevron_right</mat-icon>
+                            <mat-icon class="selectable" *ngIf="isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">expand_more</mat-icon>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="children-expansion" sticky>
+                        <mat-header-cell class="expansion-header" *matHeaderCellDef></mat-header-cell>
+                        <mat-cell class="expansion" *matCellDef="let pricingStructureItem">
+                            <div class="depth-{{pricingStructureItem.depth}}">
+                                <mat-icon>last_page</mat-icon>
+                            </div>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef>Name</th>
+                        <td mat-cell *matCellDef="let pricingStructureItem">{{pricingStructureItem.itemName}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef>Description</th>
+                        <td mat-cell *matCellDef="let pricingStructureItem">{{pricingStructureItem.itemDescription}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pricing">
+                        <th mat-header-cell *matHeaderCellDef>Price</th>
+                        <td mat-cell *matCellDef="let pricingStructureItem">{{pricingStructureItem.price}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="country">
+                        <th mat-header-cell *matHeaderCellDef>Currency Country</th>
+                        <td mat-cell *matCellDef="let pricingStructureItem">{{pricingStructureItem.country}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Action</th>
+                        <td mat-cell *matCellDef="let pricingStructureItem">
+                            <button type="button" mat-flat-button color="primary" (click)="onEditPricingStructureItem($event, pricingStructureItem)">Edit</button>
+                            <button type="button" mat-flat-button color="primary" (click)="onDeletePricingStructureItem($event, pricingStructureItem)">Remove</button>
+                        </td>
+                    </ng-container>
+
+                    <mat-header-row class="item-header" *matHeaderRowDef="['expansion', 'name', 'description', 'pricing', 'country', 'actions']"></mat-header-row>
+                    <mat-row class="item" *matRowDef="let tableItem; columns: ['expansion', 'name', 'description', 'pricing', 'country', 'actions'];"></mat-row>
+                    <mat-row class="item" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'pricing', 'country', 'actions']; when: isChildRow"
+                             [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
+                </table>
+            </div>
+        </div>
+    </ng-container>
+</div>
