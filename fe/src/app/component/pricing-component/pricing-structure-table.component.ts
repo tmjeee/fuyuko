@@ -49,20 +49,19 @@ export interface PricingStructureEvent {
 }
 
 export interface PricingStructureInput {
-    pricingStrucutres: PricingStructure[];
+    pricingStructures: PricingStructure[];
     currentPricingStructure: PricingStructure;
 }
 
 @Component({
-    selector: 'app-pricing-structure-main',
-    templateUrl: './pricing-structure-main.component.html',
-    styleUrls: ['./pricing-structure-main.component.scss']
+    selector: 'app-pricing-structure-table',
+    templateUrl: './pricing-structure-table.component.html',
+    styleUrls: ['./pricing-structure-table.component.scss']
 })
-export class PricingStructureMainComponent implements OnInit, OnChanges {
+export class PricingStructureTableComponent implements OnInit, OnChanges {
 
     @Input() pricingStructureInput: PricingStructureInput;
     @Input() fetchFn: (pricingStructureId: number) => Observable<PricingStructureWithItems>;
-    @Input() findFn: (pricingStructureId: number) => Observable<PricingStructure>;
     @Output() events: EventEmitter<PricingStructureEvent>;
 
     // currently selected pricing structure with items  for 'info' and 'items' sections
@@ -119,7 +118,7 @@ export class PricingStructureMainComponent implements OnInit, OnChanges {
     onNewPricingStructure($event: MouseEvent) {
         this.matDialog.open(PricingStructurePopupComponent,
             {
-                width: '250px',
+                width: '550px',
                 data: {
                     pricingStructure: null
                 }
@@ -134,7 +133,6 @@ export class PricingStructureMainComponent implements OnInit, OnChanges {
                     }
                 })
             ).subscribe();
-
     }
 
     onEditPricingStructure($event: MouseEvent, pricingStructureWithItems: PricingStructureWithItems) {

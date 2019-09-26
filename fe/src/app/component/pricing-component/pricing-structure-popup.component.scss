@@ -1,3 +1,12 @@
 .pricing-structure-popup-component {
 
+  mat-form-field {
+    margin-bottom: 10px;
+  }
+
+  .controls {
+    *:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
 }

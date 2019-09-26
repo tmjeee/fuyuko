@@ -4,9 +4,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {PricingStructurePopupComponent} from './pricing-structure-popup.component';
-import {ItemPriceTableComponent} from './item-price-table.component';
 import {ItemPricePopupComponent} from './item-price-popup.component';
-import {PricingStructureMainComponent} from './pricing-structure-main.component';
+import {PricingStructureTableComponent} from './pricing-structure-table.component';
 
 
 @NgModule({
@@ -19,15 +18,13 @@ import {PricingStructureMainComponent} from './pricing-structure-main.component'
     ],
     declarations: [
         PricingStructurePopupComponent,
-        ItemPriceTableComponent,
+        PricingStructureTableComponent,
         ItemPricePopupComponent,
-        PricingStructureMainComponent,
     ],
     exports: [
         PricingStructurePopupComponent,
-        ItemPriceTableComponent,
+        PricingStructureTableComponent,
         ItemPricePopupComponent,
-        PricingStructureMainComponent,
     ],
     entryComponents: [
         PricingStructurePopupComponent,

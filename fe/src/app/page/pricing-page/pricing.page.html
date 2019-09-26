@@ -1,4 +1,9 @@
 
 <div class="pricing-page">
   <h1>Pricing</h1>
+  <app-pricing-structure-table
+          [fetchFn]="fetchFn"
+          (events)="onPricingStructureTableEvent($event)"
+          [pricingStructureInput]="pricingStructureInput">
+  </app-pricing-structure-table>
 </div>

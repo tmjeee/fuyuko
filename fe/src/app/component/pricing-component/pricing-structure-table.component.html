@@ -1,14 +1,14 @@
-<div class="pricing-structure-main-component">
+<div class="pricing-structure-table-component">
 
     <div class="controls">
         <button type="button" mat-flat-button color="primary" (click)="onNewPricingStructure($event)">New Pricing Structure</button>
     </div>
 
-    <mat-form-field>
+    <mat-form-field class="pricing-structure-selection">
         <mat-label>Pricing Structure</mat-label>
         <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)">
             <mat-option [value]="undefined">--- Select one ---</mat-option>
-            <mat-option *ngFor="let pricingStructure of pricingStructureInput.pricingStrucutres" [value]="pricingStructure">
+            <mat-option *ngFor="let pricingStructure of pricingStructureInput.pricingStructures" [value]="pricingStructure">
                 {{pricingStructure.id}} - {{pricingStructure.name}}
             </mat-option>
         </mat-select>
@@ -32,20 +32,20 @@
             <div class="content">
                 <table mat-table [dataSource]="dataSource">
                     <ng-container matColumnDef="expansion" sticky>
-                        <mat-header-cell class="expansion-header" *matHeaderCellDef></mat-header-cell>
-                        <mat-cell class="expansion" *matCellDef="let pricingStructureItem">
+                        <th mat-header-cell class="expansion-header" *matHeaderCellDef></th>
+                        <td mat-cell class="expansion" *matCellDef="let pricingStructureItem">
                             <mat-icon class="selectable" *ngIf="!isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">chevron_right</mat-icon>
                             <mat-icon class="selectable" *ngIf="isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">expand_more</mat-icon>
-                        </mat-cell>
+                        </td>
                     </ng-container>
 
                     <ng-container matColumnDef="children-expansion" sticky>
-                        <mat-header-cell class="expansion-header" *matHeaderCellDef></mat-header-cell>
-                        <mat-cell class="expansion" *matCellDef="let pricingStructureItem">
+                        <th mat-header-cell class="expansion-header" *matHeaderCellDef></th>
+                        <td mat-cell class="expansion" *matCellDef="let pricingStructureItem">
                             <div class="depth-{{pricingStructureItem.depth}}">
                                 <mat-icon>last_page</mat-icon>
                             </div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
 
                     <ng-container matColumnDef="name">
@@ -70,16 +70,16 @@
 
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef>Action</th>
-                        <td mat-cell *matCellDef="let pricingStructureItem">
+                        <td mat-cell *matCellDef="let pricingStructureItem" class="action-controls">
                             <button type="button" mat-flat-button color="primary" (click)="onEditPricingStructureItem($event, pricingStructureItem)">Edit</button>
                             <button type="button" mat-flat-button color="primary" (click)="onDeletePricingStructureItem($event, pricingStructureItem)">Remove</button>
                         </td>
                     </ng-container>
 
-                    <mat-header-row class="item-header" *matHeaderRowDef="['expansion', 'name', 'description', 'pricing', 'country', 'actions']"></mat-header-row>
-                    <mat-row class="item" *matRowDef="let tableItem; columns: ['expansion', 'name', 'description', 'pricing', 'country', 'actions'];"></mat-row>
-                    <mat-row class="item" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'pricing', 'country', 'actions']; when: isChildRow"
-                             [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
+                    <tr mat-header-row class="item-header" *matHeaderRowDef="['expansion', 'name', 'description', 'pricing', 'country', 'actions']"></tr>
+                    <tr mat-row class="item" *matRowDef="let tableItem; columns: ['expansion', 'name', 'description', 'pricing', 'country', 'actions'];"></tr>
+                    <tr mat-row class="item" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'pricing', 'country', 'actions']; when: isChildRow"
+                             [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></tr>
                 </table>
             </div>
         </div>

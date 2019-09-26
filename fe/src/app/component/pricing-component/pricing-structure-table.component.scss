@@ -1,0 +1,35 @@
+.pricing-structure-table-component {
+  .controls {
+    margin-bottom: 10px;
+  }
+
+  .pricing-structure-selection {
+    margin-bottom: 10px;
+  }
+
+  .pricing-structure-info {
+    .controls {
+      margin-bottom: 10px;
+      :not(:last-child) {
+        margin-right: 5px;
+      }
+    }
+    .content {
+      margin-bottom: 10px;
+    }
+  }
+
+  .pricing-structure-items {
+    .content {
+      table {
+        td {
+          &.action-controls {
+            :not(:last-child) {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

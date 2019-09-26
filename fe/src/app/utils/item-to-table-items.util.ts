@@ -167,6 +167,9 @@ export function toBulkEditItem(tableItems: BulkEditTableItem[]): BulkEditItem[] 
 
 function internalToTablePricingStructureItemWithPrice(items: PricingStructureItemWithPrice[], depth: number, rootParentId?: number):
     TablePricingStructureItemWithPrice[] {
+  if (!items) {
+     return [];
+  }
   const nextDepth = ++depth;
   return items.reduce((tableItems: TablePricingStructureItemWithPrice[], item: PricingStructureItemWithPrice) => {
     const childrenRootParentId = (rootParentId ? rootParentId : item.id);
