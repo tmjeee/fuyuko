@@ -7,7 +7,7 @@ import util from 'util';
 import semver from 'semver';
 import {i, e} from '../logger';
 
-const runUpdate = async () => {
+export const runUpdate = async () => {
 
     const updaterEntries: QueryRows = await doInDbConnection<void>(async (conn: PoolConnection) => {
         const r1: QueryResponse = await conn.query(`

@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {MatDialogRef} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {PricingStructure} from '../../model/pricing-structure.model';
 
 
 @Component({
@@ -24,6 +25,11 @@ export class PricingStructurePopupComponent {
     }
 
     onSubmit() {
+        this.matDialogRef.close({
+            id: -1,
+            name: this.formControlName.value,
+            description: this.formControlDescription.value
+        } as PricingStructure);
     }
 
     onCancel($event: MouseEvent) {

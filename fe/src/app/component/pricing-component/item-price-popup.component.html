@@ -1,3 +1,14 @@
 <div class="item-price-popup-component">
-
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+       <mat-form-field>
+           <mat-label>Price</mat-label>
+           <input matInput [formControl]="formControlPrice">
+           <mat-hint>Item Price</mat-hint>
+           <mat-error *ngIf="formControlPrice?.errors?.required">Price is required</mat-error>
+       </mat-form-field>
+        <div class="controls">
+            <button mat-flat-button color="primary" type="submit">Ok</button>
+            <button mat-flat-button color="primary" type="button" (click)="onCancel($event)">Cancel</button>
+        </div>
+    </form>
 </div>

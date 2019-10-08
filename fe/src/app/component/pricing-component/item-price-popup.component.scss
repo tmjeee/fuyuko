@@ -1,3 +1,9 @@
 .item-price-popup-component {
 
+  .controls {
+    margin-top: 10px;
+    :not(:last-child) {
+      margin-right: 5px;
+    }
+  }
 }

@@ -42,9 +42,9 @@ export class PricingStructureItemsTableDataSource extends DataSource<TablePricin
 }
 
 export interface PricingStructureEvent {
-    type: 'new-pricing-structure' | 'delete-pricing-structure' | 'delete-pricing-item' |
+    type: 'new-pricing-structure' | 'delete-pricing-structure' |
         'edit-pricing-structure' | 'edit-pricing-item';
-    pricingStructure?: PricingStructure; // for add / edit /remove of PricingStrucutre
+    pricingStructure?: PricingStructure; // for add / edit /remove of PricingStructure
     pricingStructureItem?: TablePricingStructureItemWithPrice; // for add / edit / remove of PricingStructureItemWithPrice
 }
 
@@ -138,7 +138,7 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
     onEditPricingStructure($event: MouseEvent, pricingStructureWithItems: PricingStructureWithItems) {
         this.matDialog.open(PricingStructurePopupComponent,
             {
-                width: '250px',
+                width: '550px',
                 data: {
                     pricingStructure: pricingStructureWithItems
                 }
@@ -180,13 +180,6 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
                 }
             })
         ).subscribe();
-    }
-
-    onDeletePricingStructureItem($event: MouseEvent, pricingStructureItem: TablePricingStructureItemWithPrice) {
-        this.events.emit({
-            type: 'delete-pricing-item',
-            pricingStructureItem
-        } as PricingStructureEvent);
     }
 
 
