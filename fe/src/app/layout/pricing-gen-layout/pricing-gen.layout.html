@@ -28,28 +28,7 @@
     </mat-sidenav>
     <mat-sidenav-content>
       <div class="main-content">
-        <!-- user sub-side-nav -->
-        <mat-sidenav-container class="sub-side-nav-container">
-          <mat-sidenav [opened]="subSideBarOpened" mode="side" [fixedInViewport]="true" [fixedTopGap]="65" position="start">
-            <mat-list>
-              <mat-list-item [class.selected]="routeSubSideNavData === 'pricing'">
-                <mat-icon>transfer_within_a_station</mat-icon>
-                <a href="#" [routerLink]="['/pricing-gen-layout', {outlets: {primary:['pricing'], help:['pricing-help']}}]">Roles</a>
-              </mat-list-item>
-            </mat-list>
-          </mat-sidenav>
-          <mat-sidenav-content>
-            <mat-toolbar class="secondary-toolbar" color="primary">
-              <mat-toolbar-row>
-                <mat-icon class="sub-sidebar-button" (click)="onSubSidebarButtonClicked($event)">menu</mat-icon>
-                <span class="spacer"></span>
-              </mat-toolbar-row>
-            </mat-toolbar>
-            <div class="primary-outlet">
-              <router-outlet name="primary"></router-outlet>
-            </div>
-          </mat-sidenav-content>
-        </mat-sidenav-container>
+         <router-outlet name="primary"></router-outlet>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
