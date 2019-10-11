@@ -37,14 +37,12 @@ export class RuleService {
   }
 
   addRule(rule: Rule): Observable<Rule> {
-    console.log('******* add rule', rule);
     rule.id = this.count++;
     ALL_RULES.push(rule);
     return of(rule);
   }
 
   updateRule(rule: Rule): Observable<Rule> {
-    console.log('******* update rule', rule);
     const index = ALL_RULES.findIndex((r: Rule) => r.id === rule.id);
     if (index !== -1) {
       ALL_RULES.splice(index, 1, rule);
@@ -53,7 +51,6 @@ export class RuleService {
   }
 
   deleteRule(rule: Rule): Observable<Rule> {
-    console.log('******* delete rule', rule);
     const index = ALL_RULES.findIndex((r: Rule) => r.id === rule.id);
     if (index !== -1) {
       ALL_RULES.splice(index, 1);

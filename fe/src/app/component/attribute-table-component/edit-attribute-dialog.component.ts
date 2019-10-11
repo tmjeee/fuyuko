@@ -195,7 +195,6 @@ export class EditAttributeDialogComponent implements AfterViewInit {
   }
 
   onSubmit() {
-    console.log('**** on submit');
     const att: Attribute = { ...this.attribute };
     att.name = this.formControlAttributeName.value;
     att.description = this.formControlAttributeDescription.value;
@@ -234,12 +233,10 @@ export class EditAttributeDialogComponent implements AfterViewInit {
       case 'doubleselect':
         break;
     }
-    console.log('***** att submit', att);
     this.dialogRef.close(att);
   }
 
   onCancelClicked($event: MouseEvent) {
-    console.log('**** cancel');
     this.dialogRef.close(undefined);
   }
 

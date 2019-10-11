@@ -108,7 +108,6 @@ export class DataThumbnailComponent {
   }
 
   delete($event: MouseEvent) {
-    console.log('**** delete', this.selectionModel.selected);
     const i: Item[] = this.selectionModel.selected;
     this.pendingDeletion.push(...this.selectionModel.selected);
     this.selectionModel.selected.forEach((selectedItem: Item) => {
@@ -157,7 +156,6 @@ export class DataThumbnailComponent {
             } else {
               this.pendingSaving.push(tmpItem);
             }
-            console.log(this.pendingSaving);
           }
         })
       ).subscribe();

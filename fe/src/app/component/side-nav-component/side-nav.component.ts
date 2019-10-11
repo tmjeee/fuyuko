@@ -36,7 +36,6 @@ export class SideNavComponent implements OnInit {
       result = rr.data.sideNav;
       if (!result) {
         result =  this.findSideNavData(rr.children);
-        console.log('result', result);
         if (result) {
           return result;
         }

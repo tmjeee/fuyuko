@@ -215,7 +215,6 @@ export class AttributeOperatorEditorComponent implements OnInit {
     }
 
     onOperatorSelectionChange($event: MatSelectChange) {
-        console.log('&&&&&&& operator selection changed', $event.value);
         this.operator = $event.value;
         this.itemValue = null;
         this.reload();
@@ -335,7 +334,6 @@ export class AttributeOperatorEditorComponent implements OnInit {
             }
         }
         const event = { attribute, itemValue, operator} as ItemValueOperatorAndAttribute;
-        console.log('******* fireEvent', event);
         this.events.emit(event);
     }
 

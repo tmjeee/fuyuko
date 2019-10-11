@@ -54,7 +54,6 @@ export class ViewRulesPageComponent implements OnInit {
                 this.attributes = r[0];
                 this.rules = r[1];
                 this.ready = true;
-                console.log('**** rules loaded', this.rules);
               })
             ).subscribe();
           }

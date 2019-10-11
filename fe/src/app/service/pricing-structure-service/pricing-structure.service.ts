@@ -14,17 +14,33 @@ const allPricingStructures: PricingStructureWithItems[] = [
     { id: (++pricingStructureIdCounter), name: 'Pricing Structure #1', description: 'Pricing Structure #1 description',
         items: [
             {
-                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #1',
-                itemDescription: 'item #1 description', price: 1.00, country: 'AUD'
-            } as PricingStructureItemWithPrice
+                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #1a',
+                itemDescription: 'item #1a description', price: 1.00, country: 'AUD'
+            } as PricingStructureItemWithPrice,
+            {
+                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #1b',
+                itemDescription: 'item #1b description', price: 2.00, country: 'AUD'
+            } as PricingStructureItemWithPrice,
+            {
+                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #1c',
+                itemDescription: 'item #1c description', price: 3.00, country: 'AUD'
+            } as PricingStructureItemWithPrice,
         ]
     } as PricingStructureWithItems,
     { id: (++pricingStructureIdCounter), name: 'Pricing Structure #2', description: 'Pricing Structure #2 description',
         items: [
             {
-                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #2',
-                itemDescription: 'item #2 description', price: 2.00, country: 'AUD'
-            } as PricingStructureItemWithPrice
+                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #2a',
+                itemDescription: 'item #2a description', price: 2.00, country: 'AUD'
+            } as PricingStructureItemWithPrice,
+            {
+                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #2b',
+                itemDescription: 'item #2b description', price: 4.00, country: 'AUD'
+            } as PricingStructureItemWithPrice,
+            {
+                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #2c',
+                itemDescription: 'item #2c description', price: 6.00, country: 'AUD'
+            } as PricingStructureItemWithPrice,
         ]
     } as PricingStructureWithItems,
 ];
@@ -57,22 +73,24 @@ export class PricingStructureService {
         return of(pricingStructure);
     }
 
-    newPricingStrucutreChildItem(pricingStructure: PricingStructure, parent: TablePricingStructureItemWithPrice, pricingStructureItem: TablePricingStructureItemWithPrice):
-        Observable<PricingStructureItemWithPrice> {
-        const ps: PricingStructureWithItems = allPricingStructures.find((p: PricingStructure) => p.id === pricingStructure.id);
-        if (ps) {
-            const pi: PricingStructureItemWithPrice = ps.items.find((i: PricingStructureItemWithPrice) => i.id === parent.id);
-            const newPricingStructureItem: PricingStructureItemWithPrice = { ...pricingStructureItem, children: [] };
-            newPricingStructureItem.id = (++pricingStructureItemIdCounter);
-            pi.children.push(newPricingStructureItem);
-            return of(newPricingStructureItem);
-        }
-        return of(null);
-    }
-
     newPricingStructure(pricingStructure: PricingStructure): Observable<PricingStructure> {
-        const newPricingStructure: PricingStructureWithItems = {...pricingStructure, items: []};
-        newPricingStructure.id = (++pricingStructureIdCounter);
+        const newPricingStructure: PricingStructureWithItems =
+            { id: (++pricingStructureIdCounter), name: `Pricing Structure #${(Math.random()*100)/100}`, description: `Pricing Structure #${(Math.random()*100)/100} description`,
+                items: [
+                    {
+                        id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: `item #${(Math.random()*100)/100}`,
+                        itemDescription: `item #${(Math.random()*100)/100} description`, price: (Math.random()*10)/10, country: 'AUD'
+                    } as PricingStructureItemWithPrice,
+                    {
+                        id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: `item #${(Math.random()*100)/100}`,
+                        itemDescription: `item #${(Math.random()*100)/100} description`, price: (Math.random()*10)/10, country: 'AUD'
+                    } as PricingStructureItemWithPrice,
+                    {
+                        id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: `item #${(Math.random()*100)/100}`,
+                        itemDescription: `item #${(Math.random()*100)/100} description`, price: (Math.random()*10)/10, country: 'AUD'
+                    } as PricingStructureItemWithPrice,
+                ]
+            } as PricingStructureWithItems;
         allPricingStructures.push(newPricingStructure);
         return of(newPricingStructure);
     }

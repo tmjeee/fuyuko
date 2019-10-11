@@ -61,7 +61,6 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
        const attributes: Attribute[] = r[0];
        const items: Item[] = r[1];
        const tableItems: TableItem[] = toTableItem(items);
-       console.log('***** reload()', tableItems);
        this.itemAndAttributeSet = {
          attributes,
          tableItems,
@@ -73,7 +72,6 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
 
   onDataTableEvent($event: DataTableComponentEvent) {
-    console.log('***** onDataTAble event', $event);
     switch ($event.type) {
       case 'modification':
         forkJoin(

@@ -97,7 +97,6 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     }
 
     onWhereClauseEvent(index: number, $event: ItemValueOperatorAndAttribute) {
-        console.log('************* onWhereClauseEvent', $event);
         this.whereClauses[index] = { ...$event };
         this.formGroupFirstStep.updateValueAndValidity();
     }
@@ -176,7 +175,6 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     }
 
     onFirstStepSubmit() {
-        console.log('***************** onFirstStepSubmit');
         this.secondStepReady = false;
         this.bulkEditService
             .previewBuilEdit(this.view.id, this.changeClauses, this.whereClauses)
@@ -186,7 +184,6 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
                    if (this.bulkEditPackage) {
                        const bulkEditItems: BulkEditItem[] = this.bulkEditPackage.bulkEditItems;
                        this.bulkEditTableItems  = toBulkEditTableItem(bulkEditItems);
-                       console.log ('*******************', this.bulkEditTableItems);
                        this.secondStepReady = true;
                    }
                 })

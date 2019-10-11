@@ -239,7 +239,6 @@ export class ItemService {
   }
 
   saveItems(items: Item[]): Observable<Item[]> {
-    console.log('service save item', items);
     // todo:
     const newlyAddedItems: Item[] = [];
     items.forEach((i: Item) => {
@@ -265,7 +264,6 @@ export class ItemService {
 
   saveTableItems(items: TableItem[]): Observable<Item[]> {
     // todo:
-    console.log('service save table item', items);
     const newlyAddedItems: Item[] = [];
     items.forEach((i: TableItem) => {
       if (i.id <  0) { // new item

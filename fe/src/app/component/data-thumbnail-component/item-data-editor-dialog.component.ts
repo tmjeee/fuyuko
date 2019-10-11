@@ -26,7 +26,6 @@ export class ItemDataEditorDialogComponent {
 
 
   onItemNameChange($event: ItemEditorComponentEvent) {
-    console.log('**** onItemNameChange', $event);
     this.hasChange = true;
     this.item.name = $event.item.name;
   }

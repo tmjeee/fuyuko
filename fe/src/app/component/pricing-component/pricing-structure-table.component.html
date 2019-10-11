@@ -5,11 +5,11 @@
     </div>
 
     <mat-form-field class="pricing-structure-selection">
-        <mat-label>Pricing Structure</mat-label>
-        <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)">
+        <mat-label>Pricing Structure </mat-label>
+        <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)" [(value)]="pricingStructure">
             <mat-option [value]="undefined">--- Select one ---</mat-option>
-            <mat-option *ngFor="let pricingStructure of pricingStructureInput.pricingStructures" [value]="pricingStructure">
-                {{pricingStructure.id}} - {{pricingStructure.name}}
+            <mat-option *ngFor="let ps of pricingStructureInput.pricingStructures" [value]="ps">
+                {{ps.id}} - {{ps.name}}
             </mat-option>
         </mat-select>
         <mat-hint>Select a pricing structure</mat-hint>

@@ -135,11 +135,9 @@ export class DataTableComponent implements OnInit, OnChanges {
   masterToggle($event: MatCheckboxChange) {
     if (this.itemAndAttributeSet.tableItems.length > 0 &&
         this.selectionModel.selected.length === this.itemAndAttributeSet.tableItems.length) {
-      console.log('clear');
       this.selectionModel.clear();
     } else {
       this.itemAndAttributeSet.tableItems.forEach((i: TableItem) => {
-        console.log('select ', i);
         this.selectionModel.select(i);
       });
     }

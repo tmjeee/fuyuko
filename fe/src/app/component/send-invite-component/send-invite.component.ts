@@ -69,8 +69,6 @@ export class SendInviteComponent implements OnInit {
   }
 
   onSendInvitation($event: MouseEvent) {
-    console.log('*****', this.formControlGroup.value);
-    console.log(this.selectedGroups);
     this.events.emit({
       email: this.formControlEmail.value,
       groups: this.selectedGroups

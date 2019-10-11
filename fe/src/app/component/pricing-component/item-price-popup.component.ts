@@ -4,9 +4,6 @@ import {PricingStructureItem, PricingStructureItemWithPrice, TablePricingStructu
 import {Observable} from 'rxjs';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
-interface DialogDataType {
-    pricingStructureItem: TablePricingStructureItemWithPrice;
-}
 
 @Component({
     templateUrl: './item-price-popup.component.html',
@@ -18,17 +15,17 @@ export class ItemPricePopupComponent {
     formControlPrice: FormControl;
 
     constructor(private matDialogRef: MatDialogRef<ItemPricePopupComponent>,
-                private formBuilder: FormBuilder,
-                @Inject(MAT_DIALOG_DATA) private data: DialogDataType) {
-        this.formControlPrice = this.formBuilder.control('', [Validators.required]);
+                @Inject(MAT_DIALOG_DATA) private data: TablePricingStructureItemWithPrice,
+                private formBuilder: FormBuilder) {
+        this.formControlPrice = this.formBuilder.control(data.price ? data.price : '', [Validators.required]);
         this.formGroup = this.formBuilder.group({
             price: this.formControlPrice
         });
     }
 
     onSubmit() {
-        this.data.pricingStructureItem.price = this.formControlPrice.value;
-        this.matDialogRef.close(this.data.pricingStructureItem);
+        this.data.price = this.formControlPrice.value;
+        this.matDialogRef.close(this.data);
     }
 
     onCancel($event: MouseEvent) {

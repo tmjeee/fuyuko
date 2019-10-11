@@ -24,10 +24,11 @@ export interface RowInfo {
 
 export class PricingStructureItemsTableDataSource extends DataSource<TablePricingStructureItemWithPrice> {
 
-    private subject: BehaviorSubject<TablePricingStructureItemWithPrice[]> = new BehaviorSubject([]);
+    private subject: BehaviorSubject<TablePricingStructureItemWithPrice[]>;
 
     connect(collectionViewer: CollectionViewer):
         Observable<TablePricingStructureItemWithPrice[] | ReadonlyArray<TablePricingStructureItemWithPrice>> {
+        this.subject = new BehaviorSubject<TablePricingStructureItemWithPrice[]>([]);
         return this.subject.asObservable();
     }
 
@@ -64,9 +65,11 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
     @Input() fetchFn: (pricingStructureId: number) => Observable<PricingStructureWithItems>;
     @Output() events: EventEmitter<PricingStructureEvent>;
 
-    // currently selected pricing structure with items  for 'info' and 'items' sections
+    // currently selected ones
+    pricingStructure: PricingStructure;
     pricingStructureWithItems: PricingStructureWithItems;
     tablePricingStructureItemsWithPrice: TablePricingStructureItemWithPrice[];
+
     dataSource: PricingStructureItemsTableDataSource;
 
     rowInfoMap: Map<number, RowInfo>;   // item id as key (the parent)
@@ -84,44 +87,45 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         const simpleChange: SimpleChange = changes.pricingStructureInput;
         if (simpleChange.currentValue) {
-            const currentPricingStructure: PricingStructure = (simpleChange.currentValue as PricingStructureInput).currentPricingStructure;
-            if (currentPricingStructure) {
-                this.reload(currentPricingStructure.id);
-            }
+            const ps: PricingStructure = (simpleChange.currentValue as PricingStructureInput).currentPricingStructure;
+            this.pricingStructure = (ps ? this.pricingStructureInput.pricingStructures.find((p) => p.id === ps.id) : null);
+            this.reload(this.pricingStructure);
         }
     }
 
     onPricingStructureSelectionChanged($event: MatSelectChange) {
-        const pricingStructure: PricingStructure = $event.value as PricingStructure;
-        if (pricingStructure) {
-            this.reload(pricingStructure.id);
-        }
+        this.pricingStructure = $event.value as PricingStructure;
+        this.reload(this.pricingStructure);
     }
 
-    reload(pricingStructureId: number) {
+    reload(pricingStructure: PricingStructure) {
         this.pricingStructureWithItems = undefined;
         this.tablePricingStructureItemsWithPrice = [];
         this.rowInfoMap = new Map();
-        this.fetchFn(pricingStructureId)
-            .pipe(
-                tap((p: PricingStructureWithItems) => {
-                    this.pricingStructureWithItems = p;
-                    this.pricingStructureWithItems.items.forEach((item: PricingStructureItemWithPrice) => {
-                        this.rowInfoMap.set(item.id, { tableItem: item, expanded: false } as RowInfo);
-                    });
-                    this.tablePricingStructureItemsWithPrice = toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items);
-                    this.dataSource.update(this.tablePricingStructureItemsWithPrice);
-                })
-            ).subscribe();
+        if (pricingStructure && pricingStructure.id) {
+            this.fetchFn(pricingStructure.id)
+                .pipe(
+                    tap((p: PricingStructureWithItems) => {
+                        this.pricingStructureWithItems = p;
+                        this.pricingStructureWithItems.items.forEach((item: PricingStructureItemWithPrice) => {
+                            this.rowInfoMap.set(item.id, { tableItem: item, expanded: false } as RowInfo);
+                        });
+                        this.tablePricingStructureItemsWithPrice = toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items);
+                        setTimeout(()=>{
+                            this.dataSource.update([...this.tablePricingStructureItemsWithPrice]);
+                        });
+                    })
+                ).subscribe();
+        } else {
+            this.tablePricingStructureItemsWithPrice = []
+        }
     }
 
     onNewPricingStructure($event: MouseEvent) {
         this.matDialog.open(PricingStructurePopupComponent,
             {
                 width: '550px',
-                data: {
-                    pricingStructure: null
-                }
+                data: null
             } as MatDialogConfig)
             .afterClosed().pipe(
                 tap((r: PricingStructure) => {
@@ -139,9 +143,7 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
         this.matDialog.open(PricingStructurePopupComponent,
             {
                 width: '550px',
-                data: {
-                    pricingStructure: pricingStructureWithItems
-                }
+                data: pricingStructureWithItems
             } as MatDialogConfig)
             .afterClosed().pipe(
                 tap((r: PricingStructure) => {
@@ -166,15 +168,14 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
     onEditPricingStructureItem($event: MouseEvent, pricingStructureItem: TablePricingStructureItemWithPrice) {
         this.matDialog.open(ItemPricePopupComponent, {
             width: '250px',
-            data: {
-                pricingStructureItem
-            }
+            data: pricingStructureItem
         } as MatDialogConfig)
             .afterClosed().pipe(
             tap((r: TablePricingStructureItemWithPrice) => {
                 if (r) {
                     this.events.emit({
                         type: 'edit-pricing-item',
+                        pricingStructure: this.pricingStructureInput.currentPricingStructure,
                         pricingStructureItem: r
                     } as PricingStructureEvent);
                 }

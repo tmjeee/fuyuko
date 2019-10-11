@@ -18,19 +18,19 @@ export class PricingPageComponent implements OnInit  {
     constructor(private pricingStructureService: PricingStructureService) {}
 
     ngOnInit(): void {
-        this.reload();
+        this.reload(null);
         this.fetchFn = (pricingStructureId: number) => {
             return this.pricingStructureService.pricingStructureWithItems(pricingStructureId);
         };
     }
 
-    reload() {
+    reload(pricingStructure: PricingStructure) {
         this.pricingStructureService.allPricingStructures()
             .pipe(
-                tap((p: PricingStructure[]) => {
+                tap((pricingStructures: PricingStructure[]) => {
                     this.pricingStructureInput = {
-                        pricingStructures: p,
-                        currentPricingStructure: null
+                        pricingStructures: pricingStructures,
+                        currentPricingStructure: pricingStructure
                     } as PricingStructureInput;
                 })
             ).subscribe();
@@ -41,25 +41,25 @@ export class PricingPageComponent implements OnInit  {
             case 'delete-pricing-structure':
                 this.pricingStructureService
                     .deletePricingStructure($event.pricingStructure)
-                    .pipe(tap((r: PricingStructure) => this.reload()))
+                    .pipe(tap((r: PricingStructure) => this.reload(null)))
                     .subscribe();
                 break;
             case 'new-pricing-structure':
                 this.pricingStructureService
                     .newPricingStructure($event.pricingStructure)
-                    .pipe(tap((r: PricingStructure) => this.reload()))
+                    .pipe(tap((r: PricingStructure) => this.reload(r)))
                     .subscribe();
                 break;
             case 'edit-pricing-structure':
                 this.pricingStructureService
                     .updatePricingStructure($event.pricingStructure)
-                    .pipe(tap((r: PricingStructure) => this.reload()))
+                    .pipe(tap((r: PricingStructure) => this.reload(r)))
                     .subscribe();
                 break;
             case 'edit-pricing-item':
                 this.pricingStructureService
                     .editPricingStructureItem($event.pricingStructureItem)
-                    .pipe(tap((r: PricingStructureItemWithPrice) => this.reload()))
+                    .pipe(tap((r: PricingStructureItemWithPrice) => this.reload($event.pricingStructure)))
                     .subscribe();
                 break;
         }

@@ -88,7 +88,6 @@ export class DataListComponent {
                     if (r) {
                         this.pendingSaving.push(r);
                         this.itemAndAttributeSet.items.unshift(r);
-                        console.log('**************** after add', this.itemAndAttributeSet);
                     }
                 })
             ).subscribe();

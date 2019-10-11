@@ -87,7 +87,6 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
         });
         break;
       case 'reload':
-        console.log('data thumbnail reload');
         this.reload();
         break;
     }
