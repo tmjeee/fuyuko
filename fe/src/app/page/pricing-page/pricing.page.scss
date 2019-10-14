@@ -1,4 +1,9 @@
 .pricing-page {
    margin: 10px;
-
+   ::ng-deep {
+      .pricing-structure-table-component {
+         margin-right: 20px;
+         margin-left: 20px;
+      }
+   }
 }

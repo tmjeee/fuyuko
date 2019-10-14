@@ -1,0 +1,66 @@
+<div class="import-data-component">
+    <mat-horizontal-stepper [linear]="true" #stepper>
+        <!-- first step: select view -->
+        <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Select View</ng-template>
+                <div class="content">
+                    <mat-form-field>
+                        <mat-label>Import View</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let view of views" [value]="view">
+                                {{view.name}} - {{view.description}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint>Select a view to import to</mat-hint>
+                        <mat-error *ngIf="viewFormControl?.errors?.required">An import view is required</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="controls">
+                    <button mat-flat-button matStepperNext color="primary">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+        <!-- second step: upload data file -->
+        <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Upload data file</ng-template>
+                <div class="content">
+                    <angular-file-uploader
+                            (ApiResponse)="onFileUploadResponse($event)"
+                            [config]="fileUploadConfig">
+                    </angular-file-uploader>
+                </div>
+                <div class="controls">
+                    <button mat-flat-button matStepperPrevious color="primary">Back</button>
+                    <button mat-flat-button matStepperNext color="primary">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+        <!-- thrid step: Review data file-->
+        <mat-step [state]="thirdFormGroup">
+            <form [formGroup]="thirdFormGroup">
+                <ng-template matStepLabel>Review</ng-template>
+                <div class="controls">
+                    <button mat-flat-button matStepperPrevious color="primary">Back</button>
+                    <button mat-flat-button matStepperNext color="primary">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+
+        <!-- fourth step: Import data -->
+        <mat-step [state]="fourthFormGroup">
+            <form [formGroup]="fourthFormGroup">
+                <ng-template matStepLabel>Import</ng-template>
+                <div class="controls">
+                    <button mat-flat-button matStepperPrevious color="primary">Back</button>
+                    <button mat-flat-button matStepperNext color="primary">Done</button>
+                </div>
+            </form>
+        </mat-step>
+
+    </mat-horizontal-stepper>
+</div>

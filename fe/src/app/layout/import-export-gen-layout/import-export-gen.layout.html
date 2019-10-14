@@ -33,9 +33,13 @@
         <mat-sidenav-container class="sub-side-nav-container">
           <mat-sidenav [opened]="subSideBarOpened" mode="side" [fixedInViewport]="true" [fixedTopGap]="65" position="start">
             <mat-list>
-              <mat-list-item [class.selected]="routeSubSideNavData === 'import-export'">
-                <mat-icon>transfer_within_a_station</mat-icon>
-                <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary:['import-export'], help:['import-export-help']}}]">Import Export</a>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'import'">
+                <mat-icon>trending_down</mat-icon>
+                <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary:['import'], help:['import-help']}}]">Import</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'export'">
+                <mat-icon>trending_up</mat-icon>
+                <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary:['export'], help:['export-help']}}]">Export</a>
               </mat-list-item>
             </mat-list>
           </mat-sidenav>

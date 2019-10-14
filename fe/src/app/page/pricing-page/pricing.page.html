@@ -1,9 +1,18 @@
 
 <div class="pricing-page">
-  <h1>Pricing</h1>
-  <app-pricing-structure-table
-          [fetchFn]="fetchFn"
-          (events)="onPricingStructureTableEvent($event)"
-          [pricingStructureInput]="pricingStructureInput">
-  </app-pricing-structure-table>
+  <mat-card class="mat-elevation-z-20">
+    <mat-card-header>
+      <mat-card-title>Pricing Structure</mat-card-title>
+      <mat-card-subtitle>
+          Manage pricing structure(s) of View(s)
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <app-pricing-structure-table
+        [fetchFn]="fetchFn"
+        (events)="onPricingStructureTableEvent($event)"
+        [pricingStructureInput]="pricingStructureInput">
+      </app-pricing-structure-table>
+    </mat-card-content>
+  </mat-card>
 </div>

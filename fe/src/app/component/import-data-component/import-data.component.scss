@@ -1,0 +1,8 @@
+.import-data-component {
+
+  .controls {
+      :not(:last-child) {
+        margin-right: 10px;
+      }
+  }
+}

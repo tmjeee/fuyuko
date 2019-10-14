@@ -23,8 +23,10 @@ import {ProfileHelpPageComponent} from './page/profile-help-page/profile-help.pa
 import {SettingsHelpPageComponent} from './page/settings-help-page/settings-help.page';
 import {UserHelpPageComponent} from './page/user-help-page/user-help.page';
 import {ViewHelpPageComponent} from './page/view-help-page/view-help.page';
-import {ImportExportPageComponent} from './page/import-export-page/import-export.page';
-import {ImportExportHelpPageComponent} from './page/import-export-help-page/import-export-help.page';
+import {ImportPageComponent} from './page/import-page/import.page';
+import {ImportHelpPageComponent} from './page/import-help-page/import-help.page';
+import {ExportPageComponent} from './page/export-page/export.page';
+import {ExportHelpPageComponent} from "./page/export-help-page/export-help.page";
 import {NotificationComponent} from './component/notification-component/notification.component';
 import {NotificationDialogComponent} from './component/notification-component/notification-dialog.component';
 import {OverlayContainer} from '@angular/cdk/overlay';
@@ -32,7 +34,7 @@ import {AvatarComponent} from './component/avatar-component/avatar.component';
 import {AvatarDialogComponent} from './component/avatar-component/avatar-dialog.component';
 import {AvatarService} from './service/avatar-service/avatar.service';
 import {AngularFileUploaderModule} from 'angular-file-uploader';
-import {NotificationAnimationType, SimpleNotificationsModule} from 'angular2-notifications';
+import {Icons, NotificationAnimationType, Options, Position, SimpleNotificationsModule} from 'angular2-notifications';
 import {ProfileInfoComponent} from './component/profile-info-component/profile-info.component';
 import {PasswordComponent} from './component/password-component/password.component';
 import {UserRolePageComponent} from './page/user-role-page/user-role.page';
@@ -97,6 +99,11 @@ import {JobsModule} from './component/jobs-component/jobs.module';
 import {UtilsModule} from './utils/utils.module';
 import {PricingModule} from './component/pricing-component/pricing.module';
 import {PricingStructureService} from './service/pricing-structure-service/pricing-structure.service';
+import {ImportDataComponent} from "./component/import-data-component/import-data.component";
+import {ImportDataModule} from "./component/import-data-component/import-data.module";
+import {ExportDataModule} from "./component/export-data-component/export-data.module";
+import {ImportDataService} from "./service/export-data-service/import.data.service";
+import {ExportDataService} from "./service/import-data-service/export-data.service";
 
 @NgModule({
   declarations: [
@@ -129,8 +136,10 @@ import {PricingStructureService} from './service/pricing-structure-service/prici
     UserPeoplePageComponent,
     UserHelpPageComponent,
     ViewHelpPageComponent,
-    ImportExportPageComponent,
-    ImportExportHelpPageComponent,
+    ImportPageComponent,
+    ImportHelpPageComponent,
+    ExportHelpPageComponent,
+    ExportPageComponent,
     PricingPageComponent,
     PricingHelpPageComponent,
     FileNotFoundPageComponent,
@@ -176,7 +185,7 @@ import {PricingStructureService} from './service/pricing-structure-service/prici
       maxLength: 0,
       theClass: 'message-toast',
       animate: NotificationAnimationType.Fade
-    }),
+    } as Options),
 
     // custom modules
     AttributeTableModule,
@@ -191,7 +200,9 @@ import {PricingStructureService} from './service/pricing-structure-service/prici
     BulkEditWizardModule,
     JobsModule,
     UtilsModule,
-    PricingModule
+    PricingModule,
+    ImportDataModule,
+    ExportDataModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -209,6 +220,8 @@ import {PricingStructureService} from './service/pricing-structure-service/prici
     {provide: BulkEditService, useClass: BulkEditService} as Provider,
     {provide: JobsService, useClass: JobsService} as Provider,
     {provide: PricingStructureService, useClass: PricingStructureService} as Provider,
+    {provide: ImportDataService, useClass: ImportDataService} as Provider,
+    {provide: ExportDataService, useClass: ExportDataService} as Provider,
 
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},

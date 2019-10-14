@@ -1,0 +1,9 @@
+.import-page {
+  margin: 0 10px;
+  ::ng-deep {
+    .import-data-component {
+      margin-right: 20px;
+      // margin-left: 20px;
+    }
+  }
+}

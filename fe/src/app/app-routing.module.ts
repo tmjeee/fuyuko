@@ -15,8 +15,8 @@ import {ViewHelpPageComponent} from './page/view-help-page/view-help.page';
 import {SettingsHelpPageComponent} from './page/settings-help-page/settings-help.page';
 import {BulkEditHelpPageComponent} from './page/bulk-edit-help-page/bulk-edit-help.page';
 import {HelpCenterHelpPageComponent} from './page/help-center-help-page/help-center-help.page';
-import {ImportExportHelpPageComponent} from './page/import-export-help-page/import-export-help.page';
-import {ImportExportPageComponent} from './page/import-export-page/import-export.page';
+import {ImportHelpPageComponent} from './page/import-help-page/import-help.page';
+import {ImportPageComponent} from './page/import-page/import.page';
 import {UserRolePageComponent} from './page/user-role-page/user-role.page';
 import {UserGroupPageComponent} from './page/user-group-page/user-group.page';
 import {UserPeoplePageComponent} from './page/user-people-page/user-people.page';
@@ -39,6 +39,8 @@ import {AuthGuard} from './guard/auth-guard/auth.guard';
 import {ErrorPageComponent} from './page/error-page/error.page';
 import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
+import {ExportPageComponent} from "./page/export-page/export.page";
+import {ExportHelpPageComponent} from "./page/export-help-page/export-help.page";
 
 const routes: Routes = [
 
@@ -164,17 +166,31 @@ const routes: Routes = [
     },
     children: [
       {
-        path: 'import-export',
+        path: 'import',
         canActivate: [AuthGuard],
-        component: ImportExportPageComponent,
+        component: ImportPageComponent,
         data: {
-          subSideNav: 'import-export'
+          subSideNav: 'import'
         }
       } as Route,
       {
-        path: 'import-export-help',
+        path: 'import-help',
         canActivate: [AuthGuard],
-        component: ImportExportHelpPageComponent,
+        component: ImportHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+      {
+        path: 'export',
+        canActivate: [AuthGuard],
+        component: ExportPageComponent,
+        data: {
+          subSideNav: 'export'
+        }
+      } as Route,
+      {
+        path: 'export-help',
+        canActivate: [AuthGuard],
+        component: ExportHelpPageComponent,
         outlet: 'help'
       } as Route,
     ]
