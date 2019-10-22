@@ -1,0 +1,23 @@
+.view-only-data-table-component {
+
+  table {
+    tr {
+      th {
+        &.expansion-header {
+          width: 50px;
+        }
+        &.attribute-header {
+
+        }
+      }
+      td {
+        &.expansion {
+
+        }
+        &.attribute {
+
+        }
+      }
+    }
+  }
+}

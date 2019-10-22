@@ -1,4 +1,128 @@
 
 <div class="export-data-component">
+    <mat-horizontal-stepper [linear]="true" #stepper>
 
+        <!-- first step: select view -->
+        <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup" (ngSubmit)="onFirstFormSubmit()">
+                <ng-template matStepLabel>Select View</ng-template>
+                <div class="content step-1">
+                    <mat-form-field>
+                        <mat-label>Export View</mat-label>
+                        <mat-select [formControl]="viewFormControl">
+                            <mat-option [value]="undefined">-- select a view --</mat-option>
+                            <mat-option *ngFor="let view of views" [value]="view">
+                                {{view.name}} - {{view.description}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint>Select a view to import to</mat-hint>
+                        <mat-error *ngIf="viewFormControl?.errors?.required">An import view is required</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="controls">
+                    <button mat-flat-button matStepperNext color="primary" type="submit" [disabled]="firstFormGroup.invalid">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+
+        <!-- second step: select attributes of view -->
+        <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup" (ngSubmit)="onSecondFormSubmit()">
+                <ng-template matStepLabel>Select Attributes</ng-template>
+                <div class="content step-2">
+                    <ng-container *ngIf="!secondFormReady">
+                       Loading ...
+                    </ng-container>
+                    <ng-container *ngIf="secondFormReady">
+                        <mat-radio-group [formControl]="attributeSelectionOptionFormControl" (change)="onAttributeSelectionOptionChange($event)">
+                            <mat-radio-button [value]="'all'">All attributes</mat-radio-button>
+                            <mat-radio-button [value]="'selection'">Selected attributes</mat-radio-button>
+                        </mat-radio-group>
+                        <ng-container *ngIf="currentAttributeSelectionOption === 'selection'"> <!-- 'selection' option selected -->
+                            <div class="attributes-selection" fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="start center">
+                                <div *ngFor="let attribute of allAttributes">
+                                    <mat-checkbox (change)="onAttributeCheckboxChange($event)" [formControl]="secondFormGroup.get('attributes').get('' + attribute.id)">{{attribute.name}}</mat-checkbox>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+                <div class="controls">
+                    <button type="button" mat-flat-button matStepperPrevious color="primary">Back</button>
+                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="secondFormGroup.invalid">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+
+        <!-- third step: select items of view -->
+        <mat-step [stepControl]="thirdFormGroup">
+            <form [formGroup]="secondFormGroup" (ngSubmit)="onThirdFormSubmit()">
+                <ng-template matStepLabel>Select Items</ng-template>
+                <div class="content step-3">
+                    <ng-container *ngIf="!itemValueOperatorAndAttributeList || !itemValueOperatorAndAttributeList.length">
+                        No item filtering, click 'add' to create one and 'remove' to delete
+                    </ng-container>
+                    <div class="item-filtering" *ngFor="let itemValueOperatorAndAttribute of itemValueOperatorAndAttributeList">
+                        <app-attribute-operator-editor [attributes]="allAttributes"
+                                                       [itemValueOperatorAndAttribute]="itemValueOperatorAndAttribute"
+                                                       (events)="onAttributeOperatorEvent($event, itemValueOperatorAndAttribute)">
+                        </app-attribute-operator-editor>
+                        <div class="delete-item-filtering">
+                            <button type="button" mat-flat-button color="primary" (click)="onDeleteItemFilter($event, itemValueOperatorAndAttribute)">Delete</button>
+                        </div>
+                    </div>
+                    <div class="add-item-filtering">
+                        <button type="button" mat-flat-button color="primary" (click)="onAddItemFilter($event)">Add</button>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button type="button" mat-flat-button matStepperPrevious color="primary">Back</button>
+                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="thirdFormGroup.invalid">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+        <!-- forth: review data export -->
+        <mat-step [stepControl]="fourthFormGroup">
+            <form [formGroup]="fourthFormGroup" (ngSubmit)="onFourthFormSubmit()">
+                <ng-template matStepLabel>Review Data Export</ng-template>
+                <ng-container *ngIf="!fourthFormReady">
+                    Loading ...
+                </ng-container>
+                <ng-container *ngIf="fourthFormReady">
+                    <div class="content step=4">
+                        <app-view-only-data-table [attributes]="dataExport.attributes"
+                                                  [items]="dataExport.items">
+                        </app-view-only-data-table>
+                    </div>
+                </ng-container>
+                <div class="controls">
+                    <button type="button" mat-flat-button matStepperPrevious color="primary">Back</button>
+                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="!fourthFormReady">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+
+        <!-- fifth step: export data job-->
+        <mat-step [stepControl]="fifthFormGroup">
+            <form [formGroup]="fifthFormGroup" (ngSubmit)="onFifthFormSubmit(stepper)">
+                <ng-template matStepLabel>Schedule export job</ng-template>
+                <div class="content step-5">
+                    <ng-container *ngIf="!jobSubmitted">
+                       Submitting data export job ...
+                    </ng-container>
+                    <ng-container *ngIf="jobSubmitted">
+                        Data export job submitted, job Id {{job.id}}
+                    </ng-container>
+                </div>
+                <div class="controls">
+                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="!jobSubmitted">Done</button>
+                </div>
+            </form>
+        </mat-step>
+
+    </mat-horizontal-stepper>
 </div>

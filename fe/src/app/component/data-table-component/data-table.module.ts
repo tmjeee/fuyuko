@@ -6,6 +6,7 @@ import {AppMaterialsModule} from '../../app-materials.module';
 import {DataTableComponent} from './data-table.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {ItemSearchModule} from '../item-search-component/item-search.module';
+import {ViewOnlyDataTableComponent} from './view-only-data-table.component';
 
 
 @NgModule({
@@ -20,9 +21,11 @@ import {ItemSearchModule} from '../item-search-component/item-search.module';
   ],
   declarations: [
     DataTableComponent,
+    ViewOnlyDataTableComponent,
   ],
   exports: [
     DataTableComponent,
+    ViewOnlyDataTableComponent,
   ]
 })
 export class DataTableModule {

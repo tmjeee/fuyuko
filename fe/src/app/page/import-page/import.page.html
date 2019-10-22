@@ -8,7 +8,11 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <app-import-data></app-import-data>
+      <app-import-data
+              [views]="allViews"
+              [showPreview]="shwoPreviewFn"
+              [submitDataImport]="submitDataImportFn">
+      </app-import-data>
     </mat-card-content>
   </mat-card>
 </div>

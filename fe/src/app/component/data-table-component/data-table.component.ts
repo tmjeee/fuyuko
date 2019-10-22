@@ -210,7 +210,8 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   onAddChildrenItem(rootParentItem: TableItem) {
     const nextId = this.counter--;
-    const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes, rootParentItem.id, rootParentItem.rootParentId);
+    const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes,
+        rootParentItem.id, rootParentItem.rootParentId);
     this.pendingSavingItems.set(nextId, newItem);
     const indexOfRootParentItem = this.itemAndAttributeSet.tableItems.findIndex((i: TableItem) => i.id === rootParentItem.id);
     this.itemAndAttributeSet.tableItems.splice(indexOfRootParentItem + 1, 0, newItem);

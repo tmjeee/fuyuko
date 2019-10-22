@@ -1,0 +1,36 @@
+
+<div class="view-only-data-table-component">
+    <table mat-table [dataSource]="datasource">
+        <ng-container matColumnDef="expansion" sticky>
+            <th mat-header-cell class="expansion-header" *matHeaderCellDef></th>
+            <td mat-cell class="expansion" *matCellDef="let tableItem">
+                <mat-icon class="selectable" *ngIf="!isRowExpanded(tableItem)" (click)="rowClicked(tableItem)">chevron_right</mat-icon>
+                <mat-icon class="selectable" *ngIf="isRowExpanded(tableItem)" (click)="rowClicked(tableItem)">expand_more</mat-icon>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell class="attribute-header" *matHeaderCellDef>Name</th>
+            <td mat-cell class="attribute" *matCellDef="let tableItem">
+                {{tableItem.name}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell class="attribute-header" *matHeaderCellDef>Description</th>
+            <td mat-cell class="attribute" *matCellDef="let tableItem">
+                {{tableItem.description}}
+            </td>
+        </ng-container>
+
+        <ng-container [matColumnDef]="''+attribute.id" *ngFor="let attribute of attributes">
+            <th mat-header-cell class="attribute-header" *matHeaderCellDef>{{attribute.name}}</th>
+            <td mat-cell class="attribute" *matCellDef="let tableItem">{{tableItem[attribute.id] | itemAttributeValueAsString:attribute }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+        <tr mat-row *matRowDef="let tableItem; columns: displayColumns"></tr>
+        <tr mat-row *matRowDef="let tableItem; columns: displayColumns; when: isChildRow"
+                 [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></tr>
+    </table>
+</div>

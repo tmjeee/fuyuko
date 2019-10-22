@@ -1,3 +1,36 @@
 .export-data-component {
+  .content {
+    &.step-2 {
+      .mat-radio-group {
+        *:not(:last-child) {
+          margin-right: 10px;
+        }
+      }
+      .attributes-selection {
+        margin-top: 10px;
+      }
+    }
+
+    &.step-3 {
+      .item-filtering {
+        ::ng-deep .attribute-operator-editor-component {
+          margin-bottom: 10px;
+        }
+        .delete-item-filring {
+          margin-top: 10px;
+        }
+      }
+      .add-item-filtering {
+        margin-top: 10px;
+      }
+    }
+  }
+  .controls {
+    margin-top: 10px;
+    button:not(:last-child) {
+      margin-right: 10px;
+    }
+
+  }
 
 }

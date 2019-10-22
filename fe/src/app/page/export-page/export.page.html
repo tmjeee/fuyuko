@@ -1,3 +1,18 @@
 <div class="export-page">
-    <h1>Export page</h1>
+    <mat-card class="mat-elevation-z-20">
+        <mat-card-header>
+            <mat-card-title>Export data</mat-card-title>
+            <mat-card-subtitle>
+                Wizard to export item(s) from View
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-export-data [views]="allViews"
+                             [viewAttributesFn]="viewAttributeFn"
+                             [viewItemsFn]="viewItemsFn"
+                             [previewExportFn]="previewExportFn"
+                             [submitExportJobFn]="submitExportJobFn">
+            </app-export-data>
+        </mat-card-content>
+    </mat-card>
 </div>

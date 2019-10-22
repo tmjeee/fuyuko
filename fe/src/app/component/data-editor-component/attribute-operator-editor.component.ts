@@ -106,15 +106,15 @@ export class AttributeOperatorEditorComponent implements OnInit {
                 this.formControlOperator = this.formBuilder.control(this.operator, [Validators.required]);
             }
             const hasItemValueForOperator = this.formControlOperator && operatorNeedsItemValue(this.formControlOperator.value);
-            if (this.itemValue && hasItemValueForOperator) {
+            if (/*this.itemValue &&*/ hasItemValueForOperator) {
                 switch (this.attribute.type) {
                     case 'string':
                     case 'text':
                     case 'number':
                     case 'date': {
-                        this.formControl = this.formBuilder.control(
-                            convertToString(this.attribute, this.itemValue), [Validators.required]);
-                        this.formGroup.addControl('formControl', this.formControlAttribute);
+                        const v = this.itemValue ? convertToString(this.attribute, this.itemValue) : '';
+                        this.formControl = this.formBuilder.control(v, [Validators.required]);
+                        this.formGroup.addControl('formControl', this.formControl);
                         break;
                     }
                     case 'currency': {

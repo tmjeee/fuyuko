@@ -1,10 +1,13 @@
-import {NgModule} from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {AppMaterialsModule} from "../../app-materials.module";
-import {ExportDataComponent} from "./export-data.component";
-import {AngularFileUploaderModule} from "angular-file-uploader";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AppMaterialsModule} from '../../app-materials.module';
+import {ExportDataComponent} from './export-data.component';
+import {AngularFileUploaderModule} from 'angular-file-uploader';
+import {DataEditorModule} from '../data-editor-component/data-editor.module';
+import {DataTableModule} from '../data-table-component/data-table.module';
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 @NgModule({
     imports: [
@@ -13,7 +16,10 @@ import {AngularFileUploaderModule} from "angular-file-uploader";
         FormsModule,
         ReactiveFormsModule,
         AppMaterialsModule,
-        AngularFileUploaderModule
+        AngularFileUploaderModule,
+        DataTableModule,
+        DataEditorModule,
+        FlexLayoutModule,
     ],
     declarations: [
         ExportDataComponent

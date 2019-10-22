@@ -2,12 +2,13 @@
     <mat-horizontal-stepper [linear]="true" #stepper>
         <!-- first step: select view -->
         <mat-step [stepControl]="firstFormGroup">
-            <form [formGroup]="firstFormGroup">
+            <form [formGroup]="firstFormGroup" (ngSubmit)="onFirstFormSubmit()">
                 <ng-template matStepLabel>Select View</ng-template>
                 <div class="content">
                     <mat-form-field>
                         <mat-label>Import View</mat-label>
-                        <mat-select>
+                        <mat-select [formControl]="viewFormControl">
+                            <mat-option [value]="undefined">-- select a view --</mat-option>
                             <mat-option *ngFor="let view of views" [value]="view">
                                 {{view.name}} - {{view.description}}
                             </mat-option>
@@ -17,47 +18,63 @@
                     </mat-form-field>
                 </div>
                 <div class="controls">
-                    <button mat-flat-button matStepperNext color="primary">Next</button>
+                    <button mat-flat-button matStepperNext color="primary" type="submit" [disabled]="!firstFormGroup.valid">Next</button>
                 </div>
             </form>
         </mat-step>
 
         <!-- second step: upload data file -->
-        <mat-step [stepControl]="secondFormGroup">
-            <form [formGroup]="secondFormGroup">
+        <mat-step [stepControl]="secondFormGroup" >
+            <form [formGroup]="secondFormGroup" (ngSubmit)="onSecondFormSubmit()">
                 <ng-template matStepLabel>Upload data file</ng-template>
                 <div class="content">
-                    <angular-file-uploader
-                            (ApiResponse)="onFileUploadResponse($event)"
-                            [config]="fileUploadConfig">
-                    </angular-file-uploader>
+                  <input type="file" #fileUploadInputElement
+                         (change)="onUploadDataFileChange($event.target.files)">
                 </div>
                 <div class="controls">
-                    <button mat-flat-button matStepperPrevious color="primary">Back</button>
-                    <button mat-flat-button matStepperNext color="primary">Next</button>
+                    <button mat-flat-button matStepperPrevious color="primary" type="button">Back</button>
+                    <button mat-flat-button matStepperNext color="primary" type="submit" [disabled]="!secondFormGroup.valid">Next</button>
                 </div>
             </form>
         </mat-step>
 
         <!-- thrid step: Review data file-->
         <mat-step [state]="thirdFormGroup">
-            <form [formGroup]="thirdFormGroup">
+            <form [formGroup]="thirdFormGroup" (ngSubmit)="onThirdFormSubmit()">
                 <ng-template matStepLabel>Review</ng-template>
+                <div class="content">
+                    <ng-container *ngIf="dataImport">
+                        <app-notification-message-listing [messages]="dataImport.messages"></app-notification-message-listing>
+                        <app-view-only-data-table [attributes]="dataImport.attributes"
+                                                  [items]="dataImport.items">
+                        </app-view-only-data-table>
+                    </ng-container>
+                </div>
                 <div class="controls">
-                    <button mat-flat-button matStepperPrevious color="primary">Back</button>
-                    <button mat-flat-button matStepperNext color="primary">Next</button>
+                    <button mat-flat-button matStepperPrevious color="primary" type="button">Back</button>
+                    <button mat-flat-button matStepperNext color="primary"
+                            [disabled]="disableThirdForm"
+                            type="submit">Next</button>
                 </div>
             </form>
         </mat-step>
 
 
-        <!-- fourth step: Import data -->
+        <!-- fourth step: Import data job -->
         <mat-step [state]="fourthFormGroup">
-            <form [formGroup]="fourthFormGroup">
+            <form [formGroup]="fourthFormGroup" (ngSubmit)="onFourthFormSubmit(stepper)">
                 <ng-template matStepLabel>Import</ng-template>
+                <div class="content">
+                    <!-- show job submitted -->
+                    <ng-container *ngIf="!jobSubmitted">
+                        Submiting data import job ...
+                    </ng-container>
+                    <ng-container *ngIf="jobSubmitted">
+                        Data Import job submitted (Job id {{this.job.id}})
+                    </ng-container>
+                </div>
                 <div class="controls">
-                    <button mat-flat-button matStepperPrevious color="primary">Back</button>
-                    <button mat-flat-button matStepperNext color="primary">Done</button>
+                    <button mat-flat-button matStepperNext color="primary" [disabled]="!jobSubmitted" type="submit">Done</button>
                 </div>
             </form>
         </mat-step>

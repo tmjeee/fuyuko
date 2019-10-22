@@ -102,8 +102,9 @@ import {PricingStructureService} from './service/pricing-structure-service/prici
 import {ImportDataComponent} from "./component/import-data-component/import-data.component";
 import {ImportDataModule} from "./component/import-data-component/import-data.module";
 import {ExportDataModule} from "./component/export-data-component/export-data.module";
-import {ImportDataService} from "./service/export-data-service/import.data.service";
-import {ExportDataService} from "./service/import-data-service/export-data.service";
+import {ImportDataService} from "./service/import-data-service/import-data.service";
+import {ExportDataService} from "./service/export-data-service/export-data.service";
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 @NgModule({
   declarations: [
@@ -174,6 +175,7 @@ import {ExportDataService} from "./service/import-data-service/export-data.servi
     AppRoutingModule,
     AppMaterialsModule,
     AngularFileUploaderModule,
+    FlexLayoutModule,
     SimpleNotificationsModule.forRoot({
       position: ['bottom', 'center'],
       timeOut: 2000,
