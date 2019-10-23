@@ -26,7 +26,7 @@ import {ViewHelpPageComponent} from './page/view-help-page/view-help.page';
 import {ImportPageComponent} from './page/import-page/import.page';
 import {ImportHelpPageComponent} from './page/import-help-page/import-help.page';
 import {ExportPageComponent} from './page/export-page/export.page';
-import {ExportHelpPageComponent} from "./page/export-help-page/export-help.page";
+import {ExportHelpPageComponent} from './page/export-help-page/export-help.page';
 import {NotificationComponent} from './component/notification-component/notification.component';
 import {NotificationDialogComponent} from './component/notification-component/notification-dialog.component';
 import {OverlayContainer} from '@angular/cdk/overlay';
@@ -44,7 +44,6 @@ import {SideNavComponent} from './component/side-nav-component/side-nav.componen
 import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
 import {HelpCenterLayoutComponent} from './layout/help-center-gen-layout/help-center-gen.layout';
 import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
-import {PricingLayoutComponent} from './layout/pricing-gen-layout/pricing-gen.layout';
 import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
 import {PricingPageComponent} from './page/pricing-page/pricing.page';
@@ -99,12 +98,30 @@ import {JobsModule} from './component/jobs-component/jobs.module';
 import {UtilsModule} from './utils/utils.module';
 import {PricingModule} from './component/pricing-component/pricing.module';
 import {PricingStructureService} from './service/pricing-structure-service/pricing-structure.service';
-import {ImportDataComponent} from "./component/import-data-component/import-data.component";
-import {ImportDataModule} from "./component/import-data-component/import-data.module";
-import {ExportDataModule} from "./component/export-data-component/export-data.module";
-import {ImportDataService} from "./service/import-data-service/import-data.service";
-import {ExportDataService} from "./service/export-data-service/export-data.service";
-import {FlexLayoutModule} from "@angular/flex-layout";
+import {ImportDataModule} from './component/import-data-component/import-data.module';
+import {ExportDataModule} from './component/export-data-component/export-data.module';
+import {ImportDataService} from './service/import-data-service/import-data.service';
+import {ExportDataService} from './service/export-data-service/export-data.service';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {SettingsService} from './service/settings-service/settings.service';
+import {tap} from 'rxjs/operators';
+import {User} from './model/user.model';
+import {SettingsModule} from './component/settings-component/settings.module';
+
+const appInitializer = (settingsService: SettingsService, authService: AuthService) => {
+  return () => {
+    authService.asObservable()
+      .pipe(
+        tap((u: User) => {
+        if (u == null) { // logout
+          settingsService.destroyRuntimeSettings().subscribe();
+        } else { // login
+          settingsService.getRuntimeSettings(u).subscribe();
+        }
+      })
+      ).subscribe();
+  };
+};
 
 @NgModule({
   declarations: [
@@ -117,7 +134,6 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     UserLayoutComponent,
     HelpCenterLayoutComponent,
     ImportExportLayoutComponent,
-    PricingLayoutComponent,
     ViewLayoutComponent,
 
     // pages
@@ -205,6 +221,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     PricingModule,
     ImportDataModule,
     ExportDataModule,
+    SettingsModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -224,7 +241,9 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     {provide: PricingStructureService, useClass: PricingStructureService} as Provider,
     {provide: ImportDataService, useClass: ImportDataService} as Provider,
     {provide: ExportDataService, useClass: ExportDataService} as Provider,
+    {provide: SettingsService, useClass: SettingsService} as Provider,
 
+    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,

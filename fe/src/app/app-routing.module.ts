@@ -23,7 +23,6 @@ import {UserPeoplePageComponent} from './page/user-people-page/user-people.page'
 import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
 import {HelpCenterLayoutComponent} from './layout/help-center-gen-layout/help-center-gen.layout';
 import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
-import {PricingLayoutComponent} from './layout/pricing-gen-layout/pricing-gen.layout';
 import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
 import {PricingPageComponent} from './page/pricing-page/pricing.page';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
@@ -39,8 +38,8 @@ import {AuthGuard} from './guard/auth-guard/auth.guard';
 import {ErrorPageComponent} from './page/error-page/error.page';
 import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
-import {ExportPageComponent} from "./page/export-page/export.page";
-import {ExportHelpPageComponent} from "./page/export-help-page/export-help.page";
+import {ExportPageComponent} from './page/export-page/export.page';
+import {ExportHelpPageComponent} from './page/export-help-page/export-help.page';
 
 const routes: Routes = [
 
@@ -197,33 +196,6 @@ const routes: Routes = [
   } as Route,
 
 
-  // pricing-gen-layout
-  {
-    path: 'pricing-gen-layout',
-    canActivate: [AuthGuard],
-    component: PricingLayoutComponent,
-    data: {
-      sideNav: 'pricing'
-    },
-    children: [
-      {
-        path: 'pricing-structure',
-        canActivate: [AuthGuard],
-        component: PricingPageComponent,
-        data: {
-          subSideNav: 'pricing'
-        }
-      } as Route,
-      {
-        path: 'pricing-help',
-        canActivate: [AuthGuard],
-        component: PricingHelpPageComponent,
-        outlet: 'help'
-      }
-    ]
-  } as Route,
-
-
   // view-gen-layout
   {
     path: 'view-gen-layout',
@@ -360,11 +332,28 @@ const routes: Routes = [
        canActivate: [AuthGuard],
        component: JobsHelpPageComponent,
        outlet: 'help',
-     } as Route
+     } as Route,
+
+
+     // pricing
+     {
+       path: 'pricing-structure',
+       canActivate: [AuthGuard],
+       component: PricingPageComponent,
+       data: {
+         sideNav: 'pricing'
+       }
+     } as Route,
+     {
+       path: 'pricing-help',
+       canActivate: [AuthGuard],
+       component: PricingHelpPageComponent,
+       outlet: 'help'
+     }
    ]
  } as Route,
- {
-   path: 'error',
+  {
+    path: 'error',
    component: ErrorPageComponent
  } as Route,
  {

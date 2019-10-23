@@ -1,4 +1,17 @@
 .settings-page {
   margin: 10px;
 
+  ::ng-deep {
+    section {
+      margin: 10px 0 30px 10px;
+      mat-label {
+        display: block;
+      }
+      mat-hint {
+        display: block;
+      }
+    }
+  }
+
+
 }

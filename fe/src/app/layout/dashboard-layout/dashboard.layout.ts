@@ -3,6 +3,7 @@ import {AbstractGenLayoutComponent} from '../abstract-gen.layout';
 import {AppNotificationService} from '../../service/app-notification-service/app-notification.service';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {SettingsService} from '../../service/settings-service/settings.service';
 
 
 @Component({
@@ -13,8 +14,9 @@ export class DashboardLayoutComponent extends AbstractGenLayoutComponent impleme
 
   constructor(notificationService: AppNotificationService,
               authService: AuthService,
+              settingsService: SettingsService,
               router: Router,
               route: ActivatedRoute) {
-    super(notificationService, authService, router, route);
+    super(notificationService, authService, settingsService, router, route);
   }
 }

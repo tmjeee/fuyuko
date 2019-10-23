@@ -3,6 +3,7 @@ import {Router, ActivatedRoute} from '@angular/router';
 import {AppNotificationService} from '../../service/app-notification-service/app-notification.service';
 import {AbstractGenSubLayoutComponent} from '../abstract-gen-sub.layout';
 import {AuthService} from '../../service/auth-service/auth.service';
+import {SettingsService} from '../../service/settings-service/settings.service';
 
 
 @Component({
@@ -13,8 +14,9 @@ export class UserLayoutComponent extends AbstractGenSubLayoutComponent {
 
   constructor(notificationService: AppNotificationService,
               authService: AuthService,
+              settingsService: SettingsService,
               route: ActivatedRoute, router: Router) {
-    super(notificationService, authService, route, router);
+    super(notificationService, authService, settingsService, route, router);
   }
 }
 

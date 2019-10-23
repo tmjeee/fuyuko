@@ -1,10 +1,12 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../service/auth-service/auth.service';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {User} from '../../model/user.model';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
+import {SettingsService} from '../../service/settings-service/settings.service';
+import {RuntimeSettings, Settings} from "../../model/settings.model";
 
 
 @Component({
@@ -20,6 +22,7 @@ export class LoginPageComponent {
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
+              private settingsService: SettingsService,
               private notificationService: NotificationsService,
               private router: Router) {
     this.formControlUsername = formBuilder.control('', [Validators.required]);
@@ -40,6 +43,10 @@ export class LoginPageComponent {
           } else {
             this.notificationService.error('Error', 'Unexpected error logging in');
           }
+          return u;
+        }),
+        map((u: User|null) => {
+            if (u) { }
         })
       ).subscribe();
   }

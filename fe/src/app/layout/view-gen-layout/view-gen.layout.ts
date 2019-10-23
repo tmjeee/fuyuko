@@ -8,6 +8,7 @@ import {Subscription} from 'rxjs';
 import {View} from '../../model/view.model';
 import {map} from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
+import {SettingsService} from '../../service/settings-service/settings.service';
 
 
 @Component({
@@ -26,10 +27,11 @@ export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implement
 
   constructor(appNotificationService: AppNotificationService,
               authService: AuthService,
+              settingsService: SettingsService,
               router: Router,
               route: ActivatedRoute,
               protected viewService: ViewService) {
-    super(appNotificationService, authService, route, router);
+    super(appNotificationService, authService, settingsService, route, router);
   }
 
 

@@ -2,10 +2,12 @@ import {OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AppNotificationService} from '../service/app-notification-service/app-notification.service';
 import {ActivatedRoute, ActivatedRouteSnapshot, Router, Event as RouterEvent, NavigationEnd} from '@angular/router';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {AppNotification} from '../model/notification.model';
 import {AuthService} from '../service/auth-service/auth.service';
 import {User} from '../model/user.model';
+import {SettingsService} from '../service/settings-service/settings.service';
+import {RuntimeSettings} from '../model/settings.model';
 
 export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
 
@@ -21,12 +23,16 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
   notificationServiceSubscription: Subscription;
   routerEventSubscription: Subscription;
 
+  runtimeSettings: RuntimeSettings;
+
   constructor(protected notificationService: AppNotificationService,
               protected authService: AuthService,
+              protected settingsService: SettingsService,
               protected router: Router,
               protected route: ActivatedRoute) {
-    this.sideNavOpened = true;
-    this.helpNavOpened = true;
+    this.runtimeSettings = this.settingsService.getLocalRuntimeSettings();
+    this.helpNavOpened = this.runtimeSettings.openHelpNav;
+    this.sideNavOpened = this.runtimeSettings.openSideNav;
   }
 
 
