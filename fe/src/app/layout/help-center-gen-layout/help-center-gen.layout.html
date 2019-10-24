@@ -36,6 +36,10 @@
                 <mat-icon>live_help</mat-icon>
                 <a href="#" [routerLink]="['/help-center-gen-layout', {outlets: {primary:['help-center'], help:['help-center-help']}}]">Help Center</a>
               </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'forum'">
+                <mat-icon>forum</mat-icon>
+                <a href="#" [routerLink]="['/help-center-gen-layout', {outlets: {primary:['forum'], help:['forum-help']}}]">Forum</a>
+              </mat-list-item>
             </mat-list>
           </mat-sidenav>
           <mat-sidenav-content>

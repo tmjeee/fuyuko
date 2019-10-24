@@ -1,0 +1,30 @@
+<div class="help-center-component">
+    <mat-sidenav-container [autosize]="true">
+        <mat-sidenav mode="side" opened="true" [fixedInViewport]="false" [autoFocus]="true">
+            <mat-list role="list">
+                <mat-list-item
+                        (click)="onFaqCategoryClicked($event, category)"
+                        *ngFor="let category of categories"
+                        role="listitem">
+                    {{category.name}}
+                </mat-list-item>
+            </mat-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <ng-container *ngIf="loadingFaqs">Loading ...</ng-container>
+            <mat-accordion *ngIf="!loadingFaqs">
+                <mat-expansion-panel *ngFor="let faq of faqs">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{faq.title}}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            {{faq.description}}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div> {{faq.answer}} </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

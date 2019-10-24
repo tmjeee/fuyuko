@@ -1,0 +1,26 @@
+<div class="all-forums-page">
+    <!--
+    <h1>All Forums</h1>
+    <ul>
+        <li>
+            <a [routerLink]="[1]">All Topics in Forum #1</a>
+        </li>
+        <li>
+            <a [routerLink]="[1, 'topic', 2]">All Posts in Topic #2 in Forum #1</a>
+        </li>
+    </ul>
+    -->
+
+    <mat-card class="mat-elevation-z-20">
+        <mat-card-header>
+            <mat-card-title>Forums</mat-card-title>
+            <mat-card-subtitle>
+                All forums available
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-forums-listings [forums]="forums">
+            </app-forums-listings>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,34 @@
+<div class="forums-listings-component">
+
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let forum of forums">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                   {{forum.title}}
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{forum.description}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div>
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <div fxFlex="20%">Creator:</div>
+                    <div fxFlex="80%">{{forum.creator.name}}</div>
+                </div>
+                <div fxLayout="row">
+                    <div fxFlex>Date:</div>
+                    <div fxFlex>{{forum.creationDate | date}}</div>
+                </div>
+                <div fxLayout="row">
+                    <div fxFlex>Title:</div>
+                    <div fxFlex>{{forum.title}}</div>
+                </div>
+                <div fxLayout="row">
+                    <div fxFlex>Description:</div>
+                    <div fxFlex>{{forum.description}}</div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+</div>
