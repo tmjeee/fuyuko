@@ -109,13 +109,15 @@ import {User} from './model/user.model';
 import {SettingsModule} from './component/settings-component/settings.module';
 import {ForumPageComponent} from './page/forum-page/forum.page';
 import {ForumHelpPageComponent} from './page/forum-help-page/forum-help.page';
-import {HelpCenterModule} from "./component/help-center-component/help-center.module";
-import {HelpCenterService} from "./service/help-center-service/help-center.service";
-import {ForumService} from "./service/forum-service/forum.service";
-import {AllForumsPageComponent} from "./page/forum-page/all-forums.page";
-import {AllTopicsInForumPageComponent} from "./page/forum-page/all-topics-in-forum.page";
-import {AllPostsInTopicPageComponent} from "./page/forum-page/all-posts-in-topic.page";
-import {ForumModule} from "./component/forum-component/forum.module";
+import {HelpCenterModule} from './component/help-center-component/help-center.module';
+import {HelpCenterService} from './service/help-center-service/help-center.service';
+import {ForumService} from './service/forum-service/forum.service';
+import {AllForumsPageComponent} from './page/forum-page/all-forums.page';
+import {AllTopicsInForumPageComponent} from './page/forum-page/all-topics-in-forum.page';
+import {AllPostsInTopicPageComponent} from './page/forum-page/all-posts-in-topic.page';
+import {ForumModule} from './component/forum-component/forum.module';
+import {DashboardModule} from './component/dashboard-component/dashboard.module';
+import {DashboardService} from "./service/dashboard-service/dashboard.service";
 
 const appInitializer = (settingsService: SettingsService, authService: AuthService) => {
   return () => {
@@ -238,6 +240,7 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     SettingsModule,
     HelpCenterModule,
     ForumModule,
+    DashboardModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -260,6 +263,7 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     {provide: SettingsService, useClass: SettingsService} as Provider,
     {provide: HelpCenterService, useClass: HelpCenterService} as Provider,
     {provide: ForumService, useClass: ForumService} as Provider,
+    {provide: DashboardService, useClass: DashboardService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,

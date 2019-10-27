@@ -1,0 +1,52 @@
+<div class="dashboard-component">
+
+    <div fxLayout="row" class="controls-panel">
+        <mat-form-field class="control-panel-element">
+            <mat-label>Dashboard Layout</mat-label>
+            <mat-select [formControl]="formControlDashboardStrategySelected" (selectionChange)="onDashboardStrategySelectionChanged($event)">
+                <mat-option *ngFor="let strategy of strategies" [value]="strategy">{{strategy.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="control-panel-element">
+            <mat-label>Widgets</mat-label>
+            <mat-select [formControl]="formControlWidgetInfoSelected" (selectionChange)="onDashboardWidgetInfoSelectionChanged($event)">
+                <mat-option *ngFor="let widgetInfo of dashboardWidgetInfos" [value]="widgetInfo">{{widgetInfo.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div class="control-panel-element">
+            <button type="button" mat-flat-button color="primary">Save</button>
+        </div>
+    </div>
+
+    <div fxLayout="row" class="dashboard-panel" cdkDropListGroup>
+        <div *ngFor="let columnIndex of columnIndexes" fxFlex>
+            <div fxLayout="column"
+                 class="widgets-droplist"
+                 fxFlex
+                 cdkDropList
+                 [cdkDropListData]="getDashboardWidgetTypesForColumn(columnIndex)"
+                 (cdkDropListDropped)="onDrop($event)">
+                <ng-container *ngFor="let widgetType of getDashboardWidgetTypesForColumn(columnIndex)">
+                    <div cdkDrag class="widget-panel">
+                        <div class="widget-handle" cdkDragHandle>
+                            <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                            </svg>
+                        </div>
+                        <div class="widget-drag-preview" *cdkDragPreview>
+                            <mat-icon>file_copy</mat-icon>
+                        </div>
+                        <div class="widget-drag-placeholder" *cdkDragPlaceholder>
+                            Drag Placeholder
+                        </div>
+                        <app-widget-container [dashboardWidgetType]="widgetType">
+                        </app-widget-container>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

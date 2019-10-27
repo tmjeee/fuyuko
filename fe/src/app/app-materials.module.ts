@@ -35,6 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 @NgModule({
   imports: [
@@ -72,7 +73,8 @@ import {MatMomentDateModule} from '@angular/material-moment-adapter';
     MatSortModule,
     MatTableModule,
     MatDatepickerModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    DragDropModule,
   ],
   exports: [
     MatAutocompleteModule,
@@ -110,6 +112,7 @@ import {MatMomentDateModule} from '@angular/material-moment-adapter';
     MatTableModule,
     MatDatepickerModule,
     MatMomentDateModule,
+    DragDropModule,
   ]
 })
 export class AppMaterialsModule {

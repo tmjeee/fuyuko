@@ -1,7 +1,8 @@
 <div class="dashboard-page">
-  <h1>Dashboard</h1>
-
-  <ul>
-    <li><a [routerLink]="['/user-gen-layout', {outlets: {primary:['role'], help: ['user-help'] }}]">user</a></li>
-  </ul>
+    <app-dashboard
+            [dashboardWidgetTypes]="dashboardWidgetTypes"
+            [dashboardWidgetInfos]="dashboardWidgetInfos"
+            [strategies]="strategies"
+            [initialStrategy]="selectedStrategy">
+    </app-dashboard>
 </div>

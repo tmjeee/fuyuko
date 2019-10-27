@@ -25,7 +25,21 @@ html {
     .mat-table {
       width: 100%;
     }
+
   }
+}
+
+:root {
+    // for Dashboard page's widgets drap and drop
+    .widget-drag-preview {
+      border: 2px solid black;
+      background-color: white;
+      margin-left: 15px;
+      padding: 10px;
+      .mat-icon {
+        color: black;
+      }
+    }
 }
 
 

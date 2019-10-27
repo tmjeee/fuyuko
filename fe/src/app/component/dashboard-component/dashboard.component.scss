@@ -1,0 +1,59 @@
+.dashboard-component {
+    :host-context(.widget-drag-preview) {
+      .mat-icon {
+        color: white;
+        background-color: white;
+      }
+    }
+
+  .controls-panel {
+    .control-panel-element:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+
+  ::ng-deep {
+    .dashboard-panel {
+      .widgets-droplist {
+        &.cdk-drop-list-dragging {
+          .widget-panel {
+            .widget-handle {
+              display: none !important;
+              visibility: hidden !important;
+            }
+          }
+        }
+        .widget-drag-placeholder {
+          background: var(--my-app-background-background);
+          border: dotted 3px var(--my-app-foreground-text);
+          min-height: 50px;
+          transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+        }
+        .widget-panel {
+          min-height: 100px;
+          // border: 1px solid;
+          position: relative;
+          .widget-handle {
+            display: none;
+            visibility: hidden;
+            position: absolute;
+            padding: 5px;
+            top: 0;
+            right: 0;
+            background-color: var(--my-app-background-background);
+            svg {
+              color: var(--my-app-foreground-text);
+            }
+          }
+          &:hover {
+            .widget-handle {
+              display: block;
+              visibility: visible;
+              cursor: move;
+            }
+          }
+        }
+      }
+    }
+  }
+}
