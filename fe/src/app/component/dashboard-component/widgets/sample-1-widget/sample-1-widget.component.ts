@@ -1,5 +1,6 @@
 import {DashboardWidget, DashboardWidgetInfo} from '../../../../model/dashboard.model';
 import {Component, OnInit} from '@angular/core';
+import {DashboardWidgetService} from "../../../../service/dashboard-service/dashbowd-widget.service";
 
 
 @Component({
@@ -7,7 +8,7 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./sample-1-widget.component.scss']
 
 })
-export class Sample1WidgetComponent implements DashboardWidget, OnInit {
+export class Sample1WidgetComponent extends DashboardWidget implements OnInit {
 
     id = Sample1WidgetComponent.info().id;
     name = Sample1WidgetComponent.info().name;
@@ -18,7 +19,8 @@ export class Sample1WidgetComponent implements DashboardWidget, OnInit {
         return { id: 'sample-1-widget', name: 'sample-1-widget name', type: Sample1WidgetComponent };
     }
 
-    constructor() {
+    constructor(dashboardWidgetService: DashboardWidgetService) {
+        super(dashboardWidgetService);
     }
 
     ngOnInit(): void {

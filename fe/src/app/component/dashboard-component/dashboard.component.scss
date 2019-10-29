@@ -44,6 +44,9 @@
             svg {
               color: var(--my-app-foreground-text);
             }
+            .delete-widget {
+              cursor: pointer;
+            }
           }
           &:hover {
             .widget-handle {

@@ -1,13 +1,32 @@
-import {Component, Input, OnInit, Type} from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    QueryList,
+    Type,
+    ViewChild,
+    ViewChildren, ViewContainerRef
+} from '@angular/core';
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {MatSelectChange} from '@angular/material/select';
-import {DashboardStrategy, DashboardWidget, DashboardWidgetInfo} from '../../model/dashboard.model';
+import {
+    DashboardStrategy,
+    DashboardWidgetInfo,
+    DashboardWidgetInstance
+} from '../../model/dashboard.model';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {WidgetContainerComponent} from './widget-container.component';
+import * as uuid from 'uuid/v1';
+import {WidgetContainerComponent} from "./widget-container.component";
 
 
 
 
+export interface DashboardComponentEvent {
+    serializedData: string;
+}
 
 
 @Component({
@@ -21,57 +40,100 @@ export class DashboardComponent implements OnInit {
     @Input() initialStrategy: DashboardStrategy;
 
     @Input() dashboardWidgetInfos: DashboardWidgetInfo[];
-    @Input() dashboardWidgetTypes: Type<DashboardWidget>[];
-    // @Input() dashboardWidgetTypes: DashboardWidgetType[];
+    @Input() data: string;
+
+    @Output() events: EventEmitter<DashboardComponentEvent>;
+
+    @ViewChildren('widgetPanel', {read: ViewContainerRef}) widgetPanels: QueryList<ViewContainerRef>;
+    @ViewChildren('widgetContainer', {read: WidgetContainerComponent}) widgetContainers: QueryList<WidgetContainerComponent>;
 
 
+    prevStrategy: DashboardStrategy;
     columnIndexes: number[];
     formControlDashboardStrategySelected: FormControl;
     formControlWidgetInfoSelected: FormControl;
 
 
     constructor(private formBuilder: FormBuilder) {
+        this.events = new EventEmitter<DashboardComponentEvent>();
     }
 
     ngOnInit(): void {
         this.formControlDashboardStrategySelected = this.formBuilder.control(this.initialStrategy, [Validators.required]);
         this.formControlWidgetInfoSelected = this.formBuilder.control(undefined);
-        this.reload();
+        this.columnIndexes = this.getCurrentStrategy().columnIndexes();
+        this.prevStrategy = this.initialStrategy;
+        if (this.data) {
+            this.getCurrentStrategy().deserialize(this.data);
+        }
     }
 
     onDashboardStrategySelectionChanged($event: MatSelectChange) {
-        this.formControlDashboardStrategySelected.setValue($event.value as DashboardStrategy);
-        this.reload();
+        console.log('***** onDashboardStrategySelectionChanged');
+        const d = this.prevStrategy.serialize();
+        console.log('current strategy', this.getCurrentStrategy());
+        console.log('&&&&& d', d);
+        this.setCurrentStrategy($event.value as DashboardStrategy);
+        this.columnIndexes = this.getCurrentStrategy().columnIndexes();
+        this.getCurrentStrategy().deserialize(d);
+        this.prevStrategy = this.getCurrentStrategy();
     }
 
-    currentStrategy(): DashboardStrategy {
+    setCurrentStrategy(dashboardStrategy: DashboardStrategy) {
+        this.formControlDashboardStrategySelected.setValue(dashboardStrategy);
+    }
+
+    getCurrentStrategy(): DashboardStrategy {
         return this.formControlDashboardStrategySelected.value as DashboardStrategy;
     }
 
-    reload() {
-        this.columnIndexes = this.currentStrategy().columnIndexes();
-        this.currentStrategy().addDashboardWidgetTypes(this.dashboardWidgetTypes);
-        // this.currentStrategy().addDashboardWidgetTypes({ type: this.dashboardWidgetTypes, data: {}});
-        console.log(this.columnIndexes);
-    }
 
     onDashboardWidgetInfoSelectionChanged($event: MatSelectChange) {
         const selectedDashboardWidgetInfo: DashboardWidgetInfo = $event.value;
-        this.currentStrategy().addDashboardWidgetTypes([selectedDashboardWidgetInfo.type]);
-        // this.currentStrategy().addDashboardWidgetTypes([{ type: selectedDashboardWidgetInfo.type, data: {}}]);
+        this.getCurrentStrategy().addDashboardWidgetInstances([{
+            instanceId: uuid(),
+            typeId: selectedDashboardWidgetInfo.id,
+            type: selectedDashboardWidgetInfo.type
+        }]);
         this.formControlWidgetInfoSelected.setValue(undefined);
     }
 
-    // getDashboardWidgetTypesForColumn(columnIndex: number): DashboardWidgetType {
-    getDashboardWidgetTypesForColumn(columnIndex: number): Type<DashboardWidget>[]  {
-        return this.currentStrategy().getDashboardWidgetTypesForColumn(columnIndex);
+    getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[] {
+        return this.getCurrentStrategy().getDashboardWidgetInstancesForColumn(columnIndex);
     }
 
-    onDrop($event: CdkDragDrop<Type<DashboardWidget>[], any>) {
+    onDrop($event: CdkDragDrop<DashboardWidgetInstance[], any>) {
         if ($event.container === $event.previousContainer) {
             moveItemInArray($event.container.data, $event.previousIndex, $event.currentIndex);
         } else {
             transferArrayItem($event.previousContainer.data, $event.container.data, $event.previousIndex, $event.currentIndex);
+        }
+    }
+
+    saveDashboardLayout($event: MouseEvent) {
+        const data = this.getCurrentStrategy().serialize();
+        this.events.emit({serializedData: data} as DashboardComponentEvent);
+    }
+
+    onCloseWidget($event: MouseEvent, widgetInstance: DashboardWidgetInstance) {
+        console.log('******* close', widgetInstance);
+        const c: WidgetContainerComponent = this.widgetContainers.find((comp: WidgetContainerComponent) => {
+            return comp.dashboardWidgetInstance.instanceId === widgetInstance.instanceId;
+        });
+        if (c) {
+            c.destroy();
+        }
+
+        const itemFound: ViewContainerRef = this.widgetPanels.find((item: ViewContainerRef) => {
+            const element: HTMLElement = item.element.nativeElement;
+            const id = element.getAttribute('instanceId');
+            return id === widgetInstance.instanceId;
+        });
+        console.log(itemFound);
+        if (itemFound) {
+            itemFound.clear();
+            const htmlElement: HTMLElement = itemFound.element.nativeElement;
+            htmlElement.parentElement.removeChild(htmlElement);
         }
     }
 }

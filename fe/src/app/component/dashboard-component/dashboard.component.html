@@ -16,7 +16,7 @@
         </mat-form-field>
 
         <div class="control-panel-element">
-            <button type="button" mat-flat-button color="primary">Save</button>
+            <button type="button" mat-flat-button color="primary" (click)="saveDashboardLayout($event)">Save</button>
         </div>
     </div>
 
@@ -26,15 +26,16 @@
                  class="widgets-droplist"
                  fxFlex
                  cdkDropList
-                 [cdkDropListData]="getDashboardWidgetTypesForColumn(columnIndex)"
+                 [cdkDropListData]="getDashboardWidgetInstancesForColumn(columnIndex)"
                  (cdkDropListDropped)="onDrop($event)">
-                <ng-container *ngFor="let widgetType of getDashboardWidgetTypesForColumn(columnIndex)">
-                    <div cdkDrag class="widget-panel">
-                        <div class="widget-handle" cdkDragHandle>
-                            <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                <ng-container *ngFor="let widgetInstance of getDashboardWidgetInstancesForColumn(columnIndex)">
+                    <div cdkDrag class="widget-panel" #widgetPanel [attr.instanceId]="widgetInstance.instanceId">
+                        <div class="widget-handle">
+                            <svg width="24px" fill="currentColor" viewBox="0 0 24 24" cdkDragHandle>
                                 <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                                 <path d="M0 0h24v24H0z" fill="none"></path>
                             </svg>
+                            <mat-icon class="delete-widget" (click)="onCloseWidget($event, widgetInstance)">close</mat-icon>
                         </div>
                         <div class="widget-drag-preview" *cdkDragPreview>
                             <mat-icon>file_copy</mat-icon>
@@ -42,7 +43,7 @@
                         <div class="widget-drag-placeholder" *cdkDragPlaceholder>
                             Drag Placeholder
                         </div>
-                        <app-widget-container [dashboardWidgetType]="widgetType">
+                        <app-widget-container #widgetContainer [dashboardWidgetInstance]="widgetInstance">
                         </app-widget-container>
                     </div>
                 </ng-container>

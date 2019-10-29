@@ -118,6 +118,7 @@ import {AllPostsInTopicPageComponent} from './page/forum-page/all-posts-in-topic
 import {ForumModule} from './component/forum-component/forum.module';
 import {DashboardModule} from './component/dashboard-component/dashboard.module';
 import {DashboardService} from "./service/dashboard-service/dashboard.service";
+import {DashboardWidgetService} from "./service/dashboard-service/dashbowd-widget.service";
 
 const appInitializer = (settingsService: SettingsService, authService: AuthService) => {
   return () => {
@@ -264,6 +265,7 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     {provide: HelpCenterService, useClass: HelpCenterService} as Provider,
     {provide: ForumService, useClass: ForumService} as Provider,
     {provide: DashboardService, useClass: DashboardService} as Provider,
+    {provide: DashboardWidgetService, useClass: DashboardWidgetService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,

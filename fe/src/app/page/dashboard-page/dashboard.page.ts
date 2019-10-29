@@ -1,8 +1,14 @@
 import {Component, OnInit, Type} from '@angular/core';
 import {DashboardService} from '../../service/dashboard-service/dashboard.service';
-import {DashboardStrategy, DashboardWidget, DashboardWidgetInfo} from '../../model/dashboard.model';
+import {
+    DashboardStrategy,
+    DashboardWidgetInfo,
+} from '../../model/dashboard.model';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {User} from '../../model/user.model';
+import {DashboardComponentEvent} from '../../component/dashboard-component/dashboard.component';
+import {tap} from 'rxjs/operators';
+import {NotificationsService} from 'angular2-notifications';
 
 
 @Component({
@@ -13,10 +19,11 @@ export class DashboardPageComponent implements OnInit {
     strategies: DashboardStrategy[];
     selectedStrategy: DashboardStrategy;
     dashboardWidgetInfos: DashboardWidgetInfo[];
-    dashboardWidgetTypes: Type<DashboardWidget>[];
+    data: string;
 
     constructor(private dashboardService: DashboardService,
-                private authService: AuthService) {}
+                private authService: AuthService,
+                private notificationsService: NotificationsService) {}
 
     ngOnInit(): void {
         this.strategies = this.dashboardService.getAllDashboardStrategies();
@@ -25,9 +32,20 @@ export class DashboardPageComponent implements OnInit {
         this.dashboardWidgetInfos = this.dashboardService.getAllDashboardWidgetInfos();
 
         const myself: User = this.authService.myself();
-        this.dashboardWidgetTypes = this.dashboardService.getUserDashboardWidgetTypes(myself);
+        this.data = this.dashboardService.getUserDashboardLayoutData(myself);
 
-        console.log('****** ', this.dashboardWidgetTypes);
     }
 
+    onDashboardEvent($event: DashboardComponentEvent) {
+        this.dashboardService.saveDashboardLayout($event.serializedData)
+            .pipe(
+                tap((r: boolean) => {
+                    if (r) {
+                        this.notificationsService.success(`Success`, `Dashboard layout saved`);
+                    } else {
+                        this.notificationsService.error(`Error`, `Dashboard layout failed`);
+                    }
+                })
+            ).subscribe();
+    }
 }

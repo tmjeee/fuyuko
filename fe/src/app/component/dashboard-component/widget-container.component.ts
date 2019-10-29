@@ -9,7 +9,7 @@ import {
     Type,
     ViewChild, ViewContainerRef
 } from '@angular/core';
-import {DashboardWidget} from '../../model/dashboard.model';
+import {DashboardWidget, DashboardWidgetInstance} from '../../model/dashboard.model';
 
 
 @Component({
@@ -20,8 +20,7 @@ import {DashboardWidget} from '../../model/dashboard.model';
 })
 export class WidgetContainerComponent  implements OnInit, AfterViewInit {
 
-    // @Input() dashboardWidgetType: DashboardWidgetType;
-    @Input() dashboardWidgetType: Type<DashboardWidget>;
+    @Input() dashboardWidgetInstance: DashboardWidgetInstance;
 
     @ViewChild('container', {read: ViewContainerRef, static: true}) container: ViewContainerRef;
 
@@ -36,16 +35,13 @@ export class WidgetContainerComponent  implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         setTimeout(() => {
             const componentFactory: ComponentFactory<DashboardWidget> =
-                this.componentFactoryResolver.resolveComponentFactory(this.dashboardWidgetType);
+               this.componentFactoryResolver.resolveComponentFactory(this.dashboardWidgetInstance.type);
             this.componentRef = this.container.createComponent(componentFactory);
-
-            // const componentFactory: ComponentFactory<DashboardWidget> =
-            //    this.componentFactoryResolver.resolveComponentFactory(this.dashboardWidgetType.type);
-            // this.componentRef = this.container.createComponent(componentFactory);
-            // const component: DashboardWidget = this.componentRef.instance;
-            // component.serializeData(dashboardWidgetType.data);
         });
     }
 
+    destroy() {
+        this.container.clear();
+    }
 
 }

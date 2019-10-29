@@ -1,14 +1,20 @@
 import {Type} from '@angular/core';
+import {DashboardWidgetService} from '../service/dashboard-service/dashbowd-widget.service';
 
+export interface SerializeFormat {
+    strategyId: string;
+    instances: DashboardWidgetInstance[];
+    special: any;
+}
 
 export interface DashboardStrategy {
     id: string;
     name: string;
     columnIndexes(): number[];
-    // addDashboardWidgetTypes(dashboardWidgetTypes: DashboardWidgetType[]);
-    addDashboardWidgetTypes(dashboardWidgetTypes: Type<DashboardWidget>[]);
-    // getDashboardWidgetTypesForColumn(columnIndex: number): DashboardWidgetType[];
-    getDashboardWidgetTypesForColumn(columnIndex: number): Type<DashboardWidget>[];
+    addDashboardWidgetInstances(dashboardWidgetInsances: DashboardWidgetInstance[]);
+    getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[];
+    serialize(): string;
+    deserialize(data: string);
 }
 
 export interface DataMap {
@@ -16,19 +22,26 @@ export interface DataMap {
 }
 
 
-export interface DashboardWidget {
+export class DashboardWidget {
     id: string;
     name: string;
-    // serializeData(d: DataMap);
-    // deserializeData(): DataMap;
+
+    constructor(protected dashboardWidgetService: DashboardWidgetService) { }
+
+    saveData(widgetInstance: DashboardWidgetInstance, data: DataMap) {
+       this.saveData(widgetInstance, data);
+    }
+
+    loadData(widgetInstance: DashboardWidgetInstance): DataMap {
+        return this.dashboardWidgetService.loadData(widgetInstance);
+    }
 }
 
-/*
-export interface DashboardWidgetType {
+export interface DashboardWidgetInstance {
+    instanceId: string;
+    typeId: string;
     type: Type<DashboardWidget>;
-    data: DataMap
 }
- */
 
 export interface DashboardWidgetInfo {
     id: string;

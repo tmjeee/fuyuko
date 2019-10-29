@@ -1,8 +1,9 @@
 <div class="dashboard-page">
     <app-dashboard
-            [dashboardWidgetTypes]="dashboardWidgetTypes"
+            [data]="data"
             [dashboardWidgetInfos]="dashboardWidgetInfos"
             [strategies]="strategies"
-            [initialStrategy]="selectedStrategy">
+            [initialStrategy]="selectedStrategy"
+            (events)="onDashboardEvent($event)">
     </app-dashboard>
 </div>
