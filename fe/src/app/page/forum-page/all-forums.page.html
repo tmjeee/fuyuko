@@ -19,8 +19,14 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-forums-listings [forums]="forums">
+            <app-forums-listings [forums]="forums" (events)="onForumEvent($event)">
             </app-forums-listings>
         </mat-card-content>
     </mat-card>
+
+    <!--
+    <app-forums-listings [forums]="forums">
+    </app-forums-listings>
+    -->
+
 </div>

@@ -1,4 +1,5 @@
-import mariadb, {Pool, PoolConfig, PoolConnection} from 'mariadb';
+import * as mariadb  from 'mariadb';
+import {Pool, PoolConfig, PoolConnection} from 'mariadb';
 import config from '../config';
 
 const poolConfig: PoolConfig = {

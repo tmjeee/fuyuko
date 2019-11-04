@@ -17,6 +17,12 @@ export class ForumService {
         return of([...ALL_FORUMS]);
     }
 
+    getForum(forumId: number): Observable<Forum> {
+        const ff: Forum =  ALL_FORUMS.find((f: Forum) => (f.id === forumId));
+        return of(ff);
+    }
+
+
     allTopics(forumId: number): Observable<Topic[]> {
         return of([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i: number) => {
             return {

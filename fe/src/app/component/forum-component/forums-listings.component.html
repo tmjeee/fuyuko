@@ -1,5 +1,4 @@
 <div class="forums-listings-component">
-
     <mat-accordion>
         <mat-expansion-panel *ngFor="let forum of forums">
             <mat-expansion-panel-header>
@@ -8,12 +7,28 @@
                 </mat-panel-title>
                 <mat-panel-description>
                     {{forum.description}}
+                    <mat-icon (click)="onViewFormDetails($event, forum)">more_vert</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <div>
-                <div fxLayout="row" fxLayoutAlign="center center">
-                    <div fxFlex="20%">Creator:</div>
-                    <div fxFlex="80%">{{forum.creator.name}}</div>
+                <table mat-table [dataSource]="[
+                         {name: 'Creator', value: forum.creator.name},
+                         {name: 'Date', value: formatDate(forum.creationDate)},
+                         {name: 'Title', value: forum.title},
+                         {name: 'Description', value: forum.description}
+                    ]">
+                    <ng-container matColumnDef="name">
+                       <td mat-cell *matCellDef="let element">{{element.name}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="value">
+                       <td mat-cell *matCellDef="let element">{{element.value}}</td>
+                    </ng-container>
+                    <tr mat-row *matRowDef="let row; columns: ['name', 'value']"></tr>
+                </table>
+                <!--
+                <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+                    <div fxFlex="0 0 auto">Creator:</div>
+                    <div fxFlex="1 1 auto">{{forum.creator.name}}</div>
                 </div>
                 <div fxLayout="row">
                     <div fxFlex>Date:</div>
@@ -27,6 +42,7 @@
                     <div fxFlex>Description:</div>
                     <div fxFlex>{{forum.description}}</div>
                 </div>
+                -->
             </div>
         </mat-expansion-panel>
     </mat-accordion>

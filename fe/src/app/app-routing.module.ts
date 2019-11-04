@@ -40,11 +40,11 @@ import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
 import {ExportPageComponent} from './page/export-page/export.page';
 import {ExportHelpPageComponent} from './page/export-help-page/export-help.page';
-import {ForumPageComponent} from "./page/forum-page/forum.page";
-import {ForumHelpPageComponent} from "./page/forum-help-page/forum-help.page";
-import {AllForumsPageComponent} from "./page/forum-page/all-forums.page";
-import {AllTopicsInForumPageComponent} from "./page/forum-page/all-topics-in-forum.page";
-import {AllPostsInTopicPageComponent} from "./page/forum-page/all-posts-in-topic.page";
+import {ForumPageComponent} from './page/forum-page/forum.page';
+import {ForumHelpPageComponent} from './page/forum-help-page/forum-help.page';
+import {AllForumsPageComponent} from './page/forum-page/all-forums.page';
+import {AllTopicsInForumPageComponent} from './page/forum-page/all-topics-in-forum.page';
+import {AllPostsInTopicPageComponent} from './page/forum-page/all-posts-in-topic.page';
 
 const routes: Routes = [
 

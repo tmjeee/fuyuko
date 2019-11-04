@@ -1,3 +1,21 @@
 .forums-listings-component {
-
+  mat-accordion {
+    mat-expansion-panel {
+      mat-expansion-panel-header {
+        mat-panel-description {
+          mat-icon {
+            position: absolute;
+            right: 80px;
+          }
+        }
+      }
+      table {
+        tr {
+          td:first-child {
+            width: 150px;
+          }
+        }
+      }
+    }
+  }
 }
