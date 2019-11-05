@@ -3,22 +3,62 @@ import {i} from '../../logger';
 import {doInDbConnection} from "../../db";
 
 
-export const update = () => {
+export const update = async () => {
    i(`Inside ${__filename}, running update`);
 
-   TBL_GROUP();
-   TBL_USER();
-   TBL_LOOKUP_USER_GROUP();
-   TBL_ROLE();
-   TBL_LOOKUP_GROUP_ROLE();
-   TBL_PRICING_STRUCTURE();
+   await TBL_GROUP();
+   await TBL_USER();
+   await TBL_USER_AVATAR();
+   await TBL_LOOKUP_USER_GROUP();
+   await TBL_ROLE();
+   await TBL_LOOKUP_GROUP_ROLE();
+   await TBL_PRICING_STRUCTURE();
+   await TBL_LOOKUP_PRICING_STRUCTURE_GROUP();
+   await TBL_PRICING_STRUCTURE_ITEM();
+   await TBL_RULE();
+   await TBL_RULE_VALIDATE_CLAUSE();
+   await TBL_RULE_WHEN_CLAUSE();
+   await TBL_VIEW();
+   await TBL_ITEM();
+   await TBL_ITEM_IMAGE();
+   await TBL_ITEM_ATTRIBUTE();
+   await TBL_ITEM_ATTRIBUTE_METADATA();
+   await TBL_ITEM_ATTRIBUTE_METADATA_ENTRY();
+   await TBL_ITEM_VALUE();
+   await TBL_ITEM_VALUE_METADATA();
+   await TBL_ITEM_VALUE_METADATA_ENTRY();
+   await TBL_DATA_IMPORT();
+   await TBL_DATA_IMPORT_FILE();
+   await TBL_DATA_IMPORT_LOG();
+   await TBL_DATA_IMPORT_ITEM();
+   await TBL_DATA_IMPORT_ITEM_IMAGE();
+   await TBL_DATA_IMPORT_ITEM_ATTRIBUTE();
+   await TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA();
+   await TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA_ENTRY();
+   await TBL_DATA_IMPORT_ITEM_VALUE();
+   await TBL_DATA_IMPORT_ITEM_VALUE_METADATA();
+   await TBL_DATA_IMPORT_ITEM_VALUE_METADATA_ENTRY();
+   await TBL_DATA_EXPORT();
+   await TBL_DATA_EXPORT_FILE();
+   await TBL_DATA_EXPORT_LOG();
+   await TBL_DATA_EXPORT_ITEM();
+   await TBL_DATA_EXPORT_ITEM_IMAGE();
+   await TBL_DATA_EXPORT_ITEM_ATTRIBUTE();
+   await TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA();
+   await TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA_ENTRY();
+   await TBL_DATA_EXPORT_ITEM_VALUE();
+   await TBL_DATA_EXPORT_ITEM_VALUE_METADATA();
+   await TBL_DATA_EXPORT_ITEM_VALUE_METADATA_ENTRY();
+   await TBL_BULK_EDIT();
+   await TBL_BULK_EDIT_LOG();
+   await ADD_FK_CONSTRAINT();
 
    i(`${__filename} done running update`);
 };
 
-const TBL_GROUP = () => {
+const TBL_GROUP = async () => {
    // TBL_GROUP
-   doInDbConnection((conn: PoolConnection) => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_GROUP (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -29,37 +69,49 @@ const TBL_GROUP = () => {
    });
 };
 
-const TBL_USER = () => {
+const TBL_USER = async () => {
    // TBL_USER
-   doInDbConnection((conn: PoolConnection) => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_USER (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL, 
+            DESCRIPTION VARCHAR(500) NOT NULL 
          );
       `)
    });
 };
 
-const TBL_LOOKUP_USER_GROUP = () => {
-   // TBL_LOOKUP_USER_GROUP
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_USER_AVATAR = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_LOOKUP_USER_GROUP (
+         CREATE TABLE IF NOT EXISTS TBL_USER_AVATAR (
             ID INT PRIMARY KEY AUTO_INCREMENT,
-            USER_ID INT NOT NULL,
-            GROUP_ID INT NOT NULL,
-            CONSTRAINT FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID),
-            CONSTRAINT FOREIGN KEY (GROUP_ID) REFERENCES TBL_GROUP(ID)
+            USER_ID INT,
+            MIME_TYPE VARCHAR(200),
+            SIZE INT,
+            CONTENT BLOB
          );
       `);
    });
 };
 
-const TBL_ROLE = () => {
+const TBL_LOOKUP_USER_GROUP = async () => {
+   // TBL_LOOKUP_USER_GROUP
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_LOOKUP_USER_GROUP (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            USER_ID INT NOT NULL,
+            GROUP_ID INT NOT NULL
+         );
+      `);
+   });
+};
+
+const TBL_ROLE = async () => {
    // TBL_ROLE
-   doInDbConnection((conn: PoolConnection) => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ROLE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -70,36 +122,36 @@ const TBL_ROLE = () => {
    });
 };
 
-const TBL_LOOKUP_GROUP_ROLE = () => {
+const TBL_LOOKUP_GROUP_ROLE = async () => {
    // TBL_LOOKUP_GROUP_ROLE
-   doInDbConnection((conn: PoolConnection) => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_LOOKUP_GROUP_ROLE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             GROUP_ID INT NOT NULL,
-            ROLE_ID INT NOT NULL,
-            CONSTRAINT FOREIGN KEY (GROUP_ID) REFERENCES GROUP(ID),
-            CONSTRAINT FOREIGN KEY (ROLE_ID) REFERENCES ROLE(ID)
+            ROLE_ID INT NOT NULL
          );
       `);
    });
 
 };
 
-const TBL_PRICING_STRUCTURE = () => {
-    doInDbConnection((conn: PoolConnection) => {
-        conn.query(`
+const TBL_PRICING_STRUCTURE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_PRICING_STRUCTURE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
+            VIEW_ID INT,
             NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL,
-            VIEW_ID INT
+            DESCRIPTION VARCHAR(500) NOT NULL
           );  
-        `);
-    });
+      `);
+   });
+}
 
-const TBL_LOOKUP_PRICING_STRUCTURE_GROUP = () => {
-   doInDbConnection((conn: PoolConnection) => {
+
+const TBL_LOOKUP_PRICING_STRUCTURE_GROUP = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_LOOKUP_PRICING_STRUCTURE_GROUP (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -110,62 +162,63 @@ const TBL_LOOKUP_PRICING_STRUCTURE_GROUP = () => {
    });
 }
 
-const TBL_PRICING_STRUCTURE_ITEM = () => {
-   doInDbConnection((conn: PoolConnection) => {
+
+const TBL_PRICING_STRUCTURE_ITEM = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_PRICING_STRUCTURE_ITEM (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             ITEM_ID INT,
             PRICING_STRUCTURE_ID INT,
-            PRICE NUMBER
+            PRICE DECIMAL
          );
       `);
    });
 }
 
-const TBL_RULE = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_RULE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
-         CREATE TABLE IF NOT EXIST TBL_RULE (
+         CREATE TABLE IF NOT EXISTS TBL_RULE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
+            VIEW_ID INT,
             NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL,
+            DESCRIPTION VARCHAR(500) NOT NULL
          );
       `)
    });
 }
 
-const TBL_RULE_VALIDATE_CLAUSE = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_RULE_VALIDATE_CLAUSE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_RULE_VALIDATE_CLAUSE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             RULE_ID INT,
-            ATTRIBUTE_ID INT,
+            ITEM_ATTRIBUTE_ID INT,
             OPERATOR VARCHAR(200),
-            CONDITION VARCHAR(200)
+            \`CONDITION\` VARCHAR(200)
          );
       `);
    })
 };
 
-const TBL_RULE_WHEN_CLAUSE = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_RULE_WHEN_CLAUSE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_RULE_WHEN_CLAUSE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
-            VIEW_ID INT,
             RULE_ID INT,
-            ATTRIBUTE_ID INT,
+            ITEM_ATTRIBUTE_ID INT,
             OPERATOR VARCHAR(200),
-            CONDITION VARCHAR(200) 
+            \`CONDITION\` VARCHAR(200) 
          );
       `);
    });
 };
 
-const TBL_VIEW = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_VIEW = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_VIEW (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -176,8 +229,8 @@ const TBL_VIEW = () => {
    });
 };
 
-const TBL_ITEM = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_ITEM = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -190,23 +243,23 @@ const TBL_ITEM = () => {
    })
 };
 
-const TBL_ITEM_IMAGE = () => {
-  doInDbConnection((conn: PoolConnection) => {
-     conn.query(`
-         CREATE TABLE IF NOT EXIST TBL_ITEM_IMAGE (
+const TBL_ITEM_IMAGE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_ITEM_IMAGE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             ITEM_ID INT,
             MIME_TYPE VARCHAR(200) NOT NULL,
             NAME VARCHAR(200) NOT NULL,
-            SIZE NUMBER NOT NULL,
+            SIZE INT NOT NULL,
             CONTENT BLOB NOT NULL 
          );
      `)
-  })
+   })
 };
 
-const TBL_ITEM_ATTRIBUTE = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_ITEM_ATTRIBUTE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM_ATTRIBUTE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -219,8 +272,8 @@ const TBL_ITEM_ATTRIBUTE = () => {
    });
 };
 
-const TBL_ITEM_ATTRIBUTE_METADATA = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_ITEM_ATTRIBUTE_METADATA = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM_ATTRIBUTE_METADATA (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -231,33 +284,33 @@ const TBL_ITEM_ATTRIBUTE_METADATA = () => {
    });
 };
 
-const TBL_ITEM_ATTRIBUTE_METADATA_ENTRY = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_ITEM_ATTRIBUTE_METADATA_ENTRY = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             ITEM_ATTRIBUTE_METADATA_ID INT,
-            KEY VARCHAR(200) NOT NULL,
+            \`KEY\` VARCHAR(200) NOT NULL,
             VALUE VARCHAR(500) NOT NULL 
-         );
-      `);
-   }) ;
-};
-
-const TBL_ITEM_VALUE = () => {
-   doInDbConnection((conn: PoolConnection) => {
-      conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_ITEM_VALUE (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            ITEM_ID INT,
-            ATTRIBUTE_ID INT
          );
       `);
    });
 };
 
-const TBL_ITEM_VALUE_METADATA = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_ITEM_VALUE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_ITEM_VALUE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            ITEM_ID INT,
+            ITEM_ATTRIBUTE_ID INT
+         );
+      `);
+   });
+};
+
+const TBL_ITEM_VALUE_METADATA = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM_VALUE_METADATA (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -269,53 +322,54 @@ const TBL_ITEM_VALUE_METADATA = () => {
 };
 
 
-const TBL_ITEM_VALUE_METADATA_ENTRY = () => {
-    doInDbConnection((conn: PoolConnection) => {
-         conn.query(`
+const TBL_ITEM_VALUE_METADATA_ENTRY = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
             CREATE TABLE IF NOT EXISTS TBL_ITEM_VALUE_METADATA_ENTRY (
                ID INT PRIMARY KEY AUTO_INCREMENT,
-               ITEM_METADATA_ID INT,
-               KEY VARCHAR(200) NOT NULL,
+               ITEM_VALUE_METADATA_ID INT,
+               \`KEY\` VARCHAR(200) NOT NULL,
                VALUE VARCHAR(500) NOT NULL 
             );
          `);
-    });
+   });
 };
 
 
-const TBL_DATA_IMPORT = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_DATA_IMPORT = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             VIEW_ID INT,
-            CREATION_DATE DATE,
+            CREATION_DATE TIMESTAMP
          );
       `);
    });
 };
 
-const TBL_DATA_IMPORT_FILE = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_DATA_IMPORT_FILE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_FILE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             DATA_IMPORT_ID INT,
-            NAME VARHAR(200),
+            NAME VARCHAR(200),
             MIME_TYPE VARCHAR(200),
-            SIZE NUMBER,
+            SIZE INT,
             CONTENT BLOB 
          )
       `);
    });
 }
 
-const TBL_DATA_IMPORT_LOG = () => {
-   doInDbConnection((conn: PoolConnection) => {
+const TBL_DATA_IMPORT_LOG = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_LOG (
             ID INT PRIMARY KEY AUTO_INCREMENT,
-            CREATION_DATE DATE,
+            DATA_IMPORT_ID INT,
+            CREATION_DATE TIMESTAMP,
             LEVEL VARCHAR(200),
             LOG TEXT 
          );
@@ -323,57 +377,369 @@ const TBL_DATA_IMPORT_LOG = () => {
    });
 };
 
-const TBL_DATA_IMPORT_ITEM = () => {
-   doInDbConnection((conn: PoolConnection) => {
-      conn.query(``);
-   });
-};
-
-const TBL_DATA_IMPORT_ITEM_ATTRIBUTE = () => {
-   doInDbConnection((conn: PoolConnection) => {
-      conn.query(``);
-   });
-};
-
-
-const TBL_DATA_EXPORT = () => {
-   doInDbConnection((conn: PoolConnection) => {
-      conn.query(``);
-   });
-};
-
-const TBL_DATA_EXPORT_FILE = () => {
-   doInDbConnection((conn: PoolConnection) => {
-      conn.query(``);
+const TBL_DATA_IMPORT_ITEM = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE TBL_DATA_IMPORT_ITEM (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            DATA_IMPORT_ID INT,
+            PARENT_ID INT,
+            NAME VARCHAR(200),
+            DESCRIPTION VARCHAR(500) 
+         );
+      `);
    });
 };
 
 
-const TBL_DATA_EXPORT_LOG = () => {
-   doInDbConnection((conn: PoolConnection) => {
-      conn.query(``);
-   });
-};
-const TBL_DATA_EXPORT_ITEM = () => {
-   doInDbConnection((conn: PoolConnection) => {
-      conn.query(``);
-   });
-};
-
-const TBL_DATA_EXPORT_ITEM_ATTRIBUTE = () => {
-   doInDbConnection((conn: PoolConnection) => {
-      conn.query(``);
-   });
+const TBL_DATA_IMPORT_ITEM_IMAGE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_IMAGE (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_IMPORT_ITEM_ID INT,
+         MIME_TYPE VARCHAR(200) NOT NULL,
+         NAME VARCHAR(200) NOT NULL,
+         SIZE INT NOT NULL,
+         CONTENT BLOB NOT NULL 
+      );
+  `)
+   })
 };
 
+const TBL_DATA_IMPORT_ITEM_ATTRIBUTE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_ATTRIBUTE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            DATA_IMPORT_ITEM_ID INT,
+            ATTRIBUTE_METADATA_ID INT,
+            NAME VARCHAR(200) NOT NULL,
+            DESCRIPTION VARCHAR(500) NOT NULL
+         );
+      `);
+   });
+};
 
 
-   const TBL_RULE_WHERE_CLAUSE = () => {
+const TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_IMPORT_ITEM_ATTRIBUTE_ID INT,
+         NAME VARCHAR(200) NOT NULL 
+      );
+   `);
+   });
+};
 
+const TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA_ENTRY = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA_ENTRY (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_IMPORT_ITEM_ATTRIBUTE_METADATA_ID INT,
+         \`KEY\` VARCHAR(200) NOT NULL,
+         VALUE VARCHAR(500) NOT NULL 
+      );
+   `);
+   });
+};
+
+const TBL_DATA_IMPORT_ITEM_VALUE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_VALUE (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_IMPORT_ITEM_ID INT,
+         ITEM_ATTRIBUTE_ID INT
+      );
+   `);
+   });
+};
+
+const TBL_DATA_IMPORT_ITEM_VALUE_METADATA = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_VALUE_METADATA (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_IMPORT_ITEM_VALUE_ID INT,
+         NAME VARCHAR(200) NOT NULL 
+      );
+   `);
+   });
+};
+
+
+const TBL_DATA_IMPORT_ITEM_VALUE_METADATA_ENTRY = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_VALUE_METADATA_ENTRY (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            DATA_IMPORT_ITEM_VALUE_METADATA_ID INT,
+            \`KEY\` VARCHAR(200) NOT NULL,
+            VALUE VARCHAR(500) NOT NULL 
+         );
+      `);
+   });
+};
+
+
+const TBL_DATA_EXPORT = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         VIEW_ID INT,
+         CREATION_DATE TIMESTAMP
+      );
+   `);
+   });
+};
+
+const TBL_DATA_EXPORT_FILE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_FILE (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_EXPORT_ID INT,
+         NAME VARCHAR(200),
+         MIME_TYPE VARCHAR(200),
+         SIZE INT,
+         CONTENT BLOB 
+      )
+   `);
+   });
 }
 
-    // ALTER TABLE TBL_GROUP ADD CONSTRAINT FOREIGN KEY (PRICING_STRUCTURE_ID) REFERENCES TBL_PRICING_STRUCTURE(ID)
+const TBL_DATA_EXPORT_LOG = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_LOG (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_EXPORT_ID INT,
+         CREATION_DATE TIMESTAMP,
+         LEVEL VARCHAR(200),
+         LOG TEXT 
+      );
+   `);
+   });
 };
+
+const TBL_DATA_EXPORT_ITEM = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE TBL_DATA_EXPORT_ITEM (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_EXPORT_ID INT,
+         PARENT_ID INT,
+         NAME VARCHAR(200),
+         DESCRIPTION VARCHAR(500) 
+      );
+   `);
+   });
+};
+
+
+const TBL_DATA_EXPORT_ITEM_IMAGE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_IMAGE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            DATA_EXPORT_ITEM_ID INT,
+            MIME_TYPE VARCHAR(200) NOT NULL,
+            NAME VARCHAR(200) NOT NULL,
+            SIZE INT NOT NULL,
+            CONTENT BLOB NOT NULL 
+         );
+   `)
+   })
+};
+
+const TBL_DATA_EXPORT_ITEM_ATTRIBUTE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_ATTRIBUTE (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_EXPORT_ITEM_ID INT,
+         ATTRIBUTE_METADATA_ID INT,
+         NAME VARCHAR(200) NOT NULL,
+         DESCRIPTION VARCHAR(500) NOT NULL
+      );
+   `);
+   });
+};
+
+
+const TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+   CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA (
+      ID INT PRIMARY KEY AUTO_INCREMENT,
+      DATA_EXPORT_ITEM_ATTRIBUTE_ID INT,
+      NAME VARCHAR(200) NOT NULL 
+   );
+`);
+   });
+};
+
+const TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA_ENTRY = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+   CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA_ENTRY (
+      ID INT PRIMARY KEY AUTO_INCREMENT,
+      DATA_EXPORT_ITEM_ATTRIBUTE_METADATA_ID INT,
+      \`KEY\` VARCHAR(200) NOT NULL,
+      VALUE VARCHAR(500) NOT NULL 
+   );
+`);
+   });
+};
+
+const TBL_DATA_EXPORT_ITEM_VALUE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+   CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_VALUE (
+      ID INT PRIMARY KEY AUTO_INCREMENT,
+      DATA_EXPORT_ITEM_ID INT,
+      ITEM_ATTRIBUTE_ID INT
+   );
+`);
+   });
+};
+
+const TBL_DATA_EXPORT_ITEM_VALUE_METADATA = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+   CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_VALUE_METADATA (
+      ID INT PRIMARY KEY AUTO_INCREMENT,
+      DATA_EXPORT_ITEM_VALUE_ID INT,
+      NAME VARCHAR(200) NOT NULL 
+   );
+`);
+   });
+};
+
+
+const TBL_DATA_EXPORT_ITEM_VALUE_METADATA_ENTRY = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+      CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_VALUE_METADATA_ENTRY (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+         DATA_EXPORT_ITEM_VALUE_METADATA_ID INT,
+         \`KEY\` VARCHAR(200) NOT NULL,
+         VALUE VARCHAR(500) NOT NULL 
+      );
+   `);
+   });
+};
+
+
+
+const TBL_BULK_EDIT = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_BULK_EDIT (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(200),
+            DESCRIPTION VARCHAR(500)
+         );
+      `);
+   });
+};
+
+const TBL_BULK_EDIT_LOG = async () => {
+    await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_BULK_EDIT_LOG (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            BULK_EDIT_ID INT,
+            CREATION_DATE TIMESTAMP,
+            LEVEL VARCHAR(200),
+            LOG TEXT
+         );
+      `)
+    });
+};
+
+const ADD_FK_CONSTRAINT = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(` ALTER TABLE TBL_USER_AVATAR ADD CONSTRAINT FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID)`);
+      
+      conn.query(`ALTER TABLE TBL_LOOKUP_GROUP_ROLE ADD CONSTRAINT FOREIGN KEY (GROUP_ID) REFERENCES TBL_GROUP(ID)`);
+      conn.query(`ALTER TABLE TBL_LOOKUP_GROUP_ROLE ADD CONSTRAINT FOREIGN KEY (ROLE_ID) REFERENCES TBL_ROLE(ID)`);
+           
+      conn.query(`ALTER TABLE TBL_LOOKUP_USER_GROUP ADD CONSTRAINT FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID)`);
+      conn.query(`ALTER TABLE TBL_LOOKUP_USER_GROUP ADD CONSTRAINT FOREIGN KEY (GROUP_ID) REFERENCES  TBL_GROUP(ID)`);
+
+      conn.query(`ALTER TABLE TBL_LOOKUP_PRICING_STRUCTURE_GROUP ADD CONSTRAINT FOREIGN KEY (PRICING_STRUCTURE_ID) REFERENCES TBL_PRICING_STRUCTURE(ID)`);
+      conn.query(`ALTER TABLE TBL_LOOKUP_PRICING_STRUCTURE_GROUP ADD CONSTRAINT FOREIGN KEY (GROUP_ID) REFERENCES TBL_GROUP(ID)`);
+
+      conn.query(`ALTER TABLE TBL_PRICING_STRUCTURE ADD CONSTRAINT FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
+      conn.query(`ALTER TABLE TBL_PRICING_STRUCTURE_ITEM ADD CONSTRAINT FOREIGN KEY (ITEM_ID) REFERENCES TBL_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_PRICING_STRUCTURE_ITEM ADD CONSTRAINT FOREIGN KEY (PRICING_STRUCTURE_ID) REFERENCES TBL_PRICING_STRUCTURE(ID)`);
+
+      conn.query(`ALTER TABLE TBL_RULE ADD CONSTRAINT FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
+      conn.query(`ALTER TABLE TBL_RULE_VALIDATE_CLAUSE ADD CONSTRAINT FOREIGN KEY (RULE_ID) REFERENCES TBL_RULE(ID)`);
+      conn.query(`ALTER TABLE TBL_RULE_VALIDATE_CLAUSE ADD CONSTRAINT FOREIGN KEY (ITEM_ATTRIBUTE_ID) REFERENCES TBL_ITEM_ATTRIBUTE(ID)`);
+      conn.query(`ALTER TABLE TBL_RULE_WHEN_CLAUSE ADD CONSTRAINT FOREIGN KEY (RULE_ID) REFERENCES TBL_RULE(ID)`);
+      conn.query(`ALTER TABLE TBL_RULE_WHEN_CLAUSE ADD CONSTRAINT FOREIGN KEY (ITEM_ATTRIBUTE_ID) REFERENCES TBL_ITEM_ATTRIBUTE(ID)`);
+          
+      conn.query(`ALTER TABLE TBL_ITEM ADD CONSTRAINT FOREIGN KEY (PARENT_ID) REFERENCES TBL_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM ADD CONSTRAINT FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM_IMAGE ADD CONSTRAINT FOREIGN KEY (ITEM_ID) REFERENCES TBL_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM_ATTRIBUTE ADD CONSTRAINT FOREIGN KEY (ITEM_ID) REFERENCES TBL_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM_ATTRIBUTE ADD CONSTRAINT FOREIGN KEY (ATTRIBUTE_METADATA_ID) REFERENCES TBL_ITEM_ATTRIBUTE_METADATA(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM_ATTRIBUTE_METADATA ADD CONSTRAINT FOREIGN KEY (ITEM_ATTRIBUTE_ID) REFERENCES TBL_ITEM_ATTRIBUTE(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM_ATTRIBUTE_METADATA_ENTRY ADD CONSTRAINT FOREIGN KEY (ITEM_ATTRIBUTE_METADATA_ID) REFERENCES TBL_ITEM_ATTRIBUTE_METADATA(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM_VALUE ADD CONSTRAINT FOREIGN KEY (ITEM_ID) REFERENCES TBL_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM_VALUE ADD CONSTRAINT FOREIGN KEY (ITEM_ATTRIBUTE_ID) REFERENCES TBL_ITEM_ATTRIBUTE(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM_VALUE_METADATA ADD CONSTRAINT FOREIGN KEY (ITEM_VALUE_ID) REFERENCES TBL_ITEM_VALUE(ID)`);
+      conn.query(`ALTER TABLE TBL_ITEM_VALUE_METADATA_ENTRY ADD CONSTRAINT FOREIGN KEY (ITEM_VALUE_METADATA_ID) REFERENCES TBL_ITEM_VALUE_METADATA(ID)`);
+
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT ADD CONSTRAINT FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_FILE ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_LOG ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM ADD CONSTRAINT FOREIGN KEY (PARENT_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_IMAGE ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ITEM_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_LOG ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM ADD CONSTRAINT FOREIGN KEY (PARENT_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_IMAGE ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ITEM_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_ATTRIBUTE ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ITEM_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_ATTRIBUTE ADD CONSTRAINT FOREIGN KEY (ATTRIBUTE_METADATA_ID) REFERENCES TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ITEM_ATTRIBUTE_ID) REFERENCES TBL_DATA_IMPORT_ITEM_ATTRIBUTE(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA_ENTRY ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ITEM_ATTRIBUTE_METADATA_ID) REFERENCES TBL_DATA_IMPORT_ITEM_ATTRIBUTE_METADATA(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_VALUE ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ITEM_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_VALUE ADD CONSTRAINT FOREIGN KEY (ITEM_ATTRIBUTE_ID) REFERENCES TBL_DATA_IMPORT_ITEM_ATTRIBUTE(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_VALUE_METADATA ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ITEM_VALUE_ID) REFERENCES TBL_DATA_IMPORT_ITEM_VALUE(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_VALUE_METADATA_ENTRY ADD CONSTRAINT FOREIGN KEY (DATA_IMPORT_ITEM_VALUE_METADATA_ID) REFERENCES TBL_DATA_IMPORT_ITEM_VALUE_METADATA(ID)`);
+
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT ADD CONSTRAINT FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_FILE ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_LOG ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM ADD CONSTRAINT FOREIGN KEY (PARENT_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_IMAGE ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ITEM_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_LOG ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM ADD CONSTRAINT FOREIGN KEY (PARENT_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_IMAGE ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ITEM_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_ATTRIBUTE ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ITEM_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_ATTRIBUTE ADD CONSTRAINT FOREIGN KEY (ATTRIBUTE_METADATA_ID) REFERENCES TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ITEM_ATTRIBUTE_ID) REFERENCES TBL_DATA_EXPORT_ITEM_ATTRIBUTE(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA_ENTRY ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ITEM_ATTRIBUTE_METADATA_ID) REFERENCES TBL_DATA_EXPORT_ITEM_ATTRIBUTE_METADATA(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_VALUE ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ITEM_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_VALUE ADD CONSTRAINT FOREIGN KEY (ITEM_ATTRIBUTE_ID) REFERENCES TBL_DATA_EXPORT_ITEM_ATTRIBUTE(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_VALUE_METADATA ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ITEM_VALUE_ID) REFERENCES TBL_DATA_EXPORT_ITEM_VALUE(ID)`);
+      conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_VALUE_METADATA_ENTRY ADD CONSTRAINT FOREIGN KEY (DATA_EXPORT_ITEM_VALUE_METADATA_ID) REFERENCES TBL_DATA_EXPORT_ITEM_VALUE_METADATA(ID)`);
+
+      conn.query(`ALTER TABLE TBL_BULK_EDIT_LOG ADD CONSTRAINT FOREIGN KEY (BULK_EDIT_ID) REFERENCES TBL_BULK_EDIT(ID)`);
+   });
+}
+
 
 
 

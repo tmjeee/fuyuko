@@ -16,17 +16,6 @@ export interface AvatarDialogComponentData {
 })
 export class AvatarDialogComponent {
 
-  fileUploadConfig: any = {
-    multiple: false,
-    fomatsAllowed: '.jpg,.png,.gif,.jpeg,.bmp',
-    maxSize: 20,
-    uploadAPI: {
-      url: '',
-      headers: {
-      }
-    },
-  };
-
   constructor(private matDialogRef: MatDialogRef<AvatarDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: AvatarDialogComponentData) {}
 
@@ -43,8 +32,9 @@ export class AvatarDialogComponent {
     this.matDialogRef.close(avatar);
   }
 
-  onFileUploadResponse(event: any) {
-    console.log(event);
-  }
 
+    onFileInputChange($event: Event) {
+      const fileList: FileList = ($event.target as HTMLInputElement).files;
+      console.log(fileList);
+    }
 }

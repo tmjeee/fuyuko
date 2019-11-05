@@ -24,7 +24,7 @@ const fs_1 = __importDefault(require("fs"));
 const util_1 = __importDefault(require("util"));
 const semver_1 = __importDefault(require("semver"));
 const logger_1 = require("../logger");
-const runUpdate = () => __awaiter(this, void 0, void 0, function* () {
+exports.runUpdate = () => __awaiter(this, void 0, void 0, function* () {
     const updaterEntries = yield db_1.doInDbConnection((conn) => __awaiter(this, void 0, void 0, function* () {
         const r1 = yield conn.query(`
             CREATE TABLE IF NOT EXISTS TBL_UPDATER (
@@ -47,26 +47,24 @@ const runUpdate = () => __awaiter(this, void 0, void 0, function* () {
         const s = yield Promise.resolve().then(() => __importStar(require(scriptFileFullPath)));
         const hasBeenUpdated = updaterEntryNames.includes(script);
         if (hasBeenUpdated) {
-            logger_1.i(`script ${scriptFileFullPath} has already been executed before`);
+            logger_1.i(`script ${scriptFileFullPath} has already been executed before, skip excution`);
         }
         else if (!s || !s.update) {
             logger_1.e(`${scriptFileFullPath} does not have the required update function`);
         }
         else if (s && s.update && !hasBeenUpdated) {
             logger_1.i(`perform update on script ${scriptFileFullPath}`);
-            const conn = yield db_1.dbPool.getConnection();
             try {
-                yield s.update(conn);
-            }
-            finally {
-                yield conn.end();
-            }
-            yield db_1.doInDbConnection((conn) => {
-                conn.query(`
+                yield s.update();
+                yield db_1.doInDbConnection((conn) => {
+                    conn.query(`
                     INSERT INTO TBL_UPDATER (NAME) VALUES (?)
                 `, [script]);
-            });
+                });
+            }
+            catch (e) {
+                e(`Error executing script ${scriptFileFullPath}`, e);
+            }
         }
     }
 });
-runUpdate();

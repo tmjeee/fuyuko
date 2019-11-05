@@ -4,5 +4,6 @@
   "db-password": "root",
   "db-port": 3306,
   "db-database": "fuyuko",
-  "db-connection-limit": 5
+  "db-connection-limit": 5,
+  "version": "1.0.0-beta"
 }

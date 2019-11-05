@@ -18,10 +18,13 @@
       <div class="custom-avatar-section">
         Or upload a custom avatar
         <div class="upload-custom-avatar">
+          <input type="file" (change)="onFileInputChange($event)">
+          <!--
           <angular-file-uploader
             (ApiResponse)="onFileUploadResponse($event)"
             [config]="fileUploadConfig">
           </angular-file-uploader>
+          -->
         </div>
       </div>
     </div>
