@@ -33,8 +33,8 @@ export class AvatarDialogComponent {
   }
 
 
-    onFileInputChange($event: Event) {
-      const fileList: FileList = ($event.target as HTMLInputElement).files;
-      console.log(fileList);
-    }
+  onFileInputChange($event: Event) {
+    const fileList: FileList = ($event.target as HTMLInputElement).files;
+    console.log(fileList);
+  }
 }

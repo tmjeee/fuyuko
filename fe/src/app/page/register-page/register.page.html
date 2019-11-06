@@ -1,5 +1,5 @@
 <div class="register-page">
-  <form>
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit();">
     <mat-card class="container">
       <mat-card-header>
         <mat-card-title>Register</mat-card-title>
@@ -22,19 +22,25 @@
       <mat-card-content>
         <div class="form">
           <mat-form-field>
-            <input matInput placeholder="Email">
+            <input matInput placeholder="Email" [formControl]="formControlEmail">
           </mat-form-field>
           <mat-form-field>
-            <input matInput placeholder="Username">
+            <input matInput placeholder="Username" [formControl]="formControlUsername">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="password" placeholder="Password" [formControl]="formControlPassword">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="password" placeholder="Confirm Password" [formControl]="formControlConfirmPassword">
           </mat-form-field>
         </div>
       </mat-card-content>
       <mat-card-actions>
         <div class="control">
-          <button mat-flat-button type="submit" color="primary">Register</button>
+          <button mat-flat-button type="submit" color="primary" [disabled]="formGroup.invalid">Register</button>
           <div class="link">
             Already registered?
-            Try <a href="#" class="login-link">Login</a>.
+            Try <a href="#" class="login-link" [routerLink]="['/login-layout', 'login']">Login</a>.
           </div>
         </div>
       </mat-card-actions>

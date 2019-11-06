@@ -46,7 +46,7 @@ export const doInDbConnection = async <R> (callback: (conn: PoolConnection) => R
     const conn: PoolConnection = await dbPool.getConnection();
     try {
         await conn.beginTransaction();
-        const r: any =  callback(conn);
+        const r: any =  await callback(conn);
         await conn.commit();
         return r;
     } catch(e) {

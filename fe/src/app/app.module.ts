@@ -82,7 +82,7 @@ import {CounterService} from './service/counter-service/counter.service';
 import {DataThumbnailModule} from './component/data-thumbnail-component/data-thumbnail.module';
 import {DataListModule} from './component/data-list-component/data-list.module';
 import {CarouselComponent} from './component/carousel-component/carousel.component';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ProfilingInterceptor} from './interceptor/profiling.interceptor';
 import {ErrorPageComponent} from './page/error-page/error.page';
 import {GlobalErrorhandler} from './error-handler/global.errorhandler';
@@ -209,6 +209,7 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     AppMaterialsModule,
     AngularFileUploaderModule,
     FlexLayoutModule,
+    HttpClientModule,
     SimpleNotificationsModule.forRoot({
       position: ['bottom', 'center'],
       timeOut: 2000,

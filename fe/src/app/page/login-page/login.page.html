@@ -20,10 +20,10 @@
       </mat-card-content>
       <mat-card-actions>
         <div class="control">
-          <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid">Login</button>
+          <button type="submit" mat-flat-button color="primary" [disabled]="!formGroup.valid">Login</button>
           <div class="link">
             Not registered yet?
-            <a href="#" class="register-link" routerLink="/register">Register</a> here.
+            <a href="#" class="register-link" [routerLink]="['/login-layout', 'register']">Register</a> here.
           </div>
         </div>
       </mat-card-actions>

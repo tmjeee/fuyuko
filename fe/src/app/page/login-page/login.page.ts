@@ -6,7 +6,6 @@ import {User} from '../../model/user.model';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {SettingsService} from '../../service/settings-service/settings.service';
-import {RuntimeSettings, Settings} from "../../model/settings.model";
 
 
 @Component({

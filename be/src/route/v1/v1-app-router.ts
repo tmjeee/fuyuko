@@ -1,9 +1,10 @@
 
 import express, {Request, Response, NextFunction, Router} from 'express';
-import formidable, {Fields, Files} from 'formidable';
+import * as formidable from 'formidable';
+import {Fields, Files} from 'formidable';
 import util from 'util';
 
-const v1AppRouter:Router  = express.Router();
+export const v1AppRouter:Router  = express.Router();
 
 v1AppRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.send('test ok');

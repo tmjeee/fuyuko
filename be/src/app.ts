@@ -1,6 +1,6 @@
 import express, {NextFunction, Request, Response, Express} from 'express';
 import cookieParser from 'cookie-parser';
-import v1AppRouter from './v1-app-router';
+import v1AppRouter from './route/v1/v1-app-router';
 import cors from 'cors';
 import {i} from './logger';
 import {runUpdate} from './updater';

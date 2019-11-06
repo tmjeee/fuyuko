@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
 import {Themes} from '../theme-service/theme.service';
+import {HttpClient} from "@angular/common/http";
 
 
 export interface StorageToken  {
@@ -14,7 +15,7 @@ export class AuthService {
 
   private subject: BehaviorSubject<User>;
 
- constructor() {
+ constructor(private httpClient: HttpClient) {
    const myself: User = this.myself();
    this.subject = new BehaviorSubject(myself);
  }

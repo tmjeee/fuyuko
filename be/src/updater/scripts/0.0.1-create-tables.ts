@@ -6,6 +6,8 @@ import {doInDbConnection} from "../../db";
 export const update = async () => {
    i(`Inside ${__filename}, running update`);
 
+   await TBL_AUDIT_LOG();
+   await TBL_REGISTRATION();
    await TBL_GROUP();
    await TBL_USER();
    await TBL_USER_AVATAR();
@@ -69,14 +71,46 @@ const TBL_GROUP = async () => {
    });
 };
 
+const TBL_AUDIT_LOG = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_AUDIT_LOG (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            CATEGORY VARCHAR(200),
+            CREATION_DATE TIMESTAMP,
+            LOG TEXT 
+         );
+      `);
+   })
+}
+
+const TBL_REGISTRATION = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_REGISTRATION {
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            USERNAME VARCHAR(200) NOT NULL,
+            EMAIL VARCHAR(200) NOT NULL,
+            CREATION_DATE TIMESTAMP NOT NULL,
+            TYPE VARCHAR(200) NOT NULL                   # 'self' or 'invitation'
+            CODE VARCHAR(200) NOT NULL                   # 'invitation' use this to determine activation
+            ACTIVATED BOOLEAN 
+         );
+      `);
+   });
+}
+
 const TBL_USER = async () => {
    // TBL_USER
    await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_USER (
             ID INT PRIMARY KEY AUTO_INCREMENT,
-            NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL 
+            USERNAME VARCHAR(200) NOT NULL,
+            CREATION_DATE TIMESTAMP NOT NULL,
+            LAST_UPDATE TIMESTAMP NOT NULL,
+            EMAIL VARCHAR(200) NOT NULL,
+            ENABLED BOOLEAN
          );
       `)
    });
