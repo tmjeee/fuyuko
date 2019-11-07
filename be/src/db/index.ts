@@ -1,3 +1,3 @@
 
 
-export {doInDbConnection, dbPool, QueryResponse, QueryRows, QueryRow} from './db';
+export {doInDbConnection, dbPool, QueryResponse, QueryA, QueryI, QueryM} from './db';

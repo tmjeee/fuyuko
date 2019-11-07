@@ -22,7 +22,7 @@ const db_1 = require("../db");
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const util_1 = __importDefault(require("util"));
-const semver_1 = __importDefault(require("semver"));
+const semver = __importStar(require("semver"));
 const logger_1 = require("../logger");
 exports.runUpdate = () => __awaiter(this, void 0, void 0, function* () {
     const updaterEntries = yield db_1.doInDbConnection((conn) => __awaiter(this, void 0, void 0, function* () {
@@ -41,7 +41,7 @@ exports.runUpdate = () => __awaiter(this, void 0, void 0, function* () {
     const scriptsInScriptsDir = yield util_1.default.promisify(fs_1.default.readdir)(scriptsDir);
     const orderedScripts = scriptsInScriptsDir
         .filter((f) => f.endsWith('.js'))
-        .sort((f1, f2) => semver_1.default.compare(f1, f2));
+        .sort((f1, f2) => semver.compare(f1, f2));
     for (const script of orderedScripts) {
         const scriptFileFullPath = (path_1.default.join(scriptsDir, script));
         const s = yield Promise.resolve().then(() => __importStar(require(scriptFileFullPath)));

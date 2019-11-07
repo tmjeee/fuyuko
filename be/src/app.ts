@@ -6,10 +6,11 @@ import {i} from './logger';
 import {runUpdate} from './updater';
 import {runBanner} from './banner';
 import * as formidable from 'formidable';
+import config from './config';
 
 runBanner();
 
-const port: number = 8888;
+const port: number = Number(config.port);
 const app: Express = express();
 
 app.use(express.urlencoded());

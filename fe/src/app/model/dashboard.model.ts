@@ -1,11 +1,6 @@
 import {Type} from '@angular/core';
 import {DashboardWidgetService} from '../service/dashboard-service/dashbowd-widget.service';
 
-export interface SerializeFormat {
-    strategyId: string;
-    instances: DashboardWidgetInstance[];
-    special: any;
-}
 
 export interface DashboardStrategy {
     id: string;

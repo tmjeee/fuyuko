@@ -1,15 +1,15 @@
 
-import {doInDbConnection, dbPool, QueryResponse, QueryRows, QueryRow} from "../db";
-import {PoolConfig, PoolConnection} from "mariadb";
+import {doInDbConnection, dbPool, QueryResponse, QueryI, QueryA } from "../db";
+import {PoolConnection} from "mariadb";
 import path from 'path';
 import fs from 'fs';
 import util from 'util';
-import semver from 'semver';
+import * as semver from 'semver';
 import {i, e} from '../logger';
 
 export const runUpdate = async () => {
 
-    const updaterEntries: QueryRows = await doInDbConnection<void>(async (conn: PoolConnection) => {
+    const updaterEntries: QueryA = await doInDbConnection<void>(async (conn: PoolConnection) => {
         const r1: QueryResponse = await conn.query(`
             CREATE TABLE IF NOT EXISTS TBL_UPDATER (
               ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -18,12 +18,12 @@ export const runUpdate = async () => {
             );
         `);
 
-        const r2: QueryRows = await conn.query(
+        const r2: QueryA = await conn.query(
           `SELECT * FROM TBL_UPDATER`
         );
         return r2;
     });
-    const updaterEntryNames: string[] = updaterEntries.map((r: QueryRow) => r.NAME);
+    const updaterEntryNames: string[] = updaterEntries.map((r: QueryI) => r.NAME);
 
     const scriptsDir: string = (path.join(__dirname, 'scripts'));
     const scriptsInScriptsDir: string[] = await util.promisify(fs.readdir)(scriptsDir);

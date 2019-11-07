@@ -1,9 +1,9 @@
 
 
 export interface Registration {
-    registrationId: string;
+    registrationId: number;
     username: string;
     email: string;
-    status: boolean;
+    status: 'SUCCESS' | 'ERROR';
     message: string;
 }

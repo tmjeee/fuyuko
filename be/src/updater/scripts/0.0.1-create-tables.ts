@@ -6,6 +6,7 @@ import {doInDbConnection} from "../../db";
 export const update = async () => {
    i(`Inside ${__filename}, running update`);
 
+   await TBL_DASHBOARD();
    await TBL_AUDIT_LOG();
    await TBL_REGISTRATION();
    await TBL_GROUP();
@@ -54,8 +55,21 @@ export const update = async () => {
    await TBL_BULK_EDIT();
    await TBL_BULK_EDIT_LOG();
    await ADD_FK_CONSTRAINT();
+   await ADD_INDEXES();
 
    i(`${__filename} done running update`);
+};
+
+const TBL_DASHBOARD = async () => {
+   doInDbConnection((conn: PoolConnection) => {
+       conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_DASHBOARD (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            USER_ID INT,
+            SERIALIZED_DATA TEXT 
+         );
+       `);
+   });
 };
 
 const TBL_GROUP = async () => {
@@ -87,13 +101,13 @@ const TBL_AUDIT_LOG = async () => {
 const TBL_REGISTRATION = async () => {
    await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_REGISTRATION {
+         CREATE TABLE IF NOT EXISTS TBL_REGISTRATION (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             USERNAME VARCHAR(200) NOT NULL,
             EMAIL VARCHAR(200) NOT NULL,
             CREATION_DATE TIMESTAMP NOT NULL,
-            TYPE VARCHAR(200) NOT NULL                   # 'self' or 'invitation'
-            CODE VARCHAR(200) NOT NULL                   # 'invitation' use this to determine activation
+            TYPE VARCHAR(200) NOT NULL,                   # 'self' or 'invitation'
+            CODE VARCHAR(200) NOT NULL,                   # 'invitation' use this to determine activation
             ACTIVATED BOOLEAN 
          );
       `);
@@ -697,8 +711,16 @@ const TBL_BULK_EDIT_LOG = async () => {
     });
 };
 
+const ADD_INDEXES = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+       // todo: querios Indexes
+   });
+};
+
 const ADD_FK_CONSTRAINT = async () => {
    await doInDbConnection((conn: PoolConnection) => {
+      conn.query('ALTER TABLE TBL_DASHBOARD ADD CONSTRAINT FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID)');
+
       conn.query(` ALTER TABLE TBL_USER_AVATAR ADD CONSTRAINT FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID)`);
       
       conn.query(`ALTER TABLE TBL_LOOKUP_GROUP_ROLE ADD CONSTRAINT FOREIGN KEY (GROUP_ID) REFERENCES TBL_GROUP(ID)`);

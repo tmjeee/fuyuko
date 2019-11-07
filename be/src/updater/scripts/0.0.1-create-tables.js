@@ -12,6 +12,9 @@ const logger_1 = require("../../logger");
 const db_1 = require("../../db");
 exports.update = () => __awaiter(this, void 0, void 0, function* () {
     logger_1.i(`Inside ${__filename}, running update`);
+    yield TBL_DASHBOARD();
+    yield TBL_AUDIT_LOG();
+    yield TBL_REGISTRATION();
     yield TBL_GROUP();
     yield TBL_USER();
     yield TBL_USER_AVATAR();
@@ -58,7 +61,19 @@ exports.update = () => __awaiter(this, void 0, void 0, function* () {
     yield TBL_BULK_EDIT();
     yield TBL_BULK_EDIT_LOG();
     yield ADD_FK_CONSTRAINT();
+    yield ADD_INDEXES();
     logger_1.i(`${__filename} done running update`);
+});
+const TBL_DASHBOARD = () => __awaiter(this, void 0, void 0, function* () {
+    db_1.doInDbConnection((conn) => {
+        conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_DASHBOARD (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            USER_ID INT,
+            SERIALIZED_DATA TEXT 
+         );
+       `);
+    });
 });
 const TBL_GROUP = () => __awaiter(this, void 0, void 0, function* () {
     // TBL_GROUP
@@ -72,14 +87,44 @@ const TBL_GROUP = () => __awaiter(this, void 0, void 0, function* () {
       `);
     });
 });
+const TBL_AUDIT_LOG = () => __awaiter(this, void 0, void 0, function* () {
+    yield db_1.doInDbConnection((conn) => {
+        conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_AUDIT_LOG (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            CATEGORY VARCHAR(200),
+            CREATION_DATE TIMESTAMP,
+            LOG TEXT 
+         );
+      `);
+    });
+});
+const TBL_REGISTRATION = () => __awaiter(this, void 0, void 0, function* () {
+    yield db_1.doInDbConnection((conn) => {
+        conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_REGISTRATION (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            USERNAME VARCHAR(200) NOT NULL,
+            EMAIL VARCHAR(200) NOT NULL,
+            CREATION_DATE TIMESTAMP NOT NULL,
+            TYPE VARCHAR(200) NOT NULL,                   # 'self' or 'invitation'
+            CODE VARCHAR(200) NOT NULL,                   # 'invitation' use this to determine activation
+            ACTIVATED BOOLEAN 
+         );
+      `);
+    });
+});
 const TBL_USER = () => __awaiter(this, void 0, void 0, function* () {
     // TBL_USER
     yield db_1.doInDbConnection((conn) => {
         conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_USER (
             ID INT PRIMARY KEY AUTO_INCREMENT,
-            NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL 
+            USERNAME VARCHAR(200) NOT NULL,
+            CREATION_DATE TIMESTAMP NOT NULL,
+            LAST_UPDATE TIMESTAMP NOT NULL,
+            EMAIL VARCHAR(200) NOT NULL,
+            ENABLED BOOLEAN
          );
       `);
     });
@@ -608,8 +653,14 @@ const TBL_BULK_EDIT_LOG = () => __awaiter(this, void 0, void 0, function* () {
       `);
     });
 });
+const ADD_INDEXES = () => __awaiter(this, void 0, void 0, function* () {
+    yield db_1.doInDbConnection((conn) => {
+        // todo: querios Indexes
+    });
+});
 const ADD_FK_CONSTRAINT = () => __awaiter(this, void 0, void 0, function* () {
     yield db_1.doInDbConnection((conn) => {
+        conn.query('ALTER TABLE TBL_DASHBOARD ADD CONSTRAINT FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID)');
         conn.query(` ALTER TABLE TBL_USER_AVATAR ADD CONSTRAINT FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID)`);
         conn.query(`ALTER TABLE TBL_LOOKUP_GROUP_ROLE ADD CONSTRAINT FOREIGN KEY (GROUP_ID) REFERENCES TBL_GROUP(ID)`);
         conn.query(`ALTER TABLE TBL_LOOKUP_GROUP_ROLE ADD CONSTRAINT FOREIGN KEY (ROLE_ID) REFERENCES TBL_ROLE(ID)`);

@@ -33,7 +33,7 @@ exports.doInDbConnection = (callback) => __awaiter(this, void 0, void 0, functio
     const conn = yield exports.dbPool.getConnection();
     try {
         yield conn.beginTransaction();
-        const r = callback(conn);
+        const r = yield callback(conn);
         yield conn.commit();
         return r;
     }

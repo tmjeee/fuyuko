@@ -13,14 +13,9 @@ const poolConfig: PoolConfig = {
 
 export const dbPool: Pool = mariadb.createPool(poolConfig);
 
-export type QueryResponse  = {
-    affectedRows: number,
-    insertId: number,
-    warningStatus: number
-};
 
-export type QueryRows = {
-    meta: [{
+export interface QueryM {
+    meta: {
         columnLength: number,
         columnType: number,
         scale: number,
@@ -32,15 +27,22 @@ export type QueryRows = {
         orgTable: Function,
         name: Function,
         orgName: Function
-    }],
-    [columnName: string]: any,
-    length: number,
-    [Symbol.iterator]: any
+    }[],
+}
+
+export interface QueryI {
+    [name: string]: any
+}
+
+export type QueryA = QueryI[] & QueryM;
+
+
+export type QueryResponse  = {
+    affectedRows: number,
+    insertId: number,
+    warningStatus: number
 };
 
-export type QueryRow = {
-    [columnName: string]: any;
-}
 
 export const doInDbConnection = async <R> (callback: (conn: PoolConnection) => R)  => {
     const conn: PoolConnection = await dbPool.getConnection();

@@ -6,7 +6,10 @@
   "scripts": {
     "tsc": "tsc",
     "start": "node -- src/app.js",
-    "copy-model": "cp -fr ../fe/src/app/model ./src/"
+    "copy-model": "cp -fr ../fe/src/app/model ./src/ ; rm -fr ./src/model/dashboard.model.ts ; ",
+    "preexec": "npm run copy-model",
+    "exec": "npm run tsc",
+    "postexec": "npm run start"
   },
   "author": "",
   "license": "GPL",

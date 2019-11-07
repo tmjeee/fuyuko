@@ -2,12 +2,13 @@ import {Injectable } from '@angular/core';
 import {
     DashboardStrategy,
     DashboardWidgetInfo,
-    DashboardWidgetInstance, SerializeFormat
+    DashboardWidgetInstance,
 } from '../../model/dashboard.model';
 import {Sample1WidgetComponent} from '../../component/dashboard-component/widgets/sample-1-widget/sample-1-widget.component';
 import {User} from '../../model/user.model';
 import {Sample2WidgetComponent} from '../../component/dashboard-component/widgets/sample-2-widget/sample-2-widget.component';
-import {Observable, of} from "rxjs";
+import {Observable, of} from 'rxjs';
+import {SerializeFormat} from '../../model/dashboard-serialzable.model';
 
 
 // a must be array / multi-dimention array of DashboardWidgetInstance
@@ -92,7 +93,7 @@ export class DashboardStrategy2x implements DashboardStrategy {
         return data;
     }
     deserialize(data: string) {
-        this.dashboardWidgetInstances = [[],[]];
+        this.dashboardWidgetInstances = [[], []];
         this.i = 0;
         const strategyId = this.id;
         const x: SerializeFormat = JSON.parse(data);
@@ -121,24 +122,24 @@ export const DASHBOARD_WIDGET_INFOS = [
 export class DashboardService {
 
     serializedData: string = JSON.stringify({
-                              strategyId: '2x',
-                              instances: [
-                                  {instanceId: '1', typeId: Sample1WidgetComponent.info().id },
-                                  {instanceId: '2', typeId: Sample1WidgetComponent.info().id },
-                                  {instanceId: '3', typeId: Sample2WidgetComponent.info().id },
-                                  {instanceId: '4', typeId: Sample2WidgetComponent.info().id },
-                              ],
-                              special: [
-                                  [
-                                      {instanceId: '1', typeId: Sample1WidgetComponent.info().id },
-                                      {instanceId: '2', typeId: Sample1WidgetComponent.info().id },
-                                  ],
-                                  [
-                                      {instanceId: '3', typeId: Sample2WidgetComponent.info().id },
-                                      {instanceId: '4', typeId: Sample2WidgetComponent.info().id },
-                                  ]
-                              ]
-                          } as SerializeFormat);
+       strategyId: '2x',
+       instances: [
+           {instanceId: '1', typeId: Sample1WidgetComponent.info().id },
+           {instanceId: '2', typeId: Sample1WidgetComponent.info().id },
+           {instanceId: '3', typeId: Sample2WidgetComponent.info().id },
+           {instanceId: '4', typeId: Sample2WidgetComponent.info().id },
+       ],
+       special: [
+           [
+               {instanceId: '1', typeId: Sample1WidgetComponent.info().id },
+               {instanceId: '2', typeId: Sample1WidgetComponent.info().id },
+           ],
+           [
+               {instanceId: '3', typeId: Sample2WidgetComponent.info().id },
+               {instanceId: '4', typeId: Sample2WidgetComponent.info().id },
+           ]
+       ]
+    } as SerializeFormat);
 
     getAllDashboardStrategies(): DashboardStrategy[] {
         return [...DASHBOARD_STRATEGIES];
