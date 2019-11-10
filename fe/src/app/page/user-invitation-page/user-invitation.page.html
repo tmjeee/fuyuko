@@ -1,0 +1,15 @@
+<div class="user-invitation-page">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>User Invitation</mat-card-title>
+            <mat-card-subtitle>Send out registration invitation. An email with activation link will be sent out. Once activated,
+            the user will automatically be transitioned into the system.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-send-invite [groupSearchFn]="groupSearchFn"
+                             (events)="onSendInvite($event)">
+            </app-send-invite>
+        </mat-card-content>
+    </mat-card>
+
+</div>

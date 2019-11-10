@@ -1,5 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {MyErrorStateMatcher} from '../../utils/my-error-state-matcher.util';
+import {RegistrationService} from '../../service/registration-service/registration.service';
+import {tap} from 'rxjs/operators';
+import {RegistrationResponse} from '../../model/registration.model';
+import {NotificationsService} from 'angular2-notifications';
+import {toNotifications} from "../../service/common.service";
 
 @Component({
   templateUrl: './register.page.html',
@@ -10,24 +17,46 @@ export class RegisterPageComponent implements OnInit {
   formGroup: FormGroup;
   formControlEmail: FormControl;
   formControlUsername: FormControl;
+  formGroupPassword: FormGroup;
   formControlPassword: FormControl;
   formControlConfirmPassword: FormControl;
+  errorStateMatcher: ErrorStateMatcher;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+              private registrationService: RegistrationService,
+              private notificationSerivce: NotificationsService) {
+    this.errorStateMatcher = new MyErrorStateMatcher();
     this.formControlEmail = this.formBuilder.control('', [Validators.required, Validators.email]);
     this.formControlUsername = this.formBuilder.control('', [Validators.required]);
     this.formControlPassword = this.formBuilder.control('', [Validators.required]);
     this.formControlConfirmPassword = this.formBuilder.control('', [Validators.required]);
-    this.formGroup = this.formBuilder.group({
-      username: this.formControlUsername,
-      email: this.formControlEmail,
+    this.formGroupPassword = this.formBuilder.group({
       password: this.formControlPassword,
       confirmPassword: this.formControlConfirmPassword
+    });
+    this.formGroup = this.formBuilder.group({
+      email: this.formControlEmail,
+      username: this.formControlUsername,
+      formGroupPassword: this.formGroupPassword
+    });
+    this.formGroupPassword.setValidators((formGroupPassword: FormGroup) => {
+      const p1: string = formGroupPassword.controls.password.value;
+      const p2: string = formGroupPassword.controls.confirmPassword.value;
+      if (p1 !== p2) {
+        return { passwordMatch: true };
+      }
+      return null;
     });
   }
 
   onSubmit() {
-
+      this.registrationService
+          .register(this.formControlEmail.value, this.formControlUsername.value, this.formControlPassword.value)
+          .pipe(
+              tap((r: RegistrationResponse) => {
+                  toNotifications(this.notificationSerivce, r);
+              })
+          ).subscribe();
   }
 
   ngOnInit(): void {

@@ -29,7 +29,10 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let user">
-        <mat-icon class="delete" color="primary" (click)="onCancelClicked($event, user)">cancel</mat-icon>
+        <mat-icon *ngFor="let actionType of actionTypes"
+                  class="action-type" color="primary"
+                  (click)="onActionTypeClicked($event, actionType, user)"
+                  [matTooltip]="actionType.tooltip">{{actionType.icon}}</mat-icon>
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

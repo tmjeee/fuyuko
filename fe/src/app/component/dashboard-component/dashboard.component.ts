@@ -19,7 +19,7 @@ import {
 } from '../../model/dashboard.model';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import * as uuid from 'uuid/v1';
-import {WidgetContainerComponent} from "./widget-container.component";
+import {WidgetContainerComponent} from './widget-container.component';
 
 
 
@@ -93,7 +93,6 @@ export class DashboardComponent implements OnInit {
         this.getCurrentStrategy().addDashboardWidgetInstances([{
             instanceId: uuid(),
             typeId: selectedDashboardWidgetInfo.id,
-            type: selectedDashboardWidgetInfo.type
         }]);
         this.formControlWidgetInfoSelected.setValue(undefined);
     }

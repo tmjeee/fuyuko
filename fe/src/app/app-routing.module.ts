@@ -45,6 +45,9 @@ import {ForumHelpPageComponent} from './page/forum-help-page/forum-help.page';
 import {AllForumsPageComponent} from './page/forum-page/all-forums.page';
 import {AllTopicsInForumPageComponent} from './page/forum-page/all-topics-in-forum.page';
 import {AllPostsInTopicPageComponent} from './page/forum-page/all-posts-in-topic.page';
+import {ActivatePageComponent} from './page/activate-page/activate.page';
+import {UserInvitationPageComponent} from './page/user-invitation-page/user-invitation.page';
+import {UserActivationPageComponent} from './page/user-activation-page/user-activation.page';
 
 const routes: Routes = [
 
@@ -66,6 +69,10 @@ const routes: Routes = [
      {
        path: 'register',
        component: RegisterPageComponent,
+     } as Route,
+     {
+       path: 'activate/:code',
+       component: ActivatePageComponent,
      } as Route
    ]
  } as Route,
@@ -121,6 +128,22 @@ const routes: Routes = [
        component: UserPeoplePageComponent,
        data: {
          subSideNav: 'people'
+       }
+     } as Route,
+     {
+       path: 'invitation',
+       canActivate: [AuthGuard],
+       component: UserInvitationPageComponent,
+       data: {
+         subSideNav: 'invitation'
+       }
+     } as Route,
+     {
+       path: 'activation',
+       canActivate: [AuthGuard],
+       component: UserActivationPageComponent,
+       data: {
+         subSideNav: 'activation'
        }
      } as Route,
      {

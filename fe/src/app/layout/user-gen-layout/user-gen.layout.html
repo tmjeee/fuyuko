@@ -44,6 +44,14 @@
                 <mat-icon>person</mat-icon>
                 <a href="#" [routerLink]="['/user-gen-layout', {outlets: {primary:['people'], help: ['user-help']}}]">Users</a>
               </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'invitation'">
+                <mat-icon>insert_invitation</mat-icon>
+                <a href="#" [routerLink]="['/user-gen-layout', {outlets: {primary:['invitation'], help: ['user-help']}}]">Invitation</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'activation'">
+                <mat-icon>whatshot</mat-icon>
+                <a href="#" [routerLink]="['/user-gen-layout', {outlets: {primary:['activation'], help: ['user-help']}}]">Activation</a>
+              </mat-list-item>
             </mat-list>
           </mat-sidenav>
           <mat-sidenav-content>

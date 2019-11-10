@@ -1,0 +1,67 @@
+<div class="activate-page">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit();">
+        <mat-card class="container">
+            <mat-card-header>
+                <mat-card-title>Activate Invitation</mat-card-title>
+                <mat-card-subtitle>
+                    <div *ngIf="!!status" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center" class="message-box"
+                         [ngClass]="{error: (status === 'ERROR'), success: (status === 'SUCCESS')}">
+                        <mat-icon *ngIf="status === 'ERROR'" fxFlex="0 0 auto">warning</mat-icon>
+                        <mat-icon *ngIf="status === 'SUCCESS'" fxFlex="0 0 auto">info</mat-icon>
+                        <div class="message" fxFlex="1 0, auto">{{message}}</div>
+                    </div>
+                    <div class="text">
+                        Upon completing this invitation activation, you will be able to logon and start participating.
+                    </div>
+                    <div class="text">
+                        If you do not have an invitation, you can still <a [routerLink]="['/register']">self register</a>, but your registration will need
+                        to be approved before you can logged on.
+                    </div>
+                    <div class="text">
+                        Enjoy and let the fun begin!
+                    </div>
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="form">
+                    <mat-form-field>
+                        <mat-label>Email from invitation</mat-label>
+                        <mat-hint>Email from invitation</mat-hint>
+                        <input matInput placeholder="Email" [formControl]="formControlEmail" readonly>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Username</mat-label>
+                        <mat-hint>Enter a username</mat-hint>
+                        <input matInput placeholder="Username" [formControl]="formControlUsername">
+                        <mat-error *ngIf="formControlUsername?.errors?.required">Username is required</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Password</mat-label>
+                        <mat-hint>Enter password</mat-hint>
+                        <input matInput type="password" placeholder="Password" [formControl]="formControlPassword"
+                        [errorStateMatcher]="errorStateMatcher">
+                        <mat-error *ngIf="formControlPassword?.errors?.required">Password is required</mat-error>
+                        <mat-error *ngIf="formGroupPassword?.errors?.passwordMatch">Passwords must match</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Confirm password</mat-label>
+                        <mat-hint>Confirm password</mat-hint>
+                        <input matInput type="password" placeholder="Confirm Password" [formControl]="formControlConfirmPassword"
+                        [errorStateMatcher]="errorStateMatcher">
+                        <mat-error *ngIf="formControlConfirmPassword?.errors?.required">Confirmed password is required</mat-error>
+                        <mat-error *ngIf="formGroupPassword?.errors?.passwordMatch">Passwords must match</mat-error>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <div class="control">
+                    <button mat-flat-button type="submit" color="primary" [disabled]="formGroup.invalid">Activate</button>
+                    <div class="link">
+                        Already registered?
+                        Try <a href="#" class="login-link" [routerLink]="['/login-layout', 'login']">Login</a>.
+                    </div>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+</div>

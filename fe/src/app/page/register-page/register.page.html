@@ -22,16 +22,33 @@
       <mat-card-content>
         <div class="form">
           <mat-form-field>
+            <mat-label>Email</mat-label>
+            <mat-hint>Enter a valid email</mat-hint>
             <input matInput placeholder="Email" [formControl]="formControlEmail">
+            <mat-error *ngIf="formControlEmail?.errors?.required">Email is required</mat-error>
+            <mat-error *ngIf="formControlEmail?.errors?.email">Email format must be valid</mat-error>
           </mat-form-field>
           <mat-form-field>
+            <mat-label>Username</mat-label>
+            <mat-hint>Enter a valida username</mat-hint>
             <input matInput placeholder="Username" [formControl]="formControlUsername">
+            <mat-error *ngIf="formControlEmail?.errors?.required">Username is required</mat-error>
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="password" placeholder="Password" [formControl]="formControlPassword">
+            <mat-label>Password</mat-label>
+            <mat-hint>Enter a valid password</mat-hint>
+            <input matInput type="password" placeholder="Password" [formControl]="formControlPassword"
+                   [errorStateMatcher]="errorStateMatcher">
+            <mat-error *ngIf="formControlPassword?.errors?.required">Password is required</mat-error>
+            <mat-error *ngIf="formGroupPassword?.errors?.passwordMatch">Password must match</mat-error>
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="password" placeholder="Confirm Password" [formControl]="formControlConfirmPassword">
+            <mat-label>Confirm Password</mat-label>
+            <mat-hint>Enter a valid confirmation password</mat-hint>
+            <input matInput type="password" placeholder="Confirm Password" [formControl]="formControlConfirmPassword"
+                   [errorStateMatcher]="errorStateMatcher">
+            <mat-error *ngIf="formControlPassword?.errors?.required">Confirmation password is required</mat-error>
+            <mat-error *ngIf="formGroupPassword?.errors?.passwordMatch">Confirm password must match</mat-error>
           </mat-form-field>
         </div>
       </mat-card-content>

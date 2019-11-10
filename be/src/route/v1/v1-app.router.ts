@@ -2,7 +2,8 @@
 import express, {Request, Response, NextFunction, Router} from 'express';
 import * as formidable from 'formidable';
 import {Fields, Files} from 'formidable';
-import registerRoutes from './register-route';
+import selfRegisterRoutes from './self-register.route';
+import createInvitationRoutes from './create-invitation.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -15,7 +16,8 @@ v1AppRouter.post('/p', (req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-registerRoutes(v1AppRouter);
+selfRegisterRoutes(v1AppRouter);
+createInvitationRoutes(v1AppRouter);
 
 
 export default v1AppRouter;

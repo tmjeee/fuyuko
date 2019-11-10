@@ -6,8 +6,6 @@
       <mat-card-subtitle>
         Users management configurations. Including :-
         <ul>
-          <li>Sending invitation to users in order for them to join the system. Once an invitation is sent they will be in
-          the 'Pending' users list</li>
           <li>Inspect and manage currently active users, including deactivating them</li>
           <li>Inspect and manage currently inactive users, including re-activating them</li>
         </ul>
@@ -15,32 +13,6 @@
     </mat-card-header>
     <mat-card-content>
       <mat-accordion>
-        <!-- send invitation -->
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Send invitation</mat-panel-title>
-            <mat-panel-description>Send Invitations to user(s) to join the system. This is a way to add users into the system</mat-panel-description>
-          </mat-expansion-panel-header>
-          <app-send-invite [groupSearchFn]="groupSearchFn"
-                            (events)="onSendInvite($event)">
-          </app-send-invite>
-        </mat-expansion-panel>
-
-
-        <!-- pending users -->
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Pending</mat-panel-title>
-            <mat-panel-description>Contains list of users where invitations are sent and are pending their interations for activation.</mat-panel-description>
-          </mat-expansion-panel-header>
-          <app-user-search-table [userSearchFn]="pendingUserSearchFn"
-                          searchFieldHint="Search for users in pending list, key in approximate username and press enter to search"
-                          searchFieldLabel="Search users"
-                          searchFieldPlaceholder="Search for users"
-                          [users]="pendingUsers"
-                          (events)="onPendingUsersTableEvent($event)"></app-user-search-table>
-        </mat-expansion-panel>
-
 
         <!-- active users -->
         <mat-expansion-panel>
@@ -52,6 +24,7 @@
                           searchFieldHint="Search for users in active list, key in approximate username and press enter to search"
                           searchFieldLabel="Search users"
                           searchFieldPlaceholder="Search for users"
+                          [actionTypes]="activeUsersActionTypes"
                           [users]="activeUsers"
                           (events)="onActiveUsersTableEvent($event)"></app-user-search-table>
         </mat-expansion-panel>
@@ -66,6 +39,7 @@
                           searchFieldHint="Search for users in inactive list, key in approximate username and press enter to search"
                           searchFieldLabel="Search users"
                           searchFieldPlaceholder="Search for users"
+                          [actionTypes]="inactiveUsersActionTypes"
                           [users]="inactiveUsers"
                           (events)="onInactiveUsersTableEvent($event)"></app-user-search-table>
         </mat-expansion-panel>

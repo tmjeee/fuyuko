@@ -117,8 +117,13 @@ import {AllTopicsInForumPageComponent} from './page/forum-page/all-topics-in-for
 import {AllPostsInTopicPageComponent} from './page/forum-page/all-posts-in-topic.page';
 import {ForumModule} from './component/forum-component/forum.module';
 import {DashboardModule} from './component/dashboard-component/dashboard.module';
-import {DashboardService} from "./service/dashboard-service/dashboard.service";
-import {DashboardWidgetService} from "./service/dashboard-service/dashbowd-widget.service";
+import {DashboardService} from './service/dashboard-service/dashboard.service';
+import {DashboardWidgetService} from './service/dashboard-service/dashbowd-widget.service';
+import {ActivatePageComponent} from './page/activate-page/activate.page';
+import {UserInvitationPageComponent} from './page/user-invitation-page/user-invitation.page';
+import {ActivationService} from './service/activation-service/activation.service';
+import {UserActivationPageComponent} from './page/user-activation-page/user-activation.page';
+import {InvitationService} from "./service/invitation-service/invitation.service";
 
 const appInitializer = (settingsService: SettingsService, authService: AuthService) => {
   return () => {
@@ -152,6 +157,7 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     LoginPageComponent,
     DashboardPageComponent,
     RegisterPageComponent,
+    ActivatePageComponent,
     BulkEditPageComponent,
     BulkEditHelpPageComponent,
     HelpCenterPageComponent,
@@ -163,6 +169,8 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     UserRolePageComponent,
     UserGroupPageComponent,
     UserPeoplePageComponent,
+    UserInvitationPageComponent,
+    UserActivationPageComponent,
     UserHelpPageComponent,
     ViewHelpPageComponent,
     ImportPageComponent,
@@ -267,11 +275,14 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     {provide: ForumService, useClass: ForumService} as Provider,
     {provide: DashboardService, useClass: DashboardService} as Provider,
     {provide: DashboardWidgetService, useClass: DashboardWidgetService} as Provider,
+    {provide: ActivationService, useClass: ActivationService} as Provider,
+    {provide: InvitationService, useClass: InvitationService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
+    // {provide: HTTP_INTERCEPTORS, useClass: ExceptionHandling, multi: true} as Provider,
     {provide: ErrorHandler, useClass: GlobalErrorhandler} as Provider,
   ],
   entryComponents: [

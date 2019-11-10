@@ -6,5 +6,15 @@
   "db-database": "fuyuko",
   "db-connection-limit": 5,
   "version": "1.0.0-beta",
-  "port": "8888"
+  "port": 8888,
+  "salt": "some-salt",
+
+  "fe-url-base": "http://localhost:4500/",
+
+  "smtp-host": "smtp.gmail.com",
+  "smtp-port": 587,
+  "smtp-secure": false,
+  "smtp-user": "fuyuko.mdm@gmail.com",
+  "smtp-password": "oeckyqpcyhazcoij",
+  "smtp-from-email": "app@fuyuko.com"
 }

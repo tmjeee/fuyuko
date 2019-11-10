@@ -9,11 +9,10 @@ import {map} from 'rxjs/operators';
 
 export type UserSearchFn = (user: string) => Observable<User[]>;
 
-export type UserSearchTableComponentEventType = 'delete';
 
 export interface UserSearchTableComponentEvent {
-  type: UserSearchTableComponentEventType;
-  user?: User;      // only when type is 'delete'
+  type: string;
+  user?: User;
 }
 
 class UserSearchTableDataSource implements DataSource<User> {
@@ -33,6 +32,13 @@ class UserSearchTableDataSource implements DataSource<User> {
   }
 }
 
+
+export interface ActionType {
+  type: string;
+  icon: string;
+  tooltip: string;
+}
+
 @Component({
   selector: 'app-user-search-table',
   templateUrl: './user-search-table.component.html',
@@ -46,6 +52,7 @@ export class UserSearchTableComponent implements OnInit {
 
   @Input() users: User[];
   @Input() userSearchFn: UserSearchFn;
+  @Input() actionTypes: ActionType[];
   @Output() events: EventEmitter<UserSearchTableComponentEvent> = new EventEmitter();
 
   dataSource: UserSearchTableDataSource;
@@ -72,11 +79,11 @@ export class UserSearchTableComponent implements OnInit {
       ).subscribe();
   }
 
-  onCancelClicked($event: MouseEvent, user: User) {
+  onActionTypeClicked($event: MouseEvent, actionType: ActionType, user: any) {
     this.events.emit({
-      type: 'delete',
+      type: actionType.type,
       user
     } as UserSearchTableComponentEvent);
-  }
 
+  }
 }

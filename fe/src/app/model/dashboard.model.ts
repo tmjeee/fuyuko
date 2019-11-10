@@ -1,12 +1,13 @@
 import {Type} from '@angular/core';
 import {DashboardWidgetService} from '../service/dashboard-service/dashbowd-widget.service';
+import {SerializeInstanceFormat} from './dashboard-serialzable.model';
 
 
 export interface DashboardStrategy {
     id: string;
     name: string;
     columnIndexes(): number[];
-    addDashboardWidgetInstances(dashboardWidgetInsances: DashboardWidgetInstance[]);
+    addDashboardWidgetInstances(serializeInstanceFormats: SerializeInstanceFormat[]);
     getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[];
     serialize(): string;
     deserialize(data: string);

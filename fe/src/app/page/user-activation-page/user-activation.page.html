@@ -1,0 +1,18 @@
+<div class="user-activation-page">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Self Registered User Activation</mat-card-title>
+            <mat-card-subtitle>Activate / Approve all self registered User, so they can start participating and contribute.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-user-search-table [userSearchFn]="pendingUserSearchFn"
+                                   searchFieldHint="Search for users in pending list, key in approximate username and press enter to search"
+                                   searchFieldLabel="Search users"
+                                   searchFieldPlaceholder="Search for users"
+                                   [actionTypes]="actionTypes"
+                                   [users]="pendingUsers"
+                                   (events)="onPendingUsersTableEvent($event)">
+            </app-user-search-table>
+        </mat-card-content>
+    </mat-card>
+</div>

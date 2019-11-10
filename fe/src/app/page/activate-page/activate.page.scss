@@ -1,0 +1,56 @@
+.activate-page {
+  a {
+    padding: 3px;
+    border-radius: 2px;
+    color: var(--my-app-accent-default-contrast);
+    background-color: var(--my-app-accent-default);
+  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .container {
+   .message-box {
+     padding: 10px;
+     border-radius: 5px;
+     &.error {
+       background-color: var(--my-app-primary-default);
+       color: var(--my-app-primary-default-contrast);
+     }
+     &.success {
+       background-color: var(--my-app-accent-default);
+       color: var(--my-app-primary-accent-default-contrast);
+     }
+     mat-icon {
+     }
+     .message {
+     }
+   }
+
+
+    width: 35vw;
+    opacity: 0.888;
+
+    .form, .control {
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      & > * {
+        width: 100%;
+      }
+    }
+
+    .text {
+      margin: 15px 0;
+    }
+
+    .control {
+      .link {
+        margin-top: 10px;
+      }
+    }
+  }
+}

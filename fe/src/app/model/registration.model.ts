@@ -1,6 +1,6 @@
 
 
-export interface Registration {
+export interface RegistrationResponse {
     registrationId: number;
     username: string;
     email: string;

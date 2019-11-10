@@ -1,3 +1,6 @@
+
 {
-  "version": "1.0.0-beta"
+  "version": "1.0.0-beta",
+  "api_host_url": "http://localhost:8888/v1"
+
 }

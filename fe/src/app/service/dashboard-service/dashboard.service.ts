@@ -8,21 +8,21 @@ import {Sample1WidgetComponent} from '../../component/dashboard-component/widget
 import {User} from '../../model/user.model';
 import {Sample2WidgetComponent} from '../../component/dashboard-component/widgets/sample-2-widget/sample-2-widget.component';
 import {Observable, of} from 'rxjs';
-import {SerializeFormat} from '../../model/dashboard-serialzable.model';
+import {SerializeFormat, SerializeInstanceFormat} from '../../model/dashboard-serialzable.model';
 
 
-// a must be array / multi-dimention array of DashboardWidgetInstance
+// a must be array / multi-dimention array of SerializeInstanceFormat
 const stickInTypes = (a: any) => {
     if (Array.isArray(a)) {
-        const ar: DashboardWidgetInstance[] = a;
+        const ar: SerializeInstanceFormat[] = a;
         for (const ai of ar) {
             stickInTypes(ai);
         }
     } else  {
-       const d: DashboardWidgetInstance =  a as DashboardWidgetInstance;
+       const d: SerializeInstanceFormat =  a as SerializeInstanceFormat;
        const wi: DashboardWidgetInfo = DASHBOARD_WIDGET_INFOS.find((i: DashboardWidgetInfo) => i.id === d.typeId);
        if (wi) {
-           d.type = wi.type;
+           (d as any).type = wi.type;
        } else {
           console.error(
               `DashboardWidgetInstance instanceId ${d.instanceId} of typeId ${d.typeId} is an invalid entry, cannot identify the type`);
@@ -42,8 +42,15 @@ export class DashboardStrategy1x implements DashboardStrategy {
     getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[] {
         return this.dashboardWidgetInstances;
     }
-    addDashboardWidgetInstances(dashboardWidgetInstances: DashboardWidgetInstance[]) {
-        this.dashboardWidgetInstances.push(...dashboardWidgetInstances);
+    addDashboardWidgetInstances(serializeInstanceFormats: SerializeInstanceFormat[]) {
+        serializeInstanceFormats.forEach((t: SerializeInstanceFormat) => {
+            const dashboardWidgetInfo: DashboardWidgetInfo = DASHBOARD_WIDGET_INFOS.find((dwi: DashboardWidgetInfo) => dwi.id === t.typeId);
+            this.dashboardWidgetInstances.push({
+                instanceId: t.instanceId,
+                typeId: t.typeId,
+                type: dashboardWidgetInfo.type
+            } as DashboardWidgetInstance);
+        });
     }
     serialize(): string {
         const strategyId = this.id;
@@ -57,7 +64,7 @@ export class DashboardStrategy1x implements DashboardStrategy {
     deserialize(data: string) {
         this.dashboardWidgetInstances = [];
         const x: SerializeFormat = JSON.parse(data);
-        const r: DashboardWidgetInstance[] = x.instances;
+        const r: SerializeInstanceFormat[] = x.instances;
         stickInTypes(r);
         this.addDashboardWidgetInstances(r);
     }
@@ -77,9 +84,14 @@ export class DashboardStrategy2x implements DashboardStrategy {
     getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[] {
         return this.dashboardWidgetInstances[columnIndex % this.NUM];
     }
-    addDashboardWidgetInstances(dashboardWidgetTypes: DashboardWidgetInstance[]) {
-        dashboardWidgetTypes.forEach((t: DashboardWidgetInstance) => {
-            this.dashboardWidgetInstances[this.i % this.NUM].push(t);
+    addDashboardWidgetInstances(serializeInstanceFormats: SerializeInstanceFormat[]) {
+        serializeInstanceFormats.forEach((t: SerializeInstanceFormat) => {
+            const dashboardWidgetInfo: DashboardWidgetInfo = DASHBOARD_WIDGET_INFOS.find((dwi: DashboardWidgetInfo) => dwi.id === t.typeId);
+            this.dashboardWidgetInstances[this.i % this.NUM].push({
+                instanceId: t.instanceId,
+                typeId: t.typeId,
+                type: dashboardWidgetInfo.type
+            } as DashboardWidgetInstance);
             this.i += 1;
         });
     }

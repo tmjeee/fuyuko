@@ -12,7 +12,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const formidable = __importStar(require("formidable"));
-const register_route_1 = __importDefault(require("./register-route"));
+const self_register_route_1 = __importDefault(require("./self-register.route"));
+const create_invitation_route_1 = __importDefault(require("./create-invitation.route"));
 const v1AppRouter = express_1.default.Router();
 v1AppRouter.get('/', (req, res, next) => {
     res.send('test ok');
@@ -21,5 +22,6 @@ v1AppRouter.post('/p', (req, res, next) => {
     new formidable.IncomingForm().parse(req, (error, fields, files) => {
     });
 });
-register_route_1.default(v1AppRouter);
+self_register_route_1.default(v1AppRouter);
+create_invitation_route_1.default(v1AppRouter);
 exports.default = v1AppRouter;
