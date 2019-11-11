@@ -112,7 +112,8 @@ const TBL_GROUP = () => __awaiter(this, void 0, void 0, function* () {
          CREATE TABLE IF NOT EXISTS TBL_GROUP (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL 
+            DESCRIPTION VARCHAR(500) NOT NULL,
+            STATUS VARCHAR(200) NOT NULL
          );
       `);
     });
@@ -141,7 +142,7 @@ const TBL_USER = () => __awaiter(this, void 0, void 0, function* () {
             EMAIL VARCHAR(200) NOT NULL,
             FIRSTNAME VARCHAR(200),
             LASTNAME VARCHAR(200),
-            ENABLED BOOLEAN NOT NULL,
+            STATUS VARCHAR(200) NOT NULL,
             PASSWORD VARCHAR(500) NOT NULL
          );
       `);

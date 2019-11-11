@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
 import {Themes} from '../theme-service/theme.service';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from '@angular/common/http';
+import {LoginResponse} from '../../model/login.model';
 
 
 export interface StorageToken  {
@@ -24,7 +25,7 @@ export class AuthService {
    return this.subject.asObservable();
  }
 
-  login(username: string, password: string): Observable<User|void> {
+  login(username: string, password: string): Observable<LoginResponse> {
       // todo:
        const token = Math.random(); // todo: jwt token
        if (username === 'tmjee' && password === 'tmjee') {
