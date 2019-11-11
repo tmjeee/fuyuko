@@ -9,7 +9,11 @@
   "port": 8888,
   "salt": "some-salt",
 
+  "jwt-secret": "some-secret",
+  "jwt-expiration": "1h",
+
   "fe-url-base": "http://localhost:4500/",
+  "be-url-base": "http://localhost:8888/v1/",
 
   "smtp-host": "smtp.gmail.com",
   "smtp-port": 587,

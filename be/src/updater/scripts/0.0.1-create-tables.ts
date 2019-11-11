@@ -114,7 +114,8 @@ const TBL_GROUP = async () => {
          CREATE TABLE IF NOT EXISTS TBL_GROUP (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL 
+            DESCRIPTION VARCHAR(500) NOT NULL,
+            STATUS VARCHAR(200) NOT NULL
          );
       `);
    });
@@ -146,7 +147,7 @@ const TBL_USER = async () => {
             EMAIL VARCHAR(200) NOT NULL,
             FIRSTNAME VARCHAR(200),
             LASTNAME VARCHAR(200),
-            ENABLED BOOLEAN NOT NULL,
+            STATUS VARCHAR(200) NOT NULL,
             PASSWORD VARCHAR(500) NOT NULL
          );
       `)
