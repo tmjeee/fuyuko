@@ -6,4 +6,5 @@ export interface LoginResponse {
     status: Status;
     message: string;
     user: User;
+    theme: string;
 }

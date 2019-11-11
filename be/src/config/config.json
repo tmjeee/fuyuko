@@ -16,5 +16,7 @@
   "smtp-secure": false,
   "smtp-user": "fuyuko.mdm@gmail.com",
   "smtp-password": "oeckyqpcyhazcoij",
-  "smtp-from-email": "app@fuyuko.com"
+  "smtp-from-email": "app@fuyuko.com",
+
+  "default-theme": "deeppurple_amber_light"
 }

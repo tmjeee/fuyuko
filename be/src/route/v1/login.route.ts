@@ -14,7 +14,7 @@ const loginHttpAction = [
         const username: string = req.body.username;
         const password: string = req.body.password;
 
-        jwt.sign({});
+        // jwt.sign({});
 
 
 

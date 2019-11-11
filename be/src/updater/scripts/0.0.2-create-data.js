@@ -31,6 +31,9 @@ exports.update = () => {
         conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u1.insertId, g2.insertId]);
         conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u2.insertId, g3.insertId]);
         conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u2.insertId, g4.insertId]);
+        // user-theme
+        conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`, [u1.insertId, 'pink_bluegrey_light']);
+        conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`, [u2.insertId, 'indigo_lightblue_dark']);
     }));
 };
 const passwd = (passwd) => {
