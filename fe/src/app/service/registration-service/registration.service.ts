@@ -12,9 +12,9 @@ export class RegistrationService {
 
     constructor(private httpClient: HttpClient) {}
 
-    register(email: string, username: string, password: string): Observable<RegistrationResponse> {
+    register(email: string, username: string, firstName: string, lastName: string, password: string): Observable<RegistrationResponse> {
         return this.httpClient.post<RegistrationResponse>(URL_REGISTER, {
-            email, username, password
+            email, username, password, firstName, lastName
         });
     }
 

@@ -30,9 +30,21 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Username</mat-label>
-            <mat-hint>Enter a valida username</mat-hint>
+            <mat-hint>Enter a valid username</mat-hint>
             <input matInput placeholder="Username" [formControl]="formControlUsername">
             <mat-error *ngIf="formControlEmail?.errors?.required">Username is required</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>First Name</mat-label>
+            <mat-hint>Enter a valid First Name</mat-hint>
+            <input matInput placeholder="First Name" [formControl]="formControlFirstName">
+            <mat-error *ngIf="formControlFirstName?.errors?.required">First Name is required</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Last Name</mat-label>
+            <mat-hint>Enter a valid Last Name</mat-hint>
+            <input matInput placeholder="Last Name" [formControl]="formControlLastName">
+            <mat-error *ngIf="formControlLastName?.errors?.required">Last Name is required</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Password</mat-label>

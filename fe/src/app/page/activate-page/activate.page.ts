@@ -17,6 +17,8 @@ export class ActivatePageComponent implements OnInit {
     formGroupPassword: FormGroup;
     formControlEmail: FormControl;
     formControlUsername: FormControl;
+    formControlFirstName: FormControl;
+    formControlLastName: FormControl;
     formControlPassword: FormControl;
     formControlConfirmPassword: FormControl;
 
@@ -33,6 +35,8 @@ export class ActivatePageComponent implements OnInit {
         this.message = '';
         this.formControlEmail = this.formBuilder.control('', [Validators.required, Validators.email]);
         this.formControlUsername = this.formBuilder.control('', [Validators.required]);
+        this.formControlFirstName = this.formBuilder.control('', [Validators.required]);
+        this.formControlLastName = this.formBuilder.control('', [Validators.required]);
         this.formControlPassword = this.formBuilder.control('', [Validators.required]);
         this.formControlConfirmPassword = this.formBuilder.control('', [Validators.required]);
         this.formGroupPassword = this.formBuilder.group({
@@ -42,6 +46,8 @@ export class ActivatePageComponent implements OnInit {
         this.formGroup = this.formBuilder.group({
             username: this.formControlUsername,
             email: this.formControlEmail,
+            firstName: this.formControlFirstName,
+            lastName: this.formControlLastName,
             passwordGroup: this.formGroupPassword
         });
         this.formGroupPassword.setValidators((fg: FormGroup) => {
@@ -61,7 +67,7 @@ export class ActivatePageComponent implements OnInit {
             this.message = `Missing code for activation`;
             return;
         }
-        this.activationService.invitation(this.code)
+        this.activationService.getInvitation(this.code)
             .pipe(
                 tap((i: Invitation) => {
                     if (i) {
@@ -78,7 +84,12 @@ export class ActivatePageComponent implements OnInit {
 
     onSubmit() {
         this.activationService
-            .activate(this.code)
+            .activate(this.code,
+                this.formControlEmail.value,
+                this.formControlUsername.value,
+                this.formControlFirstName.value,
+                this.formControlLastName.value,
+                this.formControlPassword.value)
             .pipe(
                 tap((a: Activation) => {
                     this.status = a.status;

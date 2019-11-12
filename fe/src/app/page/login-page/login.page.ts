@@ -6,6 +6,7 @@ import {User} from '../../model/user.model';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {SettingsService} from '../../service/settings-service/settings.service';
+import {LoginResponse} from "../../model/login.model";
 
 
 @Component({
@@ -36,17 +37,14 @@ export class LoginPageComponent {
     this.authService
       .login(this.formControlUsername.value, this.formControlPassword.value)
       .pipe(
-        map((u: User|null) => {
-          if (u) {
+        map((u: LoginResponse) => {
+          if (u && u.status === 'SUCCESS') {
             this.router.navigate(['/dashboard-layout', 'dashboard']);
           } else {
             this.notificationService.error('Error', 'Unexpected error logging in');
           }
           return u;
         }),
-        map((u: User|null) => {
-            if (u) { }
-        })
       ).subscribe();
   }
 }

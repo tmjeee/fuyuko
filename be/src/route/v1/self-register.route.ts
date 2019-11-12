@@ -8,18 +8,19 @@ import {catchErrorMiddlewareFn, validateMiddlewareFn} from "./common-middleware"
 
 import util from 'util';
 import {PoolConnection} from "mariadb";
+import {hashedPassword} from "../../service";
 
 
-const selfRegister = async (username: string, email: string, password: string): Promise<RegistrationResponse> => {
+const selfRegister = async (username: string, email: string, firstName: string, lastName: string,  password: string): Promise<RegistrationResponse> => {
 
     const reg: RegistrationResponse = await doInDbConnection(async (conn: PoolConnection) => {
 
         const q1: QueryA = await conn.query(
-            `SELECT COUNT(*) AS COUNT FROM TBL_SELF_REGISTRATION WHERE USERNAME = ? OR EMAIL = ?`,
-            [username, email]);
+            `SELECT COUNT(*) AS COUNT FROM TBL_SELF_REGISTRATION WHERE (USERNAME = ? OR EMAIL = ?) AND ACTIVATED = ?`,
+            [username, email, false]);
         const q2: QueryA = await conn.query(
-            `SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE USERNAME = ? OR EMAIL = ?`,
-            [username, email])
+            `SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE (USERNAME = ? OR EMAIL = ?) AND STATUS <> ? `,
+            [username, email, 'DELETED'])
 
         if (!!q1[0].COUNT || !!q2[0].COUNT) {
             return { registrationId: null, email, username, status: 'ERROR', message: `Username ${username} or ${email} is already taken`} as RegistrationResponse;
@@ -27,10 +28,10 @@ const selfRegister = async (username: string, email: string, password: string): 
 
         const r: QueryResponse = await conn.query(
             `
-                INSERT INTO TBL_SELF_REGISTRATION (USERNAME, EMAIL, CREATION_DATE, ACTIVATED)
-                VALUES (?, ?, ?, ?);
+                INSERT INTO TBL_SELF_REGISTRATION (USERNAME, EMAIL, FIRSTNAME, LASTNAME, PASSWORD, CREATION_DATE, ACTIVATED)
+                VALUES (?, ?, ?, ?, ?, ?, ?);
             `,
-            [username, email, new Date(), false]
+            [username, email, firstName, lastName, hashedPassword(password), new Date(), false]
         );
         if (r.affectedRows > 0) {
             return { registrationId: r.insertId, email, username, status: 'SUCCESS', message: `User ${username} (${email}) registered`} as RegistrationResponse;
@@ -51,9 +52,11 @@ const selfRegisterHttpAction = [
     async (req: Request, res: Response, next: NextFunction) => {
         const username: string = req.body.username
         const email: string = req.body.email;
+        const firstName: string = req.body.firstName;
+        const lastName: string = req.body.lastName;
         const password: string = req.body.password;
 
-        const r: RegistrationResponse = await selfRegister(username, email, password);
+        const r: RegistrationResponse = await selfRegister(username, email, firstName, lastName, password);
 
         res.status(200).json(r);
     }

@@ -17,6 +17,8 @@ export class RegisterPageComponent implements OnInit {
   formGroup: FormGroup;
   formControlEmail: FormControl;
   formControlUsername: FormControl;
+  formControlFirstName: FormControl;
+  formControlLastName: FormControl;
   formGroupPassword: FormGroup;
   formControlPassword: FormControl;
   formControlConfirmPassword: FormControl;
@@ -28,6 +30,8 @@ export class RegisterPageComponent implements OnInit {
     this.errorStateMatcher = new MyErrorStateMatcher();
     this.formControlEmail = this.formBuilder.control('', [Validators.required, Validators.email]);
     this.formControlUsername = this.formBuilder.control('', [Validators.required]);
+    this.formControlFirstName = this.formBuilder.control('', [Validators.required]);
+    this.formControlLastName = this.formBuilder.control('', [Validators.required]);
     this.formControlPassword = this.formBuilder.control('', [Validators.required]);
     this.formControlConfirmPassword = this.formBuilder.control('', [Validators.required]);
     this.formGroupPassword = this.formBuilder.group({
@@ -37,6 +41,8 @@ export class RegisterPageComponent implements OnInit {
     this.formGroup = this.formBuilder.group({
       email: this.formControlEmail,
       username: this.formControlUsername,
+      firstName: this.formControlFirstName,
+      lastName: this.formControlLastName,
       formGroupPassword: this.formGroupPassword
     });
     this.formGroupPassword.setValidators((formGroupPassword: FormGroup) => {
@@ -51,7 +57,8 @@ export class RegisterPageComponent implements OnInit {
 
   onSubmit() {
       this.registrationService
-          .register(this.formControlEmail.value, this.formControlUsername.value, this.formControlPassword.value)
+          .register(this.formControlEmail.value, this.formControlUsername.value, this.formControlFirstName.value,
+              this.formControlLastName.value, this.formControlPassword.value)
           .pipe(
               tap((r: RegistrationResponse) => {
                   toNotifications(this.notificationSerivce, r);

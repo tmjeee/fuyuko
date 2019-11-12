@@ -5,6 +5,11 @@ import {Themes} from '../theme-service/theme.service';
 import {HttpClient} from '@angular/common/http';
 import {LoginResponse} from '../../model/login.model';
 
+import config from '../../../assets/config.json';
+import {tap} from "rxjs/operators";
+
+
+const URL_LOGIN = `${config.api_host_url}/login`;
 
 export interface StorageToken  {
   token: string;
@@ -26,28 +31,16 @@ export class AuthService {
  }
 
   login(username: string, password: string): Observable<LoginResponse> {
-      // todo:
-       const token = Math.random(); // todo: jwt token
-       if (username === 'tmjee' && password === 'tmjee') {
-        const u: User = {
-          id: 1,
-          email: 'tmjee1@gmail.com',
-          groups: [],
-          username: 'tmjee',
-          firstName: 'Toby',
-          lastName: 'Jee',
-          avatarUrl: 'assets/images/avatar/avatar-01.png',
-          theme: Themes.THEME_PINK_BLUEGREY_LIGHT as any as string
-        } as User;
-
-        this.storeToken({
-          token: '' + token,
-          myself: u
-        } as StorageToken);
-        this.subject.next(u);
-        return of(u);
-       }
-       return of(null);
+        return this.httpClient.post<LoginResponse>(URL_LOGIN, {
+            username, password
+        }).pipe(
+            tap((r: LoginResponse) => {
+                this.storeToken({
+                    token: r.jwtToken,
+                    myself: r.user
+                } as StorageToken);
+            })
+        );
   }
 
   logout(): Observable<void> {

@@ -36,6 +36,18 @@
                         <mat-error *ngIf="formControlUsername?.errors?.required">Username is required</mat-error>
                     </mat-form-field>
                     <mat-form-field>
+                        <mat-label>First name</mat-label>
+                        <mat-hint>Enter your first name</mat-hint>
+                        <input matInput placeholder="First Name" [formControl]="formControlFirstName">
+                        <mat-error *ngIf="formControlFirstName?.errors?.required">First name is required</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Last name</mat-label>
+                        <mat-hint>Enter your last name</mat-hint>
+                        <input matInput placeholder="Last Name" [formControl]="formControlLastName">
+                        <mat-error *ngIf="formControlLastName?.errors?.required">Last name is required</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
                         <mat-label>Password</mat-label>
                         <mat-hint>Enter password</mat-hint>
                         <input matInput type="password" placeholder="Password" [formControl]="formControlPassword"

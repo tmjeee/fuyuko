@@ -13,8 +13,10 @@ import config from "../../config";
 import {Status} from "../../model/status.model";
 import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
+import {makeApiError, makeApiErrorObj} from "../../util";
 
 const loginHttpAction = [
+    [
         check('username').isLength({min: 1}),
         check('password').isLength({min:1})
     ],
@@ -45,8 +47,9 @@ const loginHttpAction = [
             `, [usrname, password, 'ENABLED']);
 
             if (qUser.length <= 0) { // no user found
-                // todo: switch to error object
-                res.status(401).json({});
+                res.status(401).json(makeApiErrorObj(
+                    makeApiError(`No user ${usrname} found`, 'username', usrname, 'api')
+                ));
             }
 
             const theme: string = qUser[0].THEME;

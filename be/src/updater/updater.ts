@@ -49,8 +49,8 @@ export const runUpdate = async () => {
                     INSERT INTO TBL_UPDATER (NAME) VALUES (?)
                 `, [script]);
                 });
-            } catch(e) {
-                e(`Error executing script ${scriptFileFullPath}`, e);
+            } catch(err) {
+                e(`Error executing script ${scriptFileFullPath}`, err);
             }
         }
     }
