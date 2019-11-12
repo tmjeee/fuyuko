@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {Avatar} from '../../model/avatar.model';
+import {map, tap} from 'rxjs/operators';
+import {GlobalAvatar} from '../../model/avatar.model';
 import {AvatarService} from '../../service/avatar-service/avatar.service';
 import {AvatarComponentEvent} from '../../component/avatar-component/avatar.component';
 import {NotificationsService} from 'angular2-notifications';
@@ -20,18 +20,23 @@ import {User} from '../../model/user.model';
 export class ProfilePageComponent implements OnInit, OnDestroy {
 
   ready: boolean;
-  allPredefinedAvatars: Avatar[];
+  allPredefinedAvatars: GlobalAvatar[];
   myself: User;
   allThemes: Theme[];
 
   constructor(private avatarService: AvatarService,
               private themeService: ThemeService,
               private authService: AuthService,
-              private notificationsService: NotificationsService) {}
+              private notificationsService: NotificationsService) {
+  }
 
   ngOnInit(): void {
     this.allThemes = this.themeService.allThemes();
-    this.allPredefinedAvatars = this.avatarService.allPredefinedAvatars();
+    this.avatarService.allPredefinedAvatars().pipe(
+        tap((globalAvatars: GlobalAvatar[]) => {
+            this.allPredefinedAvatars = globalAvatars;
+        })
+    ).subscribe();
     this.authService.asObservable()
       .pipe(
         map((myself: User) => {
@@ -54,6 +59,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   onAvatarComponentEvent(event: AvatarComponentEvent) {
     this.myself.avatarUrl = event.avatar.url;
+    const avatar: GlobalAvatar = event.avatar;
     this.authService.saveMyself(this.myself);
     this.notificationsService.success('Success', 'Avatar updated');
   }

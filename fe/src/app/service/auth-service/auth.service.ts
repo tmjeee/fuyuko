@@ -6,10 +6,11 @@ import {HttpClient} from '@angular/common/http';
 import {LoginResponse} from '../../model/login.model';
 
 import config from '../../../assets/config.json';
-import {tap} from "rxjs/operators";
+import {tap} from 'rxjs/operators';
 
 
 const URL_LOGIN = `${config.api_host_url}/login`;
+const URL_LOGOUT = `${config.api_host_url}/logout`;
 
 export interface StorageToken  {
   token: string;
@@ -39,15 +40,19 @@ export class AuthService {
                     token: r.jwtToken,
                     myself: r.user
                 } as StorageToken);
+                this.subject.next(r.user);
             })
         );
   }
 
   logout(): Observable<void> {
-    // todo:
-    this.destroyToken();
-    this.subject.next(null);
-    return of(null);
+     return this.httpClient.post<void>(`${URL_LOGOUT}`, {
+     }).pipe(
+         tap((_) => {
+             this.destroyToken();
+             this.subject.next(null);
+         })
+     );
   }
 
   saveMyself(myself: User) {

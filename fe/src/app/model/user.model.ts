@@ -9,7 +9,6 @@ export interface User {
   username: string;
   email: string;
   groups: Group[];
-  avatarUrl: string;
   theme: string;
 }
 

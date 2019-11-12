@@ -57,7 +57,7 @@ const getAvatarHttpAction = [
 ];
 
 const reg = (router: Router) => {
-    router.get('/avatar/:userId', ...getAvatarHttpAction)
+    router.get('/user/avatar/:userId', ...getAvatarHttpAction)
 }
 
 export default reg;

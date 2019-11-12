@@ -9,7 +9,7 @@
       Choose from some predefined avatars
       <div class="predefined-avatar-list">
         <div class="predefined-avatar" *ngFor="let predefinedAvatar of allPredifinedAvatars()">
-          <img [attr.src]="predefinedAvatar.url" (click)="onPredefinedAvatarClicked($event, predefinedAvatar)">
+          <img [attr.src]="globalAvatarUrl(predefinedAvatar)" (click)="onPredefinedAvatarClicked($event, predefinedAvatar)">
         </div>
       </div>
 
@@ -19,12 +19,6 @@
         Or upload a custom avatar
         <div class="upload-custom-avatar">
           <input type="file" (change)="onFileInputChange($event)">
-          <!--
-          <angular-file-uploader
-            (ApiResponse)="onFileUploadResponse($event)"
-            [config]="fileUploadConfig">
-          </angular-file-uploader>
-          -->
         </div>
       </div>
     </div>

@@ -14,13 +14,17 @@
 
 
     <div class="avatar-section">
-      <app-avatar [user]="myself"
+      <app-avatar *ngIf="allPredefinedAvatars"
+                  [user]="myself"
                   [editable]="true"
                   [allPredefinedAvatars]="allPredefinedAvatars"
                   (events)="onAvatarComponentEvent($event)"
                   width="200px"
                   height="200px">
       </app-avatar>
+      <div *ngIf="!allPredefinedAvatars">
+        Loading ...
+      </div>
     </div>
 
     <mat-divider></mat-divider>

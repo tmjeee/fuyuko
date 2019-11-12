@@ -36,14 +36,14 @@ const loginHttpAction = [
                     U.EMAIL AS EMAIL, 
                     U.FIRSTNAME AS FIRSTNAME, 
                     U.LASTNAME AS LASTNAME, 
-                    U.ENABLED AS ENABLED, 
+                    U.STATUS AS STATUS, 
                     U.PASSWORD AS PASSWORD,
                     T.THEME AS THEME,
                     A.ID AS AVATAR_ID
                 FROM TBL_USER AS U
-                LEFT JOIN TBL_THEME AS T ON T.USER_ID = U.ID 
+                LEFT JOIN TBL_USER_THEME AS T ON T.USER_ID = U.ID 
                 LEFT JOIN TBL_USER_AVATAR AS A ON A.USER_ID = U.ID
-                WHERE U.USERNAME = ? AND U.PASSWORD = ? AND STATUS= = ?
+                WHERE U.USERNAME = ? AND U.PASSWORD = ? AND U.STATUS = ?
             `, [usrname, password, 'ENABLED']);
 
             if (qUser.length <= 0) { // no user found

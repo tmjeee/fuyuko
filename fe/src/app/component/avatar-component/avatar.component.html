@@ -1,10 +1,10 @@
 
 <div class="avatar-component">
-  <img *ngIf="user && user.avatarUrl"
-       [attr.src]="user.avatarUrl"
+  <img *ngIf="user"
+       [attr.src]="userAvatarUrl(user.id)"
        [ngStyle]="{width: width, height: height}"
        class="avatar">
-  <img *ngIf="!(user && user.avatarUrl)"
+  <img *ngIf="!user"
        class="avatar"
        [ngStyle]="{width: width, height: height}"
        src="assets/images/avatar/no-avatar.jpg">

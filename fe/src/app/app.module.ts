@@ -123,7 +123,7 @@ import {ActivatePageComponent} from './page/activate-page/activate.page';
 import {UserInvitationPageComponent} from './page/user-invitation-page/user-invitation.page';
 import {ActivationService} from './service/activation-service/activation.service';
 import {UserActivationPageComponent} from './page/user-activation-page/user-activation.page';
-import {InvitationService} from "./service/invitation-service/invitation.service";
+import {InvitationService} from './service/invitation-service/invitation.service';
 
 const appInitializer = (settingsService: SettingsService, authService: AuthService) => {
   return () => {

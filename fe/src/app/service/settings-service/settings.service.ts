@@ -31,14 +31,18 @@ export class SettingsService {
         return of (SETTINGS);
     }
 
-    saveRuntimeSettings(r: RuntimeSettings): Observable<RuntimeSettings> {
+    saveRuntimeSettings(r: RuntimeSettings): RuntimeSettings {
         RUNTIME_SETTINGS = {...r};
         localStorage.setItem('MY_APP_RUNTIME_SETTINGS', JSON.stringify(RUNTIME_SETTINGS));
-        return of(RUNTIME_SETTINGS);
+        return RUNTIME_SETTINGS;
     }
 
     getLocalRuntimeSettings(): RuntimeSettings {
-        const r = JSON.parse(localStorage.getItem('MY_APP_RUNTIME_SETTINGS'));
+        let r = JSON.parse(localStorage.getItem('MY_APP_RUNTIME_SETTINGS'));
+        if (!r) {
+          this.saveRuntimeSettings(r);
+          r = {...SETTINGS};
+        }
         return r;
     }
 

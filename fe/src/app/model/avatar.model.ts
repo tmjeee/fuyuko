@@ -1,7 +1,8 @@
 
 
-export interface Avatar {
-  url: string;
+export interface GlobalAvatar {
+  id: number;
   name: string;
-  description: string;
+  mimeType: string;
+  size: number;
 }

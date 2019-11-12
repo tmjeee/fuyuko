@@ -28,8 +28,8 @@ const INSERT_GLOBAL_AVATARS = async () => {
         const mimeType: fileType.FileTypeResult = fileType(buffer);
         const size = buffer.length;
 
-        doInDbConnection((conn: PoolConnection) => {
-            conn.query(`INSERT INTO TBL_GLOBAL_AVATAR (NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?, ?, ?, ?)`,
+        await doInDbConnection(async (conn: PoolConnection) => {
+            const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_AVATAR (NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?, ?, ?, ?)`,
                 [file, mimeType.mime, size, buffer]);
         });
     }

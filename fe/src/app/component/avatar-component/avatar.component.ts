@@ -2,11 +2,12 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import {AvatarDialogComponent, AvatarDialogComponentData} from './avatar-dialog.component';
 import {map} from 'rxjs/operators';
-import {Avatar} from '../../model/avatar.model';
+import {GlobalAvatar} from '../../model/avatar.model';
 import {User} from '../../model/user.model';
+import config from '../../../assets/config.json';
 
 export interface AvatarComponentEvent {
-  avatar: Avatar;
+  avatar: GlobalAvatar;
 }
 
 
@@ -21,7 +22,7 @@ export class AvatarComponent implements OnInit {
   @Input() width: string;
   @Input() height: string;
   @Input() editable: boolean;
-  @Input() allPredefinedAvatars: Avatar[];
+  @Input() allPredefinedAvatars: GlobalAvatar[];
 
   @Output() events: EventEmitter<AvatarComponentEvent>;
 
@@ -57,11 +58,16 @@ export class AvatarComponent implements OnInit {
       ).subscribe();
     matDialogRef.afterClosed()
       .pipe(
-        map((result: Avatar) => {
+        map((result: GlobalAvatar) => {
           this.dialogOpened = false;
-          this.events.emit({ avatar: result} as AvatarComponentEvent);
+          if (result) {
+              this.events.emit({ avatar: result} as AvatarComponentEvent);
+          }
         })
       ).subscribe();
   }
 
+  userAvatarUrl(userId: number): string {
+    return `${config.api_host_url}/${userId}`;
+  }
 }
