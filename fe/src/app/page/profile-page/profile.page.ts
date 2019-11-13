@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {GlobalAvatar, UserAvatarResponse} from '../../model/avatar.model';
@@ -11,6 +11,7 @@ import {ProfileInfoComponentEvent} from '../../component/profile-info-component/
 import {PasswordComponentEvent} from '../../component/password-component/password.component';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {User} from '../../model/user.model';
+import {GlobalCommunicationService} from "../../service/global-communication-service/global-communication.service";
 
 
 @Component({
@@ -27,6 +28,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   constructor(private avatarService: AvatarService,
               private themeService: ThemeService,
               private authService: AuthService,
+              private globalCommunicationService: GlobalCommunicationService,
               private notificationsService: NotificationsService) {
   }
 
@@ -60,6 +62,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   onAvatarComponentEvent(event: AvatarComponentEvent) {
     const avatar: GlobalAvatar | File = event.avatar;
     const f = (r: UserAvatarResponse) => {
+      this.globalCommunicationService.avatarReloadSubject.next(Math.random());
       this.notificationsService.success('Success', `Avatar updated`);
     };
     if (avatar instanceof File) {

@@ -124,6 +124,9 @@ import {UserInvitationPageComponent} from './page/user-invitation-page/user-invi
 import {ActivationService} from './service/activation-service/activation.service';
 import {UserActivationPageComponent} from './page/user-activation-page/user-activation.page';
 import {InvitationService} from './service/invitation-service/invitation.service';
+import { JwtInterceptor } from './interceptor/jwt.interceptor';
+import {GlobalCommunicationService} from "./service/global-communication-service/global-communication.service";
+import Global = WebAssembly.Global;
 
 const appInitializer = (settingsService: SettingsService, authService: AuthService) => {
   return () => {
@@ -277,12 +280,13 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     {provide: DashboardWidgetService, useClass: DashboardWidgetService} as Provider,
     {provide: ActivationService, useClass: ActivationService} as Provider,
     {provide: InvitationService, useClass: InvitationService} as Provider,
+    {provide: GlobalCommunicationService, useClass: GlobalCommunicationService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
-    // {provide: HTTP_INTERCEPTORS, useClass: ExceptionHandling, multi: true} as Provider,
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true, deps: [AuthService]} as Provider,
     {provide: ErrorHandler, useClass: GlobalErrorhandler} as Provider,
   ],
   entryComponents: [

@@ -14,21 +14,30 @@ export class GlobalErrorhandler extends ErrorHandler {
     }
 
     handleError(error: any): void {
+        console.log('********************** error', error);
         if (error instanceof HttpErrorResponse) { // service call
-            const httpErrorResponse : HttpErrorResponse = error as HttpErrorResponse;
+            const httpErrorResponse: HttpErrorResponse = error as HttpErrorResponse;
             if (!navigator.onLine) {
                 this.notificationService.error(`Offline`, `Browser offline`);
             } else {
                 if (httpErrorResponse.status === 0 ) {
                     // api backend is down
                     this.notificationService.error(`API Service`, `Unable to connect to API services`);
+                } else if (httpErrorResponse.status === 401) {
+                    // unauthorized 401
+                    // location.href = '/login-layout/login';
+                    return;
                 }
             }
-            console.error(error);
         } else { // client error
             console.error(error);
-            const router: Router = this.injector.get(Router);
-            router.navigate(['/error']);
+            this.getRouter().navigate(['/error']);
         }
     }
+
+    private getRouter(): Router {
+        const router: Router = this.injector.get(Router);
+        return router;
+    }
 }
+

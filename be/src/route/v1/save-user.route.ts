@@ -30,13 +30,13 @@ const httpAction: any[] = [
                 conn.query(`UPDATE TBL_USER SET FIRSTNAME = ? WHERE USER_ID = ?`, [firstName, userId]);
             }
             if (lastName){
-
+                conn.query(`UPDATE TBL_USER SET LASTNAME = ? WHERE USER_ID = ?`, [lastName, userId]);
             }
             if (email) {
-
+                conn.query(`UPDATE TBL_USER SET EMAIL = ? WHERE USER_ID = ?`, [email, userId]);
             }
             if (theme){
-
+                conn.query(`UPDATE TBL_USER SET THEME = ? WHERE USER_ID = ? `, [theme, userId]);
             }
         });
 

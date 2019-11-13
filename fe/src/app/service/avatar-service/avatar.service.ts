@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {GlobalAvatar, UserAvatarResponse} from '../../model/avatar.model';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import config from '../../../assets/config.json';
 
@@ -10,7 +10,8 @@ const URL_SAVE_USER_AVATAR = `${config.api_host_url}/user/avatar`;
 @Injectable()
 export class AvatarService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
   saveUserCustomAvatar(f: File): Observable<UserAvatarResponse> {
      const formData: FormData = new FormData();

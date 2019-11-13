@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, ElementRef, Inject, Renderer2, ViewChild} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {GlobalAvatar} from '../../model/avatar.model';
 import {User} from '../../model/user.model';
@@ -20,7 +20,10 @@ export class AvatarDialogComponent {
   selectedAvatar: GlobalAvatar;
   selectedFile: File;
 
+  @ViewChild('fileInput', {static: true}) fileInput: ElementRef;
+
   constructor(private matDialogRef: MatDialogRef<AvatarDialogComponent>,
+              private renderer: Renderer2,
               @Inject(MAT_DIALOG_DATA) public data: AvatarDialogComponentData) {}
 
   onClose(event: Event) {
@@ -34,6 +37,8 @@ export class AvatarDialogComponent {
   onPredefinedAvatarClicked(event: Event, avatar: GlobalAvatar) {
       this.selectedAvatar = avatar;
       this.selectedFile = null;
+      this.renderer.setValue(this.fileInput.nativeElement, '');
+      this.fileInput.nativeElement.value = '';
   }
 
   onFileInputChange($event: Event) {

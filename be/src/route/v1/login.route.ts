@@ -51,6 +51,7 @@ const loginHttpAction = [
                 res.status(401).json(makeApiErrorObj(
                     makeApiError(`No user ${usrname} found`, 'username', usrname, 'api')
                 ));
+                return;
             }
 
             const theme: string = qUser[0].THEME;
@@ -87,7 +88,11 @@ const loginHttpAction = [
                     } as Group);
                 }
                 const group: Group = acc.get(g.G_ID);
-                group.roles.push(g.R_NAME);
+                group.roles.push({
+                   id: g.R_ID,
+                   name: g.R_NAME,
+                   description: g.R_DESCRIPTION
+                } as Role);
                 return acc;
             }, new Map<number, Group>()).values()];
 
@@ -112,6 +117,24 @@ const loginHttpAction = [
         });
     }
 ];
+
+
+const roles = async (groupId: number, conn: PoolConnection) => {
+    const q: QueryA = await conn.query(
+        `SELECT ID, NAME, DESCRIPTION 
+        FROM TBL_ROLE AS R
+        LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR.ROLE_ID = R.ID
+        WHERE LGR.GROUP_ID = ?
+        `, [groupId]);
+
+    const roles: Role[] = q.map((i: QueryI) => ({
+        id: i.ID,
+        name: i.NAME,
+        description: i.DESCRIPTION
+    } as Role));
+
+    return roles;
+};
 
 const reg = (router: Router, registry: Registry) => {
     const p = '/login';

@@ -11,6 +11,7 @@ import {tap} from 'rxjs/operators';
 
 const URL_LOGIN = `${config.api_host_url}/login`;
 const URL_LOGOUT = `${config.api_host_url}/logout`;
+const URL_SAVE_USER = `${config.api_host_url}`;
 
 export interface StorageToken  {
   token: string;
@@ -70,14 +71,23 @@ export class AuthService {
     localStorage.setItem('MY_APP_MYSELF', JSON.stringify(token));
   }
 
-  private destroyToken() {
+  destroyToken() {
     localStorage.removeItem('MY_APP_MYSELF');
   }
 
+  jwtToken(): string {
+      const storageToken: string = localStorage.getItem('MY_APP_MYSELF');
+      if (storageToken) {
+          const token: StorageToken =  JSON.parse(storageToken);
+          return token.token;
+      }
+      return null;
+  }
+
   myself(): User {
-    const stringifySelf: string = localStorage.getItem('MY_APP_MYSELF');
-    if (stringifySelf) {
-      const token: StorageToken =  JSON.parse(stringifySelf);
+    const storageToken: string = localStorage.getItem('MY_APP_MYSELF');
+    if (storageToken) {
+      const token: StorageToken =  JSON.parse(storageToken);
       return token.myself;
     }
     return null;

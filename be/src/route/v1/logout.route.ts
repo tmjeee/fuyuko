@@ -4,7 +4,6 @@ import {Registry} from "./v1-app.router";
 
 const logoutHttpAction: any[] = [
     [],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
     (req: Request, res: Response, next: NextFunction) => {
         res.status(200).json({});

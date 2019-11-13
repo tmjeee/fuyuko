@@ -19,7 +19,8 @@ export const timingLogMiddlewareFn = (req: Request, res: Response, next: NextFun
         const elapsedTime = process.hrtime(startTime);
         const diffInMilliSecs = ((elapsedTime[0] * 1000) + (elapsedTime[1] * 1e-6));
 
-        i(`Time take for request ${httpMethod}-${url} : ${diffInMilliSecs}ms`);
+        const s = res.statusCode;
+        i(`Profiling Request ${httpMethod}-${url} Response ${s} : ${diffInMilliSecs}ms`);
     });
     next();
 }
@@ -51,6 +52,7 @@ type JwtErrorType = {
 
 export const validateJwtMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
     const jwtToken: string = req.headers['x-auth-jwt'] as string;
+    console.log('************* jwtToken', jwtToken);
     if (!jwtToken) {
         res.status(401).json(makeApiErrorObj(
             makeApiError(`Missing jwt token`, 'jwt', '', 'Security')
@@ -61,7 +63,9 @@ export const validateJwtMiddlewareFn = (req: Request, res: Response, next: NextF
         const jwtPayload: JwtPayload = verifyJwtToken(jwtToken);
         res.locals.jwtPayload = jwtPayload;
         next();
+        console.log('******************* jwt validation middleware ok');
     } catch(err ) {
+        console.log('**************** ', err);
         const jwtError: JwtErrorType = err;
         res.status(401).json(makeApiErrorObj(
             makeApiError(`${jwtError.name} ${jwtError.message}`, 'jwtToken', '', 'Security')

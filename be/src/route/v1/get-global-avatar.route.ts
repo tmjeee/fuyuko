@@ -9,7 +9,6 @@ const httpAction: any[] = [
     [
         check('avatarName').exists()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 

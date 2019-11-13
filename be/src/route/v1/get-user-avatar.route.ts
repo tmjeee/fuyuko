@@ -23,7 +23,6 @@ const getAvatarHttpAction = [
     [
         check('userId')
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 

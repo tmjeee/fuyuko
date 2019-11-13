@@ -7,7 +7,6 @@ import {Registry} from "./v1-app.router";
 
 const httpAction: any[] = [
     [],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         await doInDbConnection(async (conn: PoolConnection) => {

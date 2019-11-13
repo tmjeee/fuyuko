@@ -1,5 +1,6 @@
 
 import express, {Request, Response, NextFunction, Router, Express} from 'express';
+import v1 = require("uuid/v1");
 import * as formidable from 'formidable';
 import {Fields, Files} from 'formidable';
 import {range} from "../../util";
@@ -18,6 +19,7 @@ import registerLogoutRoute from './logout.route';
 import registerSelfRegisterRoute from './self-register.route';
 import registerSaveUserAvatarRoute from './save-user-avatar.route';
 import registerSaveUserRoute from './save-user.route';
+import registerGetUserRoute from './get-user.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -75,6 +77,8 @@ const reg = (app: Express) => {
     registerSelfRegisterRoute(v1AppRouter, registry);
     registerSaveUserAvatarRoute(v1AppRouter, registry);
     registerSaveUserRoute(v1AppRouter, registry);
+    registerGetUserAvatarRoutes(v1AppRouter, registry);
+    registerGetUserRoute(v1AppRouter, registry);
 
     i('URL Mapings :-\n' + registry.print({indent: 2, text: ''}).text);
 }

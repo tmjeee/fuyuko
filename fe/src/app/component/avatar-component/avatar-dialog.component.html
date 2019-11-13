@@ -20,12 +20,12 @@
       <div class="custom-avatar-section">
         Or upload a custom avatar
         <div class="upload-custom-avatar">
-          <input type="file" (change)="onFileInputChange($event)">
+          <input type="file" #fileInput (change)="onFileInputChange($event)">
         </div>
       </div>
     </div>
   </div>
   <div mat-dialog-actions>
-    <button type="button" mat-button-flat (click)="onDone($event)">Ok</button>
+    <button type="button" mat-flat-button color="primary" (click)="onDone($event)">Ok</button>
   </div>
 </div>

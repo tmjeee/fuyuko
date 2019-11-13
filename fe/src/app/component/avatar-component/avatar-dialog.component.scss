@@ -27,6 +27,9 @@
           margin: 20px;
           cursor: pointer;
         }
+        img.selected {
+          border: dotted 5px;
+        }
       }
     }
   }
