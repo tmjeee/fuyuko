@@ -1,13 +1,15 @@
 import {Router, Request, Response, NextFunction} from "express";
-import {validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
+import {Registry} from "./v1-app.router";
 
 const httpAction: any[] = [
     [
         check('avatarName').exists()
     ],
+    validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
@@ -28,8 +30,10 @@ const httpAction: any[] = [
     }
 ]
 
-const reg = (router: Router) => {
-    router.get('/global/avatar/:avatarName', ...httpAction)
+const reg = (router: Router, registry: Registry) => {
+    const p = '/global/avatar/:avatarName';
+    registry.addItem('GET', p);
+    router.get(p, ...httpAction)
 }
 
 export default reg;

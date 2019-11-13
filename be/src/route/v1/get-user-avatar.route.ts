@@ -1,8 +1,10 @@
 import {Router, Request, Response, NextFunction} from "express";
-import {validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
+import {Registry} from "./v1-app.router";
+import {valid} from "semver";
 
 const sendNoAvatarAvatar = async (res: Response, conn: PoolConnection) => {
     const q: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_AVATAR WHERE NAME = ?',
@@ -21,6 +23,7 @@ const getAvatarHttpAction = [
     [
         check('userId')
     ],
+    validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
@@ -56,8 +59,10 @@ const getAvatarHttpAction = [
     }
 ];
 
-const reg = (router: Router) => {
-    router.get('/user/avatar/:userId', ...getAvatarHttpAction)
+const reg = (router: Router, registry: Registry) => {
+    const p = '/user/avatar/:userId';
+    registry.addItem('GET', p);
+    router.get(p, ...getAvatarHttpAction)
 }
 
 export default reg;

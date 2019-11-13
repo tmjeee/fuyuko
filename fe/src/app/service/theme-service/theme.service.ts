@@ -1,13 +1,5 @@
 import {Injectable} from '@angular/core';
-import {OverlayContainer} from '@angular/cdk/overlay';
 import {BehaviorSubject, Observable, Observer, Subject} from 'rxjs';
-
-/*
-.theme-deeppurple-amber
-.theme-indigo-pink
-.theme-pink-bluegrey
-.theme-purple-green
- */
 
 export enum Themes {
   THEME_DEEPPURPLE_AMBER_LIGHT      = 'deeppurple_amber_light' as any,
@@ -96,8 +88,17 @@ export class ThemeService {
     return Array.from(ALL_THEMES_MAP.values());
   }
 
-  setTheme(theme: Theme) {
-    this.subject.next(theme);
+  setTheme(theme: Theme | string) {
+    if (theme) {
+      if (typeof theme === 'string') {
+        const t: Theme = ALL_THEMES.find((t: Theme) => t.theme.toString() === theme);
+        if (t) {
+          this.subject.next(t);
+        }
+      } else {
+        this.subject.next(theme as Theme);
+      }
+    }
   }
 
   observer(): Observable<Theme> {

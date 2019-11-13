@@ -17,6 +17,9 @@ export interface AvatarDialogComponentData {
 })
 export class AvatarDialogComponent {
 
+  selectedAvatar: GlobalAvatar;
+  selectedFile: File;
+
   constructor(private matDialogRef: MatDialogRef<AvatarDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: AvatarDialogComponentData) {}
 
@@ -29,16 +32,23 @@ export class AvatarDialogComponent {
   }
 
   onPredefinedAvatarClicked(event: Event, avatar: GlobalAvatar) {
-    this.matDialogRef.close(avatar);
+      this.selectedAvatar = avatar;
+      this.selectedFile = null;
   }
-
 
   onFileInputChange($event: Event) {
     const fileList: FileList = ($event.target as HTMLInputElement).files;
     console.log(fileList);
+    this.selectedFile = fileList[0];
+    this.selectedAvatar = null;
   }
 
   globalAvatarUrl(predefinedAvatar: GlobalAvatar): string {
       return `${config.api_host_url}/global/avatar/${predefinedAvatar.name}`;
+  }
+
+  onDone($event: MouseEvent) {
+    const e = this.selectedFile ? this.selectedFile : this.selectedAvatar;
+    this.matDialogRef.close(e);
   }
 }

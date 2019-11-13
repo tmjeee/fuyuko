@@ -1,17 +1,22 @@
 import {Router, Request, Response, NextFunction} from "express";
 import {check} from "express-validator";
-import {validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {PoolConnection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {hashedPassword, sendEmail} from "../../service";
 import config from '../../config';
 import {RegistrationResponse} from "../../model/registration.model";
+import {Registry} from "./v1-app.router";
 
+/**
+ * Approve other users' self registration entries
+ */
 const approveSelfRegistrationHttpAction = [
     [
         check('registrationId').exists().isNumeric()
     ],
+    validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
@@ -78,7 +83,9 @@ const approveSelfRegistrationHttpAction = [
 ]
 
 
-const reg = (router: Router) => {
-    router.post('/self-register/approve/:registrationId', ...approveSelfRegistrationHttpAction)
+const reg = (router: Router, registry: Registry) => {
+    const p = '/self-register/approve/:registrationId';
+    registry.addItem('POST', p);
+    router.post(p, ...approveSelfRegistrationHttpAction)
 }
 export default reg;

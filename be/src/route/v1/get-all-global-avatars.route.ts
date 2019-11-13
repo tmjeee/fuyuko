@@ -1,11 +1,13 @@
 import {Router, Request, Response, NextFunction} from "express";
-import {validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
 import {GlobalAvatar} from "../../model/avatar.model";
+import {Registry} from "./v1-app.router";
 
 const httpAction: any[] = [
     [],
+    validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         await doInDbConnection(async (conn: PoolConnection) => {
@@ -28,8 +30,10 @@ const httpAction: any[] = [
     }
 ]
 
-const reg = (router: Router) => {
-    router.get('/global/avatars', ...httpAction);
+const reg = (router: Router, registry: Registry) => {
+    const p = '/global/avatars';
+    registry.addItem('GET', p);
+    router.get(p, ...httpAction);
 }
 
 export default reg;

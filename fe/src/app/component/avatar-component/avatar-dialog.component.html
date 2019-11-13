@@ -9,7 +9,9 @@
       Choose from some predefined avatars
       <div class="predefined-avatar-list">
         <div class="predefined-avatar" *ngFor="let predefinedAvatar of allPredifinedAvatars()">
-          <img [attr.src]="globalAvatarUrl(predefinedAvatar)" (click)="onPredefinedAvatarClicked($event, predefinedAvatar)">
+          <img [ngClass]="{'selected': (selectedAvatar && predefinedAvatar.name == selectedAvatar.name)}"
+               [attr.src]="globalAvatarUrl(predefinedAvatar)"
+               (click)="onPredefinedAvatarClicked($event, predefinedAvatar)">
         </div>
       </div>
 
@@ -22,5 +24,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div mat-dialog-actions>
+    <button type="button" mat-button-flat (click)="onDone($event)">Ok</button>
   </div>
 </div>

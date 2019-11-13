@@ -1,6 +1,6 @@
 import {NextFunction, Router, Request, Response } from "express";
 import {check} from "express-validator";
-import {validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {sendEmail} from "../../service";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {PoolConnection} from "mariadb";
@@ -9,13 +9,10 @@ import config from "../../config";
 import uuid = require("uuid");
 import {CreateInvitationResponse} from "../../model/invitation.model";
 import has = Reflect.has;
+import {Registry} from "./v1-app.router";
 
 /**
- * POST   /v1/create-invitation
- *  - email: string
- *  - groupIds: number[]
- *
- * @param email
+ * Send out invitation to register / activate account (through email)
  */
 export const createInvitation = async (email: string, groupIds: number[] = []): Promise<CreateInvitationResponse> => {
 
@@ -64,6 +61,7 @@ const createInvitationHttpAction = [
     [
         check('email').isLength({min:1}).isEmail(),
     ],
+    validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const email: string = req.body.email;
@@ -78,8 +76,10 @@ const createInvitationHttpAction = [
     }
 ];
 
-const reg = (router: Router) => {
-    router.post('/create-invitation', ...createInvitationHttpAction);
+const reg = (router: Router, registry: Registry) => {
+    const p = '/create-invitation';
+    registry.addItem('POST', p);
+    router.post(p, ...createInvitationHttpAction);
 }
 
 export default reg;

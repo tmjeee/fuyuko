@@ -7,7 +7,7 @@ import {User} from '../../model/user.model';
 import config from '../../../assets/config.json';
 
 export interface AvatarComponentEvent {
-  avatar: GlobalAvatar;
+  avatar: GlobalAvatar | File;
 }
 
 
@@ -58,7 +58,7 @@ export class AvatarComponent implements OnInit {
       ).subscribe();
     matDialogRef.afterClosed()
       .pipe(
-        map((result: GlobalAvatar) => {
+        map((result: GlobalAvatar | File) => {
           this.dialogOpened = false;
           if (result) {
               this.events.emit({ avatar: result} as AvatarComponentEvent);

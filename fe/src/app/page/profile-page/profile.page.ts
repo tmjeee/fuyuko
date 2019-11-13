@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {GlobalAvatar} from '../../model/avatar.model';
+import {GlobalAvatar, UserAvatarResponse} from '../../model/avatar.model';
 import {AvatarService} from '../../service/avatar-service/avatar.service';
 import {AvatarComponentEvent} from '../../component/avatar-component/avatar.component';
 import {NotificationsService} from 'angular2-notifications';
@@ -58,10 +58,17 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   onAvatarComponentEvent(event: AvatarComponentEvent) {
-    this.myself.avatarUrl = event.avatar.url;
-    const avatar: GlobalAvatar = event.avatar;
-    this.authService.saveMyself(this.myself);
-    this.notificationsService.success('Success', 'Avatar updated');
+    const avatar: GlobalAvatar | File = event.avatar;
+    const f = (r: UserAvatarResponse) => {
+      this.notificationsService.success('Success', `Avatar updated`);
+    };
+    if (avatar instanceof File) {
+      this.avatarService.saveUserCustomAvatar(avatar)
+          .pipe( tap(f.bind(this))).subscribe();
+    } else if (avatar) { // not falsy
+      this.avatarService.saveUserAvatar(avatar.name)
+          .pipe(tap(f.bind(this))).subscribe();
+    }
   }
 
   onProfileInfoEvent(event: ProfileInfoComponentEvent) {

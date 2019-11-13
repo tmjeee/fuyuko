@@ -5,6 +5,7 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
 import { Invitation } from "../../model/invitation.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
+import {Registry} from "./v1-app.router";
 
 const getInvitationsByCodeHttpAction = [
     [
@@ -52,8 +53,10 @@ const getInvitationsByCodeHttpAction = [
     }
 ]
 
-const reg = (router: Router) => {
-   router.get('/invitations/:code', ...getInvitationsByCodeHttpAction)
+const reg = (router: Router, registry: Registry) => {
+   const p = '/invitations/:code';
+   registry.addItem('GET', p);
+   router.get(p, ...getInvitationsByCodeHttpAction)
 }
 
 export default reg;

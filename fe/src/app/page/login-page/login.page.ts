@@ -6,7 +6,7 @@ import {User} from '../../model/user.model';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {SettingsService} from '../../service/settings-service/settings.service';
-import {LoginResponse} from "../../model/login.model";
+import {LoginResponse} from '../../model/login.model';
 
 
 @Component({

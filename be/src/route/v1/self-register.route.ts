@@ -1,6 +1,6 @@
 
 import {Request, Response, NextFunction, Router} from 'express';
-import {check} from 'express-validator/check';
+import {check} from 'express-validator';
 
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {RegistrationResponse} from "../../model/registration.model";
@@ -9,6 +9,7 @@ import {catchErrorMiddlewareFn, validateMiddlewareFn} from "./common-middleware"
 import util from 'util';
 import {PoolConnection} from "mariadb";
 import {hashedPassword} from "../../service";
+import {Registry} from "./v1-app.router";
 
 
 const selfRegister = async (username: string, email: string, firstName: string, lastName: string,  password: string): Promise<RegistrationResponse> => {
@@ -64,8 +65,10 @@ const selfRegisterHttpAction = [
 
 
 
-const reg = (router: Router) => {
-    router.post('/self-register', ...selfRegisterHttpAction);
+const reg = (router: Router, registry: Registry) => {
+    const p = '/self-register';
+    registry.addItem('POST', p);
+    router.post(p, ...selfRegisterHttpAction);
 };
 
 export default reg;

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
-import {Themes} from '../theme-service/theme.service';
+import {Themes, ThemeService} from '../theme-service/theme.service';
 import {HttpClient} from '@angular/common/http';
 import {LoginResponse} from '../../model/login.model';
 
@@ -22,7 +22,8 @@ export class AuthService {
 
   private subject: BehaviorSubject<User>;
 
- constructor(private httpClient: HttpClient) {
+ constructor(private httpClient: HttpClient,
+             private themeService: ThemeService) {
    const myself: User = this.myself();
    this.subject = new BehaviorSubject(myself);
  }
@@ -40,6 +41,7 @@ export class AuthService {
                     token: r.jwtToken,
                     myself: r.user
                 } as StorageToken);
+                this.themeService.setTheme(r.theme);
                 this.subject.next(r.user);
             })
         );

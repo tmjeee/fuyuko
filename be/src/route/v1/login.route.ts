@@ -14,6 +14,7 @@ import {Status} from "../../model/status.model";
 import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
+import {Registry} from "./v1-app.router";
 
 const loginHttpAction = [
     [
@@ -112,7 +113,9 @@ const loginHttpAction = [
     }
 ];
 
-const reg = (router: Router) => {
+const reg = (router: Router, registry: Registry) => {
+    const p = '/login';
+    registry.addItem('POST', p);
     router.post('/login', ...loginHttpAction) ;
 }
 

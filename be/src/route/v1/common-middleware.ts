@@ -1,9 +1,35 @@
 import {NextFunction, Request, Response} from "express";
 import {validationResult, ValidationError} from 'express-validator';
-import {e} from "../../logger";
+import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
+
+
+export const getJwtPayload = (res: Response): JwtPayload => {
+   return res.locals.jwtPayload;
+}
+
+export const timingLogMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
+    const startTime = process.hrtime();
+    const httpMethod = req.method;
+    const url = req.url;
+
+    res.on('finish', () => {
+        const elapsedTime = process.hrtime(startTime);
+        const diffInMilliSecs = ((elapsedTime[0] * 1000) + (elapsedTime[1] * 1e-6));
+
+        i(`Time take for request ${httpMethod}-${url} : ${diffInMilliSecs}ms`);
+    });
+    next();
+}
+
+export const httpLogMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
+    const httpMethod = req.method;
+    const url = req.url;
+    i(`Incoming HTTP request: ${httpMethod} - ${url}`);
+    next();
+};
 
 export const validateMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
     const errors  = validationResult(req);
@@ -24,7 +50,7 @@ type JwtErrorType = {
 
 
 export const validateJwtMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
-    const jwtToken: string = req.headers['X-AUTH-JWT'] as string;
+    const jwtToken: string = req.headers['x-auth-jwt'] as string;
     if (!jwtToken) {
         res.status(401).json(makeApiErrorObj(
             makeApiError(`Missing jwt token`, 'jwt', '', 'Security')
@@ -43,22 +69,14 @@ export const validateJwtMiddlewareFn = (req: Request, res: Response, next: NextF
     }
 };
 
-export const catchErrorMiddlewareFn = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        console.log('before &&&&&&&&&&&&&&&&&&&&&&&& ');
-        await next();
-        console.log('after &&&&&&&&&&&&&&&&&&&&&&&& ');
-    } catch (err) {
+export const catchErrorMiddlewareFn = async (err: any, req: Request, res: Response, next: NextFunction) => {
        e('Unexpected Error', err);
-       res.status(500).json({
-           errors: [
-               {
-                   value: "",
-                   msg: `Unexpected Error: ${err.toString()}`,
-                   param: "",
-                   location: "system"
-               }
-           ]
-       });
-    }
+       if (res.headersSent) {
+           return next(err);
+       }
+       res.status(500).json(
+           makeApiErrorObj(
+               makeApiError(`Unexpected Error: ${err.toString()}`, '', '', 'error')
+           )
+       );
 };

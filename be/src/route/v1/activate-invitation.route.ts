@@ -1,13 +1,17 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {check} from 'express-validator';
-import {validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {PoolConnection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {hashedPassword} from "../../service";
 import config from '../../config';
 import {Activation} from "../../model/activation.model";
+import {Registry} from "./v1-app.router";
 
+/**
+ * Activate invitation received (eg. through email)
+ */
 const activateHttpAction = [
     [
         check('code').isLength({ min: 1 }),
@@ -97,8 +101,10 @@ const activateHttpAction = [
     }
 ];
 
-const reg = (router: Router) => {
-    router.post('/activate-invitation/:code', ...activateHttpAction);
+const reg = (router: Router, registry: Registry) => {
+    const p = '/activate-invitation/:code';
+    registry.addItem('POST', p);
+    router.post(p, ...activateHttpAction);
 }
 
 export default reg;
