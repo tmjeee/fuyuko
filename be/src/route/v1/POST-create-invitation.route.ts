@@ -8,8 +8,7 @@ import {SendMailOptions} from "nodemailer";
 import config from "../../config";
 import uuid = require("uuid");
 import {CreateInvitationResponse} from "../../model/invitation.model";
-import has = Reflect.has;
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 
 /**
  * Send out invitation to register / activate account (through email)
@@ -57,7 +56,7 @@ export const createInvitation = async (email: string, groupIds: number[] = []): 
     });
 };
 
-const createInvitationHttpAction = [
+const httpAction = [
     [
         check('email').isLength({min:1}).isEmail(),
     ],
@@ -79,7 +78,7 @@ const createInvitationHttpAction = [
 const reg = (router: Router, registry: Registry) => {
     const p = '/create-invitation';
     registry.addItem('POST', p);
-    router.post(p, ...createInvitationHttpAction);
+    router.post(p, ...httpAction);
 }
 
 export default reg;

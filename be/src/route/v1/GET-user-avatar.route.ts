@@ -3,7 +3,7 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 import {valid} from "semver";
 
 const sendNoAvatarAvatar = async (res: Response, conn: PoolConnection) => {
@@ -19,7 +19,7 @@ const sendNoAvatarAvatar = async (res: Response, conn: PoolConnection) => {
     }
 }
 
-const getAvatarHttpAction = [
+const httpAction = [
     [
         check('userId')
     ],
@@ -61,7 +61,7 @@ const getAvatarHttpAction = [
 const reg = (router: Router, registry: Registry) => {
     const p = '/user/avatar/:userId';
     registry.addItem('GET', p);
-    router.get(p, ...getAvatarHttpAction)
+    router.get(p, ...httpAction)
 }
 
 export default reg;

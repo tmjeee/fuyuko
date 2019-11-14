@@ -9,7 +9,7 @@ import {catchErrorMiddlewareFn, validateMiddlewareFn} from "./common-middleware"
 import util from 'util';
 import {PoolConnection} from "mariadb";
 import {hashedPassword} from "../../service";
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 
 
 const selfRegister = async (username: string, email: string, firstName: string, lastName: string,  password: string): Promise<RegistrationResponse> => {
@@ -42,8 +42,7 @@ const selfRegister = async (username: string, email: string, firstName: string, 
     return reg;
 };
 
-const selfRegisterHttpAction = [
-    catchErrorMiddlewareFn,
+const httpAction = [
     [
         check('username').isLength({min:1}),
         check('email').isLength({min:1}).isEmail(),
@@ -68,7 +67,7 @@ const selfRegisterHttpAction = [
 const reg = (router: Router, registry: Registry) => {
     const p = '/self-register';
     registry.addItem('POST', p);
-    router.post(p, ...selfRegisterHttpAction);
+    router.post(p, ...httpAction);
 };
 
 export default reg;

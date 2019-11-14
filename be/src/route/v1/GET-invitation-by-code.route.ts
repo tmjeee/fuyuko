@@ -5,9 +5,9 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
 import { Invitation } from "../../model/invitation.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 
-const getInvitationsByCodeHttpAction = [
+const httpAction = [
     [
         check('code').exists()
     ],
@@ -56,7 +56,7 @@ const getInvitationsByCodeHttpAction = [
 const reg = (router: Router, registry: Registry) => {
    const p = '/invitations/:code';
    registry.addItem('GET', p);
-   router.get(p, ...getInvitationsByCodeHttpAction)
+   router.get(p, ...httpAction)
 }
 
 export default reg;

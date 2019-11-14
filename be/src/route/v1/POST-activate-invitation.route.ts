@@ -7,12 +7,12 @@ import {makeApiError, makeApiErrorObj} from "../../util";
 import {hashedPassword} from "../../service";
 import config from '../../config';
 import {Activation} from "../../model/activation.model";
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 
 /**
  * Activate invitation received (eg. through email)
  */
-const activateHttpAction = [
+const httpAction = [
     [
         check('code').isLength({ min: 1 }),
         check('username').exists({checkFalsy: true, checkNull: true}),
@@ -104,7 +104,7 @@ const activateHttpAction = [
 const reg = (router: Router, registry: Registry) => {
     const p = '/activate-invitation/:code';
     registry.addItem('POST', p);
-    router.post(p, ...activateHttpAction);
+    router.post(p, ...httpAction);
 }
 
 export default reg;

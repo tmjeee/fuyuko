@@ -1,8 +1,8 @@
 import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 
-const logoutHttpAction: any[] = [
+const httpAction: any[] = [
     [],
     validateMiddlewareFn,
     (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +13,7 @@ const logoutHttpAction: any[] = [
 const reg = (router: Router, registry: Registry) => {
     const p = '/logout';
     registry.addItem('POST', p);
-    router.post(p, ...logoutHttpAction);
+    router.post(p, ...httpAction);
 };
 
 export default reg;

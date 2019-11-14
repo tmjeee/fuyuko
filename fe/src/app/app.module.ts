@@ -125,10 +125,10 @@ import {ActivationService} from './service/activation-service/activation.service
 import {UserActivationPageComponent} from './page/user-activation-page/user-activation.page';
 import {InvitationService} from './service/invitation-service/invitation.service';
 import { JwtInterceptor } from './interceptor/jwt.interceptor';
-import {GlobalCommunicationService} from "./service/global-communication-service/global-communication.service";
+import {GlobalCommunicationService} from './service/global-communication-service/global-communication.service';
 import Global = WebAssembly.Global;
 
-const appInitializer = (settingsService: SettingsService, authService: AuthService) => {
+const appInitializer = (settingsService: SettingsService, authService: AuthService, themeService: ThemeService) => {
   return () => {
     authService.asObservable()
       .pipe(
@@ -137,6 +137,7 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
           settingsService.destroyRuntimeSettings().subscribe();
         } else { // login
           settingsService.getRuntimeSettings(u).subscribe();
+          themeService.setTheme(u.theme);
         }
       })
       ).subscribe();
@@ -282,7 +283,7 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     {provide: InvitationService, useClass: InvitationService} as Provider,
     {provide: GlobalCommunicationService, useClass: GlobalCommunicationService} as Provider,
 
-    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService] } as Provider,
+    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,

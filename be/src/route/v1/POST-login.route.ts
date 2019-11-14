@@ -14,9 +14,9 @@ import {Status} from "../../model/status.model";
 import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 
-const loginHttpAction = [
+const httpAction = [
     [
         check('username').isLength({min: 1}),
         check('password').isLength({min:1})
@@ -139,7 +139,7 @@ const roles = async (groupId: number, conn: PoolConnection) => {
 const reg = (router: Router, registry: Registry) => {
     const p = '/login';
     registry.addItem('POST', p);
-    router.post('/login', ...loginHttpAction) ;
+    router.post('/login', ...httpAction) ;
 }
 
 export default reg;

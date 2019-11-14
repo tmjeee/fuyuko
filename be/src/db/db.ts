@@ -1,6 +1,7 @@
 import * as mariadb  from 'mariadb';
 import {Pool, PoolConfig, PoolConnection} from 'mariadb';
 import config from '../config';
+import {e} from '../logger';
 
 const poolConfig: PoolConfig = {
     host: config["db-host"],
@@ -51,8 +52,9 @@ export const doInDbConnection = async <R> (callback: (conn: PoolConnection) => R
         const r: any =  await callback(conn);
         await conn.commit();
         return r;
-    } catch(e) {
+    } catch(err) {
         await conn.rollback();
+        e(err.toString(), err);
         throw e;
     } finally {
         await conn.end();

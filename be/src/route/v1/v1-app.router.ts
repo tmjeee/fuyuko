@@ -1,68 +1,38 @@
 
 import express, {Request, Response, NextFunction, Router, Express} from 'express';
+import {i} from '../../logger';
+import {Registry} from "../../registry";
 import v1 = require("uuid/v1");
 import * as formidable from 'formidable';
 import {Fields, Files} from 'formidable';
 import {range} from "../../util";
-import {i} from '../../logger';
 
 // routes
-import registerActivateInvirationRoute from './activate-invitation.route';
-import registerApproveSelfRegistrationRoute from './approve-self-registration.route';
-import registerCreateInvitationRoute from './create-invitation.route';
-import registerGetUserAvatarRoutes from './get-user-avatar.route';
-import registerGetGlobalAvatarRoute from './get-global-avatar.route';
-import registerGetInvitationByCodeRoute from './get-invitation-by-code.route';
-import registerGetAllGlobalAvatarsRoute from './get-all-global-avatars.route';
-import registerLoginRoute from './login.route';
-import registerLogoutRoute from './logout.route';
-import registerSelfRegisterRoute from './self-register.route';
-import registerSaveUserAvatarRoute from './save-user-avatar.route';
-import registerSaveUserRoute from './save-user.route';
-import registerGetUserRoute from './get-user.route';
+import registerActivateInvirationRoute from './POST-activate-invitation.route';
+import registerApproveSelfRegistrationRoute from './POST-approve-self-registration.route';
+import registerCreateInvitationRoute from './POST-create-invitation.route';
+import registerGetUserAvatarRoutes from './GET-user-avatar.route';
+import registerGetGlobalAvatarRoute from './GET-global-avatar.route';
+import registerGetInvitationByCodeRoute from './GET-invitation-by-code.route';
+import registerGetAllGlobalAvatarsRoute from './GET-all-global-avatars.route';
+import registerLoginRoute from './POST-login.route';
+import registerLogoutRoute from './POST-logout.route';
+import registerSelfRegisterRoute from './POST-self-register.route';
+import registerSaveUserAvatarRoute from './POST-save-user-avatar.route';
+import registerSaveUserRoute from './POST-save-user.route';
+import registerGetUserRoute from './GET-user.route';
+import registerGetAllGroupsRoute from './GET-all-groups.route';
+import registerGetGroupByIdRoute  from './GET-group-by-id.route';
+import registerGetGroupsWithNoSuchRoleRoute from './GET-groups-with-no-such-role.route';
+import registerDeleteRoleFromGroupRoute from './DELETE-role-from-group.route';
+import registerAddRoleToGroupRoute from './POST-add-role-to-group.route';
 
 const v1AppRouter:Router  = express.Router();
 
-type RegistryItem = {path: string, description: string};
 
-export class Registry {
-    name: string;
-    children: Registry[];
-    items: RegistryItem[];
-    constructor(n: string) {
-        this.name = n;
-        this.children = [];
-        this.items = [];
-    }
-    static newRegistry(n: string): Registry {
-        return new Registry(n);
-    }
-    newRegistry(n: string): Registry {
-        const registry = new Registry(n);
-        this.children.push(registry);
-        return registry;
-    }
-    addItem(path: string, description: string) {
-        this.items.push({path, description} as RegistryItem);
-    }
-    print(arg = {indent: 0, text: ''}) {
-        for (const child of this.children) {
-            arg.indent++;
-            child.print(arg);
-        }
-        range(0, arg.indent).forEach(()=> arg.text += ' ');
-        arg.text += `${this.name}\n`;
-        for (const item of this.items) {
-            range(0, arg.indent + 2).forEach(()=> arg.text += ' ');
-            arg.text += `${item.path} - ${item.description}\n`;
-        }
-        return arg;
-    }
-}
-
-const reg = (app: Express) => {
+const reg = (app: Express, regi: Registry) => {
     const p = '/v1';
-    const registry = Registry.newRegistry(p);
+    const registry = regi.newRegistry(p);
     app.use(p, v1AppRouter);
 
     registerActivateInvirationRoute(v1AppRouter, registry);
@@ -79,17 +49,11 @@ const reg = (app: Express) => {
     registerSaveUserRoute(v1AppRouter, registry);
     registerGetUserAvatarRoutes(v1AppRouter, registry);
     registerGetUserRoute(v1AppRouter, registry);
-
-    i('URL Mapings :-\n' + registry.print({indent: 2, text: ''}).text);
+    registerGetAllGroupsRoute(v1AppRouter, registry);
+    registerGetGroupByIdRoute(v1AppRouter, registry);
+    registerGetGroupsWithNoSuchRoleRoute(v1AppRouter, registry);
+    registerDeleteRoleFromGroupRoute(v1AppRouter, registry);
+    registerAddRoleToGroupRoute(v1AppRouter, registry);
 }
-
-/*
-v1AppRouter.post('/p', (req: Request, res: Response, next: NextFunction) => {
-    new formidable.IncomingForm().parse(req, (error: any, fields: Fields, files: Files) => {
-    });
-});
- */
-
-
 
 export default reg;

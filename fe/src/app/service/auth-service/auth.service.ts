@@ -42,7 +42,6 @@ export class AuthService {
                     token: r.jwtToken,
                     myself: r.user
                 } as StorageToken);
-                this.themeService.setTheme(r.theme);
                 this.subject.next(r.user);
             })
         );

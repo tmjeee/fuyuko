@@ -3,7 +3,7 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 
 const httpAction: any[] = [
     [

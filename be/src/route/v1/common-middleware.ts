@@ -4,7 +4,26 @@ import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
+import {hasUserRole} from "../../service/user.service";
 
+
+export const validateUserRoleMiddlewareFn = (roleName: string) => {
+    return (async (req: Request, res: Response, next: NextFunction) => {
+        const jwtPayload: JwtPayload = getJwtPayload(res);
+        const userId: number = jwtPayload.user.id;
+        const hasRole: boolean = await hasUserRole(userId, roleName);
+        if (!hasRole) {
+            res.status(403).json(
+                makeApiErrorObj(
+                    makeApiError(`Unauthorized: Require role ${roleName} to perform ${req.method} ${req.url}`,
+                        'roleName', roleName, 'Security')
+                )
+            );
+            return;
+        }
+        next();
+    });
+}
 
 export const getJwtPayload = (res: Response): JwtPayload => {
    return res.locals.jwtPayload;
@@ -52,7 +71,6 @@ type JwtErrorType = {
 
 export const validateJwtMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
     const jwtToken: string = req.headers['x-auth-jwt'] as string;
-    console.log('************* jwtToken', jwtToken);
     if (!jwtToken) {
         res.status(401).json(makeApiErrorObj(
             makeApiError(`Missing jwt token`, 'jwt', '', 'Security')
@@ -63,9 +81,7 @@ export const validateJwtMiddlewareFn = (req: Request, res: Response, next: NextF
         const jwtPayload: JwtPayload = verifyJwtToken(jwtToken);
         res.locals.jwtPayload = jwtPayload;
         next();
-        console.log('******************* jwt validation middleware ok');
     } catch(err ) {
-        console.log('**************** ', err);
         const jwtError: JwtErrorType = err;
         res.status(401).json(makeApiErrorObj(
             makeApiError(`${jwtError.name} ${jwtError.message}`, 'jwtToken', '', 'Security')

@@ -7,12 +7,12 @@ import {makeApiError, makeApiErrorObj} from "../../util";
 import {hashedPassword, sendEmail} from "../../service";
 import config from '../../config';
 import {RegistrationResponse} from "../../model/registration.model";
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 
 /**
  * Approve other users' self registration entries
  */
-const approveSelfRegistrationHttpAction = [
+const httpAction = [
     [
         check('registrationId').exists().isNumeric()
     ],
@@ -86,6 +86,6 @@ const approveSelfRegistrationHttpAction = [
 const reg = (router: Router, registry: Registry) => {
     const p = '/self-register/approve/:registrationId';
     registry.addItem('POST', p);
-    router.post(p, ...approveSelfRegistrationHttpAction)
+    router.post(p, ...httpAction)
 }
 export default reg;

@@ -11,7 +11,7 @@ import fileType from 'file-type';
 import {UserAvatarResponse} from "../../model/avatar.model";
 import util from 'util';
 import fs from 'fs';
-import {Registry} from "./v1-app.router";
+import {Registry} from "../../registry";
 
 const httpAction: any[] = [
 
