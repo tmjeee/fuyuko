@@ -1,4 +1,4 @@
-import {SimpleStatus} from "./status.model";
+import {SimpleStatus} from './status.model';
 
 
 export interface Role {
@@ -8,9 +8,14 @@ export interface Role {
 }
 
 export interface DeleteRoleFromGroupResponse {
-    status: SimpleStatus,
+    status: SimpleStatus;
     message: string;
     entriesDeleted: number;
+}
+
+export interface AddRoleToGroupResponse {
+    status: SimpleStatus;
+    message: string;
 }
 
 

@@ -6,15 +6,13 @@
 
 (v) DELETE /group/:groupId/role/:roleId
 
-POST /group/:groupId/add-role/:roleId
+(v) POST /group/:groupId/add-role/:roleId
 
-POST /role
+(V) GET /users/not-in-group/:groupId
 
-GET /users/not-in-group/:groupId
+(v) POST /group/:groupId/add-user/:userId
 
-POST /group/:groupId/add-user/:userId
-
-POST /group/:groupId/remove-user/:userId
+(v) DELETE /group/:groupId/remove-user/:userId
 
 GET /self-registers
 

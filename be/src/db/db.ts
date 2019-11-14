@@ -35,9 +35,11 @@ export interface QueryI {
     [name: string]: any
 }
 
+// for SELECT statments
 export type QueryA = QueryI[] & QueryM;
 
 
+// for INSERT, UPDATE etc. statements
 export type QueryResponse  = {
     affectedRows: number,
     insertId: number,

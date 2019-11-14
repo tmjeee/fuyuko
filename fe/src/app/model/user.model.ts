@@ -1,4 +1,5 @@
 import {Group} from './group.model';
+import {SimpleStatus} from './status.model';
 
 export type UserStatus = 'enabled' | 'disabled' | 'deleted';
 
@@ -10,5 +11,10 @@ export interface User {
   email: string;
   groups: Group[];
   theme: string;
+}
+
+export interface DeleteUserFromGroupResponse {
+  status: SimpleStatus;
+  message: string;
 }
 
