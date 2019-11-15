@@ -9,7 +9,28 @@
     <mat-card-content>
 
     <mat-accordion>
-      <!-- 'VIEW' role -->
+
+      <mat-expansion-panel *ngFor="let role of allRoles">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+              {{role.name}}
+          </mat-panel-title>
+          <mat-panel-description>
+              {{role.description}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-group-table
+                searchFieldPlaceholder="Group Name to add to role"
+                searchFieldHint="Search from auto suggest group to add to role"
+                searchFieldLabel="Search for a group to add to role."
+                [groups]="allRoleGroups.get(role)"
+                [groupSearchFn]="groupSearchByRole(role)"
+                (events)="onRoleGroupTableEvent($event, role)">
+        </app-group-table>
+      </mat-expansion-panel>
+
+
+      <!--
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -29,7 +50,6 @@
         </app-group-table>
       </mat-expansion-panel>
 
-      <!-- 'EDIT' role -->
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -50,7 +70,6 @@
       </mat-expansion-panel>
 
 
-      <!-- 'PARTNER' role -->
       <mat-expansion-panel>
         <mat-expansion-panel-header collapsedHeight="150px" expandedHeight="200px">
           <mat-panel-title>
@@ -71,9 +90,9 @@
           (events)="onPartnerRoleGroupEvent($event)">
         </app-group-table>
       </mat-expansion-panel>
+      -->
 
     </mat-accordion>
     </mat-card-content>
-
   </mat-card>
 </div>

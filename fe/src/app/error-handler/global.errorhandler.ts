@@ -25,7 +25,7 @@ export class GlobalErrorhandler extends ErrorHandler {
                     this.notificationService.error(`API Service`, `Unable to connect to API services`);
                 } else if (httpErrorResponse.status === 401) {
                     // unauthorized 401
-                    // location.href = '/login-layout/login';
+                    location.href = '/login-layout/login';
                     return;
                 }
             }

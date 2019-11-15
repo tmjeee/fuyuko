@@ -34,6 +34,7 @@ import registerDeleteUserByIdRoute from './DELETE-user-by-id.route';
 import registerPostChangeUserStatusRoute from './POST-change-user-status.route';
 import registerGetSelfRegistersRoute from './GET-self-register.route';
 import registerDeleteSelfRegisterRoute from './DELETE-self-register.route';
+import registerGetAllRolesRoute from './GET-all-roles.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -70,6 +71,7 @@ const reg = (app: Express, regi: Registry) => {
     registerGetUsersByStatusRoute(v1AppRouter, registry);
     registerDeleteUserByIdRoute(v1AppRouter, registry)
     registerPostChangeUserStatusRoute(v1AppRouter, registry);
+    registerGetAllRolesRoute(v1AppRouter, registry);
 }
 
 

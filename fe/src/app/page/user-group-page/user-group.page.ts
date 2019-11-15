@@ -59,7 +59,7 @@ export class UserGroupPageComponent implements OnInit {
   }
 
   onUserTableEvent(e: UserTableComponentEvent, g: Group) {
-    switch(e.type) {
+    switch (e.type) {
       case 'delete':
         this.userManagementService.removeUserFromGroup(e.user, g);
         this.notificationsService.success('Success', `User ${e.user.username} deleted from group ${g.name}`);

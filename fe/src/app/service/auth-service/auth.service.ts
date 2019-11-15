@@ -11,7 +11,7 @@ import {tap} from 'rxjs/operators';
 
 const URL_LOGIN = `${config.api_host_url}/login`;
 const URL_LOGOUT = `${config.api_host_url}/logout`;
-const URL_SAVE_USER = `${config.api_host_url}`;
+const URL_SAVE_USER = `${config.api_host_url}/user`;
 
 export interface StorageToken  {
   token: string;
@@ -57,14 +57,38 @@ export class AuthService {
      );
   }
 
-  saveMyself(myself: User) {
-   // todo:
-    const token: StorageToken = JSON.parse(localStorage.getItem('MY_APP_MYSELF'));
-    token.myself = myself;
-    this.storeToken(token);
-    this.subject.next(myself);
+  saveMyself(myself: User): Observable<User> {
+    return this.httpClient.post<User>(URL_SAVE_USER, {
+        userId: myself.id,
+        firstName: myself.username,
+        lastName: myself.lastName,
+        email: myself.email
+    }).pipe(
+        tap(this.afterSaveCallback.bind(this))
+    );
   }
 
+  saveTheme(theme: string): Observable<User> {
+    return this.httpClient.post<User>(URL_SAVE_USER, {
+        theme
+    }).pipe(
+        tap(this.afterSaveCallback.bind(this))
+    );
+  }
+
+  savePassword(myself: User, password: string) {
+      return this.httpClient.post<User>(URL_SAVE_USER, {
+          password
+      }).pipe(
+          tap(this.afterSaveCallback.bind(this))
+      );
+  }
+  private afterSaveCallback(u: User) {
+      const token: StorageToken = JSON.parse(localStorage.getItem('MY_APP_MYSELF'));
+      token.myself = u;
+      this.storeToken(token);
+      this.subject.next(u);
+  }
 
   private storeToken(token: StorageToken) {
     localStorage.setItem('MY_APP_MYSELF', JSON.stringify(token));
@@ -92,7 +116,4 @@ export class AuthService {
     return null;
   }
 
-  savePassword(myself: User, password: string) {
-    // todo:
-  }
 }

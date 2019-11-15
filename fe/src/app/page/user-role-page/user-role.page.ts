@@ -5,12 +5,15 @@ import {
   GroupTableComponentEvent,
   GroupTableComponentEventType
 } from '../../component/group-table-component/group-table.component';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
-import {Role} from '../../model/role.model';
-import {map} from 'rxjs/operators';
+import {Role, ROLE_EDIT, ROLE_PARTNER, ROLE_VIEW} from '../../model/role.model';
+import {map, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
+import config from '../../../assets/config.json';
 
+
+const URL_GET_ALL_ROLES = `${config.api_host_url}/roles`;
 
 @Component({
   templateUrl: './user-role.page.html',
@@ -18,120 +21,64 @@ import {NotificationsService} from 'angular2-notifications';
 })
 export class UserRolePageComponent implements OnInit {
 
-  groupsWithViewRole: Group[];
-  groupsWithEditRole: Group[];
-  groupsWithPartnerRole: Group[];
-  groupSearchByViewRoleFn: GroupSearchFn;
-  groupSearchByEditRoleFn: GroupSearchFn;
-  groupSearchByPartnerRoleFn: GroupSearchFn;
+  groupSearchByRole: (role: Role) => GroupSearchFn;
+
+  allRoles: Role[];
+
+  allRoleGroups: Map<Role, Group[]>;
 
   constructor(private userManagementService: UserManagementService,
-              private notificationsService: NotificationsService) { }
+              private notificationsService: NotificationsService) {
+      this.allRoles = [];
+      this.allRoleGroups = new Map();
+  }
 
   ngOnInit(): void {
-    this.groupSearchByViewRoleFn = (g: string): Observable<Group[]> => {
-      return this.userManagementService
-        .findNotYetAssociatedToRoleGroup(Role.VIEW)
-        .pipe(
-          map((grps: Group[]) => this.groupsWithViewRole = grps)
-        );
-    };
-    this.groupSearchByEditRoleFn = (g: string): Observable<Group[]> => {
-      return this.userManagementService
-        .findNotYetAssociatedToRoleGroup(Role.EDIT)
-        .pipe(
-          map((grps: Group[]) => this.groupsWithEditRole = grps)
-        );
-    };
-    this.groupSearchByPartnerRoleFn = (g: string): Observable<Group[]> => {
-      return this.userManagementService
-        .findNotYetAssociatedToRoleGroup(Role.PARTNER)
-        .pipe(
-          map((grps: Group[]) => this.groupsWithPartnerRole = grps)
-        );
-    };
-
-    this.reloadViewRoleGroups();
-    this.reloadEditRoleGroups();
-    this.reloadPartnerRoleGroups();
-  }
-
-  reloadViewRoleGroups() {
-    this.userManagementService.findNotYetAssociatedToRoleGroup(Role.VIEW)
-      .pipe(
-        map((grp: Group[]) =>  this.groupsWithViewRole = grp )
-      ).subscribe();
-  }
-
-  reloadEditRoleGroups() {
-    this.userManagementService.findNotYetAssociatedToRoleGroup(Role.EDIT)
-      .pipe(
-        map((grp: Group[]) =>  this.groupsWithEditRole = grp )
-      ).subscribe();
-  }
-
-  reloadPartnerRoleGroups() {
-    this.userManagementService.findNotYetAssociatedToRoleGroup(Role.PARTNER)
-      .pipe(
-        map((grp: Group[]) =>  this.groupsWithPartnerRole = grp )
-      ).subscribe();
-  }
-
-  onViewRoleGroupEvent(event: GroupTableComponentEvent) {
-    switch (event.type) {
-      case GroupTableComponentEventType.SEARCH: {
-        this.notificationsService.success('Success', `Add ${event.group.name} to VIEW role`);
-        this.reloadViewRoleGroups();
-        break;
-      }
-      case GroupTableComponentEventType.CANCEL: {
-        this.userManagementService.removeRoleFromGroup(Role.VIEW, event.group)
+      this.userManagementService.allRoles()
           .pipe(
-            map((r) => {
-              this.notificationsService.success('Success', 'Role removed from group');
-              this.reloadViewRoleGroups();
+            tap((r: Role[]) => {
+                console.log('**************** roles', r);
+                this.allRoles = r;
+                r.reduce((a: Map<Role, Group[]>, role: Role) => {
+                   a.set(role, []);
+                   return a;
+                }, this.allRoleGroups);
+                this.reloadRoleGroups();
             })
           ).subscribe();
-        break;
-      }
-    }
+      this.groupSearchByRole = (role: Role) => {
+          return (group: string): Observable<Group[]> => {
+              return this.userManagementService.findNotYetAssociatedToRoleGroup(role.name);
+          };
+      };
   }
-  onEditRoleGroupEvent(event: GroupTableComponentEvent) {
-    switch (event.type) {
-      case GroupTableComponentEventType.SEARCH: {
-        this.notificationsService.success('Success', `Add ${event.group.name} to EDIT role`);
-        this.reloadEditRoleGroups();
-        break;
-      }
-      case GroupTableComponentEventType.CANCEL: {
-        this.userManagementService.removeRoleFromGroup(Role.EDIT, event.group)
-          .pipe(
-            map((r) => {
-              this.notificationsService.success('Success', 'Role removed from group');
-              this.reloadEditRoleGroups();
-            })
-          ).subscribe();
-        break;
-      }
-    }
+
+  reloadRoleGroups() {
+      Array.from(this.allRoleGroups.keys())
+          .forEach((role: Role) =>  {
+              this.userManagementService
+                  .findNotYetAssociatedToRoleGroup(role.name)
+                  .pipe(
+                    map((groups: Group[]) => {
+                        this.allRoleGroups.set(role, groups);
+                    })
+                  ).subscribe();
+          });
   }
-  onPartnerRoleGroupEvent(event: GroupTableComponentEvent) {
-    switch (event.type) {
-      case GroupTableComponentEventType.SEARCH: {
-        this.notificationsService.success('Success', `Add ${event.group.name} to PARTNER role`);
-        this.reloadPartnerRoleGroups();
-        break;
-      }
-      case GroupTableComponentEventType.CANCEL: {
-        this.userManagementService.removeRoleFromGroup(Role.PARTNER, event.group)
-          .pipe(
-            map((r) => {
-              this.notificationsService.success('Success', 'Role removed from group');
-              this.reloadPartnerRoleGroups();
-            })
-          ).subscribe();
-        break;
-      }
+
+
+    onRoleGroupTableEvent($event: GroupTableComponentEvent, role: Role) {
+      /*
+        switch ($event.type) {
+            case GroupTableComponentEventType.CANCEL:
+                this.userManagementService.removeUserFromGroup(e.user, g);
+                this.notificationsService.success('Success', `User ${e.user.username} deleted from group ${g.name}`);
+                break;
+            case Group:
+                this.userManagementService.addUserToGroup(e.user, g);
+                this.notificationsService.success('Success', `User ${e.user.username} added to group ${g.name}`);
+                break;
+        }
+        */
     }
-  }
 }

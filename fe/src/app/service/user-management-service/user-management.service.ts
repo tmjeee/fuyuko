@@ -1,15 +1,26 @@
 import {Injectable} from '@angular/core';
-import {Role} from '../../model/role.model';
+import {Role, RoleName} from '../../model/role.model';
 import {Group, GroupStatus} from '../../model/group.model';
 import {Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
+import config from '../../../assets/config.json';
+import {HttpClient} from "@angular/common/http";
+
+const URL_ALL_ROLES = `${config.api_host_url}/roles`;
 
 @Injectable()
 export class UserManagementService {
 
+  constructor(private httpClient: HttpClient){}
+
 
   // === Roles =============
-  findNotYetAssociatedToRoleGroup(role: Role): Observable<Group[]> {
+
+  allRoles(): Observable<Role[]> {
+    return this.httpClient.get<Role[]>(URL_ALL_ROLES);
+  }
+
+  findNotYetAssociatedToRoleGroup(roleName: RoleName): Observable<Group[]> {
     // todo:
     return of([
       {id: 1,  name: 'group #01', description: 'This is group 01', status: 'enabled', roles: []} as Group,
@@ -29,7 +40,7 @@ export class UserManagementService {
     ]);
   }
 
-  removeRoleFromGroup(role: Role, group: Group): Observable<void> {
+  removeRoleFromGroup(roleName: RoleName, group: Group): Observable<void> {
     // todo:
     return of(null);
   }
@@ -63,7 +74,7 @@ export class UserManagementService {
       {id: 17, name: 'group #17', description: 'group #17 description', status: 'enabled', roles: []} as Group,
       {id: 18, name: 'group #18', description: 'group #18 description', status: 'enabled', roles: []} as Group,
     ]);
-  };
+  }
 
   getAllGroups(): Observable<Group[]> {
     // todo:

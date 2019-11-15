@@ -55,14 +55,17 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     const theme: Theme = event.value as Theme;
     this.themeService.setTheme(theme);
     this.myself.theme = theme.theme.toString();
-    this.authService.saveMyself(this.myself);
-    this.notificationsService.success('Success', 'Theme changed');
+    this.authService.saveTheme(this.myself.theme).pipe(
+        tap((_) => {
+            this.notificationsService.success('Success', 'Theme changed');
+        })
+    ).subscribe();
   }
 
   onAvatarComponentEvent(event: AvatarComponentEvent) {
     const avatar: GlobalAvatar | File = event.avatar;
     const f = (r: UserAvatarResponse) => {
-      this.globalCommunicationService.avatarReloadSubject.next(Math.random());
+      this.globalCommunicationService.reloadAvatar();
       this.notificationsService.success('Success', `Avatar updated`);
     };
     if (avatar instanceof File) {
@@ -78,13 +81,22 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.myself.firstName = event.firstName;
     this.myself.lastName = event.lastName;
     this.myself.email = event.email;
-    this.myself.username = event.username;
-    this.authService.saveMyself(this.myself);
-    this.notificationsService.success('Success', 'Profile information updated');
+    this.authService
+        .saveMyself(this.myself)
+        .pipe(
+            tap((_) => {
+              this.notificationsService.success('Success', 'Profile information updated');
+            })
+        ).subscribe();
   }
 
   onPasswordEvent(event: PasswordComponentEvent) {
-    this.authService.savePassword(this.myself, event.password);
-    this.notificationsService.success('Success', 'Password updated');
+    this.authService
+        .savePassword(this.myself, event.password)
+        .pipe(
+            tap((_) => {
+              this.notificationsService.success('Success', 'Password updated');
+            })
+        ).subscribe();
   }
 }

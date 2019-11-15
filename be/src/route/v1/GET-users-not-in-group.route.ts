@@ -108,7 +108,7 @@ const httpAction: any[] = [
 
 const reg = (router: Router, registry: Registry) => {
     const p = `/users/not-in-group/:groupId`;
-    registry.addItem('GET', 'p');
+    registry.addItem('GET', p);
     router.get(p, ...httpAction);
 }
 

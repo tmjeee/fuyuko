@@ -5,7 +5,7 @@ import {Subject} from 'rxjs';
 @Injectable()
 export class GlobalCommunicationService {
 
-    avatarReloadSubject: Subject<number>; // emit when avatar needs updating
+    private avatarReloadSubject: Subject<number>; // emit when avatar needs updating
 
     constructor() {
         this.avatarReloadSubject = new Subject<number>();
@@ -13,5 +13,9 @@ export class GlobalCommunicationService {
 
     avatarReloadObservable() {
         return this.avatarReloadSubject.asObservable();
+    }
+
+    reloadAvatar() {
+        this.avatarReloadSubject.next(Math.random());
     }
 }
