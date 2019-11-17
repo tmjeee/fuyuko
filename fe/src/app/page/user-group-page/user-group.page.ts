@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {Group} from '../../model/group.model';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {User} from '../../model/user.model';
-import {UserSearchFn, UserTableComponentEvent} from '../../component/user-table-component/user-table.component';
+import {Action, UserSearchFn, UserTableComponentEvent} from '../../component/user-table-component/user-table.component';
 import {Observable} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
 
 
 @Component({
@@ -19,6 +21,11 @@ export class UserGroupPageComponent implements OnInit {
   allGroups: Group[];
 
   allGroupsUsers: Map<Group, User[]> = new Map(); // {[groupId: string]: User[]} = {};
+
+
+  actions: Action[] = [
+      { icon: '', tooltip: 'Remove user from group', type: 'DELETE'} as Action
+  ];
 
   constructor(private userManagementService: UserManagementService, private notificationsService: NotificationsService) {
   }
@@ -49,24 +56,36 @@ export class UserGroupPageComponent implements OnInit {
   reloadGroupUsers() {
     Array.from(this.allGroupsUsers.keys())
       .forEach((grp: Group) => {
-        this.userManagementService.findUsersNotInGroup(grp)
-          .pipe(
-            map((users: User[]) => {
-              this.allGroupsUsers.set(grp, users);
-            })
-          ).subscribe();
+          this._reloadGroupUser(grp);
       });
+  }
+
+  private _reloadGroupUser(grp: Group) {
+      this.userManagementService.findUsersInGroup(grp)
+          .pipe(
+              map((users: User[]) => {
+                  this.allGroupsUsers.set(grp, users);
+              })
+          ).subscribe();
   }
 
   onUserTableEvent(e: UserTableComponentEvent, g: Group) {
     switch (e.type) {
-      case 'delete':
-        this.userManagementService.removeUserFromGroup(e.user, g);
-        this.notificationsService.success('Success', `User ${e.user.username} deleted from group ${g.name}`);
+        case this.actions[0].type: // 'DELETE' action type
+        this.userManagementService.removeUserFromGroup(e.user, g).pipe(
+            tap((r: ApiResponse) => {
+               toNotifications(this.notificationsService, r);
+               this._reloadGroupUser(g);
+            })
+        ).subscribe();
         break;
-      case 'selection':
-        this.userManagementService.addUserToGroup(e.user, g);
-        this.notificationsService.success('Success', `User ${e.user.username} added to group ${g.name}`);
+      case 'SELECTION':
+        this.userManagementService.addUserToGroup(e.user, g).pipe(
+            tap((r: ApiResponse) => {
+                toNotifications(this.notificationsService, r);
+                this._reloadGroupUser(g);
+            })
+        ).subscribe();
         break;
     }
   }

@@ -10,7 +10,9 @@ import {
   ActionType,
   UserSearchTableComponentEvent
 } from '../../component/user-search-table-component/user-search-table.component';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
 
 
 @Component({
@@ -36,29 +38,53 @@ export class UserPeoplePageComponent implements OnInit {
       return this.userManagementService.findActiveUsers(userName);
     };
 
-    this.activeUsersActionTypes = [{type: 'deactivate', icon: 'backspace', tooltip: 'Deactivate User'}];
-    this.inactiveUsersActionTypes = [{type: 'activate', icon: 'add_box', tooltip: 'Activate User'}];
+    this.activeUsersActionTypes = [{type: 'DEACTIVATE', icon: 'remove_circle', tooltip: 'Deactivate User'}];
+    this.inactiveUsersActionTypes = [{type: 'ACTIVATE', icon: 'add_box', tooltip: 'Activate User'}];
   }
 
   ngOnInit(): void {
+      this.reload();
+  }
+
+  reload() {
     this.userManagementService.getAllActiveUsers().pipe(
-      map((u: User[]) => this.activeUsers = u)
+        tap((u: User[]) => {
+          this.activeUsers = u;
+        })
     ).subscribe();
     this.userManagementService.getAllInactiveUsers().pipe(
-      map((u: User[]) => this.inactiveUsers = u)
+        map((u: User[]) => this.inactiveUsers = u)
     ).subscribe();
   }
 
 
 
   onActiveUsersTableEvent($event: UserSearchTableComponentEvent) {
-    this.notificationService.success('Success', `delete active user ${$event.user.username}`);
-    this.userManagementService.deleteActiveUser($event.user);
+      switch ($event.type) {
+        case 'DEACTIVATE':
+          this.userManagementService.setUserStatus($event.user.id, 'DISABLED')
+              .pipe(
+                  tap((r: ApiResponse) => {
+                    toNotifications(this.notificationService, r);
+                    this.reload();
+                  })
+              ).subscribe();
+          break;
+      }
   }
 
   onInactiveUsersTableEvent($event: UserSearchTableComponentEvent) {
-    this.notificationService.success('Success', `delete inactive user ${$event.user.username}`);
-    this.userManagementService.deleteInactiveUser($event.user);
+    switch ($event.type) {
+      case 'ACTIVATE':
+        this.userManagementService.setUserStatus($event.user.id, 'ENABLED')
+            .pipe(
+                tap((r: ApiResponse) => {
+                  toNotifications(this.notificationService, r);
+                  this.reload();
+                })
+            ).subscribe();
+        break;
+    }
   }
 
 }

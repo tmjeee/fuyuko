@@ -13,10 +13,9 @@ import {CollectionViewer} from '@angular/cdk/collections';
 
 export type UserSearchFn = (user: string) => Observable<User[]>;
 
-export type UserTableComponentEventType = 'delete' | 'selection';
 
 export interface UserTableComponentEvent {
-  type: UserTableComponentEventType;
+  type: string;
   user: User;
 }
 
@@ -39,6 +38,12 @@ class UserTableDataSource implements DataSource<User> {
   }
 }
 
+export interface Action {
+  icon: string;
+  tooltip: string;
+  type: string;
+}
+
 @Component({
   selector: 'app-user-table',
   templateUrl: './user-table.component.html',
@@ -50,9 +55,11 @@ export class UserTableComponent implements OnInit, OnChanges {
   @Input() searchFieldLabel: string;
   @Input() searchFieldHint: string;
 
+  @Input() actions: Action[] = [];
   @Input() users: User[];
   @Input() userSearchFn: UserSearchFn;
   @Output() events: EventEmitter<UserTableComponentEvent> = new EventEmitter();
+
 
   dataSource: UserTableDataSource;
 
@@ -73,7 +80,7 @@ export class UserTableComponent implements OnInit, OnChanges {
       .pipe(
         startWith(''),
         filter((v: User | string) => typeof v === 'string'),
-        debounceTime(1000),
+        debounceTime(500),
         switchMap((v: string) => {
           return this.userSearchFn(v);
         })
@@ -90,22 +97,25 @@ export class UserTableComponent implements OnInit, OnChanges {
   onUserSearchSelected(event: MatAutocompleteSelectedEvent) {
     const user: User = event.option.value;
     this.events.emit({
-      type: 'selection',
+      type: 'SELECTION',
       user
     } as UserTableComponentEvent);
+    this.formControlUserSearch.setValue('');
   }
 
   onCancelClicked(event: Event, user: User) {
     this.events.emit({
-      type: 'delete', user
+      type: 'DELETE', user
     } as UserTableComponentEvent);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.user) {
-      const change: SimpleChange = changes.user;
-      const users: User[] = change.currentValue;
-      this.dataSource.update(users);
+    if (changes.users) {
+      if (this.dataSource) {
+        const change: SimpleChange = changes.users;
+        const users: User[] = change.currentValue;
+        this.dataSource.update(users);
+      }
     }
   }
 }

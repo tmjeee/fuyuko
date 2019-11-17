@@ -1,13 +1,39 @@
 import {NextFunction, Router, Request, Response } from "express";
 import {Registry } from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {check} from 'express-validator';
+import {doInDbConnection, QueryA} from "../../db";
+import {PoolConnection} from "mariadb";
+import {makeApiError, makeApiErrorObj} from "../../util";
+import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [
-    [],
+    [
+        check('groupId').exists().isNumeric(),
+        check('userId').exists().isNumeric()
+    ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
+        const groupId: number = Number(req.params.groupId);
+        const userId: number = Number(req.params.userId);
+
+        await doInDbConnection(async (conn: PoolConnection) => {
+           const q1: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_USER_GROUP WHERE GROUP_ID = ? AND USER_ID = ?`, [groupId, userId]);
+           if (q1.length > 0 && q1[0].COUNT > 0) {
+               res.status(200).json(makeApiErrorObj(
+                   makeApiError(`User ${userId} already in group ${groupId}`, 'userId', String(userId), 'System')
+               ));
+               return;
+           }
+
+           await conn.query(`INSERT INTO TBL_LOOKUP_USER_GROUP (GROUP_ID, USER_ID) VALUES (?, ?)`, [groupId, userId]);
+           res.status(200).json({
+               status: "SUCCESS",
+               message: `User ${userId} added to group ${groupId}`
+           } as ApiResponse);
+        });
     }
 ];
 

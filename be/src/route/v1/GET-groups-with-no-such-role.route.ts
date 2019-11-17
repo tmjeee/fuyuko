@@ -4,17 +4,18 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
-import {GetGroupsResponse, Group} from "../../model/group.model";
+import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
+import {Paginable} from "../../model/pagnination.model";
 
 const httpAction: any[] = [
     [
-        check('roleId').exists().isNumeric()
+        check('roleName').exists()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
-        const roleId: number = Number(req.params.roleId);
+        const roleName: string = req.params.roleName;
 
         await doInDbConnection(async (conn: PoolConnection) => {
 
@@ -29,9 +30,9 @@ const httpAction: any[] = [
                      FROM TBL_GROUP AS G
                      LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
                      LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
-                     WHERE R.ID = ? 
+                     WHERE R.NAME = ? 
                 )
-            `,[roleId]);
+            `,[roleName]);
             const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -43,7 +44,6 @@ const httpAction: any[] = [
                     R.DESCRIPTION AS R_DESCRIPTION
                 FROM TBL_GROUP AS G
                 LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
-                LEFT JOIN TBL_GROUP AS G ON G.ID = LGR.GROUP_ID
                 LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
                 WHERE G.STATUS = 'ENABLED' 
                 AND G.ID NOT IN (
@@ -52,9 +52,9 @@ const httpAction: any[] = [
                      FROM TBL_GROUP AS G
                      LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
                      LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
-                     WHERE R.ID = ? 
+                     WHERE R.NAME = ? 
                 )
-            `, [roleId]);
+            `, [roleName]);
             const m: Map<number/*groupId*/, Group> = new Map();
             const groups: Group[] = q.reduce((groups: Group[], c: QueryI) => {
                 const groupId: number = c.G_ID;
@@ -90,13 +90,13 @@ const httpAction: any[] = [
                 limit: totalGroups,
                 offset: 0,
                 payload: groups
-            } as GetGroupsResponse);
+            } as Paginable<Group>);
         });
     }
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/groups/no-role/:roleId`;
+    const p = `/groups/no-role/:roleName`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 

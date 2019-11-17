@@ -1,12 +1,12 @@
-import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
+import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
+import {User} from "../../model/user.model";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
-import {User} from "../../model/user.model";
 
 const httpAction: any[] = [
     [
@@ -15,6 +15,7 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
+
         const u: User[] = await doInDbConnection(async (conn: PoolConnection) => {
 
             const groupId: number = Number(req.params.groupId);
@@ -45,7 +46,7 @@ const httpAction: any[] = [
                 LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
                 LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
                 WHERE U.STATUS = 'ENABLED' AND G.STATUS = 'ENABLED'
-                AND U.ID NOT IN (
+                AND U.ID IN (
                     SELECT 
                         U.ID
                     FROM TBL_USER AS U 
@@ -101,11 +102,11 @@ const httpAction: any[] = [
                         description: i.R_DESCRIPTION
                     } as Role;
                     r.set(rKey, role);
-                        g.get(gKey).roles.push(role);
-                    }
+                    g.get(gKey).roles.push(role);
+                }
 
-                    return acc;
-                }, []
+                return acc;
+            }, []
             );
         });
 
@@ -113,8 +114,11 @@ const httpAction: any[] = [
     }
 ]
 
+
+
+
 const reg = (router: Router, registry: Registry) => {
-    const p = `/users/not-in-group/:groupId`;
+    const p = `/users/in-group/:groupId`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 }

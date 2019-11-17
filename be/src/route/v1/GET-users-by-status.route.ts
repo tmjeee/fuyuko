@@ -45,54 +45,61 @@ const httpAction: any[] = [
                 LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
                 LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
                 LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
-                WHERE U.STATUS = ? AND G.STATUS  'ENABLED'
+                WHERE U.STATUS = ? AND G.STATUS = 'ENABLED'
             `, [status]);
 
 
-            const m: Map<number/*group id*/, Group> = new Map();
-            const r: Map<number/*group id*/, Role[]> = new Map();
+            const u: Map<number/*user id*/, User> = new Map();
+            const g: Map<string/*<user id>_<group id>*/, Group> = new Map();
+            const r: Map<string/*<user id>_<group id>_<role id>*/, Role> = new Map();
 
-            return q.reduce((u: User, i: QueryI, index: number) => {
-                if (index === 0) {
-                    u.id = i.U_ID;
-                    u.firstName = i.U_USERNAME;
-                    u.lastName = i.U_LASTNAME;
-                    u.username = i.U_USERNAME;
-                    u.theme = i.UT_THEME;
-                    u.email = i.U_EMAIL;
+
+            return q.reduce((acc: User[], i: QueryI, index: number) => {
+                const userId = i.U_ID;
+                const uKey = `${userId}`;
+                if (!u.has(userId)) {
+                    const user: User = ({
+                        id: i.U_ID,
+                        username: i.U_USERNAME,
+                        firstName: i.U_FIRSTNAME,
+                        lastName: i.U_LASTNAME,
+                        email: i.U_EMAIL,
+                        theme: i.UT_THEME,
+                        groups: []
+                    } as User);
+                    u.set(userId, user);
+                    acc.push(user);
                 }
+
                 const groupId = i.G_ID;
-                if (!m.has(groupId)) {
-                    const g: Group = ({
-                        id: groupId,
+                const gKey = `${userId}_${groupId}`;
+                if (!g.has(gKey)) {
+                    const group: Group = ({
+                        id: i.G_ID,
                         name: i.G_NAME,
                         description: i.G_DESCRIPTION,
                         status: i.G_STATUS,
                         roles: []
-                    } as Group);
-                    u.groups.push(g);
-                    m.set(groupId, g);
-                    r.set(groupId, g.roles);
+                    });
+                    g.set(gKey, group);
+                    u.get(userId).groups.push(group);
                 }
 
                 const roleId = i.R_ID;
-                r.get(groupId).push({
-                    id: roleId,
-                    name: i.R_NAME,
-                    description: i.R_DESCRIPTION
-                } as Role);
+                const rKey = `${userId}_${groupId}_${roleId}`;
+                if (!r.has(rKey)) {
+                    const role: Role = {
+                        id: i.R_ID,
+                        name: i.R_NAME,
+                        description: i.R_DESCRIPTION
+                    } as Role;
+                    r.set(rKey, role);
+                        g.get(gKey).roles.push(role);
+                    }
 
-
-                return u;
-            }, {
-                id: null,
-                firstName: null,
-                lastName: null,
-                username: null,
-                theme: null,
-                email: null,
-                groups: []
-            } as User);
+                    return acc;
+                }, []
+            );
         });
 
         res.status(200).json(u);

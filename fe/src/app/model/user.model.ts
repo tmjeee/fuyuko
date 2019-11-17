@@ -13,8 +13,3 @@ export interface User {
   theme: string;
 }
 
-export interface DeleteUserFromGroupResponse {
-  status: SimpleStatus;
-  message: string;
-}
-

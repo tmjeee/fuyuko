@@ -1,10 +1,10 @@
 import {NextFunction, Router, Request, Response } from "express";
 import {Registry } from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
+import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
 import {check} from 'express-validator';
-import {DeleteUserFromGroupResponse} from "../../model/user.model";
+import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [
     [
@@ -24,7 +24,7 @@ const httpAction: any[] = [
                 res.status(200).json({
                     status: 'ERROR',
                     message: `User ${userId} not in group ${groupId}`
-                } as DeleteUserFromGroupResponse);
+                } as ApiResponse);
                 return;
             }
 
@@ -32,7 +32,7 @@ const httpAction: any[] = [
             res.status(200).json({
                 status: 'SUCCESS',
                 message: `User ${userId} deleted from group ${groupId}`
-            } as DeleteUserFromGroupResponse);
+            } as ApiResponse);
             return;
         });
     }

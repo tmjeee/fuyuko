@@ -27,6 +27,9 @@ export class GlobalErrorhandler extends ErrorHandler {
                     // unauthorized 401
                     location.href = '/login-layout/login';
                     return;
+                } else if (httpErrorResponse.status === 404) { // api service not found??
+                    this.notificationService.error('API Service',
+                        `unable to find API service ${httpErrorResponse.url}`);
                 }
             }
         } else { // client error

@@ -13,15 +13,5 @@ export interface Role {
     description: string;
 }
 
-export interface DeleteRoleFromGroupResponse {
-    status: SimpleStatus;
-    message: string;
-    entriesDeleted: number;
-}
-
-export interface AddRoleToGroupResponse {
-    status: SimpleStatus;
-    message: string;
-}
 
 

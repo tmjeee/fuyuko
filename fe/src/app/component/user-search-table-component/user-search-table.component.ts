@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {User} from '../../model/user.model';
 import {UserSearchFn} from '../user-table-component/user-table.component';
 import {DataSource} from '@angular/cdk/table';
@@ -12,7 +12,7 @@ export type UserSearchFn = (user: string) => Observable<User[]>;
 
 export interface UserSearchTableComponentEvent {
   type: string;
-  user?: User;
+  user: User;
 }
 
 class UserSearchTableDataSource implements DataSource<User> {
@@ -44,7 +44,7 @@ export interface ActionType {
   templateUrl: './user-search-table.component.html',
   styleUrls: ['./user-search-table.component.scss']
 })
-export class UserSearchTableComponent implements OnInit {
+export class UserSearchTableComponent implements OnInit, OnChanges {
 
   @Input() searchFieldPlaceholder: string;
   @Input() searchFieldLabel: string;
@@ -84,6 +84,15 @@ export class UserSearchTableComponent implements OnInit {
       type: actionType.type,
       user
     } as UserSearchTableComponentEvent);
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+      const change: SimpleChange = changes.users;
+      if (this.dataSource) {
+        const users: User[] = change.currentValue;
+        this.dataSource.update(users);
+      }
 
   }
 }

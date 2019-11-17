@@ -10,14 +10,17 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 export type GroupSearchFn = (group: string) => Observable<Group[]>;
 
-export enum GroupTableComponentEventType {
-  CANCEL = 'DELETE' as any,
-  SEARCH = 'ADD' as any
-}
+export const SEARCH_ACTION_TYPE = 'SEARCH';
 
 export interface GroupTableComponentEvent {
-  type: GroupTableComponentEventType;
+  type: string;
   group: Group;
+}
+
+export interface Action {
+  icon: string;
+  type: string;
+  tooltip: string;
 }
 
 @Component({
@@ -34,6 +37,7 @@ export class GroupTableComponent implements OnInit, OnChanges {
   @Input() groups: Group[];
   @Input() groupSearchFn: GroupSearchFn;
 
+  @Input() actions: Action[];
   @Output() events: EventEmitter<GroupTableComponentEvent>;
 
   formControlGroupSearch: FormControl;
@@ -44,6 +48,7 @@ export class GroupTableComponent implements OnInit, OnChanges {
   constructor(private formBuilder: FormBuilder) {
     this.dataSource = new GroupTableComponentDataSource();
     this.formControlGroupSearch = formBuilder.control('');
+    this.actions = [];
     this.events = new EventEmitter();
   }
 
@@ -68,17 +73,11 @@ export class GroupTableComponent implements OnInit, OnChanges {
     return group.name;
   }
 
-  onCancelClicked(event: Event, group: Group) {
-    this.events.emit({
-      type: GroupTableComponentEventType.CANCEL,
-      group
-    } as GroupTableComponentEvent);
-  }
 
   onGroupSearchSelected(event: MatAutocompleteSelectedEvent) {
     const group: Group = event.option.value;
     this.events.emit({
-      type: GroupTableComponentEventType.SEARCH,
+      type: SEARCH_ACTION_TYPE,
       group
     } as GroupTableComponentEvent);
     this.formControlGroupSearch.setValue('');
@@ -90,6 +89,13 @@ export class GroupTableComponent implements OnInit, OnChanges {
       const g: Group[] = simpleChange.currentValue;
       this.dataSource.update(g);
     }
+  }
+
+  onActionClicked($event: MouseEvent, group: Group, action: Action) {
+    this.events.emit({
+      type: action.type,
+      group
+    } as GroupTableComponentEvent);
   }
 }
 

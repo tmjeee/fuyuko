@@ -12,6 +12,3 @@ export interface Group {
   roles: Role[];
 }
 
-export interface GetGroupsResponse extends Paginable<Group> {
-}
-

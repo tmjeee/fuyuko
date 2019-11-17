@@ -24,73 +24,11 @@
                 searchFieldHint="Search from auto suggest group to add to role"
                 searchFieldLabel="Search for a group to add to role."
                 [groups]="allRoleGroups.get(role)"
+                [actions]="actions"
                 [groupSearchFn]="groupSearchByRole(role)"
                 (events)="onRoleGroupTableEvent($event, role)">
         </app-group-table>
       </mat-expansion-panel>
-
-
-      <!--
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            View
-          </mat-panel-title>
-          <mat-panel-description>
-            Configure groups with 'view' role. Groups with this roles are allowed 'view' access to the system.
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <app-group-table
-          searchFieldPlaceholder="Group Name to add to role"
-          searchFieldHint="Search from auto suggest group to add to role"
-          searchFieldLabel="Search for a group to add to role."
-          [groups]="groupsWithViewRole"
-          [groupSearchFn]="groupSearchByViewRoleFn"
-          (events)="onViewRoleGroupEvent($event)">
-        </app-group-table>
-      </mat-expansion-panel>
-
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Edit
-          </mat-panel-title>
-          <mat-panel-description>
-            Configure groups with 'edit' role. Groups with this role are allowed 'edit' access to the system.
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <app-group-table
-          searchFieldPlaceholder="Group Name to add to role"
-          searchFieldHint="Search from auto suggest group to add to role"
-          searchFieldLabel="Search for a group to add to role."
-          [groups]="groupsWithEditRole"
-          [groupSearchFn]="groupSearchByViewRoleFn"
-          (events)="onEditRoleGroupEvent($event)">
-        </app-group-table>
-      </mat-expansion-panel>
-
-
-      <mat-expansion-panel>
-        <mat-expansion-panel-header collapsedHeight="150px" expandedHeight="200px">
-          <mat-panel-title>
-            Partner
-          </mat-panel-title>
-          <mat-panel-description>
-            Configure groups with 'partner' role. Groups with this role has no 'view' and 'edit' access to the system,
-            but will have access to partner page where they can view items and their pricing depending on which pricing
-            structures the group has. Pricing structures and items price are configurable in Pricing side menu.
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <app-group-table
-          searchFieldPlaceholder="Group Name to add to role"
-          searchFieldHint="Search from auto suggest group to add to role"
-          searchFieldLabel="Search for a group to add to role."
-          [groups]="groupsWithPartnerRole"
-          [groupSearchFn]="groupSearchByViewRoleFn"
-          (events)="onPartnerRoleGroupEvent($event)">
-        </app-group-table>
-      </mat-expansion-panel>
-      -->
 
     </mat-accordion>
     </mat-card-content>
