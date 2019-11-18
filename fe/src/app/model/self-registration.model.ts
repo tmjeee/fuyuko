@@ -1,4 +1,4 @@
-import {SimpleStatus} from "./status.model";
+import {SimpleStatus} from './status.model';
 
 export interface SelfRegistration {
     id: number;

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Self} from '@angular/core';
 import {UserSearchFn} from '../../component/user-table-component/user-table.component';
 import {User} from '../../model/user.model';
 import {
@@ -8,7 +8,10 @@ import {
 import {NotificationsService} from 'angular2-notifications';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
+import {SelfRegistration} from '../../model/self-registration.model';
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
 
 
 @Component({
@@ -19,29 +22,54 @@ export class UserActivationPageComponent implements OnInit {
 
     pendingUserSearchFn: UserSearchFn;
 
-    pendingUsers: User[];
+    pendingUsers: SelfRegistration[];
     actionTypes: ActionType[];
 
 
     constructor(private notificationService: NotificationsService,
                 private userManagementService: UserManagementService) {
         this.pendingUserSearchFn = (userName: string): Observable<User[]> => {
-            return this.userManagementService.findInactiveUsers(userName);
+            return this.userManagementService.findPendingUsers(userName);
         };
-        this.actionTypes = [{type: 'activate', icon: 'add_circle', tooltip: 'Activate Self Registered User'} as ActionType];
+        this.actionTypes = [
+            {type: 'ACTIVATE', icon: 'add_circle', tooltip: 'Activate Self Registered User'} as ActionType,
+            {type: 'DELETE', icon: 'delete', tooltip: 'Delete this Self Registered User entry'} as ActionType
+        ];
     }
 
     ngOnInit(): void {
+        this.reload();
+    }
+
+    reload() {
         this.userManagementService.getAllPendingUsers().pipe(
-            map((u: User[]) => {
+            map((u: SelfRegistration[]) => {
                 this.pendingUsers = u;
             })
         ).subscribe();
     }
 
     onPendingUsersTableEvent($event: UserSearchTableComponentEvent) {
-        this.notificationService.success('Success', `delete pending user ${$event.user.username}`);
-        this.userManagementService.deletePendingUser($event.user);
+        switch ($event.type) {
+            case 'DELETE': {
+                this.userManagementService.deletePendingUser($event.user as SelfRegistration)
+                    .pipe(
+                        tap((r: ApiResponse) => {
+                            toNotifications(this.notificationService, r);
+                        })
+                    ).subscribe();
+                break;
+            }
+            case 'ACTIVATE': {
+                this.userManagementService.approvePendingUser($event.user as SelfRegistration)
+                    .pipe(
+                        tap((r: ApiResponse) => {
+                            toNotifications(this.notificationService, r);
+                        })
+                    ).subscribe();
+                break;
+            }
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import {HttpClient} from '@angular/common/http';
 import {Paginable} from '../../model/pagnination.model';
 import {ApiResponse} from '../../model/response.model';
 import {map, tap} from 'rxjs/operators';
+import {SelfRegistration} from '../../model/self-registration.model';
 
 const URL_ALL_ROLES = `${config.api_host_url}/roles`;
 const URL_ALL_GROUPS_WITHOUT_ROLE = `${config.api_host_url}/groups/no-role/:roleName`;
@@ -21,6 +22,10 @@ const URL_ADD_USER_TO_GROUP = `${config.api_host_url}/group/:groupId/add-user/:u
 const URL_REMOVE_USER_FROM_GROUP = `${config.api_host_url}/group/:groupId/remove-user/:userId`;
 const URL_GET_USERS_BY_STATUS = `${config.api_host_url}/users/status/:status`;
 const URL_SET_USER_STATUS = `${config.api_host_url}/user/:userId/status/:status`;
+const URL_GET_SELF_REGISTRATION = `${config.api_host_url}/self-registers`;
+const URL_POST_APPROVE_SELF_REGISTRATION = `${config.api_host_url}/approve/:selfRegistrationId`;
+const URL_DELETE_SELF_REGISTRATION = `${config.api_host_url}/self-register/:selfRegistrationId`;
+
 
 @Injectable()
 export class UserManagementService {
@@ -131,32 +136,19 @@ export class UserManagementService {
     return this.httpClient.get<User[]>(URL_GET_USERS_BY_STATUS.replace(':status', 'DISABLED'));
   }
 
-  deletePendingUser(user: User): Observable<ApiResponse> {
-    return of(null);
+  // ========= self registration
+
+  deletePendingUser(selfRegistration: SelfRegistration): Observable<ApiResponse> {
+      return this.httpClient.delete<ApiResponse>(
+          URL_DELETE_SELF_REGISTRATION.replace(':selfRegistrationId', String(selfRegistration.id)), {});
   }
 
-  getAllPendingUsers(): Observable<User[]> {
-    // todo:
-    return of ([
-      {id:  1, firstName: 'f01', lastName: 'l01', username: 'u01', email: 'u01@mail.com', groups: []} as User,
-      {id:  2, firstName: 'f02', lastName: 'l02', username: 'u02', email: 'u02@mail.com', groups: []} as User,
-      {id:  3, firstName: 'f03', lastName: 'l03', username: 'u03', email: 'u03@mail.com', groups: []} as User,
-      {id:  4, firstName: 'f04', lastName: 'l04', username: 'u04', email: 'u04@mail.com', groups: []} as User,
-      {id:  5, firstName: 'f05', lastName: 'l05', username: 'u05', email: 'u05@mail.com', groups: []} as User,
-      {id:  6, firstName: 'f06', lastName: 'l06', username: 'u06', email: 'u06@mail.com', groups: []} as User,
-      {id:  7, firstName: 'f07', lastName: 'l07', username: 'u07', email: 'u07@mail.com', groups: []} as User,
-      {id:  8, firstName: 'f08', lastName: 'l08', username: 'u08', email: 'u08@mail.com', groups: []} as User,
-      {id:  9, firstName: 'f09', lastName: 'l09', username: 'u09', email: 'u09@mail.com', groups: []} as User,
-      {id: 10, firstName: 'f10', lastName: 'l10', username: 'u10', email: 'u10@mail.com', groups: []} as User,
-      {id: 11, firstName: 'f11', lastName: 'l11', username: 'u11', email: 'u11@mail.com', groups: []} as User,
-      {id: 12, firstName: 'f12', lastName: 'l12', username: 'u12', email: 'u12@mail.com', groups: []} as User,
-      {id: 13, firstName: 'f13', lastName: 'l13', username: 'u13', email: 'u13@mail.com', groups: []} as User,
-      {id: 14, firstName: 'f14', lastName: 'l14', username: 'u14', email: 'u14@mail.com', groups: []} as User,
-      {id: 15, firstName: 'f15', lastName: 'l15', username: 'u15', email: 'u15@mail.com', groups: []} as User,
-      {id: 16, firstName: 'f16', lastName: 'l16', username: 'u16', email: 'u16@mail.com', groups: []} as User,
-      {id: 17, firstName: 'f17', lastName: 'l17', username: 'u17', email: 'u17@mail.com', groups: []} as User,
-      {id: 18, firstName: 'f18', lastName: 'l18', username: 'u18', email: 'u18@mail.com', groups: []} as User,
-      {id: 19, firstName: 'f19', lastName: 'l19', username: 'u19', email: 'u19@mail.com', groups: []} as User,
-    ]);
+  getAllPendingUsers(): Observable<SelfRegistration[]> {
+      return this.httpClient.get<SelfRegistration[]>(URL_GET_SELF_REGISTRATION);
+  }
+
+  approvePendingUser(selfRegistration: SelfRegistration): Observable<ApiResponse> {
+      return this.httpClient.post<ApiResponse>(
+          URL_POST_APPROVE_SELF_REGISTRATION.replace(':selfRegistrationId', String(selfRegistration.id)),{});
   }
 }

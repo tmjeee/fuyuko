@@ -6,24 +6,25 @@ import {CollectionViewer} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
+import {SelfRegistration} from '../../model/self-registration.model';
 
 export type UserSearchFn = (user: string) => Observable<User[]>;
 
 
 export interface UserSearchTableComponentEvent {
   type: string;
-  user: User;
+  user: User | SelfRegistration;
 }
 
-class UserSearchTableDataSource implements DataSource<User> {
+class UserSearchTableDataSource implements DataSource<User | SelfRegistration> {
 
-  subject: BehaviorSubject<User[]> = new BehaviorSubject([]);
+  subject: BehaviorSubject<User[] | SelfRegistration[]> = new BehaviorSubject([]);
 
-  update(users: User[]) {
+  update(users: User[] | SelfRegistration[]) {
     this.subject.next(users);
   }
 
-  connect(collectionViewer: CollectionViewer): Observable<User[] | ReadonlyArray<User>> {
+  connect(collectionViewer: CollectionViewer): Observable<User[] | ReadonlyArray<User> | SelfRegistration[] | ReadonlyArray<SelfRegistration>> {
     return this.subject.asObservable();
   }
 
@@ -50,7 +51,7 @@ export class UserSearchTableComponent implements OnInit, OnChanges {
   @Input() searchFieldLabel: string;
   @Input() searchFieldHint: string;
 
-  @Input() users: User[];
+  @Input() users: User[] | SelfRegistration[];
   @Input() userSearchFn: UserSearchFn;
   @Input() actionTypes: ActionType[];
   @Output() events: EventEmitter<UserSearchTableComponentEvent> = new EventEmitter();
@@ -93,6 +94,5 @@ export class UserSearchTableComponent implements OnInit, OnChanges {
         const users: User[] = change.currentValue;
         this.dataSource.update(users);
       }
-
   }
 }

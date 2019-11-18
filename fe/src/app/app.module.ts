@@ -127,6 +127,7 @@ import {InvitationService} from './service/invitation-service/invitation.service
 import { JwtInterceptor } from './interceptor/jwt.interceptor';
 import {GlobalCommunicationService} from './service/global-communication-service/global-communication.service';
 import Global = WebAssembly.Global;
+import {RegistrationService} from "./service/registration-service/registration.service";
 
 const appInitializer = (settingsService: SettingsService, authService: AuthService, themeService: ThemeService) => {
   return () => {
@@ -281,6 +282,7 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     {provide: DashboardWidgetService, useClass: DashboardWidgetService} as Provider,
     {provide: ActivationService, useClass: ActivationService} as Provider,
     {provide: InvitationService, useClass: InvitationService} as Provider,
+    {provide: RegistrationService, useClass: RegistrationService} as Provider,
     {provide: GlobalCommunicationService, useClass: GlobalCommunicationService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService] } as Provider,

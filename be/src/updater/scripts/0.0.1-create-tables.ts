@@ -352,7 +352,8 @@ const TBL_VIEW = async () => {
          CREATE TABLE IF NOT EXISTS TBL_VIEW (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL
+            DESCRIPTION VARCHAR(500) NOT NULL,
+            STATUS VARCHAR(200) NOT NULL
          );
       `)
    });

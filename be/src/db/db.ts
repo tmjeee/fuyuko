@@ -56,15 +56,11 @@ export const doInDbConnection = async <R> (callback: (conn: PoolConnection) => R
         return r;
     } catch(err) {
         await conn.rollback();
-        e(err.toString(), err);
-        throw e;
+        // e(err.toString(), err);
+        throw err;
+        // return Promise.reject(e);
     } finally {
         await conn.end();
     }
 };
 
-(async()=>{
-    const r: string =  await doInDbConnection<string>((conn: PoolConnection) => {
-        return 'test';
-    });
-})();

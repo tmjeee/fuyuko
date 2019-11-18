@@ -29,7 +29,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = '/self-register/:selfRegisterId';
+    const p = '/self-register/:selfRegistrationId';
     registry.addItem('DELETE', p);
     router.delete(p, ...httpAction);
 }

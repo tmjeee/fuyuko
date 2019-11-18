@@ -14,23 +14,23 @@ import {Registry} from "../../registry";
  */
 const httpAction = [
     [
-        check('registrationId').exists().isNumeric()
+        check('selfRegistrationId').exists().isNumeric()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
-        const registrationId: number = Number(req.params.registrationId);
+        const selfRegistrationId: number = Number(req.params.selfRegistrationId);
 
         doInDbConnection(async (conn: PoolConnection) => {
 
             const q1: QueryA = await conn.query(`
                 SELECT ID, USERNAME, EMAIL, CREATION_DATE, ACTIVATED, FIRSTNAME, LASTNAME, PASSWORD FROM TBL_SELF_REGISTRATION WHERE ID = ? AND ACTIVATED = ?
-            `, [registrationId, false]);
+            `, [selfRegistrationId, false]);
 
             if (q1.length < 0) { // is not valid anymore (maybe already activated?)
                 return res.status(400).json(makeApiErrorObj(
-                    makeApiError(`Self registration id ${registrationId} is no longer active anymore`, 'registrationId', registrationId.toString(), 'api')
+                    makeApiError(`Self registration id ${selfRegistrationId} is no longer active anymore`, 'registrationId', selfRegistrationId.toString(), 'api')
                 ));
             }
 
@@ -74,7 +74,7 @@ const httpAction = [
             res.status(200).json({
                 email,
                 message: `Self registration approval for ${username} (${email}) success`,
-                registrationId,
+                registrationId: selfRegistrationId,
                 status: 'SUCCESS',
                 username
             } as RegistrationResponse);
@@ -84,7 +84,7 @@ const httpAction = [
 
 
 const reg = (router: Router, registry: Registry) => {
-    const p = '/self-register/approve/:registrationId';
+    const p = '/self-register/approve/:selfRegistrationId';
     registry.addItem('POST', p);
     router.post(p, ...httpAction)
 }
