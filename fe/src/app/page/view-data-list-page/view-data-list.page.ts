@@ -39,6 +39,8 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
       this.currentView = currentView;
       if (this.currentView) {
         this.reload();
+      } else {
+        this.done = true;
       }
     });
   }

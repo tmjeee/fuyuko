@@ -33,3 +33,24 @@ export interface Attribute {
   pair2?: Pair2[]; // for double select
 }
 
+
+export interface Attribute2 {
+  id: number;
+  type: string;
+  name: string;
+  description: string;
+  metadatas: Metadata2[];
+}
+
+export interface Metadata2 {
+  id: number;
+  name: string;
+  entries: MetadataEntry2[];
+}
+
+export interface MetadataEntry2 {
+  id: number;
+  key: string;
+  value: string;
+}
+

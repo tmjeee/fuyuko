@@ -6,6 +6,7 @@
         <button type="button" [disabled]="!canDelete()" color="primary" (click)="onDelete($event)" mat-flat-button>Delete</button>
         <button type="button" color="primary" mat-flat-button (click)="onReload($event)">Reload</button>
     </div>
+
     <div class="table">
         <mat-table [dataSource]="dataSource">
             <ng-container  matColumnDef="selection" sticky>

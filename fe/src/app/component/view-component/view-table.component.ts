@@ -28,7 +28,7 @@ export class ViewTableDataSource extends DataSource<View> {
 }
 
 export interface ViewTableComponentEvent {
-    type: 'update' | 'reload';
+    type: 'UPDATE' | 'RELOAD';
     updatedViews?: View[];
     deletedViews?: View[];
 }
@@ -78,7 +78,7 @@ export class ViewTableComponent implements OnInit {
     }
 
     canSave(): boolean {
-        return (this.pendingSavings.length > 0);
+        return (this.pendingSavings.length > 0 || this.pendingDeletion.length > 0);
     }
 
     canDelete(): boolean {
@@ -105,6 +105,7 @@ export class ViewTableComponent implements OnInit {
 
     onSave($event: MouseEvent) {
         this.events.emit({
+            type: 'UPDATE',
             updatedViews: this.pendingSavings,
             deletedViews: this.pendingDeletion
         } as ViewTableComponentEvent);
@@ -127,7 +128,7 @@ export class ViewTableComponent implements OnInit {
     }
 
     onReload($event: MouseEvent) {
-        this.events.emit({ type: 'reload'} as ViewTableComponentEvent);
+        this.events.emit({ type: 'RELOAD'} as ViewTableComponentEvent);
         this.resetCheckboxes();
     }
 

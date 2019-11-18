@@ -40,6 +40,8 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
       this.currentView = currentView;
       if (this.currentView) {
         this.reload();
+      } else {
+        this.done = true;
       }
     });
   }
@@ -53,11 +55,12 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   reload() {
     this.done = false;
     const viewId = this.currentView.id;
-    combineLatest(
+    combineLatest([
       this.attributeService.getAllAttributesByView(viewId),
       this.itemService.getAllItems(viewId)
-    ).pipe(
+    ]).pipe(
       map( (r: [Attribute[], Item[]]) => {
+       console.log('***************** map');
        const attributes: Attribute[] = r[0];
        const items: Item[] = r[1];
        const tableItems: TableItem[] = toTableItem(items);

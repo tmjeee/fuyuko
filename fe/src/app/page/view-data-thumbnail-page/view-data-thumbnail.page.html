@@ -7,10 +7,9 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div *ngIf="!done">
-        Loading ...
-      </div>
-      <ng-container *ngIf="done">
+      <div *ngIf="!done"> Loading ... </div>
+      <div *ngIf="done && !itemAndAttributeSet">No Items</div>
+      <ng-container *ngIf="done && itemAndAttributeSet">
         <app-data-thumbnail [itemAndAttributeSet]="itemAndAttributeSet"
                             (searchEvents)="onDataThumbnailSearchEvent($event)"
                             (events)="onDataThumbnailEvent($event)">

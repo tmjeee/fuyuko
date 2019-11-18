@@ -5,8 +5,9 @@
       <mat-card-subtitle>Configuration of rules related the current view</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div *ngIf="!ready">Loading ...</div>
-      <app-rules-table *ngIf="ready"
+      <div *ngIf="!ready">Loading ... </div>
+      <div *ngIf="ready && !rules">No rules.</div>
+      <app-rules-table *ngIf="ready && rules"
                        [rules]="rules"
                        [attributes]="attributes"
                        (events)="onRulesTableEvent($event)">

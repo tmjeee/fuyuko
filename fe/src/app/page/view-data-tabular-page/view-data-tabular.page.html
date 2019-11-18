@@ -9,14 +9,13 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div *ngIf="!done">
-        Loading ...
-      </div>
-        <app-data-table *ngIf="done"
-                        (searchEvents)="onDataTableSearchEvent($event)"
-                        (events)="onDataTableEvent($event)"
-                        [itemAndAttributeSet]="itemAndAttributeSet">
-        </app-data-table>
+      <div *ngIf="!done"> Loading ... </div>
+      <div *ngIf="done && !itemAndAttributeSet">No Items</div>
+      <app-data-table *ngIf="done && itemAndAttributeSet"
+                      (searchEvents)="onDataTableSearchEvent($event)"
+                      (events)="onDataTableEvent($event)"
+                      [itemAndAttributeSet]="itemAndAttributeSet">
+      </app-data-table>
     </mat-card-content>
   </mat-card>
 </div>

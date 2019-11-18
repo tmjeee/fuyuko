@@ -41,8 +41,9 @@ export class ViewViewsPageComponent implements OnInit {
     }
 
     onViewTableEvent($event: ViewTableComponentEvent) {
+        console.log('****************** update', $event);
         switch ($event.type) {
-            case 'update':
+            case 'UPDATE':
                 combineLatest([
                     this.viewService.saveViews($event.updatedViews),
                     this.viewService.deleteViews($event.deletedViews)
@@ -54,7 +55,7 @@ export class ViewViewsPageComponent implements OnInit {
                    }),
                 ).subscribe();
                 break;
-            case 'reload':
+            case 'RELOAD':
                 this.reload();
                 break;
         }

@@ -8,7 +8,7 @@ import {Rule} from '../../model/rule.model';
 import {OperatorType, ALL_OPERATOR_TYPES} from '../../model/operator.model';
 import {RulesTableComponentEvent} from '../../component/rules-component/rules-table.component';
 import {CounterService} from '../../service/counter-service/counter.service';
-import {map} from 'rxjs/operators';
+import {finalize, map} from 'rxjs/operators';
 import {combineLatest} from 'rxjs';
 
 
@@ -43,21 +43,24 @@ export class ViewRulesPageComponent implements OnInit {
     this.viewService
       .asObserver()
       .pipe(
-        map((currentView: View) => {
-          if (currentView) {
-            this.currentView = currentView;
-            combineLatest([
-              this.attributeService.getAllAttributesByView(this.currentView.id),
-              this.ruleService.getAllRulesByView(this.currentView.id)
-            ]).pipe(
-              map((r: [Attribute[], Rule[]]) => {
-                this.attributes = r[0];
-                this.rules = r[1];
-                this.ready = true;
-              })
-            ).subscribe();
-          }
-        })
+         map((currentView: View) => {
+           console.log('**** map');
+           if (currentView) {
+             this.currentView = currentView;
+             combineLatest([
+               this.attributeService.getAllAttributesByView(this.currentView.id),
+               this.ruleService.getAllRulesByView(this.currentView.id)
+             ]).pipe(
+               map((r: [Attribute[], Rule[]]) => {
+                 this.attributes = r[0];
+                 this.rules = r[1];
+                 this.ready = true;
+               })
+             ).subscribe();
+           } else {
+               this.ready = true;
+           }
+         }),
       ).subscribe();
   }
 

@@ -36,6 +36,6 @@ export class ViewService {
   }
 
   deleteViews(deletedViews: View[]): Observable<ApiResponse> {
-      return this.httpClient.post<ApiResponse>(URL_DELETE_VIEW, (deletedViews ? deletedViews : []));
+      return this.httpClient.request<ApiResponse>('delete', URL_DELETE_VIEW, { body: (deletedViews ? deletedViews : [])});
   }
 }
