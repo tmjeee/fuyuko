@@ -40,7 +40,7 @@ const httpAction: any[] = [
             const m: Map<string /* attributeId_metadataId */, Metadata2> = new Map();
             const e: Map<string /* attributeId_metadataId_entryId */, MetadataEntry2> = new Map();
 
-            const ats: Attribute[] = q.reduce((acc: Attribute[], i: QueryI) => {
+            const ats: Attribute2[] = q.reduce((acc: Attribute2[], i: QueryI) => {
 
                 const attributeId: number = i.A_ID;
                 const metadataId: number = i.M_ID;
@@ -56,6 +56,7 @@ const httpAction: any[] = [
                         metadatas: []
                     } as Attribute2;
                     a.set(aK, att);
+                    acc.push(att);
                 }
 
                 const mK: string = `${attributeId}_${metadataId}`;
@@ -65,6 +66,7 @@ const httpAction: any[] = [
                         name: i.M_NAME,
                         entries: []
                     } as Metadata2;
+                    m.set(mK, met);
                     a.get(aK).metadatas.push(met);
                 }
 
@@ -86,8 +88,9 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-
-
+    const p = `/attributes/view/:viewId`;
+    registry.addItem('GET', p);
+    router.get(p, ...httpAction);
 };
 
 export default reg;

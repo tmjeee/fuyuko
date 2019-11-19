@@ -90,43 +90,43 @@ const INSERT_DATA = async () => {
         const a2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'text', 'text attribute', 'text attribute description']);
         // number
         const a3: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'number', 'number attribute', 'number attribute description']);
-        const a3m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'number metadata']);
+        const a3m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a3.insertId, 'number metadata']);
         const a3m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a3m1.insertId, 'format', '0.0']);
         // date
         const a4: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'date', 'date attribute', 'date attribute description']);
-        const a4m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'date metadata']);
+        const a4m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a4.insertId, 'date metadata']);
         const a4m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a4m1.insertId, 'format', 'DD-MM-YYYY']);
         // currency
         const a5: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'currency', 'currency attribute', 'currency attribute description']);
-        const a5m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'currency metadata']);
+        const a5m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a5.insertId, 'currency metadata']);
         const a5m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a5m1.insertId, 'showCurrencyCountry', 'true']);
         // volumne
         const a6: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'volume', 'volume attribute', 'volume attribute description']);
-        const a6m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'number metadata']);
+        const a6m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a6.insertId, 'number metadata']);
         const a6m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a6m1.insertId, 'format', '0.0']);
         // dimention
         const a7: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'dimension', 'dimension attribute', 'dimension attribute description']);
-        const a7m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'number metadata']);
+        const a7m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a7.insertId, 'number metadata']);
         const a7m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a7m1.insertId, 'format', '0.0']);
         // area
         const a8: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'area', 'area attribute', 'area attribute description']);
-        const a8m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'number metadata']);
+        const a8m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a8.insertId, 'number metadata']);
         const a8m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a8m1.insertId, 'format', '0.0']);
         // length
         const a9: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'length', 'length attribute', 'length attribute description']);
-        const a9m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'number metadata']);
+        const a9m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a9.insertId, 'number metadata']);
         const a9m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a9m1.insertId, 'format', '0.0']);
         // width
         const a10: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'width', 'width attribute', 'width attribute description']);
-        const a10m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'number metadata']);
+        const a10m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a10.insertId, 'number metadata']);
         const a10m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a10m1.insertId, 'format', '0.0']);
         // height
         const a11: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'height', 'height attribute', 'height attribute description']);
-        const a11m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'number metadata']);
+        const a11m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a11.insertId, 'number metadata']);
         const a11m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a11m1.insertId, 'format', '0.0']);
         // select
         const a12: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'select', 'select attribute', 'select attribute description']);
-        const a12m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'select metadata']);
+        const a12m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a12.insertId, 'select metadata']);
         const a12m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key1', 'value1']);
         const a12m1e2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key2', 'value2']);
         const a12m1e3: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key3', 'value3']);
@@ -138,7 +138,7 @@ const INSERT_DATA = async () => {
         const a12m1e9: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key9', 'value9']);
         // double select
         const a13: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'doubleselect', 'doubleselect attribute', 'doubleselect attribute description']);
-        const a13m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'pair1']);
+        const a13m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a13.insertId, 'pair1']);
         const a13m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key1', 'value1']);
         const a13m1e2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key2', 'value2']);
         const a13m1e3: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key3', 'value3']);

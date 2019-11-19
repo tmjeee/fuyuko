@@ -8,6 +8,7 @@ import {Fields, Files} from 'formidable';
 import {range} from "../../util";
 
 // routes
+import registerGetHeartbeatRoute from './GET-heartbeat-route';
 import registerPostActivateInvirationRoute from './POST-activate-invitation.route';
 import registerPostApproveSelfRegistrationRoute from './POST-approve-self-registration.route';
 import registerPostCreateInvitationRoute from './POST-create-invitation.route';
@@ -50,6 +51,7 @@ const reg = (app: Express, regi: Registry) => {
     const registry = regi.newRegistry(p);
     app.use(p, v1AppRouter);
 
+    registerGetHeartbeatRoute(v1AppRouter, registry);
     registerPostActivateInvirationRoute(v1AppRouter, registry);
     registerPostApproveSelfRegistrationRoute(v1AppRouter, registry);
     registerPostCreateInvitationRoute(v1AppRouter, registry);

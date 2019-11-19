@@ -16,7 +16,6 @@ runBanner();
 const port: number = Number(config.port);
 const app: Express = express();
 
-app.use(catchErrorMiddlewareFn);
 app.use(timingLogMiddlewareFn);
 app.use(express.urlencoded());
 app.use(express.json());
@@ -28,6 +27,8 @@ app.all('*', cors());
 const registry: Registry = Registry.newRegistry('app');
 registerV1AppRouter(app, registry);
 i('URL Mapings :-\n' + registry.print({indent: 2, text: ''}).text);
+app.use(catchErrorMiddlewareFn);
+
 
 i(`running db update`);
 runUpdate()

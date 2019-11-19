@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "cowsay": "^1.4.0",
     "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
     "express-validator": "^6.2.0",
     "file-type": "^12.4.0",
     "formidable": "^1.2.1",
