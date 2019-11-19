@@ -2,7 +2,11 @@ import {Injectable} from '@angular/core';
 import {View} from '../../model/view.model';
 import {Observable, of} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
+import {HttpClient} from '@angular/common/http';
+import config from '../../../assets/config.json';
 
+const URL_ALL_ATTRIBUTES_BY_VIEW = `${config.api_host_url}/attributes/view/:viewId`;
+const URL_SEARCH_ALL_ATTRIBUTES_BY_VIEW = `${config.api_host_url}/attributes/view/:viewId/search/:attribute`;
 
 @Injectable()
 export class AttributeService {
@@ -59,10 +63,11 @@ export class AttributeService {
     {id: 13, type: 'height',    name: 'height attribute',     description: 'This is a height attribute', format: '0.0'} as Attribute,
   ];
 
+  constructor(private httpClient: HttpClient) {}
+
 
   getAllAttributesByView(viewId: number): Observable<Attribute[]> {
-    // todo:
-    return of([...this.A]);
+    return this.httpClient.get<Attribute[]>(URL_ALL_ATTRIBUTES_BY_VIEW.replace(':viewId', String(viewId)));
   }
 
   deleteAttribute(view: View, attribute: Attribute): Observable<Attribute> {
@@ -71,12 +76,9 @@ export class AttributeService {
     return of(attribute);
   }
 
-  searchAttribute(view: View, search: string): Observable<Attribute[]> {
-    // todo:
-    if (search) {
-      return of([...this.B]);
-    }
-    return this.getAllAttributesByView(view.id);
+  searchAttribute(viewId: number, search: string): Observable<Attribute[]> {
+    return this.httpClient.get<Attribute[]>(
+        URL_SEARCH_ALL_ATTRIBUTES_BY_VIEW.replace(':viewId', String(viewId)).replace(':attribute', search));
   }
 
   addAttribute(view: View, attribute: Attribute): Observable<Attribute> {

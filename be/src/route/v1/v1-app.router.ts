@@ -42,6 +42,7 @@ import registerGetAllViewsRoute from './GET-all-views.route';
 import registerPostSaveViewsRoute from './POST-save-view.route';
 import registerDeleteViewsRoute from './DELETE-views.route';
 import registerGetAllAttributesByView from './GET-all-attributes-by-view.route';
+import registerGetSearchAllAttributesByView from './GET-search-attributes-by-view.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -86,6 +87,7 @@ const reg = (app: Express, regi: Registry) => {
     registerPostSaveViewsRoute(v1AppRouter, registry);
     registerDeleteViewsRoute(v1AppRouter, registry);
     registerGetAllAttributesByView(v1AppRouter, registry);
+    registerGetSearchAllAttributesByView(v1AppRouter, registry);
 }
 
 

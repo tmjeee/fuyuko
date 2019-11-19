@@ -66,7 +66,7 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
           ).subscribe();
         break;
       case 'search':
-        this.attributeService.searchAttribute($event.view, $event.search)
+        this.attributeService.searchAttribute($event.view.id, $event.search)
           .pipe(
             map((a: Attribute[]) => {
               this.attributes = a;

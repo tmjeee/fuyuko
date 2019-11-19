@@ -126,7 +126,7 @@ const INSERT_DATA = async () => {
         const a11m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a11m1.insertId, 'format', '0.0']);
         // select
         const a12: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)', [v1.insertId, 'select', 'select attribute', 'select attribute description']);
-        const a12m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a12.insertId, 'select metadata']);
+        const a12m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a12.insertId, 'pair1']);
         const a12m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key1', 'value1']);
         const a12m1e2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key2', 'value2']);
         const a12m1e3: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key3', 'value3']);
@@ -148,16 +148,16 @@ const INSERT_DATA = async () => {
         const a13m1e7: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key7', 'value7']);
         const a13m1e8: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key8', 'value8']);
         const a13m1e9: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key9', 'value9']);
-        const a13m2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a1.insertId, 'pair2']);
-        const a13m2e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key1', 'xkey1=xvalue1']);
-        const a13m2e2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key2', 'xkey2=xvalue2']);
-        const a13m2e3: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key3', 'xkey3=xvalue3']);
-        const a13m2e4: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key4', 'xkey4=xvalue4']);
-        const a13m2e5: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key5', 'xkey5=xvalue5']);
-        const a13m2e6: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key6', 'xkey6=xvalue6']);
-        const a13m2e7: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key7', 'xkey7=xvalue7']);
-        const a13m2e8: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key8', 'xkey8=xvalue8']);
-        const a13m2e9: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key9', 'xkey9=xvalue9']);
+        const a13m2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a13.insertId, 'pair2']);
+        const a13m2e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey1=xvalue1']);
+        const a13m2e2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey2=xvalue2']);
+        const a13m2e3: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey3=xvalue3']);
+        const a13m2e4: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey4=xvalue4']);
+        const a13m2e5: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey5=xvalue5']);
+        const a13m2e6: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey6=xvalue6']);
+        const a13m2e7: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey7=xvalue7']);
+        const a13m2e8: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey8=xvalue8']);
+        const a13m2e9: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey9=xvalue9']);
     });
 }
 

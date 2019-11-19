@@ -1,21 +1,23 @@
-import {NextFunction, Router, Request, Response} from "express";
+import {NextFunction, Request, Response, Router} from "express";
 import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
-import {Attribute} from "../../model/attribute.model";
 import {Attribute2, convert, Metadata2, MetadataEntry2} from "../../service/attribute-conversion.service";
+import {Attribute} from "../../model/attribute.model";
+import {check} from 'express-validator';
 
 const httpAction: any[] = [
     [
-        check('viewId').exists().isNumeric()
+        check('viewId').exists().isNumeric(),
+        check('attribute')
     ],
-    validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
+        const attribute: string = req.params.attribute ? req.params.attribute : '';
 
         await doInDbConnection(async (conn: PoolConnection) => {
 
@@ -34,8 +36,8 @@ const httpAction: any[] = [
                 FROM TBL_ITEM_ATTRIBUTE AS A
                 LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA AS M ON M.ITEM_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA_ENTRY AS E ON E.ITEM_ATTRIBUTE_METADATA_ID = M.ID
-                WHERE A.VIEW_ID = ?
-            `, [viewId]);
+                WHERE A.VIEW_ID = ? AND A.NAME LIKE ?
+            `, [viewId, `%${attribute}%`]);
 
             const a: Map<string /* attributeId */, Attribute2> = new Map();
             const m: Map<string /* attributeId_metadataId */, Metadata2> = new Map();
@@ -74,9 +76,9 @@ const httpAction: any[] = [
                 const eK: string = `${attributeId}_${metadataId}_${entryId}`;
                 if (!e.has(eK) && attributeId && metadataId && entryId) {
                     const ent: MetadataEntry2 = {
-                       id: i.E_ID,
-                       key: i.E_KEY,
-                       value: i.E_VALUE
+                        id: i.E_ID,
+                        key: i.E_KEY,
+                        value: i.E_VALUE
                     } as MetadataEntry2;
                     m.get(mK).entries.push(ent);
                 }
@@ -91,7 +93,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/attributes/view/:viewId`;
+    const p = `/attributes/view/:viewId/search/:attribute`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 };
