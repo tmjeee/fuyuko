@@ -12,10 +12,12 @@ import fileType from 'file-type';
 
 
 export const update = async () => {
-    i(`Inside ${__filename}, running update`);
+    i(`running scripts in ${__filename}`);
 
     await INSERT_DATA();
     await INSERT_GLOBAL_AVATARS();
+
+    i(`done running update on ${__filename}`);
 };
 
 const INSERT_GLOBAL_AVATARS = async () => {
@@ -158,6 +160,10 @@ const INSERT_DATA = async () => {
         const a13m2e7: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey7=xvalue7']);
         const a13m2e8: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey8=xvalue8']);
         const a13m2e9: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey9=xvalue9']);
+
+
+        // item
+
     });
 }
 

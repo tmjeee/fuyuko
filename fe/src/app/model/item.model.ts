@@ -15,11 +15,18 @@ export interface Item {
   id: number;
   name: string;
   description: string;
-  images: string[];
+  images: ItemImage[];
   parentId: number;
   [attributeId: number]: Value;
 
   children: Item[];
+}
+
+export interface ItemImage {
+  id: number;
+  name: string;
+  mimeType: string;
+  size: number;
 }
 
 export interface TableItem {

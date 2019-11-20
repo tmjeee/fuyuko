@@ -6,28 +6,7 @@ import {
     Pair1,
     Pair2
 } from "../model/attribute.model";
-
-
-// this is the form stored in db
-export interface Attribute2 {
-    id: number;
-    type: string;
-    name: string;
-    description: string;
-    metadatas: Metadata2[];
-}
-
-export interface Metadata2 {
-    id: number;
-    name: string;
-    entries: MetadataEntry2[];
-}
-
-export interface MetadataEntry2 {
-    id: number;
-    key: string;
-    value: string;
-}
+import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../route/model/ss-attribute.model';
 
 export const revert = (attributes: Attribute[]) : Attribute2[]=> {
    return attributes.map(_revert);
@@ -57,8 +36,8 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
                     id: -1,
                     key: 'format',
                     value: (attribute.format ? attribute.format : DEFAULT_NUMERIC_FORMAT)
-                } as MetadataEntry2]
-            } as Metadata2);
+                } as AttributeMetadataEntry2]
+            } as AttributeMetadata2);
             break;
         case 'date':
             // att.format = getMetadataEntry('format', attribute2, DEFAULT_DATE_FORMAT);
@@ -69,8 +48,8 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
                     id: -1,
                     key: 'format',
                     value: (attribute.format ? attribute.format : DEFAULT_DATE_FORMAT)
-                } as MetadataEntry2]
-            } as Metadata2);
+                } as AttributeMetadataEntry2]
+            } as AttributeMetadata2);
             break;
         case 'currency':
             // att.showCurrencyCountry = Boolean(getMetadataEntry('showCurrencyCountry', attribute2, 'true'));
@@ -81,23 +60,23 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
                     id: -1,
                     key: 'showCurrencyCountry',
                     value: (attribute.showCurrencyCountry ? attribute.showCurrencyCountry : DEFAULT_SHOW_COUNTRY_CURRENCY)
-                } as MetadataEntry2]
-            } as Metadata2);
+                } as AttributeMetadataEntry2]
+            } as AttributeMetadata2);
             break;
         case 'select':
             // att.pair1 = getMetadataPair1Entry(attribute2);
             att.metadatas.push({
                 id: -1,
                 name: `pair1`,
-                entries: attribute.pair1.reduce((acc: MetadataEntry2[], c: Pair1) => {
+                entries: attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
                     acc.push({
                        id: -1,
                        key: c.key,
                        value: c.value
-                    } as MetadataEntry2)
+                    } as AttributeMetadataEntry2)
                     return acc;
                 }, [])
-            } as Metadata2);
+            } as AttributeMetadata2);
             break;
         case 'doubleselect':
             // att.pair1 = getMetadataPair1Entry(attribute2);
@@ -105,27 +84,27 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
             att.metadatas.push({
                 id: -1,
                 name: `pair1`,
-                entries: attribute.pair1.reduce((acc: MetadataEntry2[], c: Pair1) => {
+                entries: attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
                     acc.push({
                         id: -1,
                         key: c.key,
                         value: c.value
-                    } as MetadataEntry2)
+                    } as AttributeMetadataEntry2)
                     return acc;
                 }, [])
-            } as Metadata2);
+            } as AttributeMetadata2);
             att.metadatas.push({
                 id: -1,
                 name: `pair2`,
-                entries: attribute.pair2.reduce((acc: MetadataEntry2[], c: Pair2) => {
+                entries: attribute.pair2.reduce((acc: AttributeMetadataEntry2[], c: Pair2) => {
                     acc.push({
                         id: -1,
                         key: c.key1,
                         value: `${c.key2}=${c.value}`
-                    } as MetadataEntry2)
+                    } as AttributeMetadataEntry2)
                     return acc;
                 }, [])
-            } as Metadata2);
+            } as AttributeMetadata2);
             break;
         case 'string':
         case 'text':

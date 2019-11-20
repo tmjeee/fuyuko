@@ -4,7 +4,7 @@ import {doInDbConnection} from "../../db";
 
 
 export const update = async () => {
-   i(`Inside ${__filename}, running update`);
+   i(`running scripts in ${__filename}`);
 
    await TBL_INVITATION_REGISTRATION();
    await TBL_INVITATION_REGISTRATION_GROUPS();
@@ -62,7 +62,7 @@ export const update = async () => {
    await ADD_FK_CONSTRAINT();
    await ADD_INDEXES();
 
-   i(`${__filename} done running update`);
+   i(`done running update on ${__filename}`);
 };
 
 
@@ -380,10 +380,11 @@ const TBL_ITEM_IMAGE = async () => {
          CREATE TABLE IF NOT EXISTS TBL_ITEM_IMAGE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             ITEM_ID INT,
+            PRIMARY BOOLEAN,
             MIME_TYPE VARCHAR(200) NOT NULL,
             NAME VARCHAR(200) NOT NULL,
             SIZE INT NOT NULL,
-            CONTENT BLOB NOT NULL 
+            CONTENT BLOB NOT NULL
          );
      `)
    })
@@ -461,7 +462,8 @@ const TBL_ITEM_VALUE_METADATA_ENTRY = async () => {
                ID INT PRIMARY KEY AUTO_INCREMENT,
                ITEM_VALUE_METADATA_ID INT,
                \`KEY\` VARCHAR(200) NOT NULL,
-               VALUE VARCHAR(500) NOT NULL 
+               VALUE VARCHAR(500) NOT NULL,
+               DATA_TYPE VARCHAR(200) NOT NULL 
             );
          `);
    });

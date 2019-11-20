@@ -5,7 +5,8 @@ import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
 import {Attribute} from "../../model/attribute.model";
-import {Attribute2, convert, Metadata2, MetadataEntry2} from "../../service/attribute-conversion.service";
+import {convert} from "../../service/attribute-conversion.service";
+import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/ss-attribute.model";
 
 const httpAction: any[] = [
     [
@@ -38,8 +39,8 @@ const httpAction: any[] = [
             `, [viewId]);
 
             const a: Map<string /* attributeId */, Attribute2> = new Map();
-            const m: Map<string /* attributeId_metadataId */, Metadata2> = new Map();
-            const e: Map<string /* attributeId_metadataId_entryId */, MetadataEntry2> = new Map();
+            const m: Map<string /* attributeId_metadataId */, AttributeMetadata2> = new Map();
+            const e: Map<string /* attributeId_metadataId_entryId */, AttributeMetadataEntry2> = new Map();
 
             const ats: Attribute2[] = q.reduce((acc: Attribute2[], i: QueryI) => {
 
@@ -62,22 +63,22 @@ const httpAction: any[] = [
 
                 const mK: string = `${attributeId}_${metadataId}`;
                 if (!m.has(mK) && attributeId && metadataId) {
-                    const met: Metadata2 = {
+                    const met: AttributeMetadata2 = {
                         id: i.M_ID,
                         name: i.M_NAME,
                         entries: []
-                    } as Metadata2;
+                    } as AttributeMetadata2;
                     m.set(mK, met);
                     a.get(aK).metadatas.push(met);
                 }
 
                 const eK: string = `${attributeId}_${metadataId}_${entryId}`;
                 if (!e.has(eK) && attributeId && metadataId && entryId) {
-                    const ent: MetadataEntry2 = {
+                    const ent: AttributeMetadataEntry2 = {
                        id: i.E_ID,
                        key: i.E_KEY,
                        value: i.E_VALUE
-                    } as MetadataEntry2;
+                    } as AttributeMetadataEntry2;
                     m.get(mK).entries.push(ent);
                 }
                 return acc;
