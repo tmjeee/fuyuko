@@ -34,7 +34,7 @@ const httpAction: any[] = [
                 FROM TBL_ITEM_ATTRIBUTE AS A
                 LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA AS M ON M.ITEM_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA_ENTRY AS E ON E.ITEM_ATTRIBUTE_METADATA_ID = M.ID
-                WHERE A.VIEW_ID = ?
+                WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED'
             `, [viewId]);
 
             const a: Map<string /* attributeId */, Attribute2> = new Map();
