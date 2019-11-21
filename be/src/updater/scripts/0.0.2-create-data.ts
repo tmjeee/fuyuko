@@ -5,11 +5,12 @@ import sha256 from "sha256";
 import config from "../../config";
 import {hashedPassword} from "../../service";
 import path from 'path';
-import fs, {BinaryData, ReadStream} from 'fs';
+import fs, {BinaryData, readFile, ReadStream} from 'fs';
 import util, {promisify} from 'util';
 import {fsRead, FsReadResult} from '../../util';
 import fileType from 'file-type';
 import {create} from "domain";
+import * as Path from "path";
 
 
 export const update = async () => {
@@ -246,7 +247,8 @@ type CreateItemType = {
     viewId: number,
     itemName: string,
     images: {
-        fileName: string
+        fileName: string,
+        primary: boolean
     }[],
     values: {
         attributeId: number,
@@ -397,6 +399,15 @@ const _createItem = async (args: CreateItemType) => {
                 await args.conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [itemValueMetadataId, entry.key, entry.value, entry.dataType]);
             }
         }
+    }
+    for (const image of args.images) {
+        const fileName = image.fileName;
+        const fullPath = Path.resolve(__dirname, '../assets/item-images', fileName);
+
+        const buffer: Buffer = await util.promisify(readFile)(fullPath);
+        const mimeType: fileType.FileTypeResult = fileType(buffer);
+
+        await args.conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?`, [itemId, image.primary, mimeType.mime, fileName, buffer.length, buffer]);
     }
     // await args.conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, PRIMARY, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, []);
 }
