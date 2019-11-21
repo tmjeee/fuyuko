@@ -9,6 +9,7 @@ import fs, {BinaryData, ReadStream} from 'fs';
 import util, {promisify} from 'util';
 import {fsRead, FsReadResult} from '../../util';
 import fileType from 'file-type';
+import {create} from "domain";
 
 
 export const update = async () => {
@@ -151,112 +152,91 @@ const INSERT_DATA = async () => {
         const a13m1e8: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key8', 'value8']);
         const a13m1e9: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key9', 'value9']);
         const a13m2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a13.insertId, 'pair2']);
-        const a13m2e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey1=xvalue1']);
-        const a13m2e2: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey2=xvalue2']);
-        const a13m2e3: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey3=xvalue3']);
-        const a13m2e4: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey4=xvalue4']);
-        const a13m2e5: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey5=xvalue5']);
-        const a13m2e6: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey6=xvalue6']);
-        const a13m2e7: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey7=xvalue7']);
-        const a13m2e8: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey8=xvalue8']);
-        const a13m2e9: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey9=xvalue9']);
+        const a13m2e11: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey11=xvalue11']);
+        const a13m2e12: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey12=xvalue12']);
+        const a13m2e13: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey13=xvalue13']);
+        const a13m2e14: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey14=xvalue14']);
+        const a13m2e15: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey15=xvalue15']);
+        const a13m2e16: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey16=xvalue16']);
+        const a13m2e17: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey17=xvalue17']);
+        const a13m2e18: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey18=xvalue18']);
+        const a13m2e19: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey19=xvalue19']);
+        const a13m2e21: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey21=xvalue21']);
+        const a13m2e22: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey22=xvalue22']);
+        const a13m2e23: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey23=xvalue23']);
+        const a13m2e24: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey24=xvalue24']);
+        const a13m2e25: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey25=xvalue25']);
+        const a13m2e26: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey26=xvalue26']);
+        const a13m2e27: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey27=xvalue27']);
+        const a13m2e28: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey28=xvalue28']);
+        const a13m2e29: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey29=xvalue29']);
+        const a13m2e31: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey31=xvalue31']);
+        const a13m2e32: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey32=xvalue32']);
+        const a13m2e33: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey33=xvalue33']);
+        const a13m2e34: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey34=xvalue34']);
+        const a13m2e35: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey35=xvalue35']);
+        const a13m2e36: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey36=xvalue36']);
+        const a13m2e37: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey37=xvalue37']);
+        const a13m2e38: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey38=xvalue38']);
+        const a13m2e39: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey39=xvalue39']);
+        const a13m2e41: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey41=xvalue41']);
+        const a13m2e42: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey42=xvalue42']);
+        const a13m2e43: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey43=xvalue43']);
+        const a13m2e44: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey44=xvalue44']);
+        const a13m2e45: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey45=xvalue45']);
+        const a13m2e46: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey46=xvalue46']);
+        const a13m2e47: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey47=xvalue47']);
+        const a13m2e48: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey48=xvalue48']);
+        const a13m2e49: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey49=xvalue49']);
+        const a13m2e51: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey51=xvalue51']);
+        const a13m2e52: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey52=xvalue52']);
+        const a13m2e53: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey53=xvalue53']);
+        const a13m2e54: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey54=xvalue54']);
+        const a13m2e55: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey55=xvalue55']);
+        const a13m2e56: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey56=xvalue56']);
+        const a13m2e57: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey57=xvalue57']);
+        const a13m2e58: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey58=xvalue58']);
+        const a13m2e59: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey59=xvalue59']);
+        const a13m2e61: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey61=xvalue61']);
+        const a13m2e62: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey62=xvalue62']);
+        const a13m2e63: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey63=xvalue63']);
+        const a13m2e64: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey64=xvalue64']);
+        const a13m2e65: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey65=xvalue65']);
+        const a13m2e66: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey66=xvalue66']);
+        const a13m2e67: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey67=xvalue67']);
+        const a13m2e68: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey68=xvalue68']);
+        const a13m2e69: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey69=xvalue69']);
+        const a13m2e71: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey71=xvalue71']);
+        const a13m2e72: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey72=xvalue72']);
+        const a13m2e73: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey73=xvalue73']);
+        const a13m2e74: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey74=xvalue74']);
+        const a13m2e75: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey75=xvalue75']);
+        const a13m2e76: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey76=xvalue76']);
+        const a13m2e77: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey77=xvalue77']);
+        const a13m2e78: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey78=xvalue78']);
+        const a13m2e79: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey79=xvalue79']);
+        const a13m2e81: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey81=xvalue81']);
+        const a13m2e82: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey82=xvalue82']);
+        const a13m2e83: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey83=xvalue83']);
+        const a13m2e84: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey84=xvalue84']);
+        const a13m2e85: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey85=xvalue85']);
+        const a13m2e86: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey86=xvalue86']);
+        const a13m2e87: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey87=xvalue87']);
+        const a13m2e88: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey88=xvalue88']);
+        const a13m2e89: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey89=xvalue89']);
+        const a13m2e91: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey91=xvalue91']);
+        const a13m2e92: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey92=xvalue92']);
+        const a13m2e93: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey93=xvalue93']);
+        const a13m2e94: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey94=xvalue94']);
+        const a13m2e95: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey95=xvalue95']);
+        const a13m2e96: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey96=xvalue96']);
+        const a13m2e97: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey97=xvalue97']);
+        const a13m2e98: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey98=xvalue98']);
+        const a13m2e99: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey99=xvalue99']);
 
 
-        await createItem({
-            conn,
-            viewId: v1.insertId,
-            itemName: 'item #1',
-            values: [
-                {attributeId: a1.insertId, // string
-                metadatas: [{
-                   entries: [
-                       { key: 'type', value: 'string', dataType: 'string'},
-                       { key: 'value', value: 'some string', dataType: 'string'}
-                   ]}]},
-                {attributeId: a2.insertId, // text
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'text', dataType: 'string'},
-                            { key: 'value', value: 'some text', dataType: 'string'}
-                        ]}]},
-                {attributeId: a3.insertId, // number
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'number', dataType: 'string'},
-                            { key: 'value', value: '10', dataType: 'number'}
-                        ]}]},
-                {attributeId: a4.insertId, // date
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'date', dataType: 'string'},
-                            { key: 'value', value: '12-10-1988', dataType: 'string'}
-                        ]}]},
-                {attributeId: a5.insertId, // currency
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'currency', dataType: 'string'},
-                            { key: 'value', value: '10.10', dataType: 'number'},
-                            { key: 'country', value: 'AU', dataType: 'string'}
-                        ]}]},
-                {attributeId: a6.insertId, // volume
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'volume', dataType: 'string'},
-                            { key: 'value', value: '20', dataType: 'number'},
-                            { key: 'unit', value: 'l', dataType: 'string'}
-                        ]}]},
-                {attributeId: a7.insertId, // dimension
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'dimension', dataType: 'string'},
-                            { key: 'length', value: '21', dataType: 'number'},
-                            { key: 'width', value: '22', dataType: 'number'},
-                            { key: 'height', value: '23', dataType: 'number'},
-                            { key: 'unit', value: 'cm', dataType: 'string'}
-                        ]}]},
-                {attributeId: a8.insertId, // area
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'area', dataType: 'string'},
-                            { key: 'value', value: '31', dataType: 'number'},
-                            { key: 'unit', value: 'cm', dataType: 'string'}
-                        ]}]},
-                {attributeId: a9.insertId, // length
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'length', dataType: 'string'},
-                            { key: 'value', value: '33', dataType: 'number'},
-                            { key: 'unit', value: 'cm', dataType: 'string'}
-                        ]}]},
-                {attributeId: a10.insertId, // width
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'width', dataType: 'string'},
-                            { key: 'value', value: '32', dataType: 'number'},
-                            { key: 'unit', value: 'cm', dataType: 'string'}
-                        ]}]},
-                {attributeId: a11.insertId, // height
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'height', dataType: 'string'},
-                            { key: 'value', value: '33', dataType: 'number'},
-                            { key: 'unit', value: 'cm', dataType: 'string'}
-                        ]}]},
-                {attributeId: a12.insertId, // select
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'select', dataType: 'string'},
-                            { key: 'key', value: 'key2', dataType: 'string'},
-                        ]}]},
-                {attributeId: a13.insertId, // doubleselect
-                    metadatas: [{
-                        entries: [
-                            { key: 'type', value: 'doubleselect', dataType: 'string'},
-                            { key: 'key1', value: 'key2', dataType: 'string'},
-                            { key: 'key2', value: 'xkey2', dataType: 'string'},
-                        ]}]},
-            ]
-        });
+        await createItem(conn, v1.insertId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a12.insertId);
+
     });
 }
 
@@ -265,6 +245,9 @@ type CreateItemType = {
     conn: PoolConnection,
     viewId: number,
     itemName: string,
+    images: {
+        fileName: string
+    }[],
     values: {
         attributeId: number,
         metadatas:
@@ -275,10 +258,130 @@ type CreateItemType = {
                     dataType: string;
                 }[]
             }[]
-    }[]
+    }[],
+    children: CreateItemType[]
 }
 
-const createItem = async (args: CreateItemType) => {
+const createItem = async (conn: PoolConnection, viewId: number, att1Id: number, att2Id: number, att3Id: number, att4Id: number, att5Id: number, att6Id: number,
+                          att7Id: number, att8Id: number, att9Id: number, att10Id: number, att11Id: number, att12Id: number, att13Id: number) => {
+    const createAnItemType = (children: CreateItemType[] = []): CreateItemType => ({
+        conn,
+        viewId: viewId,
+        itemName: `item #${random()}`,
+        images: [],
+        children,
+        values: [
+            {attributeId: att1Id, // string
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'string', dataType: 'string'},
+                        { key: 'value', value: `some string ${random()}`, dataType: 'string'}
+                    ]}]},
+            {attributeId: att2Id, // text
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'text', dataType: 'string'},
+                        { key: 'value', value: `some text ${random()}`, dataType: 'string'}
+                    ]}]},
+            {attributeId: att3Id, // number
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'number', dataType: 'string'},
+                        { key: 'value', value: `${random()}`, dataType: 'number'}
+                    ]}]},
+            {attributeId: att4Id, // date
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'date', dataType: 'string'},
+                        { key: 'value', value: `12-10-1988`, dataType: 'string'}
+                    ]}]},
+            {attributeId: att5Id, // currency
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'currency', dataType: 'string'},
+                        { key: 'value', value: `${random()}.10`, dataType: 'number'},
+                        { key: 'country', value: 'AU', dataType: 'string'}
+                    ]}]},
+            {attributeId: att6Id, // volume
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'volume', dataType: 'string'},
+                        { key: 'value', value: `${random()}`, dataType: 'number'},
+                        { key: 'unit', value: 'l', dataType: 'string'}
+                    ]}]},
+            {attributeId: att7Id, // dimension
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'dimension', dataType: 'string'},
+                        { key: 'length', value: `${random()}`, dataType: 'number'},
+                        { key: 'width', value: `${random()}`, dataType: 'number'},
+                        { key: 'height', value: `${random()}`, dataType: 'number'},
+                        { key: 'unit', value: 'cm', dataType: 'string'}
+                    ]}]},
+            {attributeId: att8Id, // area
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'area', dataType: 'string'},
+                        { key: 'value', value: `${random()}`, dataType: 'number'},
+                        { key: 'unit', value: 'cm', dataType: 'string'}
+                    ]}]},
+            {attributeId: att9Id, // length
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'length', dataType: 'string'},
+                        { key: 'value', value: `${random()}`, dataType: 'number'},
+                        { key: 'unit', value: 'cm', dataType: 'string'}
+                    ]}]},
+            {attributeId: att10Id, // width
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'width', dataType: 'string'},
+                        { key: 'value', value: `${random()}`, dataType: 'number'},
+                        { key: 'unit', value: 'cm', dataType: 'string'}
+                    ]}]},
+            {attributeId: att11Id, // height
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'height', dataType: 'string'},
+                        { key: 'value', value: `${random()}`, dataType: 'number'},
+                        { key: 'unit', value: 'cm', dataType: 'string'}
+                    ]}]},
+            {attributeId: att12Id, // select
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'select', dataType: 'string'},
+                        { key: 'key', value: 'key2', dataType: 'string'},
+                    ]}]},
+            {attributeId: att13Id, // doubleselect
+                metadatas: [{
+                    entries: [
+                        { key: 'type', value: 'doubleselect', dataType: 'string'},
+                        { key: 'key1', value: 'key3', dataType: 'string'},
+                        { key: 'key2', value: 'xkey35', dataType: 'string'},
+                    ]}]},
+        ]
+    });
+
+    const itemDef: CreateItemType =
+        createAnItemType([
+            createAnItemType([
+                createAnItemType([
+                    createAnItemType()
+                ]),
+                createAnItemType([
+                    createAnItemType([
+                        createAnItemType()
+                    ])
+                ]),
+                createAnItemType()
+            ]),
+            createAnItemType(),
+        ]);
+
+    _createItem(itemDef);
+}
+
+const _createItem = async (args: CreateItemType) => {
     // item
     const qItem: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (NULL,?,?,?,'ENABLED')`, [args.viewId, args.itemName, `${args.itemName} Description`]);
     const itemId: number = qItem.insertId;
@@ -291,11 +394,16 @@ const createItem = async (args: CreateItemType) => {
             const itemValueMetadataId: number = qItemValueMetadata.insertId;
 
             for (const entry of metadata.entries) {
-                await args.conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, KEY, VALUE, DATA_TYPE) VALUES (?,?,?,?)`, [itemValueMetadataId, entry.key, entry.value, entry.dataType]);
+                await args.conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [itemValueMetadataId, entry.key, entry.value, entry.dataType]);
             }
         }
     }
     // await args.conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, PRIMARY, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, []);
+}
+
+
+const random = (): string => {
+    return String(Math.round(Math.random() * 100000));
 }
 
 

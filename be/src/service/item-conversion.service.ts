@@ -21,7 +21,7 @@ export const _convert = (item2: Item2): Item => {
         images: item2.images,
         description: item2.description,
         name: item2.name,
-        children: []
+        children: convert(item2.children)
     } as Item;
 
     for (const value2 of item2.values) {
@@ -46,7 +46,8 @@ export const _revert = (item: Item): Item2 => {
         description: item.description,
         images: item.images,
         parentId: item.parentId,
-        values: []
+        values: [],
+        children: revert(item.children)
     } as Item2;
 
     for (const i in item) {

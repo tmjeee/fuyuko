@@ -45,6 +45,7 @@ import registerGetAllAttributesByViewRoute from './GET-all-attributes-by-view.ro
 import registerGetSearchAllAttributesByViewRoute from './GET-search-attributes-by-view.route';
 import registerPostUpdateAttributesRoute from './POST-update-attributes.route';
 import registerPostUpdateAttributeStatusRoute from './POST-update-attributes.route';
+import registerGetAllItemsByViewRoute from './GET-all-items-by-view.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -92,6 +93,7 @@ const reg = (app: Express, regi: Registry) => {
     registerGetSearchAllAttributesByViewRoute(v1AppRouter, registry);
     registerPostUpdateAttributesRoute(v1AppRouter, registry);
     registerPostUpdateAttributeStatusRoute(v1AppRouter, registry);
+    registerGetAllItemsByViewRoute(v1AppRouter, registry);
 }
 
 

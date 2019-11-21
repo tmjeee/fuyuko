@@ -16,6 +16,7 @@ import {
 } from "../../model/item.model";
 import {Attribute, DEFAULT_DATE_FORMAT, DEFAULT_NUMERIC_FORMAT} from "../../model/attribute.model";
 import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../model/ss-attribute.model";
+import {convert} from "../../service/item-conversion.service";
 
 const httpAction: any[] = [
    [
@@ -152,7 +153,8 @@ const httpAction: any[] = [
             }, []);
 
 
-            res.status(200).json(allItems2);
+            const allItems: Item[] = convert(allItems2);
+            res.status(200).json(allItems);
 
         });
    }

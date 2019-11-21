@@ -29,7 +29,8 @@ export interface Item2 {
     description: string;
     images: ItemImage[];
     parentId: number;
-    values: ItemValue2[]
+    values: ItemValue2[];
+    children: Item2[];
 }
 
 export interface ItemValue2 {
