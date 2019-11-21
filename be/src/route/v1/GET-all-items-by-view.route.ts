@@ -58,7 +58,7 @@ const httpAction: any[] = [
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
                 LEFT JOIN TBL_ITEM_ATTRIBUTE AS A ON A.ID = V.ITEM_ATTRIBUTE_ID
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
-                WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED'
+                WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND I.PARENT_ID IS NULL
             `, [viewId]);
 
             const itemMap:  Map<string  /* itemId */,                                            Item2> = new Map();
@@ -67,7 +67,7 @@ const httpAction: any[] = [
             const metaMap:  Map<string  /* itemId_attributeId_valueId_metadataId> */,            ItemMetadata2> = new Map();
             const entMap:   Map<string  /* itemId_attributeId_valueId_metadataId_entryId */,     ItemMetadataEntry2> = new Map();
 
-            const allItems: Item2[] =  q.reduce((acc: Item2[], c: QueryI) => {
+            const allItems2: Item2[] =  q.reduce((acc: Item2[], c: QueryI) => {
 
                 const itemId: number = c.I_ID;
                 const itemMapKey: string = `${itemId}`;
@@ -150,6 +150,9 @@ const httpAction: any[] = [
 
                 return acc;
             }, []);
+
+
+            res.status(200).json(allItems2);
 
         });
    }

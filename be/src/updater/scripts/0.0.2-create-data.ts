@@ -106,7 +106,7 @@ const INSERT_DATA = async () => {
         const a6: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [v1.insertId, 'volume', 'volume attribute', 'volume attribute description']);
         const a6m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a6.insertId, 'number metadata']);
         const a6m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a6m1.insertId, 'format', '0.0']);
-        // dimention
+        // dimension
         const a7: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [v1.insertId, 'dimension', 'dimension attribute', 'dimension attribute description']);
         const a7m1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a7.insertId, 'number metadata']);
         const a7m1e1: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a7m1.insertId, 'format', '0.0']);
@@ -162,9 +162,140 @@ const INSERT_DATA = async () => {
         const a13m2e9: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey9=xvalue9']);
 
 
-        // item
-
+        await createItem({
+            conn,
+            viewId: v1.insertId,
+            itemName: 'item #1',
+            values: [
+                {attributeId: a1.insertId, // string
+                metadatas: [{
+                   entries: [
+                       { key: 'type', value: 'string', dataType: 'string'},
+                       { key: 'value', value: 'some string', dataType: 'string'}
+                   ]}]},
+                {attributeId: a2.insertId, // text
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'text', dataType: 'string'},
+                            { key: 'value', value: 'some text', dataType: 'string'}
+                        ]}]},
+                {attributeId: a3.insertId, // number
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'number', dataType: 'string'},
+                            { key: 'value', value: '10', dataType: 'number'}
+                        ]}]},
+                {attributeId: a4.insertId, // date
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'date', dataType: 'string'},
+                            { key: 'value', value: '12-10-1988', dataType: 'string'}
+                        ]}]},
+                {attributeId: a5.insertId, // currency
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'currency', dataType: 'string'},
+                            { key: 'value', value: '10.10', dataType: 'number'},
+                            { key: 'country', value: 'AU', dataType: 'string'}
+                        ]}]},
+                {attributeId: a6.insertId, // volume
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'volume', dataType: 'string'},
+                            { key: 'value', value: '20', dataType: 'number'},
+                            { key: 'unit', value: 'l', dataType: 'string'}
+                        ]}]},
+                {attributeId: a7.insertId, // dimension
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'dimension', dataType: 'string'},
+                            { key: 'length', value: '21', dataType: 'number'},
+                            { key: 'width', value: '22', dataType: 'number'},
+                            { key: 'height', value: '23', dataType: 'number'},
+                            { key: 'unit', value: 'cm', dataType: 'string'}
+                        ]}]},
+                {attributeId: a8.insertId, // area
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'area', dataType: 'string'},
+                            { key: 'value', value: '31', dataType: 'number'},
+                            { key: 'unit', value: 'cm', dataType: 'string'}
+                        ]}]},
+                {attributeId: a9.insertId, // length
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'length', dataType: 'string'},
+                            { key: 'value', value: '33', dataType: 'number'},
+                            { key: 'unit', value: 'cm', dataType: 'string'}
+                        ]}]},
+                {attributeId: a10.insertId, // width
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'width', dataType: 'string'},
+                            { key: 'value', value: '32', dataType: 'number'},
+                            { key: 'unit', value: 'cm', dataType: 'string'}
+                        ]}]},
+                {attributeId: a11.insertId, // height
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'height', dataType: 'string'},
+                            { key: 'value', value: '33', dataType: 'number'},
+                            { key: 'unit', value: 'cm', dataType: 'string'}
+                        ]}]},
+                {attributeId: a12.insertId, // select
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'select', dataType: 'string'},
+                            { key: 'key', value: 'key2', dataType: 'string'},
+                        ]}]},
+                {attributeId: a13.insertId, // doubleselect
+                    metadatas: [{
+                        entries: [
+                            { key: 'type', value: 'doubleselect', dataType: 'string'},
+                            { key: 'key1', value: 'key2', dataType: 'string'},
+                            { key: 'key2', value: 'xkey2', dataType: 'string'},
+                        ]}]},
+            ]
+        });
     });
+}
+
+
+type CreateItemType = {
+    conn: PoolConnection,
+    viewId: number,
+    itemName: string,
+    values: {
+        attributeId: number,
+        metadatas:
+            {
+                entries: {
+                    key: string;
+                    value: string;
+                    dataType: string;
+                }[]
+            }[]
+    }[]
+}
+
+const createItem = async (args: CreateItemType) => {
+    // item
+    const qItem: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (NULL,?,?,?,'ENABLED')`, [args.viewId, args.itemName, `${args.itemName} Description`]);
+    const itemId: number = qItem.insertId;
+    for (const attr of args.values) {
+        const qItemValue: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, attr.attributeId]);
+        const itemValueId: number = qItemValue.insertId;
+
+        for (const metadata of attr.metadatas) {
+            const qItemValueMetadata: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUES (?,?)`, [itemValueId, '']);
+            const itemValueMetadataId: number = qItemValueMetadata.insertId;
+
+            for (const entry of metadata.entries) {
+                await args.conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, KEY, VALUE, DATA_TYPE) VALUES (?,?,?,?)`, [itemValueMetadataId, entry.key, entry.value, entry.dataType]);
+            }
+        }
+    }
+    // await args.conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, PRIMARY, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, []);
 }
 
 

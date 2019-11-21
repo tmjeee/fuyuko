@@ -380,7 +380,7 @@ const TBL_ITEM_IMAGE = async () => {
          CREATE TABLE IF NOT EXISTS TBL_ITEM_IMAGE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             ITEM_ID INT,
-            PRIMARY BOOLEAN,
+            \`PRIMARY\` BOOLEAN,
             MIME_TYPE VARCHAR(200) NOT NULL,
             NAME VARCHAR(200) NOT NULL,
             SIZE INT NOT NULL,

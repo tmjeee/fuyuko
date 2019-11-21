@@ -27,6 +27,7 @@ export interface ItemImage {
   name: string;
   mimeType: string;
   size: number;
+  primary: boolean;
 }
 
 export interface TableItem {

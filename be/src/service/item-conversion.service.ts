@@ -27,7 +27,7 @@ export const _convert = (item2: Item2): Item => {
     for (const value2 of item2.values) {
         const value: Value = {
             attributeId: value2.attributeId,
-            val: toValue(value2.metadatas)
+            val: toItemValTypes(value2.metadatas)
         } as Value;
         item[value2.attributeId] = value;
     }
@@ -40,7 +40,6 @@ export const revert = (items: Item[]): Item2[] => {
 }
 
 export const _revert = (item: Item): Item2 => {
-    // todo:
     const item2: Item2 = {
         id: item.id,
         name: item.name,
@@ -55,10 +54,19 @@ export const _revert = (item: Item): Item2 => {
             const value: Value = item[i];
             const val: ItemValTypes = value.val;
 
-            const entries: ItemMetadataEntry2[] =[];
-            
+            item2.values.push(toItem2Value2(value));
+        }
+    }
+    return item2;
+}
 
-            const value2: ItemValue2 = {
+const toItem2Value2 = (value: Value): ItemValue2 => {
+    const val: ItemValTypes = value.val;
+    let i: ItemValue2 = null;
+    switch(val.type) {
+        case 'string': {
+            const v: StringValue = val as StringValue;
+            i = {
                 id: -1,
                 attributeId: value.attributeId,
                 metadatas: [{
@@ -66,19 +74,426 @@ export const _revert = (item: Item): Item2 => {
                     attributeType: val.type,
                     attributeId: value.attributeId,
                     name: '',
-                    entries
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: val.value,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
                 } as ItemMetadata2]
             } as ItemValue2;
-
+            break;
+        }
+        case 'text': {
+            const v: TextValue = val as TextValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: val.value,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'number': {
+            const v: NumberValue = val as NumberValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: `${val.value}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'area': {
+            const v: AreaValue = val as AreaValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'unit',
+                            value: val.unit,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: `${val.value}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'dimension': {
+            const v: DimensionValue = val as DimensionValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'width',
+                            value: `${val.width}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'height',
+                            value: `${val.height}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'length',
+                            value: `${val.length}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'unit',
+                            value: `${val.unit}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'width': {
+            const v: WidthValue = val as WidthValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: `${v.value}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'unit',
+                            value: `${v.unit}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'length': {
+            const v: LengthValue = val as LengthValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: `${val.value}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'unit',
+                            value: `${val.unit}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'height': {
+            const v: HeightValue = val as HeightValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: `${val.value}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'unit',
+                            value: `${val.unit}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case "volume": {
+            const v: VolumeValue = val as VolumeValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: `${val.value}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'unit',
+                            value: `${val.unit}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'date': {
+            const v: DateValue = val as DateValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: `${val.value}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'currency': {
+            const v: CurrencyValue = val as CurrencyValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'value',
+                            value: `${val.value}`,
+                            dataType: 'number'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'country',
+                            value: `${val.country}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'select': {
+            const v: SelectValue = val as SelectValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'key',
+                            value: `${val.key}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
+        }
+        case 'doubleselect': {
+            const v: DoubleSelectValue = val as DoubleSelectValue;
+            i = {
+                id: -1,
+                attributeId: value.attributeId,
+                metadatas: [{
+                    id: -1,
+                    attributeType: val.type,
+                    attributeId: value.attributeId,
+                    name: '',
+                    entries: [
+                        {
+                            id: -1,
+                            key: 'type',
+                            value: val.type,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'key1',
+                            value: `${val.key1}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                        {
+                            id: -1,
+                            key: 'key2',
+                            value: `${val.key2}`,
+                            dataType: 'string'
+                        } as ItemMetadataEntry2,
+                    ]
+                } as ItemMetadata2]
+            } as ItemValue2;
+            break;
         }
     }
-
-
-    return item2;
+    return i;
 }
 
 
-const toValue = (metadatas: ItemMetadata2[]): any => {
+const toItemValTypes = (metadatas: ItemMetadata2[]): ItemValTypes => {
     const o: any = {};
     for (const metadata of metadatas) {
         for (const entry of metadata.entries) {
@@ -105,70 +520,30 @@ let val: ItemValTypes = null;
 let attributeType: string = null;
 switch(attributeType) {
     case 'string':
-        val = {
-            type: 'string',
-            value: ''
-        } as StringValue;
         break;
     case 'text':
-        val = {
-
-        } as TextValue;
         break;
     case 'number':
-        val = {
-
-        } as NumberValue;
         break;
     case 'area':
-        val = {
-
-        } as AreaValue;
         break;
     case 'dimension':
-        val = {
-
-        } as DimensionValue;
         break;
     case 'width':
-        val = {
-
-        } as WidthValue;
         break;
     case 'length':
-        val = {
-
-        } as LengthValue;
         break;
     case 'height':
-        val = {
-
-        } as HeightValue;
         break;
     case "volume":
-        val = {
-
-        } as VolumeValue;
         break;
     case 'date':
-        val = {
-
-        } as DateValue;
         break;
     case 'currency':
-        val = {
-
-        } as CurrencyValue;
         break;
     case 'select':
-        val = {
-
-        } as SelectValue;
         break;
     case 'doubleselect':
-        val = {
-
-        } as DoubleSelectValue;
         break;
 }
  */
