@@ -11,7 +11,7 @@ import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../route/mod
 
 
 export const convert = (item2s: Item2[]): Item[] => {
-   return item2s.map(_convert);
+   return (item2s ? item2s.map(_convert): []);
 }
 
 export const _convert = (item2: Item2): Item => {
@@ -36,7 +36,7 @@ export const _convert = (item2: Item2): Item => {
 }
 
 export const revert = (items: Item[]): Item2[] => {
-    return items.map(_revert);
+    return (items ? items.map(_revert) : []);
 }
 
 export const _revert = (item: Item): Item2 => {

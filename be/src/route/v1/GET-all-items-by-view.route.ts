@@ -17,6 +17,7 @@ import {
 import {Attribute, DEFAULT_DATE_FORMAT, DEFAULT_NUMERIC_FORMAT} from "../../model/attribute.model";
 import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../model/ss-attribute.model";
 import {convert} from "../../service/item-conversion.service";
+import {findChildrenItems} from "../../service/item.service";
 
 const httpAction: any[] = [
    [
@@ -68,7 +69,9 @@ const httpAction: any[] = [
             const metaMap:  Map<string  /* itemId_attributeId_valueId_metadataId> */,            ItemMetadata2> = new Map();
             const entMap:   Map<string  /* itemId_attributeId_valueId_metadataId_entryId */,     ItemMetadataEntry2> = new Map();
 
-            const allItems2: Item2[] =  q.reduce((acc: Item2[], c: QueryI) => {
+            // const allItems2: Item2[] = [];
+            // for (const c /* QueryI */ of [...(q.values)]) {}
+            const allItems2: Item2[] =  await q.reduce(async (acc: Promise<Item2[]>, c: QueryI) => {
 
                 const itemId: number = c.I_ID;
                 const itemMapKey: string = `${itemId}`;
@@ -94,11 +97,12 @@ const httpAction: any[] = [
                         name: c.I_NAME,
                         description: c.I_DESCRIPTION,
                         images: [],
-                        values: []
+                        values: [],
+                        children: await findChildrenItems(viewId, itemId)
                     } as Item2;
 
                     itemMap.set(itemMapKey, item);
-                    acc.push(item);
+                    (await acc).push(item);
                 }
 
                 if (!imgMap.has(imgMapKey)) {
@@ -149,12 +153,12 @@ const httpAction: any[] = [
                     meta.entries.push(entry);
                 }
 
-                return acc;
-            }, []);
+                return (acc);
+            }, Promise.resolve([]));
 
 
-            const allItems: Item[] = convert(allItems2);
-            res.status(200).json(allItems);
+            // const allItems: Item[] = convert(allItems2);
+            res.status(200).json(allItems2);
 
         });
    }

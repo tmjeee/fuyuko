@@ -9,7 +9,7 @@ import {
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../route/model/ss-attribute.model';
 
 export const revert = (attributes: Attribute[]) : Attribute2[]=> {
-   return attributes.map(_revert);
+   return (attributes ? attributes.map(_revert) : []);
 }
 
 export const _revert = (attribute: Attribute) : Attribute2 => {
@@ -116,7 +116,7 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
 
 
 export const convert = (attribute2s: Attribute2[]) : Attribute[] => {
-    return attribute2s.map(_convert);
+    return (attribute2s ? attribute2s.map(_convert) : []);
 }
 
 export const _convert = (attribute2: Attribute2): Attribute => {

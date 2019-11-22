@@ -30,6 +30,7 @@
     "nodemailer": "^6.3.1",
     "semver": "^6.3.0",
     "sha256": "^0.2.0",
+    "sprintf": "^0.1.5",
     "typescript": "^3.5.3",
     "uuid": "^3.3.3",
     "xoauth2": "^1.2.0"
@@ -47,6 +48,7 @@
     "@types/nodemailer": "^6.2.2",
     "@types/semver": "^6.0.2",
     "@types/sha256": "^0.2.0",
+    "@types/sprintf": "^0.1.0",
     "@types/uuid": "^3.4.6"
   }
 }

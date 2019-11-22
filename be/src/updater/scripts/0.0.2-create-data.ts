@@ -11,6 +11,8 @@ import {fsRead, FsReadResult} from '../../util';
 import fileType from 'file-type';
 import {create} from "domain";
 import * as Path from "path";
+import {ItemImage} from "../../model/item.model";
+import {sprintf} from 'sprintf';
 
 
 export const update = async () => {
@@ -236,7 +238,7 @@ const INSERT_DATA = async () => {
         const a13m2e99: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey99=xvalue99']);
 
 
-        await createItem(conn, v1.insertId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a12.insertId);
+        await createManyItems(conn, v1.insertId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a12.insertId);
 
     });
 }
@@ -264,13 +266,21 @@ type CreateItemType = {
     children: CreateItemType[]
 }
 
-const createItem = async (conn: PoolConnection, viewId: number, att1Id: number, att2Id: number, att3Id: number, att4Id: number, att5Id: number, att6Id: number,
+const createManyItems = async (conn: PoolConnection, viewId: number, att1Id: number, att2Id: number, att3Id: number, att4Id: number, att5Id: number, att6Id: number,
                           att7Id: number, att8Id: number, att9Id: number, att10Id: number, att11Id: number, att12Id: number, att13Id: number) => {
+    let _c = 0;
+    const c = () => {
+        return (((_c++)%351)+1);
+    }
     const createAnItemType = (children: CreateItemType[] = []): CreateItemType => ({
         conn,
         viewId: viewId,
         itemName: `item #${random()}`,
-        images: [],
+        images: [
+            { fileName: sprintf('%04s.jpg', c()), primary: true },
+            { fileName: sprintf('%04s.jpg', c()), primary: false },
+            { fileName: sprintf('%04s.jpg', c()), primary: false },
+        ],
         children,
         values: [
             {attributeId: att1Id, // string
@@ -383,9 +393,9 @@ const createItem = async (conn: PoolConnection, viewId: number, att1Id: number, 
     _createItem(itemDef);
 }
 
-const _createItem = async (args: CreateItemType) => {
+const _createItem = async (args: CreateItemType, parentItemId: number = null) => {
     // item
-    const qItem: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (NULL,?,?,?,'ENABLED')`, [args.viewId, args.itemName, `${args.itemName} Description`]);
+    const qItem: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`, [parentItemId, args.viewId, args.itemName, `${args.itemName} Description`]);
     const itemId: number = qItem.insertId;
     for (const attr of args.values) {
         const qItemValue: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, attr.attributeId]);
@@ -402,14 +412,17 @@ const _createItem = async (args: CreateItemType) => {
     }
     for (const image of args.images) {
         const fileName = image.fileName;
+        const isPrimary = image.primary;
         const fullPath = Path.resolve(__dirname, '../assets/item-images', fileName);
 
         const buffer: Buffer = await util.promisify(readFile)(fullPath);
         const mimeType: fileType.FileTypeResult = fileType(buffer);
 
-        await args.conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?`, [itemId, image.primary, mimeType.mime, fileName, buffer.length, buffer]);
+        await args.conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, [itemId, isPrimary, mimeType.mime, fileName, buffer.length, buffer]);
     }
-    // await args.conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, PRIMARY, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, []);
+    for (const child of args.children) {
+        _createItem(child, itemId);
+    }
 }
 
 
