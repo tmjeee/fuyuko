@@ -46,6 +46,10 @@ import registerGetSearchAllAttributesByViewRoute from './GET-search-attributes-b
 import registerPostUpdateAttributesRoute from './POST-update-attributes.route';
 import registerPostUpdateAttributeStatusRoute from './POST-update-attributes.route';
 import registerGetAllItemsByViewRoute from './GET-all-items-by-view.route';
+import registerGetItemImageByIdRoute from './GET-item-image-by-id.route';
+import registerGetItemPrimaryImageByItemIdRoute from './GET-item-primary-image.route';
+import registerPostUpdateItemRoute from './POST-update-items.route';
+import registerPostUpdateItemStatusRoute  from './POST-update-item-status.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -94,6 +98,10 @@ const reg = (app: Express, regi: Registry) => {
     registerPostUpdateAttributesRoute(v1AppRouter, registry);
     registerPostUpdateAttributeStatusRoute(v1AppRouter, registry);
     registerGetAllItemsByViewRoute(v1AppRouter, registry);
+    registerGetItemImageByIdRoute(v1AppRouter, registry);
+    registerGetItemPrimaryImageByItemIdRoute(v1AppRouter, registry);
+    registerPostUpdateItemRoute(v1AppRouter, registry);
+    registerPostUpdateItemStatusRoute(v1AppRouter, registry);
 }
 
 

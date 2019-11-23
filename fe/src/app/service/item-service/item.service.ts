@@ -262,10 +262,10 @@ export class ItemService {
     return of([...newlyAddedItems]);
   }
 
-  saveTableItems(items: TableItem[]): Observable<Item[]> {
+  saveTableItems(tableItems: TableItem[]): Observable<Item[]> {
     // todo:
     const newlyAddedItems: Item[] = [];
-    items.forEach((i: TableItem) => {
+    tableItems.forEach((i: TableItem) => {
       if (i.id <  0) { // new item
         const nextId =  this.counter++;
         i.id = nextId;

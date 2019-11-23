@@ -69,9 +69,8 @@ const httpAction: any[] = [
             const metaMap:  Map<string  /* itemId_attributeId_valueId_metadataId> */,            ItemMetadata2> = new Map();
             const entMap:   Map<string  /* itemId_attributeId_valueId_metadataId_entryId */,     ItemMetadataEntry2> = new Map();
 
-            // const allItems2: Item2[] = [];
-            // for (const c /* QueryI */ of [...(q.values)]) {}
-            const allItems2: Item2[] =  await q.reduce(async (acc: Promise<Item2[]>, c: QueryI) => {
+            const allItems2: Item2[] = [];
+            for (const c of q) {
 
                 const itemId: number = c.I_ID;
                 const itemMapKey: string = `${itemId}`;
@@ -90,7 +89,9 @@ const httpAction: any[] = [
                 const imageId: number = c.IMG_ID;
                 const imgMapKey: string = `${itemId}_${imageId}`;
 
+
                 if (!itemMap.has(itemMapKey)) {
+                    const children: Item2[] = await findChildrenItems(viewId, itemId);
                     const item: Item2 = {
                         id: itemId,
                         parentId: c.I_PARENT_ID,
@@ -98,19 +99,19 @@ const httpAction: any[] = [
                         description: c.I_DESCRIPTION,
                         images: [],
                         values: [],
-                        children: await findChildrenItems(viewId, itemId)
+                        children
                     } as Item2;
 
                     itemMap.set(itemMapKey, item);
-                    (await acc).push(item);
+                    allItems2.push(item);
                 }
 
                 if (!imgMap.has(imgMapKey)) {
                     const img: ItemImage = {
-                       id: imageId,
-                       name: c.IMG_NAME,
-                       mimeType: c.IMG_MIMETYPE,
-                       size: c.IMG_SIZE
+                        id: imageId,
+                        name: c.IMG_NAME,
+                        mimeType: c.IMG_MIMETYPE,
+                        size: c.IMG_SIZE
                     } as ItemImage;
                     imgMap.set(imgMapKey, img);
                     const item: Item2 = itemMap.get(itemMapKey);
@@ -118,14 +119,14 @@ const httpAction: any[] = [
                 }
 
                 if (!valueMap.has(valueMapKey)) {
-                   const itemValue: ItemValue2 = {
-                      id: valueId,
-                      attributeId,
-                      metadatas: []
-                   } as ItemValue2;
-                   valueMap.set(valueMapKey, itemValue);
-                   const item: Item2 = itemMap.get(itemMapKey);
-                   item.values.push(itemValue);
+                    const itemValue: ItemValue2 = {
+                        id: valueId,
+                        attributeId,
+                        metadatas: []
+                    } as ItemValue2;
+                    valueMap.set(valueMapKey, itemValue);
+                    const item: Item2 = itemMap.get(itemMapKey);
+                    item.values.push(itemValue);
                 }
 
                 if (!metaMap.has(metaMapKey)) {
@@ -152,14 +153,11 @@ const httpAction: any[] = [
                     const meta: ItemMetadata2 = metaMap.get(metaMapKey);
                     meta.entries.push(entry);
                 }
-
-                return (acc);
-            }, Promise.resolve([]));
+            }
 
 
-            // const allItems: Item[] = convert(allItems2);
-            res.status(200).json(allItems2);
-
+            const allItems: Item[] = convert(allItems2);
+            res.status(200).json(allItems);
         });
    }
 ]

@@ -1,4 +1,5 @@
 import express, {NextFunction, Request, Response, Express} from 'express';
+require('express-async-errors');
 import cookieParser from 'cookie-parser';
 import registerV1AppRouter from './route/v1/v1-app.router';
 import cors from 'cors';
