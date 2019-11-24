@@ -15,9 +15,11 @@ export function createNewTableItem(id: number, attributes: Attribute[], parentId
     return i;
 }
 
-export function createNewItemValue(a: Attribute): Value {
+export function createNewItemValue(a: Attribute, defaultValues: boolean = true): Value {
     const val: Value = { attributeId: a.id, val: undefined } as Value;
-    setItemValue(a, val);
+    if (defaultValues) {
+        setItemValue(a, val);
+    }
     return val;
 }
 

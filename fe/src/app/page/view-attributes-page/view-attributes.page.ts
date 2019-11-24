@@ -7,6 +7,8 @@ import {Subscription} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {AttributeTableComponentEvent} from '../../component/attribute-table-component/attribute-table.component';
 import {NotificationsService} from 'angular2-notifications';
+import {ApiResponse} from "../../model/response.model";
+import {toNotifications} from "../../service/common.service";
 
 @Component({
   templateUrl: './view-attributes.page.html',
@@ -59,8 +61,8 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
         this.attributeService
           .deleteAttribute($event.view, $event.attribute)
           .pipe(
-            map((a: Attribute) => {
-              this.notificationsService.success('Success', 'Attribute deleted');
+            map((a: ApiResponse) => {
+              toNotifications(this.notificationsService, a);
               this.reloadAttributes();
             })
           ).subscribe();
@@ -76,8 +78,8 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
       case 'add':
         this.attributeService.addAttribute($event.view, $event.attribute)
           .pipe(
-            map((a: Attribute) => {
-              this.notificationsService.success('Success', 'Attribute added');
+            map((a: ApiResponse) => {
+              toNotifications(this.notificationsService, a);
               this.reloadAttributes();
             })
           ).subscribe();
@@ -85,8 +87,8 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
       case 'edit':
         this.attributeService.updateAttribute($event.view, $event.attribute)
           .pipe(
-            map((a: Attribute) => {
-              this.notificationsService.success('Success', 'Attribute updated');
+            map((a: ApiResponse) => {
+              toNotifications(this.notificationsService, a);
               this.reloadAttributes();
             })
           ).subscribe();

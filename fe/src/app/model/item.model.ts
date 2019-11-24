@@ -34,7 +34,7 @@ export interface TableItem {
   id: number;
   name: string;
   description: string;
-  images: string[];
+  images: ItemImage[];
   parentId: number;
   depth: number;
   [attributeId: number]: Value;

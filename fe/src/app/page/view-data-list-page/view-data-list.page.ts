@@ -10,6 +10,9 @@ import {ItemService} from '../../service/item-service/item.service';
 import {Item} from '../../model/item.model';
 import {map} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
+import {ApiResponse} from "../../model/response.model";
+import {toNotifications} from "../../service/common.service";
+import {NotificationsService} from "angular2-notifications";
 
 
 @Component({
@@ -27,6 +30,7 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   constructor(private attributeService: AttributeService,
+              private notificationService: NotificationsService,
               private viewService: ViewService,
               private itemService: ItemService) {
   }
@@ -80,11 +84,11 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
     switch ($event.type) {
       case 'modification':
         combineLatest([
-          this.itemService.saveItems($event.modifiedItems),
-          this.itemService.deleteItems($event.deletedItems)
-        ]).subscribe((r: [Item[], Item[]]) => {
-          const modifiedItems: Item[] = r[0];
-          const deletedItems: Item[] = r[1];
+          this.itemService.saveItems(this.currentView.id, $event.modifiedItems),
+          this.itemService.deleteItems(this.currentView.id, $event.deletedItems)
+        ]).subscribe((r: [ApiResponse, ApiResponse]) => {
+          toNotifications(this.notificationService, r[0]);
+          toNotifications(this.notificationService, r[1]);
           this.reload();
         });
         break;

@@ -54,8 +54,14 @@ export function toItem(tableItems: TableItem[]): Item[] {
   const m: Map<number, Item> = tableItems.reduce((acc: Map<number, Item>, tableItem: TableItem) => {
     const itemId = tableItem.id;
     const itemParentId = tableItem.parentId;
-    const item: Item = {id: itemId, name: tableItem.name, description: tableItem.description,
-      images: tableItem.images, parentId: itemParentId, children: []} as Item;
+    const item: Item = {
+      id: itemId,
+      name: tableItem.name,
+      description: tableItem.description,
+      images: tableItem.images,
+      parentId: itemParentId,
+      children: []
+    } as Item;
 
     // item
     if (!acc.has(itemId)) {

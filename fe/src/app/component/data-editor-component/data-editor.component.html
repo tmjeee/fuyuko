@@ -1,7 +1,10 @@
 
 <div class="data-editor-component">
   <span (click)="onItemAttributeValueClicked($event)">
+      <!--
       <input type="text" [disabled]="false" [readOnly]="true"
              value="{{itemValueAndAttribute?.itemValue | itemAttributeValueAsString:itemValueAndAttribute.attribute}}">
+      -->
+      {{itemValueAndAttribute?.itemValue | itemAttributeValueAsString:itemValueAndAttribute.attribute}}
   </span>
 </div>

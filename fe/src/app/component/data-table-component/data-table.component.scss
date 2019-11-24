@@ -42,6 +42,7 @@
       mat-header-row {
         &.item-header {
           mat-header-cell {
+            margin: 5px;
             &.selection-header {
               min-width: 50px;
               display: flex;
@@ -68,6 +69,7 @@
       mat-row {
         &.item {
           mat-cell {
+            margin: 5px;
             align-items: stretch;
             &.selection {
               min-width: 50px;

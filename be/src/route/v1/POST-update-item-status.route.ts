@@ -1,32 +1,41 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import { check } from "express-validator";
+import { check, body, param } from "express-validator";
 import {doInDbConnection} from "../../db";
 import {Pool, PoolConnection} from "mariadb";
+import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [
     [
-        check('viewId').exists().isNumeric(),
-        check('itemId').exists().isNumeric(),
-        check('status').exists()
+        body('itemIds').isArray(),
+        body('itemIds.*').exists().isNumeric(),
+        param('viewId').exists().isNumeric(),
+        param('status').exists()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
-        const itemId: number = Number(req.params.itemId);
         const status: string = req.params.status;
+        const itemIds: number[] = req.body.itemIds;
 
         await doInDbConnection(async (conn: PoolConnection) => {
-            await conn.query(`UPDATE TBL_ITEM SET STATUS = ? WHERE ID=?`, [status,itemId]);
+            for (const itemId of itemIds) {
+                await conn.query(`UPDATE TBL_ITEM SET STATUS = ? WHERE ID=?`, [status,itemId]);
+            }
         });
+        res.status(200).json({
+           status: 'SUCCESS',
+           message: `Items deleted`
+        } as ApiResponse)
     }
+
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `view/:viewId/item/:itemId/status/:status`;
+    const p = `/view/:viewId/items/status/:status`;
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
 };

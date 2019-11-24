@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ItemService} from '../../service/item-service/item.service';
 import {combineLatest, forkJoin, Subscription} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {Item, TableItem} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';
 import {TableItemAndAttributeSet} from '../../model/item-attribute.model';
@@ -11,6 +11,9 @@ import {View} from '../../model/view.model';
 import {DataTableComponentEvent} from '../../component/data-table-component/data-table.component';
 import {toTableItem} from '../../utils/item-to-table-items.util';
 import {ItemSearchComponentEvent, SearchType} from '../../component/item-search-component/item-search.component';
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
 
 
 @Component({
@@ -29,6 +32,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   constructor(private attributeService: AttributeService,
+              private notificationService: NotificationsService,
               private viewService: ViewService,
               private itemService: ItemService) {
   }
@@ -60,7 +64,6 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
       this.itemService.getAllItems(viewId)
     ]).pipe(
       map( (r: [Attribute[], Item[]]) => {
-       console.log('***************** map');
        const attributes: Attribute[] = r[0];
        const items: Item[] = r[1];
        const tableItems: TableItem[] = toTableItem(items);
@@ -77,13 +80,13 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   onDataTableEvent($event: DataTableComponentEvent) {
     switch ($event.type) {
       case 'modification':
-        forkJoin(
-          this.itemService.deleteTableItems($event.deletedItems),
-          this.itemService.saveTableItems($event.modifiedItems)
-        ).pipe(
-          map((r: [Item[], Item[]]) => {
-            const deletedItems: Item[] = r[0];
-            const savedItems: Item[] = r[1];
+        forkJoin([
+          this.itemService.deleteTableItems(this.currentView.id, $event.deletedItems),
+          this.itemService.saveTableItems(this.currentView.id, $event.modifiedItems)
+        ]).pipe(
+          tap((r: [ApiResponse, ApiResponse]) => {
+            toNotifications(this.notificationService, r[0]);
+            toNotifications(this.notificationService, r[1]);
             this.reload();
           })
         ).subscribe();

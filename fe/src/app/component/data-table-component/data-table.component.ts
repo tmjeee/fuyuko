@@ -6,7 +6,7 @@ import {CollectionViewer, SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import {ItemValueAndAttribute, TableItemAndAttribute, TableItemAndAttributeSet} from '../../model/item-attribute.model';
-import {createNewTableItem} from '../../utils/ui-item-value-creator.utils';
+import {createNewItemValue, createNewTableItem} from '../../utils/ui-item-value-creator.utils';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
@@ -323,5 +323,13 @@ export class DataTableComponent implements OnInit, OnChanges {
     this.searchEvents.emit($event);
   }
 
+  getItemValue(tableItem: TableItem, attribute: Attribute) {
+      let value: Value = tableItem[attribute.id];
+      if (!!!value) {
+          value = createNewItemValue(attribute, false);
+          tableItem[attribute.id] = value;
+      }
+      return value;
+  }
 }
 

@@ -238,7 +238,7 @@ const INSERT_DATA = async () => {
         const a13m2e99: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey99=xvalue99']);
 
 
-        await createManyItems(conn, v1.insertId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a12.insertId);
+        await createManyItems(conn, v1.insertId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a13.insertId);
 
     });
 }
