@@ -20,6 +20,9 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
+
+        const viewId: number = Number(req.params.viewId);
+
         await doInDbConnection(async (conn: PoolConnection) => {
             const q: QueryA = await conn.query(`
                 SELECT
@@ -32,6 +35,9 @@ const httpAction: any[] = [
                    WC.ID AS WC_ID,
                    WC.ITEM_ATTRIBUTE_ID AS WC_ITEM_ATTRIBUTE_ID,
                    WC.OPERATOR AS WC_OPERATOR,
+                   WCA.NAME AS WCA_NAME,
+                   WCA.DESCRIPTION AS WCA_DESCRIPTION,
+                   WCA.TYPE AS WCA_TYPE,
                    WCM.ID AS WCM_ID,
                    WCM.NAME AS WCM_NAME,
                    WCME.ID AS WCME_ID,
@@ -42,6 +48,9 @@ const httpAction: any[] = [
                    VC.ID AS VC_ID,
                    VC.ITEM_ATTRIBUTE_ID AS VC_ITEM_ATTRIBUTE_ID,
                    VC.OPERATOR AS VC_OPERATOR,
+                   VCA.NAME AS VCA_NAME,
+                   VCA.DESCRIPTION AS VCA_DESCRIPTION,
+                   VCA.TYPE AS VCA_TYPE,
                    VCM.ID AS VCM_ID,
                    VCM.NAME AS VCM_NAME,
                    VCME.ID AS VCME_ID,
@@ -51,12 +60,15 @@ const httpAction: any[] = [
                 
                 FROM TBL_RULE AS R
                 LEFT JOIN TBL_RULE_VALIDATE_CLAUSE AS VC ON VC.RULE_ID = R.ID
-                LEFT JOIN TBL_RULE_VALIDATE_CLAUSE_METADATA VCM AS VCM.RULE_VALIDATE_CLAUSE_ID = VC.ID
-                LEFT JOIN TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY VCME AS VCME.RULE_VALIDATE_CLAUSE_METADATA_ID = VCM.ID
+                LEFT JOIN TBL_ITEM_ATTRIBUTE AS VCA ON VCA.ID = VC.ITEM_ATTRIBUTE_ID
+                LEFT JOIN TBL_RULE_VALIDATE_CLAUSE_METADATA AS VCM ON RULE_VALIDATE_CLAUSE_ID = VC.ID
+                LEFT JOIN TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY AS VCME ON RULE_VALIDATE_CLAUSE_METADATA_ID = VCM.ID
                 LEFT JOIN TBL_RULE_WHEN_CLAUSE AS WC ON WC.RULE_ID = R.ID
+                LEFT JOIN TBL_ITEM_ATTRIBUTE AS WCA ON WCA.ID = WC.ITEM_ATTRIBUTE_ID
                 LEFT JOIN TBL_RULE_WHEN_CLAUSE_METADATA AS WCM ON WCM.RULE_WHEN_CLAUSE_ID = WC.ID
                 LEFT JOIN TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY AS WCME ON WCME.RULE_WHEN_CLAUSE_METADATA_ID =WCM.ID
-            `);
+                WHERE R.STATUS <> 'DELETED' AND R.VIEW_ID = ?
+            `, [viewId]);
 
             const rMap:     Map<string /* ruleId */,                                        Rule2> = new Map();
             const vcMap:    Map<string /* ruleId_validationClauseId */,                     ValidateClause2> = new Map();
@@ -87,6 +99,11 @@ const httpAction: any[] = [
                 const vcMapKey: string = `${ruleId}_${vcId}`;
                 if (!vcMap.has(vcMapKey)) {
                     const vc  = {
+                        id: vcId,
+                        operator: i.VC_OPERATOR,
+                        attributeId: i.VC_ITEM_ATTRIBUTE_ID,
+                        attributeName: i.VCA_NAME,
+                        attributeType: i.VCA_TYPE,
                         metadatas: []
                     } as ValidateClause2;
                     vcMap.set(vcMapKey, vc);
@@ -97,6 +114,8 @@ const httpAction: any[] = [
                 const vcmMapKey: string = `${ruleId}_${vcId}_${vcmId}`;
                 if (!vcmMap.has(vcmMapKey)) {
                     const vcm = {
+                        id: vcmId,
+                        name: i.VCM_NAME,
                         entries: []
                     } as ValidateClauseMetadata2;
                     vcmMap.set(vcmMapKey, vcm);
@@ -107,7 +126,10 @@ const httpAction: any[] = [
                 const vcmeMapKey: string = `${ruleId}_${vcId}_${vcmId}_${vcmeId}`;
                 if (!vcmeMap.has(vcmeMapKey)) {
                     const vcme = {
-
+                        id: vcmeId,
+                        key: i.VCME_KEY,
+                        value: i.VCME_VALUE,
+                        dataType: i.VCME_DATA_TYPE
                     } as ValidateClauseMetadataEntry2;
                     vcmeMap.set(vcmeMapKey, vcme);
                     vcmMap.get(vcmMapKey).entries.push(vcme);
@@ -117,6 +139,11 @@ const httpAction: any[] = [
                 const wcMapKey: string = `${ruleId}_${wcId}`;
                 if (!wcMap.has(wcMapKey)) {
                     const wc = {
+                       id: wcId,
+                       attributeId: i.WC_ITEM_ATTRIBUTE_ID,
+                       attributeName: i.WCA_NAME,
+                       attributeType: i.WCA_TYPE,
+                       operator: i.WC_OPERATOR,
                        metadatas: []
                     } as WhenClause2;
                     wcMap.set(wcMapKey, wc);
@@ -127,6 +154,8 @@ const httpAction: any[] = [
                 const wcmMapKey: string = `${ruleId}_${wcId}_${wcmId}`;
                 if (!wcmMap.has(wcmMapKey)) {
                     const wcm = {
+                       id: wcmId,
+                       name: i.WCM_NAME,
                        entries: []
                     } as WhenClauseMetadata2;
                     wcmMap.set(wcmMapKey, wcm);
@@ -137,7 +166,10 @@ const httpAction: any[] = [
                 const wcmeMapKey: string = `${ruleId}_${wcId}_${wcmId}_${wcmeId}`;
                 if (!wcmeMap.has(wcmeMapKey)) {
                     const wcme = {
-
+                        id: wcmeId,
+                        key: i.WCME_KEY,
+                        value: i.WCME_VALUE,
+                        dataType: i.WCME_DATA_TYPE
                     } as WhenClauseMetadataEntry2;
                     wcmeMap.set(wcmeMapKey, wcme);
                     wcmMap.get(wcmMapKey).entries.push(wcme);
@@ -146,9 +178,9 @@ const httpAction: any[] = [
                 return acc;
             }, []);
 
-            res.status(200).json(rule2s);
-            // const rules: Rule[] = convert(rule2s);
-            // res.status(200).json(rules);
+            //res.status(200).json(rule2s);
+            const rules: Rule[] = convert(rule2s);
+            res.status(200).json(rules);
         });
     }
 ];

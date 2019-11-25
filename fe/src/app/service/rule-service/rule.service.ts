@@ -2,75 +2,56 @@ import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {Rule, ValidateClause, WhenClause} from 'src/app/model/rule.model';
 import {StringValue} from '../../model/item.model';
+import {HttpClient} from '@angular/common/http';
+import {ApiResponse} from '../../model/response.model';
+import config from '../../../assets/config.json';
 
-const ALL_RULES: Rule[] = [
-  { id: 1, name: 'Rule #1', description: 'Rule #1 Description', enabled: true,
-    validateClauses: [
-      { id: 2, attributeId: 1, attributeName: 'string attribute', attributeType: 'string', operator: 'eq',
-        condition: { type: 'string', value: 'aaaa'} as StringValue} as ValidateClause
-    ],
-    whenClauses: [
-      { id: 3, attributeId: 1, attributeName: 'string attribute', attributeType: 'string', operator: 'eq',
-        condition: { type: 'string', value: 'bbbb'} as StringValue} as WhenClause
-    ]
-  } as Rule,
-  { id: 2, name: 'Rule #2', description: 'Rule #2 Description', enabled: false,
-    validateClauses: [
-      { id: 2, attributeId: 1, attributeName: 'string attribute', attributeType: 'string', operator: 'eq',
-        condition: { type: 'string', value: 'ccc'} as StringValue} as ValidateClause
-    ],
-    whenClauses: [
-      { id: 3, attributeId: 1, attributeName: 'string attribute', attributeType: 'string', operator: 'eq',
-        condition: { type: 'string', value: 'ddd'} as StringValue} as WhenClause
-    ]
-  } as Rule,
-];
+
+const URL_GET_ALL_RULES_BY_VIEW = `${config.api_host_url}/view/:viewId/rules`;
+const URL_POST_UPDATE_RULE_STATUS = `${config.api_host_url}/view/:viewId/rule/:ruleId/status/:status`;
+const URL_POST_UPDATE_RULES = `${config.api_host_url}/view/:viewId/rules`;
 
 @Injectable()
 export class RuleService {
 
-  count: number = ALL_RULES.length;
+
+  constructor(private httpClient: HttpClient) {}
 
 
   getAllRulesByView(viewId: number): Observable<Rule[]> {
-    return of(ALL_RULES);
+    return this.httpClient.get<Rule[]>(URL_GET_ALL_RULES_BY_VIEW.replace(':viewId', `${viewId}`));
   }
 
-  addRule(rule: Rule): Observable<Rule> {
-    rule.id = this.count++;
-    ALL_RULES.push(rule);
-    return of(rule);
+  addRule(viewId: number, rule: Rule): Observable<ApiResponse> {
+      return this.httpClient.post<ApiResponse>(URL_POST_UPDATE_RULES.replace(':viewId', `${viewId}`), {
+        rules: [rule]
+      });
   }
 
-  updateRule(rule: Rule): Observable<Rule> {
-    const index = ALL_RULES.findIndex((r: Rule) => r.id === rule.id);
-    if (index !== -1) {
-      ALL_RULES.splice(index, 1, rule);
-    }
-    return of(rule);
+  updateRule(viewId: number, rule: Rule): Observable<ApiResponse> {
+    return this.httpClient.post<ApiResponse>(URL_POST_UPDATE_RULES.replace(':viewId', `${viewId}`), {
+      rules: [rule]
+    });
   }
 
-  deleteRule(rule: Rule): Observable<Rule> {
-    const index = ALL_RULES.findIndex((r: Rule) => r.id === rule.id);
-    if (index !== -1) {
-      ALL_RULES.splice(index, 1);
-    }
-    return of(rule);
+  deleteRule(viewId: number, rule: Rule): Observable<ApiResponse> {
+    return this.httpClient.post<ApiResponse>(URL_POST_UPDATE_RULE_STATUS
+        .replace(':viewId', `${viewId}`)
+        .replace(':ruleId', `${rule.id}`)
+        .replace(':status', 'DELETED'), {});
   }
 
-  enableRule(rule: Rule) {
-      const index = ALL_RULES.findIndex((r: Rule) => r.id === rule.id);
-      if (index !== -1) {
-          ALL_RULES[index].enabled = true;
-      }
-      return of (ALL_RULES[index]);
+  enableRule(viewId: number, rule: Rule): Observable<ApiResponse> {
+    return this.httpClient.post<ApiResponse>(URL_POST_UPDATE_RULE_STATUS
+        .replace(':viewId', `${viewId}`)
+        .replace(':ruleId', `${rule.id}`)
+        .replace(':status', 'ENABLED'), {});
   }
 
-  disableRule(rule: Rule) {
-    const index = ALL_RULES.findIndex((r: Rule) => r.id === rule.id);
-    if (index !== -1) {
-      ALL_RULES[index].enabled = false;
-    }
-    return of (ALL_RULES[index]);
+  disableRule(viewId: number, rule: Rule): Observable<ApiResponse> {
+    return this.httpClient.post<ApiResponse>(URL_POST_UPDATE_RULE_STATUS
+        .replace(':viewId', `${viewId}`)
+        .replace(':ruleId', `${rule.id}`)
+        .replace(':status', 'DISABLED'), {});
   }
 }

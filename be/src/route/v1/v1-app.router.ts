@@ -51,6 +51,8 @@ import registerGetItemPrimaryImageByItemIdRoute from './GET-item-primary-image.r
 import registerPostUpdateItemRoute from './POST-update-items.route';
 import registerPostUpdateItemStatusRoute  from './POST-update-item-status.route';
 import registerGetAllRulesByViewRoute from './GET-all-rules-by-view.route';
+import registerPostUpdateRuleStatusRoute from './POST-update-rule-status.route';
+import registerPostUpdateRules from './POST-update-rules.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -104,6 +106,8 @@ const reg = (app: Express, regi: Registry) => {
     registerPostUpdateItemRoute(v1AppRouter, registry);
     registerPostUpdateItemStatusRoute(v1AppRouter, registry);
     registerGetAllRulesByViewRoute(v1AppRouter, registry);
+    registerPostUpdateRuleStatusRoute(v1AppRouter, registry);
+    registerPostUpdateRules(v1AppRouter, registry);
 }
 
 

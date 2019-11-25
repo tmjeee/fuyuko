@@ -10,8 +10,6 @@ export class JwtInterceptor implements HttpInterceptor {
 
         const jwtToken = this.authService.jwtToken();
 
-        console.log('************** jwt interceptor token', jwtToken);
-
         let effectiveReq = req;
         if (jwtToken) {
             effectiveReq = req.clone({
@@ -19,7 +17,6 @@ export class JwtInterceptor implements HttpInterceptor {
                     'x-auth-jwt': jwtToken
                 }
             });
-            console.log('******* effectiveReq', effectiveReq);
         }
 
         return next.handle(effectiveReq);

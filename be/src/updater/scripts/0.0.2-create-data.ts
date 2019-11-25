@@ -243,6 +243,7 @@ const INSERT_DATA = async () => {
 
 
         // rules
+        await createManyRules(conn, v1.insertId, a1.insertId, a2.insertId);
 
 
     });
@@ -275,10 +276,64 @@ type CreateRuleType = {
     }[]
 }
 
+const createManyRules = async(conn: PoolConnection, viewId: number, att1Id: number, att2Id: number) => {
+    const c = ()=>({
+        name: `Rule #${random()}`,
+        viewId: viewId,
+        validateClauses: [
+            {
+                attributeId: att1Id,
+                operator: 'eq',
+                metadatas: [
+                    {
+                        entries:[
+                            { key: 'type', value: 'string', dataType: 'string'},
+                            { key: 'value', value: 'val string 1', dataType: 'string'},
+                        ]
+                    },
+                    {
+                        entries:[
+                            { key: 'type', value: 'string', dataType: 'string'},
+                            { key: 'value', value: 'val string 2', dataType: 'string'},
+                        ]
+                    },
+                ]
+            }
+        ],
+        whenClauses: [
+            {
+                attributeId: att2Id,
+                operator: 'not eq',
+                metadatas: [
+                    {
+                        entries:[
+                            { key: 'type', value: 'text', dataType: 'string'},
+                            { key: 'value', value: 'val text 1', dataType: 'string'},
+                        ]
+                    },
+                    {
+                        entries:[
+                            { key: 'type', value: 'text', dataType: 'string'},
+                            { key: 'value', value: 'val text 2', dataType: 'string'},
+                        ]
+                    },
+                ]
+            },
+        ]
+    });
+
+    await createRule(conn, c());
+    await createRule(conn, c());
+    await createRule(conn, c());
+    await createRule(conn, c());
+    await createRule(conn, c());
+    await createRule(conn, c());
+}
+
 const createRule = async (conn: PoolConnection, t: CreateRuleType) => {
     const r1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,'ENABLED')`, [t.viewId, t.name, `${t.name} Description`]);
     for (const vc of t.validateClauses) {
-        const vc1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, ITEM_ATTRIBUTE_ID, OPERATOR, CONDITION) VALUES (?,?,?,?)`, [r1.insertId, vc.attributeId, 'eq', '']);
+        const vc1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, ITEM_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,?)`, [r1.insertId, vc.attributeId, vc.operator, '']);
         for (const vcm of vc.metadatas) {
             const vcm1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE_METADATA (RULE_VALIDATE_CLAUSE_ID, NAME) VALUES (?, '')`, [vc1.insertId]);
             for (const vcme of vcm.entries) {
@@ -288,7 +343,13 @@ const createRule = async (conn: PoolConnection, t: CreateRuleType) => {
     }
 
     for (const wc of t.whenClauses) {
-
+        const wc1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE (RULE_ID, ITEM_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,?)`, [r1.insertId, wc.attributeId, wc.operator, '']);
+        for (const wcm of wc.metadatas) {
+            const wcm1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE_METADATA (RULE_WHEN_CLAUSE_ID, NAME) VALUES (?, '')`, [wc1.insertId]);
+            for (const wcme of wcm.entries) {
+                await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY (RULE_WHEN_CLAUSE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [wcm1.insertId, wcme.key, wcme.value, wcme.dataType]);
+            }
+        }
     }
 }
 

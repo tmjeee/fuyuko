@@ -112,4 +112,12 @@ export class RulesTableComponent {
       rule
     } as RulesTableComponentEvent);
   }
+
+  isEnabled(rule: Rule) {
+    return rule.status === 'ENABLED';
+  }
+
+  isDisabled(rule: Rule) {
+    return rule.status === 'DISABLED';
+  }
 }

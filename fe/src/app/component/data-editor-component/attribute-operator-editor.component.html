@@ -13,7 +13,7 @@
             <mat-select (selectionChange)="onOperatorSelectionChange($event)" [formControl]="formControlOperator">
                 <mat-option *ngFor="let operator of operators" [value]="operator">{{operator}}</mat-option>
             </mat-select>
-            <mat-hint>Select operator</mat-hint>
+            <mat-hint>Select operator {{this.operator}}</mat-hint>
         </mat-form-field>
 
         <!-- formControl -->

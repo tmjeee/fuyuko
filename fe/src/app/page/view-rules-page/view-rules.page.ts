@@ -1,4 +1,4 @@
-import {Component, OnInit, Provider} from '@angular/core';
+import {Component, OnDestroy, OnInit, Provider} from '@angular/core';
 import {ViewService} from '../../service/view-service/view.service';
 import {View} from '../../model/view.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
@@ -9,7 +9,10 @@ import {OperatorType, ALL_OPERATOR_TYPES} from '../../model/operator.model';
 import {RulesTableComponentEvent} from '../../component/rules-component/rules-table.component';
 import {CounterService} from '../../service/counter-service/counter.service';
 import {finalize, map} from 'rxjs/operators';
-import {combineLatest} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
+import {ApiResponse} from "../../model/response.model";
+import {toNotifications} from "../../service/common.service";
+import {NotificationsService} from "angular2-notifications";
 
 
 @Component({
@@ -19,89 +22,111 @@ import {combineLatest} from 'rxjs';
     {provide: CounterService, useClass: CounterService} as Provider
   ]
 })
-export class ViewRulesPageComponent implements OnInit {
+export class ViewRulesPageComponent implements OnInit, OnDestroy {
 
   currentView: View;
   attributes: Attribute[];
   rules: Rule[];
+
+  subscription: Subscription;
 
 
   ready: boolean;
 
   constructor(private viewService: ViewService,
               private attributeService: AttributeService,
+              private notificationService: NotificationsService,
               private ruleService: RuleService) {
   }
 
 
   ngOnInit(): void {
-    this.reload();
-  }
-
-  reload() {
-    this.ready = false;
-    this.viewService
+    this.subscription = this.viewService
       .asObserver()
       .pipe(
-         map((currentView: View) => {
-           console.log('**** map');
-           if (currentView) {
-             this.currentView = currentView;
-             combineLatest([
-               this.attributeService.getAllAttributesByView(this.currentView.id),
-               this.ruleService.getAllRulesByView(this.currentView.id)
-             ]).pipe(
-               map((r: [Attribute[], Rule[]]) => {
-                 this.attributes = r[0];
-                 this.rules = r[1];
-                 this.ready = true;
-               })
-             ).subscribe();
-           } else {
-               this.ready = true;
-           }
-         }),
+        map((currentView: View) => {
+          if (currentView) {
+              this.currentView = currentView;
+              combineLatest([
+                  this.attributeService.getAllAttributesByView(this.currentView.id),
+                  this.ruleService.getAllRulesByView(this.currentView.id)
+              ]).pipe(
+                  map((r: [Attribute[], Rule[]]) => {
+                      this.attributes = r[0];
+                      this.rules = r[1];
+                      this.ready = true;
+                  })
+              ).subscribe();
+          } else {
+              this.ready = true;
+          }
+        }),
       ).subscribe();
   }
 
-  onRulesTableEvent($event: RulesTableComponentEvent) {
-    switch ($event.type) {
+  ngOnDestroy(): void {
+      if (this.subscription) {
+          this.subscription.unsubscribe();
+      }
+  }
+
+    reload() {
+    this.ready = false;
+    combineLatest([
+        this.attributeService.getAllAttributesByView(this.currentView.id),
+        this.ruleService.getAllRulesByView(this.currentView.id)
+    ]).pipe(
+        map((r: [Attribute[], Rule[]]) => {
+            this.attributes = r[0];
+            this.rules = r[1];
+            this.ready = true;
+        })
+    ).subscribe();
+  }
+
+    onRulesTableEvent($event: RulesTableComponentEvent) {
+        switch ($event.type) {
       case 'add':
-        this.ruleService.addRule($event.rule)
+        this.ruleService.addRule(this.currentView.id, $event.rule)
           .pipe(
-            map( (r: Rule) => {
+            map( (r: ApiResponse) => {
+              toNotifications(this.notificationService, r);
               this.reload();
             })
           ).subscribe();
         break;
       case 'edit':
-        this.ruleService.updateRule($event.rule)
+        this.ruleService.updateRule(this.currentView.id, $event.rule)
           .pipe(
-            map( (r: Rule) => {
+            map( (r: ApiResponse) => {
+              toNotifications(this.notificationService, r);
               this.reload();
             })
           ).subscribe();
         break;
       case 'delete':
-        this.ruleService.deleteRule($event.rule)
+        this.ruleService.deleteRule(this.currentView.id, $event.rule)
           .pipe(
-            map((r: Rule) => {
+            map((r: ApiResponse) => {
+              toNotifications(this.notificationService, r);
               this.reload();
             })
           ).subscribe();
         break;
         case 'enable':
-            this.ruleService.enableRule($event.rule)
+            this.ruleService.enableRule(this.currentView.id, $event.rule)
                 .pipe(
-                    map((r: Rule) => {
+                    map((r: ApiResponse) => {
+                        toNotifications(this.notificationService, r);
                         this.reload();
                     })
                 ).subscribe();
             break;
         case 'disable':
-            this.ruleService.disableRule($event.rule)
+            this.ruleService.disableRule(this.currentView.id, $event.rule)
                 .pipe(
-                    map((r: Rule) => {
+                    map((r: ApiResponse) => {
+                        toNotifications(this.notificationService, r);
                         this.reload();
                     })
                 ).subscribe();

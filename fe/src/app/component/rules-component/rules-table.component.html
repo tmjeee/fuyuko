@@ -9,7 +9,7 @@
     <mat-expansion-panel *ngFor="let rule of rules; let i = index;">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{rule.name}} <span *ngIf="rule.enabled">Enabled</span> <span *ngIf="!rule.enabled">Disabled</span>
+          {{rule.name}}
         </mat-panel-title>
         <mat-panel-description>
             <div class="description">
@@ -17,8 +17,8 @@
             </div>
             <div class="controls">
               <button type="button" mat-flat-button color="primary" (click)="onDeleteRule($event, rule)">Delete Rule</button>
-              <button type="button" mat-flat-button color="primary" *ngIf="!rule.enabled" (click)="onEnableRule($event, rule)">Enable</button>
-              <button type="button" mat-flat-button color="primary" *ngIf="rule.enabled" (click)="onDisableRule($event, rule)">Disable</button>
+              <button type="button" mat-flat-button color="primary" *ngIf="isDisabled(rule)" (click)="onEnableRule($event, rule)">Enable</button>
+              <button type="button" mat-flat-button color="primary" *ngIf="isEnabled(rule)" (click)="onDisableRule($event, rule)">Disable</button>
               <button type="button" mat-flat-button color="primary" (click)="onEditRule($event, rule)">Edit Rule</button>
             </div>
         </mat-panel-description>
