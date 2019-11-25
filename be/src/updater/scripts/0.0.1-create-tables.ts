@@ -25,7 +25,11 @@ export const update = async () => {
    await TBL_PRICING_STRUCTURE_ITEM();
    await TBL_RULE();
    await TBL_RULE_VALIDATE_CLAUSE();
+   await TBL_RULE_VALIDATE_CLAUSE_METADATA();
+   await TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY();
    await TBL_RULE_WHEN_CLAUSE();
+   await TBL_RULE_WHEN_CLAUSE_METADATA();
+   await TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY();
    await TBL_VIEW();
    await TBL_ITEM();
    await TBL_ITEM_IMAGE();
@@ -312,7 +316,8 @@ const TBL_RULE = async () => {
             ID INT PRIMARY KEY AUTO_INCREMENT,
             VIEW_ID INT,
             NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL
+            DESCRIPTION VARCHAR(500) NOT NULL,
+            STATUS VARCHAR(200) NOT NULL
          );
       `)
    });
@@ -332,6 +337,32 @@ const TBL_RULE_VALIDATE_CLAUSE = async () => {
    })
 };
 
+const TBL_RULE_VALIDATE_CLAUSE_METADATA = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_RULE_VALIDATE_CLAUSE_METADATA (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            RULE_VALIDATE_CLAUSE_ID INT,
+            NAME VARCHAR(200)
+         );
+      `);
+   });
+}
+
+const TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            RULE_VALIDATE_CLAUSE_METADATA_ID INT,
+            \`KEY\` VARCHAR(200),
+            \`VALUE\` VARCHAR(500),
+            DATA_TYPE VARCHAR(200) 
+         );
+      `);
+   });
+}
+
 const TBL_RULE_WHEN_CLAUSE = async () => {
    await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
@@ -344,6 +375,32 @@ const TBL_RULE_WHEN_CLAUSE = async () => {
          );
       `);
    });
+};
+
+const TBL_RULE_WHEN_CLAUSE_METADATA = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_RULE_WHEN_CLAUSE_METADATA (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            RULE_WHEN_CLAUSE_ID INT,
+            NAME VARCHAR(200)
+         );
+      `);
+   });
+};
+
+const TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            RULE_WHEN_CLAUSE_METADATA_ID INT,
+            \`KEY\` VARCHAR(200),
+            \`VALUE\` VARCHAR(500),
+            DATA_TYPE VARCHAR(200) 
+         );
+      `);
+   })
 };
 
 const TBL_VIEW = async () => {
@@ -834,9 +891,13 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_RULE ADD CONSTRAINT \`fk_tbl_rule-1\` FOREIGN KEY IF NOT EXISTS (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
       await conn.query(`ALTER TABLE TBL_RULE_VALIDATE_CLAUSE ADD CONSTRAINT \`fk_tbl_rule_validate_clause-1\` FOREIGN KEY IF NOT EXISTS (RULE_ID) REFERENCES TBL_RULE(ID)`);
       await conn.query(`ALTER TABLE TBL_RULE_VALIDATE_CLAUSE ADD CONSTRAINT \`fk_tbl_rule_validate_clause-2\` FOREIGN KEY IF NOT EXISTS (ITEM_ATTRIBUTE_ID) REFERENCES TBL_ITEM_ATTRIBUTE(ID)`);
+      await conn.query(`ALTER TABLE TBL_RULE_VALIDATE_CLAUSE_METADATA ADD CONSTRAINT \`fk_tbl_rule_validate_clause_metadata-1\` FOREIGN KEY IF NOT EXISTS (RULE_VALIDATE_CLAUSE_ID) REFERENCES TBL_RULE_VALIDATE_CLAUSE(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY ADD CONSTRAINT \`fk_tbl_rule_validate_clause_metadata_entry-1\` FOREIGN KEY IF NOT EXISTS (RULE_VALIDATE_CLAUSE_METADATA_ID) REFERENCES TBL_RULE_VALIDATE_CLAUSE_METADATA(ID) ON DELETE CASCADE`)
       await conn.query(`ALTER TABLE TBL_RULE_WHEN_CLAUSE ADD CONSTRAINT \`fk_tbl_rule_when_clause-1\` FOREIGN KEY IF NOT EXISTS (RULE_ID) REFERENCES TBL_RULE(ID)`);
       await conn.query(`ALTER TABLE TBL_RULE_WHEN_CLAUSE ADD CONSTRAINT \`fk_tbl_rule_when_clause-2\` FOREIGN KEY IF NOT EXISTS (ITEM_ATTRIBUTE_ID) REFERENCES TBL_ITEM_ATTRIBUTE(ID)`);
-      await
+      await conn.query(`ALTER TABLE TBL_RULE_WHEN_CLAUSE_METADATA ADD CONSTRAINT \`fk_tbl_rule_when_clause_metadata-1\` FOREIGN KEY IF NOT EXISTS (RULE_WHEN_CLAUSE_ID) REFERENCES TBL_RULE_WHEN_CLAUSE(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY ADD CONSTRAINT \`fk_tbl_rule_when_clause_metadata_entry-1\` FOREIGN KEY IF NOT EXISTS (RULE_WHEN_CLAUSE_METADATA_ID) REFERENCES TBL_RULE_WHEN_CLAUSE_METADATA(ID) ON DELETE CASCADE`);
+
       await conn.query(`ALTER TABLE TBL_ITEM ADD CONSTRAINT \`fk_tbl_item-1\` FOREIGN KEY IF NOT EXISTS (PARENT_ID) REFERENCES TBL_ITEM(ID)`);
       await conn.query(`ALTER TABLE TBL_ITEM ADD CONSTRAINT \`fk_tbl_item-2\` FOREIGN KEY IF NOT EXISTS (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
       await conn.query(`ALTER TABLE TBL_ITEM_IMAGE ADD CONSTRAINT \`fk_tbl_item_image-1\` FOREIGN KEY IF NOT EXISTS (ITEM_ID) REFERENCES TBL_ITEM(ID)`);

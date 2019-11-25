@@ -1,6 +1,10 @@
 // this is the attribute form stored in db
-import {ItemImage, Value} from "../../model/item.model";
+import {ItemImage, ItemValTypes, Value} from "../../model/item.model";
+import {ValidateClause, WhenClause} from "../../model/rule.model";
+import {AttributeType} from "../../model/attribute.model";
+import {OperatorType} from "../../model/operator.model";
 
+// === Attribute2
 export interface Attribute2 {
     id: number;
     type: string;
@@ -23,6 +27,7 @@ export interface AttributeMetadataEntry2 {
 
 
 // this is the item metadata form stored in db
+// ====== Item2
 export interface Item2 {
     id: number;
     name: string;
@@ -54,5 +59,58 @@ export interface ItemMetadataEntry2 {
     dataType: string;
 }
 
+// ======== Rule2
+export interface Rule2 {
+    id: number;
+    name: string;
+    status: string;
+    description: string;
+    validateClauses: ValidateClause2[];
+    whenClauses: WhenClause2[];
+}
+
+export interface ValidateClause2 {
+    id: number;
+    attributeId: number;
+    attributeName: string;
+    attributeType: AttributeType;
+    operator: OperatorType;
+    metadatas: ValidateClauseMetadata2[]
+}
+
+export interface ValidateClauseMetadata2 {
+    id: number;
+    name: string;
+    entries: ValidateClauseMetadataEntry2[];
+}
+
+export interface ValidateClauseMetadataEntry2 {
+    id: number;
+    key: string;
+    value: string;
+    dataType: string;
+}
+
+export interface WhenClause2 {
+    id: number;
+    attributeId: number;
+    attributeName: string;
+    attributeType: AttributeType;
+    operator: OperatorType;
+    metadatas: WhenClauseMetadata2[];
+}
+
+export interface WhenClauseMetadata2 {
+    id: number;
+    name: string;
+    entries: WhenClauseMetadataEntry2[];
+}
+
+export interface WhenClauseMetadataEntry2 {
+    id: number;
+    key: string;
+    value: string;
+    dataType: string;
+}
 
 

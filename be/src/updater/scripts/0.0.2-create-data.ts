@@ -238,14 +238,61 @@ const INSERT_DATA = async () => {
         const a13m2e99: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey99=xvalue99']);
 
 
+        // items
         await createManyItems(conn, v1.insertId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a13.insertId);
+
+
+        // rules
+
 
     });
 }
 
+type CreateRuleType = {
+    name: string,
+    viewId: number,
+    validateClauses: {
+        attributeId: number,
+        operator: string,
+        metadatas: {
+            entries: {
+                key: string,
+                value: string,
+                dataType: string
+            }[]
+        }[]
+    }[],
+    whenClauses: {
+        attributeId: number,
+        operator: string,
+        metadatas: {
+            entries: {
+                key: string,
+                value: string,
+                dataType: string
+            }[]
+        }[]
+    }[]
+}
+
+const createRule = async (conn: PoolConnection, t: CreateRuleType) => {
+    const r1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,'ENABLED')`, [t.viewId, t.name, `${t.name} Description`]);
+    for (const vc of t.validateClauses) {
+        const vc1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, ITEM_ATTRIBUTE_ID, OPERATOR, CONDITION) VALUES (?,?,?,?)`, [r1.insertId, vc.attributeId, 'eq', '']);
+        for (const vcm of vc.metadatas) {
+            const vcm1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE_METADATA (RULE_VALIDATE_CLAUSE_ID, NAME) VALUES (?, '')`, [vc1.insertId]);
+            for (const vcme of vcm.entries) {
+                await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY (RULE_VALIDATE_CLAUSE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [vcm1.insertId, vcme.key, vcme.value, vcme.dataType]);
+            }
+        }
+    }
+
+    for (const wc of t.whenClauses) {
+
+    }
+}
 
 type CreateItemType = {
-    conn: PoolConnection,
     viewId: number,
     itemName: string,
     images: {
@@ -273,7 +320,6 @@ const createManyItems = async (conn: PoolConnection, viewId: number, att1Id: num
         return (((_c++)%351)+1);
     }
     const createAnItemType = (children: CreateItemType[] = []): CreateItemType => ({
-        conn,
         viewId: viewId,
         itemName: `item #${random()}`,
         images: [
@@ -390,23 +436,23 @@ const createManyItems = async (conn: PoolConnection, viewId: number, att1Id: num
             createAnItemType(),
         ]);
 
-    _createItem(itemDef);
+    _createItem(conn, itemDef);
 }
 
-const _createItem = async (args: CreateItemType, parentItemId: number = null) => {
+const _createItem = async (conn: PoolConnection, args: CreateItemType, parentItemId: number = null) => {
     // item
-    const qItem: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`, [parentItemId, args.viewId, args.itemName, `${args.itemName} Description`]);
+    const qItem: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`, [parentItemId, args.viewId, args.itemName, `${args.itemName} Description`]);
     const itemId: number = qItem.insertId;
     for (const attr of args.values) {
-        const qItemValue: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, attr.attributeId]);
+        const qItemValue: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, attr.attributeId]);
         const itemValueId: number = qItemValue.insertId;
 
         for (const metadata of attr.metadatas) {
-            const qItemValueMetadata: QueryResponse = await args.conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUES (?,?)`, [itemValueId, '']);
+            const qItemValueMetadata: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUES (?,?)`, [itemValueId, '']);
             const itemValueMetadataId: number = qItemValueMetadata.insertId;
 
             for (const entry of metadata.entries) {
-                await args.conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [itemValueMetadataId, entry.key, entry.value, entry.dataType]);
+                await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [itemValueMetadataId, entry.key, entry.value, entry.dataType]);
             }
         }
     }
@@ -418,10 +464,10 @@ const _createItem = async (args: CreateItemType, parentItemId: number = null) =>
         const buffer: Buffer = await util.promisify(readFile)(fullPath);
         const mimeType: fileType.FileTypeResult = fileType(buffer);
 
-        await args.conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, [itemId, isPrimary, mimeType.mime, fileName, buffer.length, buffer]);
+        await conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, [itemId, isPrimary, mimeType.mime, fileName, buffer.length, buffer]);
     }
     for (const child of args.children) {
-        _createItem(child, itemId);
+        _createItem(conn, child, itemId);
     }
 }
 

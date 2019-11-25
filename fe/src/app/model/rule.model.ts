@@ -5,7 +5,7 @@ import {OperatorType} from './operator.model';
 export interface Rule {
   id: number;
   name: string;
-  enabled: boolean;
+  status: string;
   description: string;
   validateClauses: ValidateClause[];
   whenClauses: WhenClause[];
