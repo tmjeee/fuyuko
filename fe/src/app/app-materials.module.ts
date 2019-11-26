@@ -35,10 +35,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
-import {DragDropModule} from "@angular/cdk/drag-drop";
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
+    BrowserAnimationsModule,
     MatAutocompleteModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -77,6 +79,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     DragDropModule,
   ],
   exports: [
+    BrowserAnimationsModule,
     MatAutocompleteModule,
     MatCheckboxModule,
     MatFormFieldModule,

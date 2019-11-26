@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ItemAndAttributeSet, ItemValueAndAttribute} from '../../model/item-attribute.model';
-import {Item} from '../../model/item.model';
+import {Item, ItemImage} from '../../model/item.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ItemDataEditorDialogComponent} from './item-data-editor-dialog.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -9,6 +9,7 @@ import {map} from 'rxjs/operators';
 import {ItemSearchComponentEvent, SearchType} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 import {createNewItem} from '../../utils/ui-item-value-creator.utils';
+import config from '../../../assets/config.json';
 
 
 export interface DataThumbnailSearchComponentEvent {
@@ -22,12 +23,14 @@ export interface DataThumbnailComponentEvent {
   deletedItems: Item[];  // only available when type is modification
 }
 
+const URL_GET_ITEM_IMAGE = `${config.api_host_url}/item/image/:itemImageId`;
+
 @Component({
   selector: 'app-data-thumbnail',
   templateUrl: './data-thumbnail.component.html',
   styleUrls: ['./data-thumbnail.component.scss']
 })
-export class DataThumbnailComponent {
+export class DataThumbnailComponent implements OnInit {
   counter: number;
 
   showMoreMap: Map<number, boolean>; /* <item id, can show more> */
@@ -49,6 +52,18 @@ export class DataThumbnailComponent {
     this.events = new EventEmitter();
     this.searchEvents = new EventEmitter();
     this.counter = -1;
+  }
+
+  ngOnInit(): void {
+  }
+
+
+  getItemImagesUrl(item: Item): string[] {
+    if (item && item.images) {
+      // const p = `/item/image/:itemImageId`;
+      return item.images.map((i: ItemImage) => URL_GET_ITEM_IMAGE.replace(':itemImageId', `${i.id}`));
+    }
+    return [];
   }
 
   isShowMore(item: Item) {
@@ -188,4 +203,5 @@ export class DataThumbnailComponent {
       this.selectionModel.deselect(item);
     }
   }
+
 }

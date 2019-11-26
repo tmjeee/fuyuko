@@ -12,7 +12,7 @@ const httpAction: any[] = [
         await doInDbConnection(async (conn: PoolConnection) => {
 
             const q: QueryA = await conn.query(
-                `SELECT ID, NAME, MIME_TYPE, SIZE FROM TBL_GLOBAL_AVATAR WHERE NAME <> 'no-avatar.jpg'`);
+                `SELECT ID, NAME, MIME_TYPE, SIZE FROM TBL_GLOBAL_AVATAR`);
 
             const globalAvatar: GlobalAvatar[] = q.reduce((acc: GlobalAvatar[], curr: QueryI) => {
                 acc.push({

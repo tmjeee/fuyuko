@@ -6,7 +6,7 @@ import {RegistrationService} from '../../service/registration-service/registrati
 import {tap} from 'rxjs/operators';
 import {RegistrationResponse} from '../../model/registration.model';
 import {NotificationsService} from 'angular2-notifications';
-import {toNotifications} from "../../service/common.service";
+import {toNotifications} from '../../service/common.service';
 
 @Component({
   templateUrl: './register.page.html',

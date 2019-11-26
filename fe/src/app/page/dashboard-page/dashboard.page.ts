@@ -37,6 +37,12 @@ export class DashboardPageComponent implements OnInit {
     }
 
     onDashboardEvent($event: DashboardComponentEvent) {
+        console.log('********** onDashboardEvent', $event);
+        this.notificationsService.success('Success', 'testing 123');
+        this.notificationsService.info('Info', 'testing 123 asd sid iasdo oais diaosid asd iois iod iaoi dioisd ioiosd ioioaisd iosd');
+        this.notificationsService.warn('Warninig', 'testing 123 sioio asdio iosid iosdsd');
+        this.notificationsService.error('Error', 'testing 123 iaoisdi aposidiaps diaopsid osidopai sdiosido sido siod sod apidsosipoaidois iudsdis udisudiauisdsiud ');
+        /*
         this.dashboardService.saveDashboardLayout($event.serializedData)
             .pipe(
                 tap((r: boolean) => {
@@ -47,5 +53,6 @@ export class DashboardPageComponent implements OnInit {
                     }
                 })
             ).subscribe();
+         */
     }
 }

@@ -7,8 +7,8 @@ import {Registry} from "../../registry";
 import {valid} from "semver";
 
 const sendNoAvatarAvatar = async (res: Response, conn: PoolConnection) => {
-    const q: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_AVATAR WHERE NAME = ?',
-        ['no-avatar.jpg']);
+    const q: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_IMAGE WHERE TAG = ?',
+        ['no-avatar']);
     if (q.length > 0) {
         res.setHeader('Content-Length', q[0].SIZE);
         res.status(200)
@@ -59,7 +59,7 @@ const httpAction = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = '/user/avatar/:userId';
+    const p = '/user/:userId/avatar';
     registry.addItem('GET', p);
     router.get(p, ...httpAction)
 }

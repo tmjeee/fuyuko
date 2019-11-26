@@ -69,10 +69,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       this.notificationsService.success('Success', `Avatar updated`);
     };
     if (avatar instanceof File) {
-      this.avatarService.saveUserCustomAvatar(avatar)
+      this.avatarService.saveUserCustomAvatar(this.myself.id, avatar)
           .pipe( tap(f.bind(this))).subscribe();
     } else if (avatar) { // not falsy
-      this.avatarService.saveUserAvatar(avatar.name)
+      this.avatarService.saveUserAvatar(this.myself.id, avatar.name)
           .pipe(tap(f.bind(this))).subscribe();
     }
   }

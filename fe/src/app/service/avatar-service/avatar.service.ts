@@ -5,7 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import config from '../../../assets/config.json';
 
 const URL_ALL_GLOBAL_AVATARS = `${config.api_host_url}/global/avatars`;
-const URL_SAVE_USER_AVATAR = `${config.api_host_url}/user/avatar`;
+const URL_SAVE_USER_AVATAR = `${config.api_host_url}/user/:userId/avatar`;
 
 @Injectable()
 export class AvatarService {
@@ -13,16 +13,16 @@ export class AvatarService {
   constructor(private httpClient: HttpClient) {
   }
 
-  saveUserCustomAvatar(f: File): Observable<UserAvatarResponse> {
+  saveUserCustomAvatar(userId: number, f: File): Observable<UserAvatarResponse> {
      const formData: FormData = new FormData();
      formData.set('customAvatarFile', f);
-     return this.httpClient.post<UserAvatarResponse>(URL_SAVE_USER_AVATAR, formData);
+     return this.httpClient.post<UserAvatarResponse>(URL_SAVE_USER_AVATAR.replace(':userId', `${userId}`), formData);
   }
 
-  saveUserAvatar(globalAvatarName: string): Observable<UserAvatarResponse> {
+  saveUserAvatar(userId: number, globalAvatarName: string): Observable<UserAvatarResponse> {
       const formData: FormData = new FormData();
       formData.set('globalAvatarName', globalAvatarName);
-      return this.httpClient.post<UserAvatarResponse>(URL_SAVE_USER_AVATAR, formData);
+      return this.httpClient.post<UserAvatarResponse>(URL_SAVE_USER_AVATAR.replace(':userId', `${userId}`), formData);
   }
 
   allPredefinedAvatars(): Observable<GlobalAvatar[]> {

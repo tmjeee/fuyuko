@@ -20,7 +20,7 @@
         <mat-icon color="primary" (click)="editItem(item)">edit</mat-icon>
       </div>
       <div class="carousel">
-        <app-carousel [images]="item.images"></app-carousel>
+        <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Name</mat-label>
@@ -50,7 +50,7 @@
           </div>
         </ng-container>
       </div>
-      <div><a href="#" class="show-more-link" (click)="showMore($event, item)">
+      <div><a href="#" class="show-more-link mat-hint mat-caption" (click)="showMore($event, item)">
         <ng-container *ngIf="isShowMore(item)">Show less ...</ng-container>
         <ng-container *ngIf="!isShowMore(item)">Show more ...</ng-container>
       </a></div>

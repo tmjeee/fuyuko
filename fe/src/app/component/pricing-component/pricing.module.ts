@@ -11,10 +11,10 @@ import {PricingStructureTableComponent} from './pricing-structure-table.componen
 @NgModule({
     imports: [
         CommonModule,
-        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        AppMaterialsModule
+        AppMaterialsModule,
+        BrowserAnimationsModule,
     ],
     declarations: [
         PricingStructurePopupComponent,
@@ -25,6 +25,7 @@ import {PricingStructureTableComponent} from './pricing-structure-table.componen
         PricingStructurePopupComponent,
         PricingStructureTableComponent,
         ItemPricePopupComponent,
+        BrowserAnimationsModule,
     ],
     entryComponents: [
         PricingStructurePopupComponent,

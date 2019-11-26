@@ -1,115 +1,64 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {
-    PricingStructure, PricingStructureItem,
-    PricingStructureItemWithPrice,
+    PricingStructure,
     PricingStructureWithItems,
     TablePricingStructureItemWithPrice
 } from '../../model/pricing-structure.model';
+import config from '../../../assets/config.json';
+import {HttpClient} from '@angular/common/http';
+import {ApiResponse} from '../../model/response.model';
 
-let pricingStructureIdCounter = 0;
-let pricingStructureItemIdCounter = 0;
-
-const allPricingStructures: PricingStructureWithItems[] = [
-    { id: (++pricingStructureIdCounter), name: 'Pricing Structure #1', description: 'Pricing Structure #1 description',
-        items: [
-            {
-                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #1a',
-                itemDescription: 'item #1a description', price: 1.00, country: 'AUD'
-            } as PricingStructureItemWithPrice,
-            {
-                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #1b',
-                itemDescription: 'item #1b description', price: 2.00, country: 'AUD'
-            } as PricingStructureItemWithPrice,
-            {
-                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #1c',
-                itemDescription: 'item #1c description', price: 3.00, country: 'AUD'
-            } as PricingStructureItemWithPrice,
-        ]
-    } as PricingStructureWithItems,
-    { id: (++pricingStructureIdCounter), name: 'Pricing Structure #2', description: 'Pricing Structure #2 description',
-        items: [
-            {
-                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #2a',
-                itemDescription: 'item #2a description', price: 2.00, country: 'AUD'
-            } as PricingStructureItemWithPrice,
-            {
-                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #2b',
-                itemDescription: 'item #2b description', price: 4.00, country: 'AUD'
-            } as PricingStructureItemWithPrice,
-            {
-                id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: 'item #2c',
-                itemDescription: 'item #2c description', price: 6.00, country: 'AUD'
-            } as PricingStructureItemWithPrice,
-        ]
-    } as PricingStructureWithItems,
-];
+const URL_ALL_PRICING_STRUCTURES = `${config.api_host_url}/view/:viewId/pricingStructures`;
+const URL_ALL_ITEMS_WITH_PRICE = `${config.api_host_url}/view/:viewId/pricingStructuresWithItems/:pricingStructureId`;
+const URL_UPDATE_PRICING_STRUCTURE_STATUS = `${config.api_host_url}/view/:viewId/pricingStructure/:pricingStructureId/status/:status`;
+const URL_UPDATE_PRICING_STRUCTURE = `${config.api_host_url}/view/:viewId/pricingStructures`;
+const URL_UPDATE_PRICING_STRUCTURE_ITEM = `${config.api_host_url}/view/:viewId/pricingStructure/:pricingStructureId/item`;
 
 
 @Injectable()
 export class PricingStructureService {
 
-    allPricingStructures(): Observable<PricingStructure[]> {
-        return of(allPricingStructures.map((ps: PricingStructureWithItems) => {
-            return {
-                id: ps.id,
-                name: ps.name,
-                description: ps.description,
-            } as PricingStructure;
-        }));
+    constructor(private httpClient: HttpClient) { }
+
+    allPricingStructures(viewId: number): Observable<PricingStructure[]> {
+        return this.httpClient.get<PricingStructure[]>(URL_ALL_PRICING_STRUCTURES.replace(':viewId', `${viewId}`));
     }
 
-    pricingStructureWithItems(pricingStructureId: number): Observable<PricingStructureWithItems> {
-        return of(allPricingStructures.find((p: PricingStructureWithItems) => p.id === pricingStructureId));
+    pricingStructureWithItems(viewId: number, pricingStructureId: number): Observable<PricingStructureWithItems> {
+        return this.httpClient.get<PricingStructureWithItems>(
+            URL_ALL_ITEMS_WITH_PRICE.replace(':viewId', `${viewId}`).replace(':pricingStructureId', `${pricingStructureId}`));
     }
     ////////
 
-    deletePricingStructure(pricingStructure: PricingStructure): Observable<PricingStructure> {
-        const temp: PricingStructureWithItems[] = allPricingStructures.filter((p: PricingStructureWithItems) => {
-            return p.id !== pricingStructure.id;
-        });
-        allPricingStructures.length = 0 ;
-        allPricingStructures.push(...temp);
-        return of(pricingStructure);
+    deletePricingStructure(viewId: number, pricingStructure: PricingStructure): Observable<ApiResponse> {
+        return this.httpClient.post<ApiResponse>(
+            URL_UPDATE_PRICING_STRUCTURE_STATUS
+                .replace(':viewId', `${viewId}`)
+                .replace(':pricingStructureId', `${pricingStructure.id}`)
+                .replace(':status', `DELETED`), {});
     }
 
-    newPricingStructure(pricingStructure: PricingStructure): Observable<PricingStructure> {
-        const newPricingStructure: PricingStructureWithItems =
-            { id: (++pricingStructureIdCounter), name: `Pricing Structure #${(Math.random()*100)/100}`, description: `Pricing Structure #${(Math.random()*100)/100} description`,
-                items: [
-                    {
-                        id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: `item #${(Math.random()*100)/100}`,
-                        itemDescription: `item #${(Math.random()*100)/100} description`, price: (Math.random()*10)/10, country: 'AUD'
-                    } as PricingStructureItemWithPrice,
-                    {
-                        id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: `item #${(Math.random()*100)/100}`,
-                        itemDescription: `item #${(Math.random()*100)/100} description`, price: (Math.random()*10)/10, country: 'AUD'
-                    } as PricingStructureItemWithPrice,
-                    {
-                        id: (++pricingStructureItemIdCounter), itemId: pricingStructureItemIdCounter, itemName: `item #${(Math.random()*100)/100}`,
-                        itemDescription: `item #${(Math.random()*100)/100} description`, price: (Math.random()*10)/10, country: 'AUD'
-                    } as PricingStructureItemWithPrice,
-                ]
-            } as PricingStructureWithItems;
-        allPricingStructures.push(newPricingStructure);
-        return of(newPricingStructure);
+    newPricingStructure(viewId: number, pricingStructure: PricingStructure): Observable<ApiResponse> {
+        return this.httpClient.post<ApiResponse>(
+            URL_UPDATE_PRICING_STRUCTURE.replace(':viewId', `${viewId}`), {
+                pricingStructures: [pricingStructure]
+            });
     }
 
-    updatePricingStructure(pricingStructure: PricingStructure): Observable<PricingStructure> {
-        const ps: PricingStructureWithItems = allPricingStructures.find((p: PricingStructure) => p.id === pricingStructure.id);
-        ps.name = pricingStructure.name;
-        ps.description = pricingStructure.description;
-        return of(pricingStructure);
+    updatePricingStructure(viewId: number, pricingStructure: PricingStructure): Observable<ApiResponse> {
+        return this.httpClient.post<ApiResponse>(
+            URL_UPDATE_PRICING_STRUCTURE.replace(':viewId', `${viewId}`), {
+                pricingStructures: [pricingStructure]
+            });
     }
 
-    editPricingStructureItem(pricingStructureItem: TablePricingStructureItemWithPrice): Observable<PricingStructureItemWithPrice> {
-        for (const ps of allPricingStructures) {
-            for (const pi  of ps.items) {
-                if (pi.id === pricingStructureItem.id) {
-                    pi.price = pricingStructureItem.price;
-                    return of(pi);
-                }
-            }
-        }
+    editPricingStructureItem(viewId: number, pricingStructureId: number, pricingStructureItem: TablePricingStructureItemWithPrice):
+        Observable<ApiResponse> {
+        return this.httpClient.post<ApiResponse>(
+            URL_UPDATE_PRICING_STRUCTURE_ITEM
+                .replace(':viewId', `${viewId}`)
+                .replace(':pricingStructureId', `${pricingStructureId}`),
+            {pricingStructureItems: [pricingStructureItem]});
     }
 }

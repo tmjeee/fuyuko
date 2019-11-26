@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ItemAndAttributeSet, ItemValueAndAttribute} from '../../model/item-attribute.model';
 import {ItemSearchComponentEvent, SearchType} from '../item-search-component/item-search.component';
-import {Item} from '../../model/item.model';
+import {Item, ItemImage} from '../../model/item.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ItemDataEditorDialogComponent} from '../data-thumbnail-component/item-data-editor-dialog.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {map} from 'rxjs/operators';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 import {createNewItem} from '../../utils/ui-item-value-creator.utils';
+import config from "../../../assets/config.json";
 
 export interface DataListComponentEvent {
     type: 'modification' | 'reload';
@@ -21,6 +22,7 @@ export interface DataListSearchComponentEvent {
     search: string;
 }
 
+const URL_GET_ITEM_IMAGE = `${config.api_host_url}/item/image/:itemImageId`;
 
 @Component({
   selector: 'app-data-list',
@@ -46,6 +48,14 @@ export class DataListComponent {
         this.pendingDeletion = [];
         this.events = new EventEmitter();
         this.searchEvents = new EventEmitter();
+    }
+
+    getItemImagesUrl(item: Item): string[] {
+        if (item && item.images) {
+            // const p = `/item/image/:itemImageId`;
+            return item.images.map((i: ItemImage) => URL_GET_ITEM_IMAGE.replace(':itemImageId', `${i.id}`));
+        }
+        return [];
     }
 
     onItemSearchEvent($event: ItemSearchComponentEvent) {

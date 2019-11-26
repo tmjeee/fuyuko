@@ -126,10 +126,12 @@ import {UserActivationPageComponent} from './page/user-activation-page/user-acti
 import {InvitationService} from './service/invitation-service/invitation.service';
 import { JwtInterceptor } from './interceptor/jwt.interceptor';
 import {GlobalCommunicationService} from './service/global-communication-service/global-communication.service';
-import Global = WebAssembly.Global;
-import {RegistrationService} from "./service/registration-service/registration.service";
+import {RegistrationService} from './service/registration-service/registration.service';
 
-const appInitializer = (settingsService: SettingsService, authService: AuthService, themeService: ThemeService) => {
+const appInitializer = (settingsService: SettingsService,
+                        authService: AuthService,
+                        themeService: ThemeService,
+                        viewService: ViewService) => {
   return () => {
     authService.asObservable()
       .pipe(
@@ -139,9 +141,11 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
         } else { // login
           settingsService.getRuntimeSettings(u).subscribe();
           themeService.setTheme(u.theme);
+          viewService.init();
         }
       })
       ).subscribe();
+    console.log('********************* app initialize', viewService);
   };
 };
 
@@ -225,7 +229,7 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     HttpClientModule,
     SimpleNotificationsModule.forRoot({
       position: ['bottom', 'center'],
-      timeOut: 2000,
+      timeOut: 0,
       showProgressBar: true,
       pauseOnHover: true,
       lastOnBottom: true,
@@ -285,7 +289,8 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     {provide: RegistrationService, useClass: RegistrationService} as Provider,
     {provide: GlobalCommunicationService, useClass: GlobalCommunicationService} as Provider,
 
-    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService] } as Provider,
+    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
+        deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
@@ -298,6 +303,8 @@ const appInitializer = (settingsService: SettingsService, authService: AuthServi
     EditAttributeDialogComponent,
   ],
   exports: [
+    BrowserModule,
+    BrowserAnimationsModule
   ],
   bootstrap: [AppComponent]
 })

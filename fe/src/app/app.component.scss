@@ -1,0 +1,8 @@
+.app {
+  ::ng-deep simple-notifications {
+    .simple-notification-wrapper {
+      max-width: 100vw;
+      min-width: 80vw;
+    }
+  }
+}

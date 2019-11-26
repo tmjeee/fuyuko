@@ -31,11 +31,31 @@ const httpAction: any[] = [
             `, [itemId]);
 
             if (q.length <= 0) {
-                res.status(400).json(
-                    makeApiErrorObj(
-                        makeApiError(`No Item image for item id ${itemId}`, `itemId`, `${itemId}`, `API`)
-                    )
-                );
+
+                const q1: QueryA = await conn.query(`
+                    SELECT
+                        ID, TAG, NAME, MIME_TYPE, SIZE, CONTENT 
+                    FROM TBL_GLOBAL_IMAGE WHERE TAG = ?
+                `, ['no-item-image']);
+
+
+                if (q1.length <= 0) {
+                    res.status(400).json(
+                        makeApiErrorObj(
+                            makeApiError(`No Item image for item id ${itemId}`, `itemId`, `${itemId}`, `API`)
+                        )
+                    );
+                    return;
+                }
+
+                const contentLength: number = q1[0].SIZE;
+                const contentType: string = q1[0].MIME_TYPE;
+                const buffer: Buffer = q1[0].CONTENT;
+
+                res.header('Content-Length', String(contentLength));
+                res.status(200)
+                    .contentType(contentType)
+                    .end(buffer);
                 return;
             }
 

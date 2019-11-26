@@ -24,16 +24,16 @@ export interface RowInfo {
 
 export class PricingStructureItemsTableDataSource extends DataSource<TablePricingStructureItemWithPrice> {
 
-    private subject: BehaviorSubject<TablePricingStructureItemWithPrice[]>;
+     private subject: BehaviorSubject<TablePricingStructureItemWithPrice[]> = new BehaviorSubject<TablePricingStructureItemWithPrice[]>([]);
 
     connect(collectionViewer: CollectionViewer):
         Observable<TablePricingStructureItemWithPrice[] | ReadonlyArray<TablePricingStructureItemWithPrice>> {
-        this.subject = new BehaviorSubject<TablePricingStructureItemWithPrice[]>([]);
+        // this.subject = new BehaviorSubject<TablePricingStructureItemWithPrice[]>([]);
         return this.subject.asObservable();
     }
 
     disconnect(collectionViewer: CollectionViewer): void {
-        this.subject.complete();
+        // this.subject.complete();
     }
 
     update(items: TablePricingStructureItemWithPrice[]) {
@@ -95,6 +95,7 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
 
     onPricingStructureSelectionChanged($event: MatSelectChange) {
         this.pricingStructure = $event.value as PricingStructure;
+        console.log(this.pricingStructure);
         this.reload(this.pricingStructure);
     }
 
@@ -107,17 +108,24 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
                 .pipe(
                     tap((p: PricingStructureWithItems) => {
                         this.pricingStructureWithItems = p;
+                        console.log('******************* pricingStructureWithItems', p);
                         this.pricingStructureWithItems.items.forEach((item: PricingStructureItemWithPrice) => {
                             this.rowInfoMap.set(item.id, { tableItem: item, expanded: false } as RowInfo);
                         });
-                        this.tablePricingStructureItemsWithPrice = toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items);
-                        setTimeout(()=>{
+                        this.tablePricingStructureItemsWithPrice =
+                            toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items);
+
+                        // this.dataSource = new PricingStructureItemsTableDataSource();
+                        this.dataSource.update(this.tablePricingStructureItemsWithPrice);
+                        /*
+                        setTimeout(() => {
                             this.dataSource.update([...this.tablePricingStructureItemsWithPrice]);
                         });
+                         */
                     })
                 ).subscribe();
         } else {
-            this.tablePricingStructureItemsWithPrice = []
+            this.tablePricingStructureItemsWithPrice = [];
         }
     }
 

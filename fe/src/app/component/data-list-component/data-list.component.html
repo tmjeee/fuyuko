@@ -30,7 +30,7 @@
                    <mat-panel-description>{{item.description}}</mat-panel-description>
                </mat-expansion-panel-header>
                 <div>
-                    <app-carousel [images]="item.images"></app-carousel>
+                    <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
                 </div>
                 <div>
                     <mat-label>Name</mat-label>

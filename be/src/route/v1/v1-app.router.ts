@@ -1,11 +1,6 @@
 
-import express, {Request, Response, NextFunction, Router, Express} from 'express';
-import {i} from '../../logger';
+import express, {Router, Express} from 'express';
 import {Registry} from "../../registry";
-import v1 = require("uuid/v1");
-import * as formidable from 'formidable';
-import {Fields, Files} from 'formidable';
-import {range} from "../../util";
 
 // routes
 import registerGetHeartbeatRoute from './GET-heartbeat-route';
@@ -52,7 +47,12 @@ import registerPostUpdateItemRoute from './POST-update-items.route';
 import registerPostUpdateItemStatusRoute  from './POST-update-item-status.route';
 import registerGetAllRulesByViewRoute from './GET-all-rules-by-view.route';
 import registerPostUpdateRuleStatusRoute from './POST-update-rule-status.route';
-import registerPostUpdateRules from './POST-update-rules.route';
+import registerPostUpdateRulesRoute from './POST-update-rules.route';
+import registerGetAllPricingStructuresByViewRoute from './GET-all-pricing-structures-by-view.route';
+import registerGetAllPricingStructuresWithItemsByViewRoute from './GET-all-pricing-structures-with-items-by-view.route';
+import registerPostUpdatePricingStructureRoute from './POST-update-pricing-structure.route';
+import registerPostUpdatePricingStructureStatusRoute from './POST-update-pricing-structure-status.route';
+import registerPostUpdatePricingStructureItemRoute from './POST-update-pricing-structure-item.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -107,7 +107,12 @@ const reg = (app: Express, regi: Registry) => {
     registerPostUpdateItemStatusRoute(v1AppRouter, registry);
     registerGetAllRulesByViewRoute(v1AppRouter, registry);
     registerPostUpdateRuleStatusRoute(v1AppRouter, registry);
-    registerPostUpdateRules(v1AppRouter, registry);
+    registerPostUpdateRulesRoute(v1AppRouter, registry);
+    registerGetAllPricingStructuresByViewRoute(v1AppRouter, registry);
+    registerGetAllPricingStructuresWithItemsByViewRoute(v1AppRouter, registry);
+    registerPostUpdatePricingStructureStatusRoute(v1AppRouter, registry);
+    registerPostUpdatePricingStructureItemRoute(v1AppRouter, registry);
+    registerPostUpdatePricingStructureRoute(v1AppRouter, registry);
 }
 
 

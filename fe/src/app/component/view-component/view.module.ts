@@ -6,6 +6,7 @@ import {AppMaterialsModule} from '../../app-materials.module';
 import {ViewTableComponent} from './view-table.component';
 import {ViewEditorComponent} from './view-editor.component';
 import {ViewEditorDialogComponent} from './view-editor-dialog.component';
+import {ViewSelectorComponent} from "./view-selector.component";
 
 @NgModule({
     imports: [
@@ -19,11 +20,13 @@ import {ViewEditorDialogComponent} from './view-editor-dialog.component';
         ViewTableComponent,
         ViewEditorComponent,
         ViewEditorDialogComponent,
+        ViewSelectorComponent,
     ],
     exports: [
         ViewTableComponent,
         ViewEditorComponent,
         ViewEditorDialogComponent,
+        ViewSelectorComponent,
     ],
     entryComponents: [
         ViewEditorDialogComponent,

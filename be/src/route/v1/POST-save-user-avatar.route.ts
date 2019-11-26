@@ -12,14 +12,18 @@ import {UserAvatarResponse} from "../../model/avatar.model";
 import util from 'util';
 import fs from 'fs';
 import {Registry} from "../../registry";
+import {param} from 'express-validator';
 
 const httpAction: any[] = [
-
+    [
+        param('userId').exists().isNumeric()
+    ],
+    validateJwtMiddlewareFn,
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
         const jwtPayload: JwtPayload = getJwtPayload(res);
-        const userId: number = jwtPayload.user.id;
+        const userId: number = Number(req.params.userId);
 
         const r: {fields: Fields, files: Files} = await multipartParse(req);
 
@@ -89,7 +93,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = '/user/avatar';
+    const p = '/user/:userId/avatar';
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
 };

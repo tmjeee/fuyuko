@@ -20,6 +20,7 @@ export const update = async () => {
 
     await INSERT_DATA();
     await INSERT_GLOBAL_AVATARS();
+    await INSERT_GLOBAL_IMAGES();
 
     i(`done running update on ${__filename}`);
 };
@@ -37,6 +38,23 @@ const INSERT_GLOBAL_AVATARS = async () => {
         await doInDbConnection(async (conn: PoolConnection) => {
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_AVATAR (NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?, ?, ?, ?)`,
                 [file, mimeType.mime, size, buffer]);
+        });
+    }
+};
+
+const INSERT_GLOBAL_IMAGES = async () => {
+    const globalImagesAssetsDir: string = path.resolve(__dirname, '../assets/global-images');
+    const files: string[] = await util.promisify(fs.readdir)(globalImagesAssetsDir);
+
+    for (const file of files) {
+        const fullPath = `${globalImagesAssetsDir}${path.sep}${file}`;
+        const fileNameOnly = path.basename(file).split('.')[0];
+        const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(fullPath));
+        const mimeType: fileType.FileTypeResult = fileType(buffer);
+        const size = buffer.length;
+
+        await doInDbConnection(async (conn: PoolConnection) => {
+            const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_IMAGE (NAME, MIME_TYPE, SIZE, CONTENT, TAG) VALUES (?,?,?,?,?)`, [file, mimeType.mime, size, buffer, fileNameOnly]);
         });
     }
 }
@@ -238,12 +256,17 @@ const INSERT_DATA = async () => {
         const a13m2e99: QueryResponse = await conn.query('INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey99=xvalue99']);
 
 
+        // pricing structure
+        const ps1: QueryResponse = await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?, 'ENABLED')`, [v1.insertId, 'Pricing Structure #1', 'Pricing Structure #1 Description']);
+
+
         // items
-        await createManyItems(conn, v1.insertId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a13.insertId);
+        await createManyItems(conn, ps1.insertId, v1.insertId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a13.insertId);
 
 
         // rules
         await createManyRules(conn, v1.insertId, a1.insertId, a2.insertId);
+
 
 
     });
@@ -374,7 +397,7 @@ type CreateItemType = {
     children: CreateItemType[]
 }
 
-const createManyItems = async (conn: PoolConnection, viewId: number, att1Id: number, att2Id: number, att3Id: number, att4Id: number, att5Id: number, att6Id: number,
+const createManyItems = async (conn: PoolConnection, pricingStructureId: number, viewId: number, att1Id: number, att2Id: number, att3Id: number, att4Id: number, att5Id: number, att6Id: number,
                           att7Id: number, att8Id: number, att9Id: number, att10Id: number, att11Id: number, att12Id: number, att13Id: number) => {
     let _c = 0;
     const c = () => {
@@ -497,10 +520,10 @@ const createManyItems = async (conn: PoolConnection, viewId: number, att1Id: num
             createAnItemType(),
         ]);
 
-    _createItem(conn, itemDef);
+    _createItem(conn, pricingStructureId, itemDef);
 }
 
-const _createItem = async (conn: PoolConnection, args: CreateItemType, parentItemId: number = null) => {
+const _createItem = async (conn: PoolConnection, pricingStructureId: number, args: CreateItemType, parentItemId: number = null) => {
     // item
     const qItem: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`, [parentItemId, args.viewId, args.itemName, `${args.itemName} Description`]);
     const itemId: number = qItem.insertId;
@@ -528,7 +551,7 @@ const _createItem = async (conn: PoolConnection, args: CreateItemType, parentIte
         await conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, [itemId, isPrimary, mimeType.mime, fileName, buffer.length, buffer]);
     }
     for (const child of args.children) {
-        _createItem(conn, child, itemId);
+        _createItem(conn, pricingStructureId, child, itemId);
     }
 }
 

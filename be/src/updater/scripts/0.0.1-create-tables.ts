@@ -16,6 +16,7 @@ export const update = async () => {
    await TBL_GROUP();
    await TBL_USER();
    await TBL_GLOBAL_AVATAR();
+   await TBL_GLOBAL_IMAGE();
    await TBL_USER_AVATAR();
    await TBL_LOOKUP_USER_GROUP();
    await TBL_ROLE();
@@ -200,6 +201,21 @@ const TBL_USER_DASHBOARD_WIDGET = async () => {
    });
 };
 
+const TBL_GLOBAL_IMAGE = async () => {
+   await doInDbConnection((conn: PoolConnection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_GLOBAL_IMAGE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            TAG VARCHAR(200) NOT NULL,
+            NAME VARCHAR(200) NOT NULL,
+            MIME_TYPE VARCHAR(200) NOT NULL,
+            SIZE INT NOT NULL,
+            CONTENT LONGBLOB NOT NULL 
+         )
+      `);
+   });
+}
+
 const TBL_GLOBAL_AVATAR = async () => {
    await doInDbConnection((conn: PoolConnection) => {
       conn.query(`
@@ -276,7 +292,8 @@ const TBL_PRICING_STRUCTURE = async () => {
             ID INT PRIMARY KEY AUTO_INCREMENT,
             VIEW_ID INT,
             NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL
+            DESCRIPTION VARCHAR(500) NOT NULL,
+            STATUS VARCHAR(200) NOT NULL
           );  
       `);
    });

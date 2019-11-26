@@ -4,6 +4,7 @@ import {View} from '../../model/view.model';
 import {ApiResponse} from '../../model/response.model';
 import config from '../../../assets/config.json';
 import {HttpClient} from '@angular/common/http';
+import {catchError, tap} from "rxjs/operators";
 
 const URL_ALL_VIEWS = `${config.api_host_url}/views`;
 const URL_UPDATE_VIEW = `${config.api_host_url}/views/update`;
@@ -16,6 +17,22 @@ export class ViewService {
 
   constructor(private httpClient: HttpClient) {
     this.subject = new BehaviorSubject<View>(null);
+  }
+
+  init() {
+    this.getAllViews().pipe(
+        tap((v: View[]) => {
+            console.log('**** views', v);
+            if (v && v.length > 0) {
+                console.log('************** fire view', v[0]);
+                this.subject.next(v[0]);
+            }
+        }),
+        catchError((e: Error, o: any) => {
+            console.error(e);
+            return of(null);
+        })
+    ).subscribe();
   }
 
   asObserver(): Observable<View> {

@@ -5,13 +5,14 @@ import {map, tap} from 'rxjs/operators';
 import {GlobalAvatar} from '../../model/avatar.model';
 import {User} from '../../model/user.model';
 import config from '../../../assets/config.json';
-import {GlobalCommunicationService} from "../../service/global-communication-service/global-communication.service";
-import {Subscription} from "rxjs";
+import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
+import {Subscription} from 'rxjs';
 
 export interface AvatarComponentEvent {
   avatar: GlobalAvatar | File;
 }
 
+const URL_USER_AVATAR = `${config.api_host_url}/user/:userId/avatar`;
 
 @Component({
   selector: 'app-avatar',
@@ -90,7 +91,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
   }
 
   userAvatarUrl(userId: number): string {
-    return `${config.api_host_url}/user/avatar/${userId}?d=${this.d}`;
+      return URL_USER_AVATAR.replace(':userId', `${userId}`).concat(`?=${this.d}`);
   }
 
 }
