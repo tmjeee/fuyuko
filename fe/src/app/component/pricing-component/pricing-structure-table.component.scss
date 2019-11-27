@@ -1,13 +1,4 @@
 .pricing-structure-table-component {
-
-  .hidethis {
-    display: none;
-    visibility: hidden;
-  }
-
-
-
-
   .controls {
     margin-bottom: 10px;
   }
@@ -31,12 +22,56 @@
   .pricing-structure-items {
     .content {
       table {
-        td {
-          &.action-controls {
-            :not(:last-child) {
-              margin-right: 5px;
+        tr {
+          td {
+            &.action-controls {
+              :not(:last-child) {
+                margin-right: 5px;
+              }
+            }
+
+            .depth-0 {
+              margin-left: 0px;
+            }
+            .depth-1 {
+              margin-left: 10px;
+            }
+            .depth-2 {
+              margin-left: 20px;
+            }
+            .depth-3 {
+              margin-left: 30px;
+            }
+            .depth-4 {
+              margin-left: 40px;
+            }
+            .depth-5 {
+              margin-left: 50px;
+
+            }
+            .depth-6 {
+              margin-left: 60px;
+
+            }
+            .depth-7 {
+              margin-left: 70px;
+
+            }
+            .depth-8 {
+              margin-left: 80px;
+
+            }
+            .depth-9 {
+              margin-left: 90px;
+
+            }
+            .depth-10 {
+              margin-left: 100px;
             }
           }
+        }
+        &.attribute {
+          min-width: 150px;
         }
       }
     }

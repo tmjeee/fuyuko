@@ -9,7 +9,6 @@ import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [
     [
-       check('viewId').exists().isNumeric(),
        body('pricingStructures').isArray(),
        body('pricingStructures.*.name').exists(),
        body('pricingStructures.*.description').exists()
@@ -43,7 +42,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/view/:viewId/pricingStructures`;
+    const p = `/pricingStructures`;
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
 }

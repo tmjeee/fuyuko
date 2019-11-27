@@ -12,7 +12,7 @@ import {
 import {Item} from "../../model/item.model";
 
 
-const getChildren = async (conn: PoolConnection, viewId: number, pricingStructureId: number, parentItemId: number): Promise<PricingStructureItemWithPrice[]> => {
+const getChildren = async (conn: PoolConnection, pricingStructureId: number, parentItemId: number): Promise<PricingStructureItemWithPrice[]> => {
 
     const q: QueryA = await conn.query(`
                 SELECT
@@ -36,8 +36,8 @@ const getChildren = async (conn: PoolConnection, viewId: number, pricingStructur
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = I.VIEW_ID
                 LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
-                WHERE I.VIEW_ID=? AND PS.ID = ? AND I.PARENT_ID = ? AND I.STATUS = 'ENABLED'
-    `, [viewId, pricingStructureId, parentItemId]);
+                WHERE PS.ID = ? AND I.PARENT_ID = ? AND I.STATUS = 'ENABLED'
+    `, [pricingStructureId, parentItemId]);
 
 
     const acc: PricingStructureItemWithPrice[] = [];
@@ -51,7 +51,7 @@ const getChildren = async (conn: PoolConnection, viewId: number, pricingStructur
             price: i.PSI_PRICE,
             country: '',
             parentId: i.I_PARENT_ID,
-            children: await getChildren(conn, viewId, pricingStructureId, itemId),
+            children: await getChildren(conn, pricingStructureId, itemId),
         } as PricingStructureItemWithPrice;
         acc.push(a);
     }
@@ -60,7 +60,6 @@ const getChildren = async (conn: PoolConnection, viewId: number, pricingStructur
 
 const httpAction: any[] = [
     [
-        check('viewId').exists().isNumeric(),
         check('pricingStructureId').exists().isNumeric()
     ],
     validateMiddlewareFn,
@@ -94,8 +93,8 @@ const httpAction: any[] = [
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = I.VIEW_ID
                 LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
-                WHERE I.VIEW_ID=? AND PS.ID=? AND I.PARENT_ID IS NULL AND I.STATUS = 'ENABLED'
-            `, [viewId, pricingStructureId]);
+                WHERE PS.ID=? AND I.PARENT_ID IS NULL AND I.STATUS = 'ENABLED'
+            `, [pricingStructureId]);
 
             let pricingStructureWithItems: PricingStructureWithItems = null;
             for (const i of q) {
@@ -117,14 +116,14 @@ const httpAction: any[] = [
 
                if (!mItemMap.has(mItemMapKey)) {
                    const item: PricingStructureItemWithPrice = {
-                       id: i.PSI_ID,
+                       id: itemId,
                        itemId: itemId,
                        itemName: i.I_NAME,
                        itemDescription: i.I_DESCRIPTION,
                        parentId: i.I_PARENT_ID,
                        country: '',
                        price: i.PSI_PRICE,
-                       children: await getChildren(conn, viewId, pricingStructureId, itemId)
+                       children: await getChildren(conn, pricingStructureId, itemId)
                    } as PricingStructureItemWithPrice;
                    mItemMap.set(mItemMapKey, item);
                    pricingStructureWithItems.items.push(item);
@@ -137,7 +136,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/view/:viewId/pricingStructuresWithItems/:pricingStructureId`;
+    const p = `/pricingStructuresWithItems/:pricingStructureId`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 }

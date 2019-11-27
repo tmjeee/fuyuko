@@ -15,16 +15,16 @@
         <mat-hint>Select a pricing structure</mat-hint>
     </mat-form-field>
 
-    <!--div *ngIf="pricingStructureWithItems"-->
+    <ng-container *ngIf="pricingStructureWithItems">
         <div class="pricing-structure-info">
             <div class="controls">
                 <button type="button" mat-flat-button color="primary" (click)="onDeletePricingStructure($event, pricingStructureWithItems)">Delete Pricing Structure</button>
                 <button type="button" mat-flat-button color="primary" (click)="onEditPricingStructure($event, pricingStructureWithItems)">Edit Pricing Structure</button>
             </div>
             <div class="content">
-                <div>ID: {{pricingStructureWithItems?.id}}</div>
-                <div>Name: {{pricingStructureWithItems?.name}}</div>
-                <div>Description: {{pricingStructureWithItems?.description}}</div>
+                <div>ID: {{pricingStructureWithItems.id}}</div>
+                <div>Name: {{pricingStructureWithItems.name}}</div>
+                <div>Description: {{pricingStructureWithItems.description}}</div>
             </div>
         </div>
 
@@ -81,5 +81,6 @@
                              [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></tr>
                 </table>
             </div>
-    </div>
+        </div>
+    </ng-container>
 </div>

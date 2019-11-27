@@ -48,8 +48,8 @@ import registerPostUpdateItemStatusRoute  from './POST-update-item-status.route'
 import registerGetAllRulesByViewRoute from './GET-all-rules-by-view.route';
 import registerPostUpdateRuleStatusRoute from './POST-update-rule-status.route';
 import registerPostUpdateRulesRoute from './POST-update-rules.route';
-import registerGetAllPricingStructuresByViewRoute from './GET-all-pricing-structures-by-view.route';
-import registerGetAllPricingStructuresWithItemsByViewRoute from './GET-all-pricing-structures-with-items-by-view.route';
+import registerGetAllPricingStructuresByViewRoute from './GET-all-pricing-structures.route';
+import registerGetAllPricingStructuresWithItemsByViewRoute from './GET-all-pricing-structures-with-items.route';
 import registerPostUpdatePricingStructureRoute from './POST-update-pricing-structure.route';
 import registerPostUpdatePricingStructureStatusRoute from './POST-update-pricing-structure-status.route';
 import registerPostUpdatePricingStructureItemRoute from './POST-update-pricing-structure-item.route';

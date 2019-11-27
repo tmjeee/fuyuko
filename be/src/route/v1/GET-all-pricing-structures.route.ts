@@ -8,7 +8,6 @@ import {PricingStructure} from "../../model/pricing-structure.model";
 
 const httpAction: any[] = [
     [
-        check('viewId').exists().isNumeric()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
@@ -22,8 +21,8 @@ const httpAction: any[] = [
             const q: QueryA = await conn.query(`
                 SELECT 
                     ID, VIEW_ID, NAME, DESCRIPTION 
-                FROM TBL_PRICING_STRUCTURE WHERE VIEW_ID = ?
-            `, [viewId]);
+                FROM TBL_PRICING_STRUCTURE
+            `, []);
 
             const pricingStructures: PricingStructure[] = q.reduce((acc: PricingStructure[], i: QueryI) => {
 
@@ -43,7 +42,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/view/:viewId/pricingStructures`;
+    const p = `/pricingStructures`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 }

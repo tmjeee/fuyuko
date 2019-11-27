@@ -14,6 +14,7 @@ import {CollectionViewer} from '@angular/cdk/collections';
 import {PricingStructurePopupComponent} from './pricing-structure-popup.component';
 import {ItemPricePopupComponent} from './item-price-popup.component';
 import {toTablePricingStructureItemWithPrice} from '../../utils/item-to-table-items.util';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 
 export interface RowInfo {
@@ -24,16 +25,16 @@ export interface RowInfo {
 
 export class PricingStructureItemsTableDataSource extends DataSource<TablePricingStructureItemWithPrice> {
 
-     private subject: BehaviorSubject<TablePricingStructureItemWithPrice[]> = new BehaviorSubject<TablePricingStructureItemWithPrice[]>([]);
+    private subject: BehaviorSubject<TablePricingStructureItemWithPrice[]>;
 
     connect(collectionViewer: CollectionViewer):
         Observable<TablePricingStructureItemWithPrice[] | ReadonlyArray<TablePricingStructureItemWithPrice>> {
-        // this.subject = new BehaviorSubject<TablePricingStructureItemWithPrice[]>([]);
+        this.subject = new BehaviorSubject<TablePricingStructureItemWithPrice[]>([]);
         return this.subject.asObservable();
     }
 
     disconnect(collectionViewer: CollectionViewer): void {
-        // this.subject.complete();
+        this.subject.complete();
     }
 
     update(items: TablePricingStructureItemWithPrice[]) {
@@ -57,7 +58,16 @@ export interface PricingStructureInput {
 @Component({
     selector: 'app-pricing-structure-table',
     templateUrl: './pricing-structure-table.component.html',
-    styleUrls: ['./pricing-structure-table.component.scss']
+    styleUrls: ['./pricing-structure-table.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            // state('collapsed', style({height: '0px', minHeight: '0', display: 'none', visibility: 'hidden'})),
+            // state('expanded', style({height: '*',  display: 'table-row', visibility: 'visible'})),
+            state('collapsed', style({height: '0px', minHeight: '0', opacity: '0'})),
+            state('expanded', style({height: '*',  opacity: '1'})),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
 })
 export class PricingStructureTableComponent implements OnInit, OnChanges {
 
@@ -95,7 +105,6 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
 
     onPricingStructureSelectionChanged($event: MatSelectChange) {
         this.pricingStructure = $event.value as PricingStructure;
-        console.log(this.pricingStructure);
         this.reload(this.pricingStructure);
     }
 
@@ -108,20 +117,15 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
                 .pipe(
                     tap((p: PricingStructureWithItems) => {
                         this.pricingStructureWithItems = p;
-                        console.log('******************* pricingStructureWithItems', p);
                         this.pricingStructureWithItems.items.forEach((item: PricingStructureItemWithPrice) => {
                             this.rowInfoMap.set(item.id, { tableItem: item, expanded: false } as RowInfo);
                         });
                         this.tablePricingStructureItemsWithPrice =
                             toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items);
-
-                        // this.dataSource = new PricingStructureItemsTableDataSource();
-                        this.dataSource.update(this.tablePricingStructureItemsWithPrice);
-                        /*
+                        console.log('****************************************xxxxx ', this.tablePricingStructureItemsWithPrice);
                         setTimeout(() => {
                             this.dataSource.update([...this.tablePricingStructureItemsWithPrice]);
                         });
-                         */
                     })
                 ).subscribe();
         } else {

@@ -9,7 +9,6 @@ import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [
     [
-        param('viewId').exists().isNumeric(),
         param('pricingStructureId').exists().isNumeric(),
         body('pricingStructureItems').isArray(),
         body('pricingStructureItems.*.id').exists().isNumeric(),
@@ -20,7 +19,6 @@ const httpAction: any[] = [
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
-        const viewId: number = Number(req.params.viewId);
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const pricingStructureItems: PricingStructureItemWithPrice[] =  req.body.pricingStructureItems;
 
@@ -31,8 +29,8 @@ const httpAction: any[] = [
                     SELECT COUNT(*) AS COUNT 
                     FROM TBL_PRICING_STRUCTURE_ITEM AS I 
                     INNER JOIN TBL_PRICING_STRUCTURE AS P ON P.ID = I.PRICING_STRUCTURE_ID
-                    WHERE WHERE I.ITEM_ID=? AND I.PRICING_STRUCTURE_ID=? AND P.VIEW_ID=?;
-                `, [pricingStructureItem.itemId, pricingStructureId, viewId]);
+                    WHERE WHERE I.ITEM_ID=? AND I.PRICING_STRUCTURE_ID=?;
+                `, [pricingStructureItem.itemId, pricingStructureId]);
 
                 if (qc.length <= 0 || qc[0].COUNT <= 0) { // insert
                     await conn.query(`
@@ -55,7 +53,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/view/:viewId/pricingStructure/:pricingStructureId/item`;
+    const p = `/pricingStructure/:pricingStructureId/item`;
     router.post(p, ...httpAction);
 }
 
