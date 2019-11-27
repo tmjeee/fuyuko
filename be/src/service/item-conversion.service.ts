@@ -502,7 +502,7 @@ const toItemValue2 = (value: Value): ItemValue2 => {
 }
 
 
-const toItemValTypes = (metadatas: ItemMetadata2[]): ItemValTypes => {
+export const toItemValTypes = (metadatas: ItemMetadata2[]): ItemValTypes => {
     const o: any = {};
     for (const metadata of metadatas) {
         for (const entry of metadata.entries) {

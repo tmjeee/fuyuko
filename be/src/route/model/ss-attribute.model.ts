@@ -114,3 +114,10 @@ export interface WhenClauseMetadataEntry2 {
 }
 
 
+// =========== BulkEdit
+
+export interface BulkEdit2 {
+
+}
+
+
