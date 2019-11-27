@@ -1,7 +1,17 @@
 
 <div class="jobs-page">
-    <app-jobs-listings
-            [jobs]="jobs"
-            [fetchFn]="fetchFn">
-    </app-jobs-listings>
+    <mat-card class="mat-elevation-z-20">
+        <mat-card-header>
+            <mat-card-title>Scheduled Jobs</mat-card-title>
+            <mat-card-subtitle>
+                Manage and monitor scheduled jobs.
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-jobs-listings
+                    [jobs]="jobs"
+                    [fetchFn]="fetchFn">
+            </app-jobs-listings>
+        </mat-card-content>
+    </mat-card>
 </div>

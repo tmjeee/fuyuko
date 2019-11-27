@@ -13,7 +13,7 @@ const httpAction: any[] = [
         body('pricingStructureItems').isArray(),
         body('pricingStructureItems.*.id').exists().isNumeric(),
         body('pricingStructureItems.*.itemId').exists().isNumeric(),
-        body('pricingStructureItems.*.pricing').exists().isNumeric()
+        body('pricingStructureItems.*.price').exists().isNumeric()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
@@ -29,7 +29,7 @@ const httpAction: any[] = [
                     SELECT COUNT(*) AS COUNT 
                     FROM TBL_PRICING_STRUCTURE_ITEM AS I 
                     INNER JOIN TBL_PRICING_STRUCTURE AS P ON P.ID = I.PRICING_STRUCTURE_ID
-                    WHERE WHERE I.ITEM_ID=? AND I.PRICING_STRUCTURE_ID=?;
+                    WHERE I.ITEM_ID=? AND I.PRICING_STRUCTURE_ID=?;
                 `, [pricingStructureItem.itemId, pricingStructureId]);
 
                 if (qc.length <= 0 || qc[0].COUNT <= 0) { // insert

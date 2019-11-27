@@ -5,7 +5,7 @@ import {ViewService} from '../../service/view-service/view.service';
 import {View} from '../../model/view.model';
 import {map} from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
-import {Subscription} from "rxjs";
+import {Subscription} from 'rxjs';
 
 
 @Component({

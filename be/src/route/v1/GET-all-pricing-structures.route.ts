@@ -21,7 +21,7 @@ const httpAction: any[] = [
             const q: QueryA = await conn.query(`
                 SELECT 
                     ID, VIEW_ID, NAME, DESCRIPTION 
-                FROM TBL_PRICING_STRUCTURE
+                FROM TBL_PRICING_STRUCTURE WHERE STATUS <> 'DELETED'
             `, []);
 
             const pricingStructures: PricingStructure[] = q.reduce((acc: PricingStructure[], i: QueryI) => {

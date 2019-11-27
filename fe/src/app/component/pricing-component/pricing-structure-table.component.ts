@@ -187,7 +187,7 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
                 if (r) {
                     this.events.emit({
                         type: 'edit-pricing-item',
-                        pricingStructure: this.pricingStructureInput.currentPricingStructure,
+                        pricingStructure: this.pricingStructure,
                         pricingStructureItem: r
                     } as PricingStructureEvent);
                 }

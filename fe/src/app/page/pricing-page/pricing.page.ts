@@ -4,7 +4,9 @@ import {PricingStructure, PricingStructureItemWithPrice, PricingStructureWithIte
 import {PricingStructureEvent, PricingStructureInput} from '../../component/pricing-component/pricing-structure-table.component';
 import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
 import {tap} from 'rxjs/operators';
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
 
 
 @Component({
@@ -16,7 +18,8 @@ export class PricingPageComponent implements OnInit  {
     pricingStructureInput: PricingStructureInput;
     fetchFn: (pricingStructureId: number) => Observable<PricingStructureWithItems>;
 
-    constructor(private pricingStructureService: PricingStructureService) {
+    constructor(private pricingStructureService: PricingStructureService,
+                private notificationService: NotificationsService) {
         this.pricingStructureInput = {
             pricingStructures: [],
             currentPricingStructure: null
@@ -43,29 +46,41 @@ export class PricingPageComponent implements OnInit  {
     }
 
     onPricingStructureTableEvent($event: PricingStructureEvent) {
-        switch($event.type) {
+        switch ($event.type) {
             case 'delete-pricing-structure':
                 this.pricingStructureService
                     .deletePricingStructure($event.pricingStructure)
-                    .pipe(tap((r: ApiResponse) => this.reload(null)))
+                    .pipe(tap((r: ApiResponse) => {
+                        toNotifications(this.notificationService, r);
+                        this.reload(null);
+                    }))
                     .subscribe();
                 break;
             case 'new-pricing-structure':
                 this.pricingStructureService
                     .newPricingStructure($event.pricingStructure)
-                    .pipe(tap((r: ApiResponse) => this.reload($event.pricingStructure)))
+                    .pipe(tap((r: ApiResponse) => {
+                        toNotifications(this.notificationService, r);
+                        this.reload($event.pricingStructure);
+                    }))
                     .subscribe();
                 break;
             case 'edit-pricing-structure':
                 this.pricingStructureService
                     .updatePricingStructure($event.pricingStructure)
-                    .pipe(tap((r: ApiResponse) => this.reload($event.pricingStructure)))
+                    .pipe(tap((r: ApiResponse) => {
+                        toNotifications(this.notificationService, r);
+                        this.reload($event.pricingStructure);
+                    }))
                     .subscribe();
                 break;
             case 'edit-pricing-item':
                 this.pricingStructureService
                     .editPricingStructureItem($event.pricingStructure.id, $event.pricingStructureItem)
-                    .pipe(tap((r: ApiResponse) => this.reload($event.pricingStructure)))
+                    .pipe(tap((r: ApiResponse) => {
+                        toNotifications(this.notificationService, r);
+                        this.reload($event.pricingStructure);
+                    }))
                     .subscribe();
                 break;
         }

@@ -29,7 +29,7 @@ const httpAction: any[] = [
                 } else { // update
                     conn.query(`
                         UPDATE TBL_PRICING_STRUCTURE SET NAME=?, DESCRIPTION=? WHERE ID=? AND STATUS='ENABLED' 
-                    `, [pricingStructure.name, pricingStructure.description]);
+                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.id]);
                 }
             }
         });
