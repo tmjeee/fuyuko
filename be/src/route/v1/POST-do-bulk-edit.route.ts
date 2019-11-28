@@ -5,7 +5,15 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
 import {param} from 'express-validator';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import {AreaValue, ItemValTypes, NumberValue, StringValue, TextValue, Value} from "../../model/item.model";
+import {
+    AreaValue,
+    CurrencyValue,
+    ItemValTypes,
+    NumberValue,
+    StringValue,
+    TextValue,
+    Value
+} from "../../model/item.model";
 import {Attribute} from "../../model/attribute.model";
 import {OperatorType} from "../../model/operator.model";
 import {BulkEditItem, BulkEditPackage} from "../../model/bulk-edit.model";
@@ -14,6 +22,7 @@ import {toItemValTypes} from "../../service/item-conversion.service";
 import {encodeXText} from "nodemailer/lib/shared";
 import {Operator} from "semver";
 import numeral from "numeral";
+import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, WidthUnits} from "../../model/unit.model";
 
 interface BulkEditItem2 {
     id: number;  // itemId
@@ -35,21 +44,10 @@ const httpAction: any[] = [
 
       const viewId: number = Number(req.params.viewId);
 
-      await doInDbConnection(async (conn: PoolConnection) => {
+      const bulkEditPackage: BulkEditPackage = await doInDbConnection(async (conn: PoolConnection) => {
 
         const changeClauses: ItemValueAndAttribute[] = req.body.changeClauses;
         const whenClauses: ItemValueOperatorAndAttribute[] = req.body.whereClauses;
-
-        let exp = '';
-        for (const itemValueOperatorAndAttribute of whenClauses) {
-           const value: Value = itemValueOperatorAndAttribute.itemValue;
-           const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
-           const operator: OperatorType = itemValueOperatorAndAttribute.operator;
-
-           exp += `A.ID = '${attribute.id}' `;
-           exp += `AND IE.VALUE `;
-           constructExp(operator, value, exp);
-        }
 
         const q: QueryA = await conn.query(`
            SELECT 
@@ -88,8 +86,8 @@ const httpAction: any[] = [
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
            LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA AS AM ON AM.ITEM_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA_ENTRY AS AE ON AE.ITEM_ATTRIBUTE_METADATA_ID = AM.ID
-           WHERE I.STATUS = 'ENABLED'
-        `);
+           WHERE I.STATUS = 'ENABLED' AND I.VIEW_ID=?
+        `, [viewId]);
 
 
         const iMap: Map<string /* itemId */, BulkEditItem2> = new Map();
@@ -147,7 +145,7 @@ const httpAction: any[] = [
         }, []);
 
 
-        bulkEditItem2s.filter((b: BulkEditItem2) => {
+        const matchedBulkEditItem2s: BulkEditItem2[] = bulkEditItem2s.filter((b: BulkEditItem2) => {
             for (const itemValueOperatorAndAttribute of whenClauses) {
                 const value: Value = itemValueOperatorAndAttribute.itemValue;
                 const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
@@ -186,19 +184,23 @@ const httpAction: any[] = [
                                 const eUnit: ItemMetadataEntry2 = findEntry(m.entries, "unit");
 
                                 const v1: number = (value.val as AreaValue).value;
-                                const u1: string = (value.val as AreaValue).unit;
+                                const u1: AreaUnits = (value.val as AreaValue).unit;
 
                                 const v2: number = Number((eValue.value));
-                                const u2: string = (eUnit.value);
+                                const u2: AreaUnits = (eUnit.value) as AreaUnits;
 
-                                const vv1: number = converToCm(v1, u1);
-                                const vv2: number = convertToCm(v2,u2);
+                                const vv1: number = convertToCm2(v1, u1);
+                                const vv2: number = convertToCm2(v2, u2);
 
                                 return compare(vv1, vv2, operator);
                             }
                             case "currency": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
-                                break;
+                                const v1: number = (value.val as CurrencyValue).value;
+                                const v2: number = Number(eValue.value);
+
+                                return compare(v1, v2, operator);
                             }
                             case "date": {
 
@@ -240,55 +242,76 @@ const httpAction: any[] = [
                     return false;
                 });
 
+                if (metas && metas.length) { //  this bulkEditItem2 match the 'when' criteria
+                    return true;
+                }
             }
+            return false; // this bulkEditItem2 do not match the 'when' criteria
         });
 
 
+        const bulkEditItems: BulkEditItem[] = convertToBulkEditItems(matchedBulkEditItem2s);
+        const changeAttributes: Attribute[] = changeClauses.map((c: ItemValueAndAttribute) => c.attribute);
+        const whenAttributes: Attribute[] = whenClauses.map((w: ItemValueOperatorAndAttribute) => w.attribute);
         const r = {
-           changeAttributes: [],
-           whenAttributes: [],
-           bulkEditItems: []
+           changeAttributes,
+           whenAttributes,
+           bulkEditItems
         } as BulkEditPackage
+
+        return r;
       });
+
+      res.status(200).json(bulkEditPackage);
    }
 ]
 
+const convertToBulkEditItems = (b2s: BulkEditItem2[]): BulkEditItem[] => {
+   return b2s.map(convertToBulkEditItem);
+}
+
+const convertToBulkEditItem = (b2: BulkEditItem2): BulkEditItem => {
+    const b: BulkEditItem = {
+        id: b2.id,
+        name: b2.name,
+        description: b2.description,
+        parentId: b2.parentId,
+        children: convertToBulkEditItems(b2.children),
+        images: [],
+        changes: {},
+        whens: {}
+    } as BulkEditItem;
+    return b;
+}
+
+const convertToCm = (v: number, u: DimensionUnits | WidthUnits | LengthUnits | HeightUnits): number => {
+
+}
+
+const convertToCm2 = (v: number, u: AreaUnits): number => {
+
+}
 
 const compare = (a: any, b: any, operator: OperatorType): boolean => {
 
     switch (operator) { // construct operator
         case "empty":
-            exp += ` = '' `;
             break;
         case "eq":
-            exp += ` = `;
-            constructValue(operator, value, exp);
             break;
         case "gt":
-            exp += ` > `;
-            constructValue(operator, value, exp);
             break;
         case "gte":
-            exp += ` >= `;
-            constructValue(operator, value, exp);
             break;
         case "lt":
-            exp += ` < `;
-            constructValue(operator, value, exp);
             break;
         case "lte":
-            exp += ` <= `;
-            constructValue(operator, value, exp);
             break;
         case "not empty":
-            exp += ` <> '' `;
             break;
         case "not eq":
-            exp += ` <> `;
-            constructValue(operator, value, exp);
             break;
         case "not gt":
-            exp += `not >`
             break;
         case "not gte":
             break;
@@ -299,7 +322,7 @@ const compare = (a: any, b: any, operator: OperatorType): boolean => {
     }
 }
 
-const findEntry = (entries: ItemMetadataEntry2[], key: string): ItemMetadataEntry2 {
+const findEntry = (entries: ItemMetadataEntry2[], key: string): ItemMetadataEntry2 => {
     return entries.find((e: ItemMetadataEntry2) => e.key === key);
 }
 
