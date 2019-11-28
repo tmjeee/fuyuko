@@ -5,91 +5,17 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
 import {param} from 'express-validator';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import {ItemValTypes, Value} from "../../model/item.model";
+import {AreaValue, ItemValTypes, NumberValue, StringValue, TextValue, Value} from "../../model/item.model";
 import {Attribute} from "../../model/attribute.model";
 import {OperatorType} from "../../model/operator.model";
 import {BulkEditItem, BulkEditPackage} from "../../model/bulk-edit.model";
 import {ItemMetadata2, ItemMetadataEntry2} from "../model/ss-attribute.model";
 import {toItemValTypes} from "../../service/item-conversion.service";
+import {encodeXText} from "nodemailer/lib/shared";
+import {Operator} from "semver";
+import numeral from "numeral";
 
-
-const constructExp = (operator: OperatorType, value: Value, exp: string) => {
-    switch (operator) { // construct operator
-        case "empty":
-            exp += ` = '' `;
-            break;
-        case "eq":
-            exp += ` = `;
-            constructValue(operator, value, exp);
-            break;
-        case "gt":
-            exp += ` > `;
-            constructValue(operator, value, exp);
-            break;
-        case "gte":
-            exp += ` >= `;
-            constructValue(operator, value, exp);
-            break;
-        case "lt":
-            exp += ` < `;
-            constructValue(operator, value, exp);
-            break;
-        case "lte":
-            exp += ` <= `;
-            constructValue(operator, value, exp);
-            break;
-        case "not empty":
-            exp += ` <> '' `;
-            break;
-        case "not eq":
-            exp += ` <> `;
-            constructValue(operator, value, exp);
-            break;
-        case "not gt":
-            exp += `not >`
-            break;
-        case "not gte":
-            break;
-        case "not lt":
-            break;
-        case "not lte":
-            break;
-    }
-}
-
-const constructValue = (operator: OperatorType, value: Value, exp: string) => {
-
-    switch (value.val.type) { // construct value
-        case "area":
-            break;
-        case "currency":
-            break;
-        case "date":
-            break;
-        case "dimension":
-            break;
-        case "doubleselect":
-            break;
-        case "height":
-            break;
-        case "length":
-            break;
-        case "number":
-            break;
-        case "select":
-            break;
-        case "string":
-            break;
-        case "text":
-            break;
-        case "volume":
-            break;
-        case "width":
-            break;
-    }
-}
-
- interface BulkEditItem2 {
+interface BulkEditItem2 {
     id: number;  // itemId
     name: string;
     description: string;
@@ -170,7 +96,7 @@ const httpAction: any[] = [
         const itemAttValueMetaMap: Map<string /* itemId_attributeId_metaId */, ItemMetadata2> = new Map();
         const itemAttValueMetaEntryMap: Map<string /* itemId_attributeId_metaId_entryId */, ItemMetadataEntry2> = new Map();
 
-        q.reduce((acc: BulkEditItem2[], i: QueryI) => {
+        const bulkEditItem2s: BulkEditItem2[] = q.reduce((acc: BulkEditItem2[], i: QueryI) => {
 
             const itemId: number = i.I_ID;
             const attributeId: number = i.A_ID;
@@ -203,17 +129,119 @@ const httpAction: any[] = [
                    entries: []
                 } as ItemMetadata2;
                 itemAttValueMetaMap.set(itemAttValueMetaMapKey, meta);
+                iMap.get(iMapKey).metadatas.push(meta);
             }
 
             if (!itemAttValueMetaEntryMap.has(itemAttValueMetaEntryMapKey)) {
-
+                const entry: ItemMetadataEntry2 = {
+                   id: i.IE_ID,
+                   key: i.IE_KEY,
+                   value: i.IE_VALUE,
+                   dataType: i.IE_DATA_TYPE
+                } as ItemMetadataEntry2;
+                itemAttValueMetaEntryMap.set(itemAttValueMetaEntryMapKey, entry);
+                itemAttValueMetaMap.get(itemAttValueMetaMapKey).entries.push(entry);
             }
-
-
-
 
             return acc;
         }, []);
+
+
+        bulkEditItem2s.filter((b: BulkEditItem2) => {
+            for (const itemValueOperatorAndAttribute of whenClauses) {
+                const value: Value = itemValueOperatorAndAttribute.itemValue;
+                const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
+                const operator: OperatorType = itemValueOperatorAndAttribute.operator;
+
+                const metas: ItemMetadata2[] = b.metadatas.filter((m: ItemMetadata2) =>  {
+                    if (m.attributeId === attribute.id) {
+                        switch(value.val.type) {
+                            case "string": {
+                                const eType: ItemMetadataEntry2 = findEntry(m.entries, 'type');
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+
+                                const v1: string = (value.val as StringValue).value;
+                                const v2: string = eValue.value;
+
+                                return compare(v1, v2, operator);
+                            }
+                            case "text": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+
+                                const v1: string = (value.val as TextValue).value;
+                                const v2: string = eValue.value;
+
+                                return compare(v1, v2, operator);
+                            }
+                            case "number": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+
+                                const v1: number = (value.val as NumberValue).value;
+                                const v2: number = Number(eValue.value);
+
+                                return compare(v1, v2, operator);
+                            }
+                            case "area": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, "value");
+                                const eUnit: ItemMetadataEntry2 = findEntry(m.entries, "unit");
+
+                                const v1: number = (value.val as AreaValue).value;
+                                const u1: string = (value.val as AreaValue).unit;
+
+                                const v2: number = Number((eValue.value));
+                                const u2: string = (eUnit.value);
+
+                                const vv1: number = converToCm(v1, u1);
+                                const vv2: number = convertToCm(v2,u2);
+
+                                return compare(vv1, vv2, operator);
+                            }
+                            case "currency": {
+
+                                break;
+                            }
+                            case "date": {
+
+                                break;
+                            }
+                            case "dimension": {
+
+                                break;
+                            }
+                            case "height": {
+
+                                break;
+                            }
+                            case "length": {
+
+                                break;
+                            }
+                            case "volume": {
+
+                                break;
+                            }
+                            case "width": {
+
+                                break;
+                            }
+                            case "select": {
+
+                                break;
+                            }
+                            case "doubleselect": {
+
+                                break;
+                            }
+                        }
+
+
+                        return true;
+                    }
+                    return false;
+                });
+
+            }
+        });
 
 
         const r = {
@@ -224,6 +252,56 @@ const httpAction: any[] = [
       });
    }
 ]
+
+
+const compare = (a: any, b: any, operator: OperatorType): boolean => {
+
+    switch (operator) { // construct operator
+        case "empty":
+            exp += ` = '' `;
+            break;
+        case "eq":
+            exp += ` = `;
+            constructValue(operator, value, exp);
+            break;
+        case "gt":
+            exp += ` > `;
+            constructValue(operator, value, exp);
+            break;
+        case "gte":
+            exp += ` >= `;
+            constructValue(operator, value, exp);
+            break;
+        case "lt":
+            exp += ` < `;
+            constructValue(operator, value, exp);
+            break;
+        case "lte":
+            exp += ` <= `;
+            constructValue(operator, value, exp);
+            break;
+        case "not empty":
+            exp += ` <> '' `;
+            break;
+        case "not eq":
+            exp += ` <> `;
+            constructValue(operator, value, exp);
+            break;
+        case "not gt":
+            exp += `not >`
+            break;
+        case "not gte":
+            break;
+        case "not lt":
+            break;
+        case "not lte":
+            break;
+    }
+}
+
+const findEntry = (entries: ItemMetadataEntry2[], key: string): ItemMetadataEntry2 {
+    return entries.find((e: ItemMetadataEntry2) => e.key === key);
+}
 
 const filterFn = (changeClauses: ItemValueAndAttribute[], whenClauses: ItemValueOperatorAndAttribute[]) => (i: QueryI): boolean => {
 
