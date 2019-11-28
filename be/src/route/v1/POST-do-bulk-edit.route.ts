@@ -89,6 +89,16 @@ const constructValue = (operator: OperatorType, value: Value, exp: string) => {
     }
 }
 
+ interface BulkEditItem2 {
+    id: number;  // itemId
+    name: string;
+    description: string;
+    parentId: number;
+    metadatas: ItemMetadata2[]
+    children: BulkEditItem2[]
+}
+
+
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric()
@@ -152,83 +162,53 @@ const httpAction: any[] = [
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
            LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA AS AM ON AM.ITEM_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA_ENTRY AS AE ON AE.ITEM_ATTRIBUTE_METADATA_ID = AM.ID
-           WHERE 
+           WHERE I.STATUS = 'ENABLED'
         `);
 
 
-        const itemAttValueMetaMap: Map<string /* itemId_attributeId */, ItemMetadata2[]> = new Map();
-        const itemAttValueMetaEntryMap: Map<string /* itemId_attributeId_metaId*/, ItemMetadataEntry2> = new Map();
+        const iMap: Map<string /* itemId */, BulkEditItem2> = new Map();
+        const itemAttValueMetaMap: Map<string /* itemId_attributeId_metaId */, ItemMetadata2> = new Map();
+        const itemAttValueMetaEntryMap: Map<string /* itemId_attributeId_metaId_entryId */, ItemMetadataEntry2> = new Map();
 
-
-        const itemAttValueMap: Map<string /* itemId_attributeId */, Value> = new Map();
-
-
-        const iMap: Map<string /* */, BulkEditItem> = new Map();
-
-
-        q.reduce((acc: BulkEditItem[], i: QueryI) => {
+        q.reduce((acc: BulkEditItem2[], i: QueryI) => {
 
             const itemId: number = i.I_ID;
             const attributeId: number = i.A_ID;
+            const metaId: number = i.IM_ID;
+            const entryId: number = i.IE_ID;
 
-            const itemAttValueKey: string = `${itemId}_${attributeId}`;
+            const iMapKey: string = `${itemId}`;
+            const itemAttValueMetaMapKey: string = `${itemId}_${attributeId}_${metaId}`;
+            const itemAttValueMetaEntryMapKey: string = `${itemId}_${attributeId}_${metaId}_${entryId}`;
 
-            if (!itemAttValueMap.has(itemAttValueKey)) {
-                const m = {
-                    // todo;
 
+            if (!iMap.has(iMapKey)) {
+                const item: BulkEditItem2 = {
+                    id: i.I_ID,
+                    name: i.I_NAME,
+                    description: i.I_DESCRIPTION,
+                    parentId: i.I_PARENTID,
+                    metadatas: [],
+                    children: []
+                } as BulkEditItem2;
+                iMap.set(iMapKey, item);
+            }
+
+            if (!itemAttValueMetaMap.has(itemAttValueMetaMapKey)) {
+                const meta: ItemMetadata2 = {
+                   id: i.IM_ID,
+                   name: i.IM_NAME,
+                   attributeId: i.IM_ATTRBUTE_ID,
+                   attributeType: i.A_TYPE,
+                   entries: []
                 } as ItemMetadata2;
-
-                const val: ItemValTypes = toItemValTypes(m);
-                const value: Value = {
-                    attributeId,
-                    val
-                } as Value;
-                itemAttValueMap.set(itemAttValueKey, value);
+                itemAttValueMetaMap.set(itemAttValueMetaMapKey, meta);
             }
 
-
-            for (const whenClause of whenClauses) {
-                const value: Value = whenClause.itemValue;
-                const attribute: Attribute = whenClause.attribute;
-                const operator: OperatorType = whenClause.operator;
-
-
-                const iMapKey: string = `${itemId}`;
-
-
-                if (attributeId == attribute.id &&
-
-                ) {
-
-                }
-
-                if (!iMap.has(iMapKey)) {
-
-                    const bulkEditItem: BulkEditItem = {
-                        id: number;
-                        name: string;
-                        description: string;
-                        images: string[];
-                        parentId: number;
-                        changes: {
-                            [attributeId: number]: {
-                                old: Value,
-                                    new: Value
-                            };
-                        };
-                        whens: {
-                            [attributeId: number]: Value;
-                        };
-
-                        children: BulkEditItem[];
-                    } as BulkEditItem;
-
-                }
-
-
+            if (!itemAttValueMetaEntryMap.has(itemAttValueMetaEntryMapKey)) {
 
             }
+
 
 
 
@@ -252,10 +232,9 @@ const filterFn = (changeClauses: ItemValueAndAttribute[], whenClauses: ItemValue
         const attribute: Attribute = whenClause.attribute;
         const operator: OperatorType = whenClause.operator;
 
-        i.
 
     }
-        return true;
+    return true;
 }
 
 const reg = (router: Router, registry: Registry) => {
