@@ -5,20 +5,21 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
 import {param} from 'express-validator';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
+import moment from 'moment';
 import {
     AreaValue,
-    CurrencyValue,
+    CurrencyValue, DateValue, DimensionValue, ItemImage,
     ItemValTypes,
     NumberValue,
     StringValue,
     TextValue,
     Value
 } from "../../model/item.model";
-import {Attribute} from "../../model/attribute.model";
+import {Attribute, DEFAULT_DATE_FORMAT} from "../../model/attribute.model";
 import {OperatorType} from "../../model/operator.model";
 import {BulkEditItem, BulkEditPackage} from "../../model/bulk-edit.model";
 import {ItemMetadata2, ItemMetadataEntry2} from "../model/ss-attribute.model";
-import {toItemValTypes} from "../../service/item-conversion.service";
+import {fromItemMetadata2ToValue, toItemValTypes} from "../../service/item-conversion.service";
 import {encodeXText} from "nodemailer/lib/shared";
 import {Operator} from "semver";
 import numeral from "numeral";
@@ -29,6 +30,7 @@ interface BulkEditItem2 {
     name: string;
     description: string;
     parentId: number;
+    images: ItemImage[];
     metadatas: ItemMetadata2[]
     children: BulkEditItem2[]
 }
@@ -77,7 +79,14 @@ const httpAction: any[] = [
             IE.ITEM_VALUE_METADATA_ID AS IE_ITEM_VALUE_METADATA_ID,
             IE.KEY AS IE_KEY,
             IE.VALUE AS IE_VALUE,
-            IE.DATA_TYPE AS IE_DATA_TYPE
+            IE.DATA_TYPE AS IE_DATA_TYPE,
+            
+            IMG.ID AS IMG_ID,
+            IMG.ITEM_ID AS IMG_ITEM_ID,
+            IMG.PRIMARY AS IMG_PRIMARY,
+            IMG.MIME_TYPE AS IMG_MIME_TYPE,
+            IMG.NAME AS IMG_NAME,
+            IMG.SIZE AS IMG_SIZE
            
            FROM TBL_ITEM AS I
            LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
@@ -86,6 +95,7 @@ const httpAction: any[] = [
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
            LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA AS AM ON AM.ITEM_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA_ENTRY AS AE ON AE.ITEM_ATTRIBUTE_METADATA_ID = AM.ID
+           LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
            WHERE I.STATUS = 'ENABLED' AND I.VIEW_ID=?
         `, [viewId]);
 
@@ -93,6 +103,7 @@ const httpAction: any[] = [
         const iMap: Map<string /* itemId */, BulkEditItem2> = new Map();
         const itemAttValueMetaMap: Map<string /* itemId_attributeId_metaId */, ItemMetadata2> = new Map();
         const itemAttValueMetaEntryMap: Map<string /* itemId_attributeId_metaId_entryId */, ItemMetadataEntry2> = new Map();
+        const itemImageMap: Map<string /* itemId_imageId */, ItemImage> = new Map();
 
         const bulkEditItem2s: BulkEditItem2[] = q.reduce((acc: BulkEditItem2[], i: QueryI) => {
 
@@ -100,10 +111,12 @@ const httpAction: any[] = [
             const attributeId: number = i.A_ID;
             const metaId: number = i.IM_ID;
             const entryId: number = i.IE_ID;
+            const itemImageId: number = i.IMG_ID;
 
             const iMapKey: string = `${itemId}`;
             const itemAttValueMetaMapKey: string = `${itemId}_${attributeId}_${metaId}`;
             const itemAttValueMetaEntryMapKey: string = `${itemId}_${attributeId}_${metaId}_${entryId}`;
+            const itemImageMapKey: string = `${itemId}_${itemImageId}`;
 
 
             if (!iMap.has(iMapKey)) {
@@ -113,9 +126,23 @@ const httpAction: any[] = [
                     description: i.I_DESCRIPTION,
                     parentId: i.I_PARENTID,
                     metadatas: [],
+                    images: [],
                     children: []
                 } as BulkEditItem2;
                 iMap.set(iMapKey, item);
+                acc.push(item);
+            }
+
+            if (!itemImageMap.has(itemImageMapKey)) {
+                const itemImage = {
+                    id: i.IMG_ID,
+                    name: i.IMG_NAME,
+                    primary: i.IMG_PRIMARY,
+                    mimeType: i.IMG_MIME_TYPE,
+                    size: i.IMG_SIZE
+                } as ItemImage;
+                itemImageMap.set(itemImageMapKey, itemImage);
+                iMap.get(iMapKey).images.push(itemImage);
             }
 
             if (!itemAttValueMetaMap.has(itemAttValueMetaMapKey)) {
@@ -203,10 +230,17 @@ const httpAction: any[] = [
                                 return compare(v1, v2, operator);
                             }
                             case "date": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const format = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
 
-                                break;
+                                const v1: moment.Moment = moment((value.val as DateValue).value, format);
+                                const v2: moment.Moment = moment(eValue.value, format);
+
+                                return compareDate(v1, v2, operator);
                             }
                             case "dimension": {
+
+                                ((value.val) as DimensionValue).height;
 
                                 break;
                             }
@@ -235,8 +269,6 @@ const httpAction: any[] = [
                                 break;
                             }
                         }
-
-
                         return true;
                     }
                     return false;
@@ -250,7 +282,7 @@ const httpAction: any[] = [
         });
 
 
-        const bulkEditItems: BulkEditItem[] = convertToBulkEditItems(matchedBulkEditItem2s);
+        const bulkEditItems: BulkEditItem[] = convertToBulkEditItems(matchedBulkEditItem2s, changeClauses, whenClauses);
         const changeAttributes: Attribute[] = changeClauses.map((c: ItemValueAndAttribute) => c.attribute);
         const whenAttributes: Attribute[] = whenClauses.map((w: ItemValueOperatorAndAttribute) => w.attribute);
         const r = {
@@ -266,20 +298,40 @@ const httpAction: any[] = [
    }
 ]
 
-const convertToBulkEditItems = (b2s: BulkEditItem2[]): BulkEditItem[] => {
-   return b2s.map(convertToBulkEditItem);
+const convertToBulkEditItems = (b2s: BulkEditItem2[], changes: ItemValueAndAttribute[], whens: ItemValueOperatorAndAttribute[]): BulkEditItem[] => {
+   return b2s.map((b2: BulkEditItem2) => convertToBulkEditItem(b2, changes, whens));
 }
 
-const convertToBulkEditItem = (b2: BulkEditItem2): BulkEditItem => {
+
+const convertToBulkEditItem = (b2: BulkEditItem2, changes: ItemValueAndAttribute[], whens: ItemValueOperatorAndAttribute[]): BulkEditItem => {
+    const c = changes.reduce((acc: any, change: ItemValueAndAttribute) => {
+        const met: ItemMetadata2 = b2.metadatas.find((m: ItemMetadata2) => m.attributeId === change.attribute.id);
+        const _new = {
+            attributeId: met.attributeId,
+            val: {}
+        } as Value;
+        const _c = {
+            [change.attribute.id] : {
+                old: fromItemMetadata2ToValue(met.attributeId, [met]),
+                new: change.itemValue
+            }
+        };
+        acc[met.attributeId] = _c ;
+        return acc;
+    }, {});
+    const w = whens.reduce((acc: any, when: ItemValueOperatorAndAttribute) => {
+        acc[when.attribute.id] = when.itemValue
+        return acc;
+    }, {});
     const b: BulkEditItem = {
         id: b2.id,
         name: b2.name,
         description: b2.description,
         parentId: b2.parentId,
-        children: convertToBulkEditItems(b2.children),
+        children: convertToBulkEditItems(b2.children, changes, whens),
         images: [],
-        changes: {},
-        whens: {}
+        changes: c,
+        whens: w
     } as BulkEditItem;
     return b;
 }
@@ -292,9 +344,67 @@ const convertToCm2 = (v: number, u: AreaUnits): number => {
 
 }
 
-const compare = (a: any, b: any, operator: OperatorType): boolean => {
+const compareDate = (a: moment.Moment, b: moment.Moment, operator: OperatorType): boolean => {
+    switch (operator) {
+        case "empty":
+            break;
+        case "eq":
+            break;
+        case "gt":
+            break;
+        case "gte":
+            break;
+        case "lt":
+            break;
+        case "lte":
+            break;
+        case "not empty":
+            break;
+        case "not eq":
+            break;
+        case "not gt":
+            break;
+        case "not gte":
+            break;
+        case "not lt":
+            break;
+        case "not lte":
+            break;
+    }
 
-    switch (operator) { // construct operator
+}
+
+const compareNumber = (a: number, b: number, operator: OperatorType): boolean => {
+    switch (operator) {
+        case "empty":
+            break;
+        case "eq":
+            break;
+        case "gt":
+            break;
+        case "gte":
+            break;
+        case "lt":
+            break;
+        case "lte":
+            break;
+        case "not empty":
+            break;
+        case "not eq":
+            break;
+        case "not gt":
+            break;
+        case "not gte":
+            break;
+        case "not lt":
+            break;
+        case "not lte":
+            break;
+    }
+}
+
+const compareString = (a: string, b: string, operator: OperatorType): boolean => {
+    switch (operator) {
         case "empty":
             break;
         case "eq":

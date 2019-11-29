@@ -1,4 +1,4 @@
-import {Value} from './item.model';
+import {ItemImage, Value} from './item.model';
 import {Attribute} from './attribute.model';
 
 
@@ -13,7 +13,7 @@ export interface BulkEditItem {
     id: number;
     name: string;
     description: string;
-    images: string[];
+    images: ItemImage[];
     parentId: number;
     changes: {
         [attributeId: number]: {
@@ -24,7 +24,6 @@ export interface BulkEditItem {
     whens: {
         [attributeId: number]: Value;
     };
-
     children: BulkEditItem[];
 }
 

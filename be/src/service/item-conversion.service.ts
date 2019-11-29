@@ -501,6 +501,13 @@ const toItemValue2 = (value: Value): ItemValue2 => {
     return null;
 }
 
+export const fromItemMetadata2ToValue = (attributeId: number, metas: ItemMetadata2[]): Value => {
+    return {
+       attributeId,
+       val: toItemValTypes(metas)
+    } as Value;
+}
+
 
 export const toItemValTypes = (metadatas: ItemMetadata2[]): ItemValTypes => {
     const o: any = {};
