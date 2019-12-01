@@ -53,6 +53,7 @@ import registerGetAllPricingStructuresWithItemsByViewRoute from './GET-all-prici
 import registerPostUpdatePricingStructureRoute from './POST-update-pricing-structure.route';
 import registerPostUpdatePricingStructureStatusRoute from './POST-update-pricing-structure-status.route';
 import registerPostUpdatePricingStructureItemRoute from './POST-update-pricing-structure-item.route';
+import registerPostDoBulkEditRoute from './POST-do-bulk-edit.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -113,6 +114,7 @@ const reg = (app: Express, regi: Registry) => {
     registerPostUpdatePricingStructureStatusRoute(v1AppRouter, registry);
     registerPostUpdatePricingStructureItemRoute(v1AppRouter, registry);
     registerPostUpdatePricingStructureRoute(v1AppRouter, registry);
+    registerPostDoBulkEditRoute(v1AppRouter, registry);
 }
 
 

@@ -2,13 +2,13 @@
     <table mat-table [dataSource]="dataSource">
 
         <ng-container matColumnDef="when-header">
-            <th mat-header-cell *matHeaderCellDef [attr.colspan]="whenAttribtues.length">When</th>
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="whenAttributes.length">When</th>
         </ng-container>
         <ng-container matColumnDef="change-header">
             <th mat-header-cell *matHeaderCellDef [attr.colspan]="(changeAttributes.length * 2)">Change</th>
         </ng-container>
 
-        <ng-container *ngFor="let whenAttribute of whenAttribtues">
+        <ng-container *ngFor="let whenAttribute of whenAttributes">
             <ng-container matColumnDef="when-attributes-header-{{whenAttribute.id}}">
                 <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">{{whenAttribute.name}}</th>
             </ng-container>
@@ -28,9 +28,13 @@
             </ng-container>
         </ng-container>
 
-        <ng-container *ngFor="let whenAttribute of whenAttribtues">
+        <ng-container *ngFor="let whenAttribute of whenAttributes">
             <ng-container matColumnDef="{{whenAttribute.id}}">
-                <td mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.whens[whenAttribute.id] | itemAttributeValueAsString:whenAttribute}}</td>
+                <td mat-cell *matCellDef="let bulkEditTableItem">
+                    Attribute {{whenAttribute.name}}
+                    {{bulkEditTableItem.whens[whenAttribute.id].operator}}
+                    {{bulkEditTableItem.whens[whenAttribute.id].val | itemAttributeValueAsString:whenAttribute}}
+                </td>
             </ng-container>
         </ng-container>
         <ng-container *ngFor="let changeAttribute of changeAttributes">

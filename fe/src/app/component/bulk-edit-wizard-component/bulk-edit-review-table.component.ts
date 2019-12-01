@@ -30,7 +30,7 @@ export class BulkEditReviewTableDataSource extends DataSource<BulkEditTableItem>
 export class BulkEditReviewTableComponent implements OnInit {
 
     @Input() changeAttributes: Attribute[];
-    @Input() whenAttribtues: Attribute[];
+    @Input() whenAttributes: Attribute[];
     @Input() bulkEditTableItem: BulkEditTableItem[];
     attributeHeaderColumns: string[];
     changeOldNewValuesHeaderColumns: string[];
@@ -46,7 +46,7 @@ export class BulkEditReviewTableComponent implements OnInit {
 
     ngOnInit(): void {
         this.attributeHeaderColumns = [
-            ...this.whenAttribtues.map((wa: Attribute) => `when-attributes-header-${wa.id}`),
+            ...this.whenAttributes.map((wa: Attribute) => `when-attributes-header-${wa.id}`),
             ...this.changeAttributes.map((ca: Attribute) => `change-attributes-header-${ca.id}`)
         ];
         this.changeAttributes.forEach((ca: Attribute) => {
@@ -54,7 +54,7 @@ export class BulkEditReviewTableComponent implements OnInit {
             this.changeOldNewValuesHeaderColumns.push(`change-new-values-header-${ca.id}`);
         });
         this.displayedColumns = [
-            ...this.whenAttribtues.map((wa: Attribute) => '' + wa.id),
+            ...this.whenAttributes.map((wa: Attribute) => '' + wa.id),
         ];
         this.changeAttributes.forEach((ca: Attribute) => {
             this.displayedColumns.push(`old-${ca.id}`);

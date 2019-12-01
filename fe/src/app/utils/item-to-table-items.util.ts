@@ -132,9 +132,15 @@ export function toBulkEditItem(tableItems: BulkEditTableItem[]): BulkEditItem[] 
     const itemId = tableItem.id;
     const itemParentId = tableItem.parentId;
     const item: BulkEditItem = {
-      id: itemId, name: tableItem.name, description: tableItem.description,
-      whens: tableItem.whens, changes: tableItem.changes,
-      images: tableItem.images, parentId: itemParentId, children: []} as BulkEditItem;
+      id: itemId,
+      name: tableItem.name,
+      description: tableItem.description,
+      whens: tableItem.whens,
+      changes: tableItem.changes,
+      images: tableItem.images,
+      parentId: itemParentId,
+      children: []
+    } as BulkEditItem;
 
     // item
     if (!acc.has(itemId)) {

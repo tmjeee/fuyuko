@@ -18,9 +18,9 @@ const BULK_EDIT_PREVIEW: BulkEditPackage = {
     bulkEditItems: [
         {id: 1, name: 'bulkChangeItem#1', description: 'bulk change item #1', images: [], parentId: null, children: [],
             whens: {
-                1: { attributeId: 1, val: {type: 'string', value: 'ttt1'} as StringValue },
-                2: { attributeId: 2, val: {type: 'string', value: 'ttt2'} as StringValue },
-                3: { attributeId: 3, val: {type: 'string', value: 'ttt3'} as StringValue }
+                1: { attributeId: 1, operator: 'eq', val: {type: 'string', value: 'ttt1'} as StringValue },
+                2: { attributeId: 2, operator: 'eq', val: {type: 'string', value: 'ttt2'} as StringValue },
+                3: { attributeId: 3, operator: 'eq', val: {type: 'string', value: 'ttt3'} as StringValue }
             },
             changes: {
                 4: {
@@ -39,9 +39,9 @@ const BULK_EDIT_PREVIEW: BulkEditPackage = {
         } as BulkEditItem,
         {id: 2, name: 'bulkChangeItem#2', description: 'bulk change item #2', images: [], parentId: null, children: [],
             whens: {
-                1: { attributeId: 1, val: {type: 'string', value: 'ttt4'} as StringValue },
-                2: { attributeId: 2, val: {type: 'string', value: 'ttt5'} as StringValue },
-                3: { attributeId: 3, val: {type: 'string', value: 'ttt6'} as StringValue }
+                1: { attributeId: 1, operator: 'eq', val: {type: 'string', value: 'ttt4'} as StringValue },
+                2: { attributeId: 2, operator: 'eq', val: {type: 'string', value: 'ttt5'} as StringValue },
+                3: { attributeId: 3, operator: 'eq', val: {type: 'string', value: 'ttt6'} as StringValue }
             },
             changes: {
                 4: {
