@@ -47,7 +47,13 @@ export interface BulkEditTableItem {
             new: Value
         };
     };
-    whens: ItemValueOperatorAndAttribute[];
+    whens: {
+        [attributeId: number]: {
+            attributeId: number,
+            operator: OperatorType,
+            val: ItemValTypes
+        }
+    }
 
     rootParentId: number;
 }

@@ -181,6 +181,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
             .pipe(
                 tap((b: BulkEditPackage) => {
                    this.bulkEditPackage = b;
+                   console.log('*********************** bulk edit packate', this.bulkEditPackage);
                    if (this.bulkEditPackage) {
                        const bulkEditItems: BulkEditItem[] = this.bulkEditPackage.bulkEditItems;
                        this.bulkEditTableItems  = toBulkEditTableItem(bulkEditItems);
@@ -197,7 +198,8 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
         this.editable = false;
         // todo:
         this.jobsService
-            .scheduleBulkEditJob(this.view.id, this.changeClauses, this.whereClauses)
+            // .scheduleBulkEditJob(this.view.id, this.changeClauses, this.whereClauses)
+            .scheduleBulkEditJob(this.bulkEditPackage)
             .pipe(
                 tap((j: Job) => {
                     this.job = j;

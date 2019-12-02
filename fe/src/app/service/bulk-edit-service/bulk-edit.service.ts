@@ -3,6 +3,8 @@ import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '../../model/
 import {Observable, of} from 'rxjs';
 import {BulkEditItem, BulkEditPackage} from '../../model/bulk-edit.model';
 import {StringValue} from '../../model/item.model';
+import config from '../../../assets/config.json';
+import {HttpClient} from "@angular/common/http";
 
 const BULK_EDIT_PREVIEW: BulkEditPackage = {
     whenAttributes: [
@@ -61,10 +63,27 @@ const BULK_EDIT_PREVIEW: BulkEditPackage = {
     ]
 } as BulkEditPackage;
 
+
+const URL_BULK_EDIT = `${config.api_host_url}/view/:viewId/bulk-edit`;
+
 @Injectable()
 export class BulkEditService {
-    previewBuilEdit(viewId: number, changeClauses: ItemValueAndAttribute[], whereClauses: ItemValueOperatorAndAttribute[]):
+
+    constructor(private httpClient: HttpClient) {
+    }
+
+
+    previewBuilEdit(viewId: number, changeClauses: ItemValueAndAttribute[], whenClauses: ItemValueOperatorAndAttribute[]):
         Observable<BulkEditPackage> {
-        return of({...BULK_EDIT_PREVIEW});
+        // return of({...BULK_EDIT_PREVIEW});
+
+        // const changeClauses: ItemValueAndAttribute[] = req.body.changeClauses;
+        // const whenClauses: ItemValueOperatorAndAttribute[] = req.body.whenClauses;
+
+        return this.httpClient.post<BulkEditPackage>(
+            URL_BULK_EDIT.replace(':viewId', String(viewId)), {
+            changeClauses,
+            whenClauses
+        });
     }
 }

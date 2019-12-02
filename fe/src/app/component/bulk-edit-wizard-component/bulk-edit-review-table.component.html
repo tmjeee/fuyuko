@@ -1,6 +1,10 @@
 <div class="bulk-edit-review-table-component">
     <table mat-table [dataSource]="dataSource">
 
+        <ng-container matColumnDef="empty-header">
+            <th mat-header-cell *matHeaderCellDef></th>
+        </ng-container>
+
         <ng-container matColumnDef="when-header">
             <th mat-header-cell *matHeaderCellDef [attr.colspan]="whenAttributes.length">When</th>
         </ng-container>
@@ -8,9 +12,14 @@
             <th mat-header-cell *matHeaderCellDef [attr.colspan]="(changeAttributes.length * 2)">Change</th>
         </ng-container>
 
+        <ng-container matColumnDef="item-info-header">
+            <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">Item</th>
+        </ng-container>
         <ng-container *ngFor="let whenAttribute of whenAttributes">
             <ng-container matColumnDef="when-attributes-header-{{whenAttribute.id}}">
-                <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">{{whenAttribute.name}}</th>
+                <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">
+                    {{whenAttribute.name}}
+                </th>
             </ng-container>
         </ng-container>
         <ng-container *ngFor="let changeAttribute of changeAttributes">
@@ -28,10 +37,16 @@
             </ng-container>
         </ng-container>
 
+        <ng-container matColumnDef="item-info-cell">
+            <td mat-cell  *matCellDef="let bulkEditTableItem">
+                {{bulkEditTableItem.id}}
+                {{bulkEditTableItem.name}}
+            </td>
+        </ng-container>
+
         <ng-container *ngFor="let whenAttribute of whenAttributes">
             <ng-container matColumnDef="{{whenAttribute.id}}">
                 <td mat-cell *matCellDef="let bulkEditTableItem">
-                    Attribute {{whenAttribute.name}}
                     {{bulkEditTableItem.whens[whenAttribute.id].operator}}
                     {{bulkEditTableItem.whens[whenAttribute.id].val | itemAttributeValueAsString:whenAttribute}}
                 </td>
@@ -46,7 +61,7 @@
             </ng-container>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="['when-header', 'change-header']"></tr>
+        <tr mat-header-row *matHeaderRowDef="['empty-header', 'when-header', 'change-header']"></tr>
         <tr mat-header-row *matHeaderRowDef="attributeHeaderColumns"></tr>
         <tr mat-header-row *matHeaderRowDef="changeOldNewValuesHeaderColumns"></tr>
         <tr mat-row *matRowDef="let bulkEditTableItem; columns: displayedColumns"></tr>

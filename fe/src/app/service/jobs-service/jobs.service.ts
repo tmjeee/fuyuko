@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {Job, JobAndLogs, Log} from '../../model/job.model';
 import {Observable, of} from 'rxjs';
+import {BulkEditPackage} from "../../model/bulk-edit.model";
 
 const allJobs: Job[] = [
     { id: 1, name: 'job #1', status: 'completed', creationDate: new Date(), lastUpdate: new Date()} as Job,
@@ -22,8 +23,7 @@ export class JobsService {
         return of(allJobs);
     }
 
-    scheduleBulkEditJob(viewId: number, changeClauses: ItemValueAndAttribute[], whereClauses: ItemValueOperatorAndAttribute[]):
-        Observable<Job> {
+    scheduleBulkEditJob (bulkEditPackage: BulkEditPackage): Observable<Job> {
         const job: Job =  {
             id: allJobs.length,
             status: 'scheduled',
