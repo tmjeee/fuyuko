@@ -1,9 +1,9 @@
-import {Status} from './status.model';
+import {ResponseStatus} from './response-status.model';
 
 
 export interface AppNotification {
   isNew: boolean;
-  status: Status;
+  status: ResponseStatus;
   title: string;
   message: string;
 }

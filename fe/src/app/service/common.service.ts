@@ -1,10 +1,10 @@
 import {NotificationsService} from 'angular2-notifications';
-import {Status} from '../model/status.model';
+import {ResponseStatus} from '../model/response-status.model';
 
 
 export const toNotifications = (
         notificationService: NotificationsService,
-        data: {status: Status, message: string},
+        data: {status: ResponseStatus, message: string},
         title?: string) => {
     if (data.status === 'ERROR') {
         notificationService.error(title ? title : 'Error', data.message);

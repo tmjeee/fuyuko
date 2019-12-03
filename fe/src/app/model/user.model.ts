@@ -1,5 +1,5 @@
 import {Group} from './group.model';
-import {SimpleStatus} from './status.model';
+import {SimpleResponseStatus} from './response-status.model';
 
 export type UserStatus = 'enabled' | 'disabled' | 'deleted';
 

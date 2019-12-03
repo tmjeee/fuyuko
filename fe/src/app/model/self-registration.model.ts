@@ -1,4 +1,4 @@
-import {SimpleStatus} from './status.model';
+import {SimpleResponseStatus} from './response-status.model';
 
 export interface SelfRegistration {
     id: number;
@@ -11,6 +11,6 @@ export interface SelfRegistration {
 }
 
 export interface SelfRegistrationResponse {
-    status: SimpleStatus;
+    status: SimpleResponseStatus;
     message: string;
 }

@@ -15,8 +15,8 @@ import {
     Value, VolumeValue, WidthValue
 } from "../../model/item.model";
 import {Attribute, DEFAULT_DATE_FORMAT, DEFAULT_NUMERIC_FORMAT} from "../../model/attribute.model";
-import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../model/ss-attribute.model";
-import {convert} from "../../service/item-conversion.service";
+import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../model/server-side.model";
+import {convert} from "../../service/conversion-item.service";
 import {findChildrenItems} from "../../service/item.service";
 
 const httpAction: any[] = [

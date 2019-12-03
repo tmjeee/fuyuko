@@ -5,7 +5,7 @@ import {check, body} from 'express-validator';
 import {doInDbConnection, QueryResponse} from "../../db";
 import {PoolConnection} from "mariadb";
 import {Rule} from "../../model/rule.model";
-import {Rule2} from "../model/ss-attribute.model";
+import {Rule2} from "../model/server-side.model";
 import {ApiResponse} from "../../model/response.model";
 import {revert} from "../../service/rule-conversion.service";
 

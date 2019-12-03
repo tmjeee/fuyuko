@@ -1,4 +1,4 @@
-import {SimpleStatus} from './status.model';
+import {SimpleResponseStatus} from './response-status.model';
 
 export const ROLE_VIEW = 'VIEW';
 export const ROLE_EDIT = 'EDIT';

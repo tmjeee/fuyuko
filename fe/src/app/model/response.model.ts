@@ -1,7 +1,7 @@
-import {SimpleStatus} from './status.model';
+import {SimpleResponseStatus} from './response-status.model';
 
 
 export interface ApiResponse {
-   status: SimpleStatus;
+   status: SimpleResponseStatus;
    message: string;
 }

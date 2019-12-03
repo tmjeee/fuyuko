@@ -1,8 +1,97 @@
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {PoolConnection} from "mariadb";
-import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../route/model/ss-attribute.model";
-import {Item, ItemImage} from "../model/item.model";
-import {convert} from "./item-conversion.service";
+import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../route/model/server-side.model";
+import {ItemImage, ItemValTypes, Value} from "../model/item.model";
+
+
+export const updateItemValue = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
+    await doInDbConnection(async (conn: PoolConnection) => {
+        const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND ITEM_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
+
+        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
+        const newItemValueId: number = q1.insertId;
+
+        for (const metadata of itemValue.metadatas) {
+            const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
+            const newMetadataId: number = q2.insertId;
+
+            for (const entry of metadata.entries) {
+                const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
+                    [newMetadataId, entry.key, entry.value, entry.dataType]);
+                const newMetadataEntryId = q3.insertId;
+            }
+        }
+    });
+}
+
+export const updateItem = async (viewId: number, item2: Item2) => {
+    await doInDbConnection(async (conn: PoolConnection) => {
+        return await _updateItem(conn, viewId, item2);
+    });
+}
+const _updateItem = async (conn: PoolConnection, viewId: number, item2: Item2) => {
+    const itemId: number = item2.id;
+    const name: string = item2.name;
+    const description: string = item2.description;
+
+    const q: QueryResponse = await conn.query(`UPDATE TBL_ITEM SET NAME=? , DESCRIPTION=? WHERE STATUS='ENABLED' AND ID=?`,[ name, description, itemId]);
+
+    for (const itemValue of  item2.values) {
+
+        const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND ITEM_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
+
+        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
+        const newItemValueId: number = q1.insertId;
+
+        for (const metadata of itemValue.metadatas) {
+            const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
+            const newMetadataId: number = q2.insertId;
+
+            for (const entry of metadata.entries) {
+                const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
+                    [newMetadataId, entry.key, entry.value, entry.dataType]);
+                const newMetadataEntryId = q3.insertId;
+            }
+        }
+    }
+
+    for (const child of item2.children) {
+        _updateItem(conn, viewId, child);
+    }
+}
+
+export const addItem = async (viewId: number, item2: Item2, parentId: number = null) => {
+    await doInDbConnection(async (conn: PoolConnection) => {
+        await _addItem(conn, viewId, item2, parentId);
+    });
+}
+const _addItem = async (conn: PoolConnection, viewId: number, item2: Item2, parentId: number = null) => {
+
+    const name: string = item2.name;
+    const description: string = item2.description;
+
+    const q: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`,[parentId, viewId, name, description]);
+    const newItemId: number = q.insertId;
+
+    for (const itemValue of item2.values) {
+        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [newItemId, itemValue.attributeId]);
+        const newItemValueId: number = q1.insertId;
+
+        for (const metadata of itemValue.metadatas) {
+            const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
+            const newMetadataId: number = q2.insertId;
+
+            for (const entry of metadata.entries) {
+                const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
+                    [newMetadataId, entry.key, entry.value, entry.dataType]);
+            }
+        }
+    }
+
+    for (const child of item2.children) {
+        _addItem(conn, viewId, child, newItemId);
+    }
+}
 
 
 export const findChildrenItems = async (viewId: number, parentItemId: number): Promise<Item2[]> => {

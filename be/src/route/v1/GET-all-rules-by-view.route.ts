@@ -10,7 +10,7 @@ import {
     ValidateClause2,
     ValidateClauseMetadata2,
     ValidateClauseMetadataEntry2, WhenClause2, WhenClauseMetadata2, WhenClauseMetadataEntry2
-} from "../model/ss-attribute.model";
+} from "../model/server-side.model";
 import {convert} from "../../service/rule-conversion.service";
 
 const httpAction: any[] = [

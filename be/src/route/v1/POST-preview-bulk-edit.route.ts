@@ -3,7 +3,7 @@ import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
-import {param} from 'express-validator';
+import {param, body} from 'express-validator';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 import moment from 'moment';
 import {
@@ -23,14 +23,14 @@ import {
     AttributeMetadata2,
     AttributeMetadataEntry2,
     ItemMetadata2,
-    ItemMetadataEntry2
-} from "../model/ss-attribute.model";
-import {fromItemMetadata2ToValue, toItemValTypes} from "../../service/item-conversion.service";
+    ItemMetadataEntry2, ItemValue2
+} from "../model/server-side.model";
 import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../../model/unit.model";
-import {_convert, convert} from "../../service/attribute-conversion.service";
+import {_convert as _attributeConvert, convert as attributeConvert} from "../../service/conversion-attribute.service";
+import {convert as itemValueConvert} from '../../service/conversion-item-value.service';
 
 
-const SQL_1: string = `
+const SQL: string = `
            SELECT 
             I.ID AS I_ID,
             I.PARENT_ID AS I_PARENT_ID,
@@ -87,8 +87,8 @@ const SQL_1: string = `
            WHERE I.STATUS = 'ENABLED' AND I.VIEW_ID=? 
 `
 
-const SQL_WITH_NULL_PARENT = `${SQL_1} AND I.PARENT_ID IS NULL`;
-const SQL_WITH_PARAMETERIZED_PARENT = `${SQL_1} AND I.PARENT_ID = ? `;
+const SQL_WITH_NULL_PARENT = `${SQL} AND I.PARENT_ID IS NULL`;
+const SQL_WITH_PARAMETERIZED_PARENT = `${SQL} AND I.PARENT_ID = ? `;
 
 interface BulkEditItem2 {
     id: number;  // itemId
@@ -103,7 +103,9 @@ interface BulkEditItem2 {
 
 const httpAction: any[] = [
     [
-        param('viewId').exists().isNumeric()
+        param('viewId').exists().isNumeric(),
+        body('changeClauses').exists().isArray(),
+        body('whenClauses').exists().isArray(),
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -268,7 +270,7 @@ const getBulkEditItem2s = async (conn: PoolConnection,
 
         const attMap: Map<string /* attributeId */, Attribute> =
             ([...attributeMap.values()]).reduce((m: Map<string /* attributeId */, Attribute>, i: Attribute2) => {
-                m.set(`${i.id}`, _convert(i));
+                m.set(`${i.id}`, _attributeConvert(i));
                 return m;
             }, new Map()
         );
@@ -475,7 +477,11 @@ const convertToBulkEditItem = (b2: BulkEditItem2, changes: ItemValueAndAttribute
             val: {}
         } as Value;
         const _c = {
-          old: fromItemMetadata2ToValue(met.attributeId, [met]),
+          old: itemValueConvert({
+             id: -1,
+             attributeId: met.attributeId,
+             metadatas: [met]
+          } as ItemValue2),
           new: change.itemValue
         };
         acc[met.attributeId] = _c ;
@@ -633,7 +639,7 @@ const findEntry = (entries: ItemMetadataEntry2[], key: string): ItemMetadataEntr
 
 
 const reg = (router: Router, registry: Registry) => {
-   const p = `/view/:viewId/bulk-edit`;
+   const p = `/view/:viewId/preview-bulk-edit`;
    registry.addItem('POST', p);
    router.post(p, ...httpAction);
 }

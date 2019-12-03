@@ -1,4 +1,4 @@
-import {Status} from './status.model';
+import {ResponseStatus} from './response-status.model';
 
 
 export interface GlobalAvatar {
@@ -11,5 +11,5 @@ export interface GlobalAvatar {
 export interface UserAvatarResponse {
   userAvatarId: number;
   message: string;
-  status: Status;
+  status: ResponseStatus;
 }

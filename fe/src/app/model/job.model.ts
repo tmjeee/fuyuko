@@ -1,8 +1,11 @@
+import {Level} from './level.model';
+import {Status} from './status.model';
 
+export type JobProgress = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED';
 
-export type JobStatus = 'scheduled' | 'in-progress' | 'completed' | 'failed';
+export type Level = Level;
 
-export type Level = 'debug' | 'info' | 'warn' | 'error';
+export type Status = Status;
 
 export interface Log {
     id: number;
@@ -14,9 +17,11 @@ export interface Log {
 export interface Job {
     id: number;
     name: string;
+    description: string;
     creationDate: Date;
     lastUpdate: Date;
-    status: JobStatus;
+    progress: JobProgress;
+    status: Status;
 }
 
 export interface JobAndLogs {

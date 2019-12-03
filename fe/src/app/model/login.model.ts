@@ -1,9 +1,9 @@
 import {User} from './user.model';
-import { Status } from './status.model';
+import { ResponseStatus } from './response-status.model';
 
 export interface LoginResponse {
     jwtToken: string;
-    status: Status;
+    status: ResponseStatus;
     message: string;
     user: User;
     theme: string;

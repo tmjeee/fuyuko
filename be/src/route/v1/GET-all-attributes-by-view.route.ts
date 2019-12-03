@@ -5,8 +5,8 @@ import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
 import {Attribute} from "../../model/attribute.model";
-import {convert} from "../../service/attribute-conversion.service";
-import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/ss-attribute.model";
+import {convert} from "../../service/conversion-attribute.service";
+import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/server-side.model";
 
 const httpAction: any[] = [
     [

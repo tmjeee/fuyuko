@@ -64,7 +64,7 @@ const BULK_EDIT_PREVIEW: BulkEditPackage = {
 } as BulkEditPackage;
 
 
-const URL_BULK_EDIT = `${config.api_host_url}/view/:viewId/bulk-edit`;
+const URL_BULK_EDIT = `${config.api_host_url}/view/:viewId/preview-bulk-edit`;
 
 @Injectable()
 export class BulkEditService {

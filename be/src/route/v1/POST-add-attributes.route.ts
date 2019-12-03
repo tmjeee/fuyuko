@@ -4,8 +4,8 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {param, body, check} from 'express-validator';
 import {doInDbConnection, QueryResponse} from "../../db";
 import {PoolConnection} from "mariadb";
-import {revert} from "../../service/attribute-conversion.service";
-import {Attribute2} from "../model/ss-attribute.model";
+import {revert} from "../../service/conversion-attribute.service";
+import {Attribute2} from "../model/server-side.model";
 import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [

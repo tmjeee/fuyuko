@@ -3,8 +3,8 @@ import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {PoolConnection} from "mariadb";
-import {convert} from "../../service/attribute-conversion.service";
-import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/ss-attribute.model";
+import {convert} from "../../service/conversion-attribute.service";
+import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/server-side.model";
 import {Attribute} from "../../model/attribute.model";
 import {check} from 'express-validator';
 
