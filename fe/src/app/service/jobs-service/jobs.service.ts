@@ -1,63 +1,39 @@
 import {Injectable} from '@angular/core';
-import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
-import {Job, JobAndLogs, Log} from '../../model/job.model';
+import {Job, JobAndLogs} from '../../model/job.model';
 import {Observable, of} from 'rxjs';
 import {BulkEditPackage} from '../../model/bulk-edit.model';
+import config from '../../../assets/config.json';
+import {HttpClient} from '@angular/common/http';
 
-const allJobs: Job[] = [
-    { id: 1, name: 'job #1', status: 'ENABLED', progress: 'COMPLETED', creationDate: new Date(), lastUpdate: new Date()} as Job,
-    { id: 2, name: 'job #2', status: 'ENABLED', progress: 'COMPLETED', creationDate: new Date(), lastUpdate: new Date()} as Job,
-    { id: 3, name: 'job #3', status: 'ENABLED', progress: 'FAILED', creationDate: new Date(), lastUpdate: new Date()} as Job,
-    { id: 4, name: 'job #4', status: 'ENABLED', progress: 'SCHEDULED', creationDate: new Date(), lastUpdate: new Date()} as Job,
-    { id: 5, name: 'job #5', status: 'ENABLED', progress: 'SCHEDULED', creationDate: new Date(), lastUpdate: new Date()} as Job,
-    { id: 6, name: 'job #6', status: 'ENABLED', progress: 'IN_PROGRESS', creationDate: new Date(), lastUpdate: new Date()} as Job,
-    { id: 7, name: 'job #7', status: 'ENABLED', progress: 'IN_PROGRESS', creationDate: new Date(), lastUpdate: new Date()} as Job,
-    { id: 8, name: 'job #8', status: 'ENABLED', progress: 'IN_PROGRESS', creationDate: new Date(), lastUpdate: new Date()} as Job,
-];
+
+const URL_SCHEDULE_BULK_EDIT_JOB = `${config.api_host_url}/view/:viewId/bulk-edit`;
+const URL_JOB_BY_ID = `${config.api_host_url}/job/:jobId`;
+const URL_JOB_DETAIL_BY_ID = `${config.api_host_url}/job/:jobId/detail`;
+const URL_ALL_JOBS = `${config.api_host_url}/jobs`;
 
 
 @Injectable()
 export class JobsService {
 
+    constructor(private httpClient: HttpClient) {}
+
     allJobs(): Observable<Job[]> {
-        return of(allJobs);
+        return this.httpClient.get<Job[]>(URL_ALL_JOBS);
     }
 
-    scheduleBulkEditJob(bulkEditPackage: BulkEditPackage): Observable<Job> {
-        const job: Job =  {
-            id: allJobs.length,
-            lastUpdate: new Date(),
-            creationDate: new Date(),
-            status: 'ENABLED',
-            progress: 'SCHEDULED',
-            name: `Bulk edit #${allJobs.length}`
-        } as Job;
-        allJobs.unshift(job);
-        return of(job);
+    scheduleBulkEditJob(viewId: number, bulkEditPackage: BulkEditPackage): Observable<Job> {
+        return this.httpClient.post<Job>(
+            URL_SCHEDULE_BULK_EDIT_JOB.replace(':viewId', `${viewId}`), {
+               bulkEditPackage
+            });
     }
 
     job(jobId: number): Observable<Job> {
-        const jobFound: Job = allJobs.find((j: Job) => j.id === jobId);
-        return of(jobFound);
+        return this.httpClient.get<Job>(URL_JOB_BY_ID.replace(':jobId', `${jobId}`));
     }
 
     jobLogs(jobId: number, lastLogId: number): Observable<JobAndLogs> {
-        // todo:
-        const logs: Log[] = [];
-        const jobFound: Job = allJobs.find((j: Job) => j.id === jobId);
-        if (jobFound) {
-            if (jobFound.progress === 'SCHEDULED') {
-                jobFound.progress = 'IN_PROGRESS';
-            }
-            let logId = (lastLogId ?  (lastLogId + 1) : 1);
-            for (let a = 0; a < Math.ceil(Math.random() * 10); a++) {
-                logs.push({id: logId, level: 'INFO', timestamp: new Date(), message: `log messages ${new Date()}`} as Log);
-                logId++;
-            }
-            if (jobFound.progress === 'IN_PROGRESS') {
-                jobFound.progress = 'COMPLETED';
-            }
-        }
-        return of({ job: jobFound, logs} as JobAndLogs);
+        return this.httpClient.get<JobAndLogs>(
+            URL_JOB_DETAIL_BY_ID.replace(':jobId', `${jobId}`).replace(':lastLogId', `${lastLogId}`));
     }
 }

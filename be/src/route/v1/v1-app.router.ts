@@ -56,7 +56,8 @@ import registerPostUpdatePricingStructureItemRoute from './POST-update-pricing-s
 import registerPostPreviewBulkEditRoute from './POST-preview-bulk-edit.route';
 import registerPostScheduleBulkEditRoute from './POST-schedule-bulk-edit.route';
 import registerGetAllJobsRoute from './GET-all-jobs.route';
-import registerGetJobDetailsById from './GET-job-details-by-id.route';
+import registerGetJobDetailsByIdRoute from './GET-job-details-by-id.route';
+import registerGetJobByIdRoute from './GET-job-by-id.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -120,7 +121,8 @@ const reg = (app: Express, regi: Registry) => {
     registerPostPreviewBulkEditRoute(v1AppRouter, registry);
     registerPostScheduleBulkEditRoute(v1AppRouter, registry);
     registerGetAllJobsRoute(v1AppRouter, registry);
-    registerGetJobDetailsById(v1AppRouter, registry);
+    registerGetJobDetailsByIdRoute(v1AppRouter, registry);
+    registerGetJobByIdRoute(v1AppRouter, registry);
 }
 
 

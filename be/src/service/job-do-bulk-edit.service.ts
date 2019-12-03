@@ -36,15 +36,26 @@ export const scheduleBulkEditJob = async (viewId: number, bulkEditPackage: BulkE
 };
 
 const run = async (jobLogger: JobLogger, viewId: number, bulkEditPackage: BulkEditPackage) => {
-    await doInDbConnection(async (conn: PoolConnection) => {
-        for (const bulkEditItem of bulkEditPackage.bulkEditItems) {
-            const itemId: number = bulkEditItem.id;
-            const vs: Value[] = Object.values(bulkEditItem.changes).map((_ => _.new));
+    jobLogger.updateProgress('IN_PROGRESS');
+    jobLogger.logInfo(`Start running bulk edit job (jobId: ${jobLogger.jobId})`);
+    try {
+        await doInDbConnection(async (conn: PoolConnection) => {
+            for (const bulkEditItem of bulkEditPackage.bulkEditItems) {
+                jobLogger.logInfo(`Working on item ${bulkEditItem.id}`);
+                const itemId: number = bulkEditItem.id;
+                const vs: Value[] = Object.values(bulkEditItem.changes).map((_ => _.new));
 
-            for (const v of vs) {
-                const itemValue: ItemValue2 = revert(v);
-                await updateItemValue(viewId, itemId, itemValue);
+                for (const v of vs) {
+                    const itemValue: ItemValue2 = revert(v);
+                    await updateItemValue(viewId, itemId, itemValue);
+                    jobLogger.logInfo(`Changed attribute ${v.attributeId} for item ${itemId} to ${v.val}`)
+                }
             }
-        }
-    });
+        });
+        jobLogger.logInfo(`Done running bulk edit job (jobId: ${jobLogger.jobId})`);
+        jobLogger.updateProgress('COMPLETED');
+    } catch (e) {
+        jobLogger.updateProgress('FAILED');
+        jobLogger.logError(`Encounter error ${e}`);
+    }
 }

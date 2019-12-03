@@ -7,7 +7,7 @@ export type Level = Level;
 
 export type Status = Status;
 
-export interface Log {
+export interface JobLog {
     id: number;
     timestamp: Date;
     level: Level;
@@ -26,5 +26,5 @@ export interface Job {
 
 export interface JobAndLogs {
     job: Job;
-    logs: Log[];
+    logs: JobLog[];
 }

@@ -26,7 +26,7 @@ import {Observable} from 'rxjs';
 })
 export class BulkEditWizardComponent implements OnInit, OnChanges {
 
-    editable: boolean;  // when in othird steps, all other steps are not editable
+    editable: boolean;  // when in third steps, all other steps are not editable
 
     @ViewChild('stepper', { static: false}) stepper: MatStepper;
 
@@ -198,8 +198,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
         this.editable = false;
         // todo:
         this.jobsService
-            // .scheduleBulkEditJob(this.view.id, this.changeClauses, this.whereClauses)
-            .scheduleBulkEditJob(this.bulkEditPackage)
+            .scheduleBulkEditJob(this.view.id, this.bulkEditPackage)
             .pipe(
                 tap((j: Job) => {
                     this.job = j;
