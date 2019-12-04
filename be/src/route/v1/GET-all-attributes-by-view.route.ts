@@ -32,9 +32,9 @@ const httpAction: any[] = [
                     E.ID as E_ID,
                     E.KEY AS E_KEY,
                     E.VALUE AS E_VALUE
-                FROM TBL_ITEM_ATTRIBUTE AS A
-                LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA AS M ON M.ITEM_ATTRIBUTE_ID = A.ID
-                LEFT JOIN TBL_ITEM_ATTRIBUTE_METADATA_ENTRY AS E ON E.ITEM_ATTRIBUTE_METADATA_ID = M.ID
+                FROM TBL_VIEW_ATTRIBUTE AS A
+                LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS M ON M.VIEW_ATTRIBUTE_ID = A.ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS E ON E.VIEW_ATTRIBUTE_METADATA_ID = M.ID
                 WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED'
             `, [viewId]);
 

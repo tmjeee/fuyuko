@@ -6,9 +6,9 @@ import {ItemImage, ItemValTypes, Value} from "../model/item.model";
 
 export const updateItemValue = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
     await doInDbConnection(async (conn: PoolConnection) => {
-        const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND ITEM_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
+        const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND VIEW_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
 
-        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
+        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
         const newItemValueId: number = q1.insertId;
 
         for (const metadata of itemValue.metadatas) {
@@ -38,9 +38,9 @@ const _updateItem = async (conn: PoolConnection, viewId: number, item2: Item2) =
 
     for (const itemValue of  item2.values) {
 
-        const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND ITEM_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
+        const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND VIEW_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
 
-        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
+        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
         const newItemValueId: number = q1.insertId;
 
         for (const metadata of itemValue.metadatas) {
@@ -74,7 +74,7 @@ const _addItem = async (conn: PoolConnection, viewId: number, item2: Item2, pare
     const newItemId: number = q.insertId;
 
     for (const itemValue of item2.values) {
-        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, ITEM_ATTRIBUTE_ID) VALUES (?,?)`, [newItemId, itemValue.attributeId]);
+        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [newItemId, itemValue.attributeId]);
         const newItemValueId: number = q1.insertId;
 
         for (const metadata of itemValue.metadatas) {
@@ -126,7 +126,7 @@ export const findChildrenItems = async (viewId: number, parentItemId: number): P
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_ITEM_ATTRIBUTE AS A ON A.ID = V.ITEM_ATTRIBUTE_ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND I.PARENT_ID = ?
             `, [viewId, parentItemId]);

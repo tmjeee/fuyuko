@@ -18,7 +18,7 @@ const httpAction: any[] = [
         const state: string = req.params.state;
 
         await doInDbConnection(async (conn: PoolConnection) => {
-            await conn.query(`UPDATE TBL_ITEM_ATTRIBUTE SET STATUS = ? WHERE ID = ? `, [state, attributeId]);
+            await conn.query(`UPDATE TBL_VIEW_ATTRIBUTE SET STATUS = ? WHERE ID = ? `, [state, attributeId]);
             res.status(200).json({
                 status: 'SUCCESS',
                 message: `Attribute ${attributeId} deleted`

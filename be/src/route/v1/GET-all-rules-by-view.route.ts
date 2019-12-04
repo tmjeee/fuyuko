@@ -33,7 +33,7 @@ const httpAction: any[] = [
                    R.STATUS AS R_STATUS,
                    
                    WC.ID AS WC_ID,
-                   WC.ITEM_ATTRIBUTE_ID AS WC_ITEM_ATTRIBUTE_ID,
+                   WC.VIEW_ATTRIBUTE_ID AS WC_VIEW_ATTRIBUTE_ID,
                    WC.OPERATOR AS WC_OPERATOR,
                    WCA.NAME AS WCA_NAME,
                    WCA.DESCRIPTION AS WCA_DESCRIPTION,
@@ -46,7 +46,7 @@ const httpAction: any[] = [
                    WCME.DATA_TYPE AS WCME_DATA_TYPE,
                    
                    VC.ID AS VC_ID,
-                   VC.ITEM_ATTRIBUTE_ID AS VC_ITEM_ATTRIBUTE_ID,
+                   VC.VIEW_ATTRIBUTE_ID AS VC_VIEW_ATTRIBUTE_ID,
                    VC.OPERATOR AS VC_OPERATOR,
                    VCA.NAME AS VCA_NAME,
                    VCA.DESCRIPTION AS VCA_DESCRIPTION,
@@ -60,11 +60,11 @@ const httpAction: any[] = [
                 
                 FROM TBL_RULE AS R
                 LEFT JOIN TBL_RULE_VALIDATE_CLAUSE AS VC ON VC.RULE_ID = R.ID
-                LEFT JOIN TBL_ITEM_ATTRIBUTE AS VCA ON VCA.ID = VC.ITEM_ATTRIBUTE_ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS VCA ON VCA.ID = VC.VIEW_ATTRIBUTE_ID
                 LEFT JOIN TBL_RULE_VALIDATE_CLAUSE_METADATA AS VCM ON RULE_VALIDATE_CLAUSE_ID = VC.ID
                 LEFT JOIN TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY AS VCME ON RULE_VALIDATE_CLAUSE_METADATA_ID = VCM.ID
                 LEFT JOIN TBL_RULE_WHEN_CLAUSE AS WC ON WC.RULE_ID = R.ID
-                LEFT JOIN TBL_ITEM_ATTRIBUTE AS WCA ON WCA.ID = WC.ITEM_ATTRIBUTE_ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS WCA ON WCA.ID = WC.VIEW_ATTRIBUTE_ID
                 LEFT JOIN TBL_RULE_WHEN_CLAUSE_METADATA AS WCM ON WCM.RULE_WHEN_CLAUSE_ID = WC.ID
                 LEFT JOIN TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY AS WCME ON WCME.RULE_WHEN_CLAUSE_METADATA_ID =WCM.ID
                 WHERE R.STATUS <> 'DELETED' AND R.VIEW_ID = ?
@@ -101,7 +101,7 @@ const httpAction: any[] = [
                     const vc  = {
                         id: vcId,
                         operator: i.VC_OPERATOR,
-                        attributeId: i.VC_ITEM_ATTRIBUTE_ID,
+                        attributeId: i.VC_VIEW_ATTRIBUTE_ID,
                         attributeName: i.VCA_NAME,
                         attributeType: i.VCA_TYPE,
                         metadatas: []
@@ -140,7 +140,7 @@ const httpAction: any[] = [
                 if (!wcMap.has(wcMapKey)) {
                     const wc = {
                        id: wcId,
-                       attributeId: i.WC_ITEM_ATTRIBUTE_ID,
+                       attributeId: i.WC_VIEW_ATTRIBUTE_ID,
                        attributeName: i.WCA_NAME,
                        attributeType: i.WCA_TYPE,
                        operator: i.WC_OPERATOR,

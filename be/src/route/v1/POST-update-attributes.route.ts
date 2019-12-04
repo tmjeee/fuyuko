@@ -29,20 +29,20 @@ const httpAction: any[] = [
 
             for (const att2 of atts2) {
 
-                const q: QueryA = await conn.query('SELECT STATUS FROM TBL_ITEM_ATTRIBUTE WHERE ID = ?', [att2.id]);
+                const q: QueryA = await conn.query('SELECT STATUS FROM TBL_VIEW_ATTRIBUTE WHERE ID = ?', [att2.id]);
                 if (q.length && q[0].STATUS !== 'ENABLED') {
                     failed.push(att2);
                     continue;
                 }
 
-                await conn.query(`DELETE FROM TBL_ITEM_ATTRIBUTE_METADATA WHERE ITEM_ATTRIBUTE_ID = ? `, [att2.id]);
-                await conn.query(`UPDATE TBL_ITEM_ATTRIBUTE SET TYPE=?, NAME=?, DESCRPTION=? WHERE ID=? `, [att2.type, att2.name, att2.description]);
+                await conn.query(`DELETE FROM TBL_VIEW_ATTRIBUTE_METADATA WHERE VIEW_ATTRIBUTE_ID = ? `, [att2.id]);
+                await conn.query(`UPDATE TBL_VIEW_ATTRIBUTE SET TYPE=?, NAME=?, DESCRPTION=? WHERE ID=? `, [att2.type, att2.name, att2.description]);
 
                 for (const metadata of att2.metadatas) {
-                    const qMeta: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?,?)`, [att2.id, metadata.name]);
+                    const qMeta: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?,?)`, [att2.id, metadata.name]);
                     const metadataId: number = qMeta.insertId;
                     for (const entry of metadata.entries) {
-                        await conn.query(`INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, KEY, VALUE) VALUES (?,?,?)`, [metadataId, entry.key, entry.value]);
+                        await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, KEY, VALUE) VALUES (?,?,?)`, [metadataId, entry.key, entry.value]);
                     }
                 }
             }

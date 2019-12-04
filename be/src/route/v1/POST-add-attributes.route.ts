@@ -27,16 +27,16 @@ const httpAction: any[] = [
 
             for (const att2 of attrs2) {
 
-                const qAtt: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_ATTRIBUTE (TYPE, NAME, DESCRPTION, STATUS) VALUES (?,?,?, 'ENABLED') `, [att2.type, att2.name, att2.description]);
+                const qAtt: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (TYPE, NAME, DESCRPTION, STATUS) VALUES (?,?,?, 'ENABLED') `, [att2.type, att2.name, att2.description]);
                 const attrbuteId: number = qAtt.insertId;
 
                 for (const meta of att2.metadatas) {
 
-                    const qMeta: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA (ITEM_ATTRIBUTE_ID, NAME) VALUES (?,?)`, [attrbuteId, meta.name]);
+                    const qMeta: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?,?)`, [attrbuteId, meta.name]);
                     const metaId: number = qMeta.insertId;
 
                     for (const entry of meta.entries) {
-                        await conn.query(`INSERT INTO TBL_ITEM_ATTRIBUTE_METADATA_ENTRY (ITEM_ATTRIBUTE_METADATA_ID, KEY, VALUE) VALUES (?,?,?)`, [metaId, entry.key, entry.value]);
+                        await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, KEY, VALUE) VALUES (?,?,?)`, [metaId, entry.key, entry.value]);
                     }
                 }
             }

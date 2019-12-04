@@ -49,7 +49,7 @@ const add = async (conn: PoolConnection, viewId: number, rule2: Rule2) => {
             const ruleId: number = rq.insertId;
 
             for (const validateClause of rule2.validateClauses) {
-                const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, ITEM_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, validateClause.attributeId, validateClause.operator]);
+                const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, validateClause.attributeId, validateClause.operator]);
                 const clauseId: number = rc.insertId;
 
                 for (const metadata of validateClause.metadatas) {
@@ -64,7 +64,7 @@ const add = async (conn: PoolConnection, viewId: number, rule2: Rule2) => {
             }
 
             for (const whenClause of rule2.whenClauses) {
-                const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE (RULE_ID, ITEM_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, whenClause.attributeId, whenClause.operator]);
+                const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, whenClause.attributeId, whenClause.operator]);
                 const clauseId: number = rc.insertId;
 
                 for (const metadata of whenClause.metadatas) {
@@ -90,7 +90,7 @@ const update = async (conn: PoolConnection, viewId: number, rule2: Rule2) => {
 
         for (const validateClause of rule2.validateClauses) {
 
-            const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, ITEM_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, validateClause.attributeId, validateClause.operator]);
+            const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, validateClause.attributeId, validateClause.operator]);
             const clauseId: number = rc.insertId;
 
             for (const metadata of validateClause.metadatas) {
@@ -107,7 +107,7 @@ const update = async (conn: PoolConnection, viewId: number, rule2: Rule2) => {
         await conn.query(`DELETE FROM TBL_RULE_WHEN_CLAUSE WHERE RULE_ID=?`, [ruleId]);
 
         for (const whenClause of rule2.whenClauses) {
-            const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE (RULE_ID, ITEM_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, whenClause.attributeId, whenClause.operator]);
+            const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, whenClause.attributeId, whenClause.operator]);
             const clauseId: number = rc.insertId;
 
             for (const metadata of whenClause.metadatas) {
