@@ -52,8 +52,10 @@ const httpAction: any[] = [
                     acc.job = {
                         id: i.J_ID,
                         name: i.J_NAME,
+                        description: i.J_DESCRIPTION,
                         status: i.J_STATUS,
                         creationDate: i.J_CREATION_DATE,
+                        progress: i.J_PROGRESS,
                         lastUpdate: i.J_LAST_UPDATE
                     } as Job
                 }
@@ -61,8 +63,9 @@ const httpAction: any[] = [
                 const log: JobLog = {
                     id: i.L_ID,
                     level: i.L_LEVEL,
-                    message: i.L_MESSAGE,
-                    timestamp: i.L_TIMESTAMP
+                    message: i.L_LOG,
+                    creationDate: i.L_CREATION_DATE,
+                    lastUpdate: i.L_LAST_UPDATE
                 } as JobLog;
                 acc.logs.push(log);
 
@@ -76,9 +79,12 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/job/:jobId/details/:lastLogId?`;
-    registry.addItem('GET', p);
-    router.get(p, ...httpAction);
+    const p1 = `/job/:jobId/details/:lastLogId?`;
+    const p2 = `/job/:jobId/details`;
+    registry.addItem('GET', p1);
+    registry.addItem('GET', p2);
+    router.get(p1, ...httpAction);
+    router.get(p2, ...httpAction);
 }
 
 export default reg;

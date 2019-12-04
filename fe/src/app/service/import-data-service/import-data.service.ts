@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {DataImport} from '../../model/data-import.model';
 import {Observable, of} from 'rxjs';
-import {Job, JobStatus} from '../../model/job.model';
+import {Job, Status} from '../../model/job.model';
 import {Message, Messages} from '../../model/notification-listing.model';
 import {Attribute} from '../../model/attribute.model';
 import {Item, StringValue, Value} from '../../model/item.model';
@@ -55,7 +55,8 @@ export class ImportDataService {
             name: `data import job ${num}`,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            status: 'completed'
+            progress: 'COMPLETED',
+            status: 'ENABLED'
         } as Job);
     }
 }

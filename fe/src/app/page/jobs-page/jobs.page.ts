@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Job, JobAndLogs, Log} from '../../model/job.model';
+import {Job, JobAndLogs, JobLog} from '../../model/job.model';
 import {Observable} from 'rxjs';
 import {JobsService} from '../../service/jobs-service/jobs.service';
 import {map, tap} from 'rxjs/operators';

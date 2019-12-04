@@ -14,7 +14,7 @@ const httpAction: any[] = [
 
         await doInDbConnection(async (conn: PoolConnection) => {
             const q: QueryA = await conn.query(`
-                SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE, STATUS, PROGRESS FROM TBL_JOB
+                SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE, STATUS, PROGRESS FROM TBL_JOB ORDER BY ID DESC
             `, []);
 
             const jobs: Job[] = q.reduce((acc: Job[], i: QueryI) => {
@@ -27,6 +27,7 @@ const httpAction: any[] = [
                     status: i.STATUS,
                     progress: i.PROGRESS
                 } as Job;
+                acc.push(j);
                 return acc;
             }, []);
 

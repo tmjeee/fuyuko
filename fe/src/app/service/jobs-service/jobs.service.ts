@@ -8,7 +8,7 @@ import {HttpClient} from '@angular/common/http';
 
 const URL_SCHEDULE_BULK_EDIT_JOB = `${config.api_host_url}/view/:viewId/bulk-edit`;
 const URL_JOB_BY_ID = `${config.api_host_url}/job/:jobId`;
-const URL_JOB_DETAIL_BY_ID = `${config.api_host_url}/job/:jobId/detail`;
+const URL_JOB_DETAIL_BY_ID = `${config.api_host_url}/job/:jobId/details`;
 const URL_ALL_JOBS = `${config.api_host_url}/jobs`;
 
 

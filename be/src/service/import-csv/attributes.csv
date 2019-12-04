@@ -1,1 +1,6 @@
-id,name,description
+# metadata: type=attribute
+#
+#
+id,name,description,type,
+,att 1,att 1 description,string
+,att

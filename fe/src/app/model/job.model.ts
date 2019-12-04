@@ -9,7 +9,8 @@ export type Status = Status;
 
 export interface JobLog {
     id: number;
-    timestamp: Date;
+    creationDate: Date;
+    lastUpdate: Date;
     level: Level;
     message: string;
 }

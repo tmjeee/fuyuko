@@ -4,13 +4,14 @@
             <div><span class="title">Id:</span> {{job.id}}</div>
             <div><span class="title">Name:</span> {{job.name}}</div>
             <div><span class="title">Status:</span> {{job.status}}</div>
+            <div><span class="title">Progress:</span> {{job.progress}}</div>
             <div><span class="title">Creation Date:</span> {{job.creationDate | date}}</div>
             <div><span class="title">Last update:</span> {{job.lastUpdate | date}}</div>
         </div>
         <div class="logs">
             <div *ngFor="let log of logs">
                 <div>
-                    <span>[{{log.timestamp | date:'short'}}] </span>
+                    <span>[{{log.creationDate | date:'short'}}] </span>
                     <span>[{{log.level}}] </span>
                     <span>[#{{log.id}}] - </span>
                     <span>{{log.message}}</span>

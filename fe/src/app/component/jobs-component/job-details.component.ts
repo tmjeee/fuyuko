@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
-import {Job, JobAndLogs, Log} from '../../model/job.model';
+import {Job, JobAndLogs, JobLog} from '../../model/job.model';
 import {Observable, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -15,7 +15,7 @@ export class JobDetailsComponent implements OnChanges, OnDestroy, OnInit {
     @Input() fetchFn: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
 
     timeoutHandler: any;
-    logs: Log[];
+    logs: JobLog[];
 
     constructor() {
         this.fetch = false;
@@ -68,6 +68,6 @@ export class JobDetailsComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     jobHasMoreLogs(job: Job): boolean {
-        return (job && (job.status !== 'completed' && job.status !== 'failed'));
+        return (job && (job.progress !== 'COMPLETED' && job.progress !== 'FAILED'));
     }
 }

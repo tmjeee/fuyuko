@@ -4,7 +4,7 @@ import {Attribute} from '../../model/attribute.model';
 import {Item, StringValue} from '../../model/item.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {DataExport} from '../../model/data-export.model';
-import {Job, JobStatus} from '../../model/job.model';
+import {Job, Status} from '../../model/job.model';
 
 
 @Injectable()
@@ -91,7 +91,8 @@ export class ExportDataService {
             name: `Export data job`,
             creationDate: new Date(),
             lastUpdate: new Date(),
-            status: 'scheduled',
+            progress: 'SCHEDULED',
+            status: 'ENABLED'
         } as Job);
     }
 }

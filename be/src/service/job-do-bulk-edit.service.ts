@@ -1,4 +1,4 @@
-import {BulkEditPackage} from "../model/bulk-edit.model";
+import {BulkEditItem, BulkEditPackage} from "../model/bulk-edit.model";
 import {Job} from "../model/job.model";
 import {doInDbConnection, QueryA} from "../db";
 import {Pool, PoolConnection} from "mariadb";
@@ -40,22 +40,30 @@ const run = async (jobLogger: JobLogger, viewId: number, bulkEditPackage: BulkEd
     jobLogger.logInfo(`Start running bulk edit job (jobId: ${jobLogger.jobId})`);
     try {
         await doInDbConnection(async (conn: PoolConnection) => {
-            for (const bulkEditItem of bulkEditPackage.bulkEditItems) {
-                jobLogger.logInfo(`Working on item ${bulkEditItem.id}`);
-                const itemId: number = bulkEditItem.id;
-                const vs: Value[] = Object.values(bulkEditItem.changes).map((_ => _.new));
-
-                for (const v of vs) {
-                    const itemValue: ItemValue2 = revert(v);
-                    await updateItemValue(viewId, itemId, itemValue);
-                    jobLogger.logInfo(`Changed attribute ${v.attributeId} for item ${itemId} to ${v.val}`)
-                }
-            }
+            await u(conn, jobLogger, viewId, bulkEditPackage.bulkEditItems);
         });
         jobLogger.logInfo(`Done running bulk edit job (jobId: ${jobLogger.jobId})`);
         jobLogger.updateProgress('COMPLETED');
     } catch (e) {
         jobLogger.updateProgress('FAILED');
         jobLogger.logError(`Encounter error ${e}`);
+    }
+}
+
+
+const u = async (conn: PoolConnection, jobLogger: JobLogger, viewId: number, bulkEditItems: BulkEditItem[]) => {
+    for (const bulkEditItem of bulkEditItems) {
+        jobLogger.logInfo(`Working on item ${bulkEditItem.id}`);
+        const itemId: number = bulkEditItem.id;
+        const vs: Value[] = Object.values(bulkEditItem.changes).map((_ => _.new));
+
+        for (const v of vs) {
+            const itemValue: ItemValue2 = revert(v);
+            await updateItemValue(viewId, itemId, itemValue);
+            jobLogger.logInfo(`Changed attribute ${v.attributeId} for item ${itemId} to ${v.val}`)
+        }
+
+        const children: BulkEditItem[] = bulkEditItem.children;
+        await u(conn, jobLogger, viewId, children);
     }
 }
