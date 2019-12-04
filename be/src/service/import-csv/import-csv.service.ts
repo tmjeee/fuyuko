@@ -4,6 +4,7 @@ import csvParser from 'csv-parser';
 import fs from 'fs';
 import {Writable, Readable} from 'stream';
 
+/*
 class MyWriteStream extends Readable {
    constructor(options: any) {
        super(options);
@@ -48,3 +49,4 @@ const test = async () => {
     });
 })();
 
+*/
