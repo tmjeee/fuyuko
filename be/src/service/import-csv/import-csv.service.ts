@@ -1,8 +1,17 @@
 
 
-import csvParser from 'csv-parser';
+import parser from 'csv-parser';
 import fs from 'fs';
 import {Writable, Readable} from 'stream';
+import parse = require("csv-parse/lib");
+
+
+const readCsv = (b: Buffer): any => {
+
+    parser = parse()
+
+}
+
 
 /*
 class MyWriteStream extends Readable {

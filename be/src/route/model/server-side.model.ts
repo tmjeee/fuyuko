@@ -4,7 +4,9 @@ import {ValidateClause, WhenClause} from "../../model/rule.model";
 import {AttributeType} from "../../model/attribute.model";
 import {OperatorType} from "../../model/operator.model";
 
+
 export type AuditCategory = "SYSTEM" | "APP" | "USER";
+
 
 // === Attribute2
 export interface Attribute2 {
