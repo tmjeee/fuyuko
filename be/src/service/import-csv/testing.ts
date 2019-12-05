@@ -5,37 +5,59 @@ import parse from 'csv-parse';
 import fs from "fs";
 import path from 'path';
 import util from 'util';
-import {createInterface} from "readline";
+import {createInterface, Interface} from "readline";
 import {finished, Readable} from "stream";
 import {Parser} from "csv-parse/lib";
+import os from 'os';
 
-/*
-const d = () => {
-    return new Promise((res, rej) =>{
-        const r = createInterface({
-            input: createReadStream('data.csv')
+const d = async () => {
+    const parser: Parser = parse({
+        skip_empty_lines: true,
+        relax_column_count: true,
+        columns: true
+    });
+    return new Promise((res, rej) => {
+        const file = `${__dirname}${path.sep}data.csv`;
+        const r: Interface = createInterface({
+            input: createReadStream(file)
         });
-        r.on('line', (line) => {
+        r.on('line', (line: string) => {
             console.log('** line', line);
-            if (line.indexOf('comment') >= 0) {
-                console.log('** end readline');
-                r.close();
-                r.removeAllListeners();
+            if (line.trim().startsWith('#')) {
+            } else {
+                parser.write(`${line}${os.EOL}`);
             }
         })
         .on('close', () => {
             console.log('** close');
-            res('xxx');
+            parser.end();
         })
         .on('SIGTSTP', () => {
-            rej('SIGTSTP')
+            console.log('SIGTSTP');
+            parser.end();
         })
         .on('SIGINT', () => {
-            rej('SIGINT');
-        })
+            console.log('SIGINT');
+            rej();
+        });
+
+
+        parser.on('readable', () => {
+            let rec;
+            while(rec = parser.read()) {
+                console.log(rec);
+            }
+        });
+        parser.on('end', () => {
+            console.log(' parser end');
+            res();
+        });
+        parser.on('error', (err) => {
+            console.error('error');
+            rej(err);
+        });
     });
 }
-*/
 
 
 const e = async () => {
@@ -64,22 +86,9 @@ const e = async () => {
 
 
 
-const f = async ()=> {
-    const file = `${__dirname}${path.sep}data.csv`;
-    const rs = fs.createReadStream(file);
-    finished(rs, (err) => {
-        if (err) {
-            console.error('Stream failed.', err);
-        } else {
-            console.log('Stream is done reading.');
-        }
-    });
-    rs.resume();
-}
-
 
 (async () => {
-    const r = await e();
-    // const r = await f();
+    //const r = await e();
+    const r = await d();
     console.log('end ', r);
 })();

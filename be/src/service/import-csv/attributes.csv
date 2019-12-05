@@ -1,6 +1,14 @@
-# metadata: type=attribute
-#
-#
-id,name,description,type,
-,att 1,att 1 description,string
-,att
+name,description,type,meta-entries
+att01,att 01 description,string,
+att02,att 02 description,text,
+att03,att 03 description,number,format=0.0
+att04,att 04 description,date,format=DD/MM/YYYY
+att05,att 05 description,currency,showCurrencyCountry=true
+att06,att 06 description,volume,format=0.0
+att07,att 07 description,dimension,format=0.0
+att08,att 08 description,area,format=0.0
+att09,att 09 description,width,format=0.0
+att10,att 10 description,length,format=0.0
+att11,att 11 description,height,format=0.0
+att12,att 12 description,select,key=1|value=1
+att13,att 13 description,doubleselect,format=0.0
