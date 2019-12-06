@@ -7,6 +7,17 @@ import {OperatorType} from "../../model/operator.model";
 
 export type AuditCategory = "SYSTEM" | "APP" | "USER";
 
+// csv parsed models
+export interface CsvAttribute {
+    name: string,
+    description: string;
+    type: AttributeType;
+    format?: string;
+    showCurrencyCountry?: string;
+    pair1?: string;
+    pair2?: string;
+}
+
 
 // === Attribute2
 export interface Attribute2 {

@@ -1,61 +1,43 @@
 
 
-import parser from 'csv-parser';
 import fs from 'fs';
-import {Writable, Readable} from 'stream';
-import parse = require("csv-parse/lib");
+import parse, {Parser} from "csv-parse";
+import path from 'path';
+import util from 'util';
 
+export const readCsv = async <T>(b: Buffer): Promise<T[]> => {
+    return new Promise((res, rej) => {
+        const csvobjs: T[] = [];
+        const parser: Parser = parse({
+            skip_empty_lines: true,
+            relax_column_count: true,
+            columns: true
+        });
 
-const readCsv = (b: Buffer): any => {
+        for (const line of b.toString().split(/(:?\r|\n|\r\n)/g)) {
+            parser.write(line);
+        }
+        parser.end();
 
-    parser = parse()
-
-}
-
-
-/*
-class MyWriteStream extends Readable {
-   constructor(options: any) {
-       super(options);
-   }
-
-   _write(chunk: any, encoding: string, callback: (error?: (Error | null)) => void): void {
-       // console.log('*** chunk')
-       callback();
-   }
-
-   _read(size: number): void {
-   }
-}
-
-const test = async () => {
-    return new Promise((res, rej)=> {
-        fs.createReadStream('data.csv')
-            .pipe(csvParser({
-                skipComments: false,
-            }))
-            .on('header', (header) => {
-                console.log('header', header);
-            })
-            .on('data', (data) => {
-                console.log('data', data);
-            })
-            .on('end', () => {
-                console.log('end');
-                res();
-            })
-            .on('error', (err) => {
-                console.error(err);
-                rej(err);
-            })
+        parser.on("readable", () => {
+            let l;
+            while(l = parser.read()) {
+                csvobjs.push(l);
+            }
+        });
+        parser.on("end", () => {
+            res(csvobjs);
+        });
+        parser.on('error', (err) => {
+            rej(err);
+        });
     });
 }
 
-
-(async ()=> {
-    await test().then((c) => {
-        console.log('terminate');
-    });
+(async()=>{
+    const f = `${__dirname}${path.sep}attributes.csv`;
+    const buffer: Buffer = await util.promisify(fs.readFile)(f);
+    const r = await readCsv(buffer);
+    console.log(r);
 })();
 
-*/
