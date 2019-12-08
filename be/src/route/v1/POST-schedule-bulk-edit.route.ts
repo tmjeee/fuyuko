@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {body, param} from 'express-validator';
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {BulkEditPackage} from "../../model/bulk-edit.model";
-import {scheduleBulkEditJob} from "../../service/job-do-bulk-edit.service";
+import {runJob} from "../../service/job-do-bulk-edit.service";
 import {Job} from "../../model/job.model";
 
 const httpAction = [
@@ -18,7 +18,7 @@ const httpAction = [
         const viewId: number = Number(req.params.viewId);
         const bulkEditPackage: BulkEditPackage = req.body.bulkEditPackage;
 
-        const job: Job = await scheduleBulkEditJob(viewId, bulkEditPackage);
+        const job: Job = await runJob(viewId, bulkEditPackage);
 
         res.status(200).json(job);
     }

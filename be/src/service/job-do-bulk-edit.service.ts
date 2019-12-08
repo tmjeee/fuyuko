@@ -10,7 +10,7 @@ import {updateItemValue} from "./item.service";
 const uuid = require('uuid');
 
 
-export const scheduleBulkEditJob = async (viewId: number, bulkEditPackage: BulkEditPackage): Promise<Job> => {
+export const runJob = async (viewId: number, bulkEditPackage: BulkEditPackage): Promise<Job> => {
     const uid = uuid();
     const jobLogger: JobLogger = await newJobLogger(`BulkEditJob-${uid}`, `Bulk Edit Job (${uid}) for viewId ${viewId}`);
     const job: Job = await doInDbConnection(async ({query}: PoolConnection) => {

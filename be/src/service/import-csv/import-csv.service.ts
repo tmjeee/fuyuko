@@ -34,10 +34,12 @@ export const readCsv = async <T>(b: Buffer): Promise<T[]> => {
     });
 }
 
+/*
 (async()=>{
     const f = `${__dirname}${path.sep}attributes.csv`;
     const buffer: Buffer = await util.promisify(fs.readFile)(f);
     const r = await readCsv(buffer);
     console.log(r);
 })();
+ */
 

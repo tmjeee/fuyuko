@@ -7,6 +7,7 @@ import {PoolConnection} from "mariadb";
 import {revert} from "../../service/conversion-attribute.service";
 import {Attribute2} from "../model/server-side.model";
 import {ApiResponse} from "../../model/response.model";
+import {saveAttribute2s} from "../../service/attribute.service";
 
 const httpAction: any[] = [
     [
@@ -23,29 +24,12 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const attrs2: Attribute2[] = revert(req.body.attributes);
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await saveAttribute2s(attrs2);
 
-            for (const att2 of attrs2) {
-
-                const qAtt: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (TYPE, NAME, DESCRPTION, STATUS) VALUES (?,?,?, 'ENABLED') `, [att2.type, att2.name, att2.description]);
-                const attrbuteId: number = qAtt.insertId;
-
-                for (const meta of att2.metadatas) {
-
-                    const qMeta: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?,?)`, [attrbuteId, meta.name]);
-                    const metaId: number = qMeta.insertId;
-
-                    for (const entry of meta.entries) {
-                        await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, KEY, VALUE) VALUES (?,?,?)`, [metaId, entry.key, entry.value]);
-                    }
-                }
-            }
-
-            res.status(200).json({
-               status: 'SUCCESS',
-               message: `Attributes added`
-            } as ApiResponse);
-        });
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Attributes added`
+        } as ApiResponse);
     }
 ];
 
