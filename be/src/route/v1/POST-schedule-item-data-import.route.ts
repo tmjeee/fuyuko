@@ -27,7 +27,7 @@ const httpAction: any[] = [
 
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/view/:viewId/import/prices`;
+    const p = `/view/:viewId/import/items`;
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
 };

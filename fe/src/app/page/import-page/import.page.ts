@@ -8,11 +8,9 @@ import {
     SubmitDataImportFn,
 } from '../../component/import-data-component/import-data.component';
 import {
-    AttributeDataImport,
-    DataImport,
+    AttributeDataImport, DataImportType,
     ItemDataImport,
     PriceDataImport,
-    UploadType
 } from '../../model/data-import.model';
 
 
@@ -23,18 +21,19 @@ import {
 export class ImportPageComponent implements OnInit {
 
   allViews: View[] = [];
-  shwoPreviewFn: ShowPreviewFn;
+  showPreviewFn: ShowPreviewFn;
   submitDataImportFn: SubmitDataImportFn;
 
   constructor(private importDataService: ImportDataService, private viewService: ViewService) {
   }
 
   ngOnInit(): void {
-      this.shwoPreviewFn = (uploadType: UploadType, file: File) => {
-          return this.importDataService.showPreview(uploadType, file);
+      this.showPreviewFn = (viewId: number, uploadType: DataImportType, file: File) => {
+          return this.importDataService.showPreview(viewId, uploadType, file);
       };
-      this.submitDataImportFn = ((uploadType: UploadType, dataImport: AttributeDataImport | ItemDataImport | PriceDataImport) => {
-            return this.importDataService.submitDataImport(uploadType, dataImport);
+      this.submitDataImportFn = ((viewId: number, uploadType: DataImportType,
+                                  dataImport: AttributeDataImport | ItemDataImport | PriceDataImport) => {
+            return this.importDataService.submitDataImport(viewId, uploadType, dataImport);
       });
       this.viewService.getAllViews()
           .pipe(

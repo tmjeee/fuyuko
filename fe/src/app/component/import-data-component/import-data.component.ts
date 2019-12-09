@@ -2,11 +2,9 @@ import {Component, ElementRef, Input, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {View} from '../../model/view.model';
 import {
-    AttributeDataImport,
-    DataImport,
+    AttributeDataImport, DataImportType,
     ItemDataImport,
     PriceDataImport,
-    UploadType
 } from '../../model/data-import.model';
 import {Observable} from 'rxjs';
 import {Job} from '../../model/job.model';
@@ -15,9 +13,9 @@ import {MatStepper} from '@angular/material/stepper';
 import {MatSelectChange} from '@angular/material/select';
 
 export type ShowPreviewFn =
-    (uploadType: UploadType, file: File) => Observable<AttributeDataImport | ItemDataImport | PriceDataImport>;
+    (viewId: number, uploadType: DataImportType, file: File) => Observable<AttributeDataImport | ItemDataImport | PriceDataImport>;
 export type SubmitDataImportFn =
-    (uploadType: UploadType, dataImport: AttributeDataImport | ItemDataImport | PriceDataImport) => Observable<Job>;
+    (viewId: number, uploadType: DataImportType, dataImport: AttributeDataImport | ItemDataImport | PriceDataImport) => Observable<Job>;
 
 @Component({
     selector: 'app-import-data',
@@ -32,7 +30,7 @@ export class ImportDataComponent {
     secondFormGroup: FormGroup;
     uploadTypeFormControl: FormControl;
     fileUploadFormControl: FormControl;
-    selectedUploadType: UploadType;
+    selectedUploadType: DataImportType;
     attributeDataImport: AttributeDataImport;
     itemDataImport: ItemDataImport;
     priceDataImport: PriceDataImport;
@@ -83,11 +81,12 @@ export class ImportDataComponent {
     }
 
     onSecondFormSubmit() {
+        const view: View = this.viewFormControl.value;
         const file: File = this.fileUploadFormControl.value;
-        this.showPreview(this.selectedUploadType, file)
+        this.showPreview(view.id, this.selectedUploadType, file)
             .pipe(
                 tap((dataImport: AttributeDataImport | PriceDataImport | ItemDataImport) => {
-                    switch(dataImport.type) {
+                    switch (dataImport.type) {
                         case 'ATTRIBUTE':
                             this.attributeDataImport = dataImport;
                             this.itemDataImport = undefined;
@@ -112,19 +111,20 @@ export class ImportDataComponent {
 
     onThirdFormSubmit() {
         this.jobSubmitted = false;
+        const view: View = this.viewFormControl.value;
         let dataImport: AttributeDataImport | ItemDataImport | PriceDataImport = null;
         switch (this.selectedUploadType) {
-            case 'attribute':
+            case 'ATTRIBUTE':
                 dataImport = this.attributeDataImport;
                 break;
-            case 'price':
+            case 'PRICE':
                 dataImport = this.priceDataImport;
                 break;
-            case 'item':
+            case 'ITEM':
                 dataImport = this.itemDataImport;
                 break;
         }
-        this.submitDataImport(this.selectedUploadType, dataImport)
+        this.submitDataImport(view.id, this.selectedUploadType, dataImport)
             .pipe(
                 tap((j: Job) => {
                     this.job = j;

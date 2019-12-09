@@ -32,9 +32,9 @@
                       <mat-label>Upload Type</mat-label>
                       <mat-select [formControl]="uploadTypeFormControl" (selectionChange)="onUploadTypeSelectionChanged($event)">
                           <option value="">--- select upload type ---</option>
-                          <option value="attribute">Attributes</option>
-                          <option value="item">Items</option>
-                          <option value="price">Prices</option>
+                          <option value="ATTRIBUTE">Attributes</option>
+                          <option value="ITEM">Items</option>
+                          <option value="PRICE">Prices</option>
                       </mat-select>
                       <mat-error *ngIf="uploadTypeFormControl?.errors?.required">An upload type selection is required</mat-error>
                   </mat-form-field>

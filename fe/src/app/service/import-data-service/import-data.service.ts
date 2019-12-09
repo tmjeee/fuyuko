@@ -3,13 +3,20 @@ import {
     AttributeDataImport,
     ItemDataImport,
     PriceDataImport,
-    UploadType
+    DataImportType,
 } from '../../model/data-import.model';
 import {Observable, of} from 'rxjs';
 import {Job} from '../../model/job.model';
-import {Message} from '../../model/notification-listing.model';
-import {Attribute} from '../../model/attribute.model';
-import {Item, StringValue} from '../../model/item.model';
+import config from '../../../assets/config.json';
+import {HttpClient} from '@angular/common/http';
+
+const URL_PREVIEW_ATTRIBUTES = `${config.api_host_url}/view/:viewId/import/attributes/preview`;
+const URL_PREVIEW_PRICES = `${config.api_host_url}/view/:viewId/import/prices/preview`;
+const URL_PREVIEW_ITEMS = `${config.api_host_url}/view/:viewId/import/items/preview`;
+
+const URL_SCHEDULE_ATTRIBUTES = `${config.api_host_url}/view/:viewId/import/attributes`;
+const URL_SCHEDULE_PRICES = `${config.api_host_url}/view/:viewId/import/prices`;
+const URL_SCHEDULE_ITEMS = `${config.api_host_url}/view/:viewId/import/items`;
 
 
 @Injectable()
@@ -17,52 +24,49 @@ export class ImportDataService {
 
     jobNumber = 1000;
 
-    showPreview(uploadType: UploadType, file: File): Observable<AttributeDataImport | ItemDataImport | PriceDataImport> {
-        return of({
-            type: 'ATTRIBUTE',
-            messages: {
-                infos: [
-                    {title: 'info #1', messsage: 'info #1 message'} as Message,
-                    {title: 'info #2', messsage: 'info #2 message'} as Message,
-                    {title: 'info #3', messsage: 'info #3 message'} as Message,
-                    {title: 'info #4', messsage: 'info #4 message'} as Message,
-                ],
-                warnings: [
-                    {title: 'warn #1', messsage: 'warning #1 message'} as Message,
-                    {title: 'warn #2', messsage: 'warning #2 message'} as Message,
-                    {title: 'warn #3', messsage: 'warning #3 message'} as Message,
-                    {title: 'warn #4', messsage: 'warning #4 message'} as Message,
-                    {title: 'warn #5', messsage: 'warning #5 message'} as Message,
-                ],
-                errors: []
-            } ,
-            attributes: [
-                { id: 1, type: 'string', name: 'attr #1', description: 'attr #1 description' } as Attribute,
-                { id: 2, type: 'string', name: 'attr #2', description: 'attr #2 description' } as Attribute,
-                { id: 3, type: 'string', name: 'attr #3', description: 'attr #3 description' } as Attribute,
-                { id: 4, type: 'string', name: 'attr #4', description: 'attr #4 description' } as Attribute,
-            ],
-            items: [
-                { id: 1, name: 'item #1', description: 'item #1 description', images: [], parentId: undefined, children: [],
-                    1: { attributeId: 1, val: { type: 'string', value: 'item 1 val 1' }  as StringValue },
-                    2: { attributeId: 2, val: { type: 'string', value: 'item 1 val 2' }  as StringValue },
-                    3: { attributeId: 3, val: { type: 'string', value: 'item 1 val 3' }  as StringValue },
-                    4: { attributeId: 4, val: { type: 'string', value: 'item 1 val 4' }  as StringValue },
-                } as Item
-            ]
-        } as AttributeDataImport);
+    constructor(private httpClient: HttpClient) {}
+
+    showPreview(viewId: number, uploadType: DataImportType, file: File):
+        Observable<AttributeDataImport | ItemDataImport | PriceDataImport> {
+        switch (uploadType) {
+            case 'ATTRIBUTE': {
+                const formData: FormData = new FormData();
+                formData.set('attributeDataCsvFile', file);
+                return this.httpClient.post<AttributeDataImport>(
+                    URL_PREVIEW_ATTRIBUTES.replace(':viewId', String(viewId)), formData);
+            }
+            case 'ITEM': {
+                const formData: FormData = new FormData();
+                formData.set('itemDataCsvFile', file);
+                return this.httpClient.post<ItemDataImport>(
+                    URL_PREVIEW_ITEMS.replace(':viewId', String(viewId)), formData);
+
+            }
+            case 'PRICE': {
+                const formData: FormData = new FormData();
+                formData.set('priceDataCsvFile', file);
+                return this.httpClient.post<PriceDataImport>(
+                    URL_PREVIEW_PRICES.replace(':viewId', String(viewId)), formData);
+            }
+        }
     }
 
 
-    submitDataImport(uploadType: UploadType, dataImport: AttributeDataImport | ItemDataImport | PriceDataImport): Observable<Job> {
-        const num = this.jobNumber++;
-        return of({
-            id: num,
-            name: `data import job ${num}`,
-            creationDate: new Date(),
-            lastUpdate: new Date(),
-            progress: 'COMPLETED',
-            status: 'ENABLED'
-        } as Job);
+    submitDataImport(viewId: number, uploadType: DataImportType,
+                     dataImport: AttributeDataImport | ItemDataImport | PriceDataImport): Observable<Job> {
+        switch (uploadType) {
+            case 'ATTRIBUTE': {
+                const formData: FormData = new FormData();
+                return this.httpClient.post<Job>(URL_SCHEDULE_ATTRIBUTES.replace(':viewId', String(viewId)), formData);
+            }
+            case 'ITEM': {
+                const formData: FormData = new FormData();
+                return this.httpClient.post<Job>(URL_SCHEDULE_ITEMS.replace(':viewId', String(viewId)), formData);
+            }
+            case 'PRICE': {
+                const formData: FormData = new FormData();
+                return this.httpClient.post<Job>(URL_SCHEDULE_PRICES.replace(':viewId', String(viewId)), formData);
+            }
+        }
     }
 }
