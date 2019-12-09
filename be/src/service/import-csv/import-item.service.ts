@@ -8,16 +8,39 @@ import {Attribute} from "../../model/attribute.model";
 
 export const preview = async (viewId: number, itemDataImportId: number, content: Buffer): Promise<ItemDataImport> => {
 
-    const csvPrices: CsvItem[]  = await readCsv<CsvItem>(content);
+    let counter: number = -1;
+
+    const csvItems: CsvItem[]  = await readCsv<CsvItem>(content);
     const errors: Message[] = [];
     const infos: Message[] = [];
     const warnings: Message[] = [];
 
     const attributes: Attribute[] = [];
-    const items: Item[] = await Promise.all(csvPrices.map(async (c: CsvItem) => {
+    const items: Item[] = [];
 
-        return null;
-    }));
+    const itemsMap: Map<string /* itemName */, Item> = new Map();
+    const itemsParentMap: Map<string /* itemName */, Item[]> = new Map();
+
+    for (const csvItem of csvItems) {
+        const itemsMapKey: string = `${csvItem.name}`;
+        const itemsParentMapKey: string = csvItem.parentName ? `${csvItem.parentName}` : undefined;
+        const parentItem: Item = itemsMap.get(itemsParentMapKey);
+        const children: Item[] = [];
+        const i: Item = {
+           id: counter--,
+           name: csvItem.name,
+           description: csvItem.description,
+           images: [],
+           parentId: parentItem ? parentItem.id : null,
+           children
+        } as Item;
+        itemsParentMap.set(itemsMapKey, children);
+        itemsMap.set(itemsMapKey, i);
+
+        if (itemsParentMapKey && itemsParentMap.has(itemsParentMapKey)) {
+            itemsParentMap.get(itemsParentMapKey).push(i);
+        }
+    }
 
     return {
         type: "ITEM",

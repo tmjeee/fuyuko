@@ -26,7 +26,10 @@ export interface CsvPrice {
 }
 
 export interface CsvItem {
-
+    parentName: string;
+    name: string;
+    description: string;
+    [attFormat: string] : string;
 }
 
 

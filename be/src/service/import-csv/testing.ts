@@ -17,7 +17,8 @@ const d = async () => {
         columns: true
     });
     return new Promise((res, rej) => {
-        const file = `${__dirname}${path.sep}data.csv`;
+        // const file = `${__dirname}${path.sep}data.csv`;
+        const file = `${__dirname}${path.sep}items.csv`;
         const r: Interface = createInterface({
             input: createReadStream(file)
         });

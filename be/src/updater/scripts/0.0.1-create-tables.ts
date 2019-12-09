@@ -42,26 +42,8 @@ export const update = async () => {
    await TBL_ITEM_VALUE_METADATA_ENTRY();
    await TBL_DATA_IMPORT();
    await TBL_DATA_IMPORT_FILE();
-   await TBL_DATA_IMPORT_LOG();
-   await TBL_DATA_IMPORT_ITEM();
-   await TBL_DATA_IMPORT_ITEM_IMAGE();
-   await TBL_DATA_IMPORT_VIEW_ATTRIBUTE();
-   await TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA();
-   await TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA_ENTRY();
-   await TBL_DATA_IMPORT_ITEM_VALUE();
-   await TBL_DATA_IMPORT_ITEM_VALUE_METADATA();
-   await TBL_DATA_IMPORT_ITEM_VALUE_METADATA_ENTRY();
    await TBL_DATA_EXPORT();
    await TBL_DATA_EXPORT_FILE();
-   await TBL_DATA_EXPORT_LOG();
-   await TBL_DATA_EXPORT_ITEM();
-   await TBL_DATA_EXPORT_ITEM_IMAGE();
-   await TBL_DATA_EXPORT_VIEW_ATTRIBUTE();
-   await TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA();
-   await TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA_ENTRY();
-   await TBL_DATA_EXPORT_ITEM_VALUE();
-   await TBL_DATA_EXPORT_ITEM_VALUE_METADATA();
-   await TBL_DATA_EXPORT_ITEM_VALUE_METADATA_ENTRY();
    await TBL_BULK_EDIT();
    await TBL_BULK_EDIT_LOG();
    await TBL_JOB();
@@ -576,128 +558,6 @@ const TBL_DATA_IMPORT_FILE = async () => {
    });
 }
 
-const TBL_DATA_IMPORT_LOG = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_LOG (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_IMPORT_ID INT NOT NULL,
-            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            LEVEL VARCHAR(200) NOT NULL,
-            LOG TEXT NOT NULL 
-         );
-      `);
-   });
-};
-
-const TBL_DATA_IMPORT_ITEM = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE TBL_DATA_IMPORT_ITEM (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_IMPORT_ID INT,
-            PARENT_ID INT,
-            NAME VARCHAR(200),
-            DESCRIPTION VARCHAR(500) 
-         );
-      `);
-   });
-};
-
-
-const TBL_DATA_IMPORT_ITEM_IMAGE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_IMAGE (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_IMPORT_ITEM_ID INT,
-            MIME_TYPE VARCHAR(200) NOT NULL,
-            NAME VARCHAR(200) NOT NULL,
-            SIZE INT NOT NULL,
-            CONTENT LONGBLOB NOT NULL 
-         );
-      `)
-   })
-};
-
-const TBL_DATA_IMPORT_VIEW_ATTRIBUTE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_VIEW_ATTRIBUTE (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_IMPORT_ITEM_ID INT,
-            ATTRIBUTE_METADATA_ID INT,
-            NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL
-         );
-      `);
-   });
-};
-
-
-const TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_IMPORT_VIEW_ATTRIBUTE_ID INT,
-            NAME VARCHAR(200) NOT NULL 
-         );
-      `);
-   });
-};
-
-const TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA_ENTRY = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA_ENTRY (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_IMPORT_VIEW_ATTRIBUTE_METADATA_ID INT,
-            \`KEY\` VARCHAR(200) NOT NULL,
-            VALUE VARCHAR(500) NOT NULL 
-         );
-      `);
-   });
-};
-
-const TBL_DATA_IMPORT_ITEM_VALUE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_VALUE (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_IMPORT_ITEM_ID INT,
-            VIEW_ATTRIBUTE_ID INT
-         );
-   `);
-   });
-};
-
-const TBL_DATA_IMPORT_ITEM_VALUE_METADATA = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_VALUE_METADATA (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_IMPORT_ITEM_VALUE_ID INT,
-            NAME VARCHAR(200) NOT NULL 
-         );
-   `);
-   });
-};
-
-
-const TBL_DATA_IMPORT_ITEM_VALUE_METADATA_ENTRY = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_ITEM_VALUE_METADATA_ENTRY (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_IMPORT_ITEM_VALUE_METADATA_ID INT,
-            \`KEY\` VARCHAR(200) NOT NULL,
-            VALUE VARCHAR(500) NOT NULL 
-         );
-      `);
-   });
-};
-
 
 const TBL_DATA_EXPORT = async () => {
    await doInDbConnection(async (conn: PoolConnection) => {
@@ -725,130 +585,6 @@ const TBL_DATA_EXPORT_FILE = async () => {
       `);
    });
 }
-
-const TBL_DATA_EXPORT_LOG = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_LOG (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_EXPORT_ID INT,
-            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            LEVEL VARCHAR(200) NOT NULL,
-            LOG TEXT NOT NULL 
-         );
-      `);
-   });
-};
-
-const TBL_DATA_EXPORT_ITEM = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE TBL_DATA_EXPORT_ITEM (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_EXPORT_ID INT,
-            PARENT_ID INT,
-            NAME VARCHAR(200),
-            DESCRIPTION VARCHAR(500) 
-         );
-      `);
-   });
-};
-
-
-const TBL_DATA_EXPORT_ITEM_IMAGE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_IMAGE (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_EXPORT_ITEM_ID INT,
-            MIME_TYPE VARCHAR(200) NOT NULL,
-            NAME VARCHAR(200) NOT NULL,
-            SIZE INT NOT NULL,
-            CONTENT LONGBLOB NOT NULL 
-         );
-   `)
-   })
-};
-
-const TBL_DATA_EXPORT_VIEW_ATTRIBUTE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_VIEW_ATTRIBUTE (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_EXPORT_ITEM_ID INT,
-            ATTRIBUTE_METADATA_ID INT,
-            NAME VARCHAR(200) NOT NULL,
-            DESCRIPTION VARCHAR(500) NOT NULL
-         );
-      `);
-   });
-};
-
-
-const TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_EXPORT_VIEW_ATTRIBUTE_ID INT,
-            NAME VARCHAR(200) NOT NULL 
-         );
-      `);
-   });
-};
-
-const TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA_ENTRY = async () => {
-   await doInDbConnection((conn: PoolConnection) => {
-      conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA_ENTRY (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_EXPORT_VIEW_ATTRIBUTE_METADATA_ID INT,
-            \`KEY\` VARCHAR(200) NOT NULL,
-            VALUE VARCHAR(500) NOT NULL 
-         );
-      `);
-   });
-};
-
-const TBL_DATA_EXPORT_ITEM_VALUE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_VALUE (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_EXPORT_ITEM_ID INT,
-            VIEW_ATTRIBUTE_ID INT
-         );
-      `);
-   });
-};
-
-const TBL_DATA_EXPORT_ITEM_VALUE_METADATA = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_VALUE_METADATA (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_EXPORT_ITEM_VALUE_ID INT,
-            NAME VARCHAR(200) NOT NULL 
-         );
-      `);
-   });
-};
-
-
-const TBL_DATA_EXPORT_ITEM_VALUE_METADATA_ENTRY = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_ITEM_VALUE_METADATA_ENTRY (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            DATA_EXPORT_ITEM_VALUE_METADATA_ID INT,
-            \`KEY\` VARCHAR(200) NOT NULL,
-            VALUE VARCHAR(500) NOT NULL 
-         );
-      `);
-   });
-};
-
-
 
 const TBL_BULK_EDIT = async () => {
    await doInDbConnection(async (conn: PoolConnection) => {
@@ -964,41 +700,9 @@ const ADD_FK_CONSTRAINT = async () => {
 
       await conn.query(`ALTER TABLE TBL_DATA_IMPORT ADD CONSTRAINT \`fk_tbl_data_import-1\` FOREIGN KEY IF NOT EXISTS (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
       await conn.query(`ALTER TABLE TBL_DATA_IMPORT_FILE ADD CONSTRAINT \`fk_tbl_data_import_file-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_LOG ADD CONSTRAINT \`fk_tbl_data_import_log-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM ADD CONSTRAINT \`fk_tbl_data_import_item-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM ADD CONSTRAINT \`fk_tbl_data_import_item-2\` FOREIGN KEY IF NOT EXISTS (PARENT_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_IMAGE ADD CONSTRAINT \`fk_tbl_data_import_item_image-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ITEM_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_LOG ADD CONSTRAINT \`fk_tbl_data_import_log-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM ADD CONSTRAINT \`fk_tbl_data_import_item-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ID) REFERENCES TBL_DATA_IMPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM ADD CONSTRAINT \`fk_tbl_data_import_item-2\` FOREIGN KEY IF NOT EXISTS (PARENT_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_IMAGE ADD CONSTRAINT \`fk_tbl_data_import_item_image-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ITEM_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_VIEW_ATTRIBUTE ADD CONSTRAINT \`fk_tbl_data_import_view_attribute-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ITEM_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_VIEW_ATTRIBUTE ADD CONSTRAINT \`fk_tbl_data_import_view_attribute-2\` FOREIGN KEY IF NOT EXISTS (ATTRIBUTE_METADATA_ID) REFERENCES TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA ADD CONSTRAINT \`fk_tbl_data_import_view_attribute_metadata-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_VIEW_ATTRIBUTE_ID) REFERENCES TBL_DATA_IMPORT_VIEW_ATTRIBUTE(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA_ENTRY ADD CONSTRAINT \`fk_tbl_data_import_view_attribute_metadata_entry-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_VIEW_ATTRIBUTE_METADATA_ID) REFERENCES TBL_DATA_IMPORT_VIEW_ATTRIBUTE_METADATA(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_VALUE ADD CONSTRAINT \`fk_tbl_data_import_item_value-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ITEM_ID) REFERENCES TBL_DATA_IMPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_VALUE ADD CONSTRAINT \`fk_tbl_data_import_item_value-2\` FOREIGN KEY IF NOT EXISTS (VIEW_ATTRIBUTE_ID) REFERENCES TBL_DATA_IMPORT_VIEW_ATTRIBUTE(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_VALUE_METADATA ADD CONSTRAINT \`fk_tbl_data_import_item_value_metadata-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ITEM_VALUE_ID) REFERENCES TBL_DATA_IMPORT_ITEM_VALUE(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_IMPORT_ITEM_VALUE_METADATA_ENTRY ADD CONSTRAINT \`fk_tbl_data_import_item_value_metadata_entry-1\` FOREIGN KEY IF NOT EXISTS (DATA_IMPORT_ITEM_VALUE_METADATA_ID) REFERENCES TBL_DATA_IMPORT_ITEM_VALUE_METADATA(ID)`);
 
       await conn.query(`ALTER TABLE TBL_DATA_EXPORT ADD CONSTRAINT \`fk_tbl_data_export-1\` FOREIGN KEY IF NOT EXISTS (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
       await conn.query(`ALTER TABLE TBL_DATA_EXPORT_FILE ADD CONSTRAINT \`fk_tbl_data_export_file-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_LOG ADD CONSTRAINT \`fk_tbl_data_export_log-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM ADD CONSTRAINT \`fk_tbl_data_export_item-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM ADD CONSTRAINT \`fk_tbl_data_export_item-2\` FOREIGN KEY IF NOT EXISTS (PARENT_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_IMAGE ADD CONSTRAINT \`fk_tbl_data_export_item_image-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ITEM_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_LOG ADD CONSTRAINT \`fk_tbl_data_export_log-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM ADD CONSTRAINT \`fk_tbl_data_export_item-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM ADD CONSTRAINT \`fk_tbl_data_export_item-2\` FOREIGN KEY IF NOT EXISTS (PARENT_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_IMAGE ADD CONSTRAINT \`fk_tbl_data_export_item_image-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ITEM_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_VIEW_ATTRIBUTE ADD CONSTRAINT \`fk_tbl_data_export_view_attribute-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ITEM_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_VIEW_ATTRIBUTE ADD CONSTRAINT \`fk_tbl_data_export_view_attribute-2\` FOREIGN KEY IF NOT EXISTS (ATTRIBUTE_METADATA_ID) REFERENCES TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA ADD CONSTRAINT \`fk_tbl_data_export_view_attribute_metadata-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_VIEW_ATTRIBUTE_ID) REFERENCES TBL_DATA_EXPORT_VIEW_ATTRIBUTE(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA_ENTRY ADD CONSTRAINT \`fk_tbl_data_export_view_attribute_metadata_entry-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_VIEW_ATTRIBUTE_METADATA_ID) REFERENCES TBL_DATA_EXPORT_VIEW_ATTRIBUTE_METADATA(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_VALUE ADD CONSTRAINT \`fk_tbl_data_export_item_value-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ITEM_ID) REFERENCES TBL_DATA_EXPORT_ITEM(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_VALUE ADD CONSTRAINT \`fk_tbl_data_export_item_value-2\` FOREIGN KEY IF NOT EXISTS (VIEW_ATTRIBUTE_ID) REFERENCES TBL_DATA_EXPORT_VIEW_ATTRIBUTE(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_VALUE_METADATA ADD CONSTRAINT \`fk_tbl_data_export_item_value_metadata-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ITEM_VALUE_ID) REFERENCES TBL_DATA_EXPORT_ITEM_VALUE(ID)`);
-      await conn.query(`ALTER TABLE TBL_DATA_EXPORT_ITEM_VALUE_METADATA_ENTRY ADD CONSTRAINT \`fk_tbl_data_xport_value_metadata_entry-1\` FOREIGN KEY IF NOT EXISTS (DATA_EXPORT_ITEM_VALUE_METADATA_ID) REFERENCES TBL_DATA_EXPORT_ITEM_VALUE_METADATA(ID)`);
 
       await conn.query(`ALTER TABLE TBL_BULK_EDIT_LOG ADD CONSTRAINT \`fk_tbl_bulk_edit_log-1\` FOREIGN KEY IF NOT EXISTS (BULK_EDIT_ID) REFERENCES TBL_BULK_EDIT(ID)`);
 
