@@ -1,16 +1,15 @@
 import {Injectable} from '@angular/core';
 import {
     AttributeDataImport,
-    DataImport,
     ItemDataImport,
     PriceDataImport,
     UploadType
 } from '../../model/data-import.model';
 import {Observable, of} from 'rxjs';
-import {Job, Status} from '../../model/job.model';
-import {Message, Messages} from '../../model/notification-listing.model';
+import {Job} from '../../model/job.model';
+import {Message} from '../../model/notification-listing.model';
 import {Attribute} from '../../model/attribute.model';
-import {Item, StringValue, Value} from '../../model/item.model';
+import {Item, StringValue} from '../../model/item.model';
 
 
 @Injectable()

@@ -1,11 +1,10 @@
-import {AttributeDataImport, DataImport} from "../../model/data-import.model";
+import {AttributeDataImport} from "../../model/data-import.model";
 import {readCsv} from './import-csv.service';
-import {Attribute2, CsvAttribute} from "../../route/model/server-side.model";
+import {CsvAttribute} from "../../route/model/server-side.model";
 import {Messages, Message} from "../../model/notification-listing.model";
 import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
 import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
-import {convert, revert} from "../conversion-attribute.service";
 
 const toPair1 = (pair1: string): Pair1[] => {
     return null;
