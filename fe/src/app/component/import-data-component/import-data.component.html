@@ -28,6 +28,16 @@
             <form [formGroup]="secondFormGroup" (ngSubmit)="onSecondFormSubmit()">
                 <ng-template matStepLabel>Upload data file</ng-template>
                 <div class="content">
+                  <mat-form-field>
+                      <mat-label>Upload Type</mat-label>
+                      <mat-select [formControl]="uploadTypeFormControl" (selectionChange)="onUploadTypeSelectionChanged($event)">
+                          <option value="">--- select upload type ---</option>
+                          <option value="attribute">Attributes</option>
+                          <option value="item">Items</option>
+                          <option value="price">Prices</option>
+                      </mat-select>
+                      <mat-error *ngIf="uploadTypeFormControl?.errors?.required">An upload type selection is required</mat-error>
+                  </mat-form-field>
                   <input type="file" #fileUploadInputElement
                          (change)="onUploadDataFileChange($event.target.files)">
                 </div>

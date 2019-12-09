@@ -1,14 +1,23 @@
 import {Component, ElementRef, Input, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {View} from '../../model/view.model';
-import {DataImport} from '../../model/data-import.model';
+import {
+    AttributeDataImport,
+    DataImport,
+    ItemDataImport,
+    PriceDataImport,
+    UploadType
+} from '../../model/data-import.model';
 import {Observable} from 'rxjs';
 import {Job} from '../../model/job.model';
 import {tap} from 'rxjs/operators';
 import {MatStepper} from '@angular/material/stepper';
+import {MatSelectChange} from '@angular/material/select';
 
-export type ShowPreviewFn = (file: File) => Observable<DataImport>;
-export type SubmitDataImportFn = (dataImport: DataImport) => Observable<Job>;
+export type ShowPreviewFn =
+    (uploadType: UploadType, file: File) => Observable<AttributeDataImport | ItemDataImport | PriceDataImport>;
+export type SubmitDataImportFn =
+    (uploadType: UploadType, dataImport: AttributeDataImport | ItemDataImport | PriceDataImport) => Observable<Job>;
 
 @Component({
     selector: 'app-import-data',
@@ -21,8 +30,12 @@ export class ImportDataComponent {
     viewFormControl: FormControl;
 
     secondFormGroup: FormGroup;
+    uploadTypeFormControl: FormControl;
     fileUploadFormControl: FormControl;
-    dataImport: DataImport;
+    selectedUploadType: UploadType;
+    attributeDataImport: AttributeDataImport;
+    itemDataImport: ItemDataImport;
+    priceDataImport: PriceDataImport;
     @ViewChild('fileUploadInputElement', {static: true}) fileUploadInputElement: ElementRef;
 
     thirdFormGroup: FormGroup;
@@ -42,14 +55,20 @@ export class ImportDataComponent {
         this.firstFormGroup = formBuilder.group({
             view: this.viewFormControl
         });
+        this.uploadTypeFormControl = formBuilder.control('', [Validators.required]);
         this.fileUploadFormControl = formBuilder.control(undefined, [Validators.required]);
         this.secondFormGroup = formBuilder.group({
+            uploadType: this.uploadTypeFormControl,
             fileUpload: this.fileUploadFormControl
         });
         this.thirdFormGroup = formBuilder.group({});
         this.disableThirdForm = true;
         this.fourthFormGroup = formBuilder.group({});
         this.jobSubmitted = false;
+    }
+
+    onUploadTypeSelectionChanged($event: MatSelectChange) {
+        this.selectedUploadType = $event.value;
     }
 
     onUploadDataFileChange(files: FileList) {
@@ -65,10 +84,26 @@ export class ImportDataComponent {
 
     onSecondFormSubmit() {
         const file: File = this.fileUploadFormControl.value;
-        this.showPreview(file)
+        this.showPreview(this.selectedUploadType, file)
             .pipe(
-                tap((dataImport: DataImport) => {
-                    this.dataImport = dataImport;
+                tap((dataImport: AttributeDataImport | PriceDataImport | ItemDataImport) => {
+                    switch(dataImport.type) {
+                        case 'ATTRIBUTE':
+                            this.attributeDataImport = dataImport;
+                            this.itemDataImport = undefined;
+                            this.priceDataImport = undefined;
+                            break;
+                        case 'ITEM':
+                            this.attributeDataImport = undefined;
+                            this.itemDataImport = dataImport;
+                            this.priceDataImport = undefined;
+                            break;
+                        case 'PRICE':
+                            this.attributeDataImport = undefined;
+                            this.itemDataImport = undefined;
+                            this.priceDataImport = dataImport;
+                            break;
+                    }
                     this.disableThirdForm = !!(dataImport
                         && dataImport.messages && dataImport.messages.errors && dataImport.messages.errors.length);
                 })
@@ -77,7 +112,19 @@ export class ImportDataComponent {
 
     onThirdFormSubmit() {
         this.jobSubmitted = false;
-        this.submitDataImport(this.dataImport)
+        let dataImport: AttributeDataImport | ItemDataImport | PriceDataImport = null;
+        switch (this.selectedUploadType) {
+            case 'attribute':
+                dataImport = this.attributeDataImport;
+                break;
+            case 'price':
+                dataImport = this.priceDataImport;
+                break;
+            case 'item':
+                dataImport = this.itemDataImport;
+                break;
+        }
+        this.submitDataImport(this.selectedUploadType, dataImport)
             .pipe(
                 tap((j: Job) => {
                     this.job = j;
@@ -92,5 +139,6 @@ export class ImportDataComponent {
         }
         stepper.reset();
     }
+
 }
 

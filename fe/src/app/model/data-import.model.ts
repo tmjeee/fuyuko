@@ -3,12 +3,7 @@ import {Attribute} from './attribute.model';
 import {Messages} from './notification-listing.model';
 import {PricingStructureItemWithPrice} from './pricing-structure.model';
 
-
-export interface DataImport {
-    messages: Messages;
-    attributes: Attribute[];
-    items: Item[];
-}
+export type UploadType = 'attribute' | 'item' | 'price';
 
 export type DataImportType = 'ATTRIBUTE' | 'ITEM' | 'PRICE';
 

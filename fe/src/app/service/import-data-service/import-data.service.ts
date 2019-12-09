@@ -1,5 +1,11 @@
 import {Injectable} from '@angular/core';
-import {DataImport} from '../../model/data-import.model';
+import {
+    AttributeDataImport,
+    DataImport,
+    ItemDataImport,
+    PriceDataImport,
+    UploadType
+} from '../../model/data-import.model';
 import {Observable, of} from 'rxjs';
 import {Job, Status} from '../../model/job.model';
 import {Message, Messages} from '../../model/notification-listing.model';
@@ -12,8 +18,9 @@ export class ImportDataService {
 
     jobNumber = 1000;
 
-    showPreview(file: File): Observable<DataImport> {
+    showPreview(uploadType: UploadType, file: File): Observable<AttributeDataImport | ItemDataImport | PriceDataImport> {
         return of({
+            type: 'ATTRIBUTE',
             messages: {
                 infos: [
                     {title: 'info #1', messsage: 'info #1 message'} as Message,
@@ -44,11 +51,11 @@ export class ImportDataService {
                     4: { attributeId: 4, val: { type: 'string', value: 'item 1 val 4' }  as StringValue },
                 } as Item
             ]
-        } as DataImport);
+        } as AttributeDataImport);
     }
 
 
-    submitDataImport(dataImport: DataImport): Observable<Job> {
+    submitDataImport(uploadType: UploadType, dataImport: AttributeDataImport | ItemDataImport | PriceDataImport): Observable<Job> {
         const num = this.jobNumber++;
         return of({
             id: num,
