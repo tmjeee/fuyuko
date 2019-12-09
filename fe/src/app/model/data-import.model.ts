@@ -7,7 +7,7 @@ export type DataImportType = 'ATTRIBUTE' | 'ITEM' | 'PRICE';
 
 export interface AttributeDataImport {
     type: 'ATTRIBUTE';
-    attributeDataImportId?: number;
+    dataImportId?: number;
     messages: Messages;
     attributes: Attribute[];
 }
@@ -15,14 +15,14 @@ export interface AttributeDataImport {
 export interface ItemDataImport {
     type: 'ITEM';
     messages: Messages;
-    itemDataImportId?: number;
+    dataImportId?: number;
     attributes: Attribute[];
     items: Item[];
 }
 
 export interface PriceDataImport {
     type: 'PRICE';
-    priceDataImportId?: number;
+    dataImportId?: number;
     messages: Messages;
     items: PricingStructureItemWithPrice[];
 }

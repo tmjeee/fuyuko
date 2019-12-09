@@ -14,7 +14,7 @@ const toPair2 = (pair2: string): Pair2[] => {
     return null;
 }
 
-export const preview = async (viewId: number, attributeDataImportId: number, content: Buffer): Promise<AttributeDataImport> => {
+export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<AttributeDataImport> => {
 
     const csvAttributes: CsvAttribute[]  = await readCsv<CsvAttribute>(content);
     const errors: Message[] = [];
@@ -52,7 +52,7 @@ export const preview = async (viewId: number, attributeDataImportId: number, con
 
     return {
         type: "ATTRIBUTE",
-        attributeDataImportId,
+        dataImportId,
         messages: {
            errors,
            infos,

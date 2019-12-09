@@ -5,7 +5,7 @@ import {Message, Messages} from "../../model/notification-listing.model";
 import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 import {getPricingStructureItem} from "../pricing-structure-item.service";
 
-export const preview = async (viewId: number, attributeDataImportId: number, content: Buffer): Promise<PriceDataImport> => {
+export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<PriceDataImport> => {
 
     const csvPrices: CsvPrice[]  = await readCsv<CsvPrice>(content);
     const errors: Message[] = [];
@@ -58,6 +58,7 @@ export const preview = async (viewId: number, attributeDataImportId: number, con
 
     return {
         type: 'PRICE',
+        dataImportId,
         messages: {
             infos,
             warnings,

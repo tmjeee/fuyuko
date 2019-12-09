@@ -10,14 +10,14 @@ import {runJob} from "../../service/job-do-attribute-data-import.service";
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
-        body('dataImportid').exists().isNumeric(),
+        body('dataImportId').exists().isNumeric(),
         body('attributes').exists().isArray()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
-        const dataImportId: number = Number(req.body.dataImportid);
+        const dataImportId: number = Number(req.body.dataImportId);
         const attributes: Attribute[] =  req.body.attributes;
 
         const job: Job = await runJob(viewId, dataImportId, attributes);

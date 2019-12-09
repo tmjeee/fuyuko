@@ -53,11 +53,17 @@
             <form [formGroup]="thirdFormGroup" (ngSubmit)="onThirdFormSubmit()">
                 <ng-template matStepLabel>Review</ng-template>
                 <div class="content">
-                    <ng-container *ngIf="dataImport">
-                        <app-notification-message-listing [messages]="dataImport.messages"></app-notification-message-listing>
-                        <app-view-only-data-table [attributes]="dataImport.attributes"
-                                                  [items]="dataImport.items">
+                    <ng-container *ngIf="itemDataImport">
+                        <app-notification-message-listing [messages]="itemDataImport.messages"></app-notification-message-listing>
+                        <app-view-only-data-table [attributes]="itemDataImport.attributes"
+                                                  [items]="itemDataImport.items">
                         </app-view-only-data-table>
+                    </ng-container>
+                    <ng-container *ngIf="attributeDataImport">
+
+                    </ng-container>
+                    <ng-container *ngIf="priceDataImport">
+
                     </ng-container>
                 </div>
                 <div class="controls">

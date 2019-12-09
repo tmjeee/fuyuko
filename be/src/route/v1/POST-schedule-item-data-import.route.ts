@@ -10,13 +10,14 @@ import {Item} from "../../model/item.model";
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
+        body('dataImportId').exists().isNumeric(),
         body('items').exists().isArray()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
-        const dataImportId: number = Number(req.body.priceDataImportId);
+        const dataImportId: number = Number(req.body.dataImportId);
         const items: Item[] =  req.body.items;
 
         const job: Job = await runJob(viewId, dataImportId, items);

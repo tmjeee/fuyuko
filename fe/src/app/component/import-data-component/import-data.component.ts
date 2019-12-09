@@ -112,19 +112,22 @@ export class ImportDataComponent {
     onThirdFormSubmit() {
         this.jobSubmitted = false;
         const view: View = this.viewFormControl.value;
-        let dataImport: AttributeDataImport | ItemDataImport | PriceDataImport = null;
+        const body: any = {};
         switch (this.selectedUploadType) {
             case 'ATTRIBUTE':
-                dataImport = this.attributeDataImport;
+                body.dataImportId = this.attributeDataImport.dataImportId;
+                body.attributes = this.attributeDataImport.attributes;
                 break;
             case 'PRICE':
-                dataImport = this.priceDataImport;
+                body.dataImportId = this.priceDataImport.dataImportId;
+                body.pricingStructureItemsWithPrice = this.priceDataImport.items;
                 break;
             case 'ITEM':
-                dataImport = this.itemDataImport;
+                body.dataImportId = this.itemDataImport.dataImportId;
+                body.items = this.itemDataImport.items;
                 break;
         }
-        this.submitDataImport(view.id, this.selectedUploadType, dataImport)
+        this.submitDataImport(view.id, this.selectedUploadType, body)
             .pipe(
                 tap((j: Job) => {
                     this.job = j;

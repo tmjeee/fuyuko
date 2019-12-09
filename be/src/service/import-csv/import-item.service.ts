@@ -6,7 +6,7 @@ import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model
 import {Item} from "../../model/item.model";
 import {Attribute} from "../../model/attribute.model";
 
-export const preview = async (viewId: number, itemDataImportId: number, content: Buffer): Promise<ItemDataImport> => {
+export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<ItemDataImport> => {
 
     let counter: number = -1;
 
@@ -44,7 +44,7 @@ export const preview = async (viewId: number, itemDataImportId: number, content:
 
     return {
         type: "ITEM",
-        itemDataImportId,
+        dataImportId,
         attributes,
         items,
         messages: {
