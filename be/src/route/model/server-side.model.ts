@@ -18,6 +18,17 @@ export interface CsvAttribute {
     pair2?: string;
 }
 
+export interface CsvPrice {
+    pricingStructureFormat: string;
+    itemFormat: string;
+    price: number;
+    country: string;
+}
+
+export interface CsvItem {
+
+}
+
 
 // === Attribute2
 export interface Attribute2 {

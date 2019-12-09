@@ -1,7 +1,7 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {param} from 'express-validator';
+import {param, body} from 'express-validator';
 import {doInDbConnection, QueryResponse} from "../../db";
 import {PoolConnection} from "mariadb";
 import {multipartParse} from "../../service";
@@ -12,14 +12,15 @@ import * as fs from "fs";
 
 const uuid = require('uuid');
 import fileType from 'file-type';
-import {previewAttributeDataImport} from "../../service/import-csv/import-attribute.service";
+import {preview} from "../../service/import-csv/import-attribute.service";
 import {AttributeDataImport} from "../../model/data-import.model";
 
 
 
 const httpAction: any[] = [
     [
-        param('viewId').exists().isNumeric()
+        param('viewId').exists().isNumeric(),
+        body('attributeDataCsvFile').exists()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
@@ -46,7 +47,7 @@ const httpAction: any[] = [
             return {content, dataImportId};
         });
 
-        const attributeDataImport: AttributeDataImport = await previewAttributeDataImport(viewId, dataImportId, content);
+        const attributeDataImport: AttributeDataImport = await preview(viewId, dataImportId, content);
         res.status(200).json(attributeDataImport);
     }
 ];

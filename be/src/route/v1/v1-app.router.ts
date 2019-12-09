@@ -59,7 +59,11 @@ import registerGetAllJobsRoute from './GET-all-jobs.route';
 import registerGetJobDetailsByIdRoute from './GET-job-details-by-id.route';
 import registerGetJobByIdRoute from './GET-job-by-id.route';
 import registerPostScheduleAttributeDataImportRoute from './POST-schedule-attribute-data-import.route';
-import registerPostDoAttributeDataImportRoute from './POST-do-attribute-data-import.route';
+import registerPostPreviewAttributeDataImportRoute from './POST-preview-attribute-data-import.route';
+import registerPostPreviewItemDataImportRoute from './POST-preview-item-data-import.route';
+import registerPostPreviewPriceDataImportRoute from './POST-preview-price-data-import.route';
+import registerPostScheduleItemDataImportRoute from './POST-schedule-item-data-import.route';
+import registerPostSchedulePriceDataImportRoute from './POST-schedule-pricing-data-import.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -126,7 +130,11 @@ const reg = (app: Express, regi: Registry) => {
     registerGetJobDetailsByIdRoute(v1AppRouter, registry);
     registerGetJobByIdRoute(v1AppRouter, registry);
     registerPostScheduleAttributeDataImportRoute(v1AppRouter, registry);
-    registerPostDoAttributeDataImportRoute(v1AppRouter, registry);
+    registerPostScheduleItemDataImportRoute(v1AppRouter, registry);
+    registerPostSchedulePriceDataImportRoute(v1AppRouter, registry);
+    registerPostPreviewAttributeDataImportRoute(v1AppRouter, registry);
+    registerPostPreviewItemDataImportRoute(v1AppRouter, registry);
+    registerPostPreviewPriceDataImportRoute(v1AppRouter, registry);
 }
 
 

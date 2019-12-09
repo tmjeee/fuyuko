@@ -3,6 +3,20 @@ import {PoolConnection} from "mariadb";
 import {Level} from "../model/level.model";
 import {JobProgress} from "../model/job.model";
 import {e} from '../logger';
+import {l} from "../logger/logger";
+
+export interface LoggingCallback  {
+    (level: Level, msg: string): void;
+}
+
+export const newLoggingCallback = (jobLogger?: JobLogger) => {
+    return (level: Level, msg: string) => {
+        if (jobLogger) {
+            jobLogger.log(level, msg);
+        }
+        l(level, msg);
+    }
+}
 
 export class JobLogger {
 

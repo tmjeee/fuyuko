@@ -1,27 +1,27 @@
 
 
 export interface PricingStructure {
-    id: number;
+    id: number; // pricing structure id
     name: string;
     description: string;
 }
 
 export interface PricingStructureWithItems {
-    id: number;
+    id: number; // pricing structure id
     name: string;
     description: string;
     items: PricingStructureItemWithPrice[];
 }
 
 export interface PricingStructureItem {
-    id: number;
+    id: number;     // pricing structure item id
     itemId: number;
     itemName: string;
     itemDescription: string;
 }
 
 export interface PricingStructureItemWithPrice {
-    id: number;
+    id: number;     // pricing structure item id
     itemId: number;
     itemName: string;
     itemDescription: string;
@@ -33,7 +33,7 @@ export interface PricingStructureItemWithPrice {
 }
 
 export interface TablePricingStructureItemWithPrice {
-    id: number;
+    id: number;         // pricing structure item id
     itemId: number;
     itemName: string;
     itemDescription: string;

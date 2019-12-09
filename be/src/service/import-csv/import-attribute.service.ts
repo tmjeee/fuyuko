@@ -15,7 +15,7 @@ const toPair2 = (pair2: string): Pair2[] => {
     return null;
 }
 
-export const previewAttributeDataImport = async (viewId: number, attributeDataImportId: number,  content: Buffer): Promise<AttributeDataImport> => {
+export const preview = async (viewId: number, attributeDataImportId: number, content: Buffer): Promise<AttributeDataImport> => {
 
     const csvAttributes: CsvAttribute[]  = await readCsv<CsvAttribute>(content);
     const errors: Message[] = [];
@@ -47,12 +47,6 @@ export const previewAttributeDataImport = async (viewId: number, attributeDataIm
                messsage: `Attribute ${attribute.name} already exists`
             } as Message);
         } else {
-            const attr2: Attribute2 = revert([attribute])[0];
-            doInDbConnection((conn: PoolConnection) => {
-                conn.query(`
-                    INERT INTO TBL_DATA_IMPORT_VIEW_ATTRIBUTE (DATA_IMPORT_ITEM_ID, ATTRIBUTE_METADATA_ID
-                `);
-            });
             result.push(attribute);
         }
     }

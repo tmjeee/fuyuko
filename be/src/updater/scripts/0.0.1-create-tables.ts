@@ -322,6 +322,7 @@ const TBL_PRICING_STRUCTURE_ITEM = async () => {
             ID INT PRIMARY KEY AUTO_INCREMENT,
             ITEM_ID INT,
             PRICING_STRUCTURE_ID INT,
+            COUNTRY VARCHAR(200),
             PRICE DECIMAL
          );
       `);
