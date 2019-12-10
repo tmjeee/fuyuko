@@ -1,8 +1,7 @@
-import {ItemDataImport, PriceDataImport} from "../../model/data-import.model";
-import {CsvItem, CsvPrice} from "../../route/model/server-side.model";
+import {ItemDataImport} from "../../model/data-import.model";
+import {CsvItem} from "../../route/model/server-side.model";
 import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
-import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 import {Item} from "../../model/item.model";
 import {Attribute} from "../../model/attribute.model";
 

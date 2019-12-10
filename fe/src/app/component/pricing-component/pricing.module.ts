@@ -6,6 +6,7 @@ import {AppMaterialsModule} from '../../app-materials.module';
 import {PricingStructurePopupComponent} from './pricing-structure-popup.component';
 import {ItemPricePopupComponent} from './item-price-popup.component';
 import {PricingStructureTableComponent} from './pricing-structure-table.component';
+import {ViewOnlyPriceTableComponent} from './view-only-price-table.component';
 
 
 @NgModule({
@@ -20,12 +21,14 @@ import {PricingStructureTableComponent} from './pricing-structure-table.componen
         PricingStructurePopupComponent,
         PricingStructureTableComponent,
         ItemPricePopupComponent,
+        ViewOnlyPriceTableComponent,
     ],
     exports: [
         PricingStructurePopupComponent,
         PricingStructureTableComponent,
         ItemPricePopupComponent,
         BrowserAnimationsModule,
+        ViewOnlyPriceTableComponent,
     ],
     entryComponents: [
         PricingStructurePopupComponent,

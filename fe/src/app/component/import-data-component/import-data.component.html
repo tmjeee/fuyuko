@@ -60,9 +60,11 @@
                         </app-view-only-data-table>
                     </ng-container>
                     <ng-container *ngIf="attributeDataImport">
-
+                        <app-notification-message-listing [messages]="attributeDataImport.messages"></app-notification-message-listing>
+                        <app-view-only-attribute-table [attributes]="attributeDataImport.attributes"></app-view-only-attribute-table>
                     </ng-container>
                     <ng-container *ngIf="priceDataImport">
+
 
                     </ng-container>
                 </div>

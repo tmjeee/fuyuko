@@ -7,7 +7,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {DoubleSelectComponent} from './double-select.component';
-
+import {ViewOnlyAttributeTableComponent} from './view-only-attribute-table.component';
 
 @NgModule({
   imports: [
@@ -22,12 +22,14 @@ import {DoubleSelectComponent} from './double-select.component';
     EditAttributeDialogComponent,
     SingleSelectComponent,
     DoubleSelectComponent,
+    ViewOnlyAttributeTableComponent,
   ],
   exports: [
     AttributeTableComponent,
     EditAttributeDialogComponent,
     SingleSelectComponent,
     DoubleSelectComponent,
+    ViewOnlyAttributeTableComponent,
   ],
   entryComponents: [
     EditAttributeDialogComponent
