@@ -7,7 +7,7 @@ import {ExportDataComponent} from './export-data.component';
 import {AngularFileUploaderModule} from 'angular-file-uploader';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {DataTableModule} from '../data-table-component/data-table.module';
-import {FlexLayoutModule} from "@angular/flex-layout";
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 @NgModule({
     imports: [

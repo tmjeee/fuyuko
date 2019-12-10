@@ -35,6 +35,16 @@
                        Loading ...
                     </ng-container>
                     <ng-container *ngIf="secondFormReady">
+                        <mat-form-field>
+                            <mat-label>Export type</mat-label>
+                            <mat-select [formControl]="exportTypeFormControl" (selectionChange)="onExportTypeSelectionChanged($event)">
+                                <mat-option value="">--- select an export type ---</mat-option>
+                                <mat-option value="ATTRIBUTE">Attributes</mat-option>
+                                <mat-option value="ITEM">Items</mat-option>
+                                <mat-option value="PRICE">Prices</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="exportTypeFormControl?.errors?.required">An export type is required</mat-error>
+                        </mat-form-field>
                         <mat-radio-group [formControl]="attributeSelectionOptionFormControl" (change)="onAttributeSelectionOptionChange($event)">
                             <mat-radio-button [value]="'all'">All attributes</mat-radio-button>
                             <mat-radio-button [value]="'selection'">Selected attributes</mat-radio-button>
@@ -57,7 +67,7 @@
 
 
         <!-- third step: select items of view -->
-        <mat-step [stepControl]="thirdFormGroup">
+        <mat-step [stepControl]="thirdFormGroup" *ngIf="selectedExportType !== 'ATTRIBUTE'">
             <form [formGroup]="secondFormGroup" (ngSubmit)="onThirdFormSubmit()">
                 <ng-template matStepLabel>Select Items</ng-template>
                 <div class="content step-3">

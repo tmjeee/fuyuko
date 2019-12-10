@@ -6,12 +6,10 @@ import {tap} from 'rxjs/operators';
 import {
     PreviewExportFn, SubmitExportJobFn,
     ViewAttributeFn,
-    ViewItemsFn
 } from '../../component/export-data-component/export-data.component';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
-import {Observable} from 'rxjs';
-import {DataExport} from '../../model/data-export.model';
+import {DataExportType} from '../../model/data-export.model';
 
 @Component({
     templateUrl: './export.page.html',
@@ -21,7 +19,6 @@ export class ExportPageComponent implements OnInit {
 
     allViews: View[];
     viewAttributeFn: ViewAttributeFn;
-    viewItemsFn: ViewItemsFn;
     previewExportFn: PreviewExportFn;
     submitExportJobFn: SubmitExportJobFn;
 
@@ -39,16 +36,14 @@ export class ExportPageComponent implements OnInit {
            return this.exportDataService.viewAttributeFn(viewId);
         };
 
-        this.viewItemsFn = (viewId: number) => {
-            return this.exportDataService.viewItemsFn(viewId);
+        this.previewExportFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
+                                filter: ItemValueOperatorAndAttribute[]) => {
+            return this.exportDataService.previewExportFn(exportType, viewId, attributes, filter);
         };
 
-        this.previewExportFn = (viewId: number, attributes: Attribute[], filter: ItemValueOperatorAndAttribute[]) => {
-            return this.exportDataService.previewExportFn(viewId, attributes, filter);
-        };
-
-        this.submitExportJobFn = (viewId: number, attributes: Attribute[], filter: ItemValueOperatorAndAttribute[]) => {
-            return this.exportDataService.submitExportJobFn(viewId, attributes, filter);
+        this.submitExportJobFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
+                                  filter: ItemValueOperatorAndAttribute[]) => {
+            return this.exportDataService.submitExportJobFn(exportType, viewId, attributes, filter);
         };
     }
 

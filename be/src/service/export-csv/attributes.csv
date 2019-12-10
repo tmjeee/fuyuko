@@ -1,0 +1,14 @@
+name,description,type,format,showCurrencyCountry,pair1,pair2
+att01,att 01 description,string,,,,
+att02,att 02 description,text,,,,
+att03,att 03 description,number,0.0,,
+att04,att 04 description,date,DD/MM/YYYY,,
+att05,att 05 description,currency,,true,,
+att06,att 06 description,volume,0.0,,,
+att07,att 07 description,dimension,0.0,,,
+att08,att 08 description,area,0.0,,,
+att09,att 09 description,width,0.0,,,
+att10,att 10 description,length,0.0,,,
+att11,att 11 description,height,0.0,,,
+att12,att 12 description,select,,,key1=value1|key2=value2|key3=value3,
+att13,att 13 description,doubleselect,,,key1=value1|key2=value2|key3=value3,key1=xkey11=xvalue11|key1=xkey12=xvalue12|key2=xkey21=xvalue21|key2=xkey22=xvalue22|key3=xkey31=xvalue31|key3=xkey32=xvalue32

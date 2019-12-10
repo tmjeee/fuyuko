@@ -64,6 +64,9 @@ import registerPostPreviewItemDataImportRoute from './POST-preview-item-data-imp
 import registerPostPreviewPriceDataImportRoute from './POST-preview-price-data-import.route';
 import registerPostScheduleItemDataImportRoute from './POST-schedule-item-data-import.route';
 import registerPostSchedulePriceDataImportRoute from './POST-schedule-pricing-data-import.route';
+import registerPostPreviewAttributeDataExportRoute from './POST-preview-item-data-export.route';
+import registerPostPreviewItemDataExportRoute from './POST-preview-item-data-export.route';
+import registerPostPreviewPriceDataExportRoute from './POST-preview-price-data-export.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -135,6 +138,9 @@ const reg = (app: Express, regi: Registry) => {
     registerPostPreviewAttributeDataImportRoute(v1AppRouter, registry);
     registerPostPreviewItemDataImportRoute(v1AppRouter, registry);
     registerPostPreviewPriceDataImportRoute(v1AppRouter, registry);
+    registerPostPreviewAttributeDataExportRoute(v1AppRouter, registry);
+    registerPostPreviewItemDataExportRoute(v1AppRouter, registry);
+    registerPostPreviewPriceDataExportRoute(v1AppRouter, registry);
 }
 
 

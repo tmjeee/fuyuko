@@ -2,22 +2,29 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {View} from '../../model/view.model';
 import {Observable, of} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
-import {Item, Value} from '../../model/item.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {formatCurrency} from '@angular/common';
 import {tap} from 'rxjs/operators';
 import {MatRadioChange} from '@angular/material/radio';
 import {MatHorizontalStepper} from '@angular/material/stepper';
 import {Job} from '../../model/job.model';
-import {DataExport} from '../../model/data-export.model';
+import {
+    AttributeDataExport,
+    DataExport,
+    DataExportType,
+    ItemDataExport,
+    PriceDataExport
+} from '../../model/data-export.model';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {convertToString} from '../../utils/ui-item-value-converters.util';
+import {MatSelectChange} from '@angular/material/select';
 
 export type ViewAttributeFn = (viewId: number) => Observable<Attribute[]>;
-export type ViewItemsFn = (viewId: number, whereClauses: ItemValueOperatorAndAttribute[]) => Observable<Item[]>;
-export type SubmitExportJobFn = (viewId: number, attributes: Attribute[], filter: ItemValueOperatorAndAttribute[]) => Observable<Job>;
-export type PreviewExportFn = (viewId: number, attributes: Attribute[], filter: ItemValueOperatorAndAttribute[]) => Observable<DataExport>;
+export type SubmitExportJobFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
+                                 filter: ItemValueOperatorAndAttribute[]) => Observable<Job>;
+export type PreviewExportFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
+                               filter: ItemValueOperatorAndAttribute[])
+    => Observable<AttributeDataExport | ItemDataExport | PriceDataExport>;
 
 @Component({
    selector: 'app-export-data',
@@ -28,7 +35,6 @@ export class ExportDataComponent implements OnInit {
 
     @Input() views: View[];
     @Input() viewAttributesFn: ViewAttributeFn;
-    @Input() viewItemsFn: ViewItemsFn;
     @Input() previewExportFn: PreviewExportFn;
     @Input() submitExportJobFn: SubmitExportJobFn;
 
@@ -41,8 +47,10 @@ export class ExportDataComponent implements OnInit {
     secondFormGroup: FormGroup;
     secondFormReady: boolean;
     attributeSelectionOptionFormControl: FormControl;
+    exportTypeFormControl: FormControl;
     currentAttributeSelectionOption: string;
     allAttributes: Attribute[];
+    selectedExportType: DataExportType;
 
     // 3: items filtering
     thirdFormGroup: FormGroup;
@@ -69,8 +77,10 @@ export class ExportDataComponent implements OnInit {
 
         this.secondFormReady = false;
         this.currentAttributeSelectionOption = 'all';
+        this.exportTypeFormControl = formBuilder.control('', [Validators.required]);
         this.attributeSelectionOptionFormControl = formBuilder.control('all', [Validators.required]);
         this.secondFormGroup = formBuilder.group({
+            exportType: this.exportTypeFormControl,
             attributeSelectionOption: this.attributeSelectionOptionFormControl
         });
         this.secondFormGroup.setValidators((c: AbstractControl) => {
@@ -81,7 +91,6 @@ export class ExportDataComponent implements OnInit {
                         console.log('ctl', ctl.value);
                         return (r || ctl.value);
                     }, false);
-                    console.log('***************** att validator', valid);
                     if (!valid) {
                         return {selectAtLeastOneAttribute: true};
                     }
@@ -105,30 +114,31 @@ export class ExportDataComponent implements OnInit {
     ngOnInit(): void {
     }
 
+
+    onAttributeSelectionOptionChange($event: MatRadioChange) {
+        this.currentAttributeSelectionOption = $event.value;
+        this.secondFormGroup.updateValueAndValidity();
+    }
+
     onFirstFormSubmit() {
         this.secondFormReady = false;
         const viewId: number = this.viewFormControl.value;
         this.viewAttributesFn(viewId)
             .pipe(
                 tap((a: Attribute[]) => {
-                        this.allAttributes = a;
-                        const attributesFormGroup: FormGroup = this.formBuilder.group({});
-                        this.secondFormGroup.removeControl('attributes');
-                        this.secondFormGroup.setControl('attributes', attributesFormGroup);
-                        this.allAttributes.forEach((ia: Attribute) => {
-                            const control: FormControl = this.formBuilder.control(false);
-                            (control as any).internalData = ia;
-                            attributesFormGroup.setControl('' + ia.id, control);
-                        });
-                        this.secondFormReady = true;
+                    this.allAttributes = a;
+                    const attributesFormGroup: FormGroup = this.formBuilder.group({});
+                    this.secondFormGroup.removeControl('attributes');
+                    this.secondFormGroup.setControl('attributes', attributesFormGroup);
+                    this.allAttributes.forEach((ia: Attribute) => {
+                        const control: FormControl = this.formBuilder.control(false);
+                        (control as any).internalData = ia;
+                        attributesFormGroup.setControl('' + ia.id, control);
+                    });
+                    this.secondFormReady = true;
 
                 })
             ).subscribe();
-    }
-
-    onAttributeSelectionOptionChange($event: MatRadioChange) {
-        this.currentAttributeSelectionOption = $event.value;
-        this.secondFormGroup.updateValueAndValidity();
     }
 
     onSecondFormSubmit() {
@@ -137,6 +147,9 @@ export class ExportDataComponent implements OnInit {
 
     onThirdFormSubmit() {
         this.fourthFormReady = false;
+
+        // export type
+        const exportType: DataExportType = this.exportTypeFormControl.value;
 
         // figure out view id (from step 1)
         const viewId: number = this.viewFormControl.value;
@@ -155,7 +168,7 @@ export class ExportDataComponent implements OnInit {
         // figure out item filters (from step 3)
         const f: ItemValueOperatorAndAttribute[] = this.itemValueOperatorAndAttributeList;
 
-        this.previewExportFn(viewId, att, f).pipe(
+        this.previewExportFn(exportType, viewId, att, f).pipe(
             tap((dataExport: DataExport) => {
                 this.dataExport = dataExport;
                 this.fourthFormReady = true;
@@ -164,6 +177,10 @@ export class ExportDataComponent implements OnInit {
     }
 
     onFourthFormSubmit() {
+
+        // export type
+        const exportType: DataExportType = this.exportTypeFormControl.value;
+
         // figure out view id (from step 1)
         const viewId: number = this.viewFormControl.value;
 
@@ -183,7 +200,7 @@ export class ExportDataComponent implements OnInit {
 
 
         this.jobSubmitted = false;
-        this.submitExportJobFn(viewId, att, f).pipe(
+        this.submitExportJobFn(exportType, viewId, att, f).pipe(
             tap((j: Job) => {
                 this.job = j;
                 this.jobSubmitted = true;
@@ -230,5 +247,9 @@ export class ExportDataComponent implements OnInit {
     onAttributeCheckboxChange($event: MatCheckboxChange) {
         this.secondFormGroup.updateValueAndValidity();
         this.changeDetectorRef.detectChanges();
+    }
+
+    onExportTypeSelectionChanged($event: MatSelectChange) {
+        this.selectedExportType = $event.value;
     }
 }
