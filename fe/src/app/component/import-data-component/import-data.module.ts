@@ -7,7 +7,8 @@ import {ImportDataComponent} from './import-data.component';
 import {AngularFileUploaderModule} from 'angular-file-uploader';
 import {DataTableModule} from '../data-table-component/data-table.module';
 import {NotificationMessageListingModule} from '../notification-message-listing-component/notification-message-listing.module';
-import {AttributeTableModule} from "../attribute-table-component/attribute-table.module";
+import {AttributeTableModule} from '../attribute-table-component/attribute-table.module';
+import {PricingModule} from '../pricing-component/pricing.module';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import {AttributeTableModule} from "../attribute-table-component/attribute-table
         DataTableModule,
         NotificationMessageListingModule,
         AttributeTableModule,
+        PricingModule,
     ],
     declarations: [
         ImportDataComponent

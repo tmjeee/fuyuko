@@ -52,7 +52,8 @@
                         <ng-container *ngIf="currentAttributeSelectionOption === 'selection'"> <!-- 'selection' option selected -->
                             <div class="attributes-selection" fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="start center">
                                 <div *ngFor="let attribute of allAttributes">
-                                    <mat-checkbox (change)="onAttributeCheckboxChange($event)" [formControl]="secondFormGroup.get('attributes').get('' + attribute.id)">{{attribute.name}}</mat-checkbox>
+                                    <mat-checkbox (change)="onAttributeCheckboxChange($event)"
+                                                  [formControl]="secondFormGroup.get('attributes').get('' + attribute.id)">{{attribute.name}}</mat-checkbox>
                                 </div>
                             </div>
                         </ng-container>
@@ -103,9 +104,18 @@
                 </ng-container>
                 <ng-container *ngIf="fourthFormReady">
                     <div class="content step=4">
-                        <app-view-only-data-table [attributes]="dataExport.attributes"
-                                                  [items]="dataExport.items">
-                        </app-view-only-data-table>
+                        <ng-container *ngIf="dataExport.type === 'ITEM'">
+                            <app-view-only-data-table [attributes]="dataExport.attributes"
+                                                      [items]="dataExport.items">
+                            </app-view-only-data-table>
+                        </ng-container>
+                        <ng-container *ngIf="dataExport.type === 'ATTRIBUTE'">
+                            <app-view-only-attribute-table [attributes]="dataExport.attributes">
+                            </app-view-only-attribute-table>
+                        </ng-container>
+                        <ng-container *ngIf="dataExport.type === 'PRICE'">
+                            <app-view-only-price-table></app-view-only-price-table>
+                        </ng-container>
                     </div>
                 </ng-container>
                 <div class="controls">

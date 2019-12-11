@@ -1,0 +1,20 @@
+<div class="view-only-price-table-component">
+    <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="pricingStructureName">
+            <th mat-header-cell *matHeaderCellDef>Pricing Structure Name</th>
+            <td mat-cell *matCellDef="let priceDataImportItem"> {{priceDataImportItem.pricingStructureName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="itemName">
+            <th mat-header-cell *matHeaderCellDef>Item Name</th>
+            <td mat-cell *matCellDef="let priceDataImportItem">{{priceDataImportItem.item.itemName}}</td>
+        </ng-container>
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Price</th>
+            <td mat-cell *matCellDef="let priceDataImportItem">{{priceDataImportItem.item.price}}</td>
+        </ng-container>
+        <ng-container matColumnDef="country">
+            <th mat-header-cell *matHeaderCellDef>Country</th>
+            <td mat-cell *matCellDef="let priceDataImportItem">{{priceDataImportItem.item.country}}</td>
+        </ng-container>
+    </table>
+</div>

@@ -8,6 +8,7 @@ import {AngularFileUploaderModule} from 'angular-file-uploader';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {DataTableModule} from '../data-table-component/data-table.module';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {AttributeTableModule} from '../attribute-table-component/attribute-table.module';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
         DataTableModule,
         DataEditorModule,
         FlexLayoutModule,
+        AttributeTableModule,
     ],
     declarations: [
         ExportDataComponent

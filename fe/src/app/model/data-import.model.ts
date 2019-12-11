@@ -1,7 +1,7 @@
 import {Item} from './item.model';
 import {Attribute} from './attribute.model';
 import {Messages} from './notification-listing.model';
-import {PricingStructureItemWithPrice} from './pricing-structure.model';
+import {PriceDataItem } from './pricing-structure.model';
 
 export type DataImportType = 'ATTRIBUTE' | 'ITEM' | 'PRICE';
 
@@ -24,6 +24,6 @@ export interface PriceDataImport {
     type: 'PRICE';
     dataImportId?: number;
     messages: Messages;
-    items: PricingStructureItemWithPrice[];
+    items: PriceDataItem[];
 }
 

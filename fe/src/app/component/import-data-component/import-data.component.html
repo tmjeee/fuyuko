@@ -64,8 +64,8 @@
                         <app-view-only-attribute-table [attributes]="attributeDataImport.attributes"></app-view-only-attribute-table>
                     </ng-container>
                     <ng-container *ngIf="priceDataImport">
-
-
+                        <app-notification-message-listing [messages]="priceDataImport.messages"></app-notification-message-listing>
+                        <app-view-only-price-table [priceDataImportItems]="priceDataImport.items"></app-view-only-price-table>
                     </ng-container>
                 </div>
                 <div class="controls">

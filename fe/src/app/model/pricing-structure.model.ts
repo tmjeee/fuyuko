@@ -45,4 +45,9 @@ export interface TablePricingStructureItemWithPrice {
     rootParentId: number;
 }
 
+export interface PriceDataItem {
+    pricingStructureId: number;
+    pricingStructureName: string;
+    item: PricingStructureItemWithPrice;
+}
 

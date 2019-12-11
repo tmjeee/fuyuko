@@ -60,7 +60,7 @@ export class ExportDataComponent implements OnInit {
     // 4. review export
     fourthFormGroup: FormGroup;
     fourthFormReady: boolean;
-    dataExport: DataExport;
+    dataExport: AttributeDataExport | ItemDataExport | PriceDataExport;
 
 
     // 5: submit job
@@ -167,9 +167,8 @@ export class ExportDataComponent implements OnInit {
 
         // figure out item filters (from step 3)
         const f: ItemValueOperatorAndAttribute[] = this.itemValueOperatorAndAttributeList;
-
         this.previewExportFn(exportType, viewId, att, f).pipe(
-            tap((dataExport: DataExport) => {
+            tap((dataExport: AttributeDataExport | ItemDataExport | PriceDataExport) => {
                 this.dataExport = dataExport;
                 this.fourthFormReady = true;
             })
