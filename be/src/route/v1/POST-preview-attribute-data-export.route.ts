@@ -15,9 +15,8 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const attributes: Attribute[] = req.body.attributes;
-
         res.status(200).json({
-            attributes: []
+            attributes
         } as AttributeDataExport);
     }
 ];

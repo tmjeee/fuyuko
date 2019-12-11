@@ -4,6 +4,7 @@ import {body, param} from 'express-validator';
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {Attribute} from "../../model/attribute.model";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
+import {PriceDataExport} from "../../model/data-export.model";
 
 const httpAction: any[] = [
     [
@@ -17,6 +18,11 @@ const httpAction: any[] = [
 
         const attributes: Attribute[] = req.body.attributes;
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
+
+
+        res.status(200).json({
+
+        } as PriceDataExport);
     }
 ];
 
