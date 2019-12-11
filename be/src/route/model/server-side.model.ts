@@ -67,6 +67,18 @@ export interface Item2 {
     children: Item2[];
 }
 
+export interface PricedItem2 {
+    id: number;
+    name: string;
+    description: string;
+    images: ItemImage[];
+    parentId: number;
+    values: ItemValue2[];
+    children: PricedItem2[];
+    price: number;
+    country: string;
+}
+
 export interface ItemValue2 {
     id: number;
     attributeId: number;
@@ -145,8 +157,5 @@ export interface WhenClauseMetadataEntry2 {
 
 // =========== BulkEdit
 
-export interface BulkEdit2 {
-
-}
 
 

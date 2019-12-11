@@ -94,12 +94,40 @@ interface BulkEditItem2 {
     id: number;  // itemId
     name: string;
     description: string;
-    parentId: number;
     images: ItemImage[];
+    parentId: number;
     metadatas: ItemMetadata2[]
     children: BulkEditItem2[]
 }
 
+/////
+export interface Item2 {
+    id: number;
+    name: string;
+    description: string;
+    images: ItemImage[];
+    parentId: number;
+    values: ItemValue2[];
+    children: Item2[];
+}
+
+export interface ItemValue2 {
+    id: number;
+    attributeId: number;
+    metadatas: ItemMetadata2[];
+}
+
+export interface Item {
+    id: number;
+    name: string;
+    description: string;
+    images: ItemImage[];
+    parentId: number;
+    [attributeId: number]: Value;
+
+    children: Item[];
+}
+//////
 
 const httpAction: any[] = [
     [
@@ -120,7 +148,7 @@ const httpAction: any[] = [
         const whenClauses: ItemValueOperatorAndAttribute[] = req.body.whenClauses;
 
         const {b: matchedBulkEditItem2s, m: attributeMap } = await doInDbConnection(async (conn: PoolConnection) => {
-            return await getBulkEditItem2s(conn, viewId, null, changeClauses, whenClauses);
+            return await getBulkEditItem2s(conn, viewId, null, whenClauses);
         });
 
         const bulkEditItems: BulkEditItem[] = convertToBulkEditItems(matchedBulkEditItem2s, changeClauses,
@@ -148,7 +176,6 @@ const httpAction: any[] = [
 const getBulkEditItem2s = async (conn: PoolConnection,
                                  viewId: number,
                                  parentItemId: number,
-                                 changeClauses: ItemValueAndAttribute[] ,
                                  whenClauses: ItemValueOperatorAndAttribute[]):
     Promise<{b: BulkEditItem2[], m: Map<string /* attributeId */, Attribute>}> => {
 
@@ -197,7 +224,7 @@ const getBulkEditItem2s = async (conn: PoolConnection,
                 iMap.set(iMapKey, item);
                 bulkEditItem2s.push(item);
 
-                const { b /* BulkEditItem2[] */, } = await getBulkEditItem2s(conn, viewId, itemId, changeClauses, whenClauses);
+                const { b /* BulkEditItem2[] */, } = await getBulkEditItem2s(conn, viewId, itemId, whenClauses);
                 item.children = b;
             }
 

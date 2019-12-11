@@ -22,6 +22,19 @@ export interface Item {
   children: Item[];
 }
 
+export interface PricedItem {
+  id: number;
+  name: string;
+  description: string;
+  images: ItemImage[];
+  parentId: number;
+  [attributeId: number]: Value;
+  price: number;
+  country: string;
+
+  children: PricedItem[];
+}
+
 export interface ItemImage {
   id: number;
   name: string;
