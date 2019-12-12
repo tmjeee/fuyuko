@@ -5,7 +5,7 @@ import {param, body} from 'express-validator';
 
 import {Job} from "../../model/job.model";
 import {Attribute} from "../../model/attribute.model";
-import {runJob} from "../../service/job-do-attribute-data-import.service";
+import {runJob} from "../../service/import-csv/job-do-attribute-data-import.service";
 
 const httpAction: any[] = [
     [

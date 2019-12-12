@@ -1,8 +1,8 @@
-import {Job} from "../model/job.model";
-import {Attribute} from "../model/attribute.model";
-import {JobLogger, newJobLogger, newLoggingCallback} from "./job-log.service";
-import {saveAttributes} from "./attribute.service";
-import {getJobyById} from "./job.service";
+import {Job} from "../../model/job.model";
+import {Attribute} from "../../model/attribute.model";
+import {JobLogger, newJobLogger, newLoggingCallback} from "../job-log.service";
+import {saveAttributes} from "../attribute.service";
+import {getJobyById} from "../job.service";
 
 const uuid = require('uuid');
 

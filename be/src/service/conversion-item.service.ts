@@ -15,7 +15,10 @@ export const _convert = (item2: Item2 | PricedItem2): Item | PricedItem => {
         images: item2.images,
         description: item2.description,
         name: item2.name,
-        children: convert(item2.children)
+        children: convert(item2.children),
+        price: (item2 as PricedItem2).price ? (item2 as PricedItem2).price : undefined,
+        country: (item2 as PricedItem2).country ? (item2 as PricedItem2).country : undefined,
+
     } as Item | PricedItem;
 
     for (const value2 of item2.values) {
@@ -41,7 +44,9 @@ export const _revert = (item: Item | PricedItem): Item2 | PricedItem2 => {
         images: item.images,
         parentId: item.parentId,
         values: [],
-        children: revert(item.children)
+        children: revert(item.children),
+        price: (item as PricedItem).price ? (item as PricedItem).price : undefined,
+        country: (item as PricedItem).country ? (item as PricedItem).country : undefined
     } as Item2 | PricedItem2;
 
     for (const i in item) {

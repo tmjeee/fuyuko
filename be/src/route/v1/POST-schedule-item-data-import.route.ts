@@ -1,5 +1,5 @@
 import {Job} from "../../model/job.model";
-import {runJob} from "../../service/job-do-item-data-import.service";
+import {runJob} from "../../service/import-csv/job-do-item-data-import.service";
 import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 import {body, param} from 'express-validator';
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";

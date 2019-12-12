@@ -1,8 +1,8 @@
-import {Job} from "../model/job.model";
-import {JobLogger, newJobLogger, newLoggingCallback} from "./job-log.service";
-import {getJobyById} from "./job.service";
-import {PricingStructureItemWithPrice} from "../model/pricing-structure.model";
-import {setPrices} from "./pricing-structure-item.service";
+import {Job} from "../../model/job.model";
+import {JobLogger, newJobLogger, newLoggingCallback} from "../job-log.service";
+import {getJobyById} from "../job.service";
+import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
+import {setPrices} from "../pricing-structure-item.service";
 
 const uuid = require('uuid');
 

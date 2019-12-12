@@ -1,9 +1,6 @@
 
 
-import fs from 'fs';
 import parse, {Parser} from "csv-parse";
-import path from 'path';
-import util from 'util';
 
 export const readCsv = async <T>(b: Buffer): Promise<T[]> => {
     return new Promise((res, rej) => {
