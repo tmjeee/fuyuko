@@ -16,7 +16,7 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
     // todo:
-    
+
 
     await doInDbConnection(async (conn: PoolConnection) => {
 

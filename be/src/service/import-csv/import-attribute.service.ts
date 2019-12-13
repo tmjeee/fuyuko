@@ -1,17 +1,18 @@
 import {AttributeDataImport} from "../../model/data-import.model";
-import {readCsv} from './import-csv.service';
+import {readCsv, readPair1Csv, readPair2Csv} from './import-csv.service';
 import {CsvAttribute} from "../../route/model/server-side.model";
 import {Messages, Message} from "../../model/notification-listing.model";
 import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
 import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
+import parse from 'csv-parse';
 
-const toPair1 = (pair1: string): Pair1[] => {
-    return null;
+const toPair1 = async (pair1: string): Promise<Pair1[]> => {
+    return await readPair1Csv(pair1);
 }
 
-const toPair2 = (pair2: string): Pair2[] => {
-    return null;
+const toPair2 = async (pair2: string): Promise<Pair2[]> => {
+    return await readPair2Csv(pair2);
 }
 
 export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<AttributeDataImport> => {
@@ -21,16 +22,18 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
     const infos: Message[] = [];
     const warnings: Message[] = [];
 
-    const attributes: Attribute[] = csvAttributes.map((c: CsvAttribute) => ({
-        id: -1,
-        name: c.name,
-        description: c.description,
-        format: c.format,
-        showCurrencyCountry: !!c.showCurrencyCountry,
-        type: c.type,
-        pair1: toPair1(c.pair1),
-        pair2: toPair2(c.pair2)
-    } as Attribute));
+    const attributes: Attribute[] = await
+        Promise.all(
+            csvAttributes.map(async (c: CsvAttribute) => ({
+                id: -1,
+                name: c.name,
+                description: c.description,
+                format: c.format,
+                showCurrencyCountry: !!c.showCurrencyCountry,
+                type: c.type,
+                pair1: await toPair1(c.pair1),
+                pair2: await toPair2(c.pair2)
+            } as Attribute)));
 
     const result: Attribute[] = [];
 

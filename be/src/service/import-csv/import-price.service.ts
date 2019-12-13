@@ -6,7 +6,6 @@ import {PriceDataItem, PricingStructure, PricingStructureItemWithPrice} from "..
 import {getPricingStructureItem} from "../pricing-structure-item.service";
 import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
-import {Item} from "../../model/item.model";
 
 export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<PriceDataImport> => {
 
