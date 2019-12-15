@@ -3,10 +3,14 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
 import { Item } from '../../model/item.model';
+import {runJob} from "../../service/export-csv/job-do-item-data-export.service";
+import {Job} from "../../model/job.model";
+import {Attribute} from "../../model/attribute.model";
 
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
+        body('attributes').exists().isArray(),
         body('items').exists().isArray()
     ],
     validateJwtMiddlewareFn,
@@ -14,7 +18,11 @@ const httpAction: any[] = [
     async (req:Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
+        const attributes: Attribute[] = req.body.attributes;
         const item: Item[] = req.body.items;
+
+        const job: Job = await runJob(viewId, attributes, item);
+        res.status(200).json(job);
     }
 ];
 

@@ -114,7 +114,9 @@
                             </app-view-only-attribute-table>
                         </ng-container>
                         <ng-container *ngIf="dataExport.type === 'PRICE'">
-                            <app-view-only-price-table></app-view-only-price-table>
+                            <app-view-only-price-table [attributes]="dataExport.attributes"
+                                                       [pricedItems]="dataExport.pricedItems">
+                            </app-view-only-price-table>
                         </ng-container>
                     </div>
                 </ng-container>

@@ -11,42 +11,52 @@ import * as fs from "fs";
 import fileType from "file-type";
 import {ItemDataImport} from "../../model/data-import.model";
 import {preview} from "../../service/import-csv/import-item.service";
+import {makeApiError, makeApiErrorObj} from "../../util";
 
 const uuid = require('uuid');
+const detectCsv = require('detect-csv');
 
 
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
-        body('itemDataCsvFile').exists()
+        // body('itemDataCsvFile').exists()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
-        const name: string = `price-data-import-${uuid()}`;
+        const name: string = `item-data-import-${uuid()}`;
+        const {fields, files} = await multipartParse(req);
 
-        const {content, dataImportId}: {content: Buffer, dataImportId: number} = await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: PoolConnection) => {
 
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_IMPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'ITEM')`, [viewId, name]);
             const dataImportId: number = q.insertId;
-
-            const {fields, files} = await multipartParse(req);
 
             const itemDataCsvFile: File = files.itemDataCsvFile;
 
             const content: Buffer  = await util.promisify(fs.readFile)(itemDataCsvFile.path);
 
-            const fileTypeResult: fileType.FileTypeResult = fileType(content);
+            let mimeType = undefined;
+            if (detectCsv(content)) {
+                mimeType = 'text/csv';
+            } else {
+                res.status(200).json(
+                    makeApiErrorObj(
+                        makeApiError(`Only support csv import`, `attributeDataCsvFile`, ``, `API`)
+                    )
+                );
+                return;
+            }
 
             await conn.query(`INSERT INTO TBL_DATA_IMPORT_FILE (DATA_IMPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)`,
-                [dataImportId, itemDataCsvFile.name, fileTypeResult.mime, content.length, content]);
+                [dataImportId, itemDataCsvFile.name, mimeType, content.length, content]);
 
-            return {content, dataImportId};
+            const itemDataImport: ItemDataImport = await preview(viewId, dataImportId, content);
+            res.status(200).json(itemDataImport);
         });
 
-        const itemDataImport: ItemDataImport = await preview(viewId, dataImportId, content);
-        res.status(200).json(itemDataImport);
     }
 ];
 

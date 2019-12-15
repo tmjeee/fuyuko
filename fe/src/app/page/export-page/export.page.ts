@@ -9,7 +9,7 @@ import {
 } from '../../component/export-data-component/export-data.component';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
-import {DataExportType} from '../../model/data-export.model';
+import {AttributeDataExport, DataExportType, ItemDataExport, PriceDataExport} from '../../model/data-export.model';
 
 @Component({
     templateUrl: './export.page.html',
@@ -42,8 +42,9 @@ export class ExportPageComponent implements OnInit {
         };
 
         this.submitExportJobFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
+                                  dataExport: AttributeDataExport | ItemDataExport | PriceDataExport,
                                   filter: ItemValueOperatorAndAttribute[]) => {
-            return this.exportDataService.submitExportJobFn(exportType, viewId, attributes, filter);
+            return this.exportDataService.submitExportJobFn(exportType, viewId, attributes, dataExport, filter);
         };
     }
 

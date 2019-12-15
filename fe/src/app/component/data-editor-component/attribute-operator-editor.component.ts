@@ -2,22 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
-import {
-    AREA_OPERATOR_TYPES,
-    CURRENCY_OPERATOR_TYPES,
-    DATE_OPERATOR_TYPES,
-    DIMENSION_OPERATOR_TYPES,
-    DOUBLE_SELECT_OPERATOR_TYPES,
-    HEIGHT_OPERATOR_TYPES,
-    LENGTH_OPERATOR_TYPES,
-    NUMBER_OPERATOR_TYPES, OPERATORS_WITHOUT_CONFIGURATBLE_VALUES,
-    OperatorType,
-    SELECT_OPERATOR_TYPES,
-    STRING_OPERATOR_TYPES,
-    TEXT_OPERATOR_TYPES,
-    VOLUME_OPERATOR_TYPES,
-    WIDTH_OPERATOR_TYPES
-} from '../../model/operator.model';
+import { OperatorType } from '../../model/operator.model';
 import {
     AreaValue,
     CURRENCY_FORMAT,
@@ -27,7 +12,7 @@ import {
     VolumeValue,
     WidthValue
 } from '../../model/item.model';
-import {convertToString} from '../../utils/ui-item-value-converters.util';
+import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
 import {MatDatepickerInputEvent, MatSelectChange} from '@angular/material';
 import {
     setItemAreaValue,

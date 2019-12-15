@@ -1,54 +1,65 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {param, body} from 'express-validator';
+import {param, body, check, Meta} from 'express-validator';
 import {doInDbConnection, QueryResponse} from "../../db";
 import {PoolConnection} from "mariadb";
 import {multipartParse} from "../../service";
-import {File} from 'formidable';
+import {File, IncomingForm} from 'formidable';
 import * as util from "util";
 import * as fs from "fs";
 
 
 const uuid = require('uuid');
-import fileType from 'file-type';
 import {preview} from "../../service/import-csv/import-attribute.service";
 import {AttributeDataImport} from "../../model/data-import.model";
+import {makeApiError, makeApiErrorObj} from "../../util";
 
+const detectCsv = require('detect-csv');
 
 
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
-        body('attributeDataCsvFile').exists()
+        // body('attributeDataCsvFile').exists()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const name: string = `attribute-data-import-${uuid()}`;
+        const {fields, files} = await multipartParse(req);
 
-        const {content, dataImportId}: {content: Buffer, dataImportId: number} = await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: PoolConnection) => {
 
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_IMPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'ATTRIBUTE')`, [viewId, name]);
             const dataImportId: number = q.insertId;
-
-            const {fields, files} = await multipartParse(req);
 
             const attributeDataCsvFile: File = files.attributeDataCsvFile;
 
             const content: Buffer  = await util.promisify(fs.readFile)(attributeDataCsvFile.path);
 
-            const fileTypeResult: fileType.FileTypeResult = fileType(content);
+            let mimeType = undefined;
+            if (detectCsv(content)) {
+                mimeType = 'text/csv';
+            } else {
+                res.status(200).json(
+                    makeApiErrorObj(
+                        makeApiError(`Only support csv import`, `attributeDataCsvFile`, ``, `API`)
+                    )
+                );
+                return;
+            }
+
 
             await conn.query(`INSERT INTO TBL_DATA_IMPORT_FILE (DATA_IMPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)`,
-                [dataImportId, attributeDataCsvFile.name, fileTypeResult.mime, content.length, content]);
+                [dataImportId, attributeDataCsvFile.name, mimeType, content.length, content]);
 
-            return {content, dataImportId};
+            const attributeDataImport: AttributeDataImport = await preview(viewId, dataImportId, content);
+
+            res.status(200).json(attributeDataImport);
         });
 
-        const attributeDataImport: AttributeDataImport = await preview(viewId, dataImportId, content);
-        res.status(200).json(attributeDataImport);
     }
 ];
 

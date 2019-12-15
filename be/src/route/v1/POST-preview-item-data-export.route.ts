@@ -11,6 +11,7 @@ import {getItem2WithFiltering} from "../../service/item-filtering.service";
 import { Item2 } from "../model/server-side.model";
 import {convert} from "../../service/conversion-item.service";
 import {Item} from "../../model/item.model";
+import {preview, PreviewResult} from "../../service/export-csv/export-item.service";
 
 const httpAction: any[] = [
     [
@@ -26,16 +27,12 @@ const httpAction: any[] = [
         const attributes: Attribute[] = req.body.attributes;
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
 
-        const {b: item2s, m: attributesMap}: {b: Item2[], m: Map<string /* attributeId */, Attribute> } = await doInDbConnection(async (conn: PoolConnection) => {
-            return await getItem2WithFiltering(conn, viewId, null, filter);
-        });
-
-        const items: Item[] = convert(item2s);
+        const previewResult: PreviewResult = await preview(viewId, filter);
 
         res.status(200).json({
             type: 'ITEM',
-            attributes: [...attributesMap.values()],
-            items
+            attributes: [...previewResult.m.values()],
+            items: previewResult.i
         } as ItemDataExport);
     }
 ];

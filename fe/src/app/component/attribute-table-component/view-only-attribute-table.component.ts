@@ -38,7 +38,7 @@ export class ViewOnlyAttributeTableComponent implements OnInit {
 
     @Input() attributes: Attribute[];
 
-    constructor(props) {
+    constructor() {
         this.dataSource = new InternalDataSource();
     }
 

@@ -10,8 +10,8 @@ import {
   VolumeValue, WIDTH_FORMAT, WidthValue
 } from '../model/item.model';
 import {Attribute, ATTRIBUTE_TYPES, Pair1, Pair2} from '../model/attribute.model';
-import * as moment from 'moment';
-import * as numeral from 'numeral';
+import moment from 'moment';
+import numeral from 'numeral';
 
 
 interface ItemValueConverters {

@@ -3,6 +3,33 @@
 import parse, {Parser} from "csv-parse";
 import {Pair1, Pair2} from "../../model/attribute.model";
 
+export const readKeyPairs = async (b: string): Promise<string[]> => {
+    return new Promise((res, rej) => {
+        const r = [];
+        const parser: Parser = parse({
+            delimiter: '=',
+            skip_empty_lines: true,
+            relax_column_count: true,
+            columns: false
+        });
+        parser.on("readable", () => {
+            let l;
+            while(l = parser.read()) {
+                // l =  [ 'key1', 'value1' ] or ['key1', 'xkey1', 'xval1']
+                r.push(...l);
+            }
+        });
+        parser.on("end", () => {
+            res(null);
+        });
+        parser.on('error', (err) => {
+            rej(err);
+        });
+        parser.write(b);
+        parser.end();
+    });
+}
+
 
 export const readPair1Csv = async (b: string): Promise<Pair1[]> => {
     return new Promise((res, rej) => {
@@ -13,11 +40,20 @@ export const readPair1Csv = async (b: string): Promise<Pair1[]> => {
             relax_column_count: true,
             columns: false
         });
-        parser.on("readable", () => {
+        parser.on("readable", async () => {
             let l;
             while(l = parser.read()) {
                 // l =  [ 'key1=value1', 'key2=value2', 'key3=value3' ]
-                console.log('***', l);
+                for (const _l of l) {
+                    const p: string[] = await readKeyPairs(_l);
+                    if (p && p.length == 2) {
+                        pairs.push({
+                            id: -1,
+                            key: p[0],
+                            value: p[1]
+                        } as Pair1);
+                    }
+                }
             }
         });
         parser.on("end", () => {
@@ -27,15 +63,48 @@ export const readPair1Csv = async (b: string): Promise<Pair1[]> => {
             rej(err);
         });
 
-        console.log('****');
-
         parser.write(b);
         parser.end();
     });
 }
 
-export const readPair2Csv = async (b: string): Promise<Pair2[]> => {
-    return null;
+export const readPair2Csv = async (bb: string): Promise<Pair2[]> => {
+    let b = bb ? bb : '';
+    return new Promise((res, rej) => {
+        const pairs: Pair2[] = [];
+        const parser: Parser = parse({
+            delimiter: '|',
+            skip_empty_lines: true,
+            relax_column_count: true,
+            columns: false
+        });
+        parser.on("readable", async () => {
+            let l;
+            while(l = parser.read()) {
+                // l =  [ 'key1=xkey1=value1', 'key1=xkey2=value2', 'key1=xkey3=value3' ]
+                for (const _l of l) {
+                    const p: string[] = await readKeyPairs(_l);
+                    if (p && p.length == 3) {
+                        pairs.push({
+                            id: -1,
+                            key1: p[0],
+                            key2: p[1],
+                            value: p[2]
+                        } as Pair2);
+                    }
+                }
+            }
+        });
+        parser.on("end", () => {
+            res(null);
+        });
+        parser.on('error', (err) => {
+            rej(err);
+        });
+
+        parser.write(b);
+        parser.end();
+    });
 }
 
 export const readCsv = async <T>(b: Buffer): Promise<T[]> => {
@@ -68,12 +137,4 @@ export const readCsv = async <T>(b: Buffer): Promise<T[]> => {
     });
 }
 
-/*
-(async()=>{
-    const f = `${__dirname}${path.sep}attributes.csv`;
-    const buffer: Buffer = await util.promisify(fs.readFile)(f);
-    const r = await readCsv(buffer);
-    console.log(r);
-})();
- */
 

@@ -4,15 +4,17 @@ import { DataSource } from '@angular/cdk/table';
 import { CollectionViewer } from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {PriceDataItem} from '../../model/pricing-structure.model';
+import {Attribute} from '../../model/attribute.model';
+import {Item, PricedItem} from '../../model/item.model';
 
 
-export class InternalDataSource extends DataSource<PriceDataItem> {
+export class InternalDataSource extends DataSource<PricedItem> {
 
-   subject: BehaviorSubject<PriceDataItem[]>;
+   subject: BehaviorSubject<PricedItem[]>;
 
-   connect(collectionViewer: CollectionViewer): Observable<PriceDataItem[] | ReadonlyArray<PriceDataItem>> {
+   connect(collectionViewer: CollectionViewer): Observable<PricedItem[] | ReadonlyArray<PricedItem>> {
       if (!!this.subject) {
-           this.subject = new BehaviorSubject<PriceDataItem[]>([]);
+           this.subject = new BehaviorSubject<PricedItem[]>([]);
       }
       return this.subject.asObservable();
    }
@@ -24,8 +26,8 @@ export class InternalDataSource extends DataSource<PriceDataItem> {
       this.subject = null;
    }
 
-   update(priceDataImportItems: PriceDataItem[]) {
-      this.subject.next(priceDataImportItems);
+   update(pricedItems: PricedItem[]) {
+      this.subject.next(pricedItems);
    }
 }
 
@@ -36,14 +38,16 @@ export class InternalDataSource extends DataSource<PriceDataItem> {
 })
 export class ViewOnlyPriceTableComponent implements OnInit {
 
+   @Input() attributes: Attribute[];
+   @Input() pricedItems: PricedItem[];
+
    dataSource: InternalDataSource;
-   @Input() priceDataImportItems: PriceDataItem[];
 
    constructor() {
       this.dataSource = new InternalDataSource();
    }
 
    ngOnInit(): void {
-       this.dataSource.update(this.priceDataImportItems);
+       this.dataSource.update(this.pricedItems);
    }
 }

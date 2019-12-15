@@ -16,15 +16,17 @@ import {
     PriceDataExport
 } from '../../model/data-export.model';
 import {MatCheckboxChange} from '@angular/material/checkbox';
-import {convertToString} from '../../utils/ui-item-value-converters.util';
+import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
 import {MatSelectChange} from '@angular/material/select';
 
 export type ViewAttributeFn = (viewId: number) => Observable<Attribute[]>;
-export type SubmitExportJobFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
-                                 filter: ItemValueOperatorAndAttribute[]) => Observable<Job>;
 export type PreviewExportFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
                                filter: ItemValueOperatorAndAttribute[])
     => Observable<AttributeDataExport | ItemDataExport | PriceDataExport>;
+export type SubmitExportJobFn = (exportType: DataExportType, viewId: number,
+                                 attributes: Attribute[],
+                                 dataExport: AttributeDataExport | ItemDataExport | PriceDataExport,
+                                 filter: ItemValueOperatorAndAttribute[]) => Observable<Job>;
 
 @Component({
    selector: 'app-export-data',
@@ -199,7 +201,7 @@ export class ExportDataComponent implements OnInit {
 
 
         this.jobSubmitted = false;
-        this.submitExportJobFn(exportType, viewId, att, f).pipe(
+        this.submitExportJobFn(exportType, viewId, att, this.dataExport, f).pipe(
             tap((j: Job) => {
                 this.job = j;
                 this.jobSubmitted = true;

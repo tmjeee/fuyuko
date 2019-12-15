@@ -1,7 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableItem, ItemValTypes, StringValue, TextValue, Value} from '../../model/item.model';
-import {Attribute, AttributeType} from '../../model/attribute.model';
-import {convertToString, isItemValue, isItemValueType} from '../../utils/ui-item-value-converters.util';
+import {ItemValTypes, Value} from '../../model/item.model';
+import {Attribute } from '../../model/attribute.model';
+import {convertToString } from '../../shared-utils/ui-item-value-converters.util';
 
 
 /**

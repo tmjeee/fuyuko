@@ -64,7 +64,7 @@ import registerPostPreviewItemDataImportRoute from './POST-preview-item-data-imp
 import registerPostPreviewPriceDataImportRoute from './POST-preview-price-data-import.route';
 import registerPostScheduleItemDataImportRoute from './POST-schedule-item-data-import.route';
 import registerPostSchedulePriceDataImportRoute from './POST-schedule-pricing-data-import.route';
-import registerPostPreviewAttributeDataExportRoute from './POST-preview-item-data-export.route';
+import registerPostPreviewAttributeDataExportRoute from './POST-preview-attribute-data-export.route';
 import registerPostPreviewItemDataExportRoute from './POST-preview-item-data-export.route';
 import registerPostPreviewPriceDataExportRoute from './POST-preview-price-data-export.route';
 

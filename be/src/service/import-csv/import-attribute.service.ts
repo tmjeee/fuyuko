@@ -39,10 +39,11 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
 
     for(const attribute of attributes) {
         const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
-            await conn.query(`
-                SELECT COUNT(*) AS COUNT FROM TBL_VIEW_ATTRIBUTE WHERE NAME=?
-            `, [attribute.name]);
+            return await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_VIEW_ATTRIBUTE WHERE NAME=? AND VIEW_ID=?
+            `, [attribute.name, viewId]);
         });
+        console.log('******* q ', q, attribute.name);
         if (q[0].COUNT > 0) {
             errors.push({
                title: `Attribute already exists`,

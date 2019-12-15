@@ -11,6 +11,7 @@ import config from './config';
 import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from "./route/v1/common-middleware";
 import v1 = require("uuid/v1");
 import {Registry} from "./registry";
+import formidableMiddleware from 'express-formidable';
 
 runBanner();
 
@@ -18,6 +19,7 @@ const port: number = Number(config.port);
 const app: Express = express();
 
 app.use(timingLogMiddlewareFn);
+// app.use(formidableMiddleware());
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(cookieParser());

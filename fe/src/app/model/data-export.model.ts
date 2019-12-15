@@ -24,5 +24,5 @@ export interface ItemDataExport {
 export interface PriceDataExport {
     type: 'PRICE';
     attributes: Attribute[];
-    items: PricedItem[];
+    pricedItems: PricedItem[];
 }

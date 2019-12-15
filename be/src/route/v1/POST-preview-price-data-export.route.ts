@@ -5,12 +5,8 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {Attribute} from "../../model/attribute.model";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 import {PriceDataExport} from "../../model/data-export.model";
-import {PricedItem2} from "../model/server-side.model";
-import {doInDbConnection} from "../../db";
-import {PoolConnection} from "mariadb";
-import {PricedItem} from "../../model/item.model";
-import {convert} from "../../service/conversion-item.service";
-import {getPricedItem2WithFiltering} from "../../service/priced-item-filtering.service";
+import {preview, PreviewResult} from "../../service/export-csv/export-price.service";
+const detectCsv = require('detect-csv');
 
 const httpAction: any[] = [
     [
@@ -28,16 +24,13 @@ const httpAction: any[] = [
         const attributes: Attribute[] = req.body.attributes;
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
 
-        const {b: item2s, m: attributesMap}: {b: PricedItem2[], m: Map<string /* attributeId */, Attribute> } = await doInDbConnection(async (conn: PoolConnection) => {
-            return await getPricedItem2WithFiltering(conn, viewId, pricingStructureId, null, filter);
-        });
 
-        const items: PricedItem[] = convert(item2s) as PricedItem[];
+        const p: PreviewResult = await preview(viewId, pricingStructureId, filter);
 
         res.status(200).json({
             type: "PRICE",
-            attributes: [...attributesMap.values()],
-            items,
+            attributes: [...p.m.values()],
+            pricedItems: p.i,
         } as PriceDataExport);
     }
 ];

@@ -565,6 +565,8 @@ const TBL_DATA_EXPORT = async () => {
          CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             VIEW_ID INT,
+            NAME VARCHAR(200),
+            TYPE VARCHAR(200),
             CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP
          );
       `);

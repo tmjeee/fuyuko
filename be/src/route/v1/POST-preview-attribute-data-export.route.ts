@@ -5,6 +5,7 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {Attribute} from "../../model/attribute.model";
 import {AttributeDataExport} from "../../model/data-export.model";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
+import {preview} from "../../service/export-csv/export-attribute.service";
 
 const httpAction: any[] = [
     [
@@ -15,6 +16,7 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const attributes: Attribute[] = req.body.attributes;
+        const _attributs: Attribute[] = preview(attributes);
         res.status(200).json({
             attributes
         } as AttributeDataExport);

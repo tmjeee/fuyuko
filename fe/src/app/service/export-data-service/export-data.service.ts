@@ -66,6 +66,7 @@ export class ExportDataService {
     }
 
     submitExportJobFn(exportType: DataExportType, viewId: number, attributes: Attribute[],
+                      dataExport: AttributeDataExport | ItemDataExport | PriceDataExport,
                       filter: ItemValueOperatorAndAttribute[]): Observable<Job> {
         return of({
             id: 900,

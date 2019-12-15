@@ -92,12 +92,14 @@ const SQL: string = `
 const SQL_WITH_NULL_PARENT = `${SQL} AND I.PARENT_ID IS NULL`;
 const SQL_WITH_PARAMETERIZED_PARENT = `${SQL} AND I.PARENT_ID = ? `;
 
+export type PricedItem2WithFilteringResult = {b: PricedItem2[], m: Map<string /* attributeId */, Attribute>};
+
 export const getPricedItem2WithFiltering = async (conn: PoolConnection,
                                             viewId: number,
                                             pricingStructureId: number,
                                             parentItemId: number,
                                             whenClauses: ItemValueOperatorAndAttribute[]):
-    Promise<{b: PricedItem2[], m: Map<string /* attributeId */, Attribute>}> => {
+    Promise<PricedItem2WithFilteringResult> => {
 
     const q: QueryA = !!parentItemId ?
         await conn.query( SQL_WITH_PARAMETERIZED_PARENT, [pricingStructureId, viewId, parentItemId]) :

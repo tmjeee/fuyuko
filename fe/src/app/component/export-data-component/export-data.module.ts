@@ -9,6 +9,7 @@ import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {DataTableModule} from '../data-table-component/data-table.module';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {AttributeTableModule} from '../attribute-table-component/attribute-table.module';
+import {PricingModule} from "../pricing-component/pricing.module";
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import {AttributeTableModule} from '../attribute-table-component/attribute-table
         DataEditorModule,
         FlexLayoutModule,
         AttributeTableModule,
+        PricingModule,
     ],
     declarations: [
         ExportDataComponent

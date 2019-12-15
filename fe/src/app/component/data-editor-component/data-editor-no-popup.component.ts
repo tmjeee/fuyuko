@@ -21,7 +21,7 @@ import {
     VolumeUnits,
     WidthUnits
 } from '../../model/unit.model';
-import {convertToString} from '../../utils/ui-item-value-converters.util';
+import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
 import {
     setItemAreaValue,
     setItemCurrencyValue,
