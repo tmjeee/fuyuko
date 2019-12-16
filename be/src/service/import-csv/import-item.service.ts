@@ -1,9 +1,12 @@
 import {ItemDataImport} from "../../model/data-import.model";
-import {CsvItem} from "../../route/model/server-side.model";
+import {Attribute2, CsvItem} from "../../route/model/server-side.model";
 import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
 import {Item} from "../../model/item.model";
 import {Attribute} from "../../model/attribute.model";
+import {getAttributesInView} from "../attribute.service";
+import { convert } from "../conversion-attribute.service";
+import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
 
 export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<ItemDataImport> => {
 
@@ -14,11 +17,20 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
     const infos: Message[] = [];
     const warnings: Message[] = [];
 
-    const attributes: Attribute[] = [];
-    const items: Item[] = [];
-
     const itemsMap: Map<string /* itemName */, Item> = new Map();
     const itemsChildrenMap: Map<string /* itemName */, Item[]> = new Map();
+
+
+
+    const att2s: Attribute2[] = await getAttributesInView(viewId);
+    const attributes: Attribute[] = convert(att2s);
+
+    const [attributeByIdMap, attributeByNameMap] = attributes.reduce((acc: [Map<number, Attribute>, Map<string, Attribute>], a: Attribute) => {
+        acc[0].set(a.id, a);
+        acc[1].set(a.name, a);
+        return acc;
+    }, [new Map(), new Map()]);
+
 
     for (const csvItem of csvItems) {
         const itemsMapKey: string = `${csvItem.name}`;
@@ -47,16 +59,41 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                     const v: string = kv[1];
 
                     switch(k) {
-                        case 'attrId':
-
+                        case 'attrId': {
+                            const attId: number = Number(v);
+                            const att: Attribute = attributeByIdMap.get(attId);
+                            if (att) {
+                                i[attId] = createNewItemValue(att, true);
+                            } else {
+                                errors.push({
+                                   title: `Attribute not found`,
+                                   messsage: `Attribute with id ${attId} not found in view ${viewId}`
+                                } as Message);
+                            }
                             break;
-                        case 'attrName':
-
+                        }
+                        case 'attrName': {
+                            const attName: string = String(v);
+                            const att: Attribute = attributeByNameMap.get(attName);
+                            if (att) {
+                                const attId: number = att.id;
+                                i[attId] = createNewItemValue(att, true);
+                            } else {
+                                errors.push({
+                                    title: `Attribute not found`,
+                                    messsage: `Attribute with name ${attName} not found in view ${viewId}`
+                                } as Message);
+                            }
                             break;
+                        }
                     }
+                } else {
+                    errors.push({
+                       title: `Error`,
+                       messsage: ` unable to parse key value pair ${pname}`
+                    } as Message);
                 }
             }
-
         }
     }
 

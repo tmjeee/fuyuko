@@ -1,6 +1,6 @@
 import {Item, TableItem, Value} from '../model/item.model';
 import {Attribute} from '../model/attribute.model';
-import {setItemValue} from './ui-item-value-setter.util';
+import {setItemValue} from '../utils/ui-item-value-setter.util';
 import {ItemValueOperatorAndAttributeWithId} from '../component/rules-component/rule-editor-dialog.component';
 
 export function createNewItem(id: number, attributes: Attribute[], parentId?: number): Item {
