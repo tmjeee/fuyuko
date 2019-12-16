@@ -45,7 +45,9 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
            parentId: parentItem ? parentItem.id : null,
            children
         } as Item;
-        itemsChildrenMap.set(itemsMapKey, children);
+        if (itemsMapKey) {
+            itemsChildrenMap.set(itemsMapKey, children);
+        }
         itemsMap.set(itemsMapKey, i);
         if (itemsParentMapKey && itemsChildrenMap.has(itemsParentMapKey)) {
             itemsChildrenMap.get(itemsParentMapKey).push(i);

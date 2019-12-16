@@ -12,6 +12,7 @@ import fileType from "file-type";
 import {ItemDataImport} from "../../model/data-import.model";
 import {preview} from "../../service/import-csv/import-item.service";
 import {makeApiError, makeApiErrorObj} from "../../util";
+import jsonStringifySafe from 'json-stringify-safe';
 
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
@@ -54,7 +55,8 @@ const httpAction: any[] = [
                 [dataImportId, itemDataCsvFile.name, mimeType, content.length, content]);
 
             const itemDataImport: ItemDataImport = await preview(viewId, dataImportId, content);
-            res.status(200).json(itemDataImport);
+            console.log('****** itemDataImport', jsonStringifySafe(itemDataImport));
+            res.status(200).json(jsonStringifySafe(itemDataImport));
         });
 
     }
