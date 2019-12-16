@@ -18,7 +18,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
     const items: Item[] = [];
 
     const itemsMap: Map<string /* itemName */, Item> = new Map();
-    const itemsParentMap: Map<string /* itemName */, Item[]> = new Map();
+    const itemsChildrenMap: Map<string /* itemName */, Item[]> = new Map();
 
     for (const csvItem of csvItems) {
         const itemsMapKey: string = `${csvItem.name}`;
@@ -33,11 +33,30 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
            parentId: parentItem ? parentItem.id : null,
            children
         } as Item;
-        itemsParentMap.set(itemsMapKey, children);
+        itemsChildrenMap.set(itemsMapKey, children);
         itemsMap.set(itemsMapKey, i);
+        if (itemsParentMapKey && itemsChildrenMap.has(itemsParentMapKey)) {
+            itemsChildrenMap.get(itemsParentMapKey).push(i);
+        }
 
-        if (itemsParentMapKey && itemsParentMap.has(itemsParentMapKey)) {
-            itemsParentMap.get(itemsParentMapKey).push(i);
+        for (const pname of Object.keys(csvItem)) {
+            if (!['parentName', 'name', 'description'].includes(pname)) {
+                const kv: string[] = pname.split('=');
+                if (kv && kv.length == 2) {
+                    const k: string = kv[0];
+                    const v: string = kv[1];
+
+                    switch(k) {
+                        case 'attrId':
+
+                            break;
+                        case 'attrName':
+
+                            break;
+                    }
+                }
+            }
+
         }
     }
 
@@ -45,7 +64,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
         type: "ITEM",
         dataImportId,
         attributes,
-        items,
+        items: [...itemsMap.values()],
         messages: {
             errors,
             infos,
