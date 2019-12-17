@@ -82,6 +82,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
 
 
         let itemId: number = null;
+        let itemViewId: number = null;
         if (itemFormat) {
             const token: string[] = itemFormat.split('=');
             if (token.length == 2) {
@@ -90,19 +91,21 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                 switch(identifier) {
                     case 'id': {// item id
                         const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
-                            return await conn.query(`SELECT ID FROM TBL_ITEM WHERE ID=? AND VIEW_ID=?`, [Number(val), viewId]);
+                            return await conn.query(`SELECT ID, VIEW_ID FROM TBL_ITEM WHERE ID=? AND VIEW_ID=?`, [Number(val), viewId]);
                         });
                         if (q && q.length > 0) {
                             itemId = q[0].ID;
+                            itemViewId = q[0].VIEW_ID;
                         }
                         break;
                     }
                     case 'name': { // item name
                         const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
-                            return await conn.query(`SELECT ID FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=?`, [val, viewId]);
+                            return await conn.query(`SELECT ID, VIEW_ID FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=?`, [val, viewId]);
                         });
                         if (q && q.length > 0) {
                             itemId = q[0].ID;
+                            itemViewId = q[0].VIEW_ID;
                         }
                         break;
                     }
@@ -114,6 +117,14 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
             errors.push({
                 title: `Unfound Item`,
                 messsage: `Unable to find Item for item format ${itemFormat} in view ${viewId}`
+            } as Message);
+            return null;
+        }
+
+        if (itemViewId !== viewId) {
+            errors.push({
+               title: `Item do not belong to view`,
+               messsage: `Item id ${itemId} do not belong to view id ${viewId}, price info cannot be imported`
             } as Message);
             return null;
         }

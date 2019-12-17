@@ -18,7 +18,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
     const warnings: Message[] = [];
 
     const itemsMap: Map<string /* itemName */, Item> = new Map();
-    const itemsChildrenMap: Map<string /* itemName */, Item[]> = new Map();
+    // const itemsChildrenMap: Map<string /* itemName */, Item[]> = new Map();
 
 
 
@@ -32,7 +32,9 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
     }, [new Map(), new Map()]);
 
 
+    let csvItemLineNumber = 1; // exclude header
     for (const csvItem of csvItems) {
+        csvItemLineNumber++;
         const itemsMapKey: string = `${csvItem.name}`;
         const itemsParentMapKey: string = csvItem.parentName ? `${csvItem.parentName}` : undefined;
         const parentItem: Item = itemsMap.get(itemsParentMapKey);
@@ -45,12 +47,11 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
            parentId: parentItem ? parentItem.id : null,
            children
         } as Item;
-        if (itemsMapKey) {
-            itemsChildrenMap.set(itemsMapKey, children);
+        if (!!!csvItem.parentName) {
+            itemsMap.set(itemsMapKey, i);
         }
-        itemsMap.set(itemsMapKey, i);
-        if (itemsParentMapKey && itemsChildrenMap.has(itemsParentMapKey)) {
-            itemsChildrenMap.get(itemsParentMapKey).push(i);
+        if (itemsParentMapKey && itemsMap.has(itemsParentMapKey)) {
+            itemsMap.get(itemsParentMapKey).children.push(i);
         }
 
         for (const pname of Object.keys(csvItem)) {
@@ -60,19 +61,16 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                     const k: string = kv[0];
                     const v: string = kv[1];
 
-                    console.log('**** kv', k, v);
-
                     switch(k) {
                         case 'attId': {
                             const attId: number = Number(v);
                             const att: Attribute = attributeByIdMap.get(attId);
-                            console.log('(byId) att', !!att, att);
                             if (att) {
                                 i[attId] = createNewItemValue(att, true);
                             } else {
                                 errors.push({
                                    title: `Attribute not found`,
-                                   messsage: `Attribute with id ${attId} not found in view ${viewId}`
+                                   messsage: `Line ${csvItemLineNumber}: Attribute with id ${attId} not found in view ${viewId}`
                                 } as Message);
                             }
                             break;
@@ -80,14 +78,13 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                         case 'attName': {
                             const attName: string = String(v);
                             const att: Attribute = attributeByNameMap.get(attName);
-                            console.log('(byName) att', !!att, att);
                             if (att) {
                                 const attId: number = att.id;
                                 i[attId] = createNewItemValue(att, true);
                             } else {
                                 errors.push({
                                     title: `Attribute not found`,
-                                    messsage: `Attribute with name ${attName} not found in view ${viewId}`
+                                    messsage: `Line ${csvItemLineNumber}: Attribute with name ${attName} not found in view ${viewId}`
                                 } as Message);
                             }
                             break;
@@ -96,7 +93,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                 } else {
                     errors.push({
                        title: `Error`,
-                       messsage: ` unable to parse key value pair ${pname}`
+                       messsage: `Line ${csvItemLineNumber}: unable to parse key value pair ${pname}`
                     } as Message);
                 }
             }

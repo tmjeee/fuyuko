@@ -55,8 +55,6 @@ const httpAction: any[] = [
                 [dataImportId, itemDataCsvFile.name, mimeType, content.length, content]);
 
             const itemDataImport: ItemDataImport = await preview(viewId, dataImportId, content);
-            console.log('****** itemDataImport', jsonStringifySafe(itemDataImport));
-            // res.status(200).json(jsonStringifySafe(itemDataImport));
             res.status(200).json(itemDataImport);
         });
 
