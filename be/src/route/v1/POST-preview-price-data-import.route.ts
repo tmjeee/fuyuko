@@ -33,7 +33,6 @@ const httpAction: any[] = [
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_IMPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'PRICE')`, [viewId, name]);
             const dataImportId: number = q.insertId;
 
-
             const priceDataCsvFile: File = files.priceDataCsvFile;
 
             const content: Buffer  = await util.promisify(fs.readFile)(priceDataCsvFile.path);
@@ -56,7 +55,6 @@ const httpAction: any[] = [
             const priceDataImport: PriceDataImport = await preview(viewId, dataImportId, content);
             res.status(200).json(priceDataImport);
         });
-
     }
 ];
 

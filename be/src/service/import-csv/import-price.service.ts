@@ -3,9 +3,10 @@ import {CsvPrice} from "../../route/model/server-side.model";
 import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
 import {PriceDataItem, PricingStructure, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
-import {getPricingStructureItem} from "../pricing-structure-item.service";
+import {addItemToPricingStructure, getPricingStructureItem} from "../pricing-structure-item.service";
 import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
+import * as util from 'util';
 
 export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<PriceDataImport> => {
 
@@ -16,11 +17,15 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
 
     const items: PriceDataItem[] = (await Promise.all(csvPrices.map(async (c: CsvPrice) => {
 
+        console.log(util.inspect(c, {depth: 100}));
+
         const pricingStructureFormat: string = c.pricingStructureFormat ? c.pricingStructureFormat.trim() : c.pricingStructureFormat;
         const itemFormat: string = c.itemFormat ? c.itemFormat.trim() : c.itemFormat;
 
 
         let ps: PricingStructure = null;
+        let psViewId: number = null;
+        console.log('************* pricing structure format', pricingStructureFormat);
         if (pricingStructureFormat) {
             const token: string[] = pricingStructureFormat.split('=');
             if (token.length == 2) {
@@ -31,6 +36,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                         await doInDbConnection(async (conn: PoolConnection) => {
                             const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS FROM TBL_PRICING_STRUCTURE WHERE ID=? AND STATUS = 'ENABLED'`, [Number(val)]);
                             if (q.length) {
+                               psViewId = q[0].VIEW_ID;
                                ps = {
                                   id: q[0].ID,
                                   name: q[0].NAME,
@@ -43,6 +49,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                         await doInDbConnection(async (conn: PoolConnection) => {
                             const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND STATUS = 'ENABLED'`, [(val)]);
                             if (q.length) {
+                                psViewId = q[0].VIEW_ID;
                                 ps = {
                                     id: q[0].ID,
                                     name: q[0].NAME,
@@ -56,10 +63,18 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
         }
         if (!ps) {
            errors.push({
-              title: `Unfound Pricing Structure`,
-              messsage: `Unable to find pricing structure for pricing structure format ${pricingStructureFormat}`
+               title: `Unfound Pricing Structure`,
+               messsage: `Unable to find pricing structure for pricing structure format ${pricingStructureFormat}`
            } as Message);
            return null;
+        }
+
+        if (psViewId !== viewId) {
+            errors.push({
+                title: `Pricing structure does not belongs to view`,
+                messsage: `Pricing structure ${ps.id} does not belong to the view with id ${viewId}`
+            } as Message);
+            return null;
         }
 
         const pricingStructureId: number = ps.id;
@@ -75,18 +90,18 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                 switch(identifier) {
                     case 'id': {// item id
                         const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
-                            await conn.query(`SELECT ID FROM TBL_ITEM WHERE ID=?`, [Number(val)]);
+                            return await conn.query(`SELECT ID FROM TBL_ITEM WHERE ID=? AND VIEW_ID=?`, [Number(val), viewId]);
                         });
-                        if (q.length > 0) {
+                        if (q && q.length > 0) {
                             itemId = q[0].ID;
                         }
                         break;
                     }
                     case 'name': { // item name
                         const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
-                            await conn.query(`SELECT ID FROM TBL_ITEM WHERE ID=?`, [Number(val)]);
+                            return await conn.query(`SELECT ID FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=?`, [val, viewId]);
                         });
-                        if (q.length > 0) {
+                        if (q && q.length > 0) {
                             itemId = q[0].ID;
                         }
                         break;
@@ -95,18 +110,40 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
             }
         }
 
-        if (!!itemId) {
+        if (!!!itemId) {
             errors.push({
                 title: `Unfound Item`,
-                messsage: `Unable to find Item for item format ${itemFormat}`
+                messsage: `Unable to find Item for item format ${itemFormat} in view ${viewId}`
             } as Message);
             return null;
         }
 
 
-        const p: PricingStructureItemWithPrice = await getPricingStructureItem(pricingStructureId, itemId);
-        p.price = c.price;
-        p.country = c.country;
+        let p: PricingStructureItemWithPrice = await getPricingStructureItem(viewId, pricingStructureId, itemId);
+        console.log('***** search pricingSTructureId', pricingStructureId, "itemId", itemId, p);
+        if (p) {
+            p.price = c.price;
+            p.country = c.country;
+        } else {
+            if (c.addToPricingStructureIfItemNotAlreadyAdded) {
+                const added: boolean = await addItemToPricingStructure(viewId, pricingStructureId, itemId);
+                if (added) {
+                    p = await getPricingStructureItem(viewId, pricingStructureId, itemId);
+                } else {
+                    errors.push({
+                       title: `Item failed to be added to pricing structure`,
+                       messsage: `Failed to add item ${itemId} to pricing structure with id ${pricingStructureId} (viewId ${viewId})`
+                    } as Message);
+                    return null;
+                }
+            } else {
+                errors.push({
+                    title: `Item not found in pricing structure`,
+                    messsage: `Failed to find item with id ${itemId} in pricing structure id ${pricingStructureId} to add pricing info (view Id ${viewId})`
+                } as Message);
+                return null;
+            }
+        }
 
         return {
             pricingStructureId,

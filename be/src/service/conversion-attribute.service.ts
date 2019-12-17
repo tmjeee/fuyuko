@@ -68,14 +68,14 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
             att.metadatas.push({
                 id: -1,
                 name: `pair1`,
-                entries: attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
+                entries: attribute.pair1 ? attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
                     acc.push({
                        id: -1,
                        key: c.key,
                        value: c.value
                     } as AttributeMetadataEntry2)
                     return acc;
-                }, [])
+                }, []) : []
             } as AttributeMetadata2);
             break;
         case 'doubleselect':
@@ -84,26 +84,26 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
             att.metadatas.push({
                 id: -1,
                 name: `pair1`,
-                entries: attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
+                entries: attribute.pair1 ? attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
                     acc.push({
                         id: -1,
                         key: c.key,
                         value: c.value
                     } as AttributeMetadataEntry2)
                     return acc;
-                }, [])
+                }, []) : []
             } as AttributeMetadata2);
             att.metadatas.push({
                 id: -1,
                 name: `pair2`,
-                entries: attribute.pair2.reduce((acc: AttributeMetadataEntry2[], c: Pair2) => {
+                entries: attribute.pair2 ? attribute.pair2.reduce((acc: AttributeMetadataEntry2[], c: Pair2) => {
                     acc.push({
                         id: -1,
                         key: c.key1,
                         value: `${c.key2}=${c.value}`
                     } as AttributeMetadataEntry2)
                     return acc;
-                }, [])
+                }, []) : []
             } as AttributeMetadata2);
             break;
         case 'string':

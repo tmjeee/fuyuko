@@ -27,8 +27,26 @@ export const setPrices = async (pricingStructureId: number, pricingStructureItem
     }
 }
 
+export const addItemToPricingStructure = async (viewId: number, pricingStructureId: number, itemId: number): Promise<boolean> => {
+   return await doInDbConnection(async (conn: PoolConnection) => {
+        const q: QueryA = await conn.query(
+            `SELECT COUNT(*) AS COUNT 
+                    FROM TBL_PRICING_STRUCTURE_ITEM AS I 
+                    LEFT JOIN TBL_PRICING_STRUCTURE AS P ON P.ID = I.PRICING_STRUCTURE_ID
+                    WHERE I.ITEM_ID=? AND I.PRICING_STRUCTURE_ID=? AND P.VIEW_ID=?`,
+            [itemId, pricingStructureId, viewId]);
+        if (q && q.length > 0) { // item already in pricing structure
+            return false;
+        } else { // item not yet in this pricing structure
+            await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, COUNTRY, PRICE) VALUES (?,?,?,?)`,
+                [itemId, pricingStructureId, null, null])
+            return true;
+        }
+   });
+}
 
-export const getPricingStructureItem = async (pricingStructureId: number, itemId: number): Promise<PricingStructureItemWithPrice> => {
+
+export const getPricingStructureItem = async (viewId: number, pricingStructureId: number, itemId: number): Promise<PricingStructureItemWithPrice> => {
     return await doInDbConnection(async (conn: PoolConnection) => {
         const q: QueryA = await conn.query(`
                 SELECT
@@ -46,17 +64,17 @@ export const getPricingStructureItem = async (pricingStructureId: number, itemId
                     
                     PSI.ID AS PSI_ID,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
-                    PSI_COUNTRY AS PSI_COUNTRY,
+                    PSI.COUNTRY AS PSI_COUNTRY,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
                     PSI.PRICE AS PSI_PRICE
                 
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = I.VIEW_ID
                 LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
-                WHERE PS.ID = ? AND I.ID = ? AND I.STATUS = 'ENABLED'
-    `, [pricingStructureId, itemId]);
+                WHERE PS.ID = ? AND I.ID = ? AND I.VIEW_ID=? AND I.STATUS = 'ENABLED'
+    `, [pricingStructureId, itemId, viewId]);
 
-        return {
+        return q && q[0] ? {
             id: q[0].PSI_ID,
             itemId: itemId,
             itemName: q[0].I_NAME,
@@ -65,7 +83,7 @@ export const getPricingStructureItem = async (pricingStructureId: number, itemId
             parentId: q[0].I_PARENT_ID,
             price: q[0].PSI_PRICE,
             children: await getChildrenWithConn(conn, pricingStructureId, itemId)
-        } as PricingStructureItemWithPrice;
+        } as PricingStructureItemWithPrice : null;
     });
 }
 

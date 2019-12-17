@@ -24,7 +24,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const attrs2: Attribute2[] = revert(req.body.attributes);
 
-        await saveAttribute2s(attrs2);
+        await saveAttribute2s(viewId, attrs2);
 
         res.status(200).json({
             status: 'SUCCESS',

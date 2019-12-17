@@ -454,7 +454,7 @@ const TBL_VIEW_ATTRIBUTE = async () => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_VIEW_ATTRIBUTE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
-            VIEW_ID INT,
+            VIEW_ID INT NOT NULL,
             TYPE VARCHAR(200) NOT NULL,
             NAME VARCHAR(200) NOT NULL,
             STATUS VARCHAR(200) NOT NULL,

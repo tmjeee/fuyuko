@@ -56,7 +56,8 @@ const httpAction: any[] = [
 
             const itemDataImport: ItemDataImport = await preview(viewId, dataImportId, content);
             console.log('****** itemDataImport', jsonStringifySafe(itemDataImport));
-            res.status(200).json(jsonStringifySafe(itemDataImport));
+            // res.status(200).json(jsonStringifySafe(itemDataImport));
+            res.status(200).json(itemDataImport);
         });
 
     }

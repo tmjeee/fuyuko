@@ -60,12 +60,12 @@ const _updateItem = async (conn: PoolConnection, viewId: number, item2: Item2) =
     }
 }
 
-export const addItem = async (viewId: number, item2: Item2, parentId: number = null) => {
-    await doInDbConnection(async (conn: PoolConnection) => {
-        await _addItem(conn, viewId, item2, parentId);
+export const addItem = async (viewId: number, item2: Item2, parentId: number = null): Promise<number> => {
+    return await doInDbConnection(async (conn: PoolConnection) => {
+        return await _addItem(conn, viewId, item2, parentId);
     });
 }
-const _addItem = async (conn: PoolConnection, viewId: number, item2: Item2, parentId: number = null) => {
+const _addItem = async (conn: PoolConnection, viewId: number, item2: Item2, parentId: number = null): Promise<number> => {
 
     const name: string = item2.name;
     const description: string = item2.description;
@@ -91,6 +91,8 @@ const _addItem = async (conn: PoolConnection, viewId: number, item2: Item2, pare
     for (const child of item2.children) {
         _addItem(conn, viewId, child, newItemId);
     }
+
+    return newItemId;
 }
 
 

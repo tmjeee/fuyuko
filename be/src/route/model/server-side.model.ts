@@ -23,6 +23,7 @@ export interface CsvPrice {
     itemFormat: string;
     price: number;
     country: string;
+    addToPricingStructureIfItemNotAlreadyAdded: boolean;
 }
 
 export interface CsvItem {

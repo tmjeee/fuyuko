@@ -60,10 +60,13 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                     const k: string = kv[0];
                     const v: string = kv[1];
 
+                    console.log('**** kv', k, v);
+
                     switch(k) {
-                        case 'attrId': {
+                        case 'attId': {
                             const attId: number = Number(v);
                             const att: Attribute = attributeByIdMap.get(attId);
+                            console.log('(byId) att', !!att, att);
                             if (att) {
                                 i[attId] = createNewItemValue(att, true);
                             } else {
@@ -74,9 +77,10 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                             }
                             break;
                         }
-                        case 'attrName': {
+                        case 'attName': {
                             const attName: string = String(v);
                             const att: Attribute = attributeByNameMap.get(attName);
+                            console.log('(byName) att', !!att, att);
                             if (att) {
                                 const attId: number = att.id;
                                 i[attId] = createNewItemValue(att, true);
