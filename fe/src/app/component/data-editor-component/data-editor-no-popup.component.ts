@@ -34,7 +34,7 @@ import {
     setItemTextValue,
     setItemVolumeValue,
     setItemWidthValue
-} from '../../utils/ui-item-value-setter.util';
+} from '../../shared-utils/ui-item-value-setter.util';
 
 @Component({
     selector: 'app-data-editor-no-popup',

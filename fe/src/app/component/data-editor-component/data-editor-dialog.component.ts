@@ -31,7 +31,7 @@ import {
   setItemStringValue,
   setItemTextValue,
   setItemVolumeValue, setItemWidthValue
-} from '../../utils/ui-item-value-setter.util';
+} from '../../shared-utils/ui-item-value-setter.util';
 import {
   getItemAreaValue,
   getItemCurrencyValue,

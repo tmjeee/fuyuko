@@ -21,8 +21,8 @@ import {
     setItemNumberValue, setItemSelectValue,
     setItemStringValue,
     setItemTextValue, setItemVolumeValue, setItemWidthValue
-} from '../../utils/ui-item-value-setter.util';
-import {createNewItemValue} from '../../utils/ui-item-value-creator.utils';
+} from '../../shared-utils/ui-item-value-setter.util';
+import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
 import {operatorNeedsItemValue, operatorsForAttribute} from '../../utils/attribute-operators.util';
 import * as numeral from 'numeral';
 

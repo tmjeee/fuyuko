@@ -1,0 +1,9 @@
+
+FROM nginx
+
+COPY dist/fuyuko /usr/share/nginx/html
+COPY docker/conf /etc/nginx
+
+VOLUME /usr/share/nginx/html
+VOLUME /etc/nginx
+VOLUME /var/log/nginx

@@ -4,7 +4,7 @@ import {Attribute} from '../../model/attribute.model';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {NotificationsService} from 'angular2-notifications';
 import {Value} from '../../model/item.model';
-import {createNewItemValue} from '../../utils/ui-item-value-creator.utils';
+import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
 import {getItemAreaValue, hasItemValue} from '../../utils/ui-item-value-getter.util';
 import {BulkEditService} from '../../service/bulk-edit-service/bulk-edit.service';
 import {View} from '../../model/view.model';

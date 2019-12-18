@@ -8,7 +8,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {map} from 'rxjs/operators';
 import {ItemSearchComponentEvent, SearchType} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
-import {createNewItem} from '../../utils/ui-item-value-creator.utils';
+import {createNewItem} from '../../shared-utils/ui-item-value-creator.utils';
 import config from '../../../assets/config.json';
 
 

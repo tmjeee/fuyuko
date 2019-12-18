@@ -8,8 +8,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import {map} from 'rxjs/operators';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
-import {createNewItem} from '../../utils/ui-item-value-creator.utils';
-import config from "../../../assets/config.json";
+import {createNewItem} from '../../shared-utils/ui-item-value-creator.utils';
+import config from '../../../assets/config.json';
 
 export interface DataListComponentEvent {
     type: 'modification' | 'reload';
