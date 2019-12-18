@@ -12,9 +12,9 @@ import {SerializeFormat, SerializeInstanceFormat} from '../../model/dashboard-se
 
 
 // a must be array / multi-dimention array of SerializeInstanceFormat
-const stickInTypes = (a: any) => {
+const stickInTypes = (a: SerializeInstanceFormat| SerializeInstanceFormat[] | SerializeInstanceFormat[][]) => {
     if (Array.isArray(a)) {
-        const ar: SerializeInstanceFormat[] = a;
+        const ar: SerializeInstanceFormat[] = a as SerializeInstanceFormat[];
         for (const ai of ar) {
             stickInTypes(ai);
         }

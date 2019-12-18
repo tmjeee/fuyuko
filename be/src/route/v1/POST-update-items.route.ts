@@ -26,8 +26,6 @@ const httpAction: any[] = [
         const items: Item[] = req.body.items;
         const item2s: Item2[]  = itemRevert(items);
 
-        console.log(util.inspect(item2s, {depth: 10}));
-
         for (const item2 of item2s) {
 
             if (item2.id > 0) {

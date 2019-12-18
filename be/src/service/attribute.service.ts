@@ -4,13 +4,7 @@ import {convert, revert} from "./conversion-attribute.service";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {PoolConnection} from "mariadb";
 import {LoggingCallback} from "./job-log.service";
-
-
-export const getAttributesInView = async (viewId: number): Promise<Attribute2[]> => {
-
-    return await doInDbConnection(async (conn: PoolConnection) => {
-
-        const q: QueryA = await conn.query(`
+const q1: string = `
                 SELECT
                     A.ID AS A_ID,
                     A.VIEW_ID AS A_VIEW_ID,
@@ -26,7 +20,34 @@ export const getAttributesInView = async (viewId: number): Promise<Attribute2[]>
                 LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS M ON M.VIEW_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS E ON E.VIEW_ATTRIBUTE_METADATA_ID = M.ID
                 WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED'
-            `, [viewId]);
+`;
+
+const q2: string = `
+                SELECT
+                    A.ID AS A_ID,
+                    A.VIEW_ID AS A_VIEW_ID,
+                    A.TYPE AS A_TYPE,
+                    A.NAME AS A_NAME,
+                    A.DESCRIPTION AS A_DESCRIPTION,
+                    M.ID as M_ID,
+                    M.NAME AS M_NAME,
+                    E.ID as E_ID,
+                    E.KEY AS E_KEY,
+                    E.VALUE AS E_VALUE
+                FROM TBL_VIEW_ATTRIBUTE AS A
+                LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS M ON M.VIEW_ATTRIBUTE_ID = A.ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS E ON E.VIEW_ATTRIBUTE_METADATA_ID = M.ID
+                WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED' AND A.ID IN ?
+`;
+
+export const getAttributesInView = async (viewId: number, attributeIds?: number[]): Promise<Attribute2[]> => {
+
+    return await doInDbConnection(async (conn: PoolConnection) => {
+
+        const q: QueryA = await (
+            attributeIds && attributeIds.length > 0 ?
+                 conn.query(q2, [viewId, attributeIds]) :
+                 conn.query(q1, [viewId]));
 
         const a: Map<string /* attributeId */, Attribute2> = new Map();
         const m: Map<string /* attributeId_metadataId */, AttributeMetadata2> = new Map();

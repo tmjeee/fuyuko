@@ -33,7 +33,7 @@ export class DashboardWidget {
     }
 }
 
-export interface DashboardWidgetInstance {
+export interface DashboardWidgetInstance extends SerializeInstanceFormat {
     instanceId: string;
     typeId: string;
     type: Type<DashboardWidget>;

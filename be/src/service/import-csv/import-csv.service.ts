@@ -3,31 +3,8 @@
 import parse, {Parser} from "csv-parse";
 import {Pair1, Pair2} from "../../model/attribute.model";
 
-export const readKeyPairs = async (b: string): Promise<string[]> => {
-    return new Promise((res, rej) => {
-        const r = [];
-        const parser: Parser = parse({
-            delimiter: '=',
-            skip_empty_lines: true,
-            relax_column_count: true,
-            columns: false
-        });
-        parser.on("readable", () => {
-            let l;
-            while(l = parser.read()) {
-                // l =  [ 'key1', 'value1' ] or ['key1', 'xkey1', 'xval1']
-                r.push(...l);
-            }
-        });
-        parser.on("end", () => {
-            res(null);
-        });
-        parser.on('error', (err) => {
-            rej(err);
-        });
-        parser.write(b);
-        parser.end();
-    });
+export const readKeyPairs = (b: string): string[] => {
+    return b.split('=')
 }
 
 
@@ -45,7 +22,7 @@ export const readPair1Csv = async (b: string): Promise<Pair1[]> => {
             while(l = parser.read()) {
                 // l =  [ 'key1=value1', 'key2=value2', 'key3=value3' ]
                 for (const _l of l) {
-                    const p: string[] = await readKeyPairs(_l);
+                    const p: string[] = readKeyPairs(_l);
                     if (p && p.length == 2) {
                         pairs.push({
                             id: -1,
@@ -54,10 +31,11 @@ export const readPair1Csv = async (b: string): Promise<Pair1[]> => {
                         } as Pair1);
                     }
                 }
+                parser.emit('x-done');
             }
         });
         parser.on("end", () => {
-            res(null);
+            res(pairs);
         });
         parser.on('error', (err) => {
             rej(err);
@@ -96,7 +74,7 @@ export const readPair2Csv = async (bb: string): Promise<Pair2[]> => {
             }
         });
         parser.on("end", () => {
-            res(null);
+            res(pairs);
         });
         parser.on('error', (err) => {
             rej(err);

@@ -17,8 +17,6 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
     const description: string = `attribute-data-export-job-${uid} description`;
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
-    // todo:
-
     (async ()=>{
 
         const headers: string[]  = [`name`,`description`,`type`,`format`,`showCurrencyCountry`,`pair1`,`pair2`];

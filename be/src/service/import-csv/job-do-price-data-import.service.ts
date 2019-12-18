@@ -15,7 +15,19 @@ export const runJob = async (pricingStructureId: number, attributeDataImportId: 
 
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
-    setPrices(pricingStructureId, priceItems);
+    (async ()=>{
+        await jobLogger.logInfo(`starting job ${name}`);
+        try {
+            await setPrices(pricingStructureId, priceItems, newLoggingCallback(jobLogger));
+            await jobLogger.updateProgress("COMPLETED");
+            await jobLogger.logInfo(`mark ${name} as completed`);
+        } catch(e) {
+            await jobLogger.logError(`${e.toString()}`);
+            await jobLogger.updateProgress("FAILED");
+        } finally {
+            await jobLogger.logInfo(`Done with ${name}`);
+        }
+    })();
 
     return await getJobyById(jobLogger.jobId);
 }

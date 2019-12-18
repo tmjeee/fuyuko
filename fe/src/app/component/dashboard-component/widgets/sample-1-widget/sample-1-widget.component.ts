@@ -1,6 +1,6 @@
 import {DashboardWidget, DashboardWidgetInfo} from '../../../../model/dashboard.model';
 import {Component, OnInit} from '@angular/core';
-import {DashboardWidgetService} from "../../../../service/dashboard-service/dashbowd-widget.service";
+import {DashboardWidgetService} from '../../../../service/dashboard-service/dashbowd-widget.service';
 
 
 @Component({

@@ -232,8 +232,9 @@ export const getItem2WithFiltering = async (conn: PoolConnection,
 
 
     const matchedBulkEditItem2s: Item2[] = bulkEditItem2s.filter((b: Item2) => {
-        let r: boolean = false;
+        let r: boolean = true;
         for (const itemValueOperatorAndAttribute of whenClauses) {
+            r = false;
             const value: Value = itemValueOperatorAndAttribute.itemValue;
             const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;

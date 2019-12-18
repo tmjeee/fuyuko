@@ -5,10 +5,11 @@ import {Messages, Message} from "../../model/notification-listing.model";
 import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
 import {doInDbConnection, QueryA} from "../../db";
 import {PoolConnection} from "mariadb";
-import parse from 'csv-parse';
 
 const toPair1 = async (pair1: string): Promise<Pair1[]> => {
-    return await readPair1Csv(pair1);
+    const o: Pair1[] = await readPair1Csv(pair1);
+    console.log('************************ to pair1', pair1, o);
+    return o;
 }
 
 const toPair2 = async (pair2: string): Promise<Pair2[]> => {
@@ -43,7 +44,6 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                 SELECT COUNT(*) AS COUNT FROM TBL_VIEW_ATTRIBUTE WHERE NAME=? AND VIEW_ID=?
             `, [attribute.name, viewId]);
         });
-        console.log('******* q ', q, attribute.name);
         if (q[0].COUNT > 0) {
             errors.push({
                title: `Attribute already exists`,

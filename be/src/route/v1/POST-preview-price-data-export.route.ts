@@ -37,7 +37,7 @@ const httpAction: any[] = [
 
 
 const x = (router: Router, registry: Registry) => {
-    const p = `/view/:viewId/export/pricingStructure/:pricingStructureId/price/preview`;
+    const p = `/view/:viewId/export/pricingStructure/:pricingStructureId/prices/preview`;
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
 }

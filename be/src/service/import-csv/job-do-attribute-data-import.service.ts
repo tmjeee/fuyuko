@@ -18,6 +18,7 @@ export const runJob = async (viewId: number, attributeDataImportId: number, attr
     const jobLogger: JobLogger = await newJobLogger(name, description);
 
     (async ()=> {
+        await jobLogger.logInfo(`starting job ${name}`);
         try {
             const effectiveAttributes: Attribute[] = [];
 
@@ -34,8 +35,12 @@ export const runJob = async (viewId: number, attributeDataImportId: number, attr
             }
             await saveAttributes(viewId, effectiveAttributes, newLoggingCallback(jobLogger));
             await jobLogger.updateProgress("COMPLETED");
+            await jobLogger.logInfo(`mark ${name} as completed`);
         } catch(e) {
+            await jobLogger.logError(`${e.toString()}`);
             await jobLogger.updateProgress("FAILED");
+        } finally {
+            await jobLogger.logInfo(`Done with ${name}`);
         }
     })();
 

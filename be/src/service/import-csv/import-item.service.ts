@@ -17,8 +17,8 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
     const infos: Message[] = [];
     const warnings: Message[] = [];
 
+    const items: Item[] = [];
     const itemsMap: Map<string /* itemName */, Item> = new Map();
-    // const itemsChildrenMap: Map<string /* itemName */, Item[]> = new Map();
 
 
 
@@ -48,8 +48,9 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
            children
         } as Item;
         if (!!!csvItem.parentName) {
-            itemsMap.set(itemsMapKey, i);
+            items.push(i);
         }
+        itemsMap.set(itemsMapKey, i);
         if (itemsParentMapKey && itemsMap.has(itemsParentMapKey)) {
             itemsMap.get(itemsParentMapKey).children.push(i);
         }
@@ -104,7 +105,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
         type: "ITEM",
         dataImportId,
         attributes,
-        items: [...itemsMap.values()],
+        items,
         messages: {
             errors,
             infos,

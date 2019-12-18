@@ -41,7 +41,8 @@ export class DashboardPageComponent implements OnInit {
         this.notificationsService.success('Success', 'testing 123');
         this.notificationsService.info('Info', 'testing 123 asd sid iasdo oais diaosid asd iois iod iaoi dioisd ioiosd ioioaisd iosd');
         this.notificationsService.warn('Warninig', 'testing 123 sioio asdio iosid iosdsd');
-        this.notificationsService.error('Error', 'testing 123 iaoisdi aposidiaps diaopsid osidopai sdiosido sido siod sod apidsosipoaidois iudsdis udisudiauisdsiud ');
+        this.notificationsService.error('Error',
+            'testing 123 iaoisdi aposidiaps diaopsid osidopai sdiosido sido siod sod apidsosipoaidois iudsdis udisudiauisdsiud ');
         /*
         this.dashboardService.saveDashboardLayout($event.serializedData)
             .pipe(

@@ -17,15 +17,12 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
 
     const items: PriceDataItem[] = (await Promise.all(csvPrices.map(async (c: CsvPrice) => {
 
-        console.log(util.inspect(c, {depth: 100}));
-
         const pricingStructureFormat: string = c.pricingStructureFormat ? c.pricingStructureFormat.trim() : c.pricingStructureFormat;
         const itemFormat: string = c.itemFormat ? c.itemFormat.trim() : c.itemFormat;
 
 
         let ps: PricingStructure = null;
         let psViewId: number = null;
-        console.log('************* pricing structure format', pricingStructureFormat);
         if (pricingStructureFormat) {
             const token: string[] = pricingStructureFormat.split('=');
             if (token.length == 2) {
@@ -131,7 +128,6 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
 
 
         let p: PricingStructureItemWithPrice = await getPricingStructureItem(viewId, pricingStructureId, itemId);
-        console.log('***** search pricingSTructureId', pricingStructureId, "itemId", itemId, p);
         if (p) {
             p.price = c.price;
             p.country = c.country;

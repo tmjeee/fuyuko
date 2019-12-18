@@ -1,8 +1,9 @@
 import {PoolConnection} from "mariadb";
 import {PricingStructureItemWithPrice} from "../model/pricing-structure.model";
 import {doInDbConnection, QueryA} from "../db";
+import {LoggingCallback, newLoggingCallback} from "./job-log.service";
 
-export const setPrices = async (pricingStructureId: number, pricingStructureItems: PricingStructureItemWithPrice[]) => {
+export const setPrices = async (pricingStructureId: number, pricingStructureItems: PricingStructureItemWithPrice[], loggingCallback: LoggingCallback = newLoggingCallback()) => {
     for (const pricingStructureItem of pricingStructureItems) {
         await doInDbConnection(async (conn: PoolConnection) => {
 
@@ -15,13 +16,15 @@ export const setPrices = async (pricingStructureId: number, pricingStructureItem
 
             if (qc.length <= 0 || qc[0].COUNT <= 0) { // insert
                 await conn.query(`
-                        INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, PRICE) VALUES (?,?,?)
-                    `, [pricingStructureItem.itemId, pricingStructureId, pricingStructureItem.price]);
+                        INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, PRICE, COUNTRY) VALUES (?,?,?,?)
+                    `, [pricingStructureItem.itemId, pricingStructureId, pricingStructureItem.price, pricingStructureItem.country]);
+                loggingCallback(`INFO`, `inserting price ${pricingStructureItem.price} ${pricingStructureItem.country} for item ${pricingStructureItem.itemId}`);
 
             } else { // update
                 await conn.query(`
-                        UPDATE TBL_PRICING_STRUCTURE_ITEM SET PRICE=? WHERE ITEM_ID=? AND PRICING_STRUCTURE_ID=?
-                    `, [pricingStructureItem.price, pricingStructureItem.itemId, pricingStructureId]);
+                        UPDATE TBL_PRICING_STRUCTURE_ITEM SET PRICE=?, COUNTRY=? WHERE ITEM_ID=? AND PRICING_STRUCTURE_ID=?
+                    `, [pricingStructureItem.price, pricingStructureItem.country, pricingStructureItem.itemId, pricingStructureId]);
+                loggingCallback(`INFO`, `updating price ${pricingStructureItem.price} ${pricingStructureItem.country} for item ${pricingStructureItem.itemId}`);
             }
         });
     }

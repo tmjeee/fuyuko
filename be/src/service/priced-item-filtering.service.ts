@@ -85,7 +85,7 @@ const SQL: string = `
            LEFT JOIN TBL_ITEM_VALUE_METADATA AS IM ON IM.ITEM_VALUE_ID = V.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
            LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
-           LEFT JOIN TBL_PRICING_STRUCTURE_ITEM ON PSI.PRICING_STRUCTURE_ID = ?
+           LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = ?
            WHERE I.STATUS = 'ENABLED' AND I.VIEW_ID=? 
 `
 
@@ -256,8 +256,9 @@ export const getPricedItem2WithFiltering = async (conn: PoolConnection,
 
 
     const matchedBulkEditItem2s: PricedItem2[] = bulkEditItem2s.filter((b: PricedItem2) => {
-        let r: boolean = false;
+        let r: boolean = true;
         for (const itemValueOperatorAndAttribute of whenClauses) {
+            r = false;
             const value: Value = itemValueOperatorAndAttribute.itemValue;
             const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;

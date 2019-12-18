@@ -258,7 +258,7 @@ const INSERT_DATA = async () => {
 
         // pricing structure
         const ps1: QueryResponse = await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?, 'ENABLED')`, [v1.insertId, 'Pricing Structure #1', 'Pricing Structure #1 Description']);
-        const ps2: QueryResponse = await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?, 'ENABLED')`, [v1.insertId, 'Pricing Structure #2', 'Pricing Structure #2 Description']);
+        const ps2: QueryResponse = await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?, 'ENABLED')`, [v2.insertId, 'Pricing Structure #2', 'Pricing Structure #2 Description']);
 
 
         // items

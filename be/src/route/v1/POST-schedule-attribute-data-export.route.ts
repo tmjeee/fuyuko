@@ -3,6 +3,8 @@ import {Router, Request, Response, NextFunction} from "express";
 import {param, body} from 'express-validator';
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {Attribute} from "../../model/attribute.model";
+import {Job} from "../../model/job.model";
+import {runJob} from "../../service/export-csv/job-do-attribute-data-export.service";
 
 const httpAction: any[] = [
    [
@@ -15,6 +17,8 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const attributes: Attribute[] = req.body.attributes;
 
+        const job: Job = await runJob(viewId, attributes);
+        res.status(200).json(job);
     }
 ];
 

@@ -6,20 +6,21 @@ import {param, body} from 'express-validator';
 import {Job} from "../../model/job.model";
 import {Attribute} from "../../model/attribute.model";
 import {runJob} from "../../service/import-csv/job-do-price-data-import.service";
-import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
+import {PriceDataItem, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
         body('dataImportId').exists().isNumeric(),
-        body('pricingStructureItemsWithPrice').exists().isArray()
+        body('priceDataItems').exists().isArray()
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const dataImportId: number = Number(req.body.dataImportId);
-        const pricingItems: PricingStructureItemWithPrice[] =  req.body.pricingStructureItemsWithPrice;
+        const priceDataItems: PriceDataItem[] =  req.body.priceDataItems;
+        const pricingItems: PricingStructureItemWithPrice[] = priceDataItems.map((p: PriceDataItem) => p.item).filter((i) => !!i);
 
         const job: Job = await runJob(viewId, dataImportId, pricingItems);
 
