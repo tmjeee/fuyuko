@@ -1,0 +1,10 @@
+node_modules/
+npm-debug.log
+*.sh
+spec/
+.idea/
+docker/
+tsconfig.json
+*.ts
+.gitignore
+.dockerignore

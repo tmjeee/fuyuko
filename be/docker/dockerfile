@@ -1,0 +1,15 @@
+
+FROM node:12
+
+WORKDIR /usr/src/fuyuko
+
+COPY package*.json ./
+
+COPY . .
+
+RUN npm install
+
+EXPOSE 8888
+
+CMD ["node", "src/app.js"]
+

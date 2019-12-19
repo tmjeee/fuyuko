@@ -1,0 +1,12 @@
+FROM ubuntu:18.04
+
+FROM mariadb
+
+
+FROM node:12
+
+CMD tail -f /dev/null
+
+
+
+
