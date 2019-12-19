@@ -1,5 +1,5 @@
 {
-  "db-host": "host.docker.internal",
+  "db-host": "172.20.0.2",
   "db-user": "root",
   "db-password": "root",
   "db-port": 3306,

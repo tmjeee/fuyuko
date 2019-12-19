@@ -1,11 +1,14 @@
-FROM ubuntu:18.04
+FROM mariadb:latest
 
-FROM mariadb
+ENV MYSQL_ROOT_PASSWORD root
+ENV MYSQL_DATABASE fuyuko
 
+#RUN apt -y update
+#RUN apt -y upgrade
 
-FROM node:12
+#RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
 
-CMD tail -f /dev/null
+#RUN apt -y install curl
 
 
 
