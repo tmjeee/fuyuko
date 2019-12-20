@@ -58,6 +58,8 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
         for (const pname of Object.keys(csvItem)) {
             if (!['parentName', 'name', 'description'].includes(pname)) {
                 const kv: string[] = pname.split('=');
+                const valueInString: string = csvItem[pname];
+                // todo: conver this to Value type and set it
                 if (kv && kv.length == 2) {
                     const k: string = kv[0];
                     const v: string = kv[1];

@@ -58,15 +58,19 @@ import registerPostScheduleBulkEditRoute from './POST-schedule-bulk-edit.route';
 import registerGetAllJobsRoute from './GET-all-jobs.route';
 import registerGetJobDetailsByIdRoute from './GET-job-details-by-id.route';
 import registerGetJobByIdRoute from './GET-job-by-id.route';
-import registerPostScheduleAttributeDataImportRoute from './POST-schedule-attribute-data-import.route';
 import registerPostPreviewAttributeDataImportRoute from './POST-preview-attribute-data-import.route';
 import registerPostPreviewItemDataImportRoute from './POST-preview-item-data-import.route';
 import registerPostPreviewPriceDataImportRoute from './POST-preview-price-data-import.route';
+import registerPostScheduleAttributeDataImportRoute from './POST-schedule-attribute-data-import.route';
 import registerPostScheduleItemDataImportRoute from './POST-schedule-item-data-import.route';
 import registerPostSchedulePriceDataImportRoute from './POST-schedule-pricing-data-import.route';
 import registerPostPreviewAttributeDataExportRoute from './POST-preview-attribute-data-export.route';
 import registerPostPreviewItemDataExportRoute from './POST-preview-item-data-export.route';
 import registerPostPreviewPriceDataExportRoute from './POST-preview-price-data-export.route';
+import registerPostScheduleAttributeDataExportRoute from './POST-schedule-attribute-data-export.route';
+import registerPostScheduleItemDataExportRoute from './POST-schedule-item-data-export.route';
+import registerPostSchedulePriceDataExportRoute from './POST-schedule-pricing-data-export.route';
+import registerGetExportedFileByIdRoute from './GET-export-file-by-id.route';
 import registerPostSaveDashboardRoute from './POST-save-dashboard.route';
 
 const v1AppRouter:Router  = express.Router();
@@ -142,6 +146,10 @@ const reg = (app: Express, regi: Registry) => {
     registerPostPreviewAttributeDataExportRoute(v1AppRouter, registry);
     registerPostPreviewItemDataExportRoute(v1AppRouter, registry);
     registerPostPreviewPriceDataExportRoute(v1AppRouter, registry);
+    registerPostScheduleAttributeDataExportRoute(v1AppRouter, registry);
+    registerPostScheduleItemDataExportRoute(v1AppRouter, registry);
+    registerPostSchedulePriceDataExportRoute(v1AppRouter, registry);
+    registerGetExportedFileByIdRoute(v1AppRouter, registry);
     registerPostSaveDashboardRoute(v1AppRouter, registry);
 }
 

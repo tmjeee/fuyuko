@@ -19,7 +19,7 @@ const httpAction: any[] = [
         const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
 
             const q: QueryA = await conn.query( `
-                SELECT ID, EXPORT_DATA_ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_DATA_EXPORT_FILE WHERE EXPORT_DATA_ID = ?
+                SELECT ID, DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_DATA_EXPORT_FILE WHERE DATA_EXPORT_ID= ?
             `, [exportDataId]);
 
             return q;

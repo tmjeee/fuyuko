@@ -1,4 +1,4 @@
-import {Attribute} from "../../model/attribute.model";
+import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
 import {Job} from "../../model/job.model";
 import {JobLogger, newJobLogger} from "../job-log.service";
 import {getJobyById} from "../job.service";
@@ -29,8 +29,8 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
                 type: attribute.type,
                 format: attribute.format,
                 showCurrencyCountry: attribute.showCurrencyCountry,
-                pair1: attribute.pair1,
-                pair2: attribute.pair2
+                pair1: pair1ToCsv(attribute.pair1),
+                pair2: pair2ToCsv(attribute.pair2)
             });
         }
 
@@ -52,4 +52,15 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
     })();
 
     return await getJobyById(jobLogger.jobId);
+}
+
+
+const pair1ToCsv = (pair1s: Pair1[]): string => {
+    const r: string =  pair1s.map((p: Pair1) => `${p.key}=${p.value}`).join('|');
+    return (r ? r : '');
+}
+
+const pair2ToCsv = (pair2s: Pair2[]): string => {
+    const r: string =  pair2s.map((p: Pair2) => `${p.key1}=${p.key2}=${p.value}`).join('|');
+    return (r ? r : '');
 }

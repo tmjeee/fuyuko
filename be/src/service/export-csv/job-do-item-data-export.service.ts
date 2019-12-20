@@ -7,7 +7,7 @@ import {doInDbConnection, QueryResponse} from "../../db";
 import {PoolConnection} from "mariadb";
 import {Parser} from "json2csv";
 import JSON2CSVParser from "json2csv/JSON2CSVParser";
-import {convertToString} from "../../shared-utils/ui-item-value-converters.util";
+import {convertToCsv} from "../../shared-utils/ui-item-value-converters.util";
 
 const uuid = require('uuid');
 
@@ -15,8 +15,8 @@ const uuid = require('uuid');
 export const runJob = async (viewId: number, attributes: Attribute[], items: Item[]): Promise<Job> => {
 
     const uid = uuid();
-    const name: string = `attribute-data-import-job-${uid}`;
-    const description: string = `attribute-data-import-job-${uid} description`;
+    const name: string = `item-data-export-job-${uid}`;
+    const description: string = `item-data-export-job-${uid} description`;
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
 
@@ -45,11 +45,11 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
 
             for (const attribute of attributes) {
                 const v: Value = item[attribute.id]
-                const val: string = convertToString(attribute, v);
+                const val: string = convertToCsv(attribute, v);
                 d[attribute.name] = val;
             }
             data.push(d);
-            jobLogger.logInfo(`Created csv entry ${d}`);
+            await jobLogger.logInfo(`Created csv entry ${d}`);
         }
 
         const csv: string = parser.parse(data);
@@ -66,9 +66,7 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
                 INSERT INTO TBL_DATA_EXPORT_FILE (DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)
             `, [dataExportId, name, 'text/csv', Buffer.byteLength(csv), csv]);
 
-            jobLogger.logInfo(`Put entry into db (dataExportId = ${dataExportId}`);
-
-
+            await jobLogger.logInfo(`Put entry into db (dataExportId = ${dataExportId}`);
         });
     })();
 

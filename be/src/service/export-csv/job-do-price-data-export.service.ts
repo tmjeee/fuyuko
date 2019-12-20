@@ -7,7 +7,7 @@ import {PoolConnection} from "mariadb";
 import {PricedItem, Value} from "../../model/item.model";
 import {parse, Parser} from 'json2csv';
 import JSON2CSVParser from "json2csv/JSON2CSVParser";
-import {convertToString} from "../../shared-utils/ui-item-value-converters.util";
+import {convertToCsv} from "../../shared-utils/ui-item-value-converters.util";
 
 
 const uuid = require('uuid');
@@ -16,8 +16,8 @@ const uuid = require('uuid');
 export const runJob = async (viewId: number, pricingStructureId: number, attributes: Attribute[], pricedItems: PricedItem[]): Promise<Job> => {
 
     const uid = uuid();
-    const name: string = `attribute-data-export-job-${uid}`;
-    const description: string = `attribute-data-export-job-${uid} description`;
+    const name: string = `price-data-export-job-${uid}`;
+    const description: string = `price-data-export-job-${uid} description`;
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
 
@@ -46,11 +46,11 @@ export const runJob = async (viewId: number, pricingStructureId: number, attribu
 
             for (const attribute of attributes) {
                const v: Value = priceItem[attribute.id]
-               const val: string = convertToString(attribute, v);
+               const val: string = convertToCsv(attribute, v);
                d[attribute.name] = val;
             }
             data.push(d);
-            jobLogger.logInfo(`Created csv entry ${d}`);
+            await jobLogger.logInfo(`Created csv entry ${d}`);
         }
 
         const csv: string = parser.parse(data);
@@ -66,7 +66,7 @@ export const runJob = async (viewId: number, pricingStructureId: number, attribu
                 INSERT INTO TBL_DATA_EXPORT_FILE (DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)
             `, [dataExportId, name, 'text/csv', Buffer.byteLength(csv), csv]);
 
-            jobLogger.logInfo(`Put entry into db (dataExportId = ${dataExportId}`);
+            await jobLogger.logInfo(`Put entry into db (dataExportId = ${dataExportId}`);
         });
     })();
 

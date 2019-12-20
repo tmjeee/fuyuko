@@ -32,3 +32,5 @@ const reg = (router: Router, registry: Registry) => {
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
 }
+
+export default reg;
