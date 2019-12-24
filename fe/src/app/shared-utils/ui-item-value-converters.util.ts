@@ -146,15 +146,14 @@ class DimensionItemValueConverter extends AbstractItemValueConverter {
     const f: string = a.format ? a.format : DIMENSION_FORMAT;
     return `${numeral(i.width).format(f)}|${numeral(i.height).format(f)}|${numeral(i.length).format(f)}|${i.unit}`;
   }
-  protected covertFromCsv(csv: string): DimensionValue {
-    // todo:
+  protected convertFromCsv(csv: string): DimensionValue {
     const p: string[] = csv.split('|');
     return {
-      width: 0,
-      height: 0,
-      length: 0,
       type: 'dimension',
-      unit: 'cm'
+      width: p && p.length >= 1 ? p[0] : 0,
+      height: p && p.length >= 2 ? p[1] : 0,
+      length: p && p.length >= 3 ? p[2] : 0,
+      unit:  p && p.length >= 4 ? p[3] : undefined
     } as DimensionValue;
   }
 }
@@ -168,6 +167,14 @@ class AreaItemValueConverter extends AbstractItemValueConverter {
     const f: string = a.format ? a.format : AREA_FORMAT;
     return `${numeral(i.value).format(f)}|${i.unit}`;
   }
+  protected convertFromCsv(csv: string): AreaValue {
+    const p: string[] = csv.split('|');
+    return {
+      type: 'area',
+      value: Number(p[0]),
+      unit: p[1]
+    } as AreaValue;
+  }
 }
 
 class VolumeItemValueConverter extends AbstractItemValueConverter {
@@ -178,6 +185,14 @@ class VolumeItemValueConverter extends AbstractItemValueConverter {
   protected _convertToCsv(a: Attribute, i: VolumeValue): string {
     const f: string = a.format ? a.format : VOLUME_FORMAT;
     return `${numeral(i.value).format(f)}|${i.unit}`;
+  }
+  protected convertFromCsv(csv: string): VolumeValue {
+    const p: string[] = csv.split('|');
+    return {
+      type: 'volume',
+      value: Number(p[0]),
+      unit: p[1]
+    } as VolumeValue;
   }
 }
 
@@ -190,6 +205,14 @@ class WidthItemValueConverter extends AbstractItemValueConverter {
     const f: string = a.format ? a.format : WIDTH_FORMAT;
     return `${numeral(i.value).format(f)}|${i.unit}`;
   }
+  protected convertFromCsv(csv: string): WidthValue {
+    const p: string[] = csv.split('|');
+    return {
+      type: 'width',
+      value: Number(p[0]),
+      unit: p[1]
+    } as WidthValue;
+  }
 }
 
 class LengthItemValueConverter extends AbstractItemValueConverter {
@@ -200,6 +223,14 @@ class LengthItemValueConverter extends AbstractItemValueConverter {
   protected _convertToCsv(a: Attribute, i: LengthValue): string {
     const f: string = a.format ? a.format : LENGTH_FORMAT;
     return `${numeral(i.value).format(f)}|${i.unit}`;
+  }
+  protected convertFromCsv(csv: string): LengthValue {
+    const p: string[] = csv.split('|');
+    return {
+      type: 'length',
+      value: Number(p[0]),
+      unit: p[1]
+    } as LengthValue;
   }
 }
 
@@ -212,6 +243,14 @@ class HeightItemValueConverter extends AbstractItemValueConverter {
     const f: string = a.format ? a.format : HEIGHT_FORMAT;
     return `${numeral(i.value).format(f)}|${i.unit}`;
   }
+  protected convertFromCsv(csv: string): HeightValue {
+    const p: string[] = csv.split('|');
+    return {
+      type: 'height',
+      value: Number(p[0]),
+      unit: p[1]
+    } as HeightValue;
+  }
 }
 
 class SelectItemValueConverter extends AbstractItemValueConverter {
@@ -221,6 +260,12 @@ class SelectItemValueConverter extends AbstractItemValueConverter {
   }
   protected _convertToCsv(a: Attribute, i: SelectValue): string {
     return this._convertToString(a, i);
+  }
+  protected convertFromCsv(csv: string): SelectValue {
+    return {
+      type: 'select',
+      key: csv
+    } as SelectValue;
   }
 }
 
@@ -232,6 +277,14 @@ class DoubleSelectItemValueConverter extends AbstractItemValueConverter {
   }
   protected _convertToCsv(a: Attribute, i: DoubleSelectValue): string {
     return this._convertToString(a, i);
+  }
+  protected convertFromCsv(csv: string): DoubleSelectValue {
+    const p: string[] = csv.split('|');
+    return {
+      type: 'doubleselect',
+      key1: p[0],
+      key2: p[1]
+    } as DoubleSelectValue;
   }
 }
 

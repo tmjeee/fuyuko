@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {GlobalAvatar} from '../../model/avatar.model';
 import {User} from '../../model/user.model';
 
-import config from '../../../assets/config.json';
+import config from '../../utils/config.util';
 
 export interface AvatarDialogComponentData {
   user: User;
@@ -49,7 +49,7 @@ export class AvatarDialogComponent {
   }
 
   globalAvatarUrl(predefinedAvatar: GlobalAvatar): string {
-      return `${config.api_host_url}/global/avatar/${predefinedAvatar.name}`;
+      return `${config().api_host_url}/global/avatar/${predefinedAvatar.name}`;
   }
 
   onDone($event: MouseEvent) {

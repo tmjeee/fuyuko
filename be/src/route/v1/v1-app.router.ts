@@ -76,10 +76,10 @@ import registerPostSaveDashboardRoute from './POST-save-dashboard.route';
 const v1AppRouter:Router  = express.Router();
 
 
-const reg = (app: Express, regi: Registry) => {
+const reg = (router: Router, regi: Registry) => {
     const p = '/v1';
     const registry = regi.newRegistry(p);
-    app.use(p, v1AppRouter);
+    router.use(p, v1AppRouter);
 
     registerGetHeartbeatRoute(v1AppRouter, registry);
     registerPostActivateInvirationRoute(v1AppRouter, registry);

@@ -7,7 +7,12 @@ COPY package*.json ./
 
 COPY . .
 
-RUN npm install
+RUN apt -y update && \
+    apt -y install apt-utils && \
+    apt -y install jq && \
+    apt -y install moreutils && \
+    npm install && \
+    /bin/bash -c 'chmod u+x update-config-json.sh'
 
 EXPOSE 8888
 

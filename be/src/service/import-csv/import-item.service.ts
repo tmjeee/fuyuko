@@ -2,11 +2,87 @@ import {ItemDataImport} from "../../model/data-import.model";
 import {Attribute2, CsvItem} from "../../route/model/server-side.model";
 import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
-import {Item} from "../../model/item.model";
+import {Item, Value} from "../../model/item.model";
 import {Attribute} from "../../model/attribute.model";
 import {getAttributesInView} from "../attribute.service";
 import { convert } from "../conversion-attribute.service";
 import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
+import {
+    setItemAreaValue,
+    setItemCurrencyValue,
+    setItemDateValue, setItemDimensionValue, setItemDoubleSelectValue, setItemHeightValue, setItemLengthValue,
+    setItemNumberValue, setItemSelectValue,
+    setItemStringValue,
+    setItemTextValue, setItemVolumeValue, setItemWidthValue
+} from "../../shared-utils/ui-item-value-setter.util";
+import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../../model/unit.model";
+
+
+const createNewItem = (a: Attribute, csvValueFormat: string) => {
+    const val: Value = { attributeId: a.id, val: undefined } as Value;
+    switch (a.type) {
+        case 'string': {
+            setItemStringValue(a, val, csvValueFormat);
+            break;
+        }
+        case 'text': {
+            setItemTextValue(a, val, csvValueFormat);
+            break;
+        }
+        case 'number': {
+            setItemNumberValue(a, val, Number(csvValueFormat));
+            break;
+        }
+        case 'date': {
+            setItemDateValue(a, val, csvValueFormat);
+            break;
+        }
+        case 'currency': {
+            setItemCurrencyValue(a, val, Number(csvValueFormat));
+            break;
+        }
+        case 'area': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemAreaValue(a, val, Number(s[0]), s[1] as AreaUnits);
+            break;
+        }
+        case 'volume': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemVolumeValue(a, val, Number(s[0]), s[1] as VolumeUnits);
+            break;
+        }
+        case 'dimension': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemDimensionValue(a, val, Number(s[0]), Number(s[1]), Number(s[2]), s[3] as DimensionUnits);
+            break;
+        }
+        case 'width': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemWidthValue(a, val, Number(s[0]), s[1] as WidthUnits);
+            break;
+        }
+        case 'height': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemHeightValue(a, val, Number(s[0]), s[1] as HeightUnits);
+            break;
+        }
+        case 'length': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemLengthValue(a, val, Number(s[0]), s[1] as LengthUnits);
+            break;
+        }
+        case 'select': {
+            setItemSelectValue(a, val, csvValueFormat);
+            break;
+        }
+        case 'doubleselect': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemDoubleSelectValue(a, val, s[0], s[1]);
+            break;
+        }
+    }
+    return val;
+}
 
 export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<ItemDataImport> => {
 
@@ -69,7 +145,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                             const attId: number = Number(v);
                             const att: Attribute = attributeByIdMap.get(attId);
                             if (att) {
-                                i[attId] = createNewItemValue(att, true);
+                                i[attId] = createNewItem(att, valueInString);
                             } else {
                                 errors.push({
                                    title: `Attribute not found`,
@@ -83,7 +159,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                             const att: Attribute = attributeByNameMap.get(attName);
                             if (att) {
                                 const attId: number = att.id;
-                                i[attId] = createNewItemValue(att, true);
+                                i[attId] = createNewItem(att, valueInString);
                             } else {
                                 errors.push({
                                     title: `Attribute not found`,

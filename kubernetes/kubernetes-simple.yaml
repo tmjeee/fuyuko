@@ -1,0 +1,168 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-deployment-fuyuko-simple-db
+  labels:
+    app: kubernetes-deployment-fuyuko-simple-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetes-pod-fuyuko-simple-db
+  template:
+    metadata:
+      labels:
+        app: kubernetes-pod-fuyuko-simple-db
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: kubernetes-fuyuko-simple-db
+          image: tmjee/fuyuko-db
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3306
+
+
+---
+
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-deployment-fuyuko-simple-be
+  labels:
+    app: kubernetes-deployment-fuyuko-simple-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetes-pod-fuyuko-simple-be
+  template:
+    metadata:
+      labels:
+        app: kubernetes-pod-fuyuko-simple-be
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: kubernetes-fuyuko-simple-be
+          image: tmjee/fuyuko-be
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8888
+          readinessProbe:
+            httpGet:
+              port: 8888
+              path: /api/v1/heartbeat
+          livenessProbe:
+            httpGet:
+              port: 8888
+              path: /api/v1/heartbeat
+
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-deployment-fuyuko-simple-fe
+  labels:
+    app: kubernetes-deployment-fuyuko-simple-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetes-pod-fuyuko-simple-fe
+  template:
+    metadata:
+      labels:
+        app: kubernetes-pod-fuyuko-simple-fe
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: kubernetes-fuyuko-simple-fe
+          image: tmjee/fuyuko-fe
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-service-fuyuko-simple-fe
+spec:
+  type: NodePort
+  selector:
+    app: kubernetes-pod-fuyuko-simple-fe
+  ports:
+    - name: fe-port
+      #nodePort: 8887
+      port: 8887
+      targetPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-service-fuyuko-simple-be
+spec:
+  type: NodePort
+  selector:
+    app: kubernetes-pod-fuyuko-simple-be
+  ports:
+    - name: be-port
+      #nodePort: 8888
+      port: 8888
+      targetPort: 8888
+
+---
+
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-service-fuyuko-simple-db
+spec:
+  type: LoadBalancer
+  selector:
+    app: kubernetes-pod-fuyuko-simple-db
+  ports:
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP
+
+
+---
+
+# apiVersion: networking.k8s.io/v1beta1
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kubernetes-ingress-fuyuko-simple
+#  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /
+#    kubernetes.io/ingress.class: nginx
+spec:
+  backend:
+    serviceName: kubernetes-service-fuyuko-simple-fe
+    servicePort: 8887
+  rules:
+    # - host: fuyuko-simple
+    - http:
+        paths:
+          - path: /api/*
+            backend:
+              serviceName: kubernetes-service-fuyuko-simple-be
+              servicePort: 8888
+
+

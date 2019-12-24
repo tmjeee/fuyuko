@@ -11,7 +11,6 @@ import {UserManagementService} from '../../service/user-management-service/user-
 import {Role, ROLE_EDIT, ROLE_PARTNER, ROLE_VIEW} from '../../model/role.model';
 import {map, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
-import config from '../../../assets/config.json';
 import {Paginable} from '../../model/pagnination.model';
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';

@@ -1,0 +1,1 @@
+{"version":3,"file":"forum.page.js","sourceRoot":"","sources":["../../../../../src/app/page/forum-page/forum.page.ts"],"names":[],"mappings":";AAAA,OAAO,EAAC,SAAS,EAAC,MAAM,eAAe,CAAC;AAOxC,IAAa,kBAAkB,GAA/B,MAAa,kBAAkB;CAE9B,CAAA;AAFY,kBAAkB;IAJ9B,SAAS,CAAC;QACP,WAAW,EAAE,mBAAmB;QAChC,SAAS,EAAE,CAAC,mBAAmB,CAAC;KACnC,CAAC;GACW,kBAAkB,CAE9B;SAFY,kBAAkB"}

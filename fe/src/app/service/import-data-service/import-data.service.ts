@@ -7,16 +7,16 @@ import {
 } from '../../model/data-import.model';
 import {Observable, of} from 'rxjs';
 import {Job} from '../../model/job.model';
-import config from '../../../assets/config.json';
+import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 
-const URL_PREVIEW_ATTRIBUTES = `${config.api_host_url}/view/:viewId/import/attributes/preview`;
-const URL_PREVIEW_PRICES = `${config.api_host_url}/view/:viewId/import/prices/preview`;
-const URL_PREVIEW_ITEMS = `${config.api_host_url}/view/:viewId/import/items/preview`;
+const URL_PREVIEW_ATTRIBUTES = () => `${config().api_host_url}/view/:viewId/import/attributes/preview`;
+const URL_PREVIEW_PRICES = () => `${config().api_host_url}/view/:viewId/import/prices/preview`;
+const URL_PREVIEW_ITEMS = () => `${config().api_host_url}/view/:viewId/import/items/preview`;
 
-const URL_SCHEDULE_ATTRIBUTES = `${config.api_host_url}/view/:viewId/import/attributes`;
-const URL_SCHEDULE_PRICES = `${config.api_host_url}/view/:viewId/import/prices`;
-const URL_SCHEDULE_ITEMS = `${config.api_host_url}/view/:viewId/import/items`;
+const URL_SCHEDULE_ATTRIBUTES = () => `${config().api_host_url}/view/:viewId/import/attributes`;
+const URL_SCHEDULE_PRICES = ()  => `${config().api_host_url}/view/:viewId/import/prices`;
+const URL_SCHEDULE_ITEMS = () => `${config().api_host_url}/view/:viewId/import/items`;
 
 
 @Injectable()
@@ -33,20 +33,20 @@ export class ImportDataService {
                 const formData: FormData = new FormData();
                 formData.set('attributeDataCsvFile', file);
                 return this.httpClient.post<AttributeDataImport>(
-                    URL_PREVIEW_ATTRIBUTES.replace(':viewId', String(viewId)), formData);
+                    URL_PREVIEW_ATTRIBUTES().replace(':viewId', String(viewId)), formData);
             }
             case 'ITEM': {
                 const formData: FormData = new FormData();
                 formData.set('itemDataCsvFile', file);
                 return this.httpClient.post<ItemDataImport>(
-                    URL_PREVIEW_ITEMS.replace(':viewId', String(viewId)), formData);
+                    URL_PREVIEW_ITEMS().replace(':viewId', String(viewId)), formData);
 
             }
             case 'PRICE': {
                 const formData: FormData = new FormData();
                 formData.set('priceDataCsvFile', file);
                 return this.httpClient.post<PriceDataImport>(
-                    URL_PREVIEW_PRICES.replace(':viewId', String(viewId)), formData);
+                    URL_PREVIEW_PRICES().replace(':viewId', String(viewId)), formData);
             }
         }
     }
@@ -57,15 +57,15 @@ export class ImportDataService {
         switch (uploadType) {
             case 'ATTRIBUTE': {
                 const formData: FormData = new FormData();
-                return this.httpClient.post<Job>(URL_SCHEDULE_ATTRIBUTES.replace(':viewId', String(viewId)), formData);
+                return this.httpClient.post<Job>(URL_SCHEDULE_ATTRIBUTES().replace(':viewId', String(viewId)), formData);
             }
             case 'ITEM': {
                 const formData: FormData = new FormData();
-                return this.httpClient.post<Job>(URL_SCHEDULE_ITEMS.replace(':viewId', String(viewId)), formData);
+                return this.httpClient.post<Job>(URL_SCHEDULE_ITEMS().replace(':viewId', String(viewId)), formData);
             }
             case 'PRICE': {
                 const formData: FormData = new FormData();
-                return this.httpClient.post<Job>(URL_SCHEDULE_PRICES.replace(':viewId', String(viewId)), formData);
+                return this.httpClient.post<Job>(URL_SCHEDULE_PRICES().replace(':viewId', String(viewId)), formData);
             }
         }
     }

@@ -1,0 +1,9 @@
+export const DATE_FORMAT = 'DD-MM-YYYY';
+export const CURRENCY_FORMAT = '$0.00';
+export const AREA_FORMAT = '0.00';
+export const VOLUME_FORMAT = '0.00';
+export const DIMENSION_FORMAT = '0.00';
+export const WIDTH_FORMAT = '0.00';
+export const HEIGHT_FORMAT = '0.00';
+export const LENGTH_FORMAT = '0.00';
+//# sourceMappingURL=item.model.js.map

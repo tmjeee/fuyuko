@@ -1,0 +1,1 @@
+{"version":3,"file":"forum-help.page.js","sourceRoot":"","sources":["../../../../../src/app/page/forum-help-page/forum-help.page.ts"],"names":[],"mappings":";AAAA,OAAO,EAAC,SAAS,EAAC,MAAM,eAAe,CAAC;AAOxC,IAAa,sBAAsB,GAAnC,MAAa,sBAAsB;CAElC,CAAA;AAFY,sBAAsB;IAJlC,SAAS,CAAC;QACR,WAAW,EAAE,wBAAwB;QACrC,SAAS,EAAE,CAAC,wBAAwB,CAAC;KACvC,CAAC;GACW,sBAAsB,CAElC;SAFY,sBAAsB"}

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+cd $(dirname $0)
+
+npm run tsc
+
 docker stop tmjee-fuyuko-be
 docker rm tmjee-fuyuko-be
 docker rmi -f tmjee/fuyuko-be

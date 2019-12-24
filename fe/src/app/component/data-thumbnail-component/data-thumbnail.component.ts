@@ -9,7 +9,7 @@ import {map} from 'rxjs/operators';
 import {ItemSearchComponentEvent, SearchType} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 import {createNewItem} from '../../shared-utils/ui-item-value-creator.utils';
-import config from '../../../assets/config.json';
+import config from '../../utils/config.util';
 
 
 export interface DataThumbnailSearchComponentEvent {
@@ -23,7 +23,7 @@ export interface DataThumbnailComponentEvent {
   deletedItems: Item[];  // only available when type is modification
 }
 
-const URL_GET_ITEM_IMAGE = `${config.api_host_url}/item/image/:itemImageId`;
+const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
 
 @Component({
   selector: 'app-data-thumbnail',
@@ -61,7 +61,7 @@ export class DataThumbnailComponent implements OnInit {
   getItemImagesUrl(item: Item): string[] {
     if (item && item.images) {
       // const p = `/item/image/:itemImageId`;
-      return item.images.map((i: ItemImage) => URL_GET_ITEM_IMAGE.replace(':itemImageId', `${i.id}`));
+      return item.images.map((i: ItemImage) => URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`));
     }
     return [];
   }

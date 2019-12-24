@@ -51,6 +51,7 @@ import {UserActivationPageComponent} from './page/user-activation-page/user-acti
 
 const routes: Routes = [
 
+  // default
   {
     path: '',
     pathMatch: 'full',

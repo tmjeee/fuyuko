@@ -5,13 +5,13 @@ import {Themes, ThemeService} from '../theme-service/theme.service';
 import {HttpClient} from '@angular/common/http';
 import {LoginResponse} from '../../model/login.model';
 
-import config from '../../../assets/config.json';
+import config from '../../utils/config.util';
 import {tap} from 'rxjs/operators';
 
 
-const URL_LOGIN = `${config.api_host_url}/login`;
-const URL_LOGOUT = `${config.api_host_url}/logout`;
-const URL_SAVE_USER = `${config.api_host_url}/user`;
+const URL_LOGIN = () => `${config().api_host_url}/login`;
+const URL_LOGOUT = () => `${config().api_host_url}/logout`;
+const URL_SAVE_USER = () => `${config().api_host_url}/user`;
 
 export interface StorageToken  {
   token: string;
@@ -34,7 +34,7 @@ export class AuthService {
  }
 
   login(username: string, password: string): Observable<LoginResponse> {
-        return this.httpClient.post<LoginResponse>(URL_LOGIN, {
+        return this.httpClient.post<LoginResponse>(URL_LOGIN(), {
             username, password
         }).pipe(
             tap((r: LoginResponse) => {
@@ -48,7 +48,7 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-     return this.httpClient.post<void>(`${URL_LOGOUT}`, {
+     return this.httpClient.post<void>(`${URL_LOGOUT()}`, {
      }).pipe(
          tap((_) => {
              this.destroyToken();
@@ -58,7 +58,7 @@ export class AuthService {
   }
 
   saveMyself(myself: User): Observable<User> {
-    return this.httpClient.post<User>(URL_SAVE_USER, {
+    return this.httpClient.post<User>(URL_SAVE_USER(), {
         userId: myself.id,
         firstName: myself.username,
         lastName: myself.lastName,
@@ -69,7 +69,7 @@ export class AuthService {
   }
 
   saveTheme(theme: string): Observable<User> {
-    return this.httpClient.post<User>(URL_SAVE_USER, {
+    return this.httpClient.post<User>(URL_SAVE_USER(), {
         theme
     }).pipe(
         tap(this.afterSaveCallback.bind(this))
@@ -77,7 +77,7 @@ export class AuthService {
   }
 
   savePassword(myself: User, password: string) {
-      return this.httpClient.post<User>(URL_SAVE_USER, {
+      return this.httpClient.post<User>(URL_SAVE_USER(), {
           password
       }).pipe(
           tap(this.afterSaveCallback.bind(this))
