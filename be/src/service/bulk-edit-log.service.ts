@@ -1,5 +1,5 @@
 import {doInDbConnection, QueryA, QueryResponse} from "../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Level} from "../model/level.model";
 
 export class BulkEditLogger {
@@ -25,7 +25,7 @@ export class BulkEditLogger {
     }
 
     async log(level: Level , log: string) {
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             await conn.query(`INSERT INTO TBL_BULK_EDIT_LOG (BULK_EDIT_ID, LEVEL, LOG) VALUES (?,?,?)`, [this.bulkEditId, level, log]);
         });
     }
@@ -33,7 +33,7 @@ export class BulkEditLogger {
 
 
 export const newBulkEditLogger = async (name: string, description: string = ''): Promise<BulkEditLogger> => {
-    return await doInDbConnection(async (conn: PoolConnection) => {
+    return await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`INSERT INTO TBL_BULK_EDIT (NAME, DESCRIPTION) VALUES (?,?) `, [name, description]);
         const id: number  = q.insertId;
 

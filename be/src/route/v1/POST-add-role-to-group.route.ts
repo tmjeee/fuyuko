@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/response.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 
@@ -19,7 +19,7 @@ const httpAction: any[] = [
         const groupId: number = Number(req.params.groupId);
         const roleName: string = req.params.roleName;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const qa: QueryA = await conn.query('SELECT ID FROM TBL_ROLE WHERE NAME = ?', [roleName]);
             if (!!!qa.length) {

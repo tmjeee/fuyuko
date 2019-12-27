@@ -4,7 +4,7 @@ import {validateMiddlewareFn} from "./common-middleware";
 
 import * as jwt from 'jsonwebtoken';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {createJwtToken, hashedPassword} from "../../service";
 import {LoginResponse} from "../../model/login.model";
 import {JwtPayload} from "../../model/jwt.model";
@@ -26,7 +26,7 @@ const httpAction = [
         const usrname: string = req.body.username;
         const password: string = hashedPassword(req.body.password);
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const qUser: QueryA = await conn.query(`
                 SELECT 
@@ -119,7 +119,7 @@ const httpAction = [
 ];
 
 
-const roles = async (groupId: number, conn: PoolConnection) => {
+const roles = async (groupId: number, conn: Connection) => {
     const q: QueryA = await conn.query(
         `SELECT ID, NAME, DESCRIPTION 
         FROM TBL_ROLE AS R

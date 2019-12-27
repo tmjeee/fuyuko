@@ -2,9 +2,7 @@ import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {param, body} from 'express-validator';
-import {PricingStructureItem, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 import {ApiResponse} from "../../model/response.model";
 import {setPrices} from "../../service/pricing-structure-item.service";
 

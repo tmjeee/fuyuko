@@ -56,6 +56,9 @@ echo "Altered fuyuko-be ingress ip ${INGRESS_IP} in /src/config/config.json"
 kubectl exec "$FUYUKO_BE_POD_NAME" -- ./update-config-json.sh src/config/config.json ".\"db-host\"=\"${DB_IP}\""
 echo "Altered fuyuko-be db-host ${DB_IP} in /src/config/config.json"
 
+# Run db update
+kubectl exec "$FUYUKO_BE_POD_NAME" -- npm run runUpdater
+
 echo "Content of fuyuko-be /src/config/config.json"
 kubectl exec "$FUYUKO_BE_POD_NAME" -- cat ./src/config/config.json
 

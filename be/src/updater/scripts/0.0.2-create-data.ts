@@ -1,4 +1,4 @@
-import {Pool, PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {i} from '../../logger';
 import {doInDbConnection, QueryResponse} from '../../db';
 import sha256 from "sha256";
@@ -35,7 +35,7 @@ const INSERT_GLOBAL_AVATARS = async () => {
         const mimeType: fileType.FileTypeResult = fileType(buffer);
         const size = buffer.length;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_AVATAR (NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?, ?, ?, ?)`,
                 [file, mimeType.mime, size, buffer]);
         });
@@ -53,7 +53,7 @@ const INSERT_GLOBAL_IMAGES = async () => {
         const mimeType: fileType.FileTypeResult = fileType(buffer);
         const size = buffer.length;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_IMAGE (NAME, MIME_TYPE, SIZE, CONTENT, TAG) VALUES (?,?,?,?,?)`, [file, mimeType.mime, size, buffer, fileNameOnly]);
         });
     }
@@ -61,7 +61,7 @@ const INSERT_GLOBAL_IMAGES = async () => {
 
 const INSERT_DATA = async () => {
 
-    await doInDbConnection(async (conn: PoolConnection) => {
+    await doInDbConnection(async (conn: Connection) => {
         // users
         const u1: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
             ['tmjee', new Date(), new Date(), 'tmjee1@gmail.com', 'ENABLED', hashedPassword('tmjee'), 'toby', 'jee']);
@@ -300,7 +300,7 @@ type CreateRuleType = {
     }[]
 }
 
-const createManyRules = async(conn: PoolConnection, viewId: number, att1Id: number, att2Id: number) => {
+const createManyRules = async(conn: Connection, viewId: number, att1Id: number, att2Id: number) => {
     const c = ()=>({
         name: `Rule #${random()}`,
         viewId: viewId,
@@ -354,7 +354,7 @@ const createManyRules = async(conn: PoolConnection, viewId: number, att1Id: numb
     await createRule(conn, c());
 }
 
-const createRule = async (conn: PoolConnection, t: CreateRuleType) => {
+const createRule = async (conn: Connection, t: CreateRuleType) => {
     const r1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,'ENABLED')`, [t.viewId, t.name, `${t.name} Description`]);
     for (const vc of t.validateClauses) {
         const vc1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,?)`, [r1.insertId, vc.attributeId, vc.operator, '']);
@@ -398,7 +398,7 @@ type CreateItemType = {
     children: CreateItemType[]
 }
 
-const createManyItems = async (conn: PoolConnection, pricingStructureId: number, viewId: number, att1Id: number, att2Id: number, att3Id: number, att4Id: number, att5Id: number, att6Id: number,
+const createManyItems = async (conn: Connection, pricingStructureId: number, viewId: number, att1Id: number, att2Id: number, att3Id: number, att4Id: number, att5Id: number, att6Id: number,
                           att7Id: number, att8Id: number, att9Id: number, att10Id: number, att11Id: number, att12Id: number, att13Id: number) => {
     let _c = 0;
     const c = () => {
@@ -524,7 +524,7 @@ const createManyItems = async (conn: PoolConnection, pricingStructureId: number,
     _createItem(conn, pricingStructureId, itemDef);
 }
 
-const _createItem = async (conn: PoolConnection, pricingStructureId: number, args: CreateItemType, parentItemId: number = null) => {
+const _createItem = async (conn: Connection, pricingStructureId: number, args: CreateItemType, parentItemId: number = null) => {
     // item
     const qItem: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`, [parentItemId, args.viewId, args.itemName, `${args.itemName} Description`]);
     const itemId: number = qItem.insertId;

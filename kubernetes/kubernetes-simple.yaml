@@ -24,7 +24,6 @@ spec:
           ports:
             - containerPort: 3306
 
-
 ---
 
 
@@ -55,10 +54,14 @@ spec:
           ports:
             - containerPort: 8888
           readinessProbe:
+            initialDelaySeconds: 60
+            periodSeconds: 120
             httpGet:
               port: 8888
               path: /api/v1/heartbeat
           livenessProbe:
+            initialDelaySeconds: 60
+            periodSeconds: 120
             httpGet:
               port: 8888
               path: /api/v1/heartbeat

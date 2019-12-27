@@ -3,7 +3,7 @@ import {NextFunction, Router, Request, Response} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import { check, body, param } from "express-validator";
 import {doInDbConnection} from "../../db";
-import {Pool, PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [
@@ -21,7 +21,7 @@ const httpAction: any[] = [
         const status: string = req.params.status;
         const itemIds: number[] = req.body.itemIds;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             for (const itemId of itemIds) {
                 await conn.query(`UPDATE TBL_ITEM SET STATUS = ? WHERE ID=?`, [status,itemId]);
             }

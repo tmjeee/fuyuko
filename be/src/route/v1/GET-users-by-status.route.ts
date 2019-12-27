@@ -2,7 +2,7 @@ import {NextFunction, Router, Request, Response } from "express";
 import {Registry } from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
 import {User} from "../../model/user.model";
@@ -18,7 +18,7 @@ const httpAction: any[] = [
 
         const status: string = req.params.status;
 
-        const u: User[] = await doInDbConnection(async (conn: PoolConnection) => {
+        const u: User[] = await doInDbConnection(async (conn: Connection) => {
 
             const q: QueryA = await conn.query(`
                 SELECT 

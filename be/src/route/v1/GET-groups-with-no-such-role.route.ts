@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
 import {Paginable} from "../../model/pagnination.model";
@@ -17,7 +17,7 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const roleName: string = req.params.roleName;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const qTotal: QueryA = await conn.query(`
                 SELECT 

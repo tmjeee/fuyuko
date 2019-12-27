@@ -1,11 +1,11 @@
 import {User} from "../model/user.model";
 import {doInDbConnection, QueryA, QueryI} from "../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Group} from "../model/group.model";
 import {Role} from "../model/role.model";
 
 export const hasUserRole = async (userId: number, roleName: string): Promise<boolean> => {
-    return await doInDbConnection(async (conn: PoolConnection) => {
+    return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT COUNT(*) AS COUNT 
             FROM TBL_USER AS U 
@@ -21,7 +21,7 @@ export const hasUserRole = async (userId: number, roleName: string): Promise<boo
 }
 
 export const getUserById = async (userId: number): Promise<User>  => {
-    return doInDbConnection(async (conn: PoolConnection) => {
+    return doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(
             `SELECT 
                 U.ID AS U_ID,

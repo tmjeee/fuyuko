@@ -3,7 +3,7 @@ import {NextFunction, Router, Request, Response} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check, body} from 'express-validator';
 import {doInDbConnection, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Rule} from "../../model/rule.model";
 import {Rule2} from "../model/server-side.model";
 import {ApiResponse} from "../../model/response.model";
@@ -25,11 +25,11 @@ const httpAction: any[] = [
         
         for (const rule2 of rule2s) {
             if (rule2.id && rule2.id > 0)  { // update
-                doInDbConnection((conn: PoolConnection) => {
+                doInDbConnection((conn: Connection) => {
                     update(conn, viewId, rule2)
                 });
             } else { // add
-                doInDbConnection((conn: PoolConnection) => {
+                doInDbConnection((conn: Connection) => {
                     add(conn, viewId, rule2)
                 });
             }
@@ -42,9 +42,9 @@ const httpAction: any[] = [
     }
 ];
 
-const add = async (conn: PoolConnection, viewId: number, rule2: Rule2) => {
+const add = async (conn: Connection, viewId: number, rule2: Rule2) => {
 
-    await doInDbConnection(async (conn: PoolConnection) => {
+    await doInDbConnection(async (conn: Connection) => {
             const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,'ENABLED')`, [viewId, rule2.name, rule2.description]);
             const ruleId: number = rq.insertId;
 
@@ -80,8 +80,8 @@ const add = async (conn: PoolConnection, viewId: number, rule2: Rule2) => {
     });
 };
 
-const update = async (conn: PoolConnection, viewId: number, rule2: Rule2) => {
-    await doInDbConnection(async (conn: PoolConnection) => {
+const update = async (conn: Connection, viewId: number, rule2: Rule2) => {
+    await doInDbConnection(async (conn: Connection) => {
 
         const ruleId: number = rule2.id;
         await conn.query(`UPDATE TBL_RULE SET NAME=?, DESCRIPTION=? WHERE ID=?`, [rule2.name, rule2.description, ruleId]);

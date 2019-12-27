@@ -2,11 +2,11 @@ import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Registry} from "../../registry";
 import {valid} from "semver";
 
-const sendNoAvatarAvatar = async (res: Response, conn: PoolConnection) => {
+const sendNoAvatarAvatar = async (res: Response, conn: Connection) => {
     const q: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_IMAGE WHERE TAG = ?',
         ['no-avatar']);
     if (q.length > 0) {
@@ -28,7 +28,7 @@ const httpAction = [
 
         const userId = req.params.userId;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const q1: QueryA  = await conn.query(`SELECT ID, USER_ID, GLOBAL_AVATAR_ID, MIME_TYPE, SIZE, CONTENT FROM TBL_USER_AVATAR WHERE USER_ID = ?`,
                 [userId]);
             if (q1.length > 0) { // have user avatar

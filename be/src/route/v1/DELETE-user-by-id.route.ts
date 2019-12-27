@@ -2,7 +2,7 @@ import {NextFunction, Router, Request, Response } from "express";
 import {Registry } from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/response.model";
 import {check} from 'express-validator';
 
@@ -14,7 +14,7 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const userId: number = Number(req.params.userId);
 
             await conn.query(`

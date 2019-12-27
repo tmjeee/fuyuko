@@ -4,7 +4,7 @@ import {JobLogger, newJobLogger, newLoggingCallback} from "../job-log.service";
 import {saveAttributes} from "../attribute.service";
 import {getJobyById} from "../job.service";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 
 const uuid = require('uuid');
 
@@ -23,7 +23,7 @@ export const runJob = async (viewId: number, attributeDataImportId: number, attr
             const effectiveAttributes: Attribute[] = [];
 
             for (const a of attributes) {
-                await doInDbConnection(async (conn: PoolConnection) => {
+                await doInDbConnection(async (conn: Connection) => {
                     const q: QueryA = await conn.query(
                         `SELECT COUNT(*) AS COUNT FROM TBL_VIEW_ATTRIBUTE WHERE NAME=? AND VIEW_ID=?`, [a.name, viewId]);
                     if (q.length > 0 && q[0].COUNT > 0) {

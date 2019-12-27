@@ -1,5 +1,5 @@
 import {doInDbConnection, QueryResponse} from "../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Level} from '../model/level.model';
 import {AuditCategory} from "../route/model/server-side.model";
 
@@ -19,7 +19,7 @@ export const auditLogError = async (message: string, category: AuditCategory = "
     auditLog(message, category, 'ERROR');
 }
 export const auditLog = async (message: string, category: AuditCategory = "APP", level: AuditLevel = "INFO") => {
-    await doInDbConnection(async (conn: PoolConnection) => {
+    await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`INSERT INTO TBL_AUDIT_LOG (CATEGORY, LEVEL, CREATION_DATE, LOG) VALUES (?,?,?,?)`,
             [category, level, new Date(), message]);
     });

@@ -5,12 +5,6 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {Attribute} from "../../model/attribute.model";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 import {ItemDataExport} from "../../model/data-export.model";
-import {doInDbConnection} from "../../db";
-import {Pool, PoolConnection} from "mariadb";
-import {getItem2WithFiltering} from "../../service/item-filtering.service";
-import { Item2 } from "../model/server-side.model";
-import {convert} from "../../service/conversion-item.service";
-import {Item} from "../../model/item.model";
 import {preview, PreviewResult} from "../../service/export-csv/export-item.service";
 
 const httpAction: any[] = [

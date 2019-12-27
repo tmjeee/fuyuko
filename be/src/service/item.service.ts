@@ -1,11 +1,11 @@
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../route/model/server-side.model";
 import {ItemImage, ItemValTypes, Value} from "../model/item.model";
 
 
 export const updateItemValue = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
-    await doInDbConnection(async (conn: PoolConnection) => {
+    await doInDbConnection(async (conn: Connection) => {
         const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND VIEW_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
 
         const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
@@ -25,11 +25,11 @@ export const updateItemValue = async (viewId: number, itemId: number, itemValue:
 }
 
 export const updateItem = async (viewId: number, item2: Item2) => {
-    await doInDbConnection(async (conn: PoolConnection) => {
+    await doInDbConnection(async (conn: Connection) => {
         return await _updateItem(conn, viewId, item2);
     });
 }
-const _updateItem = async (conn: PoolConnection, viewId: number, item2: Item2) => {
+const _updateItem = async (conn: Connection, viewId: number, item2: Item2) => {
     const itemId: number = item2.id;
     const name: string = item2.name;
     const description: string = item2.description;
@@ -61,11 +61,11 @@ const _updateItem = async (conn: PoolConnection, viewId: number, item2: Item2) =
 }
 
 export const addItem = async (viewId: number, item2: Item2, parentId: number = null): Promise<number> => {
-    return await doInDbConnection(async (conn: PoolConnection) => {
+    return await doInDbConnection(async (conn: Connection) => {
         return await _addItem(conn, viewId, item2, parentId);
     });
 }
-const _addItem = async (conn: PoolConnection, viewId: number, item2: Item2, parentId: number = null): Promise<number> => {
+const _addItem = async (conn: Connection, viewId: number, item2: Item2, parentId: number = null): Promise<number> => {
 
     const name: string = item2.name;
     const description: string = item2.description;
@@ -97,7 +97,7 @@ const _addItem = async (conn: PoolConnection, viewId: number, item2: Item2, pare
 
 
 export const getAllItemsInView = async (viewId: number): Promise<Item2[]> => {
-    const item2s: Item2[] = await doInDbConnection(async (conn: PoolConnection) => {
+    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT
                     I.ID AS I_ID,
@@ -145,7 +145,7 @@ export const getAllItemsInView = async (viewId: number): Promise<Item2[]> => {
 
 export const getItemById = async (viewId: number, itemId: number): Promise<Item2> => {
 
-    const item2s: Item2[] = await doInDbConnection(async (conn: PoolConnection) => {
+    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT
                     I.ID AS I_ID,
@@ -194,7 +194,7 @@ export const getItemById = async (viewId: number, itemId: number): Promise<Item2
 
 export const findChildrenItems = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
 
-    const item2s: Item2[] =  await doInDbConnection(async (conn: PoolConnection) => {
+    const item2s: Item2[] =  await doInDbConnection(async (conn: Connection) => {
 
         const q: QueryA = await conn.query(`
                 SELECT

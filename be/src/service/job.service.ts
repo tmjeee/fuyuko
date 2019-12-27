@@ -1,9 +1,9 @@
 import {Job} from "../model/job.model";
 import {doInDbConnection, QueryA} from "../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 
 export const getJobyById = async (jobId: number): Promise<Job> => {
-    const job: Job = await doInDbConnection(async (conn: PoolConnection) => {
+    const job: Job = await doInDbConnection(async (conn: Connection) => {
 
         const q: QueryA = await conn.query(`
                 SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE, STATUS, PROGRESS FROM TBL_JOB WHERE ID=? 

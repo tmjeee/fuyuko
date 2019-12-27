@@ -4,11 +4,10 @@ import {CsvAttribute} from "../../route/model/server-side.model";
 import {Messages, Message} from "../../model/notification-listing.model";
 import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
 import {doInDbConnection, QueryA} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 
 const toPair1 = async (pair1: string): Promise<Pair1[]> => {
     const o: Pair1[] = await readPair1Csv(pair1);
-    console.log('************************ to pair1', pair1, o);
     return o;
 }
 
@@ -39,7 +38,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
     const result: Attribute[] = [];
 
     for(const attribute of attributes) {
-        const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
+        const q: QueryA = await doInDbConnection(async (conn: Connection) => {
             return await conn.query(`
                 SELECT COUNT(*) AS COUNT FROM TBL_VIEW_ATTRIBUTE WHERE NAME=? AND VIEW_ID=?
             `, [attribute.name, viewId]);

@@ -1,4 +1,4 @@
-import {Pool, PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {i} from '../../logger';
 import {doInDbConnection} from "../../db";
 
@@ -56,7 +56,7 @@ export const update = async () => {
 
 
 const TBL_INVITATION_REGISTRATION = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
        await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_INVITATION_REGISTRATION (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -70,7 +70,7 @@ const TBL_INVITATION_REGISTRATION = async () => {
 }
 
 const TBL_INVITATION_REGISTRATION_GROUPS = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_INVITATION_REGISTRATION_GROUP (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -83,7 +83,7 @@ const TBL_INVITATION_REGISTRATION_GROUPS = async () => {
 
 
 const TBL_SELF_REGISTRATION = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_SELF_REGISTRATION (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -102,7 +102,7 @@ const TBL_SELF_REGISTRATION = async () => {
 
 const TBL_GROUP = async () => {
    // TBL_GROUP
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_GROUP (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -115,7 +115,7 @@ const TBL_GROUP = async () => {
 };
 
 const TBL_AUDIT_LOG = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_AUDIT_LOG (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -131,7 +131,7 @@ const TBL_AUDIT_LOG = async () => {
 
 const TBL_USER = async () => {
    // TBL_USER
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_USER (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -149,7 +149,7 @@ const TBL_USER = async () => {
 };
 
 const TBL_USER_THEME = async () => {
-    await doInDbConnection(async (conn: PoolConnection) => {
+    await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_USER_THEME (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -162,7 +162,7 @@ const TBL_USER_THEME = async () => {
 
 
 const TBL_USER_DASHBOARD = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_USER_DASHBOARD (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -174,7 +174,7 @@ const TBL_USER_DASHBOARD = async () => {
 };
 
 const TBL_USER_DASHBOARD_WIDGET = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_USER_DASHBOARD_WIDGET (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -186,7 +186,7 @@ const TBL_USER_DASHBOARD_WIDGET = async () => {
 };
 
 const TBL_GLOBAL_IMAGE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_GLOBAL_IMAGE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -201,7 +201,7 @@ const TBL_GLOBAL_IMAGE = async () => {
 }
 
 const TBL_GLOBAL_AVATAR = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_GLOBAL_AVATAR (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -215,7 +215,7 @@ const TBL_GLOBAL_AVATAR = async () => {
 }
 
 const TBL_USER_AVATAR = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_USER_AVATAR (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -231,7 +231,7 @@ const TBL_USER_AVATAR = async () => {
 
 const TBL_LOOKUP_USER_GROUP = async () => {
    // TBL_LOOKUP_USER_GROUP
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_LOOKUP_USER_GROUP (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -244,7 +244,7 @@ const TBL_LOOKUP_USER_GROUP = async () => {
 
 const TBL_ROLE = async () => {
    // TBL_ROLE
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ROLE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -257,7 +257,7 @@ const TBL_ROLE = async () => {
 
 const TBL_LOOKUP_GROUP_ROLE = async () => {
    // TBL_LOOKUP_GROUP_ROLE
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_LOOKUP_GROUP_ROLE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -270,7 +270,7 @@ const TBL_LOOKUP_GROUP_ROLE = async () => {
 };
 
 const TBL_PRICING_STRUCTURE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_PRICING_STRUCTURE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -285,7 +285,7 @@ const TBL_PRICING_STRUCTURE = async () => {
 
 
 const TBL_LOOKUP_PRICING_STRUCTURE_GROUP = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_LOOKUP_PRICING_STRUCTURE_GROUP (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -298,7 +298,7 @@ const TBL_LOOKUP_PRICING_STRUCTURE_GROUP = async () => {
 
 
 const TBL_PRICING_STRUCTURE_ITEM = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_PRICING_STRUCTURE_ITEM (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -312,7 +312,7 @@ const TBL_PRICING_STRUCTURE_ITEM = async () => {
 }
 
 const TBL_RULE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_RULE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -326,7 +326,7 @@ const TBL_RULE = async () => {
 }
 
 const TBL_RULE_VALIDATE_CLAUSE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_RULE_VALIDATE_CLAUSE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -340,7 +340,7 @@ const TBL_RULE_VALIDATE_CLAUSE = async () => {
 };
 
 const TBL_RULE_VALIDATE_CLAUSE_METADATA = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_RULE_VALIDATE_CLAUSE_METADATA (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -352,7 +352,7 @@ const TBL_RULE_VALIDATE_CLAUSE_METADATA = async () => {
 }
 
 const TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -366,7 +366,7 @@ const TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY = async () => {
 }
 
 const TBL_RULE_WHEN_CLAUSE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_RULE_WHEN_CLAUSE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -380,7 +380,7 @@ const TBL_RULE_WHEN_CLAUSE = async () => {
 };
 
 const TBL_RULE_WHEN_CLAUSE_METADATA = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_RULE_WHEN_CLAUSE_METADATA (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -392,7 +392,7 @@ const TBL_RULE_WHEN_CLAUSE_METADATA = async () => {
 };
 
 const TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -406,7 +406,7 @@ const TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY = async () => {
 };
 
 const TBL_VIEW = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_VIEW (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -419,7 +419,7 @@ const TBL_VIEW = async () => {
 };
 
 const TBL_ITEM = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -434,7 +434,7 @@ const TBL_ITEM = async () => {
 };
 
 const TBL_ITEM_IMAGE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM_IMAGE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -450,7 +450,7 @@ const TBL_ITEM_IMAGE = async () => {
 };
 
 const TBL_VIEW_ATTRIBUTE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_VIEW_ATTRIBUTE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -465,7 +465,7 @@ const TBL_VIEW_ATTRIBUTE = async () => {
 };
 
 const TBL_VIEW_ATTRIBUTE_METADATA = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_VIEW_ATTRIBUTE_METADATA (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -477,7 +477,7 @@ const TBL_VIEW_ATTRIBUTE_METADATA = async () => {
 };
 
 const TBL_VIEW_ATTRIBUTE_METADATA_ENTRY = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -490,7 +490,7 @@ const TBL_VIEW_ATTRIBUTE_METADATA_ENTRY = async () => {
 };
 
 const TBL_ITEM_VALUE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM_VALUE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -502,7 +502,7 @@ const TBL_ITEM_VALUE = async () => {
 };
 
 const TBL_ITEM_VALUE_METADATA = async () => {
-   await doInDbConnection(async(conn: PoolConnection) => {
+   await doInDbConnection(async(conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM_VALUE_METADATA (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -515,7 +515,7 @@ const TBL_ITEM_VALUE_METADATA = async () => {
 
 
 const TBL_ITEM_VALUE_METADATA_ENTRY = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_ITEM_VALUE_METADATA_ENTRY (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -530,7 +530,7 @@ const TBL_ITEM_VALUE_METADATA_ENTRY = async () => {
 
 
 const TBL_DATA_IMPORT = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -544,7 +544,7 @@ const TBL_DATA_IMPORT = async () => {
 };
 
 const TBL_DATA_IMPORT_FILE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_DATA_IMPORT_FILE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -560,7 +560,7 @@ const TBL_DATA_IMPORT_FILE = async () => {
 
 
 const TBL_DATA_EXPORT = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -574,7 +574,7 @@ const TBL_DATA_EXPORT = async () => {
 };
 
 const TBL_DATA_EXPORT_FILE = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_DATA_EXPORT_FILE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -589,7 +589,7 @@ const TBL_DATA_EXPORT_FILE = async () => {
 }
 
 const TBL_BULK_EDIT = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_BULK_EDIT (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -601,7 +601,7 @@ const TBL_BULK_EDIT = async () => {
 };
 
 const TBL_BULK_EDIT_LOG = async () => {
-    await doInDbConnection(async (conn: PoolConnection) => {
+    await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_BULK_EDIT_LOG (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -615,7 +615,7 @@ const TBL_BULK_EDIT_LOG = async () => {
 };
 
 const TBL_JOB = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_JOB (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -631,7 +631,7 @@ const TBL_JOB = async () => {
 };
 
 const TBL_JOB_LOG = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_JOB_LOG (
             ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -646,13 +646,13 @@ const TBL_JOB_LOG = async () => {
 };
 
 const ADD_INDEXES = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
        // todo: queries Indexes
    });
 };
 
 const ADD_FK_CONSTRAINT = async () => {
-   await doInDbConnection(async (conn: PoolConnection) => {
+   await doInDbConnection(async (conn: Connection) => {
 
       await conn.query(`ALTER TABLE TBL_INVITATION_REGISTRATION_GROUP ADD CONSTRAINT \`fk_tbl_invitation_registration_group-1\` FOREIGN KEY IF NOT EXISTS (INVITATION_REGISTRATION_ID) REFERENCES TBL_INVITATION_REGISTRATION(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_INVITATION_REGISTRATION_GROUP ADD CONSTRAINT \`fk_tbl_invitation_registration_group-2\` FOREIGN KEY IF NOT EXISTS (GROUP_ID) REFERENCES TBL_GROUP(ID)`);

@@ -2,7 +2,7 @@ import {NextFunction, Router, Request, Response} from "express";
 import {check} from 'express-validator';
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {hashedPassword} from "../../service";
 import config from '../../config';
@@ -31,7 +31,7 @@ const httpAction = [
         const password = req.body.password;
         let registrationId;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const q1: QueryA = await conn.query(`
                 SELECT ID, EMAIL, CREATION_DATE, CODE, ACTIVATED FROM TBL_INVITATION_REGISTRATION WHERE CODE=? AND ACTIVATED=?
             `, [code, false]);

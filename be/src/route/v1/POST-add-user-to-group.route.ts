@@ -3,7 +3,7 @@ import {Registry } from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {ApiResponse} from "../../model/response.model";
 
@@ -19,7 +19,7 @@ const httpAction: any[] = [
         const groupId: number = Number(req.params.groupId);
         const userId: number = Number(req.params.userId);
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
            const q1: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_USER_GROUP WHERE GROUP_ID = ? AND USER_ID = ?`, [groupId, userId]);
            if (q1.length > 0 && q1[0].COUNT > 0) {
                res.status(200).json(makeApiErrorObj(

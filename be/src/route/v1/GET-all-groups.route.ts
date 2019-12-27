@@ -2,7 +2,7 @@ import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
 import {Paginable} from "../../model/pagnination.model";
@@ -12,7 +12,7 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const qTotal: QueryA = await conn.query(`
                 SELECT 
                     COUNT(*) AS COUNT

@@ -3,7 +3,7 @@ import {Job} from "../../model/job.model";
 import {JobLogger, newJobLogger} from "../job-log.service";
 import {getJobyById} from "../job.service";
 import {doInDbConnection, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Parser} from "json2csv";
 import JSON2CSVParser from "json2csv/JSON2CSVParser";
 
@@ -39,7 +39,7 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
         });
         const csv: string = parser.parse(data);
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const q: QueryResponse = await conn.query(`
                 INSERT INTO TBL_DATA_EXPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'ATTRIBUTE')
             `, [viewId, name]);

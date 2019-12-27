@@ -3,7 +3,7 @@ import {NextFunction, Router, Request, Response } from "express";
 import {Registry } from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {SelfRegistration} from "../../model/self-registration.model";
 
 const httpAction: any[] = [
@@ -12,7 +12,7 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const  q: QueryA = await conn.query(`
                 SELECT

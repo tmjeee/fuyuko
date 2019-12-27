@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [
@@ -20,7 +20,7 @@ const httpAction: any[] = [
         const ruleId: number = Number(req.params.ruleId);
         const status: string = req.params.status;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             await conn.query(`UPDATE TBL_RULE SET STATUS = ? WHERE ID = ? `, [status, ruleId]);
 
             res.status(200).json({

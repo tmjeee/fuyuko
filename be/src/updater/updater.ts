@@ -1,15 +1,27 @@
 
-import {doInDbConnection, dbPool, QueryResponse, QueryI, QueryA } from "../db";
-import {PoolConnection} from "mariadb";
+import {doInDbConnection, QueryResponse, QueryI, QueryA } from "../db";
+import {Connection} from "mariadb";
 import path from 'path';
 import fs from 'fs';
 import util from 'util';
 import * as semver from 'semver';
 import {i, e} from '../logger';
+import config from '../config';
+
+export const runUpdater = async () => {
+    const runUpdater: boolean = config['db-runUpdater'];
+    if (runUpdater) {
+        i(`** Running updater`);
+        await runUpdate();
+    } else {
+        i(`** Not running updater`);
+    }
+}
+
 
 export const runUpdate = async () => {
 
-    const updaterEntries: QueryA = await doInDbConnection<void>(async (conn: PoolConnection) => {
+    const updaterEntries: QueryA = await doInDbConnection<void>(async (conn: Connection) => {
         const r1: QueryResponse = await conn.query(`
             CREATE TABLE IF NOT EXISTS TBL_UPDATER (
               ID INT PRIMARY KEY AUTO_INCREMENT,
@@ -44,7 +56,7 @@ export const runUpdate = async () => {
             i(`perform update on script ${scriptFileFullPath}`);
             try {
                 await s.update();
-                await doInDbConnection((conn: PoolConnection) => {
+                await doInDbConnection((conn: Connection) => {
                     conn.query(`
                     INSERT INTO TBL_UPDATER (NAME) VALUES (?)
                 `, [script]);

@@ -1,19 +1,5 @@
-import * as mariadb  from 'mariadb';
-import {Pool, PoolConfig, PoolConnection} from 'mariadb';
+import {Connection, ConnectionConfig, createConnection} from 'mariadb';
 import config from '../config';
-import {e} from '../logger';
-
-const poolConfig: PoolConfig = {
-    host: config["db-host"],
-    user: config["db-user"],
-    port: config["db-port"],
-    password: config["db-password"],
-    database: config["db-database"],
-    connectionLimit: config["db-connection-limit"],
-};
-
-export const dbPool: Pool = mariadb.createPool(poolConfig);
-
 
 export interface QueryM {
     meta: {
@@ -46,9 +32,16 @@ export type QueryResponse  = {
     warningStatus: number
 };
 
-
-export const doInDbConnection = async <R> (callback: (conn: PoolConnection) => R)  => {
-    const conn: PoolConnection = await dbPool.getConnection();
+export const doInDbConnection = async <R> (callback: (conn: Connection) => R)  => {
+    const connConfig: ConnectionConfig = {
+        host: config["db-host"],
+        user: config["db-user"],
+        port: config["db-port"],
+        password: config["db-password"],
+        database: config["db-database"],
+    } as ConnectionConfig;
+    const conn: Connection = await createConnection(connConfig);
+    console.log(`******* connConfig`, connConfig);
     try {
         await conn.beginTransaction();
         const r: any =  await callback(conn);

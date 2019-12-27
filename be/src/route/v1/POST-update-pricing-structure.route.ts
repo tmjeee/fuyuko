@@ -1,9 +1,9 @@
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {check, body} from 'express-validator';
+import {body} from 'express-validator';
 import {doInDbConnection} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {ApiResponse} from "../../model/response.model";
 
@@ -19,7 +19,7 @@ const httpAction: any[] = [
 
         const pricingStructures: PricingStructure[] = req.body.pricingStructures;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             for (const pricingStructure of pricingStructures) {
                 if (pricingStructure.id <= 0) { // insert

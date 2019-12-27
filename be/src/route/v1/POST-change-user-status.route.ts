@@ -3,7 +3,7 @@ import {Registry } from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [
@@ -18,7 +18,7 @@ const httpAction: any[] = [
         const status: string = req.params.status;
         const userId: number = Number(req.params.userId);
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             await conn.query(`UPDATE TBL_USER SET STATUS = ? WHERE ID = ? `, [status, userId]);
 

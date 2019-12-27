@@ -3,7 +3,7 @@ import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {param} from 'express-validator';
 import {doInDbConnection} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/response.model";
 
 const httpAction: any[] = [
@@ -17,7 +17,7 @@ const httpAction: any[] = [
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const status: string = req.params.status;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             conn.query(`
                 UPDATE TBL_PRICING_STRUCTURE SET STATUS=? WHERE ID=?
             `, [status, pricingStructureId]);

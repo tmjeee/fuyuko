@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import registerV1AppRouter from './route/v1/v1-app.router';
 import cors from 'cors';
 import {i} from './logger';
-import {runUpdate} from './updater';
+import {runUpdater} from './updater';
 import {runBanner} from './banner';
 import config from './config';
 import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from "./route/v1/common-middleware";
@@ -27,14 +27,14 @@ const registry: Registry = Registry.newRegistry('api');
 const apiRouter: Router = express.Router();
 app.use('/api', apiRouter);
 registerV1AppRouter(apiRouter, registry);
-i('URL Mapings :-\n' + registry.print({indent: 2, text: ''}).text);
+i('URL Mappings :-\n' + registry.print({indent: 2, text: ''}).text);
 app.use(catchErrorMiddlewareFn);
 
 
-i(`running db update`);
-runUpdate()
+i(`running db updater`);
+runUpdater()
     .then((_: any) => {
-        i(`done db update`)
+        i(`done with db updater`)
     });
 
 app.listen(port, () => i(`Fuyuko API started at port ${port}`));

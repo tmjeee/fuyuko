@@ -5,7 +5,7 @@ import {Message, Messages} from "../../model/notification-listing.model";
 import {PriceDataItem, PricingStructure, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 import {addItemToPricingStructure, getPricingStructureItem} from "../pricing-structure-item.service";
 import {doInDbConnection, QueryA} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import * as util from 'util';
 
 export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<PriceDataImport> => {
@@ -30,7 +30,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                 const val: string = token[1];
                 switch(identifier) {
                     case 'id': // pricing structure id
-                        await doInDbConnection(async (conn: PoolConnection) => {
+                        await doInDbConnection(async (conn: Connection) => {
                             const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS FROM TBL_PRICING_STRUCTURE WHERE ID=? AND STATUS = 'ENABLED'`, [Number(val)]);
                             if (q.length) {
                                psViewId = q[0].VIEW_ID;
@@ -43,7 +43,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                         });
                         break;
                     case 'name': // pricing structure name
-                        await doInDbConnection(async (conn: PoolConnection) => {
+                        await doInDbConnection(async (conn: Connection) => {
                             const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND STATUS = 'ENABLED'`, [(val)]);
                             if (q.length) {
                                 psViewId = q[0].VIEW_ID;
@@ -87,7 +87,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                 const val: string = token[1];
                 switch(identifier) {
                     case 'id': {// item id
-                        const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
+                        const q: QueryA = await doInDbConnection(async (conn: Connection) => {
                             return await conn.query(`SELECT ID, VIEW_ID FROM TBL_ITEM WHERE ID=? AND VIEW_ID=?`, [Number(val), viewId]);
                         });
                         if (q && q.length > 0) {
@@ -97,7 +97,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                         break;
                     }
                     case 'name': { // item name
-                        const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
+                        const q: QueryA = await doInDbConnection(async (conn: Connection) => {
                             return await conn.query(`SELECT ID, VIEW_ID FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=?`, [val, viewId]);
                         });
                         if (q && q.length > 0) {

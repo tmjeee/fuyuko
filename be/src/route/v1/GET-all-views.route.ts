@@ -2,7 +2,7 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {QueryA} from "../../db/db";
 import {View} from "../../model/view.model";
 
@@ -10,7 +10,7 @@ const httpAction: any[] = [
     [],
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(`
                 SELECT 
                      ID, NAME, DESCRIPTION

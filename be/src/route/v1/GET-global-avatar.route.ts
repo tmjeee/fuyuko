@@ -2,7 +2,7 @@ import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Registry} from "../../registry";
 
 const httpAction: any[] = [
@@ -14,7 +14,7 @@ const httpAction: any[] = [
 
         const avatarName: string  = req.params.avatarName;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const q1: QueryA  = await conn.query(`SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_AVATAR WHERE NAME = ?`,
                 [avatarName]);
             if (q1.length > 0) { // have a global avatar

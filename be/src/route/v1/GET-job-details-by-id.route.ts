@@ -3,7 +3,7 @@ import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {param} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Job, JobAndLogs, JobLog} from "../../model/job.model";
 
 const SQL = `
@@ -37,7 +37,7 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
-        const jobAndLogs: JobAndLogs = await doInDbConnection(async (conn: PoolConnection) => {
+        const jobAndLogs: JobAndLogs = await doInDbConnection(async (conn: Connection) => {
             const jobId = req.params.jobId;
             const lastLogId = req.params.lastLogId;
 

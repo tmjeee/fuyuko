@@ -3,7 +3,7 @@ import {Registry } from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {SelfRegistrationResponse} from "../../model/self-registration.model";
 
 const httpAction: any[] = [
@@ -14,7 +14,7 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const selfRegistrationId: number = Number(req.params.selfRegistrationId);
 

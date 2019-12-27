@@ -4,7 +4,7 @@ import {check, body} from 'express-validator';
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {View} from "../../model/view.model";
 import {doInDbConnection, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {e} from '../../logger';
 import {ApiResponse} from "../../model/response.model";
 
@@ -22,7 +22,7 @@ const httpAction: any[] = [
         const badUpdates: any[] = [];
         const badInserts: any[] = [];
         for (const view of views) {
-            await doInDbConnection(async (conn: PoolConnection) => {
+            await doInDbConnection(async (conn: Connection) => {
                 const id = view.id;
                 const name = view.name;
                 const descrption = view.description;

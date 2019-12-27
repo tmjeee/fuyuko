@@ -4,7 +4,7 @@ import {JobLogger, newJobLogger} from "../job-log.service";
 import {getJobyById} from "../job.service";
 import {Item, Value} from "../../model/item.model";
 import {doInDbConnection, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Parser} from "json2csv";
 import JSON2CSVParser from "json2csv/JSON2CSVParser";
 import {convertToCsv} from "../../shared-utils/ui-item-value-converters.util";
@@ -55,7 +55,7 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
         const csv: string = parser.parse(data);
 
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const q: QueryResponse = await conn.query(`
                 INSERT INTO TBL_DATA_EXPORT (VIEW_ID, NAME, TYPE) VALUES (?, ?, 'ITEM')

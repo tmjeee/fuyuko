@@ -1,4 +1,4 @@
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {ItemValueOperatorAndAttribute} from "../model/item-attribute.model";
 import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
 import {QueryA} from "../db";
@@ -94,7 +94,7 @@ const SQL_WITH_PARAMETERIZED_PARENT = `${SQL} AND I.PARENT_ID = ? `;
 
 export type PricedItem2WithFilteringResult = {b: PricedItem2[], m: Map<string /* attributeId */, Attribute>};
 
-export const getPricedItem2WithFiltering = async (conn: PoolConnection,
+export const getPricedItem2WithFiltering = async (conn: Connection,
                                             viewId: number,
                                             pricingStructureId: number,
                                             parentItemId: number,

@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {param, body, check, Meta} from 'express-validator';
 import {doInDbConnection, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {multipartParse} from "../../service";
 import {File, IncomingForm} from 'formidable';
 import * as util from "util";
@@ -30,7 +30,7 @@ const httpAction: any[] = [
         const name: string = `attribute-data-import-${uuid()}`;
         const {fields, files} = await multipartParse(req);
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_IMPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'ATTRIBUTE')`, [viewId, name]);
             const dataImportId: number = q.insertId;

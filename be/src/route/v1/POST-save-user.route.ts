@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {check} from 'express-validator';
 import {getJwtPayload, validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {JwtPayload} from "../../model/jwt.model";
 import {getUserById} from "../../service";
 import {User} from "../../model/user.model";
@@ -27,7 +27,7 @@ const httpAction: any[] = [
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
 
-        const user: User = await doInDbConnection(async (conn: PoolConnection) => {
+        const user: User = await doInDbConnection(async (conn: Connection) => {
             if (firstName) {
                 conn.query(`UPDATE TBL_USER SET FIRSTNAME = ? WHERE USER_ID = ?`, [firstName, userId]);
             }

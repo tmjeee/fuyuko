@@ -3,7 +3,7 @@ import {check} from "express-validator";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {sendEmail} from "../../service";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {SendMailOptions} from "nodemailer";
 import config from "../../config";
 import uuid = require("uuid");
@@ -15,7 +15,7 @@ import {Registry} from "../../registry";
  */
 export const createInvitation = async (email: string, groupIds: number[] = []): Promise<CreateInvitationResponse> => {
 
-    return await doInDbConnection(async (conn: PoolConnection) => {
+    return await doInDbConnection(async (conn: Connection) => {
 
         const hasUserQuery: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE EMAIL = ?`, [email]);
         if (hasUserQuery[0].COUNT > 0) {

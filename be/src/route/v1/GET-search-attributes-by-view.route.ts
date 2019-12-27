@@ -2,7 +2,7 @@ import {NextFunction, Request, Response, Router} from "express";
 import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {convert} from "../../service/conversion-attribute.service";
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/server-side.model";
 import {Attribute} from "../../model/attribute.model";
@@ -20,7 +20,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const attribute: string = req.params.attribute ? req.params.attribute : '';
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const q: QueryA = await conn.query(`
                 SELECT

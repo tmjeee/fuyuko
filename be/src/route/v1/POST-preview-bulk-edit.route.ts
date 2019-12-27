@@ -2,7 +2,7 @@ import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {param, body} from 'express-validator';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 import moment from 'moment';
@@ -141,13 +141,12 @@ const httpAction: any[] = [
 
       const viewId: number = Number(req.params.viewId);
 
-      // const bulkEditPackage: BulkEditPackage = await doInDbConnection(async (conn: PoolConnection) => {
-      const bulkEditPackage: any = await doInDbConnection(async (conn: PoolConnection) => {
+      const bulkEditPackage: BulkEditPackage = await doInDbConnection(async (conn: Connection) => {
 
         const changeClauses: ItemValueAndAttribute[] = req.body.changeClauses;
         const whenClauses: ItemValueOperatorAndAttribute[] = req.body.whenClauses;
 
-        const {b: matchedBulkEditItem2s, m: attributeMap } = await doInDbConnection(async (conn: PoolConnection) => {
+        const {b: matchedBulkEditItem2s, m: attributeMap } = await doInDbConnection(async (conn: Connection) => {
             return await getBulkEditItem2s(conn, viewId, null, whenClauses);
         });
 
@@ -173,7 +172,7 @@ const httpAction: any[] = [
    }
 ]
 
-const getBulkEditItem2s = async (conn: PoolConnection,
+const getBulkEditItem2s = async (conn: Connection,
                                  viewId: number,
                                  parentItemId: number,
                                  whenClauses: ItemValueOperatorAndAttribute[]):

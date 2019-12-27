@@ -2,7 +2,7 @@ import {Router, Request, Response, NextFunction} from "express";
 import {check} from "express-validator";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {hashedPassword, sendEmail} from "../../service";
 import config from '../../config';
@@ -22,7 +22,7 @@ const httpAction = [
 
         const selfRegistrationId: number = Number(req.params.selfRegistrationId);
 
-        doInDbConnection(async (conn: PoolConnection) => {
+        doInDbConnection(async (conn: Connection) => {
 
             const q1: QueryA = await conn.query(`
                 SELECT ID, USERNAME, EMAIL, CREATION_DATE, ACTIVATED, FIRSTNAME, LASTNAME, PASSWORD FROM TBL_SELF_REGISTRATION WHERE ID = ? AND ACTIVATED = ?

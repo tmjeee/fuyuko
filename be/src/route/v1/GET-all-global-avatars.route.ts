@@ -1,7 +1,7 @@
 import {Router, Request, Response, NextFunction} from "express";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {GlobalAvatar} from "../../model/avatar.model";
 import {Registry} from "../../registry";
 
@@ -9,7 +9,7 @@ const httpAction: any[] = [
     [],
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const q: QueryA = await conn.query(
                 `SELECT ID, NAME, MIME_TYPE, SIZE FROM TBL_GLOBAL_AVATAR`);

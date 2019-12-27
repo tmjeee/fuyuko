@@ -3,7 +3,7 @@ import {NextFunction, Request, Response, Router} from "express";
 import {param, body} from "express-validator";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {multipartParse} from "../../service";
 import {File} from "formidable";
 import * as util from "util";
@@ -28,7 +28,7 @@ const httpAction: any[] = [
         const name: string = `price-data-import-${uuid()}`;
         const {fields, files} = await multipartParse(req);
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_IMPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'PRICE')`, [viewId, name]);
             const dataImportId: number = q.insertId;

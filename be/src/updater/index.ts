@@ -1,6 +1,6 @@
 
-import {runUpdate} from './updater';
+import {runUpdate, runUpdater} from './updater';
 
 export {
-    runUpdate
+    runUpdate, runUpdater
 };

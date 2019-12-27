@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check, body} from 'express-validator';
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {View} from "../../model/view.model";
 import {ApiResponse} from "../../model/response.model";
 
@@ -19,7 +19,7 @@ const httpAction: any[] = [
         const views: View[] =  req.body;
 
         for (const view of views) {
-            await doInDbConnection((conn: PoolConnection) => {
+            await doInDbConnection((conn: Connection) => {
                 conn.query(`UPDATE TBL_VIEW SET STATUS='DELETED' WHERE ID=?`,[view.id]);
             });
         }

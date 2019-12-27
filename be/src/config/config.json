@@ -1,10 +1,10 @@
 {
-  "db-host": "localhost",
+  "db-host": "35.189.28.18",
   "db-user": "root",
   "db-password": "root",
   "db-port": 3306,
   "db-database": "fuyuko",
-  "db-connection-limit": 5,
+  "db-runUpdater": false,
   "version": "1.0.0-beta",
   "port": 8888,
   "salt": "some-salt",

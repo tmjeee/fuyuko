@@ -1,8 +1,8 @@
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../route/model/server-side.model";
 import {Attribute} from "../model/attribute.model";
-import {convert, revert} from "./conversion-attribute.service";
+import {revert} from "./conversion-attribute.service";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {LoggingCallback} from "./job-log.service";
 const q1: string = `
                 SELECT
@@ -42,7 +42,7 @@ const q2: string = `
 
 export const getAttributesInView = async (viewId: number, attributeIds?: number[]): Promise<Attribute2[]> => {
 
-    return await doInDbConnection(async (conn: PoolConnection) => {
+    return await doInDbConnection(async (conn: Connection) => {
 
         const q: QueryA = await (
             attributeIds && attributeIds.length > 0 ?
@@ -100,7 +100,7 @@ export const getAttributesInView = async (viewId: number, attributeIds?: number[
 }
 
 export const saveAttribute2s = async (viewId: number, attrs2: Attribute2[], loggingCallback?: LoggingCallback) => {
-    await doInDbConnection(async (conn: PoolConnection) => {
+    await doInDbConnection(async (conn: Connection) => {
         for (const att2 of attrs2) {
 
             loggingCallback('INFO', `adding attribute ${att2.name}`);

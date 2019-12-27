@@ -12,6 +12,7 @@
     "preexec": "npm run copy-model && npm run copy-shared-utils",
     "exec": "npm run tsc",
     "postexec": "npm run start",
+    "runUpdater": "node -- src/runUpdater.js",
     "test": "npx jasmine --reporter=jasmine-ts-console-reporter"
   },
   "author": "",

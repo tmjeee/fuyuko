@@ -6,7 +6,7 @@ import {Fields, Files, IncomingForm, File} from 'formidable';
 import {multipartParse} from "../../service";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import fileType from 'file-type';
 import {UserAvatarResponse} from "../../model/avatar.model";
 import util from 'util';
@@ -34,7 +34,7 @@ const httpAction: any[] = [
                 makeApiError(`globalAvatarName and customAvatarFile cannot be supplied together picked on`, '', '', 'api')
             ));
         } else if (globalAvatarName) {
-            await doInDbConnection(async (conn: PoolConnection) => {
+            await doInDbConnection(async (conn: Connection) => {
                 const q1: QueryA = await conn.query(`SELECT ID FROM TBL_GLOBAL_AVATAR WHERE NAME = ? `, [globalAvatarName]);
                 if (q1.length > 0) {
                     const globalAvatarId: number = q1[0].ID;
@@ -62,7 +62,7 @@ const httpAction: any[] = [
                 }
             });
         } else if (customAvatarFile) {
-            await doInDbConnection(async (conn: PoolConnection) => {
+            await doInDbConnection(async (conn: Connection) => {
                 const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(customAvatarFile.path));
                 const ft: fileType.FileTypeResult = fileType(buffer);
                 const qCount: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT, ID FROM TBL_USER_AVATAR WHERE USER_ID = ? `, [userId]);

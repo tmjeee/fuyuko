@@ -6,15 +6,14 @@ import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {RegistrationResponse} from "../../model/registration.model";
 import {catchErrorMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 
-import util from 'util';
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {hashedPassword} from "../../service";
 import {Registry} from "../../registry";
 
 
 const selfRegister = async (username: string, email: string, firstName: string, lastName: string,  password: string): Promise<RegistrationResponse> => {
 
-    const reg: RegistrationResponse = await doInDbConnection(async (conn: PoolConnection) => {
+    const reg: RegistrationResponse = await doInDbConnection(async (conn: Connection) => {
 
         const q1: QueryA = await conn.query(
             `SELECT COUNT(*) AS COUNT FROM TBL_SELF_REGISTRATION WHERE (USERNAME = ? OR EMAIL = ?) AND ACTIVATED = ?`,

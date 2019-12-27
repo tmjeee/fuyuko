@@ -1,11 +1,11 @@
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {PricingStructureItemWithPrice} from "../model/pricing-structure.model";
 import {doInDbConnection, QueryA} from "../db";
 import {LoggingCallback, newLoggingCallback} from "./job-log.service";
 
 export const setPrices = async (pricingStructureId: number, pricingStructureItems: PricingStructureItemWithPrice[], loggingCallback: LoggingCallback = newLoggingCallback()) => {
     for (const pricingStructureItem of pricingStructureItems) {
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const qc: QueryA = await conn.query(`
                     SELECT COUNT(*) AS COUNT 
@@ -31,7 +31,7 @@ export const setPrices = async (pricingStructureId: number, pricingStructureItem
 }
 
 export const addItemToPricingStructure = async (viewId: number, pricingStructureId: number, itemId: number): Promise<boolean> => {
-   return await doInDbConnection(async (conn: PoolConnection) => {
+   return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(
             `SELECT COUNT(*) AS COUNT 
                     FROM TBL_PRICING_STRUCTURE_ITEM AS I 
@@ -50,7 +50,7 @@ export const addItemToPricingStructure = async (viewId: number, pricingStructure
 
 
 export const getPricingStructureItem = async (viewId: number, pricingStructureId: number, itemId: number): Promise<PricingStructureItemWithPrice> => {
-    return await doInDbConnection(async (conn: PoolConnection) => {
+    return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT
                     I.ID AS I_ID,
@@ -90,7 +90,7 @@ export const getPricingStructureItem = async (viewId: number, pricingStructureId
     });
 }
 
-export const getChildrenWithConn = async (conn: PoolConnection, pricingStructureId: number, parentItemId: number): Promise<PricingStructureItemWithPrice[]> => {
+export const getChildrenWithConn = async (conn: Connection, pricingStructureId: number, parentItemId: number): Promise<PricingStructureItemWithPrice[]> => {
 
     const q: QueryA = await conn.query(`
                 SELECT

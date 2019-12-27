@@ -1,7 +1,10 @@
 FROM mariadb:latest
 
+COPY ./docker/mariadb.cnf /etc/mysql/
+
 ENV MYSQL_ROOT_PASSWORD root
 ENV MYSQL_DATABASE fuyuko
+
 
 #RUN apt -y update
 #RUN apt -y upgrade

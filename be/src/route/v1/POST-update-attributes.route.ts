@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check, body} from 'express-validator';
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {Attribute} from "../../model/attribute.model";
 import {revert} from "../../service/conversion-attribute.service";
 import {Attribute2} from "../model/server-side.model";
@@ -23,7 +23,7 @@ const httpAction: any[] = [
 
         const atts: Attribute[] = req.body.attributes;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const atts2: Attribute2[] = revert(atts);
             const failed: Attribute2[] = [];
 

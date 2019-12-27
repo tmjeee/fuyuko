@@ -2,7 +2,7 @@ import {Router, Request, Response, NextFunction} from "express";
 import {validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import { Invitation } from "../../model/invitation.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {Registry} from "../../registry";
@@ -16,7 +16,7 @@ const httpAction = [
 
         const code: string = req.params.code;
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const q1: QueryA = await conn.query(`
                 SELECT 
                     R.ID AS ID, R.EMAIL AS EMAIL, R.CREATION_DATE AS CREATION_DATE, R.CODE AS CODE, R.ACTIVATED AS ACTIVATED, 

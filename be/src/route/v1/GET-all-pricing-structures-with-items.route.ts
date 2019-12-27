@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {
     PricingStructureItemWithPrice,
     PricingStructureWithItems
@@ -23,7 +23,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const pricingStructureId: number = Number(req.params.pricingStructureId);
 
-        await doInDbConnection(async (conn: PoolConnection) => {
+        await doInDbConnection(async (conn: Connection) => {
 
             const q: QueryA = await conn.query(`
                 SELECT

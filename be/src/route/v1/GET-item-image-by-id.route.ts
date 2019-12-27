@@ -4,7 +4,7 @@ import {Registry} from "../../registry";
 import {check} from 'express-validator';
 import {validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 
 const httpAction: any[] = [
@@ -16,7 +16,7 @@ const httpAction: any[] = [
 
         const itemImageId: number = Number(req.params.itemImageId);
 
-        doInDbConnection(async (conn: PoolConnection) => {
+        doInDbConnection(async (conn: Connection) => {
 
             const q: QueryA = await conn.query(`
                 SELECT 

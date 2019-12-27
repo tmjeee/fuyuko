@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {param} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
-import {PoolConnection} from "mariadb";
+import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 
 const httpAction: any[] = [
@@ -16,7 +16,7 @@ const httpAction: any[] = [
 
         const exportDataId: number = Number(req.params.exportDataId);
 
-        const q: QueryA = await doInDbConnection(async (conn: PoolConnection) => {
+        const q: QueryA = await doInDbConnection(async (conn: Connection) => {
 
             const q: QueryA = await conn.query( `
                 SELECT ID, DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_DATA_EXPORT_FILE WHERE DATA_EXPORT_ID= ?

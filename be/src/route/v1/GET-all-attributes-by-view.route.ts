@@ -2,11 +2,9 @@ import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {PoolConnection} from "mariadb";
 import {Attribute} from "../../model/attribute.model";
 import {convert} from "../../service/conversion-attribute.service";
-import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/server-side.model";
+import {Attribute2} from "../model/server-side.model";
 import {getAttributesInView} from "../../service/attribute.service";
 
 const httpAction: any[] = [
