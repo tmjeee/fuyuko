@@ -11,10 +11,16 @@ RUN apt -y update && \
     apt -y install apt-utils && \
     apt -y install jq && \
     apt -y install moreutils && \
+    apt -y install vim && \
     npm install && \
-    /bin/bash -c 'chmod u+x update-config-json.sh'
+    chmod u+x update-config-json.sh && \
+    chmod u+x docker-start-cmd.sh && \
+    chmod u+x auto-update-config.sh && \
+    set -o vi
 
 EXPOSE 8888
 
-CMD ["node", "src/app.js"]
+ENTRYPOINT ["/bin/bash",  "-c"]
+
+CMD ["./docker-start-cmd.sh"]
 

@@ -34,12 +34,24 @@ spec:
   containers:
     - name: ... 
 ```
+You can list the secrects by doing 
+```
+    $> kubectl get secrets
+```
 
 see [here for details](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
 
-#
-#
-# $(kubectl get pod --selector="app=kubernetes-pod-fuyuko-simple" --output jsonpath='{.items[0].metadata.name}')
-# kubernetes-deployment-fuyuko-simple-86b558dc9c-gr4zz
-#
-#
+
+To create a gce persistent disk using kubernetes persistent volume & persistent volume claim, issue the following command first
+```
+   $> gcloud compute disks delete --quiet --zone=australia-southeast1-a kubernetes-gcepersistentdisk-fuyuko-simple
+   $> gcloud compute disks create --size=5GB --zone=australia-southeast1-a kubernetes-gcepersistentdisk-fuyuko-simple
+```
+
+
+## To filter pods
+```
+ $(kubectl get pod --selector="app=kubernetes-pod-fuyuko-simple" --output jsonpath='{.items[0].metadata.name}')
+ kubernetes-deployment-fuyuko-simple-86b558dc9c-gr4zz
+```
+

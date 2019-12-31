@@ -1,5 +1,5 @@
 
 {
   "version": "1.0.0-beta",
-  "api_host_url": "http://127.20.0.1:8888/api/v1"
+  "api_host_url": "http://127.0.0.1:8888/api/v1"
 }

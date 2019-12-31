@@ -41,7 +41,6 @@ export const doInDbConnection = async <R> (callback: (conn: Connection) => R)  =
         database: config["db-database"],
     } as ConnectionConfig;
     const conn: Connection = await createConnection(connConfig);
-    console.log(`******* connConfig`, connConfig);
     try {
         await conn.beginTransaction();
         const r: any =  await callback(conn);

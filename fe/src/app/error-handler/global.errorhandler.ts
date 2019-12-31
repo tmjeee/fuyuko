@@ -30,6 +30,9 @@ export class GlobalErrorhandler extends ErrorHandler {
                 } else if (httpErrorResponse.status === 404) { // api service not found??
                     this.notificationService.error('API Service',
                         `unable to find API service ${httpErrorResponse.url}`);
+                } else {
+                    this.notificationService.error('API Service',
+                        `${error.message}`);
                 }
             }
         } else { // client error

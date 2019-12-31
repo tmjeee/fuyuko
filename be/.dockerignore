@@ -2,6 +2,8 @@ node_modules/
 npm-debug.log
 *.sh
 !update-config-json.sh
+!auto-update-config.sh
+!docker-start-cmd.sh
 spec/
 .idea/
 docker/
