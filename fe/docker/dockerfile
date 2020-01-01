@@ -3,7 +3,7 @@ FROM nginx
 
 COPY dist/fuyuko /usr/share/nginx/html
 COPY docker/conf /etc/nginx
-COPY update-config-json.sh /usr/share/nginx/
+# COPY update-config-json.sh /usr/share/nginx/
 COPY auto-update-config.sh .
 COPY update-config-json.sh .
 COPY docker-start-cmd.sh .

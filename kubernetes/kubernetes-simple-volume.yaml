@@ -4,6 +4,7 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: kubernetes-storage-slow-fuyuko-simple
+  namespace: kubernetes-namespace-fuyuko-simple
 provisioner: kubernetes.io/gce-pd
 parameters:
   type: pd-standard
@@ -15,6 +16,7 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: kubernetes-storage-fast-fuyuko-simple
+  namespace: kubernetes-namespace-fuyuko-simple
 provisioner: kubernetes.io/gce-pd
 parameters:
   type: pd-ssd
@@ -26,6 +28,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: kubernetes-claim-fuyuko-simple
+  namespace: kubernetes-namespace-fuyuko-simple
 spec:
   accessModes:
     - ReadWriteOnce

@@ -37,7 +37,7 @@ done;
 echo "DB Load Balancer IP found to be ${DB_IP}"
 export DB_IP=${DB_IP}
 
-#
+# get currently deployed Helper POD instance name
 FUYUKO_HELPER_POD_NAME=$(kubectl get pod -l app=kubernetes-pod-fuyuko-simple-helper-${random_id} --output jsonpath='{.items[0].metadata.name}')
 echo "Found fuyuko-helper pod instance name as ${FUYUKO_HELPER_POD_NAME}"
 if [ -z "$FUYUKO_HELPER_POD_NAME" ]; then
