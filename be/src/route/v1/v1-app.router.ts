@@ -71,7 +71,10 @@ import registerPostScheduleAttributeDataExportRoute from './POST-schedule-attrib
 import registerPostScheduleItemDataExportRoute from './POST-schedule-item-data-export.route';
 import registerPostSchedulePriceDataExportRoute from './POST-schedule-pricing-data-export.route';
 import registerGetExportedFileByIdRoute from './GET-export-file-by-id.route';
-import registerPostSaveDashboardRoute from './POST-save-dashboard.route';
+import registerPostSaveUserDashboardRoute from './POST-save-user-dashboard.route';
+import registerGetUserDashboardRoute from './GET-user-dashboard.route';
+import registerPostUserDashboardWidgetDataRoute from './POST-user-dashboard-widget-data.route';
+import registerGetUserDashboardWidgetDataRoute from './GET-user-dashboard-widget-data.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -150,7 +153,10 @@ const reg = (router: Router, regi: Registry) => {
     registerPostScheduleItemDataExportRoute(v1AppRouter, registry);
     registerPostSchedulePriceDataExportRoute(v1AppRouter, registry);
     registerGetExportedFileByIdRoute(v1AppRouter, registry);
-    registerPostSaveDashboardRoute(v1AppRouter, registry);
+    registerPostSaveUserDashboardRoute(v1AppRouter, registry);
+    registerGetUserDashboardRoute(v1AppRouter, registry);
+    registerPostUserDashboardWidgetDataRoute(v1AppRouter, registry);
+    registerGetUserDashboardWidgetDataRoute(v1AppRouter, registry);
 }
 
 

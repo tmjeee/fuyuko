@@ -1,5 +1,7 @@
 <div class="dashboard-page">
+    <div *ngIf="loading">Loading ...</div>
     <app-dashboard
+            *ngIf="!loading"
             [data]="data"
             [dashboardWidgetInfos]="dashboardWidgetInfos"
             [strategies]="strategies"

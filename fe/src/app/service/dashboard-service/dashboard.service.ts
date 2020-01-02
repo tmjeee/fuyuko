@@ -8,18 +8,22 @@ import {Sample1WidgetComponent} from '../../component/dashboard-component/widget
 import {User} from '../../model/user.model';
 import {Sample2WidgetComponent} from '../../component/dashboard-component/widgets/sample-2-widget/sample-2-widget.component';
 import {Observable, of} from 'rxjs';
-import {SerializeFormat, SerializeInstanceFormat} from '../../model/dashboard-serialzable.model';
+import {SerializedDashboardFormat, SerializedDashboardWidgetInstanceFormat} from '../../model/dashboard-serialzable.model';
+import {HttpClient} from '@angular/common/http';
+import config from '../../utils/config.util';
 
 
 // a must be array / multi-dimention array of SerializeInstanceFormat
-const stickInTypes = (a: SerializeInstanceFormat| SerializeInstanceFormat[] | SerializeInstanceFormat[][]) => {
+const stickInTypes = (a: SerializedDashboardWidgetInstanceFormat|
+                         SerializedDashboardWidgetInstanceFormat[] |
+                         SerializedDashboardWidgetInstanceFormat[][]) => {
     if (Array.isArray(a)) {
-        const ar: SerializeInstanceFormat[] = a as SerializeInstanceFormat[];
+        const ar: SerializedDashboardWidgetInstanceFormat[] = a as SerializedDashboardWidgetInstanceFormat[];
         for (const ai of ar) {
             stickInTypes(ai);
         }
     } else  {
-       const d: SerializeInstanceFormat =  a as SerializeInstanceFormat;
+       const d: SerializedDashboardWidgetInstanceFormat =  a as SerializedDashboardWidgetInstanceFormat;
        const wi: DashboardWidgetInfo = DASHBOARD_WIDGET_INFOS.find((i: DashboardWidgetInfo) => i.id === d.typeId);
        if (wi) {
            (d as any).type = wi.type;
@@ -42,8 +46,8 @@ export class DashboardStrategy1x implements DashboardStrategy {
     getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[] {
         return this.dashboardWidgetInstances;
     }
-    addDashboardWidgetInstances(serializeInstanceFormats: SerializeInstanceFormat[]) {
-        serializeInstanceFormats.forEach((t: SerializeInstanceFormat) => {
+    addDashboardWidgetInstances(serializeInstanceFormats: SerializedDashboardWidgetInstanceFormat[]) {
+        serializeInstanceFormats.forEach((t: SerializedDashboardWidgetInstanceFormat) => {
             const dashboardWidgetInfo: DashboardWidgetInfo = DASHBOARD_WIDGET_INFOS.find((dwi: DashboardWidgetInfo) => dwi.id === t.typeId);
             this.dashboardWidgetInstances.push({
                 instanceId: t.instanceId,
@@ -58,13 +62,13 @@ export class DashboardStrategy1x implements DashboardStrategy {
             strategyId: this.id,
             instances: this.dashboardWidgetInstances,
             special: undefined
-        } as SerializeFormat);
+        } as SerializedDashboardFormat);
         return data;
     }
     deserialize(data: string) {
         this.dashboardWidgetInstances = [];
-        const x: SerializeFormat = JSON.parse(data);
-        const r: SerializeInstanceFormat[] = x.instances;
+        const x: SerializedDashboardFormat = JSON.parse(data);
+        const r: SerializedDashboardWidgetInstanceFormat[] = x.instances;
         stickInTypes(r);
         this.addDashboardWidgetInstances(r);
     }
@@ -84,8 +88,8 @@ export class DashboardStrategy2x implements DashboardStrategy {
     getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[] {
         return this.dashboardWidgetInstances[columnIndex % this.NUM];
     }
-    addDashboardWidgetInstances(serializeInstanceFormats: SerializeInstanceFormat[]) {
-        serializeInstanceFormats.forEach((t: SerializeInstanceFormat) => {
+    addDashboardWidgetInstances(serializeInstanceFormats: SerializedDashboardWidgetInstanceFormat[]) {
+        serializeInstanceFormats.forEach((t: SerializedDashboardWidgetInstanceFormat) => {
             const dashboardWidgetInfo: DashboardWidgetInfo = DASHBOARD_WIDGET_INFOS.find((dwi: DashboardWidgetInfo) => dwi.id === t.typeId);
             this.dashboardWidgetInstances[this.i % this.NUM].push({
                 instanceId: t.instanceId,
@@ -101,14 +105,14 @@ export class DashboardStrategy2x implements DashboardStrategy {
             strategyId,
             instances: [...this.dashboardWidgetInstances[0], ...this.dashboardWidgetInstances[1]],
             special: this.dashboardWidgetInstances
-        } as SerializeFormat);
+        } as SerializedDashboardFormat);
         return data;
     }
     deserialize(data: string) {
         this.dashboardWidgetInstances = [[], []];
         this.i = 0;
         const strategyId = this.id;
-        const x: SerializeFormat = JSON.parse(data);
+        const x: SerializedDashboardFormat = JSON.parse(JSON.parse(data));
         if (x.strategyId === strategyId) { // deserializing from same strategy id
             stickInTypes(x.special);
             this.dashboardWidgetInstances = x.special;
@@ -130,9 +134,14 @@ export const DASHBOARD_WIDGET_INFOS = [
     Sample2WidgetComponent.info(),
 ];
 
+
+const URL_GET_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard`;
+const URL_SAVE_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard/save`;
+
 @Injectable()
 export class DashboardService {
 
+    /*
     serializedData: string = JSON.stringify({
        strategyId: '2x',
        instances: [
@@ -152,6 +161,9 @@ export class DashboardService {
            ]
        ]
     } as SerializeFormat);
+     */
+
+    constructor(private httpClient: HttpClient) {}
 
     getAllDashboardStrategies(): DashboardStrategy[] {
         return [...DASHBOARD_STRATEGIES];
@@ -161,12 +173,13 @@ export class DashboardService {
         return [...DASHBOARD_WIDGET_INFOS];
     }
 
-    getUserDashboardLayoutData(myself: User): string {
-        return this.serializedData;
+    getUserDashboardLayoutData(myself: User): Observable<{data: string}> {
+        return this.httpClient.get<{data: string}>(URL_GET_DASHBOARD_FORMAT().replace(':userId', String(myself.id)));
     }
 
-    saveDashboardLayout(serializeData: string): Observable<boolean> {
-        this.serializedData = serializeData;
-        return of(true);
+    saveDashboardLayout(myself: User, serializeData: string): Observable<boolean> {
+        return this.httpClient.post<boolean>(URL_SAVE_DASHBOARD_FORMAT().replace(':userId', String(myself.id)), {
+            serializeFormat: serializeData
+        });
     }
 }

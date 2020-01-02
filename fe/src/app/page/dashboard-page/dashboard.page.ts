@@ -16,6 +16,9 @@ import {NotificationsService} from 'angular2-notifications';
   styleUrls: ['./dashboard.page.scss']
 })
 export class DashboardPageComponent implements OnInit {
+
+    loading: boolean;
+
     strategies: DashboardStrategy[];
     selectedStrategy: DashboardStrategy;
     dashboardWidgetInfos: DashboardWidgetInfo[];
@@ -26,25 +29,30 @@ export class DashboardPageComponent implements OnInit {
                 private notificationsService: NotificationsService) {}
 
     ngOnInit(): void {
+        this.loading = true;
         this.strategies = this.dashboardService.getAllDashboardStrategies();
         this.selectedStrategy = this.strategies[1];
 
         this.dashboardWidgetInfos = this.dashboardService.getAllDashboardWidgetInfos();
 
         const myself: User = this.authService.myself();
-        this.data = this.dashboardService.getUserDashboardLayoutData(myself);
-
+        this.dashboardService
+            .getUserDashboardLayoutData(myself)
+            .pipe(
+                tap((d: {data: string}) => {
+                    console.log('************************* d', d);
+                    console.log('data', d.data);
+                    const t: any = JSON.parse(d.data);
+                    console.log('after parsed', t, (typeof t));
+                    this.data = d.data;
+                    this.loading = false;
+                })
+            ).subscribe();
     }
 
     onDashboardEvent($event: DashboardComponentEvent) {
-        console.log('********** onDashboardEvent', $event);
-        this.notificationsService.success('Success', 'testing 123');
-        this.notificationsService.info('Info', 'testing 123 asd sid iasdo oais diaosid asd iois iod iaoi dioisd ioiosd ioioaisd iosd');
-        this.notificationsService.warn('Warninig', 'testing 123 sioio asdio iosid iosdsd');
-        this.notificationsService.error('Error',
-            'testing 123 iaoisdi aposidiaps diaopsid osidopai sdiosido sido siod sod apidsosipoaidois iudsdis udisudiauisdsiud ');
-        /*
-        this.dashboardService.saveDashboardLayout($event.serializedData)
+        const myself: User = this.authService.myself();
+        this.dashboardService.saveDashboardLayout(myself, $event.serializedData)
             .pipe(
                 tap((r: boolean) => {
                     if (r) {
@@ -54,6 +62,5 @@ export class DashboardPageComponent implements OnInit {
                     }
                 })
             ).subscribe();
-         */
     }
 }

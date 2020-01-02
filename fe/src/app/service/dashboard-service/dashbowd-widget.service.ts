@@ -1,18 +1,28 @@
 import {Injectable} from '@angular/core';
-import {DashboardWidgetInstance, DataMap} from '../../model/dashboard.model';
+import {DashboardWidgetInstance} from '../../model/dashboard.model';
+import {HttpClient} from '@angular/common/http';
+import {DataMap, SerializedDashboardWidgetInstanceDataFormat} from '../../model/dashboard-serialzable.model';
+import config from '../../utils/config.util';
+import {Observable} from "rxjs";
 
-
-const MAP = {};
+const URL_GET_WIDGET_DATA = () => `${config().api_host_url}/user/:userId/dashboard-widget-instance/:dashboardWidgetInstanceId`;
+const URL_POST_WIDGET_DATA = () => `${config().api_host_url}/user/:userId/dashboard-widget-instance-data`;
 
 @Injectable()
 export class DashboardWidgetService {
 
-    saveData(widgetInstance: DashboardWidgetInstance, data: DataMap) {
-        MAP[widgetInstance.instanceId] = data;
+    constructor(private httpClient: HttpClient) {}
+
+    saveData(userId: number, widgetInstance: DashboardWidgetInstance, data: DataMap): Observable<boolean> {
+        return this.httpClient.post<boolean>(URL_POST_WIDGET_DATA().replace(':userId', String(userId)), {
+            instanceId: widgetInstance.instanceId,
+            typeId: widgetInstance.typeId,
+            data
+        } as SerializedDashboardWidgetInstanceDataFormat);
+
     }
 
-    loadData(widgetInstance: DashboardWidgetInstance): DataMap {
-        const r = MAP[widgetInstance.instanceId];
-        return r;
+    loadData(userId: number, widgetInstance: DashboardWidgetInstance): Observable<DataMap> {
+        return this.httpClient.get<DataMap>(URL_GET_WIDGET_DATA().replace(':userId', String(userId)));
     }
 }

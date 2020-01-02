@@ -34,7 +34,8 @@ app.use(catchErrorMiddlewareFn);
 i(`running db updater`);
 runUpdater()
     .then((_: any) => {
-        i(`done with db updater`)
+        i(`done with db updater`);
+        i(`Fuyuko listening at port ${port} is now ready for operation !!!`);
     });
 
 app.listen(port, () => i(`Fuyuko API started at port ${port}`));

@@ -4,7 +4,7 @@
   "db-password": "root",
   "db-port": 3306,
   "db-database": "fuyuko",
-  "db-runUpdater": false,
+  "db-runUpdater": true,
   "version": "1.0.0-beta",
   "port": 8888,
   "salt": "some-salt",

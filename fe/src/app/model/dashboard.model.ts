@@ -1,22 +1,18 @@
 import {Type} from '@angular/core';
 import {DashboardWidgetService} from '../service/dashboard-service/dashbowd-widget.service';
-import {SerializeInstanceFormat} from './dashboard-serialzable.model';
+import {DataMap, SerializedDashboardWidgetInstanceFormat} from './dashboard-serialzable.model';
+import {Observable} from 'rxjs';
 
 
 export interface DashboardStrategy {
     id: string;
     name: string;
     columnIndexes(): number[];
-    addDashboardWidgetInstances(serializeInstanceFormats: SerializeInstanceFormat[]);
+    addDashboardWidgetInstances(serializeInstanceFormats: SerializedDashboardWidgetInstanceFormat[]);
     getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[];
     serialize(): string;
     deserialize(data: string);
 }
-
-export interface DataMap {
-    [k: string]: string;
-}
-
 
 export class DashboardWidget {
     id: string;
@@ -24,16 +20,16 @@ export class DashboardWidget {
 
     constructor(protected dashboardWidgetService: DashboardWidgetService) { }
 
-    saveData(widgetInstance: DashboardWidgetInstance, data: DataMap) {
-       this.saveData(widgetInstance, data);
+    saveData(userId: number, widgetInstance: DashboardWidgetInstance, data: DataMap): Observable<boolean> {
+       return this.saveData(userId, widgetInstance, data);
     }
 
-    loadData(widgetInstance: DashboardWidgetInstance): DataMap {
-        return this.dashboardWidgetService.loadData(widgetInstance);
+    loadData(userId: number, widgetInstance: DashboardWidgetInstance): Observable<DataMap> {
+        return this.dashboardWidgetService.loadData(userId, widgetInstance);
     }
 }
 
-export interface DashboardWidgetInstance extends SerializeInstanceFormat {
+export interface DashboardWidgetInstance extends SerializedDashboardWidgetInstanceFormat {
     instanceId: string;
     typeId: string;
     type: Type<DashboardWidget>;

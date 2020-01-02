@@ -22,13 +22,23 @@
  *    } as SerializeFormat);
  */
 
-export interface SerializeInstanceFormat {
+export interface SerializedDashboardWidgetInstanceFormat {
     instanceId: string;
     typeId: string;
 }
 
-export interface SerializeFormat {
+export interface SerializedDashboardFormat {
     strategyId: string;
-    instances: SerializeInstanceFormat[];
-    special: SerializeInstanceFormat[][] | any;
+    instances: SerializedDashboardWidgetInstanceFormat[];
+    special: SerializedDashboardWidgetInstanceFormat[][] | any;
+}
+
+export interface SerializedDashboardWidgetInstanceDataFormat {
+    instanceId: string;
+    typeId: string;
+    data: DataMap;
+}
+
+export interface DataMap {
+    [k: string]: string;
 }

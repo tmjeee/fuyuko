@@ -9,7 +9,7 @@
     "copy": "npm run copy-model && npm run copy-shared-utils",
     "copy-model": "cp -fr ../fe/src/app/model ./src/ ; rm -fr ./src/model/dashboard.model.ts ; ",
     "copy-shared-utils": "cp -fr ../fe/src/app/shared-utils ./src/ ;",
-    "preexec": "npm run copy-model && npm run copy-shared-utils",
+    "preexec": "npm run copy",
     "exec": "npm run tsc",
     "postexec": "npm run start",
     "runUpdater": "node -- src/runUpdater.js",

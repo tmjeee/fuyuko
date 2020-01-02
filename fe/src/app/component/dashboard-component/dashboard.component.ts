@@ -69,10 +69,7 @@ export class DashboardComponent implements OnInit {
     }
 
     onDashboardStrategySelectionChanged($event: MatSelectChange) {
-        console.log('***** onDashboardStrategySelectionChanged');
         const d = this.prevStrategy.serialize();
-        console.log('current strategy', this.getCurrentStrategy());
-        console.log('&&&&& d', d);
         this.setCurrentStrategy($event.value as DashboardStrategy);
         this.columnIndexes = this.getCurrentStrategy().columnIndexes();
         this.getCurrentStrategy().deserialize(d);
@@ -115,7 +112,6 @@ export class DashboardComponent implements OnInit {
     }
 
     onCloseWidget($event: MouseEvent, widgetInstance: DashboardWidgetInstance) {
-        console.log('******* close', widgetInstance);
         const c: WidgetContainerComponent = this.widgetContainers.find((comp: WidgetContainerComponent) => {
             return comp.dashboardWidgetInstance.instanceId === widgetInstance.instanceId;
         });
@@ -128,7 +124,6 @@ export class DashboardComponent implements OnInit {
             const id = element.getAttribute('instanceId');
             return id === widgetInstance.instanceId;
         });
-        console.log(itemFound);
         if (itemFound) {
             itemFound.clear();
             const htmlElement: HTMLElement = itemFound.element.nativeElement;
