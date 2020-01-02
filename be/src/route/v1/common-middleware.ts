@@ -4,19 +4,19 @@ import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
-import {hasUserRole} from "../../service/user.service";
+import {hasUserRoles} from "../../service/user.service";
 
 
-export const validateUserRoleMiddlewareFn = (roleName: string) => {
+export const validateUserRoleMiddlewareFn = (roleNames: string[]) => {
     return (async (req: Request, res: Response, next: NextFunction) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
-        const hasRole: boolean = await hasUserRole(userId, roleName);
+        const hasRole: boolean = await hasUserRoles(userId, roleNames);
         if (!hasRole) {
             res.status(403).json(
                 makeApiErrorObj(
-                    makeApiError(`Unauthorized: Require role ${roleName} to perform ${req.method} ${req.url}`,
-                        'roleName', roleName, 'Security')
+                    makeApiError(`Unauthorized: Require role ${roleNames.join(',')} to perform ${req.method} ${req.url}`,
+                        'roleNames', roleNames.join(','), 'Security')
                 )
             );
             return;

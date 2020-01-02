@@ -8,20 +8,17 @@ import {FileNotFoundPageComponent} from './page/file-not-found-page/file-not-fou
 import {ProfilePageComponent} from './page/profile-page/profile.page';
 import {SettingsPageComponent} from './page/settings-page/settings.page';
 import {BulkEditPageComponent} from './page/bulk-edit-page/bulk-edit.page';
-import {HelpCenterPageComponent} from './page/help-center-page/help-center.page';
 import {ProfileHelpPageComponent} from './page/profile-help-page/profile-help.page';
 import {UserHelpPageComponent} from './page/user-help-page/user-help.page';
 import {ViewHelpPageComponent} from './page/view-help-page/view-help.page';
 import {SettingsHelpPageComponent} from './page/settings-help-page/settings-help.page';
 import {BulkEditHelpPageComponent} from './page/bulk-edit-help-page/bulk-edit-help.page';
-import {HelpCenterHelpPageComponent} from './page/help-center-help-page/help-center-help.page';
 import {ImportHelpPageComponent} from './page/import-help-page/import-help.page';
 import {ImportPageComponent} from './page/import-page/import.page';
 import {UserRolePageComponent} from './page/user-role-page/user-role.page';
 import {UserGroupPageComponent} from './page/user-group-page/user-group.page';
 import {UserPeoplePageComponent} from './page/user-people-page/user-people.page';
 import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
-import {HelpCenterLayoutComponent} from './layout/help-center-gen-layout/help-center-gen.layout';
 import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
 import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
 import {PricingPageComponent} from './page/pricing-page/pricing.page';
@@ -40,11 +37,6 @@ import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
 import {ExportPageComponent} from './page/export-page/export.page';
 import {ExportHelpPageComponent} from './page/export-help-page/export-help.page';
-import {ForumPageComponent} from './page/forum-page/forum.page';
-import {ForumHelpPageComponent} from './page/forum-help-page/forum-help.page';
-import {AllForumsPageComponent} from './page/forum-page/all-forums.page';
-import {AllTopicsInForumPageComponent} from './page/forum-page/all-topics-in-forum.page';
-import {AllPostsInTopicPageComponent} from './page/forum-page/all-posts-in-topic.page';
 import {ActivatePageComponent} from './page/activate-page/activate.page';
 import {UserInvitationPageComponent} from './page/user-invitation-page/user-invitation.page';
 import {UserActivationPageComponent} from './page/user-activation-page/user-activation.page';
@@ -155,68 +147,6 @@ const routes: Routes = [
      } as Route,
    ]
  } as Route,
-
-
-  // help-center-gen-layout
-  {
-    path: 'help-center-gen-layout',
-    canActivate: [AuthGuard],
-    component: HelpCenterLayoutComponent,
-    data: {
-      sideNav: 'help-center'
-    },
-    children: [
-      {
-        path: 'help-center',
-        canActivate: [AuthGuard],
-        component: HelpCenterPageComponent,
-        data: {
-          subSideNav: 'help-center'
-        }
-      },
-      {
-        path: 'help-center-help',
-        canActivate: [AuthGuard],
-        component: HelpCenterHelpPageComponent,
-        outlet: 'help'
-      } as Route,
-
-      {
-        path: 'forum',
-        canActivate: [AuthGuard],
-        component: ForumPageComponent,
-        data: {
-          subSideNav: 'forum'
-        },
-        children: [
-          {
-            path: '',
-            pathMatch: 'full',
-            canActivate: [AuthGuard],
-            component: AllForumsPageComponent,
-          } as Route,
-          {
-            path: ':forumId',
-            pathMatch: 'full',
-            canActivate: [AuthGuard],
-            component: AllTopicsInForumPageComponent,
-          } as Route,
-          {
-            path: ':forumId/topic/:topicId',
-            pathMatch: 'full',
-            canActivate: [AuthGuard],
-            component: AllPostsInTopicPageComponent,
-          } as Route,
-        ]
-      } as Route,
-      {
-        path: 'forum-help',
-        canActivate: [AuthGuard],
-        component: ForumHelpPageComponent,
-        outlet: 'help'
-      } as Route
-    ]
-  },
 
 
   // import-export layout

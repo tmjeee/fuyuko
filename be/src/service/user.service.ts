@@ -4,7 +4,7 @@ import {Connection} from "mariadb";
 import {Group} from "../model/group.model";
 import {Role} from "../model/role.model";
 
-export const hasUserRole = async (userId: number, roleName: string): Promise<boolean> => {
+export const hasUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT COUNT(*) AS COUNT 
@@ -13,8 +13,8 @@ export const hasUserRole = async (userId: number, roleName: string): Promise<boo
             LEFT JOIN TBL_TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
             LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = LUG.GROUP_ID
             LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
-            WHERE U.ID = ? AND R.ROLE_NAME = ? AND U.STATUS= ? AND G.STATUS = ?
-        `, [userId, roleName, 'ENABLED', 'ENABLED']);
+            WHERE U.ID = ? AND R.ROLE_NAME IN ? AND U.STATUS= ? AND G.STATUS = ?
+        `, [userId, roleNames, 'ENABLED', 'ENABLED']);
 
         return !!(q.length && Number(q[0].COUNT));
     });

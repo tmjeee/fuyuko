@@ -91,16 +91,6 @@
     </mat-icon>
   </div>
 
-  <!-- help center -->
-  <div [class.selected]="routeSideNavData === 'help-center'">
-    <mat-icon class="action"
-              matTooltipPosition="after"
-              matTooltip="Help Center"
-              [routerLink]="['/help-center-gen-layout', {outlets:{primary:['help-center'], help:['help-center-help'] }}]">
-      contact_support
-    </mat-icon>
-  </div>
-
   <!-- exit / log off -->
   <div>
     <mat-icon class="action "
