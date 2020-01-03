@@ -13,12 +13,10 @@ import {BackgroundImageService} from './service/background-image-service/backgro
 import {RegisterPageComponent} from './page/register-page/register.page';
 import {GenLayoutComponent} from './layout/gen-layout/gen.layout';
 import {BulkEditPageComponent} from './page/bulk-edit-page/bulk-edit.page';
-import {HelpCenterPageComponent} from './page/help-center-page/help-center.page';
 import {ProfilePageComponent} from './page/profile-page/profile.page';
 import {SettingsPageComponent} from './page/settings-page/settings.page';
 import {FileNotFoundPageComponent} from './page/file-not-found-page/file-not-found.page';
 import {BulkEditHelpPageComponent} from './page/bulk-edit-help-page/bulk-edit-help.page';
-import {HelpCenterHelpPageComponent} from './page/help-center-help-page/help-center-help.page';
 import {ProfileHelpPageComponent} from './page/profile-help-page/profile-help.page';
 import {SettingsHelpPageComponent} from './page/settings-help-page/settings-help.page';
 import {UserHelpPageComponent} from './page/user-help-page/user-help.page';
@@ -42,7 +40,6 @@ import {UserGroupPageComponent} from './page/user-group-page/user-group.page';
 import {UserPeoplePageComponent} from './page/user-people-page/user-people.page';
 import {SideNavComponent} from './component/side-nav-component/side-nav.component';
 import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
-import {HelpCenterLayoutComponent} from './layout/help-center-gen-layout/help-center-gen.layout';
 import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
 import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
@@ -107,14 +104,9 @@ import {SettingsService} from './service/settings-service/settings.service';
 import {tap} from 'rxjs/operators';
 import {User} from './model/user.model';
 import {SettingsModule} from './component/settings-component/settings.module';
-import {ForumPageComponent} from './page/forum-page/forum.page';
-import {ForumHelpPageComponent} from './page/forum-help-page/forum-help.page';
 import {HelpCenterModule} from './component/help-center-component/help-center.module';
 import {HelpCenterService} from './service/help-center-service/help-center.service';
 import {ForumService} from './service/forum-service/forum.service';
-import {AllForumsPageComponent} from './page/forum-page/all-forums.page';
-import {AllTopicsInForumPageComponent} from './page/forum-page/all-topics-in-forum.page';
-import {AllPostsInTopicPageComponent} from './page/forum-page/all-posts-in-topic.page';
 import {ForumModule} from './component/forum-component/forum.module';
 import {DashboardModule} from './component/dashboard-component/dashboard.module';
 import {DashboardService} from './service/dashboard-service/dashboard.service';
@@ -158,7 +150,6 @@ const appInitializer = (settingsService: SettingsService,
     DashboardLayoutComponent,
     GenLayoutComponent,
     UserLayoutComponent,
-    HelpCenterLayoutComponent,
     ImportExportLayoutComponent,
     ViewLayoutComponent,
 
@@ -169,8 +160,6 @@ const appInitializer = (settingsService: SettingsService,
     ActivatePageComponent,
     BulkEditPageComponent,
     BulkEditHelpPageComponent,
-    HelpCenterPageComponent,
-    HelpCenterHelpPageComponent,
     ProfilePageComponent,
     ProfileHelpPageComponent,
     SettingsPageComponent,
@@ -197,11 +186,6 @@ const appInitializer = (settingsService: SettingsService,
     ViewViewsPageComponent,
     JobsPageComponent,
     JobsHelpPageComponent,
-    ForumPageComponent,
-    ForumHelpPageComponent,
-    AllForumsPageComponent,
-    AllTopicsInForumPageComponent,
-    AllPostsInTopicPageComponent,
     ErrorPageComponent,
 
     // components
