@@ -1,10 +1,10 @@
-import {Item, TableItem} from '../model/item.model';
+import {Item, ItemImage, PricedItem, TableItem, TablePricedItem, Value} from '../model/item.model';
 import {BulkEditItem, BulkEditTableItem} from '../model/bulk-edit.model';
 import {
   PricingStructureItemWithPrice,
-  PricingStructureWithItems,
   TablePricingStructureItemWithPrice
 } from '../model/pricing-structure.model';
+import {root} from "rxjs/internal-compatibility";
 
 ////// common
 export function copyAttrProperties(from: any, to: any) {
@@ -172,6 +172,97 @@ export function toBulkEditItem(tableItems: BulkEditTableItem[]): BulkEditItem[] 
     return acc;
   }, new Map());
   return Array.from(m.values()).filter((i: BulkEditItem) => !!!i.parentId);
+}
+
+
+///////// pricedItem <-> tablePricedItem
+function internalToTablePricedItem(items: PricedItem[], depth: number, rootParentId?: number): TablePricedItem[] {
+    if (!items) {
+      return [];
+    }
+    const nextDepth = ++depth;
+    return items.reduce((tableItems: TablePricedItem[], item: PricedItem) => {
+      const childrenRootParentId = (rootParentId ? rootParentId : item.id);
+
+      // item itsef
+      const tableItem: TablePricedItem = {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        images: item.images,
+        parentId: item.parentId,
+        depth,
+        rootParentId,
+        price: item.price,
+        country: item.country,
+      } as TablePricedItem;
+      copyAttrProperties(item, tableItem);
+      tableItems.push(tableItem);
+
+      // children of item
+      const childrenTableItems: TablePricedItem[] =
+          internalToTablePricedItem(item.children, nextDepth, childrenRootParentId);
+      tableItems.push(...childrenTableItems);
+
+      return tableItems;
+    }, []);
+}
+
+export function toTablePricedItem(items: PricedItem[]): TablePricedItem[] {
+  return internalToTablePricedItem(items, -1);
+}
+
+export function toPricedItem(tableItems: TablePricedItem[]): PricedItem[] {
+  const m: Map<number, PricedItem> =
+      tableItems.reduce((acc: Map<number, PricedItem>, tableItem: TablePricedItem) => {
+        const itemId = tableItem.id;
+        const itemParentId = tableItem.parentId;
+        const item: PricedItem = {
+          id: itemId,
+          name: tableItem.name,
+          description: tableItem.description,
+          images: tableItem.images,
+          parentId: tableItem.parentId,
+          price: tableItem.price,
+          country: tableItem.country,
+          children: []
+        } as PricedItem;
+
+        // item
+        if (!acc.has(itemId)) {
+          copyAttrProperties(tableItem, item);
+          acc.set(itemId, item);
+        } else {
+          const i: PricedItem = acc.get(itemId);
+          i.id = itemId;
+          i.name = tableItem.name;
+          i.description = tableItem.description;
+          i.images = tableItem.images;
+          i.price = tableItem.price;
+          i.country = tableItem.country;
+          copyAttrProperties(tableItem, i);
+        }
+
+        // item's parent
+        if (itemParentId) {
+          if (!acc.has(itemParentId)) {
+            const pi: PricedItem = {
+              id: itemParentId,
+              parentId: undefined,
+              children: [item]
+            } as PricedItem;
+            acc.set(itemParentId, pi);
+          } else {
+            const itemParent: PricedItem = acc.get(itemParentId);
+            const itemIndexInExistingParent: number = itemParent.children.findIndex((i: PricedItem) => i.id === item.id);
+            if (itemIndexInExistingParent === -1) { // doens't exists yet
+              itemParent.children.push(item);
+            }
+          }
+        }
+        return acc;
+      }, new Map());
+  return Array.from(m.values()).filter((i: PricedItem) => !!!i.parentId);
 }
 
 

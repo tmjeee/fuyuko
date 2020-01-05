@@ -40,6 +40,11 @@ import {ExportHelpPageComponent} from './page/export-help-page/export-help.page'
 import {ActivatePageComponent} from './page/activate-page/activate.page';
 import {UserInvitationPageComponent} from './page/user-invitation-page/user-invitation.page';
 import {UserActivationPageComponent} from './page/user-activation-page/user-activation.page';
+import {PartnerLayoutComponent} from './layout/partner-layout/partner.layout';
+import {PartnerDataTablePageComponent} from './page/partner-data-table-page/partner-data-table.page';
+import {PartnerDataListPageComponent} from './page/partner-data-list-page/partner-data-list.page';
+import {PartnerDataThumbnailPageComponent} from './page/partner-data-thumbnail-page/partner-data-thumbnail.page';
+import {PartnerHelpPageComponent} from './page/partner-help-page/partner-help.page';
 
 const routes: Routes = [
 
@@ -70,6 +75,50 @@ const routes: Routes = [
    ]
  } as Route,
 
+
+  // partner-layout
+  {
+    path: 'partner-layout',
+    canActivate: [AuthGuard],
+    component: PartnerLayoutComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/partner-layout/(table//help:partner-help)'
+      },
+      {
+        path: 'table',
+        canActivate: [AuthGuard],
+        component: PartnerDataTablePageComponent,
+        data: {
+          sideNav: 'partnerDataTable'
+        }
+      } as Route,
+      {
+        path: 'list',
+        canActivate: [AuthGuard],
+        component: PartnerDataListPageComponent,
+        data: {
+          sideNav: 'partnerDataList'
+        }
+      } as Route,
+      {
+        path: 'thumbnail',
+        canActivate: [AuthGuard],
+        component: PartnerDataThumbnailPageComponent,
+        data: {
+          sideNav: 'partnerDataThumbnail'
+        }
+      } as Route,
+      {
+        path: 'partner-help',
+        canActivate: [AuthGuard],
+        component: PartnerHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+    ]
+  } as Route,
 
 
   // dashboard-layout
@@ -357,7 +406,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { enableTracing: false, scrollPositionRestoration: 'enabled'})],
+  imports: [RouterModule.forRoot(routes, { enableTracing: true, scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

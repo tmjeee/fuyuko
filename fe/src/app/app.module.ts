@@ -111,6 +111,12 @@ import {SendInviteModule} from './component/send-invite-component/send-invite.mo
 import {SideNavModule} from './component/side-nav-component/side-nav.module';
 import {UserSearchModule} from './component/user-search-table-component/user-search.module';
 import {UserTableModule} from './component/user-table-component/user-table.module';
+import {PartnerLayoutComponent} from './layout/partner-layout/partner.layout';
+import {PartnerDataThumbnailPageComponent} from './page/partner-data-thumbnail-page/partner-data-thumbnail.page';
+import {PartnerDataListPageComponent} from './page/partner-data-list-page/partner-data-list.page';
+import {PartnerDataTablePageComponent} from './page/partner-data-table-page/partner-data-table.page';
+import {PartnerHelpPageComponent} from "./page/partner-help-page/partner-help.page";
+import {PartnerService} from "./service/partner-service/partner.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -144,6 +150,7 @@ const appInitializer = (settingsService: SettingsService,
     UserLayoutComponent,
     ImportExportLayoutComponent,
     ViewLayoutComponent,
+    PartnerLayoutComponent,
 
     // pages
     LoginPageComponent,
@@ -179,6 +186,10 @@ const appInitializer = (settingsService: SettingsService,
     JobsPageComponent,
     JobsHelpPageComponent,
     ErrorPageComponent,
+    PartnerDataThumbnailPageComponent,
+    PartnerDataListPageComponent,
+    PartnerDataTablePageComponent,
+    PartnerHelpPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -259,6 +270,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: InvitationService, useClass: InvitationService} as Provider,
     {provide: RegistrationService, useClass: RegistrationService} as Provider,
     {provide: GlobalCommunicationService, useClass: GlobalCommunicationService} as Provider,
+    {provide: PartnerService, useClass: PartnerService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
         deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,

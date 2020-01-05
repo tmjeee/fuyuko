@@ -1,0 +1,11 @@
+<div class="partner-data-thumbnail-component">
+    <mat-sidenav-container [hasBackdrop]="false">
+        <mat-sidenav #sideNav position="end" [disableClose]="true" [fixedInViewport]="false">
+            Side
+        </mat-sidenav>
+        <mat-sidenav-content>
+            Main
+            <button type="button" (click)="toggleSideNav($event)">Click</button>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
