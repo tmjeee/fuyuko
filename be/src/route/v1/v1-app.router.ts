@@ -75,8 +75,8 @@ import registerPostSaveUserDashboardRoute from './POST-save-user-dashboard.route
 import registerGetUserDashboardRoute from './GET-user-dashboard.route';
 import registerPostUserDashboardWidgetDataRoute from './POST-user-dashboard-widget-data.route';
 import registerGetUserDashboardWidgetDataRoute from './GET-user-dashboard-widget-data.route';
-import registerGetPartnerViewsRoute from './GET-partner-views.route';
-import registerGetParterPricedItemsRoute from './GET-partner-priced-items.route';
+import registerGetPartnerPricingStructuresRoute from './GET-partner-pricing-structures.route';
+import registerGetPartnerPricedItemsRoute from './GET-partner-priced-items.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -159,8 +159,8 @@ const reg = (router: Router, regi: Registry) => {
     registerGetUserDashboardRoute(v1AppRouter, registry);
     registerPostUserDashboardWidgetDataRoute(v1AppRouter, registry);
     registerGetUserDashboardWidgetDataRoute(v1AppRouter, registry);
-    registerGetPartnerViewsRoute(v1AppRouter, registry);
-    registerGetParterPricedItemsRoute(v1AppRouter, registry);
+    registerGetPartnerPricingStructuresRoute(v1AppRouter, registry);
+    registerGetPartnerPricedItemsRoute(v1AppRouter, registry);
 }
 
 
