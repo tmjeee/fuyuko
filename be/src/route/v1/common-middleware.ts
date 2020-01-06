@@ -1,17 +1,16 @@
 import {NextFunction, Request, Response} from "express";
-import {validationResult, ValidationError} from 'express-validator';
+import {validationResult} from 'express-validator';
 import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
-import {hasUserRoles} from "../../service/user.service";
+import {hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
 
-
-export const validateUserRoleMiddlewareFn = (roleNames: string[]) => {
+const validateRoleMiddlewareFn = (roleNames: string[], fn: (userId: number, roleNames: string[]) => Promise<boolean>) => {
     return (async (req: Request, res: Response, next: NextFunction) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
-        const hasRole: boolean = await hasUserRoles(userId, roleNames);
+        const hasRole: boolean = await fn(userId, roleNames);
         if (!hasRole) {
             res.status(403).json(
                 makeApiErrorObj(
@@ -23,6 +22,14 @@ export const validateUserRoleMiddlewareFn = (roleNames: string[]) => {
         }
         next();
     });
+}
+
+export const validateUserAnyRoleMiddlewareFn = (roleNames: string[]) => {
+    return validateRoleMiddlewareFn(roleNames, async (userId: number, roleNames: string[]): Promise<boolean> => await hasAnyUserRoles(userId, roleNames));
+}
+
+export const validateUserNoneOfRolesMiddlewareF = (roleNames: string[]) => {
+    return validateRoleMiddlewareFn(roleNames, async (userId: number, roleNames: string[]): Promise<boolean> => await hasNoneUserRoles(userId, roleNames));
 }
 
 export const getJwtPayload = (res: Response): JwtPayload => {

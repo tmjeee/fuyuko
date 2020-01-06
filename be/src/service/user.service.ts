@@ -4,7 +4,7 @@ import {Connection} from "mariadb";
 import {Group} from "../model/group.model";
 import {Role} from "../model/role.model";
 
-export const hasUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
+export const hasAnyUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT COUNT(*) AS COUNT 
@@ -14,6 +14,23 @@ export const hasUserRoles = async (userId: number, roleNames: string[]): Promise
             LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = LUG.GROUP_ID
             LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
             WHERE U.ID = ? AND R.ROLE_NAME IN ? AND U.STATUS= ? AND G.STATUS = ?
+        `, [userId, roleNames, 'ENABLED', 'ENABLED']);
+
+        return !!(q.length && Number(q[0].COUNT));
+    });
+}
+
+
+export const hasNoneUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+            SELECT COUNT(*) AS COUNT 
+            FROM TBL_USER AS U 
+            LEFT JOIN TBL_LOOKUP_USER_GROUP AS LUG ON LUG.USER_ID = U.ID
+            LEFT JOIN TBL_TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
+            LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = LUG.GROUP_ID
+            LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
+            WHERE U.ID = ? AND R.ROLE_NAME NOT IN ? AND U.STATUS= ? AND G.STATUS = ?
         `, [userId, roleNames, 'ENABLED', 'ENABLED']);
 
         return !!(q.length && Number(q[0].COUNT));
