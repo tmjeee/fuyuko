@@ -23,6 +23,7 @@
                     </div>
                     <div> <a (click)="onItemClicked($event, item)">{{item.name}}</a> </div>
                     <div> {{item.description}} </div>
+                    <div> Price: {{item.price | currency:item.country}}</div>
                     <div *ngFor="let attribute of attributes; let i = index;">
                         {{item[attribute.id] | itemAttributeValueAsString:attribute}}
                     </div>

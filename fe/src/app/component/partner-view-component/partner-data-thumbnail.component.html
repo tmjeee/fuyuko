@@ -20,6 +20,7 @@
                     </div>
                     <div> {{item.name}} </div>
                     <div> {{item.description}} </div>
+                    <div> Price: {{item.price | currency:item.country}}</div>
                     <div class="attribute" *ngFor="let attribute of attributes; let i = index">
                         <ng-container *ngIf="i < 2">
                             {{attribute.name}}: {{item[attribute.id] | itemAttributeValueAsString:attribute}}
