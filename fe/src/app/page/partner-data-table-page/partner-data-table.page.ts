@@ -36,7 +36,7 @@ export class PartnerDataTablePageComponent implements OnInit {
         this.partnerService.getPartnerPricingStructures(myself.id)
             .pipe(
                 tap((ps: PricingStructure[]) => {
-                    this.pricingStructures = [];
+                    this.pricingStructures = ps;
                 })
             ).subscribe();
     }
@@ -51,7 +51,7 @@ export class PartnerDataTablePageComponent implements OnInit {
                 this.tablePricedItems = toTablePricedItem(this.pricedItems);
             }),
             concatMap((_) => {
-               return this.attributeService.getAllAttributesByView(pricingStructure.viewId);
+                return this.attributeService.getAllAttributesByView(pricingStructure.viewId);
             }),
             tap((a: Attribute[]) => {
                 this.attributes = a;

@@ -1,24 +1,16 @@
 <div class="partner-data-table-component">
     <mat-sidenav-container [hasBackdrop]="false">
-        <mat-sidenav #sideNav position="end" [disableClose]="true" [fixedInViewport]="false">
-            <mat-icon (click)="onCloseSideNav($event)">close</mat-icon>
-            <div>
-                Side Nav
-                <div fxLayout="column" *ngIf="selectedTablePricedItem">
-                    <div fxFlex *ngFor="let attribute of attributes">
-                        <div fxLayout="row">
-                            <div fxFlex>
-                               {{attribute.name}}
-                            </div>
-                            <div fxFlex>
-                               {{selectedTablePricedItem[attribute.id] | itemAttributeValueAsString:attribute}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <mat-sidenav #sideNav position="end" mode="side" [disableClose]="true" [fixedInViewport]="true" fixedTopGap="65">
+            <mat-icon (click)="onCloseSideNav($event)" class="close-icon">close</mat-icon>
+            <div class="side-nav">
+                <app-partner-attribute-table *ngIf="selectedTablePricedItem"
+                                             [item]="selectedTablePricedItem"
+                                             [attributes]="attributes">
+                </app-partner-attribute-table>
             </div>
         </mat-sidenav>
         <mat-sidenav-content>
+            <div class="table-container">
             <mat-table [dataSource]="datasource">
                 <ng-container matColumnDef="selection" sticky>
                     <mat-header-cell class="selection-header" *matHeaderCellDef>
@@ -49,9 +41,24 @@
                 </ng-container>
 
                 <ng-container matColumnDef="actions" sticky>
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let tableItem">
-                        <mat-icon (click)="onViewDetailsClicked(tableItem)">queue</mat-icon>
+                    <!-- warn: for some reason styling doesn't work when resides in scss file -->
+                    <mat-header-cell class="acts-header"
+                         [ngStyle]="{
+                            'min-width': '50px',
+                            'display': 'flex',
+                            'justify-content': 'flex-start',
+                            'align-content': 'center',
+                            'line-height': '50px'
+                         }" *matHeaderCellDef>&nbsp;</mat-header-cell>
+                    <mat-cell class="acts"
+                        [ngStyle]="{
+                            'min-width': '50px',
+                            'display': 'flex',
+                            'justify-content': 'flex-start',
+                            'align-items': 'center',
+                            'line-height': '50px'
+                        }" *matCellDef="let tableItem">
+                        <mat-icon (click)="onViewDetailsClicked(tableItem)">more</mat-icon>
                     </mat-cell>
                 </ng-container>
 
@@ -99,6 +106,7 @@
                 <mat-row class="item" *matRowDef="let tableItem; columns: childrenDisplayedColumns; when: isChildRow"
                          [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
             </mat-table>
+            </div>
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>

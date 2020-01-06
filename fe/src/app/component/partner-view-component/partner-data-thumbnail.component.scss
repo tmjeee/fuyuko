@@ -1,3 +1,18 @@
 .partner-data-thumbnail-component {
-
+  ::ng-deep {
+    margin: 10px;
+    .close-icon {
+      position: absolute;
+      right: 0;
+      cursor: pointer;
+    }
+  }
+  .thumbnail-content {
+    margin: 10px;
+    .controls {
+      mat-icon {
+        cursor: pointer;
+      }
+    }
+  }
 }

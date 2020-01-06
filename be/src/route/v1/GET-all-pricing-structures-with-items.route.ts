@@ -58,6 +58,7 @@ const httpAction: any[] = [
                    pricingStructureWithItems = {
                        id: i.PS_ID,
                        name: i.PS_NAME,
+                       viewId: i.PS_VIEW_ID,
                        description: i.PS_DESCRIPTION,
                        items: []
                    } as PricingStructureWithItems;

@@ -12,9 +12,9 @@
                 <mat-label>Pricing Structure</mat-label>
                 <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)">
                     <mat-option [value]="null">--- Please select a Pricing Structure ---</mat-option>
-                    <mat option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure">
+                    <mat-option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure">
                         {{pricingStructure.name}}
-                    </mat>
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
             <div *ngIf="loading">Loading ...</div>

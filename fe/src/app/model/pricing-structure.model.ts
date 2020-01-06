@@ -1,5 +1,3 @@
-import {concatMap} from "rxjs/operators";
-
 
 export interface PricingStructure {
     id: number; // pricing structure id
@@ -10,6 +8,7 @@ export interface PricingStructure {
 
 export interface PricingStructureWithItems {
     id: number; // pricing structure id
+    viewId: number;
     name: string;
     description: string;
     items: PricingStructureItemWithPrice[];

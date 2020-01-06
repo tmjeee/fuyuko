@@ -1,3 +1,112 @@
 .partner-data-table-component {
+  ::ng-deep {
+    margin: 10px;
+    .close-icon {
+      position: absolute;
+      right: 0;
+      cursor: pointer;
+    }
+  }
+  .table-container {
+    overflow-x: scroll;
+    ::ng-deep mat-table {
+      width: 100%;
+      mat-header-row {
+        &.item-header {
+          mat-header-cell {
+            margin: 5px;
+            &.selection-header {
+              min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-content: center;
+              line-height: 50px;
+            }
 
+            &.expansion-header {
+              min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-content: center;
+              line-height: 50px;
+              margin-right: 20px;
+            }
+
+            &.attribute-header {
+              min-width: 150px;
+            }
+          }
+        }
+      }
+      mat-row {
+        &.item {
+          mat-cell {
+            margin: 5px;
+            align-items: stretch;
+            &.selection {
+              min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              line-height: 50px;
+            }
+            &.expansion {
+              min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              line-height: 50px;
+              margin-right: 20px;
+              mat-icon {
+                &.selectable {
+                  cursor: pointer;
+                }
+              }
+              .depth-0 {
+                margin-left: 0px;
+              }
+              .depth-1 {
+                margin-left: 10px;
+              }
+              .depth-2 {
+                margin-left: 20px;
+              }
+              .depth-3 {
+                margin-left: 30px;
+              }
+              .depth-4 {
+                margin-left: 40px;
+              }
+              .depth-5 {
+                margin-left: 50px;
+
+              }
+              .depth-6 {
+                margin-left: 60px;
+
+              }
+              .depth-7 {
+                margin-left: 70px;
+
+              }
+              .depth-8 {
+                margin-left: 80px;
+
+              }
+              .depth-9 {
+                margin-left: 90px;
+
+              }
+              .depth-10 {
+                margin-left: 100px;
+              }
+            }
+            &.attribute {
+              min-width: 150px;
+            }
+          }
+        }
+      }
+    }
+  }
 }

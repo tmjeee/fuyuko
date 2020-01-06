@@ -16,11 +16,11 @@ export class PartnerService {
 
 
     getPartnerPricingStructures(userId: number): Observable<PricingStructure[]> {
-        return this.httpClient.get<PricingStructure[]>(URL_PARTNER_PRICING_STRUCTURES());
+        return this.httpClient.get<PricingStructure[]>(URL_PARTNER_PRICING_STRUCTURES().replace(':userId', String(userId)));
     }
 
     getPartnerPriceItems(pricingStructureId: number): Observable<PricedItem[]> {
-        return this.httpClient.get<PricedItem[]>(URL_PARTNER_PRICE_ITEMS());
+        return this.httpClient.get<PricedItem[]>(URL_PARTNER_PRICE_ITEMS().replace(':pricingStructureId', String(pricingStructureId)));
     }
 
 }

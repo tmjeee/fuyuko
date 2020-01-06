@@ -55,4 +55,8 @@ export class PartnerDataThumbnailComponent {
         const showMore: boolean = this.isShowMore(item);
         this.showMoreMap.set(item.id, !showMore);
     }
+
+    onCloseSideNav($event: MouseEvent) {
+        this.sideNav.close();
+    }
 }

@@ -32,4 +32,9 @@ export class PartnerDataListComponent {
         this.selectedPricedItem = item;
         this.sideNav.open();
     }
+
+
+    onCloseSideNav($event: MouseEvent) {
+        this.sideNav.close();
+    }
 }

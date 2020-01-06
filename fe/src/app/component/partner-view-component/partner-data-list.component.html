@@ -1,18 +1,12 @@
 <div class="partner-data-list-component">
     <mat-sidenav-container [hasBackdrop]="false">
-        <mat-sidenav #sideNav position="end" [disableClose]="true" [fixedInViewport]="false">
-            Side
-            <div fxLayout="column" *ngIf="selectedPricedItem">
-                <div fxFlex *ngFor="let attribute of attributes">
-                    <div fxLayout="row">
-                        <div fxFlex>
-                            {{attribute.name}}
-                        </div>
-                        <div fxFlex>
-                            {{selectedPricedItem[attribute.id] | itemAttributeValueAsString:attribute}}
-                        </div>
-                    </div>
-                </div>
+        <mat-sidenav #sideNav position="end" mode="side" [disableClose]="true" [fixedInViewport]="true" fixedTopGap="65">
+            <mat-icon (click)="onCloseSideNav($event)" class="close-icon">close</mat-icon>
+            <div class="side-nav">
+                <app-partner-attribute-table *ngIf="selectedPricedItem"
+                                             [item]="selectedPricedItem"
+                                             [attributes]="attributes">
+                </app-partner-attribute-table>
             </div>
         </mat-sidenav>
         <mat-sidenav-content>
@@ -21,7 +15,6 @@
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <section> <a (click)="onItemClicked($event, item)">{{item.name}}</a> </section>
-                            <section> {{item.description}} </section>
                         </mat-panel-title>
                         <mat-panel-description>{{item.description}}</mat-panel-description>
                     </mat-expansion-panel-header>

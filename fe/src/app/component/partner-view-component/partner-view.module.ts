@@ -7,7 +7,8 @@ import {PartnerDataTableComponent} from './partner-data-table.component';
 import {PartnerDataListComponent} from './partner-data-list.component';
 import {PartnerDataThumbnailComponent} from './partner-data-thumbnail.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
-import {CarouselModule} from "../carousel-component/carousel.module";
+import {CarouselModule} from '../carousel-component/carousel.module';
+import {PartnerAttributeTableComponent} from './partner-attribute-table.component';
 
 
 @NgModule({
@@ -24,11 +25,13 @@ import {CarouselModule} from "../carousel-component/carousel.module";
         PartnerDataTableComponent,
         PartnerDataListComponent,
         PartnerDataThumbnailComponent,
+        PartnerAttributeTableComponent,
     ],
     exports: [
         PartnerDataTableComponent,
         PartnerDataListComponent,
         PartnerDataThumbnailComponent,
+        PartnerAttributeTableComponent,
     ]
 })
 export class PartnerViewModule {

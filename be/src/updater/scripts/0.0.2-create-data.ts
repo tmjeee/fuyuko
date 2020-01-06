@@ -537,6 +537,9 @@ const _createItem = async (conn: Connection, pricingStructureId: number, args: C
     // item
     const qItem: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`, [parentItemId, args.viewId, args.itemName, `${args.itemName} Description`]);
     const itemId: number = qItem.insertId;
+
+    await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, COUNTRY, PRICE) VALUES (?,?,?,?) `, [qItem.insertId, pricingStructureId, 'AUD', Number((Math.random() * 10 + 1).toFixed(2))]);
+
     for (const attr of args.values) {
         const qItemValue: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, attr.attributeId]);
         const itemValueId: number = qItemValue.insertId;
@@ -561,10 +564,9 @@ const _createItem = async (conn: Connection, pricingStructureId: number, args: C
         await conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, [itemId, isPrimary, mimeType.mime, fileName, buffer.length, buffer]);
     }
 
-    await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, COUNTRY, PRICE) VALUES (?,?,?,?) `, [qItem.insertId, pricingStructureId, 'AUD', Number((Math.random() * 10).toFixed(2))]);
 
     for (const child of args.children) {
-        _createItem(conn, pricingStructureId, child, itemId);
+        await _createItem(conn, pricingStructureId, child, itemId);
     }
 }
 

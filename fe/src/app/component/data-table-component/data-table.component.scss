@@ -43,7 +43,14 @@
         &.item-header {
           mat-header-cell {
             margin: 5px;
-            &.selection-header {
+            &.selection-header  {
+              min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-content: center;
+              line-height: 50px;
+            }
+            &.acts-header {
               min-width: 50px;
               display: flex;
               justify-content: flex-start;
@@ -73,6 +80,13 @@
             align-items: stretch;
             &.selection {
               min-width: 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              line-height: 50px;
+            }
+            &.acts {
+              min-width: 50px !important;
               display: flex;
               justify-content: flex-start;
               align-items: center;

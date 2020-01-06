@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
-import {MatSidenav} from "@angular/material/sidenav";
+import {MatSidenav} from '@angular/material/sidenav';
 
 export class DataTableDataSource extends DataSource<TablePricedItem> {
 
@@ -76,12 +76,18 @@ export class PartnerDataTableComponent implements OnInit {
                 expanded: false,
             } as RowInfo);
         });
+        this.attributes.forEach((a: Attribute, index: number) => {
+            this.attributeInfoMap.set(a.id, {
+                attribute: a,
+                hidden: false,
+                order: index
+            } as AttributeInfo);
+        });
         this.populateDisplayColumns();
         this.datasource.update([...this.tablePricedItems]);
     }
 
     populateDisplayColumns()  {
-        /*
         const columns: string[] = this.attributes
             .sort((a: Attribute, b: Attribute) => {
                 const x = this.attributeInfoMap.get(a.id).order;
@@ -95,10 +101,9 @@ export class PartnerDataTableComponent implements OnInit {
             .map((a: Attribute) => {
                 return '' + a.id;
             });
-         */
-        this.displayedColumns = ['selection', 'actions', 'expansion', 'name', 'description']; // .concat(columns);
+        this.displayedColumns = ['selection', 'actions', 'expansion', 'name', 'description'].concat(columns);
         this.childrenDisplayedColumns =
-            ['children-selection', 'children-actions', 'children-expansion', 'name', 'description']; // .concat(columns);
+            ['children-selection', 'children-actions', 'children-expansion', 'name', 'description'].concat(columns);
     }
 
     isMasterToggleChecked(): boolean {

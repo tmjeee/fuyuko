@@ -1,0 +1,22 @@
+<div class="partner-attribute-table-component">
+    <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="attribute">
+            <mat-header-cell class="attribute-header" *matHeaderCellDef>
+                Attribute
+            </mat-header-cell>
+            <mat-cell class="attribute" *matCellDef="let itemAndAttribute">
+                {{itemAndAttribute.attribute.name}}
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="value">
+            <mat-header-cell class="value-header" *matHeaderCellDef>
+                Value
+            </mat-header-cell>
+            <mat-header-cell class="value" *matCellDef="let itemAndAttribute">
+                {{itemAndAttribute.item[itemAndAttribute.attribute.id] | itemAttributeValueAsString:itemAndAttribute.attribute}}
+            </mat-header-cell>
+        </ng-container>
+        <mat-header-row class="item-header" *matHeaderRowDef="['attribute', 'value']"></mat-header-row>
+        <mat-row class="item" *matRowDef="let itemAndAttribute; columns: ['attribute', 'value'];"></mat-row>
+    </mat-table>
+</div>
