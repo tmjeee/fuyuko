@@ -2,10 +2,44 @@
     <mat-sidenav-container [hasBackdrop]="false">
         <mat-sidenav #sideNav position="end" [disableClose]="true" [fixedInViewport]="false">
             Side
+            <div fxLayout="column" *ngIf="selectedPricedItem">
+                <div fxFlex *ngFor="let attribute of attributes">
+                    <div fxLayout="row">
+                        <div fxFlex>
+                            {{attribute.name}}
+                        </div>
+                        <div fxFlex>
+                            {{selectedPricedItem[attribute.id] | itemAttributeValueAsString:attribute}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </mat-sidenav>
         <mat-sidenav-content>
-            Main
-            <button type="button" (click)="toggleSideNav($event)">Click</button>
+            <div class="grid" *ngFor="let item of pricedItems">
+                <div class="controls">
+                    <mat-icon color="primary" (click)="onViewDetailsClicked($event, item)">edit</mat-icon>
+                </div>
+                <div class="carousel">
+                    <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
+                </div>
+                <div> {{item.name}} </div>
+                <div> {{item.description}} </div>
+                <div class="attribute" *ngFor="let attribute of attributes; let i = index">
+                    <ng-container *ngIf="i < 2">
+                        {{attribute.name}}: {{item[attribute.id] | itemAttributeValueAsString:attribute}}
+                    </ng-container>
+                    <ng-container *ngIf="i >= 2">
+                        <div *ngIf="isShowMore(item)">
+                            {{attribute.name}}: {{item[attribute.id] | itemAttributeValueAsString:attribute}}
+                        </div>
+                    </ng-container>
+                </div>
+                <div><a href="#" class="show-more-link mat-hint mat-caption" (click)="showMore($event, item)">
+                    <ng-container *ngIf="isShowMore(item)">Show less ...</ng-container>
+                    <ng-container *ngIf="!isShowMore(item)">Show more ...</ng-container>
+                </a></div>
+            </div>
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>

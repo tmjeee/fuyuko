@@ -2,8 +2,39 @@
     <mat-sidenav-container [hasBackdrop]="false">
         <mat-sidenav #sideNav position="end" [disableClose]="true" [fixedInViewport]="false">
             Side
+            <div fxLayout="column" *ngIf="selectedPricedItem">
+                <div fxFlex *ngFor="let attribute of attributes">
+                    <div fxLayout="row">
+                        <div fxFlex>
+                            {{attribute.name}}
+                        </div>
+                        <div fxFlex>
+                            {{selectedPricedItem[attribute.id] | itemAttributeValueAsString:attribute}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </mat-sidenav>
         <mat-sidenav-content>
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let item of pricedItems; let i = index;">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <section> <a (click)="onItemClicked($event, item)">{{item.name}}</a> </section>
+                            <section> {{item.description}} </section>
+                        </mat-panel-title>
+                        <mat-panel-description>{{item.description}}</mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div>
+                        <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
+                    </div>
+                    <div> <a (click)="onItemClicked($event, item)">{{item.name}}</a> </div>
+                    <div> {{item.description}} </div>
+                    <div *ngFor="let attribute of attributes; let i = index;">
+                        {{item[attribute.id] | itemAttributeValueAsString:attribute}}
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>

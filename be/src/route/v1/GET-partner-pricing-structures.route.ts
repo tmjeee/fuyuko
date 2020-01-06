@@ -39,6 +39,7 @@ const httpAction: any[] = [
             const v: PricingStructure = {
                 id: curr.ID,
                 name: curr.NAME,
+                viewId: curr.VIEW_ID,
                 description: curr.DESCRIPTION
             };
             acc.push(v);

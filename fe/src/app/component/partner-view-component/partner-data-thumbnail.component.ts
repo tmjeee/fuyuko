@@ -1,5 +1,11 @@
-import {Component} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
+import {Attribute} from '../../model/attribute.model';
+import {Item, ItemImage, PricedItem} from '../../model/item.model';
+import config from '../../utils/config.util';
+import {MatSidenav} from '@angular/material/sidenav';
 
+
+const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
 
 @Component({
     selector: 'app-partner-data-thumbnail',
@@ -8,4 +14,45 @@ import {Component} from '@angular/core';
 })
 export class PartnerDataThumbnailComponent {
 
+    @Input() attributes: Attribute[];
+    @Input() pricedItems: PricedItem[];
+
+    @ViewChild('sideNav', {static: true}) sideNav: MatSidenav;
+
+    showMoreMap: Map<number, boolean>; /* <item id, can show more> */
+    selectedPricedItem: PricedItem;
+
+    constructor() {
+        this.showMoreMap = new Map();
+    }
+
+
+    getItemImagesUrl(item: Item): string[] {
+        if (item && item.images) {
+            // const p = `/item/image/:itemImageId`;
+            return item.images.map((i: ItemImage) => URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`));
+        }
+        return [];
+    }
+
+    onViewDetailsClicked($event: MouseEvent, item: PricedItem) {
+        this.selectedPricedItem = item;
+        this.sideNav.open();
+    }
+
+    isShowMore(item: Item) {
+        if (this.showMoreMap.has(item.id)) {
+            return this.showMoreMap.get(item.id);
+        } else {
+            this.showMoreMap.set(item.id, false);
+            return false;
+        }
+    }
+
+    showMore($event: MouseEvent, item: Item) {
+        $event.preventDefault();
+        $event.stopImmediatePropagation();
+        const showMore: boolean = this.isShowMore(item);
+        this.showMoreMap.set(item.id, !showMore);
+    }
 }

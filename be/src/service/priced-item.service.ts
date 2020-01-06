@@ -3,9 +3,31 @@ import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2, PricedItem2} from 
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
 import {findChildrenItems} from "./item.service";
+import {convert} from "./conversion-item-value.service";
 
+export const toPricedItems = (p: PricedItem2[]): PricedItem[] => {
+    return p.map(toPricedItem);
+}
 
-export const findPricedItems = async (pricingStructureId: number): Promise<PricedItem2[]> => {
+export const toPricedItem = (p2: PricedItem2): PricedItem => {
+    const p: PricedItem = {
+        id: p2.id,
+        name: p2.name,
+        description: p2.description,
+        parentId: p2.parentId,
+        images: p2.images,
+        country: p2.country,
+        price: p2.price,
+        children: toPricedItems(p2.children)
+    };
+    p2.values.reduce((p: PricedItem, i: ItemValue2) => {
+        p[i.attributeId] = convert(i);
+        return p;
+    }, p);
+    return p;
+}
+
+export const getPricedItems = async (pricingStructureId: number): Promise<PricedItem2[]> => {
     const item2s: PricedItem2[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT
@@ -33,8 +55,8 @@ export const findPricedItems = async (pricingStructureId: number): Promise<Price
                     IMG.SIZE AS IMG_SIZE,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
-                    PSI_COUNTRY AS PSI_COUNTRY,
-                    PSI_PRICE AS PSI_PRICE
+                    PSI.COUNTRY AS PSI_COUNTRY,
+                    PSI.PRICE AS PSI_PRICE
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
@@ -43,7 +65,7 @@ export const findPricedItems = async (pricingStructureId: number): Promise<Price
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.ID = PSI.PRICING_STRUCTURE_ID
-                WHERE PSI.PRICING_STRCUTURE_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND PS.STATUS = 'ENABLED'
+                WHERE PSI.PRICING_STRUCTURE_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND PS.STATUS = 'ENABLED'
             `, [pricingStructureId]);
 
         return _doQ(q);
@@ -52,13 +74,13 @@ export const findPricedItems = async (pricingStructureId: number): Promise<Price
 
     for (const item2 of item2s) {
         const itemId: number = item2.id;
-        item2.children = await findChildrenPricedItems(pricingStructureId, itemId);
+        item2.children = await getChildrenPricedItems(pricingStructureId, itemId);
     }
 
     return item2s;
 }
 
-export const findChildrenPricedItems = async (pricingStructureId: number, parentItemId: number): Promise<PricedItem2[]> => {
+export const getChildrenPricedItems = async (pricingStructureId: number, parentItemId: number): Promise<PricedItem2[]> => {
 
     const item2s: PricedItem2[] =  await doInDbConnection(async (conn: Connection) => {
 
@@ -89,8 +111,8 @@ export const findChildrenPricedItems = async (pricingStructureId: number, parent
                     PSI.ID AS PSI_ID,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
-                    PSI_COUNTRY AS PSI_COUNTRY,
-                    PSI_PRICE AS PSI_PRICE
+                    PSI.COUNTRY AS PSI_COUNTRY,
+                    PSI.PRICE AS PSI_PRICE
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
@@ -99,7 +121,7 @@ export const findChildrenPricedItems = async (pricingStructureId: number, parent
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.ID = PSI.PRICING_STRUCTURE_ID
-                WHERE PSI.PRICING_STRCUTURE_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND PS.STATUS = 'ENABLED' AND I.PARENT_ID = ?
+                WHERE PSI.PRICING_STRUCTURE_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND PS.STATUS = 'ENABLED' AND I.PARENT_ID = ?
             `, [pricingStructureId, parentItemId]);
 
         return _doQ(q);
@@ -108,7 +130,7 @@ export const findChildrenPricedItems = async (pricingStructureId: number, parent
 
     for (const item2 of item2s) {
         const itemId: number = item2.id;
-        item2.children = await findChildrenPricedItems(pricingStructureId, itemId);
+        item2.children = await getChildrenPricedItems(pricingStructureId, itemId);
     }
 
     return item2s;

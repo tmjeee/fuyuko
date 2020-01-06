@@ -76,7 +76,7 @@ import registerGetUserDashboardRoute from './GET-user-dashboard.route';
 import registerPostUserDashboardWidgetDataRoute from './POST-user-dashboard-widget-data.route';
 import registerGetUserDashboardWidgetDataRoute from './GET-user-dashboard-widget-data.route';
 import registerGetPartnerPricingStructuresRoute from './GET-partner-pricing-structures.route';
-import registerGetPartnerPricedItemsRoute from './GET-partner-priced-items.route';
+import registerGetPartnerPricedItemsRoute from './GET-partner-priced-items-by-pricing-structure.route';
 
 const v1AppRouter:Router  = express.Router();
 

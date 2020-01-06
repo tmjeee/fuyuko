@@ -47,6 +47,7 @@ export class PartnerDataTableComponent implements OnInit {
 
     @Input() attributes: Attribute[];
     @Input() tablePricedItems: TablePricedItem[];
+    selectedTablePricedItem: TablePricedItem;
 
     @ViewChild('sideNav', {static: true}) sideNav: MatSidenav;
 
@@ -80,6 +81,7 @@ export class PartnerDataTableComponent implements OnInit {
     }
 
     populateDisplayColumns()  {
+        /*
         const columns: string[] = this.attributes
             .sort((a: Attribute, b: Attribute) => {
                 const x = this.attributeInfoMap.get(a.id).order;
@@ -93,9 +95,10 @@ export class PartnerDataTableComponent implements OnInit {
             .map((a: Attribute) => {
                 return '' + a.id;
             });
-        this.displayedColumns = ['selection', 'actions', 'expansion', 'name', 'description'].concat(columns);
+         */
+        this.displayedColumns = ['selection', 'actions', 'expansion', 'name', 'description']; // .concat(columns);
         this.childrenDisplayedColumns =
-            ['children-selection', 'children-actions', 'children-expansion', 'name', 'description'].concat(columns);
+            ['children-selection', 'children-actions', 'children-expansion', 'name', 'description']; // .concat(columns);
     }
 
     isMasterToggleChecked(): boolean {
@@ -166,7 +169,8 @@ export class PartnerDataTableComponent implements OnInit {
         return value;
     }
 
-    onViewDetailsClicked(tableItem: any) {
+    onViewDetailsClicked(tableItem: TablePricedItem) {
+        this.selectedTablePricedItem = tableItem;
         this.sideNav.open();
     }
 

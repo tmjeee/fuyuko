@@ -8,7 +8,21 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-
+            <mat-form-field>
+                <mat-label>Pricing Structure</mat-label>
+                <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)">
+                    <mat-option [value]="null">--- Please select a Pricing Structure ---</mat-option>
+                    <mat option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure">
+                        {{pricingStructure.name}}
+                    </mat>
+                </mat-select>
+            </mat-form-field>
+            <div *ngIf="loading">Loading ...</div>
+            <app-partner-data-table
+                    *ngIf="attributes && tablePricedItems"
+                    [attributes]="attributes"
+                    [tablePricedItems]="tablePricedItems">
+            </app-partner-data-table>
         </mat-card-content>
     </mat-card>
 </div>

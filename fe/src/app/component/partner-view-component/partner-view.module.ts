@@ -7,6 +7,7 @@ import {PartnerDataTableComponent} from './partner-data-table.component';
 import {PartnerDataListComponent} from './partner-data-list.component';
 import {PartnerDataThumbnailComponent} from './partner-data-thumbnail.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
+import {CarouselModule} from "../carousel-component/carousel.module";
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import {DataEditorModule} from '../data-editor-component/data-editor.module';
         ReactiveFormsModule,
         AppMaterialsModule,
         DataEditorModule,
+        CarouselModule,
     ],
     declarations: [
         PartnerDataTableComponent,

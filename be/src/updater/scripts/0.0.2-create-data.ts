@@ -260,6 +260,15 @@ const INSERT_DATA = async () => {
         const ps1: QueryResponse = await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?, 'ENABLED')`, [v1.insertId, 'Pricing Structure #1', 'Pricing Structure #1 Description']);
         const ps2: QueryResponse = await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?, 'ENABLED')`, [v2.insertId, 'Pricing Structure #2', 'Pricing Structure #2 Description']);
 
+        // pricing structure with groups
+        await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps1.insertId, gAdmin.insertId]);
+        await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps1.insertId, gView.insertId]);
+        await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps1.insertId, gEdit.insertId]);
+        await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps1.insertId, gPartner.insertId]);
+        await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps2.insertId, gAdmin.insertId]);
+        await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps2.insertId, gView.insertId]);
+        await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps2.insertId, gEdit.insertId]);
+        await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps2.insertId, gPartner.insertId]);
 
         // items
         await createManyItems(conn, ps1.insertId, v1.insertId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a13.insertId);
@@ -551,6 +560,9 @@ const _createItem = async (conn: Connection, pricingStructureId: number, args: C
 
         await conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, [itemId, isPrimary, mimeType.mime, fileName, buffer.length, buffer]);
     }
+
+    await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, COUNTRY, PRICE) VALUES (?,?,?,?) `, [qItem.insertId, pricingStructureId, 'AUD', Number((Math.random() * 10).toFixed(2))]);
+
     for (const child of args.children) {
         _createItem(conn, pricingStructureId, child, itemId);
     }

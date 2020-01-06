@@ -117,6 +117,7 @@ import {PartnerDataListPageComponent} from './page/partner-data-list-page/partne
 import {PartnerDataTablePageComponent} from './page/partner-data-table-page/partner-data-table.page';
 import {PartnerHelpPageComponent} from "./page/partner-help-page/partner-help.page";
 import {PartnerService} from "./service/partner-service/partner.service";
+import {PartnerViewModule} from "./component/partner-view-component/partner-view.module";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -242,6 +243,7 @@ const appInitializer = (settingsService: SettingsService,
     SideNavModule,
     UserSearchModule,
     UserTableModule,
+    PartnerViewModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,

@@ -4,6 +4,18 @@
             <mat-icon (click)="onCloseSideNav($event)">close</mat-icon>
             <div>
                 Side Nav
+                <div fxLayout="column" *ngIf="selectedTablePricedItem">
+                    <div fxFlex *ngFor="let attribute of attributes">
+                        <div fxLayout="row">
+                            <div fxFlex>
+                               {{attribute.name}}
+                            </div>
+                            <div fxFlex>
+                               {{selectedTablePricedItem[attribute.id] | itemAttributeValueAsString:attribute}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </mat-sidenav>
         <mat-sidenav-content>
