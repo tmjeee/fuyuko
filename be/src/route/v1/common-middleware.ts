@@ -6,7 +6,9 @@ import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
 import {hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
 
-const validateRoleMiddlewareFn = (roleNames: string[], fn: (userId: number, roleNames: string[]) => Promise<boolean>) => {
+const validateRoleMiddlewareFn = (roleNames: string[],
+                                  fn: (userId: number, roleNames: string[]) => Promise<boolean>,
+                                  errFn: (req: Request) => string) => {
     return (async (req: Request, res: Response, next: NextFunction) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
@@ -14,7 +16,8 @@ const validateRoleMiddlewareFn = (roleNames: string[], fn: (userId: number, role
         if (!hasRole) {
             res.status(403).json(
                 makeApiErrorObj(
-                    makeApiError(`Unauthorized: Require role ${roleNames.join(',')} to perform ${req.method} ${req.url}`,
+                    makeApiError(
+                        errFn(req),
                         'roleNames', roleNames.join(','), 'Security')
                 )
             );
@@ -25,11 +28,15 @@ const validateRoleMiddlewareFn = (roleNames: string[], fn: (userId: number, role
 }
 
 export const validateUserAnyRoleMiddlewareFn = (roleNames: string[]) => {
-    return validateRoleMiddlewareFn(roleNames, async (userId: number, roleNames: string[]): Promise<boolean> => await hasAnyUserRoles(userId, roleNames));
+    return validateRoleMiddlewareFn(roleNames,
+        async (userId: number, roleNames: string[]): Promise<boolean> => await hasAnyUserRoles(userId, roleNames),
+        (req: Request) => `Unauthorized: Require role ${roleNames.join(',')} to perform ${req.method} ${req.url}`);
 }
 
 export const validateUserNoneOfRolesMiddlewareF = (roleNames: string[]) => {
-    return validateRoleMiddlewareFn(roleNames, async (userId: number, roleNames: string[]): Promise<boolean> => await hasNoneUserRoles(userId, roleNames));
+    return validateRoleMiddlewareFn(roleNames,
+        async (userId: number, roleNames: string[]): Promise<boolean> => await hasNoneUserRoles(userId, roleNames),
+        (req: Request) => `Unauthorized: Require roles to not present ${roleNames.join(',')} to perform ${req.method} ${req.url}`);
 }
 
 export const getJwtPayload = (res: Response): JwtPayload => {
