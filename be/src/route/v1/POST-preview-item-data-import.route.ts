@@ -1,7 +1,13 @@
 import {Registry} from "../../registry";
 import {NextFunction, Request, Response, Router} from "express";
 import {param, body} from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {multipartParse} from "../../service";
@@ -26,7 +32,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
-    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const name: string = `item-data-import-${uuid()}`;

@@ -1,5 +1,5 @@
 import {Router, Request, Response, NextFunction} from "express";
-import {validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
+import {validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";

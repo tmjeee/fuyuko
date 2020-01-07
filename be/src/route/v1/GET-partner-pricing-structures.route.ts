@@ -1,18 +1,23 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {param} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import { Connection } from "mariadb";
-import {ROLE_PARTNER} from "../../model/role.model";
-import {View} from "../../model/view.model";
+import {ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
 import {PricingStructure} from "../../model/pricing-structure.model";
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
-    validateUserInAnyRoleMiddlewareFn([ROLE_PARTNER]),
+    v([vFnHasAnyUserRoles([ROLE_PARTNER])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const userId: number = Number(req.params.userId);

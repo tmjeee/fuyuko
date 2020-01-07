@@ -1,9 +1,10 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {
-    getJwtPayload,
+    aFnAnyTrue,
+    getJwtPayload, v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
-    validateUserInAnyRoleMiddlewareFn
+    vFnHasAnyUserRoles
 } from "./common-middleware";
 import {JwtPayload} from "../../model/jwt.model";
 import * as formidable from 'formidable';
@@ -26,7 +27,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
-    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const jwtPayload: JwtPayload = getJwtPayload(res);

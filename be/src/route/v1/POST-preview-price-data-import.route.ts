@@ -1,14 +1,19 @@
 import {Registry} from "../../registry";
 import {NextFunction, Request, Response, Router} from "express";
 import {param, body} from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {multipartParse} from "../../service";
 import {File} from "formidable";
 import * as util from "util";
 import * as fs from "fs";
-import fileType from "file-type";
 import {PriceDataImport} from "../../model/data-import.model";
 import {preview} from "../../service/import-csv/import-price.service";
 import {makeApiError, makeApiErrorObj} from "../../util";
@@ -24,7 +29,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
-    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const name: string = `price-data-import-${uuid()}`;

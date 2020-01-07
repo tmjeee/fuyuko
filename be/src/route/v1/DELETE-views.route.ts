@@ -1,19 +1,25 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
-import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {check, body} from 'express-validator';
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {View} from "../../model/view.model";
 import {ApiResponse} from "../../model/response.model";
-import {ROLE_EDIT} from "../../model/role.model";
+import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
 
 
 const httpAction: any[] = [
     [
         body().isArray(),
         body('*.id').exists().isNumeric(),
-        validateUserInAnyRoleMiddlewareFn([ROLE_EDIT])
+        v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
