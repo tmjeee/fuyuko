@@ -6,6 +6,26 @@ import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
 import {hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
 
+export interface ValidateFn {
+    (req: Request, res: Response): Promise<boolean>;
+}
+
+export const hasAnyUserRolesFn  = (roleNames: string[]): ValidateFn => {
+    return async (req: Request, res: Response) => {
+        const jwtPayload: JwtPayload = getJwtPayload(res);
+        const userId: number = jwtPayload.user.id;
+        const hasRole: boolean = await hasAnyUserRoles(userId, roleNames);
+        if (!hasRole) {
+            return false;
+        }
+        return true;
+    }
+}
+
+export const validateRole = (vFn: ValidateFn[]) => {
+
+}
+
 const validateRoleMiddlewareFn = (roleNames: string[],
                                   fn: (userId: number, roleNames: string[]) => Promise<boolean>,
                                   errFn: (req: Request) => string) => {
