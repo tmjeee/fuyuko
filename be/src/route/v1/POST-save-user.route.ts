@@ -1,12 +1,18 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {check} from 'express-validator';
-import {getJwtPayload, validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    getJwtPayload,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn
+} from "./common-middleware";
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {JwtPayload} from "../../model/jwt.model";
 import {getUserById} from "../../service";
 import {User} from "../../model/user.model";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
@@ -16,8 +22,9 @@ const httpAction: any[] = [
         check('email'),
         check('theme'),
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
     async (req: Request, res: Response, next: NextFunction) => {
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;

@@ -1,14 +1,17 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {QueryA} from "../../db/db";
 import {View} from "../../model/view.model";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction: any[] = [
     [],
+    validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_VIEW]),
     async (req: Request, res: Response, next: NextFunction) => {
         await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(`

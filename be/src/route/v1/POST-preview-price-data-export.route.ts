@@ -1,11 +1,12 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {body, param} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {Attribute} from "../../model/attribute.model";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 import {PriceDataExport} from "../../model/data-export.model";
 import {preview, PreviewResult} from "../../service/export-csv/export-price.service";
+import {ROLE_EDIT} from "../../model/role.model";
 const detectCsv = require('detect-csv');
 
 const httpAction: any[] = [
@@ -17,6 +18,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);

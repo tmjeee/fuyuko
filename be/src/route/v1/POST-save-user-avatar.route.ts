@@ -1,5 +1,10 @@
 import {NextFunction, Router, Request, Response} from "express";
-import {getJwtPayload, validateJwtMiddlewareFn} from "./common-middleware";
+import {
+    getJwtPayload,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn
+} from "./common-middleware";
 import {JwtPayload} from "../../model/jwt.model";
 import * as formidable from 'formidable';
 import {Fields, Files, IncomingForm, File} from 'formidable';
@@ -13,13 +18,15 @@ import util from 'util';
 import fs from 'fs';
 import {Registry} from "../../registry";
 import {param} from 'express-validator';
+import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
         param('userId').exists().isNumeric()
     ],
+    validateMiddlewareFn,
     validateJwtMiddlewareFn,
-    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const jwtPayload: JwtPayload = getJwtPayload(res);

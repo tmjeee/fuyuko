@@ -1,18 +1,20 @@
 import {Registry } from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/response.model";
+import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
         check('attributeId').exists().isNumeric(),
         check('state').exists()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
     async (req: Request, res: Response, next: NextFunction) => {
         const attributeId: number = Number(req.params.attributeId);
         const state: string = req.params.state;

@@ -1,6 +1,6 @@
 import {Router, Request, Response, NextFunction} from "express";
 import {check} from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
@@ -8,6 +8,7 @@ import {hashedPassword, sendEmail} from "../../service";
 import config from '../../config';
 import {RegistrationResponse} from "../../model/registration.model";
 import {Registry} from "../../registry";
+import {ROLE_ADMIN} from "../../model/role.model";
 
 /**
  * Approve other users' self registration entries
@@ -16,8 +17,9 @@ const httpAction = [
     [
         check('selfRegistrationId').exists().isNumeric()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_ADMIN]),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const selfRegistrationId: number = Number(req.params.selfRegistrationId);

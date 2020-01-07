@@ -1,6 +1,6 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {check, body} from 'express-validator';
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
@@ -8,6 +8,7 @@ import {Attribute} from "../../model/attribute.model";
 import {revert} from "../../service/conversion-attribute.service";
 import {Attribute2} from "../model/server-side.model";
 import {ApiResponse} from "../../model/response.model";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
@@ -17,8 +18,9 @@ const httpAction: any[] = [
         body('attributes.*.name').exists(),
         body('attributes.*.description').exists()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const atts: Attribute[] = req.body.attributes;

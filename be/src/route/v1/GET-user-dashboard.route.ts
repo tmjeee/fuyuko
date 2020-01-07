@@ -1,15 +1,17 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {param} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {SerializedDashboardFormat} from "../../model/dashboard-serialzable.model";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_VIEW]),
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
         const f: SerializedDashboardFormat = await doInDbConnection(async (conn: Connection) => {

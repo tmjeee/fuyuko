@@ -1,6 +1,6 @@
 import {NextFunction, Router, Request, Response } from "express";
 import {Registry} from "../../registry";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
@@ -12,6 +12,7 @@ import {
     ValidateClauseMetadataEntry2, WhenClause2, WhenClauseMetadata2, WhenClauseMetadataEntry2
 } from "../model/server-side.model";
 import {convert} from "../../service/rule-conversion.service";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
@@ -19,6 +20,7 @@ const httpAction: any[] = [
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_VIEW]),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);

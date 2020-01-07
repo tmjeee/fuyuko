@@ -1,6 +1,6 @@
 import {NextFunction, Router, Request, Response } from "express";
 import {check} from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {sendEmail} from "../../service";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
@@ -9,6 +9,7 @@ import config from "../../config";
 import uuid = require("uuid");
 import {CreateInvitationResponse} from "../../model/invitation.model";
 import {Registry} from "../../registry";
+import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
 
 /**
  * Send out invitation to register / activate account (through email)
@@ -60,8 +61,9 @@ const httpAction = [
     [
         check('email').isLength({min:1}).isEmail(),
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_ADMIN]),
     async (req: Request, res: Response, next: NextFunction) => {
         const email: string = req.body.email;
         const groupIds: number[] = req.body.groupIds;

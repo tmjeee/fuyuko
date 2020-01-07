@@ -1,7 +1,7 @@
 import {Registry} from "../../registry";
 import {NextFunction, Request, Response, Router} from "express";
 import {param, body} from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {multipartParse} from "../../service";
@@ -12,6 +12,7 @@ import fileType from "file-type";
 import {PriceDataImport} from "../../model/data-import.model";
 import {preview} from "../../service/import-csv/import-price.service";
 import {makeApiError, makeApiErrorObj} from "../../util";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
@@ -21,8 +22,9 @@ const httpAction: any[] = [
         param('viewId').exists().isNumeric(),
         // body('priceDataCsvFile').exists()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const name: string = `price-data-import-${uuid()}`;

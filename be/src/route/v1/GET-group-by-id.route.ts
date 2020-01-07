@@ -1,11 +1,11 @@
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
-import {Role} from "../../model/role.model";
+import {Role, ROLE_VIEW} from "../../model/role.model";
 
 
 const httpAction: any[] = [
@@ -14,6 +14,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_VIEW]),
     async (req: Request, res: Response, next: NextFunction) => {
         doInDbConnection(async (conn: Connection) => {
             const groupId: number = Number(req.params.groupId);

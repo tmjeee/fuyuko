@@ -1,19 +1,20 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
-import {Role} from "../../model/role.model";
+import {Role, ROLE_VIEW} from "../../model/role.model";
 import {User} from "../../model/user.model";
 
 const httpAction: any[] = [
     [
         check('groupId').exists().isNumeric()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_VIEW]),
     async (req: Request, res: Response, next: NextFunction) => {
         const u: User[] = await doInDbConnection(async (conn: Connection) => {
 

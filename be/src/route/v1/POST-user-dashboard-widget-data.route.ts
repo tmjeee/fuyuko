@@ -1,16 +1,18 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {param, body} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {SerializedDashboardWidgetInstanceDataFormat} from "../../model/dashboard-serialzable.model";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import { Connection } from "mariadb";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
     body('data').exists(),
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
         const d: SerializedDashboardWidgetInstanceDataFormat = req.body.data;

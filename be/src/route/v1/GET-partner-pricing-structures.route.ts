@@ -1,7 +1,7 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {param} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import { Connection } from "mariadb";
 import {ROLE_PARTNER} from "../../model/role.model";
@@ -12,6 +12,7 @@ const httpAction: any[] = [
     param('userId').exists().isNumeric(),
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_PARTNER]),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const userId: number = Number(req.params.userId);

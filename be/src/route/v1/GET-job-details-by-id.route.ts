@@ -1,10 +1,11 @@
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {param} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Job, JobAndLogs, JobLog} from "../../model/job.model";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const SQL = `
                 SELECT 
@@ -34,8 +35,9 @@ const httpAction: any[] = [
     [
         param('jobId').exists().isNumeric()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_VIEW]),
     async (req: Request, res: Response, next: NextFunction) => {
         const jobAndLogs: JobAndLogs = await doInDbConnection(async (conn: Connection) => {
             const jobId = req.params.jobId;

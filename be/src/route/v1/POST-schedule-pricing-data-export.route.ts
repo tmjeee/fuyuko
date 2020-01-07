@@ -1,11 +1,12 @@
 import {param, body} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
 import {PricedItem} from "../../model/item.model";
 import {runJob} from "../../service/export-csv/job-do-price-data-export.service";
 import {Job} from "../../model/job.model";
 import {Attribute} from "../../model/attribute.model";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
@@ -14,8 +15,9 @@ const httpAction: any[] = [
         body('pricedItems').exists().isArray(),
         body('attributes').exists().isArray()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
     async (req:Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);

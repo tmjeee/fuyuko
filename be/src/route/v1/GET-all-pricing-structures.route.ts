@@ -1,15 +1,17 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_VIEW]),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);

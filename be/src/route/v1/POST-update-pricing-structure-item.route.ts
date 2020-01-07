@@ -1,10 +1,11 @@
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {param, body} from 'express-validator';
 import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 import {ApiResponse} from "../../model/response.model";
 import {setPrices} from "../../service/pricing-structure-item.service";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
@@ -14,8 +15,9 @@ const httpAction: any[] = [
         body('pricingStructureItems.*.itemId').exists().isNumeric(),
         body('pricingStructureItems.*.price').exists().isNumeric()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const pricingStructureId: number = Number(req.params.pricingStructureId);

@@ -27,13 +27,13 @@ const validateRoleMiddlewareFn = (roleNames: string[],
     });
 }
 
-export const validateUserAnyRoleMiddlewareFn = (roleNames: string[]) => {
+export const validateUserInAnyRoleMiddlewareFn = (roleNames: string[]) => {
     return validateRoleMiddlewareFn(roleNames,
         async (userId: number, roleNames: string[]): Promise<boolean> => await hasAnyUserRoles(userId, roleNames),
         (req: Request) => `Unauthorized: Require role ${roleNames.join(',')} to perform ${req.method} ${req.url}`);
 }
 
-export const validateUserNoneOfRolesMiddlewareF = (roleNames: string[]) => {
+export const validateUserInNoneOfRolesMiddlewareF = (roleNames: string[]) => {
     return validateRoleMiddlewareFn(roleNames,
         async (userId: number, roleNames: string[]): Promise<boolean> => await hasNoneUserRoles(userId, roleNames),
         (req: Request) => `Unauthorized: Require roles to not present ${roleNames.join(',')} to perform ${req.method} ${req.url}`);

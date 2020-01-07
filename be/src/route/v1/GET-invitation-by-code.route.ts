@@ -1,11 +1,12 @@
 import {Router, Request, Response, NextFunction} from "express";
-import {validateMiddlewareFn} from "./common-middleware";
+import {validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import { Invitation } from "../../model/invitation.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {Registry} from "../../registry";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction = [
     [
