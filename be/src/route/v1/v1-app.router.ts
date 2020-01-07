@@ -77,6 +77,7 @@ import registerPostUserDashboardWidgetDataRoute from './POST-user-dashboard-widg
 import registerGetUserDashboardWidgetDataRoute from './GET-user-dashboard-widget-data.route';
 import registerGetPartnerPricingStructuresRoute from './GET-partner-pricing-structures.route';
 import registerGetPartnerPricedItemsRoute from './GET-partner-priced-items-by-pricing-structure.route';
+import registerGetSearchForGroupByNameRoute from './GET-search-for-group-by-name.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -161,6 +162,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetUserDashboardWidgetDataRoute(v1AppRouter, registry);
     registerGetPartnerPricingStructuresRoute(v1AppRouter, registry);
     registerGetPartnerPricedItemsRoute(v1AppRouter, registry);
+    registerGetSearchForGroupByNameRoute(v1AppRouter, registry);
 }
 
 
