@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Role, RoleName} from '../../model/role.model';
-import {Group, GroupStatus} from '../../model/group.model';
+import {Group} from '../../model/group.model';
 import {Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
 import config from '../../utils/config.util';
@@ -25,6 +25,7 @@ const URL_SET_USER_STATUS = () => `${config().api_host_url}/user/:userId/status/
 const URL_GET_SELF_REGISTRATION = () => `${config().api_host_url}/self-registers`;
 const URL_POST_APPROVE_SELF_REGISTRATION = () => `${config().api_host_url}/approve/:selfRegistrationId`;
 const URL_DELETE_SELF_REGISTRATION = () => `${config().api_host_url}/self-register/:selfRegistrationId`;
+const URL_GET_SEARCH_GROUP_BY_NAME = () => `${config().api_host_url}/group/:groupName/search`;
 
 
 @Injectable()
@@ -61,27 +62,7 @@ export class UserManagementService {
 
   // ===== Groups ===============================
   findInGroup(groupName: string): Observable<Group[]> {
-    // todo:
-    return of ([
-      {id: 1,  name: 'group #01', description: 'group #01 description', status: 'enabled', roles: []} as Group,
-      {id: 2,  name: 'group #02', description: 'group #02 description', status: 'enabled', roles: []} as Group,
-      {id: 3,  name: 'group #03', description: 'group #03 description', status: 'enabled', roles: []} as Group,
-      {id: 4,  name: 'group #04', description: 'group #04 description', status: 'enabled', roles: []} as Group,
-      {id: 5,  name: 'group #05', description: 'group #05 description', status: 'enabled', roles: []} as Group,
-      {id: 6,  name: 'group #06', description: 'group #06 description', status: 'enabled', roles: []} as Group,
-      {id: 7,  name: 'group #07', description: 'group #07 description', status: 'enabled', roles: []} as Group,
-      {id: 8,  name: 'group #08', description: 'group #08 description', status: 'enabled', roles: []} as Group,
-      {id: 9,  name: 'group #09', description: 'group #09 description', status: 'enabled', roles: []} as Group,
-      {id: 10, name: 'group #10', description: 'group #10 description', status: 'enabled', roles: []} as Group,
-      {id: 11, name: 'group #11', description: 'group #11 description', status: 'enabled', roles: []} as Group,
-      {id: 12, name: 'group #12', description: 'group #12 description', status: 'enabled', roles: []} as Group,
-      {id: 13, name: 'group #13', description: 'group #13 description', status: 'enabled', roles: []} as Group,
-      {id: 14, name: 'group #14', description: 'group #14 description', status: 'enabled', roles: []} as Group,
-      {id: 15, name: 'group #15', description: 'group #15 description', status: 'enabled', roles: []} as Group,
-      {id: 16, name: 'group #16', description: 'group #16 description', status: 'enabled', roles: []} as Group,
-      {id: 17, name: 'group #17', description: 'group #17 description', status: 'enabled', roles: []} as Group,
-      {id: 18, name: 'group #18', description: 'group #18 description', status: 'enabled', roles: []} as Group,
-    ]);
+    return this.httpClient.get<Group[]>(URL_GET_SEARCH_GROUP_BY_NAME().replace(':groupName', groupName));
   }
 
   getAllGroups(): Observable<Group[]> {
@@ -149,6 +130,6 @@ export class UserManagementService {
 
   approvePendingUser(selfRegistration: SelfRegistration): Observable<ApiResponse> {
       return this.httpClient.post<ApiResponse>(
-          URL_POST_APPROVE_SELF_REGISTRATION().replace(':selfRegistrationId', String(selfRegistration.id)),{});
+          URL_POST_APPROVE_SELF_REGISTRATION().replace(':selfRegistrationId', String(selfRegistration.id)), {});
   }
 }

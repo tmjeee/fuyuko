@@ -1,6 +1,12 @@
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {param} from 'express-validator';
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
@@ -14,7 +20,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
-    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const status: string = req.params.status;

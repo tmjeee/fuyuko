@@ -1,6 +1,12 @@
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {param} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
@@ -37,7 +43,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
-    validateUserInAnyRoleMiddlewareFn([ROLE_VIEW]),
+    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const jobAndLogs: JobAndLogs = await doInDbConnection(async (conn: Connection) => {
             const jobId = req.params.jobId;

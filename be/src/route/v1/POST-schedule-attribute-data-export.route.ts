@@ -1,7 +1,13 @@
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
 import {param, body} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {Attribute} from "../../model/attribute.model";
 import {Job} from "../../model/job.model";
 import {runJob} from "../../service/export-csv/job-do-attribute-data-export.service";
@@ -14,7 +20,7 @@ const httpAction: any[] = [
    ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
-    validateUserInAnyRoleMiddlewareFn([ROLE_EDIT]),
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req:Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const attributes: Attribute[] = req.body.attributes;

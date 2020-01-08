@@ -1,7 +1,13 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {check} from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn, validateUserInAnyRoleMiddlewareFn} from "./common-middleware";
+import {
+   aFnAnyTrue,
+   v,
+   validateJwtMiddlewareFn,
+   validateMiddlewareFn,
+   vFnHasAnyUserRoles
+} from "./common-middleware";
 import {i} from "../../logger";
 import {getUserById} from "../../service";
 import {User} from "../../model/user.model";
@@ -13,7 +19,7 @@ const httpAction: any[] = [
    ],
    validateMiddlewareFn,
    validateJwtMiddlewareFn,
-   validateUserInAnyRoleMiddlewareFn([ROLE_VIEW]),
+   v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
    async (req: Request, res: Response, next: NextFunction) => {
       const userId: number = Number(req.params.userId);
       const user: User =  await getUserById(userId);
