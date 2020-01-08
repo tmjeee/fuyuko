@@ -15,6 +15,7 @@ import {ItemImage} from "../../model/item.model";
 import {sprintf} from 'sprintf';
 import {ROLE_ADMIN, ROLE_EDIT, ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
 import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
+import {Themes} from "../../model/theme.model";
 
 
 export const update = async () => {
@@ -31,9 +32,9 @@ const INSERT_DATA = async () => {
     await doInDbConnection(async (conn: Connection) => {
         // users
         const u1: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            ['tmjee', new Date(), new Date(), 'tmjee1@gmail.com', 'ENABLED', hashedPassword('tmjee'), 'toby', 'jee']);
+            ['tmjee', new Date(), new Date(), 'tmjee1@gmail.com', 'ENABLED', hashedPassword('test'), 'toby', 'jee']);
         const u2: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            ['sxjee', new Date(), new Date(), 'sxjee@gmail.com', 'ENABLED', hashedPassword('sxjee'), 'jason', 'jee']);
+            ['sxjee', new Date(), new Date(), 'sxjee@gmail.com', 'ENABLED', hashedPassword('test'), 'jason', 'jee']);
 
         // group ids
         const viewGroupId: number = (await conn.query(`SELECT ID FROM TBL_GROUP WHERE NAME=?`, [GROUP_VIEW]) as QueryA)[0].ID;
@@ -52,8 +53,32 @@ const INSERT_DATA = async () => {
         await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [ u2.insertId, partnerGroupId]);
 
         // user-theme
-        await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`,[u1.insertId, 'pink_bluegrey_light']);
-        await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`, [u2.insertId, 'indigo_lightblue_dark']);
+        await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`,[u1.insertId, nextTheme()]);
+        await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`, [u2.insertId, nextTheme()]);
+
+
+        // various users (group, theme etc)
+        for (const i of [1,2,3,4,5,6,7,8,9]) {
+            const uV: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [`viewer${i}`, new Date(), new Date(), `viewer${i}@gmail.com`, 'ENABLED', hashedPassword('test'), `viewer${i}_firstname`, `viewer${i}_lastname`]);
+            const uE: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [`editor${i}`, new Date(), new Date(), `editor${i}@gmail.com`, 'ENABLED', hashedPassword('test'), `editor${i}_firstname`, `editor${i}_lastname`]);
+            const uA: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [`admin${i}`, new Date(), new Date(), `admin${i}@gmail.com`, 'ENABLED', hashedPassword('test'), `admin${i}_firstname`, `admin${i}_lastname`]);
+            const uP: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [`partner${i}`, new Date(), new Date(), `partner${i}@gmail.com`, 'ENABLED', hashedPassword('test'), `partner${i}_firstname`, `partner${i}_lastname`]);
+
+
+            await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [ uV.insertId, viewGroupId]);
+            await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [ uE.insertId, editGroupId]);
+            await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [ uA.insertId, adminGroupId]);
+            await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [ uP.insertId, partnerGroupId]);
+
+            await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`,[u1.insertId, nextTheme()]);
+            await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`,[u1.insertId, nextTheme()]);
+            await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`,[u1.insertId, nextTheme()]);
+            await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`,[u1.insertId, nextTheme()]);
+        }
 
         // views
         const v1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)', ['View 1', 'View 1 Description', 'ENABLED']);
@@ -533,6 +558,23 @@ const random = (): string => {
     return String(Math.round(Math.random() * 100000));
 }
 
+
+let themeIndex: number = 0;
+const themes: string[] = [
+    Themes.THEME_DEEPPURPLE_AMBER_LIGHT.toString(),
+    Themes.THEME_DEEPPURPLE_AMBER_DARK.toString(),
+    Themes.THEME_PINK_BLUEGREY_LIGHT.toString(),
+    Themes.THEME_PINK_BLUEGREY_DARK.toString(),
+    Themes.THEME_INDIGO_LIGHTBLUE_LIGHT.toString(),
+    Themes.THEME_INDIGO_LIGHTBLUE_DARK.toString(),
+    Themes.THEME_INDIGO_PINK_LIGHT.toString(),
+    Themes.THEME_INDIGO_PINK_DARK.toString(),
+    Themes.THEME_PURPLE_GREEN_LIGHT.toString(),
+    Themes.THEME_PURPLE_GREEN_DARK.toString(),
+]
+const nextTheme = (): string => {
+    return themes[themeIndex++%themes.length];
+}
 
 
 

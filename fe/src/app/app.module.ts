@@ -115,24 +115,32 @@ import {PartnerLayoutComponent} from './layout/partner-layout/partner.layout';
 import {PartnerDataThumbnailPageComponent} from './page/partner-data-thumbnail-page/partner-data-thumbnail.page';
 import {PartnerDataListPageComponent} from './page/partner-data-list-page/partner-data-list.page';
 import {PartnerDataTablePageComponent} from './page/partner-data-table-page/partner-data-table.page';
-import {PartnerHelpPageComponent} from "./page/partner-help-page/partner-help.page";
-import {PartnerService} from "./service/partner-service/partner.service";
-import {PartnerViewModule} from "./component/partner-view-component/partner-view.module";
+import {PartnerHelpPageComponent} from './page/partner-help-page/partner-help.page';
+import {PartnerService} from './service/partner-service/partner.service';
+import {PartnerViewModule} from './component/partner-view-component/partner-view.module';
+import {BrowserLocationHistoryService} from './service/browser-location-history-service/browser-location-history.service';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
                         themeService: ThemeService,
-                        viewService: ViewService) => {
+                        viewService: ViewService,
+                        browserLocationHistoryService: BrowserLocationHistoryService) => {
   return () => {
     authService.asObservable()
       .pipe(
         tap((u: User) => {
         if (u == null) { // logout
+          browserLocationHistoryService.storeLastUrlKey(null);
           settingsService.destroyRuntimeSettings().subscribe();
         } else { // login
           settingsService.getRuntimeSettings(u).subscribe();
           themeService.setTheme(u.theme);
           viewService.init();
+          const lastUrl: string = browserLocationHistoryService.retrieveLastUrl();
+          if (lastUrl) {
+            location.href = lastUrl;
+            browserLocationHistoryService.storeLastUrlKey(null);
+          }
         }
       })
       ).subscribe();
@@ -273,9 +281,10 @@ const appInitializer = (settingsService: SettingsService,
     {provide: RegistrationService, useClass: RegistrationService} as Provider,
     {provide: GlobalCommunicationService, useClass: GlobalCommunicationService} as Provider,
     {provide: PartnerService, useClass: PartnerService} as Provider,
+    {provide: BrowserLocationHistoryService, useClass: BrowserLocationHistoryService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
-        deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
+        deps: [SettingsService, AuthService, ThemeService, ViewService, BrowserLocationHistoryService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
