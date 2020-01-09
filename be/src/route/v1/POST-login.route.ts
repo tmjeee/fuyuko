@@ -15,11 +15,12 @@ import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {Registry} from "../../registry";
+import {makeApiErrorObjWithContext} from "../../util/error.util";
 
 const httpAction = [
     [
         check('username').isLength({min: 1}),
-        check('password').isLength({min:1})
+        check('password').isLength({min: 1})
     ],
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -48,8 +49,8 @@ const httpAction = [
             `, [usrname, password, 'ENABLED']);
 
             if (qUser.length <= 0) { // no user found
-                res.status(401).json(makeApiErrorObj(
-                    makeApiError(`No user ${usrname} found`, 'username', usrname, 'api')
+                res.status(401).json(makeApiErrorObjWithContext('login',
+                    [makeApiError(`No user ${usrname} with such password found`, 'username', usrname, 'api')]
                 ));
                 return;
             }

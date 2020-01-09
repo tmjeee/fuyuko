@@ -16,13 +16,15 @@ import {Paginable} from "../../model/pagnination.model";
 
 const httpAction: any[] = [
     [
-        check('roleName').exists()
+        check('roleName').exists(),
+        check('groupName')
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const roleName: string = req.params.roleName;
+        const groupName: string = req.params.groupName;
 
         await doInDbConnection(async (conn: Connection) => {
 
@@ -38,8 +40,8 @@ const httpAction: any[] = [
                      LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
                      LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
                      WHERE R.NAME = ? 
-                )
-            `,[roleName]);
+                ) AND G.NAME LIKE ?
+            `,[roleName, `%${groupName}%`]);
             const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -60,8 +62,8 @@ const httpAction: any[] = [
                      LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
                      LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
                      WHERE R.NAME = ? 
-                )
-            `, [roleName]);
+                ) AND G.NAME LIKE ?
+            `, [roleName, `%${groupName}%`]);
             const m: Map<number/*groupId*/, Group> = new Map();
             const groups: Group[] = q.reduce((groups: Group[], c: QueryI) => {
                 const groupId: number = c.G_ID;
@@ -103,7 +105,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/groups/no-role/:roleName`;
+    const p = `/groups/no-role/:roleName/:groupName?`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 

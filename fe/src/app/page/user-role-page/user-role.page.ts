@@ -56,7 +56,7 @@ export class UserRolePageComponent implements OnInit {
       this.groupSearchByRole = (role: Role) => {
           return (group: string): Observable<Group[]> => {
               return this.userManagementService
-                  .findGroupWithoutRole(role.name)
+                  .findGroupWithoutRole(group, role.name)
                   .pipe(map((p: Paginable<Group>) => p.payload));
           };
       };

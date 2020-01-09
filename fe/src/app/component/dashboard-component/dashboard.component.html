@@ -26,9 +26,9 @@
                  class="widgets-droplist"
                  fxFlex
                  cdkDropList
-                 [cdkDropListData]="getDashboardWidgetInstancesForColumn(columnIndex)"
+                 [cdkDropListData]="getDragAndDropData(columnIndex)"
                  (cdkDropListDropped)="onDrop($event)">
-                <ng-container *ngFor="let widgetInstance of getDashboardWidgetInstancesForColumn(columnIndex)">
+                <ng-container *ngFor="let widgetInstance of getDragAndDropData(columnIndex).widgetInstances">
                     <div cdkDrag class="widget-panel" #widgetPanel [attr.instanceId]="widgetInstance.instanceId">
                         <div class="widget-handle">
                             <svg width="24px" fill="currentColor" viewBox="0 0 24 24" cdkDragHandle>

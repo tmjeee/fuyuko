@@ -1,5 +1,5 @@
 import {Component, OnInit, Self} from '@angular/core';
-import {UserSearchFn} from '../../component/user-table-component/user-table.component';
+import {UserSearchFn} from '../../component/user-search-table-component/user-search-table.component';
 import {User} from '../../model/user.model';
 import {
     ActionType,
@@ -12,6 +12,7 @@ import {map, tap} from 'rxjs/operators';
 import {SelfRegistration} from '../../model/self-registration.model';
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';
+
 
 
 @Component({
@@ -28,8 +29,8 @@ export class UserActivationPageComponent implements OnInit {
 
     constructor(private notificationService: NotificationsService,
                 private userManagementService: UserManagementService) {
-        this.pendingUserSearchFn = (userName: string): Observable<User[]> => {
-            return this.userManagementService.findPendingUsers(userName);
+        this.pendingUserSearchFn = (userName: string): Observable<SelfRegistration[]> => {
+            return this.userManagementService.findSelfRegistrations(userName);
         };
         this.actionTypes = [
             {type: 'ACTIVATE', icon: 'add_circle', tooltip: 'Activate Self Registered User'} as ActionType,

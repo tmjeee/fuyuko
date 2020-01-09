@@ -19,12 +19,12 @@ import registerPostSaveUserRoute from './POST-save-user.route';
 import registerGetUserRoute from './GET-user.route';
 import registerGetAllGroupsRoute from './GET-all-groups.route';
 import registerGetGroupByIdRoute  from './GET-group-by-id.route';
-import registerGetGroupsWithNoSuchRoleRoute from './GET-groups-with-no-such-role.route';
+import registerGetSearchGroupsWithNoSuchRoleRoute from './GET-search-groups-with-no-such-role.route';
 import registerGetGroupsWithRoleRoute from './GET-groups-with-role.route';
 import registerDeleteRoleFromGroupRoute from './DELETE-role-from-group.route';
 import registerPostAddRoleToGroupRoute from './POST-add-role-to-group.route';
 import registerPostAddUserToGroupRoute from './POST-add-user-to-group.route';
-import registerGetUsersNotInGroupRoute from './GET-users-not-in-group.route';
+import registerGetSearchUsersNotInGroupRoute from './GET-search-users-not-in-group.route';
 import registerGetUsersInGroupRoute from './GET-users-in-group.route';
 import registerDeleteUserFromGroupRoute from './DELETE-user-from-group.route';
 import registerGetUsersByStatusRoute from './GET-users-by-status.route';
@@ -78,6 +78,8 @@ import registerGetUserDashboardWidgetDataRoute from './GET-user-dashboard-widget
 import registerGetPartnerPricingStructuresRoute from './GET-partner-pricing-structures.route';
 import registerGetPartnerPricedItemsRoute from './GET-partner-priced-items-by-pricing-structure.route';
 import registerGetSearchForGroupByNameRoute from './GET-search-for-group-by-name.route';
+import registerGetSearchUserByUsernameAndStatusRoute from './GET-search-user-by-username-and-status.route';
+import registerGetSearchSelfRegistrationByUsernameRoute from './GET-search-self-registrations-by-username.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -104,11 +106,11 @@ const reg = (router: Router, regi: Registry) => {
     registerGetUserRoute(v1AppRouter, registry);
     registerGetAllGroupsRoute(v1AppRouter, registry);
     registerGetGroupByIdRoute(v1AppRouter, registry);
-    registerGetGroupsWithNoSuchRoleRoute(v1AppRouter, registry);
+    registerGetSearchGroupsWithNoSuchRoleRoute(v1AppRouter, registry);
     registerGetGroupsWithRoleRoute(v1AppRouter, registry);
     registerDeleteRoleFromGroupRoute(v1AppRouter, registry);
     registerPostAddRoleToGroupRoute(v1AppRouter, registry);
-    registerGetUsersNotInGroupRoute(v1AppRouter, registry);
+    registerGetSearchUsersNotInGroupRoute(v1AppRouter, registry);
     registerGetUsersInGroupRoute(v1AppRouter, registry);
     registerPostAddUserToGroupRoute(v1AppRouter, registry);
     registerDeleteUserFromGroupRoute(v1AppRouter, registry);
@@ -163,6 +165,8 @@ const reg = (router: Router, regi: Registry) => {
     registerGetPartnerPricingStructuresRoute(v1AppRouter, registry);
     registerGetPartnerPricedItemsRoute(v1AppRouter, registry);
     registerGetSearchForGroupByNameRoute(v1AppRouter, registry);
+    registerGetSearchUserByUsernameAndStatusRoute(v1AppRouter, registry);
+    registerGetSearchSelfRegistrationByUsernameRoute(v1AppRouter, registry);
 }
 
 

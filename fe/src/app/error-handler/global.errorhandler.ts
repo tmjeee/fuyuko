@@ -1,8 +1,9 @@
-import {ErrorHandler, Inject, Injectable, Injector} from '@angular/core';
+import {ErrorHandler, Inject, Injectable, Injector, NgZone} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
+import {readNgcCommandLineAndConfiguration} from "@angular/compiler-cli/src/main";
 
 @Injectable()
 export class GlobalErrorhandler extends ErrorHandler {
@@ -27,9 +28,14 @@ export class GlobalErrorhandler extends ErrorHandler {
                     this.notificationService.error(`API Service`, `Unable to connect to API services`);
                 } else if (httpErrorResponse.status === 401) {
                     // unauthorized 401
-                    this.locationHistoryService.storeLastUrlKey(location.href);
-                    location.href = '/login-layout/login';
-                    return;
+                    if (httpErrorResponse.error.context === 'login') { // when trying to login
+                    } else {
+                        this.locationHistoryService.storeLastUrlKey(location.href);
+                    }
+                    this.getNgZone().run(() => {
+                        this.notificationService.error('Unauthorized', httpErrorResponse.error.errors.map((e) => e.msg).join(', '));
+                        this.getRouter().navigate(['/login-layout', 'login']);
+                    });
                 } else if (httpErrorResponse.status === 403) {
                     // forbidden - 403
                     this.notificationService.error('Unauthorized',
@@ -52,6 +58,11 @@ export class GlobalErrorhandler extends ErrorHandler {
     private getRouter(): Router {
         const router: Router = this.injector.get(Router);
         return router;
+    }
+
+    private getNgZone(): NgZone {
+        const ngZone: NgZone = this.injector.get(NgZone);
+        return ngZone;
     }
 }
 

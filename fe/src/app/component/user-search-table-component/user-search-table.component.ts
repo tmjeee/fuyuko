@@ -8,7 +8,7 @@ import {FormBuilder, FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {SelfRegistration} from '../../model/self-registration.model';
 
-export type UserSearchFn = (user: string) => Observable<User[]>;
+export type UserSearchFn = (username: string) => Observable<User[] | SelfRegistration[]>;
 
 
 export interface UserSearchTableComponentEvent {

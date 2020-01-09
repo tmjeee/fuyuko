@@ -30,10 +30,10 @@ const httpAction: any[] = [
         const serializeFormatInString: string = JSON.stringify(serializeFormat);
 
         await doInDbConnection(async (conn: Connection) => {
-            const q: QueryA = await conn.query('SELECT COUNT(*) FROM TBL_USER_DASHBOARD WHERE USER_ID=?', [userId]);
+            const q: QueryA = await conn.query('SELECT COUNT(*) AS COUNT FROM TBL_USER_DASHBOARD WHERE USER_ID=?', [userId]);
             const c: number = q[0].COUNT;
             if (c > 0) { // update
-                const q1: QueryResponse = await conn.query(`UPDATETBL_USER_DASHBOARD SET USER_ID=?, SERIALIZED_DATA=?`, [userId, serializeFormatInString]);
+                const q1: QueryResponse = await conn.query(`UPDATE TBL_USER_DASHBOARD SET USER_ID=?, SERIALIZED_DATA=?`, [userId, serializeFormatInString]);
 
             } else { // insert
                 const q1: QueryResponse = await conn.query(`INSERT INTO TBL_USER_DASHBOARD (USER_ID, SERIALIZED_DATA) VALUES(?,?)`, [userId, serializeFormatInString]);

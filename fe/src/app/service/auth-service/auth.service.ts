@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
-import {Themes, ThemeService} from '../theme-service/theme.service';
+import {ThemeService} from '../theme-service/theme.service';
 import {HttpClient} from '@angular/common/http';
 import {LoginResponse} from '../../model/login.model';
 
@@ -62,7 +62,7 @@ export class AuthService {
   saveMyself(myself: User): Observable<User> {
     return this.httpClient.post<User>(URL_SAVE_USER(), {
         userId: myself.id,
-        firstName: myself.username,
+        firstName: myself.firstName,
         lastName: myself.lastName,
         email: myself.email
     }).pipe(
@@ -70,8 +70,9 @@ export class AuthService {
     );
   }
 
-  saveTheme(theme: string): Observable<User> {
+  saveTheme(myself: User, theme: string): Observable<User> {
     return this.httpClient.post<User>(URL_SAVE_USER(), {
+        userId: myself.id,
         theme
     }).pipe(
         tap(this.afterSaveCallback.bind(this))
@@ -80,6 +81,7 @@ export class AuthService {
 
   savePassword(myself: User, password: string) {
       return this.httpClient.post<User>(URL_SAVE_USER(), {
+          userId: myself.id,
           password
       }).pipe(
           tap(this.afterSaveCallback.bind(this))

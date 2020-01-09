@@ -130,17 +130,12 @@ const appInitializer = (settingsService: SettingsService,
       .pipe(
         tap((u: User) => {
         if (u == null) { // logout
-          browserLocationHistoryService.storeLastUrlKey(null);
+          browserLocationHistoryService.storeLastUrlKey('');
           settingsService.destroyRuntimeSettings().subscribe();
         } else { // login
           settingsService.getRuntimeSettings(u).subscribe();
           themeService.setTheme(u.theme);
           viewService.init();
-          const lastUrl: string = browserLocationHistoryService.retrieveLastUrl();
-          if (lastUrl) {
-            location.href = lastUrl;
-            browserLocationHistoryService.storeLastUrlKey(null);
-          }
         }
       })
       ).subscribe();

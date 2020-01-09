@@ -9,6 +9,7 @@ import {of} from 'rxjs/internal/observable/of';
 import {switchMap} from 'rxjs/internal/operators/switchMap';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer} from '@angular/cdk/collections';
+import {SelfRegistration} from '../../model/self-registration.model';
 
 
 export type UserSearchFn = (user: string) => Observable<User[]>;

@@ -28,6 +28,11 @@ export interface DashboardComponentEvent {
     serializedData: string;
 }
 
+export interface DragAndDropData {
+    columnIndex: number;
+    widgetInstances: DashboardWidgetInstance[];
+}
+
 
 @Component({
     selector: 'app-dashboard',
@@ -94,15 +99,24 @@ export class DashboardComponent implements OnInit {
         this.formControlWidgetInfoSelected.setValue(undefined);
     }
 
-    getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[] {
-        return this.getCurrentStrategy().getDashboardWidgetInstancesForColumn(columnIndex);
+    getDragAndDropData(columnIndex: number): DragAndDropData {
+        const d: DashboardWidgetInstance[] = this.getCurrentStrategy().getDashboardWidgetInstancesForColumn(columnIndex);
+        return {
+            columnIndex,
+            widgetInstances: d
+        };
     }
 
-    onDrop($event: CdkDragDrop<DashboardWidgetInstance[], any>) {
-        if ($event.container === $event.previousContainer) {
-            moveItemInArray($event.container.data, $event.previousIndex, $event.currentIndex);
-        } else {
-            transferArrayItem($event.previousContainer.data, $event.container.data, $event.previousIndex, $event.currentIndex);
+    onDrop($event: CdkDragDrop<DragAndDropData, any>) {
+        if ($event.container === $event.previousContainer) { // move across the same column
+            moveItemInArray($event.container.data.widgetInstances, $event.previousIndex, $event.currentIndex);
+            this.getCurrentStrategy().moveDashboardWidgetInstances(
+                $event.container.data.columnIndex, $event.previousIndex, $event.currentIndex);
+        } else { // move across different columns
+            transferArrayItem($event.previousContainer.data, $event.container.data.widgetInstances,
+                $event.previousIndex, $event.currentIndex);
+            this.getCurrentStrategy().transferDashboardWidgetInstances(
+                $event.previousContainer.data.columnIndex, $event.container.data.columnIndex, $event.previousIndex, $event.currentIndex);
         }
     }
 
@@ -128,6 +142,7 @@ export class DashboardComponent implements OnInit {
             itemFound.clear();
             const htmlElement: HTMLElement = itemFound.element.nativeElement;
             htmlElement.parentElement.removeChild(htmlElement);
+            this.getCurrentStrategy().removeDashboardWidgetInstances([widgetInstance.instanceId]);
         }
     }
 }

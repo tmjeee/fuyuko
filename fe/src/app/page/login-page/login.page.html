@@ -1,8 +1,13 @@
 <div class="login-page">
-  <form (ngSubmit)="onSubmmit()" [formGroup]="formGroup">
+  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
     <mat-card class="container">
       <mat-card-header>
-        <mat-card-title>Login</mat-card-title>
+        <div mat-card-avatar class="header-image">
+          <img src="assets/images/logo/fuyuko-logo.png">
+        </div>
+        <mat-card-title>
+          Login
+        </mat-card-title>
         <mat-card-subtitle>
           Logon, if you haven't got an account, feel free to register using the link below
           the login button. Enjoy!

@@ -32,7 +32,7 @@ const httpAction: any[] = [
                     PASSWORD,
                     CREATION_DATE,
                     ACTIVATED
-                FROM TBL_SELF_REGISTER
+                FROM TBL_SELF_REGISTRATION
                 WHERE ACTIVATED = false
             `);
 

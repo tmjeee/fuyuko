@@ -9,9 +9,13 @@ export interface DashboardStrategy {
     name: string;
     columnIndexes(): number[];
     addDashboardWidgetInstances(serializeInstanceFormats: SerializedDashboardWidgetInstanceFormat[]);
+    removeDashboardWidgetInstances(instanceIds: string[]);
     getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[];
     serialize(): string;
     deserialize(data: string);
+    moveDashboardWidgetInstances(columnIndex: number, previousIndex: number, currentIndex: number): void;
+    transferDashboardWidgetInstances(previousColumnIndex: number, currentColumnIndex: number,
+                                     previousIndex: number, currentIndex: number): void;
 }
 
 export class DashboardWidget {

@@ -47,11 +47,12 @@
     <div class="theme-section">
       <mat-form-field>
         <mat-label>Themes</mat-label>
-        <mat-select (selectionChange)="onThemeSelectionChanged($event)">
+        <mat-select (selectionChange)="onThemeSelectionChanged($event)" [formControl]="formControlTheme">
           <mat-option *ngFor="let theme of allThemes" [value]="theme">
             {{theme.description}}
           </mat-option>
         </mat-select>
+        <mat-hint align="end">Choose your favourite color theme</mat-hint>
       </mat-form-field>
     </div>
 

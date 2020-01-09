@@ -16,7 +16,8 @@ import {User} from "../../model/user.model";
 
 const httpAction: any[] = [
     [
-        check('groupId').exists().isNumeric()
+        check('groupId').exists().isNumeric(),
+        check('username')
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -25,6 +26,7 @@ const httpAction: any[] = [
         const u: User[] = await doInDbConnection(async (conn: Connection) => {
 
             const groupId: number = Number(req.params.groupId);
+            const username: string = req.params.username;
 
             const q: QueryA = await conn.query(`
                 SELECT 
@@ -58,9 +60,9 @@ const httpAction: any[] = [
                     FROM TBL_USER AS U 
                     LEFT JOIN TBL_LOOKUP_USER_GROUP AS LUG ON LUG.USER_ID = U.ID
                     LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
-                    WHERE G.ID = ?
-                )
-            `, [groupId]);
+                    WHERE G.ID = ? 
+                ) AND U.USERNAME LIKE ?
+            `, [groupId, `%${username}%`]);
 
 
             const u: Map<number/*user id*/, User> = new Map();
@@ -121,7 +123,7 @@ const httpAction: any[] = [
 ]
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/users/not-in-group/:groupId`;
+    const p = `/users/not-in-group/:groupId/:username?`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 }

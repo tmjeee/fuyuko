@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Theme, Themes, ThemeService, ALL_THEMES} from './service/theme-service/theme.service';
+import {Theme, ThemeService, ALL_THEMES} from './service/theme-service/theme.service';
 import {map} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';

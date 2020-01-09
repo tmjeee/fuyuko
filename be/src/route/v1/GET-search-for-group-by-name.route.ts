@@ -30,7 +30,7 @@ const httpAction: any[] = [
                 LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
                 LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
                 WHERE G.STATUS = 'ENABLED' AND G.NAME LIKE ? LIMIT 10 OFFSET 0
-            `, [groupName]);
+            `, [`%${groupName}%`]);
             const m: Map<number/*groupId*/, Group> = new Map();
             const groups: Group[] = q.reduce((groups: Group[], c: QueryI) => {
                 const groupId: number = c.G_ID;

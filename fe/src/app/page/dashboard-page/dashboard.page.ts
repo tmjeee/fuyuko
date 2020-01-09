@@ -9,6 +9,8 @@ import {User} from '../../model/user.model';
 import {DashboardComponentEvent} from '../../component/dashboard-component/dashboard.component';
 import {tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
+import {SerializedDashboardFormat} from "../../model/dashboard-serialzable.model";
+import {SerializeWithBufferAndIndexOptions} from "bson";
 
 
 @Component({
@@ -29,6 +31,7 @@ export class DashboardPageComponent implements OnInit {
                 private notificationsService: NotificationsService) {}
 
     ngOnInit(): void {
+        console.log('****** dashboard page onInit');
         this.loading = true;
         this.strategies = this.dashboardService.getAllDashboardStrategies();
         this.selectedStrategy = this.strategies[1];
@@ -39,12 +42,15 @@ export class DashboardPageComponent implements OnInit {
         this.dashboardService
             .getUserDashboardLayoutData(myself)
             .pipe(
-                tap((d: {data: string}) => {
-                    console.log('************************* d', d);
-                    console.log('data', d.data);
-                    const t: any = JSON.parse(d.data);
-                    console.log('after parsed', t, (typeof t));
-                    this.data = d.data;
+                tap((d: string) => {
+                    const s: SerializedDashboardFormat = JSON.parse(d);
+                    const strategyId: string = s.strategyId;
+                    const strategy: DashboardStrategy = this.strategies.find((s: DashboardStrategy) => s.id === strategyId);
+                    console.log('****** found strategy', strategy);
+                    if (strategy) {
+                        this.selectedStrategy = strategy;
+                    }
+                    this.data = d;
                     this.loading = false;
                 })
             ).subscribe();
