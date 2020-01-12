@@ -8,7 +8,7 @@ import {SelfRegistration} from "../../model/self-registration.model";
 
 const httpAction: any[] = [
    [
-      param('username').exists()
+      param('username')
    ],
    validateMiddlewareFn,
    validateJwtMiddlewareFn,
@@ -28,8 +28,8 @@ const httpAction: any[] = [
                CREATION_DATE,
                ACTIVATED 
             FROM TBL_SELF_REGISTRATION
-            WHERE USERNAME LIKE ? AND ACTIVATED IS TRUE
-          `, [`%${username}%`]);
+            WHERE USERNAME LIKE ? AND ACTIVATED IS FALSE
+          `, [`%${username ? username : ''}%`]);
 
           return q.reduce((a: SelfRegistration[], i: QueryI) => {
             const s: SelfRegistration = {
@@ -52,7 +52,7 @@ const httpAction: any[] = [
 
 
 export const reg = (router: Router, registry: Registry) => {
-   const p = `/self-registration/:username`;
+   const p = `/search/self-registration/:username?`;
    registry.addItem('GET', p);
    router.get(p, ...httpAction);
 }

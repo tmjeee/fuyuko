@@ -49,7 +49,7 @@ const httpAction = [
                 SELECT COUNT(*) FROM TBL_USER WHERE (EMAIL = ? OR USERNAME = ?) AND STATUS <> ?
             `, [email, username, 'DELETED']);
             if (qU1.length > 0) {
-                res.status(500).json(makeApiErrorObj(
+                res.status(400).json(makeApiErrorObj(
                     makeApiError(`User with either username ${username} or email ${email} already exists`)
                 ));
                 return;
@@ -59,7 +59,7 @@ const httpAction = [
                 SELECT COUNT(*) FROM TBL_SELF_REGISTRATION WHERE (EMAIL = ? OR USERNAME = ?) AND ACTIVATED = ? 
             `, [email, username, false]);
             if (qU1.length > 0) {
-                res.status(500).json(makeApiErrorObj(
+                res.status(400).json(makeApiErrorObj(
                     makeApiError(`User with either username ${username} or email ${email} already registered`)
                 ));
                 return;

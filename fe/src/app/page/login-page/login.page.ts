@@ -36,16 +36,14 @@ export class LoginPageComponent {
   }
 
   onSubmit() {
-    console.log('****** onSubmit');
+    this.notificationService.remove();
     this.authService
       .login(this.formControlUsername.value, this.formControlPassword.value)
       .pipe(
         map((u: LoginResponse) => {
-          console.log('****** login response', u);
           if (u && u.status === 'SUCCESS') {
             const lastUrl: string = this.browserLocationHistoryService.retrieveLastUrl();
             this.browserLocationHistoryService.storeLastUrlKey('');
-            console.log('lasturl', lastUrl, !!!lastUrl);
             if (!!!lastUrl) {
               location.href = lastUrl;
             } else {

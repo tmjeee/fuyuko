@@ -32,6 +32,8 @@ const httpAction = [
 
         doInDbConnection(async (conn: Connection) => {
 
+            console.log('************** approve self registration', selfRegistrationId);
+
             const q1: QueryA = await conn.query(`
                 SELECT ID, USERNAME, EMAIL, CREATION_DATE, ACTIVATED, FIRSTNAME, LASTNAME, PASSWORD FROM TBL_SELF_REGISTRATION WHERE ID = ? AND ACTIVATED = ?
             `, [selfRegistrationId, false]);
@@ -51,7 +53,7 @@ const httpAction = [
             const qUserExists: QueryA = await conn.query(`
                 SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE USERNAME = ? OR EMAIL = ?
             `, [username, email]);
-            if (qUserExists.length > 0) { // user already exists
+            if (qUserExists[0].COUNT > 0) { // user already exists
                 return res.status(400).json(makeApiErrorObj(
                     makeApiError(`User with username ${username} or email ${email} already exists`, 'username,email', `${username},${email}`, 'api')
                 ));

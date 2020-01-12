@@ -12,7 +12,7 @@
   "jwt-secret": "some-secret",
   "jwt-expiration": "1h",
 
-  "fe-url-base": "http://localhost:4500/",
+  "fe-url-base": "http://localhost:4200",
 
   "smtp-host": "smtp.gmail.com",
   "smtp-port": 587,

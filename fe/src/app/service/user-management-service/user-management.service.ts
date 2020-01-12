@@ -21,13 +21,13 @@ const URL_ALL_USERS_NOT_IN_GROUP = () => `${config().api_host_url}/users/not-in-
 const URL_ADD_USER_TO_GROUP = () => `${config().api_host_url}/group/:groupId/add-user/:userId`;
 const URL_REMOVE_USER_FROM_GROUP = () => `${config().api_host_url}/group/:groupId/remove-user/:userId`;
 const URL_GET_USERS_BY_STATUS = () => `${config().api_host_url}/users/status/:status`;
-const URL_GET_SEARCH_USERS_BY_USERNAME_AND_STATUS = () => `${config().api_host_url}/user/:username/status/:status/search`;
+const URL_GET_SEARCH_USERS_BY_USERNAME_AND_STATUS = () => `${config().api_host_url}/search/status/:status/user/:username`;
 const URL_SET_USER_STATUS = () => `${config().api_host_url}/user/:userId/status/:status`;
 const URL_GET_SELF_REGISTRATION = () => `${config().api_host_url}/self-registers`;
-const URL_POST_APPROVE_SELF_REGISTRATION = () => `${config().api_host_url}/approve/:selfRegistrationId`;
+const URL_POST_APPROVE_SELF_REGISTRATION = () => `${config().api_host_url}/self-register/approve/:selfRegistrationId`;
 const URL_DELETE_SELF_REGISTRATION = () => `${config().api_host_url}/self-register/:selfRegistrationId`;
 const URL_GET_SEARCH_GROUP_BY_NAME = () => `${config().api_host_url}/group/:groupName/search`;
-const URL_GET_SEARCH_PENDING_USERS_BY_USERNAME = () => `${config().api_host_url}/self-registration/:username`;
+const URL_GET_SEARCH_SELF_REGISTRATION_BY_USERNAME = () => `${config().api_host_url}/search/self-registration/:username`;
 
 
 @Injectable()
@@ -99,7 +99,7 @@ export class UserManagementService {
   // ========= Users
 
   findSelfRegistrations(userName: string): Observable<SelfRegistration[]> { // DISABLED
-    return this.httpClient.get<SelfRegistration[]>(URL_GET_SEARCH_PENDING_USERS_BY_USERNAME().replace(':username', userName));
+    return this.httpClient.get<SelfRegistration[]>(URL_GET_SEARCH_SELF_REGISTRATION_BY_USERNAME().replace(':username', userName));
   }
 
   findActiveUsers(userName: string): Observable<User[]> {
@@ -143,7 +143,8 @@ export class UserManagementService {
   }
 
   approvePendingUser(selfRegistration: SelfRegistration): Observable<ApiResponse> {
-      return this.httpClient.post<ApiResponse>(
-          URL_POST_APPROVE_SELF_REGISTRATION().replace(':selfRegistrationId', String(selfRegistration.id)), {});
+    return this.httpClient.post<ApiResponse>(
+        URL_POST_APPROVE_SELF_REGISTRATION().replace(':selfRegistrationId', String(selfRegistration.id)), {});
   }
 }
+

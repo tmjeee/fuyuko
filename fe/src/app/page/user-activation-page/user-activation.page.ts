@@ -57,6 +57,7 @@ export class UserActivationPageComponent implements OnInit {
                     .pipe(
                         tap((r: ApiResponse) => {
                             toNotifications(this.notificationService, r);
+                            this.reload();
                         })
                     ).subscribe();
                 break;
@@ -66,6 +67,7 @@ export class UserActivationPageComponent implements OnInit {
                     .pipe(
                         tap((r: ApiResponse) => {
                             toNotifications(this.notificationService, r);
+                            this.reload();
                         })
                     ).subscribe();
                 break;

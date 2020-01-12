@@ -3,7 +3,6 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
-import {readNgcCommandLineAndConfiguration} from "@angular/compiler-cli/src/main";
 
 @Injectable()
 export class GlobalErrorhandler extends ErrorHandler {
@@ -44,6 +43,9 @@ export class GlobalErrorhandler extends ErrorHandler {
                 } else if (httpErrorResponse.status === 404) { // api service not found??
                     this.notificationService.error('API Service',
                         `unable to find API service ${httpErrorResponse.url}`);
+                } else if (httpErrorResponse.status === 400) { // bad request (client error)
+                    this.notificationService.error('Client Error',
+                        `${this.getErrorMessages(httpErrorResponse)}`);
                 } else {
                     this.notificationService.error('API Service',
                         `${error.message}`);
@@ -63,6 +65,22 @@ export class GlobalErrorhandler extends ErrorHandler {
     private getNgZone(): NgZone {
         const ngZone: NgZone = this.injector.get(NgZone);
         return ngZone;
+    }
+
+    private getErrorMessages(r: HttpErrorResponse): string {
+        if (r.error && r.error.errors && r.error.errors.length > 0) {
+            return r.error.errors.reduce((acc: string[], err: {message?: string, msg?: string}) => {
+                if (err.message) {
+                    acc.push(err.message);
+                }
+                if (err.msg) {
+                    acc.push(err.msg);
+                }
+                return acc;
+            }, [])
+            .map((c: string) => c).join('<br/>');
+        }
+        return null;
     }
 }
 

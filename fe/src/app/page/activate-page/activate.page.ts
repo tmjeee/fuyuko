@@ -73,6 +73,7 @@ export class ActivatePageComponent implements OnInit {
                     if (i) {
                         this.invitation = i;
                         this.formControlEmail.setValue(i.email);
+                        this.status = 'SUCCESS';
                     } else {
                         this.status = 'ERROR';
                         this.message = 'Bad code';

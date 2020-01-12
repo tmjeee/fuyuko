@@ -10,16 +10,19 @@ import {Role} from "../../model/role.model";
 
 export const httpAction: any[] = [
     [
-        param('username').exists(),
-        param('status').exists()
+        param('status').exists(),
+        param('username'),
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
+
         await doInDbConnection(async (conn: Connection) => {
 
             const status: string = req.params.status;
             const username: string = req.params.username;
+
+
 
 
             const u: User[] = await doInDbConnection(async (conn: Connection) => {
@@ -49,8 +52,8 @@ export const httpAction: any[] = [
                 LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
                 LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
                 LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
-                WHERE U.STATUS = ? AND G.STATUS = 'ENABLED AND U.USERNAME LIKE ? '
-            `, [status, `%${username}%`]);
+                WHERE U.STATUS = ? AND G.STATUS = 'ENABLED' AND U.USERNAME LIKE ? 
+            `, [status, `%${username ? username : ''}%`]);
 
 
                 const u: Map<number/*user id*/, User> = new Map();
@@ -113,7 +116,7 @@ export const httpAction: any[] = [
 ];
 
 export const reg = (router: Router, registry: Registry) => {
-    const p = `/user/:username/status/:status/search`;
+    const p = `/search/status/:status/user/:username?`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 }
