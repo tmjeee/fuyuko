@@ -23,7 +23,8 @@ export const hasItemValue = (attribute: Attribute, value: Value): boolean => {
       case 'date':
         return (!!(value.val as DateValue).value);
       case 'number':
-          return Number.isNaN(Number((value.val as NumberValue).value));
+        console.log('***** number validity', !Number.isNaN(Number((value.val as NumberValue).value)));
+        return (!Number.isNaN(Number((value.val as NumberValue).value)));
       case 'currency':
         return (!Number.isNaN(Number((value.val as CurrencyValue).value)) && (!!(value.val as CurrencyValue).country));
       case 'area':

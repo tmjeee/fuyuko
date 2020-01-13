@@ -7,6 +7,7 @@ import util from "util";
 import {readFile} from "fs";
 import fileType from "file-type";
 import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
+import {hashedPassword} from "../../service";
 
 export const update = async () => {
     i(`running scripts in ${__filename}`);
@@ -209,7 +210,7 @@ const INSERT_DATA = async () => {
 
         // self-registrations
         for (let i = 1; i < 100; i++) {
-            const q: QueryResponse = await conn.query(`INSERT INTO TBL_SELF_REGISTRATION (USERNAME, EMAIL, FIRSTNAME, LASTNAME, PASSWORD, ACTIVATED) VALUES (?,?,?,?,?,?)`, [`self${i}`,`self${1}@gmail.com`,`self${i}-firstname`,`self${i}-lastname`,`test`,false]);
+            const q: QueryResponse = await conn.query(`INSERT INTO TBL_SELF_REGISTRATION (USERNAME, EMAIL, FIRSTNAME, LASTNAME, PASSWORD, ACTIVATED) VALUES (?,?,?,?,?,?)`, [`self${i}`,`self${i}@gmail.com`,`self${i}-firstname`,`self${i}-lastname`, hashedPassword(`test`),false]);
         }
     });
 }

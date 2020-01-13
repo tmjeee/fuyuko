@@ -66,8 +66,10 @@ const httpAction = [
             const newUserId: number = qNewUser.insertId;
 
             await conn.query(`
-                INSERT INTO TBL_THEME (USER_ID, THEME) VALUES (?,?)
+                INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?,?)
             `, [newUserId, config["default-theme"]]);
+
+            await conn.query(`UPDATE TBL_SELF_REGISTRATION SET ACTIVATED = true WHERE ID = ?`, q1[0].ID);
 
             sendEmail(email,
                 `Registration Success`,

@@ -283,7 +283,7 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   isAnyParentRowExpanded(item: TableItem) {
     const b = this.rowInfoMap.get(item.rootParentId);
-    return b.expanded;
+    return (b && b.expanded);
   }
 
   onFilter($event: MouseEvent) {

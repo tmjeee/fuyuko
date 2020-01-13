@@ -8,8 +8,8 @@ import {Rule} from '../../model/rule.model';
 import {OperatorType, ALL_OPERATOR_TYPES} from '../../model/operator.model';
 import {RulesTableComponentEvent} from '../../component/rules-component/rules-table.component';
 import {CounterService} from '../../service/counter-service/counter.service';
-import {finalize, map} from 'rxjs/operators';
-import {combineLatest, Subscription} from 'rxjs';
+import {combineAll, concatMap, finalize, map} from 'rxjs/operators';
+import {combineLatest, of, Subscription} from 'rxjs';
 import {ApiResponse} from "../../model/response.model";
 import {toNotifications} from "../../service/common.service";
 import {NotificationsService} from "angular2-notifications";
@@ -70,18 +70,23 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
       }
   }
 
-    reload() {
+  reload() {
+    console.log('************************** reload');
     this.ready = false;
-    combineLatest([
-        this.attributeService.getAllAttributesByView(this.currentView.id),
-        this.ruleService.getAllRulesByView(this.currentView.id)
-    ]).pipe(
-        map((r: [Attribute[], Rule[]]) => {
-            this.attributes = r[0];
-            this.rules = r[1];
-            this.ready = true;
-        })
-    ).subscribe();
+
+    setTimeout(() => {
+        combineLatest([
+            this.attributeService.getAllAttributesByView(this.currentView.id),
+            this.ruleService.getAllRulesByView(this.currentView.id)
+        ]).pipe(
+            map((r: [Attribute[], Rule[]]) => {
+                this.attributes = r[0];
+                this.rules = r[1];
+                this.ready = true;
+                console.log('***** rules', this.rules);
+            })
+        ).subscribe();
+    });
   }
 
     onRulesTableEvent($event: RulesTableComponentEvent) {
