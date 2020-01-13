@@ -44,10 +44,10 @@ export class LoginPageComponent {
           if (u && u.status === 'SUCCESS') {
             const lastUrl: string = this.browserLocationHistoryService.retrieveLastUrl();
             this.browserLocationHistoryService.storeLastUrlKey('');
-            if (!!!lastUrl) {
+            if (!!lastUrl) {
               location.href = lastUrl;
             } else {
-              this.router.navigate(['/dashboard-layout', 'dashboard']);
+              this.router.navigate(['/dashboard-layout', {outlets: {primary: ['dashboard'], help: ['dashboard-help']}}]);
             }
           } else {
             this.notificationService.error('Error', 'Unexpected error logging in');

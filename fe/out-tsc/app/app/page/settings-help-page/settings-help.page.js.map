@@ -1,1 +1,0 @@
-{"version":3,"file":"settings-help.page.js","sourceRoot":"","sources":["../../../../../src/app/page/settings-help-page/settings-help.page.ts"],"names":[],"mappings":";AAAA,OAAO,EAAC,SAAS,EAAC,MAAM,eAAe,CAAC;AAOxC,IAAa,yBAAyB,GAAtC,MAAa,yBAAyB;CAErC,CAAA;AAFY,yBAAyB;IAJrC,SAAS,CAAC;QACT,WAAW,EAAE,2BAA2B;QACxC,SAAS,EAAE,CAAC,2BAA2B,CAAC;KACzC,CAAC;GACW,yBAAyB,CAErC;SAFY,yBAAyB"}

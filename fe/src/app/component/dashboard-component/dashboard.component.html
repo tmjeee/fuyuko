@@ -3,8 +3,14 @@
     <div fxLayout="row" class="controls-panel">
         <mat-form-field class="control-panel-element">
             <mat-label>Dashboard Layout</mat-label>
-            <mat-select [formControl]="formControlDashboardStrategySelected" (selectionChange)="onDashboardStrategySelectionChanged($event)">
-                <mat-option *ngFor="let strategy of strategies" [value]="strategy">{{strategy.name}}</mat-option>
+            <mat-select [formControl]="formControlDashboardStrategySelected"
+                        [attr.test-mat-select]="''"
+                        (selectionChange)="onDashboardStrategySelectionChanged($event)">
+                <mat-option *ngFor="let strategy of strategies"
+                            [attr.test-mat-option]="strategy.id"
+                            [value]="strategy">
+                    {{strategy.name}}
+                </mat-option>
             </mat-select>
         </mat-form-field>
 

@@ -8,7 +8,7 @@ exports.config = {
   specs: [
     './src/**/*.e2e-spec.ts'
   ],
-  suite: [
+  suites: [
   ],
   capabilities: {
     'browserName': 'chrome'

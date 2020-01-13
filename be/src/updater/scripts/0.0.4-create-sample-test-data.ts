@@ -199,6 +199,18 @@ const INSERT_DATA = async () => {
 
         // rules
         await createManyRules(conn, v1.insertId, a1.insertId, a2.insertId);
+
+        // invitation registrations
+        for (let i = 1; i < 100; i++) {
+            const q: QueryResponse = await conn.query(`INSERT INTO TBL_INVITATION_REGISTRATION (EMAIL, CODE, ACTIVATED) VALUES (?,?,?)`, [`invitation${i}@gmail.com`, `code${i}`, false]);
+            await conn.query('INSERT INTO TBL_INVITATION_REGISTRATION_GROUP (INVITATION_REGISTRATION_ID, GROUP_ID) VALUES (?,?)', [q.insertId, 1]);
+            await conn.query('INSERT INTO TBL_INVITATION_REGISTRATION_GROUP (INVITATION_REGISTRATION_ID, GROUP_ID) VALUES (?,?)', [q.insertId, 4]);
+        }
+
+        // self-registrations
+        for (let i = 1; i < 100; i++) {
+            const q: QueryResponse = await conn.query(`INSERT INTO TBL_SELF_REGISTRATION (USERNAME, EMAIL, FIRSTNAME, LASTNAME, PASSWORD, ACTIVATED) VALUES (?,?,?,?,?,?)`, [`self${i}`,`self${1}@gmail.com`,`self${i}-firstname`,`self${i}-lastname`,`test`,false]);
+        }
     });
 }
 

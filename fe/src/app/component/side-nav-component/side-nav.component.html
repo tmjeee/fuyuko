@@ -15,7 +15,7 @@
     <mat-icon class="action"
               matTooltipPosition="after"
               matTooltip="Dashboard"
-              [routerLink]="['/dashboard-layout', 'dashboard']">
+              [routerLink]="['/dashboard-layout', {outlets:{primary:['dashboard'], help:['dashboard-help']}}]">
       dashboard
     </mat-icon>
   </div>

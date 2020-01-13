@@ -45,6 +45,7 @@ import {PartnerDataTablePageComponent} from './page/partner-data-table-page/part
 import {PartnerDataListPageComponent} from './page/partner-data-list-page/partner-data-list.page';
 import {PartnerDataThumbnailPageComponent} from './page/partner-data-thumbnail-page/partner-data-thumbnail.page';
 import {PartnerHelpPageComponent} from './page/partner-help-page/partner-help.page';
+import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-help.page';
 
 const routes: Routes = [
 
@@ -52,7 +53,7 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/dashboard-layout/dashboard',
+    redirectTo: '/dashboard-layout/(dashboard//help:dashboard-help)',
   },
 
   // login-layout
@@ -134,6 +135,12 @@ const routes: Routes = [
         path: 'dashboard',
         canActivate: [AuthGuard],
         component: DashboardPageComponent,
+      } as Route,
+      {
+        path: 'dashboard-help',
+        canActivate: [AuthGuard],
+        component: DashboardHelpPageComponent,
+        outlet: 'help'
       }
     ]
   } as Route,

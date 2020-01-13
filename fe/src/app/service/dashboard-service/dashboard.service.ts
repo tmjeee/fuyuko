@@ -82,8 +82,10 @@ export class DashboardStrategy1x implements DashboardStrategy {
         this.dashboardWidgetInstances = [];
         const x: SerializedDashboardFormat = JSON.parse(data);
         const r: SerializedDashboardWidgetInstanceFormat[] = x.instances;
-        stickInTypes(r);
-        this.addDashboardWidgetInstances(r);
+        if (r) {
+            stickInTypes(r);
+            this.addDashboardWidgetInstances(r);
+        }
     }
 }
 
@@ -147,7 +149,7 @@ export class DashboardStrategy2x implements DashboardStrategy {
         if (x.strategyId === strategyId) { // deserializing from same strategy id
             stickInTypes(x.special);
             this.dashboardWidgetInstances = x.special;
-        } else {
+        } else if (x.instances) {
             stickInTypes(x.instances);
             this.addDashboardWidgetInstances(x.instances);
         }

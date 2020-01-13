@@ -9,9 +9,7 @@ import {User} from '../../model/user.model';
 import {DashboardComponentEvent} from '../../component/dashboard-component/dashboard.component';
 import {tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
-import {SerializedDashboardFormat} from "../../model/dashboard-serialzable.model";
-import {SerializeWithBufferAndIndexOptions} from "bson";
-
+import {SerializedDashboardFormat} from '../../model/dashboard-serialzable.model';
 
 @Component({
   templateUrl: './dashboard.page.html',
@@ -31,7 +29,6 @@ export class DashboardPageComponent implements OnInit {
                 private notificationsService: NotificationsService) {}
 
     ngOnInit(): void {
-        console.log('****** dashboard page onInit');
         this.loading = true;
         this.strategies = this.dashboardService.getAllDashboardStrategies();
         this.selectedStrategy = this.strategies[1];
@@ -46,7 +43,6 @@ export class DashboardPageComponent implements OnInit {
                     const s: SerializedDashboardFormat = JSON.parse(d);
                     const strategyId: string = s.strategyId;
                     const strategy: DashboardStrategy = this.strategies.find((s: DashboardStrategy) => s.id === strategyId);
-                    console.log('****** found strategy', strategy);
                     if (strategy) {
                         this.selectedStrategy = strategy;
                     }

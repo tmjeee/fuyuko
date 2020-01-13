@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {BackgroundImage, BackgroundImageService} from '../../service/background-image-service/background-image.service';
 
 @Component({
@@ -12,7 +12,8 @@ export class LoginLayoutComponent implements OnInit, OnDestroy {
 
   allCachedImages = [];
 
-  constructor(private backgroundImageService: BackgroundImageService) {}
+  constructor(private backgroundImageService: BackgroundImageService,
+              private ngZone: NgZone) {}
 
   ngOnInit(): void {
     for (const bgImage of this.backgroundImageService.allBackgroundImages()) {
@@ -31,9 +32,11 @@ export class LoginLayoutComponent implements OnInit, OnDestroy {
   }
 
   changeBackgroundImage() {
-    this.handler = setTimeout(() => {
-      this.backgroundImage = this.backgroundImageService.randomBackgroundImage();
-      this.changeBackgroundImage();
-    }, 10000);
+    this.ngZone.runOutsideAngular(() => {
+      this.handler = setTimeout(() => {
+        this.backgroundImage = this.backgroundImageService.randomBackgroundImage();
+        this.changeBackgroundImage();
+      }, 10000);
+    });
   }
 }
