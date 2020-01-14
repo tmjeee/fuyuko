@@ -30,7 +30,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/view/:viewId/rules`;
+    const p = `/view/:viewId/rule/:ruleId`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 }

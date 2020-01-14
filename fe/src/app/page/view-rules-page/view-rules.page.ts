@@ -112,7 +112,8 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
           ).subscribe();
         break;
       case 'external-edit':
-        await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['/rule', `${$event.rule.id}`], help: ['view-help']}}])
+        console.log('***************** external-edit', $event);
+        await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['rule', `${$event.rule.id}`], help: ['view-help']}}]);
         break;
       case 'delete':
         this.ruleService.deleteRule(this.currentView.id, $event.rule)

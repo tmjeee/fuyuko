@@ -56,6 +56,10 @@
                 <mat-icon>library_books</mat-icon>
                 <a href="#" [routerLink]="['/view-gen-layout', {outlets: {primary:['views'], help:['view-help']}}]">Views</a>
               </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'validation'">
+                <mat-icon>verified_user</mat-icon>
+                <a href="#" [routerLink]="['/view-gen-layout', {outlets: {primary:['validation'], help:['view-help']}}]">Validation</a>
+              </mat-list-item>
             </mat-list>
           </mat-sidenav>
           <mat-sidenav-content class="content-2">

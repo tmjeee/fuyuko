@@ -47,6 +47,8 @@ import {PartnerDataThumbnailPageComponent} from './page/partner-data-thumbnail-p
 import {PartnerHelpPageComponent} from './page/partner-help-page/partner-help.page';
 import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-help.page';
 import {EditRulePageComponent} from "./page/view-rules-page/edit-rule.page";
+import {ViewValidationPageComponent} from "./page/view-validation-page/view-validation.page";
+import {EditAttributePageComponent} from "./page/view-attributes-page/edit-attribute.page";
 
 const routes: Routes = [
 
@@ -281,6 +283,14 @@ const routes: Routes = [
         }
       } as Route,
       {
+        path: 'attribute/:attributeId',
+        canActivate: [AuthGuard],
+        component: EditAttributePageComponent,
+        data: {
+          subSideNav: 'attributes'
+        }
+      } as Route,
+      {
         path: 'data-tabular',
         canActivate: [AuthGuard],
         component: ViewDataTabularPageComponent,
@@ -310,6 +320,14 @@ const routes: Routes = [
         component: ViewViewsPageComponent,
         data: {
           subSideNav: 'views'
+        }
+      } as Route,
+      {
+        path: 'validation',
+        canActivate: [AuthGuard],
+        component: ViewValidationPageComponent,
+        data: {
+          subSideNav: 'validation'
         }
       } as Route,
       {

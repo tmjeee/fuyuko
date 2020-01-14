@@ -120,7 +120,9 @@ import {PartnerService} from './service/partner-service/partner.service';
 import {PartnerViewModule} from './component/partner-view-component/partner-view.module';
 import {BrowserLocationHistoryService} from './service/browser-location-history-service/browser-location-history.service';
 import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-help.page';
-import {EditRulePageComponent} from "./page/view-rules-page/edit-rule.page";
+import {EditRulePageComponent} from './page/view-rules-page/edit-rule.page';
+import {ViewValidationPageComponent} from './page/view-validation-page/view-validation.page';
+import {EditAttributePageComponent} from './page/view-attributes-page/edit-attribute.page';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -185,6 +187,8 @@ const appInitializer = (settingsService: SettingsService,
     PricingHelpPageComponent,
     FileNotFoundPageComponent,
     ViewAttributesPageComponent,
+    EditAttributePageComponent,
+    ViewValidationPageComponent,
     ViewDataTabularPageComponent,
     ViewDataThumbnailPageComponent,
     ViewDataListPageComponent,

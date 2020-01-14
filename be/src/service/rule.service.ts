@@ -70,7 +70,7 @@ export const getRule2s = async (viewId: number): Promise<Rule2[]>  => {
 export const getRule2 = async (viewId: number, ruleId: number): Promise<Rule2> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_2, [viewId, ruleId]);
-        const rs: Rule[] = p(q);
+        const rs: Rule2[] = p(q);
         if (rs.length > 0) {
             return rs[0];
         }

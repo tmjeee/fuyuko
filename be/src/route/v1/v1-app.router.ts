@@ -80,6 +80,8 @@ import registerGetPartnerPricedItemsRoute from './GET-partner-priced-items-by-pr
 import registerGetSearchForGroupByNameRoute from './GET-search-for-group-by-name.route';
 import registerGetSearchUserByUsernameAndStatusRoute from './GET-search-user-by-username-and-status.route';
 import registerGetSearchSelfRegistrationByUsernameRoute from './GET-search-self-registrations-by-username.route';
+import registerGetRuleByViewRoute from './GET-rule-by-view.route';
+import registerGetAttributeByViewRoute from './GET-attribute-by-view.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -167,6 +169,8 @@ const reg = (router: Router, regi: Registry) => {
     registerGetSearchForGroupByNameRoute(v1AppRouter, registry);
     registerGetSearchUserByUsernameAndStatusRoute(v1AppRouter, registry);
     registerGetSearchSelfRegistrationByUsernameRoute(v1AppRouter, registry);
+    registerGetRuleByViewRoute(v1AppRouter, registry);
+    registerGetAttributeByViewRoute(v1AppRouter, registry);
 }
 
 

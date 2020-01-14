@@ -236,7 +236,7 @@ export class EditRulePageComponent implements OnInit, OnDestroy {
         this.ruleService.updateRule(this.currentView.id, r)
             .pipe(
                tap((_) => {
-                   this.notificationService.info(`Updated`, `Rule updated`);
+                   this.notificationService.success(`Updated`, `Rule updated`);
                    this.reload();
                })
             ).subscribe();

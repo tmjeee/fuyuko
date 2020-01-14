@@ -62,30 +62,6 @@
       </mat-form-field>
     </ng-container>
 
-    <ng-container *ngIf="currentSelectedAttributeType === 'time'">
-      <mat-form-field>
-        <mat-label>Format</mat-label>
-        <input matInput
-               type="text"
-               [formControl]="formControlTimeAttributeFormat"
-               placeholder="Time format">
-        <mat-hint>Enter a time format</mat-hint>
-        <mat-error *ngIf="formControlTimeAttributeFormat?.errors?.timeFormat">Invalid time format</mat-error>
-      </mat-form-field>
-    </ng-container>
-
-    <ng-container *ngIf="currentSelectedAttributeType === 'datetime'">
-      <mat-form-field>
-        <mat-label>Format</mat-label>
-        <input matInput
-               type="text"
-               [formControl]="formControlDatetimeAttributeFormat"
-               placeholder="Datetime format">
-        <mat-hint>Enter a datetime format</mat-hint>
-        <mat-error *ngIf="formControlDatetimeAttributeFormat?.errors?.datetimeFormat">Invalid datetime format</mat-error>
-      </mat-form-field>
-    </ng-container>
-
     <ng-container *ngIf="currentSelectedAttributeType === 'currency'">
       <div class="currency-attribute-type-options">
         <mat-label class="mat-small">Country</mat-label>
@@ -189,8 +165,8 @@
     </ng-container>
 
     <div class="controls">
-      <button type="submit" mat-flat-button [disabled]="formGroupCommon.invalid">Done</button>
-      <button type="button" mat-flat-button (click)="onCancelClicked($event)">Cancel</button>
+      <button type="submit" color="primary" mat-flat-button [disabled]="formGroupCommon.invalid">Done</button>
+      <button type="button" color="primary" mat-flat-button (click)="onCancelClicked($event)">Cancel</button>
     </div>
   </form>
 </div>

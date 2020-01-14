@@ -1,10 +1,18 @@
+@import '../../../scss/mixins';
+
 .rules-table-component {
+  @include fix-mat-accordion-description-panel();
   .main-controls {
     margin-bottom: 10px;
   }
   .mat-accordion {
     .mat-expansion-panel {
       .mat-expansion-panel-header {
+        .mat-expansion-panel-header-title {
+          span {
+            margin-left: 10px;
+          }
+        }
         .mat-expansion-panel-header-description {
           display: flex;
           .description {

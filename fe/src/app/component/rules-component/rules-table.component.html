@@ -9,7 +9,9 @@
     <mat-expansion-panel *ngFor="let rule of rules; let i = index;">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{rule.name}}
+          <mat-icon *ngIf="isDisabled(rule)" color="primary">label_off</mat-icon>
+          <mat-icon *ngIf="isEnabled(rule)" color="primary">label</mat-icon>
+          <span>{{rule.name}}</span>
         </mat-panel-title>
         <mat-panel-description>
             <div class="description">
