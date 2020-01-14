@@ -120,6 +120,7 @@ import {PartnerService} from './service/partner-service/partner.service';
 import {PartnerViewModule} from './component/partner-view-component/partner-view.module';
 import {BrowserLocationHistoryService} from './service/browser-location-history-service/browser-location-history.service';
 import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-help.page';
+import {EditRulePageComponent} from "./page/view-rules-page/edit-rule.page";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -188,6 +189,7 @@ const appInitializer = (settingsService: SettingsService,
     ViewDataThumbnailPageComponent,
     ViewDataListPageComponent,
     ViewRulesPageComponent,
+    EditRulePageComponent,
     ViewViewsPageComponent,
     JobsPageComponent,
     JobsHelpPageComponent,

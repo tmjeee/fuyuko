@@ -45,7 +45,7 @@ const httpAction: any[] = [
 
         res.status(200).json({
             status: 'SUCCESS',
-            message: `Update successfull`
+            message: `Update successful`
         } as ApiResponse);
     }
 ];

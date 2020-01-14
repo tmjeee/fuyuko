@@ -10,9 +10,10 @@ import {RulesTableComponentEvent} from '../../component/rules-component/rules-ta
 import {CounterService} from '../../service/counter-service/counter.service';
 import {combineAll, concatMap, finalize, map} from 'rxjs/operators';
 import {combineLatest, of, Subscription} from 'rxjs';
-import {ApiResponse} from "../../model/response.model";
-import {toNotifications} from "../../service/common.service";
-import {NotificationsService} from "angular2-notifications";
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -34,6 +35,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
   ready: boolean;
 
   constructor(private viewService: ViewService,
+              private router: Router,
               private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private ruleService: RuleService) {
@@ -89,7 +91,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
     });
   }
 
-    onRulesTableEvent($event: RulesTableComponentEvent) {
+    async onRulesTableEvent($event: RulesTableComponentEvent) {
         switch ($event.type) {
       case 'add':
         this.ruleService.addRule(this.currentView.id, $event.rule)
@@ -108,6 +110,9 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
               this.reload();
             })
           ).subscribe();
+        break;
+      case 'external-edit':
+        await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['/rule', `${$event.rule.id}`], help: ['view-help']}}])
         break;
       case 'delete':
         this.ruleService.deleteRule(this.currentView.id, $event.rule)

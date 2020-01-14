@@ -19,7 +19,8 @@
               <button type="button" mat-flat-button color="primary" (click)="onDeleteRule($event, rule)">Delete Rule</button>
               <button type="button" mat-flat-button color="primary" *ngIf="isDisabled(rule)" (click)="onEnableRule($event, rule)">Enable</button>
               <button type="button" mat-flat-button color="primary" *ngIf="isEnabled(rule)" (click)="onDisableRule($event, rule)">Disable</button>
-              <button type="button" mat-flat-button color="primary" (click)="onEditRule($event, rule)">Edit Rule</button>
+              <button type="button" mat-flat-button color="primary" (click)="onEditRule($event, rule)">Edit (popup)</button>
+              <button type="button" mat-flat-button color="primary" (click)="onExternalEdit($event, rule)">Edit</button>
             </div>
         </mat-panel-description>
       </mat-expansion-panel-header>

@@ -7,7 +7,7 @@ import {map} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
 
 export interface RulesTableComponentEvent {
-  type: 'add' | 'edit' | 'delete' | 'enable' | 'disable';
+  type: 'add' | 'edit' | 'delete' | 'enable' | 'disable' | 'external-edit';
   rule: Rule;
 }
 
@@ -36,6 +36,13 @@ export class RulesTableComponent {
     this.events.emit({
       type: 'delete',
       rule: {...rule},
+    } as RulesTableComponentEvent);
+  }
+
+  onExternalEdit($event: MouseEvent, rule: Rule) {
+    this.events.emit({
+      type: 'external-edit',
+      rule: {...rule}
     } as RulesTableComponentEvent);
   }
 

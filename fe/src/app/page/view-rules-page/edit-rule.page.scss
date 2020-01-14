@@ -1,0 +1,54 @@
+.edit-rule-page {
+  .content {
+    .validate-section {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      .validate-controls {
+        margin-top: 5px;
+      }
+      .validate-clauses-section {
+        .validate-clause-section {
+          margin-top: 5px;
+          display: flex;
+          .mat-form-field {
+            flex-grow: 1;
+            margin-right: 5px;
+            &:last-child {
+              margin-right: 0px;
+            }
+          }
+        }
+        max-height: 20vh;
+        overflow-y: scroll;
+      }
+    }
+
+    .when-section {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      .when-controls {
+        margin-top: 5px;
+      }
+      .when-clauses-section {
+        .when-clause-section {
+          display: flex;
+          .mat-form-field {
+            flex-grow: 1;
+            margin-right: 5px;
+            &:last-child {
+              margin-right: 0px;
+            }
+          }
+        }
+        max-height: 20vh;
+        overflow-y: scroll;
+      }
+    }
+
+    .main-controls {
+      button:not(:first-child) {
+        margin-left: 10px;
+      }
+    }
+  }
+}

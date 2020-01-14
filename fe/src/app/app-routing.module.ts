@@ -46,6 +46,7 @@ import {PartnerDataListPageComponent} from './page/partner-data-list-page/partne
 import {PartnerDataThumbnailPageComponent} from './page/partner-data-thumbnail-page/partner-data-thumbnail.page';
 import {PartnerHelpPageComponent} from './page/partner-help-page/partner-help.page';
 import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-help.page';
+import {EditRulePageComponent} from "./page/view-rules-page/edit-rule.page";
 
 const routes: Routes = [
 
@@ -259,6 +260,14 @@ const routes: Routes = [
         path: 'rules',
         canActivate: [AuthGuard],
         component: ViewRulesPageComponent,
+        data: {
+          subSideNav: 'rules'
+        }
+      } as Route,
+      {
+        path: 'rule/:ruleId',
+        canActivate: [AuthGuard],
+        component: EditRulePageComponent,
         data: {
           subSideNav: 'rules'
         }

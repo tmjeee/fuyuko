@@ -40,14 +40,14 @@ import {
 } from '../../model/item.model';
 import {getItemStringValue, hasItemValue} from '../../utils/ui-item-value-getter.util';
 import {HEIGHT_UNITS} from '../../model/unit.model';
-import {isItemValueOperatorAndAttributeValid} from "../../utils/item-value-operator-attribute.util";
+import {isItemValueOperatorAndAttributeValid} from '../../utils/item-value-operator-attribute.util';
 
 export interface RuleEditorDialogComponentData {
   attributes: Attribute[];
   rule: Rule;
 }
 
-export interface ItemValueOperatorAndAttributeWithId extends ItemValueOperatorAndAttribute{
+export interface ItemValueOperatorAndAttributeWithId extends ItemValueOperatorAndAttribute {
   id: number;
 }
 
