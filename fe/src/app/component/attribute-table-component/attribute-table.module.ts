@@ -8,6 +8,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {DoubleSelectComponent} from './double-select.component';
 import {ViewOnlyAttributeTableComponent} from './view-only-attribute-table.component';
+import {EditAttributeComponent} from "./edit-attribute.component";
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import {ViewOnlyAttributeTableComponent} from './view-only-attribute-table.compo
     SingleSelectComponent,
     DoubleSelectComponent,
     ViewOnlyAttributeTableComponent,
+    EditAttributeComponent,
   ],
   exports: [
     AttributeTableComponent,
@@ -30,6 +32,7 @@ import {ViewOnlyAttributeTableComponent} from './view-only-attribute-table.compo
     SingleSelectComponent,
     DoubleSelectComponent,
     ViewOnlyAttributeTableComponent,
+    EditAttributeComponent,
   ],
   entryComponents: [
     EditAttributeDialogComponent

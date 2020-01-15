@@ -6,71 +6,12 @@
         </mat-card-header>
         <mat-card-content>
             <div class="content">
-                <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
-                    <mat-form-field>
-                        <mat-label>Name</mat-label>
-                        <input type="text" matInput placeholder="Rule name" [formControl]="formControlName">
-                        <mat-error *ngIf="formControlName?.errors?.required">Name is required</mat-error>
-                        <mat-hint>Enter rule name</mat-hint>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <mat-label>Description</mat-label>
-                        <input type="text" matInput placeholder="Rule Description" [formControl]="formControlDescription">
-                        <mat-error *ngIf="formControlDescription?.errors?.required">Description is required</mat-error>
-                        <mat-hint>Enter rule description</mat-hint>
-                    </mat-form-field>
-
-                    <div class="validate-section">
-                        Validate :
-                        <div class="validate-controls">
-                            <button type="button" mat-flat-button color="primary" (click)="onAddRuleValidation($event)">Add Validate Clause</button>
-                        </div>
-                        <div class="validate-clauses-section" *ngIf="validateClauses.length > 0">
-                            <div class="validate-clause-section" *ngFor="let validateClause of validateClauses; let i = index">
-                                <app-attribute-operator-editor
-                                        [attributes]="attributes"
-                                        [itemValueOperatorAndAttribute]="validateClause"
-                                        (events)="onValidateClauseChange($event, i)">
-                                </app-attribute-operator-editor>
-                                <button type="button" mat-icon-button
-                                        matTooltip="Delete this when clause"
-                                        color="primary"
-                                        (click)="onDeleteRuleValidation($event, i, validateClause)">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="when-section">
-                        When :
-                        <div class="when-controls">
-                            <button type="button" mat-flat-button color="primary" (click)="onAddRuleWhen($event)">Add When Clause</button>
-                        </div>
-                        <div class="when-clauses-section" *ngIf="whenClauses.length > 0">
-                            <div class="when-clause-section" *ngFor="let whenClause of whenClauses; let i = index">
-                                <app-attribute-operator-editor
-                                        [attributes]="attributes"
-                                        [itemValueOperatorAndAttribute]="whenClause"
-                                        (events)="onWhenClauseChange($event, i)">
-                                </app-attribute-operator-editor>
-                                <button mat-icon-button
-                                        matTooltip="delete this when clause"
-                                        color="primary"
-                                        type="button" (click)="onDeleteRuleWhen($event, i, whenClause)">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="main-controls">
-                        <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid">Done</button>
-                        <button type="button" mat-flat-button color="primary" (click)="onCancel($event)">Cancel</button>
-                    </div>
-                </form>
+                <app-rule-editor
+                        [rule]="rule"
+                        [attributes]="attributes"
+                        (events)="onRuleEditorEvent($event)">
+                </app-rule-editor>
             </div>
-
         </mat-card-content>
     </mat-card>
 </div>

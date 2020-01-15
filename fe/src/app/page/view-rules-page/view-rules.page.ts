@@ -13,7 +13,7 @@ import {combineLatest, of, Subscription} from 'rxjs';
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 
 @Component({

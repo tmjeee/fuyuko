@@ -106,7 +106,7 @@ export class RulesTableComponent {
   onEnableRule($event: MouseEvent, rule: Rule) {
     $event.stopImmediatePropagation();
     $event.preventDefault();
-      this.events.emit({
+    this.events.emit({
         type: 'enable',
         rule
       } as RulesTableComponentEvent);
