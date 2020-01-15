@@ -1,6 +1,12 @@
 import {Router, Request, Response, NextFunction} from "express";
 import {check} from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
@@ -8,6 +14,7 @@ import {hashedPassword, sendEmail} from "../../service";
 import config from '../../config';
 import {RegistrationResponse} from "../../model/registration.model";
 import {Registry} from "../../registry";
+import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
 
 /**
  * Approve other users' self registration entries
@@ -16,13 +23,16 @@ const httpAction = [
     [
         check('selfRegistrationId').exists().isNumeric()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_ADMIN])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const selfRegistrationId: number = Number(req.params.selfRegistrationId);
 
         doInDbConnection(async (conn: Connection) => {
+
+            console.log('************** approve self registration', selfRegistrationId);
 
             const q1: QueryA = await conn.query(`
                 SELECT ID, USERNAME, EMAIL, CREATION_DATE, ACTIVATED, FIRSTNAME, LASTNAME, PASSWORD FROM TBL_SELF_REGISTRATION WHERE ID = ? AND ACTIVATED = ?
@@ -43,7 +53,7 @@ const httpAction = [
             const qUserExists: QueryA = await conn.query(`
                 SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE USERNAME = ? OR EMAIL = ?
             `, [username, email]);
-            if (qUserExists.length > 0) { // user already exists
+            if (qUserExists[0].COUNT > 0) { // user already exists
                 return res.status(400).json(makeApiErrorObj(
                     makeApiError(`User with username ${username} or email ${email} already exists`, 'username,email', `${username},${email}`, 'api')
                 ));
@@ -56,8 +66,10 @@ const httpAction = [
             const newUserId: number = qNewUser.insertId;
 
             await conn.query(`
-                INSERT INTO TBL_THEME (USER_ID, THEME) VALUES (?,?)
+                INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?,?)
             `, [newUserId, config["default-theme"]]);
+
+            await conn.query(`UPDATE TBL_SELF_REGISTRATION SET ACTIVATED = true WHERE ID = ?`, q1[0].ID);
 
             sendEmail(email,
                 `Registration Success`,

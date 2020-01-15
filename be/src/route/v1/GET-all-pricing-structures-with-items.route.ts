@@ -1,6 +1,12 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
@@ -9,6 +15,7 @@ import {
     PricingStructureWithItems
 } from "../../model/pricing-structure.model";
 import {getChildrenWithConn} from "../../service/pricing-structure-item.service";
+import {ROLE_VIEW} from "../../model/role.model";
 
 
 
@@ -18,6 +25,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
@@ -58,6 +66,7 @@ const httpAction: any[] = [
                    pricingStructureWithItems = {
                        id: i.PS_ID,
                        name: i.PS_NAME,
+                       viewId: i.PS_VIEW_ID,
                        description: i.PS_DESCRIPTION,
                        items: []
                    } as PricingStructureWithItems;

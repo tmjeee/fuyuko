@@ -17,6 +17,8 @@ let RUNTIME_SETTINGS: RuntimeSettings = {
     openSideNav: undefined
 };
 
+export const KEY = `MY_APP_RUNTIME_SETTINGS`;
+
 @Injectable()
 export class SettingsService {
 
@@ -33,12 +35,12 @@ export class SettingsService {
 
     saveRuntimeSettings(r: RuntimeSettings): RuntimeSettings {
         RUNTIME_SETTINGS = {...r};
-        localStorage.setItem('MY_APP_RUNTIME_SETTINGS', JSON.stringify(RUNTIME_SETTINGS));
+        localStorage.setItem(KEY, JSON.stringify(RUNTIME_SETTINGS));
         return RUNTIME_SETTINGS;
     }
 
     getLocalRuntimeSettings(): RuntimeSettings {
-        let r = JSON.parse(localStorage.getItem('MY_APP_RUNTIME_SETTINGS'));
+        let r = JSON.parse(localStorage.getItem(KEY));
         if (!r) {
           this.saveRuntimeSettings(r);
           r = {...SETTINGS};
@@ -54,13 +56,13 @@ export class SettingsService {
 
     // use only when logged out, after that 'getLocalRuntimeSettings()' would suffice (see appInitializer function)
     destroyRuntimeSettings(): Observable<null> {
-        localStorage.removeItem('MY_APP_RUNTIME_SETTINGS');
+        localStorage.removeItem(KEY);
         return of(null);
     }
 
     private ms(runtimeSettings: RuntimeSettings, settings: Settings): RuntimeSettings {
         const rs: RuntimeSettings = this.m(runtimeSettings, settings);
-        localStorage.setItem('MY_APP_RUNTIME_SETTINGS', JSON.stringify(rs));
+        localStorage.setItem(KEY, JSON.stringify(rs));
         return rs;
     }
 

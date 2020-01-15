@@ -11,6 +11,7 @@ import {Observable, of} from 'rxjs';
 import {SerializedDashboardFormat, SerializedDashboardWidgetInstanceFormat} from '../../model/dashboard-serialzable.model';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
+import {map} from 'rxjs/operators';
 
 
 // a must be array / multi-dimention array of SerializeInstanceFormat
@@ -56,6 +57,18 @@ export class DashboardStrategy1x implements DashboardStrategy {
             } as DashboardWidgetInstance);
         });
     }
+    removeDashboardWidgetInstances(instanceIds: string[]) {
+        this.dashboardWidgetInstances = this.dashboardWidgetInstances
+            .filter((i: DashboardWidgetInstance) => !instanceIds.includes(i.instanceId));
+    }
+    moveDashboardWidgetInstances(columnIndex: number, previousIndex: number, currentIndex: number) {
+        [this.dashboardWidgetInstances[currentIndex], this.dashboardWidgetInstances[previousIndex]] =
+            [this.dashboardWidgetInstances[currentIndex], this.dashboardWidgetInstances[previousIndex]];
+    }
+    transferDashboardWidgetInstances(previousColumnIndex: number, currentColumnIndex: number,
+                                     previousIndex: number, currentIndex: number) {
+        this.moveDashboardWidgetInstances(currentColumnIndex, previousIndex, currentIndex);
+    }
     serialize(): string {
         const strategyId = this.id;
         const data: string =  JSON.stringify({
@@ -69,8 +82,10 @@ export class DashboardStrategy1x implements DashboardStrategy {
         this.dashboardWidgetInstances = [];
         const x: SerializedDashboardFormat = JSON.parse(data);
         const r: SerializedDashboardWidgetInstanceFormat[] = x.instances;
-        stickInTypes(r);
-        this.addDashboardWidgetInstances(r);
+        if (r) {
+            stickInTypes(r);
+            this.addDashboardWidgetInstances(r);
+        }
     }
 }
 
@@ -99,6 +114,24 @@ export class DashboardStrategy2x implements DashboardStrategy {
             this.i += 1;
         });
     }
+    removeDashboardWidgetInstances(instanceIds: string[]) {
+        this.dashboardWidgetInstances = [
+            this.dashboardWidgetInstances[0] =
+                this.dashboardWidgetInstances[0].filter((i: DashboardWidgetInstance) => !instanceIds.includes(i.instanceId)),
+            this.dashboardWidgetInstances[1] =
+                this.dashboardWidgetInstances[1].filter((i: DashboardWidgetInstance) => !instanceIds.includes(i.instanceId))
+        ];
+    }
+    moveDashboardWidgetInstances(columnIndex: number, previousIndex: number, currentIndex: number) {
+        [this.dashboardWidgetInstances[columnIndex][currentIndex], this.dashboardWidgetInstances[columnIndex][previousIndex]] =
+            [this.dashboardWidgetInstances[columnIndex][currentIndex], this.dashboardWidgetInstances[columnIndex][previousIndex]];
+    }
+    transferDashboardWidgetInstances(previousColumnIndex: number, currentColumnIndex: number,
+                                     previousIndex: number, currentIndex: number) {
+        const tmp: DashboardWidgetInstance = this.dashboardWidgetInstances[previousColumnIndex][previousIndex];
+        this.dashboardWidgetInstances[previousColumnIndex].splice(previousIndex, 1);
+        this.dashboardWidgetInstances[currentColumnIndex].splice(currentIndex, 0, tmp);
+    }
     serialize(): string {
         const strategyId = this.id;
         const data =  JSON.stringify({
@@ -112,11 +145,11 @@ export class DashboardStrategy2x implements DashboardStrategy {
         this.dashboardWidgetInstances = [[], []];
         this.i = 0;
         const strategyId = this.id;
-        const x: SerializedDashboardFormat = JSON.parse(JSON.parse(data));
+        const x: SerializedDashboardFormat = JSON.parse(data);
         if (x.strategyId === strategyId) { // deserializing from same strategy id
             stickInTypes(x.special);
             this.dashboardWidgetInstances = x.special;
-        } else {
+        } else if (x.instances) {
             stickInTypes(x.instances);
             this.addDashboardWidgetInstances(x.instances);
         }
@@ -173,8 +206,21 @@ export class DashboardService {
         return [...DASHBOARD_WIDGET_INFOS];
     }
 
-    getUserDashboardLayoutData(myself: User): Observable<{data: string}> {
-        return this.httpClient.get<{data: string}>(URL_GET_DASHBOARD_FORMAT().replace(':userId', String(myself.id)));
+    getUserDashboardLayoutData(myself: User): Observable<string> {
+        return this.httpClient
+            .get<{data: string}>(URL_GET_DASHBOARD_FORMAT().replace(':userId', String(myself.id)))
+            .pipe(
+                map((r: {data: string}) => {
+                    const d = (r.data ? r.data.trim() : r.data);
+                    if (d) {
+                        try {
+                            return JSON.parse(d);
+                        } catch (e) {
+                        }
+                    }
+                    return '{}';
+                })
+            );
     }
 
     saveDashboardLayout(myself: User, serializeData: string): Observable<boolean> {

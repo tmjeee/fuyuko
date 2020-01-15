@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {SettingsService} from '../../service/settings-service/settings.service';
 import {LoginResponse} from '../../model/login.model';
+import {BrowserLocationHistoryService} from '../../service/browser-location-history-service/browser-location-history.service';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class LoginPageComponent {
               private authService: AuthService,
               private settingsService: SettingsService,
               private notificationService: NotificationsService,
+              private browserLocationHistoryService: BrowserLocationHistoryService,
               private router: Router) {
     this.formControlUsername = formBuilder.control('', [Validators.required]);
     this.formControlPassword = formBuilder.control('', [Validators.required]);
@@ -33,18 +35,26 @@ export class LoginPageComponent {
     });
   }
 
-  onSubmmit() {
+  onSubmit() {
+    this.notificationService.remove();
     this.authService
       .login(this.formControlUsername.value, this.formControlPassword.value)
       .pipe(
         map((u: LoginResponse) => {
           if (u && u.status === 'SUCCESS') {
-            this.router.navigate(['/dashboard-layout', 'dashboard']);
+            const lastUrl: string = this.browserLocationHistoryService.retrieveLastUrl();
+            this.browserLocationHistoryService.storeLastUrlKey('');
+            if (!!lastUrl) {
+              location.href = lastUrl;
+            } else {
+              this.router.navigate(['/dashboard-layout', {outlets: {primary: ['dashboard'], help: ['dashboard-help']}}]);
+            }
           } else {
             this.notificationService.error('Error', 'Unexpected error logging in');
           }
           return u;
         }),
       ).subscribe();
+    return false;
   }
 }

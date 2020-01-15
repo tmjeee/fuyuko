@@ -45,7 +45,7 @@ export class SendInviteComponent implements OnInit {
       .valueChanges
       .pipe(
         startWith(''),
-        filter((v: string | Group) => (typeof v === 'string')),
+        filter((v: string | Group) => (v) && (typeof v === 'string')),
         switchMap((v: string) => {
           return this.groupSearchFn(v);
         })

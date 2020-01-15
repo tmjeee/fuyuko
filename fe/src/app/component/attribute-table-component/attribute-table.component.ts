@@ -26,7 +26,7 @@ class AttributeTableDataSource extends DataSource<Attribute> {
   }
 }
 
-type EventType = 'delete' | 'search' | 'add' | 'edit';
+type EventType = 'delete' | 'search' | 'add' | 'edit' | 'external-edit';
 
 export interface AttributeTableComponentEvent {
   type: EventType;
@@ -95,8 +95,16 @@ export class AttributeTableComponent implements OnChanges {
     this.popupEditDialog('add', attribute);
   }
 
-  onEditClicked($event: MouseEvent, attribute: Attribute) {
+  onEditPopupClicked($event: MouseEvent, attribute: Attribute) {
     this.popupEditDialog('edit', attribute);
+  }
+
+  onEditClicked($event: MouseEvent, attribute: any) {
+    this.events.emit({
+      type: 'external-edit',
+      attribute,
+      view: this.view
+    } as AttributeTableComponentEvent);
   }
 
   private popupEditDialog(command: EventType, attribute: Attribute) {
@@ -117,4 +125,5 @@ export class AttributeTableComponent implements OnChanges {
         })
       ).subscribe();
   }
+
 }

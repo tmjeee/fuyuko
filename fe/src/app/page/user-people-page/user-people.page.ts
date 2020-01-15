@@ -32,7 +32,7 @@ export class UserPeoplePageComponent implements OnInit {
   constructor(private userManagementService: UserManagementService,
               private notificationService: NotificationsService) {
     this.inactiveUserSearchFn = (userName: string): Observable<User[]> => {
-      return this.userManagementService.findPendingUsers(userName);
+      return this.userManagementService.findInactiveUsers(userName);
     };
     this.activeUserSearchFn = (userName: string): Observable<User[]> => {
       return this.userManagementService.findActiveUsers(userName);

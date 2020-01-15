@@ -8,11 +8,12 @@ import {Rule} from '../../model/rule.model';
 import {OperatorType, ALL_OPERATOR_TYPES} from '../../model/operator.model';
 import {RulesTableComponentEvent} from '../../component/rules-component/rules-table.component';
 import {CounterService} from '../../service/counter-service/counter.service';
-import {finalize, map} from 'rxjs/operators';
-import {combineLatest, Subscription} from 'rxjs';
-import {ApiResponse} from "../../model/response.model";
-import {toNotifications} from "../../service/common.service";
-import {NotificationsService} from "angular2-notifications";
+import {combineAll, concatMap, finalize, map} from 'rxjs/operators';
+import {combineLatest, of, Subscription} from 'rxjs';
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
   ready: boolean;
 
   constructor(private viewService: ViewService,
+              private router: Router,
               private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private ruleService: RuleService) {
@@ -70,21 +72,26 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
       }
   }
 
-    reload() {
+  reload() {
+    console.log('************************** reload');
     this.ready = false;
-    combineLatest([
-        this.attributeService.getAllAttributesByView(this.currentView.id),
-        this.ruleService.getAllRulesByView(this.currentView.id)
-    ]).pipe(
-        map((r: [Attribute[], Rule[]]) => {
-            this.attributes = r[0];
-            this.rules = r[1];
-            this.ready = true;
-        })
-    ).subscribe();
+
+    setTimeout(() => {
+        combineLatest([
+            this.attributeService.getAllAttributesByView(this.currentView.id),
+            this.ruleService.getAllRulesByView(this.currentView.id)
+        ]).pipe(
+            map((r: [Attribute[], Rule[]]) => {
+                this.attributes = r[0];
+                this.rules = r[1];
+                this.ready = true;
+                console.log('***** rules', this.rules);
+            })
+        ).subscribe();
+    });
   }
 
-    onRulesTableEvent($event: RulesTableComponentEvent) {
+    async onRulesTableEvent($event: RulesTableComponentEvent) {
         switch ($event.type) {
       case 'add':
         this.ruleService.addRule(this.currentView.id, $event.rule)
@@ -103,6 +110,10 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
               this.reload();
             })
           ).subscribe();
+        break;
+      case 'external-edit':
+        console.log('***************** external-edit', $event);
+        await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['rule', `${$event.rule.id}`], help: ['view-help']}}]);
         break;
       case 'delete':
         this.ruleService.deleteRule(this.currentView.id, $event.rule)

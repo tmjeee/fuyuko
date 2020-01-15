@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {switchMap} from 'rxjs/internal/operators/switchMap';
-import {debounceTime, filter, startWith} from 'rxjs/operators';
+import {debounceTime, filter, map, startWith} from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 export type GroupSearchFn = (group: string) => Observable<Group[]>;
@@ -61,7 +61,16 @@ export class GroupTableComponent implements OnInit, OnChanges {
         filter((groupSearch: Group | string) => (typeof groupSearch === 'string')),
         debounceTime(1000),
         switchMap((groupSearch: string) => {
-           return this.groupSearchFn(groupSearch);
+          return (this.groupSearchFn(groupSearch));
+              /*
+            .pipe(
+              map((gs: Group[]) => {
+                const ggg: Group[] =  gs.filter((g: Group) => g.name.includes(groupSearch))
+                console.log('ggg', ggg);
+                return ggg;
+              })
+            ))
+           */
         })
       );
   }

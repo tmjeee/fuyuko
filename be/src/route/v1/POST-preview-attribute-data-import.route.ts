@@ -1,6 +1,12 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {param, body, check, Meta} from 'express-validator';
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
@@ -14,6 +20,7 @@ const uuid = require('uuid');
 import {preview} from "../../service/import-csv/import-attribute.service";
 import {AttributeDataImport} from "../../model/data-import.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const detectCsv = require('detect-csv');
 
@@ -23,8 +30,9 @@ const httpAction: any[] = [
         param('viewId').exists().isNumeric(),
         // body('attributeDataCsvFile').exists()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const name: string = `attribute-data-import-${uuid()}`;

@@ -1,6 +1,12 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {body, param} from 'express-validator';
 import {Item} from "../../model/item.model";
 import {Item2} from "../model/server-side.model";
@@ -8,6 +14,7 @@ import {revert as itemRevert} from "../../service/conversion-item.service";
 import {ApiResponse} from "../../model/response.model";
 import util from 'util';
 import {addItem, updateItem} from "../../service/item.service";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
@@ -20,6 +27,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);

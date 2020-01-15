@@ -3,8 +3,14 @@
     <div fxLayout="row" class="controls-panel">
         <mat-form-field class="control-panel-element">
             <mat-label>Dashboard Layout</mat-label>
-            <mat-select [formControl]="formControlDashboardStrategySelected" (selectionChange)="onDashboardStrategySelectionChanged($event)">
-                <mat-option *ngFor="let strategy of strategies" [value]="strategy">{{strategy.name}}</mat-option>
+            <mat-select [formControl]="formControlDashboardStrategySelected"
+                        [attr.test-mat-select]="''"
+                        (selectionChange)="onDashboardStrategySelectionChanged($event)">
+                <mat-option *ngFor="let strategy of strategies"
+                            [attr.test-mat-option]="strategy.id"
+                            [value]="strategy">
+                    {{strategy.name}}
+                </mat-option>
             </mat-select>
         </mat-form-field>
 
@@ -26,9 +32,9 @@
                  class="widgets-droplist"
                  fxFlex
                  cdkDropList
-                 [cdkDropListData]="getDashboardWidgetInstancesForColumn(columnIndex)"
+                 [cdkDropListData]="getDragAndDropData(columnIndex)"
                  (cdkDropListDropped)="onDrop($event)">
-                <ng-container *ngFor="let widgetInstance of getDashboardWidgetInstancesForColumn(columnIndex)">
+                <ng-container *ngFor="let widgetInstance of getDragAndDropData(columnIndex).widgetInstances">
                     <div cdkDrag class="widget-panel" #widgetPanel [attr.instanceId]="widgetInstance.instanceId">
                         <div class="widget-handle">
                             <svg width="24px" fill="currentColor" viewBox="0 0 24 24" cdkDragHandle>

@@ -1,54 +1,23 @@
 .edit-attribute-dialog-component {
-  form {
-    .controls {
-      margin-top: 10px;
-    }
-    .currency-attribute-type-options {
-      mat-label {
-        display: block;
-      }
-      ::ng-deep .mat-radio-group {
-        .mat-radio-button {
-          .mat-radio-label {
-            .mat-radio-container {
-
-            }
-            .mat-radio-label-content {
-              margin-right: 10px;
+  ::ng-deep .edit-attribute-component {
+    form {
+      .select-attribute-type-options {
+          .single-select-component {
+            .selection-pairs {
+              max-height: 30vh;
             }
           }
-        }
       }
-      .mat-hint {
-        display: block;
-      }
-    }
 
-    .select-attribute-type-options {
-      margin-top: 10px;
-      ::ng-deep {
-        .single-select-component {
-          .controls { }
-          .selection-pairs {
-            max-height: 30vh;
+      .doubleselect-attribute-type-options {
+          .double-select-component {
+            .pair1-selection-pairs {
+              max-height: 20vh;
+            }
+            .pair2-selection-pairs {
+              max-height: 20vh;
+            }
           }
-        }
-      }
-    }
-
-    .doubleselect-attribute-type-options {
-      margin-top: 10px;
-      ::ng-deep {
-        .double-select-component {
-          .pair1-controls { }
-          .pair2-controls { }
-          .pair1-selection-pairs {
-            max-height: 20vh;
-          }
-          .pair2-selection-pairs {
-            max-height: 20vh;
-          }
-        }
       }
     }
   }

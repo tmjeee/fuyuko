@@ -1,1 +1,0 @@
-{"version":3,"file":"file-not-found.page.js","sourceRoot":"","sources":["../../../../../src/app/page/file-not-found-page/file-not-found.page.ts"],"names":[],"mappings":";AACA,OAAO,EAAC,SAAS,EAAC,MAAM,eAAe,CAAC;AAOxC,IAAa,yBAAyB,GAAtC,MAAa,yBAAyB;CAErC,CAAA;AAFY,yBAAyB;IAJrC,SAAS,CAAC;QACT,WAAW,EAAE,4BAA4B;QACzC,SAAS,EAAE,CAAC,4BAA4B,CAAC;KAC1C,CAAC;GACW,yBAAyB,CAErC;SAFY,yBAAyB"}

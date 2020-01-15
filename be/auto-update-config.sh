@@ -33,7 +33,7 @@ echo "Db IP ${DB_IP} found in file ${dbfilename}"
 
 sleep 5s;
 
-./update-config-json.sh ./src/config/config.json ".\"fe-url-base\"=\"http://${INGRESS_IP}/\""
+./update-config-json.sh ./src/config/config.json ".\"fe-url-base\"=\"http://${INGRESS_IP}\""
 ./update-config-json.sh ./src/config/config.json ".\"db-host\"=\"${DB_IP}\""
 
 echo ""

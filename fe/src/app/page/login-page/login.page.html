@@ -1,8 +1,13 @@
-<div class="login-page">
-  <form (ngSubmit)="onSubmmit()" [formGroup]="formGroup">
+<div class="login-page" [attr.test-page-title]="'login'">
+  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
     <mat-card class="container">
       <mat-card-header>
-        <mat-card-title>Login</mat-card-title>
+        <div mat-card-avatar class="header-image">
+          <img src="assets/images/logo/fuyuko-logo.png">
+        </div>
+        <mat-card-title>
+          Login
+        </mat-card-title>
         <mat-card-subtitle>
           Logon, if you haven't got an account, feel free to register using the link below
           the login button. Enjoy!
@@ -11,16 +16,16 @@
       <mat-card-content>
         <div class="form">
           <mat-form-field>
-            <input matInput type="text" placeholder="Username" [formControl]="formControlUsername">
+            <input matInput type="text" placeholder="Username" [formControl]="formControlUsername" [attr.test-field-username]="''">
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="password" placeholder="Password" [formControl]="formControlPassword">
+            <input matInput type="password" placeholder="Password" [formControl]="formControlPassword" [attr.test-field-password]="''">
           </mat-form-field>
         </div>
       </mat-card-content>
       <mat-card-actions>
         <div class="control">
-          <button type="submit" mat-flat-button color="primary" [disabled]="!formGroup.valid">Login</button>
+          <button type="submit" mat-flat-button color="primary" [disabled]="!formGroup.valid" [attr.test-button-login]="''">Login</button>
           <div class="link">
             Not registered yet?
             <a href="#" class="register-link" [routerLink]="['/login-layout', 'register']">Register</a> here.

@@ -1,16 +1,24 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {param, body} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {DataMap} from "../../model/dashboard-serialzable.model";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
     param('dashboardWidgetInstanceId').exists(),
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const userId: number = Number(req.params.userId);

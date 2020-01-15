@@ -48,7 +48,7 @@ export class UserGroupPageComponent implements OnInit {
 
     this.userSearchFn = (group: Group): UserSearchFn  => {
       return (user: string): Observable<User[]> => {
-        return this.userManagementService.findUsersNotInGroup(group);
+        return this.userManagementService.findUsersNotInGroup(user, group);
       };
     };
   }

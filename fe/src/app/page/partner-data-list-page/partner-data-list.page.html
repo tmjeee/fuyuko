@@ -1,0 +1,27 @@
+<div class="partner-data-list-page">
+    <mat-card class="mat-elevation-z-20">
+        <mat-card-header>
+            <mat-card-title>Partner Data List</mat-card-title>
+            <mat-card-subtitle>
+                Partner data and pricing in List format
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field>
+                <mat-label>Pricing Structure</mat-label>
+                <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)">
+                    <mat-option [value]="null">--- Please select a Pricing Structure ---</mat-option>
+                    <mat-option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure">
+                        {{pricingStructure.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div *ngIf="loading">Loading ...</div>
+            <app-partner-data-list
+                    *ngIf="attributes && pricedItems"
+                    [pricedItems]="pricedItems"
+                    [attributes]="attributes">
+            </app-partner-data-list>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ViewService} from '../../service/view-service/view.service';
 import {map} from 'rxjs/operators';
@@ -7,12 +7,19 @@ import {Subscription} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {AttributeTableComponentEvent} from '../../component/attribute-table-component/attribute-table.component';
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse} from "../../model/response.model";
-import {toNotifications} from "../../service/common.service";
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
+import {Router} from "@angular/router";
+
+@Injectable()
+export class Prov {
+
+}
 
 @Component({
   templateUrl: './view-attributes.page.html',
-  styleUrls: ['./view-attributes.page.scss']
+  styleUrls: ['./view-attributes.page.scss'],
+  providers: [Prov]
 })
 export class ViewAttributesPageComponent implements OnInit, OnDestroy {
 
@@ -22,6 +29,7 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
   attributes: Attribute[];
 
   constructor(private attributeService: AttributeService,
+              private router: Router,
               private notificationsService: NotificationsService,
               private viewService: ViewService) {}
 
@@ -55,7 +63,7 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAttributeTableEvent($event: AttributeTableComponentEvent) {
+  async onAttributeTableEvent($event: AttributeTableComponentEvent) {
     switch ($event.type) {
       case 'delete':
         this.attributeService
@@ -92,6 +100,10 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
               this.reloadAttributes();
             })
           ).subscribe();
+        break;
+      case 'external-edit':
+        await this.router.navigate(['/view-gen-layout',
+            {outlets: {primary: ['attribute', `${$event.attribute.id}`], help: ['view-help']}}]);
         break;
     }
   }

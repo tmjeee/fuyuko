@@ -11,7 +11,8 @@ import {ProfileInfoComponentEvent} from '../../component/profile-info-component/
 import {PasswordComponentEvent} from '../../component/password-component/password.component';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {User} from '../../model/user.model';
-import {GlobalCommunicationService} from "../../service/global-communication-service/global-communication.service";
+import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
+import {FormBuilder, FormControl} from '@angular/forms';
 
 
 @Component({
@@ -25,11 +26,17 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   myself: User;
   allThemes: Theme[];
 
+  formControlTheme: FormControl;
+
+  private subscription: Subscription;
+
   constructor(private avatarService: AvatarService,
               private themeService: ThemeService,
               private authService: AuthService,
               private globalCommunicationService: GlobalCommunicationService,
+              private formBuilder: FormBuilder,
               private notificationsService: NotificationsService) {
+      this.formControlTheme =  formBuilder.control('');
   }
 
   ngOnInit(): void {
@@ -39,23 +46,34 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
             this.allPredefinedAvatars = globalAvatars;
         })
     ).subscribe();
-    this.authService.asObservable()
+    this.subscription = this.authService.asObservable()
       .pipe(
         map((myself: User) => {
           this.myself = myself;
+
+          if (this.myself) { // myself can be null after logged out callback
+              // @ts-ignore
+              // tslint:disable-next-line:triple-equals
+              const theme: Theme = this.allThemes.find((t: Theme) => t.theme == this.myself.theme);
+              this.formControlTheme.setValue(theme);
+          }
           this.ready = true;
         })
       ).subscribe();
   }
 
   ngOnDestroy(): void {
+      if (this.subscription) {
+          this.subscription.unsubscribe();
+      }
   }
 
   onThemeSelectionChanged(event: MatSelectChange) {
     const theme: Theme = event.value as Theme;
     this.themeService.setTheme(theme);
     this.myself.theme = theme.theme.toString();
-    this.authService.saveTheme(this.myself.theme).pipe(
+    this.formControlTheme.setValue(theme);
+    this.authService.saveTheme(this.myself, this.myself.theme).pipe(
         tap((_) => {
             this.notificationsService.success('Success', 'Theme changed');
         })
@@ -91,6 +109,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   onPasswordEvent(event: PasswordComponentEvent) {
+    console.log('******************************** password', event.password);
     this.authService
         .savePassword(this.myself, event.password)
         .pipe(

@@ -1,18 +1,26 @@
 import {Router, Request, Response, NextFunction} from "express";
 import {Registry} from "../../registry";
 import {body, param} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {BulkEditPackage} from "../../model/bulk-edit.model";
 import {runJob} from "../../service/job-do-bulk-edit.service";
 import {Job} from "../../model/job.model";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction = [
     [
         param('viewId').exists().isNumeric(),
         body('bulkEditPackage').exists()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);

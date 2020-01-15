@@ -13,9 +13,12 @@ export const isItemValueOperatorAndAttributeValid = (i: ItemValueOperatorAndAttr
         } else if (i.operator && !operatorNeedsItemValue(i.operator)) {
             return true;
         }
+        console.log('****** itemValueOperatorAndAttribute', i);
         if (!hasItemValue(i.attribute, i.itemValue)) {
+           console.log('***** false (invalid)');
            return false;
         }
+        console.log('***** true (valid)');
         return true;
     }
     return false;

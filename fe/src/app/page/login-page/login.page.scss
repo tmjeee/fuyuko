@@ -10,6 +10,14 @@
     width: 35vw;
     opacity: 0.888;
 
+    .header-image {
+      width: 85px;
+      img {
+        margin-left: 15px;
+        width: 70px;
+      }
+    }
+
     .form, .control {
       margin: 20px;
       display: flex;

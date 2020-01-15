@@ -1,15 +1,23 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
     ],
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
@@ -28,6 +36,7 @@ const httpAction: any[] = [
                 const pricingStructure: PricingStructure = {
                     id: i.ID,
                     name: i.NAME,
+                    viewId: i.VIEW_ID,
                     description: i.DESCRIPTION
                 } as PricingStructure;
                 acc.push(pricingStructure);

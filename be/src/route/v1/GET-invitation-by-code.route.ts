@@ -6,6 +6,7 @@ import {Connection} from "mariadb";
 import { Invitation } from "../../model/invitation.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {Registry} from "../../registry";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction = [
     [
@@ -22,7 +23,7 @@ const httpAction = [
                     R.ID AS ID, R.EMAIL AS EMAIL, R.CREATION_DATE AS CREATION_DATE, R.CODE AS CODE, R.ACTIVATED AS ACTIVATED, 
                     G.GROUP_ID AS GROUP_ID
                 FROM TBL_INVITATION_REGISTRATION as R
-                LET JOIN TBL_INVITATION_REGISTRATION_GROUP AS G ON G.INVITATION_REGISTRATION_ID = R.ID
+                LEFT JOIN TBL_INVITATION_REGISTRATION_GROUP AS G ON G.INVITATION_REGISTRATION_ID = R.ID
                 WHERE R.CODE = ?
             `, code);
 

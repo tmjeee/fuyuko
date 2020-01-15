@@ -1,0 +1,7 @@
+
+@import '../../../scss/mixins';
+
+.view-validation-page {
+  margin: 0 10px;
+  @include fix-mat-accordion-description-panel();
+}

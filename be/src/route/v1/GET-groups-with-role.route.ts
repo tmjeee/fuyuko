@@ -1,11 +1,17 @@
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
-import {Role} from "../../model/role.model";
+import {Role, ROLE_VIEW} from "../../model/role.model";
 import {Paginable} from "../../model/pagnination.model";
 
 
@@ -13,8 +19,9 @@ const httpAction: any[] = [
     [
         check('roleName').exists()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const roleName: string = req.params.roleName;
         await doInDbConnection(async (conn: Connection) => {

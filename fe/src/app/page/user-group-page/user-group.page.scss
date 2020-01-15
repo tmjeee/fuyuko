@@ -1,3 +1,6 @@
+@import '../../../scss/mixins';
+
 .user-group-page {
   margin: 0 10px;
+  @include fix-mat-accordion-description-panel();
 }

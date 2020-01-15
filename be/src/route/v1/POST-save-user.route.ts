@@ -1,12 +1,20 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {check} from 'express-validator';
-import {getJwtPayload, validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    getJwtPayload, v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {JwtPayload} from "../../model/jwt.model";
-import {getUserById} from "../../service";
+import {getUserById, hashedPassword} from "../../service";
 import {User} from "../../model/user.model";
+import {ROLE_EDIT} from "../../model/role.model";
+import {QueryA} from "../../db/db";
 
 const httpAction: any[] = [
     [
@@ -15,32 +23,45 @@ const httpAction: any[] = [
         check('lastName'),
         check('email'),
         check('theme'),
+        check('password'),
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         const email = req.body.email;
         const theme = req.body.theme;
+        const password = req.body.password;
 
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
 
-        const user: User = await doInDbConnection(async (conn: Connection) => {
+        await doInDbConnection(async (conn: Connection) => {
             if (firstName) {
-                conn.query(`UPDATE TBL_USER SET FIRSTNAME = ? WHERE USER_ID = ?`, [firstName, userId]);
+                await conn.query(`UPDATE TBL_USER SET FIRSTNAME = ? WHERE ID = ?`, [firstName, userId]);
             }
             if (lastName){
-                conn.query(`UPDATE TBL_USER SET LASTNAME = ? WHERE USER_ID = ?`, [lastName, userId]);
+                await conn.query(`UPDATE TBL_USER SET LASTNAME = ? WHERE ID = ?`, [lastName, userId]);
             }
             if (email) {
-                conn.query(`UPDATE TBL_USER SET EMAIL = ? WHERE USER_ID = ?`, [email, userId]);
+                await conn.query(`UPDATE TBL_USER SET EMAIL = ? WHERE ID = ?`, [email, userId]);
+            }
+            if (password) {
+                await conn.query(`UPDATE TBL_USER SET PASSWORD=? WHERE ID=?`, [hashedPassword(password), userId]);
             }
             if (theme){
-                conn.query(`UPDATE TBL_USER SET THEME = ? WHERE USER_ID = ? `, [theme, userId]);
+                const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER_THEME WHERE USER_ID=?`, [userId]);
+                if (q[0].COUNT > 0) { // theme already exists, update
+                    await conn.query(`UPDATE TBL_USER_THEME SET THEME=? WHERE USER_ID=?`, [theme, userId]);
+                } else { // theme not already exists, insert
+                    await conn.query(`INSERT INTO TBL_USER_THEME (THEME, USER_ID) VALUES (?,?)`, [theme, userId]);
+                }
             }
+        });
 
+        const user: User = await doInDbConnection(async (conn: Connection) => {
             return await getUserById(userId);
         });
 

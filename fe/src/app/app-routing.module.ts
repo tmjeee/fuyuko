@@ -40,6 +40,15 @@ import {ExportHelpPageComponent} from './page/export-help-page/export-help.page'
 import {ActivatePageComponent} from './page/activate-page/activate.page';
 import {UserInvitationPageComponent} from './page/user-invitation-page/user-invitation.page';
 import {UserActivationPageComponent} from './page/user-activation-page/user-activation.page';
+import {PartnerLayoutComponent} from './layout/partner-layout/partner.layout';
+import {PartnerDataTablePageComponent} from './page/partner-data-table-page/partner-data-table.page';
+import {PartnerDataListPageComponent} from './page/partner-data-list-page/partner-data-list.page';
+import {PartnerDataThumbnailPageComponent} from './page/partner-data-thumbnail-page/partner-data-thumbnail.page';
+import {PartnerHelpPageComponent} from './page/partner-help-page/partner-help.page';
+import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-help.page';
+import {EditRulePageComponent} from "./page/view-rules-page/edit-rule.page";
+import {ViewValidationPageComponent} from "./page/view-validation-page/view-validation.page";
+import {EditAttributePageComponent} from "./page/view-attributes-page/edit-attribute.page";
 
 const routes: Routes = [
 
@@ -47,7 +56,7 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/dashboard-layout/dashboard',
+    redirectTo: '/dashboard-layout/(dashboard//help:dashboard-help)',
   },
 
   // login-layout
@@ -71,6 +80,50 @@ const routes: Routes = [
  } as Route,
 
 
+  // partner-layout
+  {
+    path: 'partner-layout',
+    canActivate: [AuthGuard],
+    component: PartnerLayoutComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/partner-layout/(table//help:partner-help)'
+      },
+      {
+        path: 'table',
+        canActivate: [AuthGuard],
+        component: PartnerDataTablePageComponent,
+        data: {
+          sideNav: 'partnerDataTable'
+        }
+      } as Route,
+      {
+        path: 'list',
+        canActivate: [AuthGuard],
+        component: PartnerDataListPageComponent,
+        data: {
+          sideNav: 'partnerDataList'
+        }
+      } as Route,
+      {
+        path: 'thumbnail',
+        canActivate: [AuthGuard],
+        component: PartnerDataThumbnailPageComponent,
+        data: {
+          sideNav: 'partnerDataThumbnail'
+        }
+      } as Route,
+      {
+        path: 'partner-help',
+        canActivate: [AuthGuard],
+        component: PartnerHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+    ]
+  } as Route,
+
 
   // dashboard-layout
   {
@@ -85,6 +138,12 @@ const routes: Routes = [
         path: 'dashboard',
         canActivate: [AuthGuard],
         component: DashboardPageComponent,
+      } as Route,
+      {
+        path: 'dashboard-help',
+        canActivate: [AuthGuard],
+        component: DashboardHelpPageComponent,
+        outlet: 'help'
       }
     ]
   } as Route,
@@ -208,9 +267,25 @@ const routes: Routes = [
         }
       } as Route,
       {
+        path: 'rule/:ruleId',
+        canActivate: [AuthGuard],
+        component: EditRulePageComponent,
+        data: {
+          subSideNav: 'rules'
+        }
+      } as Route,
+      {
         path: 'attributes',
         canActivate: [AuthGuard],
         component: ViewAttributesPageComponent,
+        data: {
+          subSideNav: 'attributes'
+        }
+      } as Route,
+      {
+        path: 'attribute/:attributeId',
+        canActivate: [AuthGuard],
+        component: EditAttributePageComponent,
         data: {
           subSideNav: 'attributes'
         }
@@ -245,6 +320,14 @@ const routes: Routes = [
         component: ViewViewsPageComponent,
         data: {
           subSideNav: 'views'
+        }
+      } as Route,
+      {
+        path: 'validation',
+        canActivate: [AuthGuard],
+        component: ViewValidationPageComponent,
+        data: {
+          subSideNav: 'validation'
         }
       } as Route,
       {
@@ -357,7 +440,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { enableTracing: false, scrollPositionRestoration: 'enabled'})],
+  imports: [RouterModule.forRoot(routes, { enableTracing: true, scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

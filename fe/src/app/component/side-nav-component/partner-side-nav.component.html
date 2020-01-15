@@ -1,0 +1,43 @@
+<div class="partner-side-nav-component">
+    <!-- profile -->
+    <div [class.selected]="routeSideNavData === 'partnerDataTable'">
+        <mat-icon class="action"
+                  matTooltipPosition="after"
+                  matTooltip="Partner view data table"
+                  [routerLink]="['/partner-layout', {outlets: {primary:['table'], help:['partner-help'] }}]">
+            view_quilt
+        </mat-icon>
+    </div>
+    <div [class.selected]="routeSideNavData === 'partnerDataList'">
+        <mat-icon class="action"
+                  matTooltipPosition="after"
+                  matTooltip="Partner view data list"
+                  [routerLink]="['/partner-layout', {outlets: {primary:['list'], help:['partner-help'] }}]">
+            view_list
+        </mat-icon>
+    </div>
+    <div [class.selected]="routeSideNavData === 'partnerDataThumbnail'">
+        <mat-icon class="action"
+                  matTooltipPosition="after"
+                  matTooltip="Partner view data thumbnail"
+                  [routerLink]="['/partner-layout', {outlets: {primary:['thumbnail'], help:['partner-help'] }}]">
+            view_module
+        </mat-icon>
+    </div>
+    <div>
+        <mat-icon class="action"
+                  matTooltipPosition="after"
+                  matTooltip="Dashboard"
+                  [routerLink]="['/dashboard-layout', 'dashboard']">
+            dashboard
+        </mat-icon>
+    </div>
+    <div>
+        <mat-icon class="action "
+                  matTooltipPosition="after"
+                  matTooltip="Exit"
+                  (click)="logout($event)">
+            exit_to_app
+        </mat-icon>
+    </div>
+</div>

@@ -7,7 +7,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatRippleModule } from '@angular/material/core';
+import {MatCommonModule, MatRippleModule} from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
@@ -41,6 +41,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 @NgModule({
   imports: [
     BrowserAnimationsModule,
+    MatCommonModule,
     MatAutocompleteModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -80,6 +81,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
   ],
   exports: [
     BrowserAnimationsModule,
+    MatCommonModule,
     MatAutocompleteModule,
     MatCheckboxModule,
     MatFormFieldModule,

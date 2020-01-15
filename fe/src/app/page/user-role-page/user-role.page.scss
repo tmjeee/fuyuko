@@ -1,4 +1,17 @@
+@import '../../../scss/mixins';
 
 .user-role-page {
   margin: 0 10px;
+  @include fix-mat-accordion-description-panel();
+  /*
+  ::ng-deep mat-accordion {
+    mat-expansion-panel {
+      mat-expansion-panel-header {
+        mat-panel-description {
+          flex-grow: 1 !important;
+        }
+      }
+    }
+  }
+   */
 }

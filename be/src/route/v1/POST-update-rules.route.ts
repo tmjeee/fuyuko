@@ -1,6 +1,12 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {check, body} from 'express-validator';
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
@@ -8,6 +14,7 @@ import {Rule} from "../../model/rule.model";
 import {Rule2} from "../model/server-side.model";
 import {ApiResponse} from "../../model/response.model";
 import {revert} from "../../service/rule-conversion.service";
+import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
@@ -15,8 +22,9 @@ const httpAction: any[] = [
         body('rules').isArray(),
         body('rules.*.name').exists(),
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
@@ -37,7 +45,7 @@ const httpAction: any[] = [
 
         res.status(200).json({
             status: 'SUCCESS',
-            message: `Update successfull`
+            message: `Update successful`
         } as ApiResponse);
     }
 ];

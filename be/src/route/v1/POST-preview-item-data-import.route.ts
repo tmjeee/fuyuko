@@ -1,7 +1,13 @@
 import {Registry} from "../../registry";
 import {NextFunction, Request, Response, Router} from "express";
 import {param, body} from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {multipartParse} from "../../service";
@@ -13,6 +19,7 @@ import {ItemDataImport} from "../../model/data-import.model";
 import {preview} from "../../service/import-csv/import-item.service";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import jsonStringifySafe from 'json-stringify-safe';
+import {ROLE_EDIT} from "../../model/role.model";
 
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
@@ -23,8 +30,9 @@ const httpAction: any[] = [
         param('viewId').exists().isNumeric(),
         // body('itemDataCsvFile').exists()
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const name: string = `item-data-import-${uuid()}`;

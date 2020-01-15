@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
-import {Themes, ThemeService} from '../theme-service/theme.service';
+import {ThemeService} from '../theme-service/theme.service';
 import {HttpClient} from '@angular/common/http';
 import {LoginResponse} from '../../model/login.model';
 
@@ -12,6 +12,8 @@ import {tap} from 'rxjs/operators';
 const URL_LOGIN = () => `${config().api_host_url}/login`;
 const URL_LOGOUT = () => `${config().api_host_url}/logout`;
 const URL_SAVE_USER = () => `${config().api_host_url}/user`;
+
+export const KEY = `MY_APP_MYSELF`;
 
 export interface StorageToken  {
   token: string;
@@ -60,7 +62,7 @@ export class AuthService {
   saveMyself(myself: User): Observable<User> {
     return this.httpClient.post<User>(URL_SAVE_USER(), {
         userId: myself.id,
-        firstName: myself.username,
+        firstName: myself.firstName,
         lastName: myself.lastName,
         email: myself.email
     }).pipe(
@@ -68,8 +70,9 @@ export class AuthService {
     );
   }
 
-  saveTheme(theme: string): Observable<User> {
+  saveTheme(myself: User, theme: string): Observable<User> {
     return this.httpClient.post<User>(URL_SAVE_USER(), {
+        userId: myself.id,
         theme
     }).pipe(
         tap(this.afterSaveCallback.bind(this))
@@ -78,28 +81,29 @@ export class AuthService {
 
   savePassword(myself: User, password: string) {
       return this.httpClient.post<User>(URL_SAVE_USER(), {
+          userId: myself.id,
           password
       }).pipe(
           tap(this.afterSaveCallback.bind(this))
       );
   }
   private afterSaveCallback(u: User) {
-      const token: StorageToken = JSON.parse(localStorage.getItem('MY_APP_MYSELF'));
+      const token: StorageToken = JSON.parse(localStorage.getItem(KEY));
       token.myself = u;
       this.storeToken(token);
       this.subject.next(u);
   }
 
   private storeToken(token: StorageToken) {
-    localStorage.setItem('MY_APP_MYSELF', JSON.stringify(token));
+    localStorage.setItem(KEY, JSON.stringify(token));
   }
 
   destroyToken() {
-    localStorage.removeItem('MY_APP_MYSELF');
+    localStorage.removeItem(KEY);
   }
 
   jwtToken(): string {
-      const storageToken: string = localStorage.getItem('MY_APP_MYSELF');
+      const storageToken: string = localStorage.getItem(KEY);
       if (storageToken) {
           const token: StorageToken =  JSON.parse(storageToken);
           return token.token;
@@ -108,7 +112,7 @@ export class AuthService {
   }
 
   myself(): User {
-    const storageToken: string = localStorage.getItem('MY_APP_MYSELF');
+    const storageToken: string = localStorage.getItem(KEY);
     if (storageToken) {
       const token: StorageToken =  JSON.parse(storageToken);
       return token.myself;

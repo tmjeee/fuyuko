@@ -1,6 +1,12 @@
 import {Registry} from "../../registry";
 import {Router, Request, Response, NextFunction} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {param, body} from 'express-validator';
@@ -28,6 +34,7 @@ import {
 import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../../model/unit.model";
 import {_convert as _attributeConvert, convert as attributeConvert} from "../../service/conversion-attribute.service";
 import {convert as itemValueConvert} from '../../service/conversion-item-value.service';
+import {ROLE_EDIT} from "../../model/role.model";
 
 
 const SQL: string = `
@@ -137,6 +144,7 @@ const httpAction: any[] = [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
       const viewId: number = Number(req.params.viewId);

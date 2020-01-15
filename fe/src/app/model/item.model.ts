@@ -22,6 +22,19 @@ export interface Item {
   children: Item[];
 }
 
+
+export interface TableItem {
+  id: number;
+  name: string;
+  description: string;
+  images: ItemImage[];
+  parentId: number;
+  depth: number;
+  [attributeId: number]: Value;
+
+  rootParentId: number;
+}
+
 export interface PricedItem {
   id: number;
   name: string;
@@ -35,6 +48,20 @@ export interface PricedItem {
   children: PricedItem[];
 }
 
+export interface TablePricedItem {
+  id: number;
+  name: string;
+  description: string;
+  images: ItemImage[];
+  parentId: number;
+  depth: number;
+  [attributeId: number]: Value;
+  price: number;
+  country: string;
+
+  rootParentId: number;
+}
+
 export interface ItemImage {
   id: number;
   name: string;
@@ -43,17 +70,6 @@ export interface ItemImage {
   primary: boolean;
 }
 
-export interface TableItem {
-  id: number;
-  name: string;
-  description: string;
-  images: ItemImage[];
-  parentId: number;
-  depth: number;
-  [attributeId: number]: Value;
-
-  rootParentId: number;
-}
 
 export interface Value {
   attributeId: number;

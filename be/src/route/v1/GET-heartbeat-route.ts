@@ -7,8 +7,7 @@ import moment from 'moment';
 
 const httpAction: any[] = [
     [],
-    // validateJwtMiddlewareFn,
-    // validateMiddlewareFn,
+    validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const date = moment().format(`DD-MM-YYYY hh:mm:ss a`);
         res.status(200).json({

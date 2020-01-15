@@ -15,7 +15,7 @@
     <mat-icon class="action"
               matTooltipPosition="after"
               matTooltip="Dashboard"
-              [routerLink]="['/dashboard-layout', 'dashboard']">
+              [routerLink]="['/dashboard-layout', {outlets:{primary:['dashboard'], help:['dashboard-help']}}]">
       dashboard
     </mat-icon>
   </div>
@@ -88,6 +88,15 @@
               matTooltip="Jobs"
               [routerLink]="['/gen-layout', {outlets:{primary:['jobs'], help:['jobs-help']}}]">
         schedule
+    </mat-icon>
+  </div>
+
+  <div>
+    <mat-icon class="action"
+              matTooltipPostion="after"
+              matTooltip="Partner"
+              [routerLink]="['/partner-layout', {outlets:{primary: ['table'], help: ['partner-help']}}]">
+      wc
     </mat-icon>
   </div>
 

@@ -37,6 +37,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                                ps = {
                                   id: q[0].ID,
                                   name: q[0].NAME,
+                                  viewId: q[0].VIEW_ID,
                                   description: q[0].DESCRIPTION
                                } as PricingStructure;
                             }
@@ -50,6 +51,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                                 ps = {
                                     id: q[0].ID,
                                     name: q[0].NAME,
+                                    viewId: q[0].VIEW_ID,
                                     description: q[0].DESCRIPTION
                                 } as PricingStructure;
                             }
