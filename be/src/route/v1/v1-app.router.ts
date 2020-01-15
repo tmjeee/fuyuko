@@ -1,5 +1,5 @@
 
-import express, {Router, Express} from 'express';
+import express, {Router} from 'express';
 import {Registry} from "../../registry";
 
 // routes
@@ -82,6 +82,10 @@ import registerGetSearchUserByUsernameAndStatusRoute from './GET-search-user-by-
 import registerGetSearchSelfRegistrationByUsernameRoute from './GET-search-self-registrations-by-username.route';
 import registerGetRuleByViewRoute from './GET-rule-by-view.route';
 import registerGetAttributeByViewRoute from './GET-attribute-by-view.route';
+import registerGetItemsByViewRotue from './GET-items-by-view.route';
+import registerGetAllViewValidationsRoute from './GET-all-view-validations.route';
+import registerGetViewValidationResultRoute from './GET-view-validation-result.route';
+import registerPostViewValidationRoute from './POST-view-validation.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -171,6 +175,10 @@ const reg = (router: Router, regi: Registry) => {
     registerGetSearchSelfRegistrationByUsernameRoute(v1AppRouter, registry);
     registerGetRuleByViewRoute(v1AppRouter, registry);
     registerGetAttributeByViewRoute(v1AppRouter, registry);
+    registerGetItemsByViewRotue(v1AppRouter, registry);
+    registerGetAllViewValidationsRoute(v1AppRouter, registry);
+    registerGetViewValidationResultRoute(v1AppRouter, registry);
+    registerPostViewValidationRoute(v1AppRouter, registry);
 }
 
 

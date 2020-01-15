@@ -143,6 +143,52 @@ export const getAllItemsInView = async (viewId: number): Promise<Item2[]> => {
     return item2s;
 }
 
+export const getItemsByIds = async (viewId: number, itemIds: number[]): Promise<Item2[]> => {
+    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+                SELECT
+                    I.ID AS I_ID,
+                    I.PARENT_ID AS I_PARENT_ID,
+                    I.VIEW_ID AS I_VIEW_ID,
+                    I.NAME AS I_NAME,
+                    I.DESCRIPTION AS I_DESCRIPTION,
+                    I.STATUS AS I_STATUS,
+                    A.ID AS A_ID,
+                    A.TYPE AS A_TYPE,
+                    A.NAME AS A_NAME,
+                    A.STATUS AS A_STATUS,
+                    A.DESCRIPTION AS A_DESCRIPTION,
+                    V.ID AS V_ID,
+                    M.ID AS M_ID,
+                    M.NAME AS M_NAME,
+                    E.ID AS E_ID,
+                    E.KEY AS E_KEY,
+                    E.VALUE AS E_VALUE,
+                    E.DATA_TYPE AS E_DATA_TYPE,
+                    IMG.ID AS IMG_ID,
+                    IMG.MIME_TYPE AS IMG_MIME_TYPE,
+                    IMG.NAME AS IMG_NAME,
+                    IMG.SIZE AS IMG_SIZE
+                FROM TBL_ITEM AS I
+                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+                LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
+                LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
+                LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
+                WHERE I.VIEW_ID IN ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
+            `, [viewId, itemIds]);
+
+        return _doQ(q);
+    });
+
+    for (const item2 of item2s) {
+        const itemId: number = item2.id;
+        item2.children = await findChildrenItems(viewId, itemId);
+    }
+
+    return item2s;
+}
+
 export const getItemById = async (viewId: number, itemId: number): Promise<Item2> => {
 
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {

@@ -123,6 +123,7 @@ import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-h
 import {EditRulePageComponent} from './page/view-rules-page/edit-rule.page';
 import {ViewValidationPageComponent} from './page/view-validation-page/view-validation.page';
 import {EditAttributePageComponent} from './page/view-attributes-page/edit-attribute.page';
+import {ValidationService} from "./service/validation-service/validation.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -285,6 +286,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: GlobalCommunicationService, useClass: GlobalCommunicationService} as Provider,
     {provide: PartnerService, useClass: PartnerService} as Provider,
     {provide: BrowserLocationHistoryService, useClass: BrowserLocationHistoryService} as Provider,
+    {provide: ValidationService, useClass: ValidationService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
         deps: [SettingsService, AuthService, ThemeService, ViewService, BrowserLocationHistoryService] } as Provider,

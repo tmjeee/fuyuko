@@ -48,11 +48,107 @@ export const update = async () => {
    await TBL_BULK_EDIT_LOG();
    await TBL_JOB();
    await TBL_JOB_LOG();
+   await TBL_VIEW_VALIDATION();
+   await TBL_VIEW_VALIDATION_LOG();
+   await TBL_VIEW_VALIDATION_ERROR();
+   await TBL_VIEW_VALIDATION_ERROR_MESSAGE();
+   await TBL_VIEW_VALIDATION_ERROR_METADATA();
+   await TBL_VIEW_VALIDATION_ERROR_METADATA_ENTRY();
    await ADD_FK_CONSTRAINT();
    await ADD_INDEXES();
 
    i(`done running update on ${__filename}`);
 };
+
+const TBL_VIEW_VALIDATION = async () => {
+   doInDbConnection((conn: Connection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            VIEW_ID INT,
+            NAME VARCHAR(200),
+            DESCRIPTION VARCHAR(500),
+            PROGRESS VARCHAR(200),
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+}
+
+const TBL_VIEW_VALIDATION_LOG = async () => {
+    doInDbConnection((conn: Connection) => {
+       conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION_LOG (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            VIEW_VALIDATION_ID INT,
+            LEVEL VARCHAR(200),
+            MESSAGE TEXT,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP         
+         );
+       `);
+    });
+}
+
+const TBL_VIEW_VALIDATION_ERROR = async () => {
+   doInDbConnection((conn: Connection) => {
+      conn.query(`
+           CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION_ERROR (
+              ID INT PRIMARY KEY AUTO_INCREMENT,
+              VIEW_VALIDATION_ID INT,
+              ITEM_ID INT,
+              ATTRIBUTE_ID INT,
+              CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+           ); 
+       `);
+   });
+}
+
+const TBL_VIEW_VALIDATION_ERROR_MESSAGE = async () => {
+  doInDbConnection((conn: Connection) => {
+      conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION_ERROR_MESSAGE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            VIEW_VALIDATION_ERROR_ID INT,
+            MESSAGE TEXT,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+  });
+}
+
+const TBL_VIEW_VALIDATION_ERROR_METADATA = async () => {
+   doInDbConnection((conn: Connection) => {
+      conn.query(`
+            CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION_ERROR_METADATA (
+               ID INT PRIMARY KEY AUTO_INCREMENT,
+               VIEW_VALIDATION_ERROR_ID INT,
+               NAME VARCHAR(200),
+               CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+               LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ); 
+       `);
+   });
+}
+
+const TBL_VIEW_VALIDATION_ERROR_METADATA_ENTRY = async () => {
+   doInDbConnection((conn: Connection) => {
+      conn.query(`
+            CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION_ERROR_METADATA_ENTRY (
+               ID INT PRIMARY KEY AUTO_INCREMENT,
+               VIEW_VALIDATION_ERROR_METADATA_ID INT,
+               \`KEY\` VARCHAR(200),
+               \`VALUE\` VARCHAR(500),
+               DATA_TYPE VARCHAR(200),
+               CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+               LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+       `);
+   });
+}
 
 
 const TBL_INVITATION_REGISTRATION = async () => {
