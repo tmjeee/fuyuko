@@ -44,7 +44,7 @@ const httpAction: any[] = [
                 }
 
                 await conn.query(`DELETE FROM TBL_VIEW_ATTRIBUTE_METADATA WHERE VIEW_ATTRIBUTE_ID = ? `, [att2.id]);
-                await conn.query(`UPDATE TBL_VIEW_ATTRIBUTE SET TYPE=?, NAME=?, DESCRPTION=? WHERE ID=? `, [att2.type, att2.name, att2.description]);
+                await conn.query(`UPDATE TBL_VIEW_ATTRIBUTE SET TYPE=?, NAME=?, DESCRIPTION=? WHERE ID=? `, [att2.type, att2.name, att2.description, att2.id]);
 
                 for (const metadata of att2.metadatas) {
                     const qMeta: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?,?)`, [att2.id, metadata.name]);

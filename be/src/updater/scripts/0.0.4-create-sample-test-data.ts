@@ -463,14 +463,14 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
             createAnItemType(),
         ]);
 
-    _createItem(conn, pricingStructureId, itemDef);
-    _createItem(conn, pricingStructureId, itemDef);
-    _createItem(conn, pricingStructureId, itemDef);
-    _createItem(conn, pricingStructureId, itemDef);
-    _createItem(conn, pricingStructureId, itemDef);
-    _createItem(conn, pricingStructureId, itemDef);
-    _createItem(conn, pricingStructureId, itemDef);
-    _createItem(conn, pricingStructureId, itemDef);
+    await _createItem(conn, pricingStructureId, itemDef);
+    await _createItem(conn, pricingStructureId, itemDef);
+    await _createItem(conn, pricingStructureId, itemDef);
+    await _createItem(conn, pricingStructureId, itemDef);
+    await _createItem(conn, pricingStructureId, itemDef);
+    await _createItem(conn, pricingStructureId, itemDef);
+    await _createItem(conn, pricingStructureId, itemDef);
+    await _createItem(conn, pricingStructureId, itemDef);
 }
 
 const _createItem = async (conn: Connection, pricingStructureId: number, args: CreateItemType, parentItemId: number = null) => {
