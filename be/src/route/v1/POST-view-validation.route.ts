@@ -29,11 +29,10 @@ const httpAction: any[] = [
             `, [viewId, name, description, 'SCHEDULED']);
 
             const validationId: number = q.insertId;
-
-            runValidation(validationId);
-
             return validationId;
         });
+
+        runValidation(viewId, id);
 
         res.status(200).json({
             ok: true,

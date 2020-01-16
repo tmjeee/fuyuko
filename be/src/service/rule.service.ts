@@ -1,4 +1,3 @@
-import {Rule} from "../model/rule.model";
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
 import {
@@ -7,7 +6,6 @@ import {
     ValidateClauseMetadata2,
     ValidateClauseMetadataEntry2, WhenClause2, WhenClauseMetadata2, WhenClauseMetadataEntry2
 } from "../route/model/server-side.model";
-import {convert} from "./rule-conversion.service";
 
 const SQL_1 = `
    SELECT
