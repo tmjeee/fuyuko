@@ -10,6 +10,8 @@ import {
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {AttributeDataExport, DataExportType, ItemDataExport, PriceDataExport} from '../../model/data-export.model';
+import {AttributeService} from '../../service/attribute-service/attribute.service';
+import {PricingStructure} from '../../model/pricing-structure.model';
 
 @Component({
     templateUrl: './export.page.html',
@@ -23,6 +25,7 @@ export class ExportPageComponent implements OnInit {
     submitExportJobFn: SubmitExportJobFn;
 
     constructor(private viewService: ViewService,
+                private attributeService: AttributeService,
                 private exportDataService: ExportDataService) { }
 
     ngOnInit(): void {
@@ -33,12 +36,12 @@ export class ExportPageComponent implements OnInit {
         ).subscribe();
 
         this.viewAttributeFn = (viewId: number) => {
-           return this.exportDataService.viewAttributeFn(viewId);
+           return this.attributeService.getAllAttributesByView(viewId);
         };
 
         this.previewExportFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
-                                filter: ItemValueOperatorAndAttribute[]) => {
-            return this.exportDataService.previewExportFn(exportType, viewId, attributes, filter);
+                                filter: ItemValueOperatorAndAttribute[], ps?: PricingStructure) => {
+            return this.exportDataService.previewExportFn(exportType, viewId, attributes, filter, ps);
         };
 
         this.submitExportJobFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],

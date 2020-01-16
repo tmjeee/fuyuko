@@ -65,6 +65,11 @@ const routes: Routes = [
    component: LoginLayoutComponent,
    children: [
      {
+       path: '',
+       pathMatch: 'full',
+       redirectTo: '/login-layout/login',
+     } as Route,
+     {
        path: 'login',
        component: LoginPageComponent,
      } as Route,
@@ -135,6 +140,11 @@ const routes: Routes = [
     },
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/dashboard-layout/(dashboard//help:dashboard-help)',
+      } as Route,
+      {
         path: 'dashboard',
         canActivate: [AuthGuard],
         component: DashboardPageComponent,
@@ -158,6 +168,11 @@ const routes: Routes = [
      sideNav: 'user'
    },
    children: [
+     {
+       path: '',
+       pathMatch: 'full',
+       redirectTo: '/user-gen-layout/(role//help:user-help)',
+     } as Route,
      {
        path: 'role',
        canActivate: [AuthGuard],
@@ -218,6 +233,11 @@ const routes: Routes = [
     },
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/import-export-gen-layout/(import//help:import-help)',
+      } as Route,
+      {
         path: 'import',
         canActivate: [AuthGuard],
         component: ImportPageComponent,
@@ -258,6 +278,11 @@ const routes: Routes = [
       sideNav: 'view'
     },
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/view-gen-layout/(rules//help:view-help)',
+      } as Route,
       {
         path: 'rules',
         canActivate: [AuthGuard],
@@ -347,6 +372,11 @@ const routes: Routes = [
    component: GenLayoutComponent,
    children: [
      // profile
+     {
+       path: '',
+       pathMatch: 'full',
+       redirectTo: '/gen-layout/(profile//help:profile-help)'
+     } as Route,
      {
        path: 'profile',
        canActivate: [AuthGuard],
