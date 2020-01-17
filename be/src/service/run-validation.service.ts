@@ -26,6 +26,10 @@ import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from "../model/ope
 import {getAttributesInView} from "./attribute.service";
 import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
 import moment from 'moment';
+import * as logger from '../logger';
+import * as itemValueTypesToString from '../shared-utils/item-val-types-to-string.utils';
+import validate = WebAssembly.validate;
+import {valid} from "semver";
 
 interface Context {
    validationId: number;
@@ -108,7 +112,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return !!a1.value;
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
         }
@@ -141,7 +145,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return !!a1.value;
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
         }
@@ -178,7 +182,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return !!a1.value;
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
             break;
@@ -215,7 +219,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return !!a1.value;
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
             break;
@@ -253,7 +257,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return !!a1.value;
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
             break;
@@ -291,7 +295,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return (!!a1.length) && (!!a1.width) && (!!a1.height);
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
         }
@@ -328,7 +332,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return !!a1.value;
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
         }
@@ -366,7 +370,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return !!a1.value;
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
         }
@@ -404,7 +408,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return !!a1.value;
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
         }
@@ -438,7 +442,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return !!a1.key;
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
         }
@@ -472,7 +476,7 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
                 case 'not empty':
                     return (!!a1.key1 && !!a1.key2);
                 default:
-                    e(validationId,`operator of type ${op} is not defined`);
+                    e(context,`operator of type ${op} is not defined`);
                     return false;
             }
         }
@@ -490,23 +494,27 @@ export const runValidation = async (viewId: number, validationId: number) => {
 
     await i(currentContext, `Running validation for viewId ${viewId} validationId ${validationId}`);
 
+    const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
+    await i(currentContext, `Successfully retrieved validation for validationId ${validationId}`);
+
     const a2s: Attribute2[] = await getAttributesInView(viewId);
     const as: Attribute[] = await attributeConverter.convert(a2s);
-
-    const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
+    await i(currentContext,`Succesfully retrieved attributes for viewId ${viewId}`);
 
     const item2s: Item2[] = await getAllItemsInView(viewId);
     const items: Item[] = itemConverter.convert(item2s);
+    await i(currentContext, `Successfully retrieved all items for viewId ${viewId}`);
 
     const rule2s: Rule2[] = await getRule2s(viewId);
     const rules: Rule[] = ruleConverter.convert(rule2s);
-
+    await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
 
     for (const item of items) {
         currentContext.item = item;
         for (const rule of rules) {
             currentContext.rule = rule;
             let wr  = true;
+            await i(currentContext, `Validating itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
             for (const whenClause of rule.whenClauses) {
                 const att: Attribute = as.find((a: Attribute) => a.id === whenClause.attributeId);
                 const value: Value = item[whenClause.attributeId];
@@ -515,9 +523,25 @@ export const runValidation = async (viewId: number, validationId: number) => {
                 const op: OperatorType = whenClause.operator;
                 currentContext.attribute = att;
 
-                wr = wr && match(currentContext, att, i1, i2, op);
+                await i(currentContext,
+                    `Validating WhenClause ${whenClause.id} 
+                           (attributeId ${whenClause.attributeId} attributeName ${whenClause.attributeName} op ${whenClause.operator} 
+                           against itemValueTypes ${itemValueTypesToString.toString(whenClause.condition)})
+                           for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
+
+                const tmp = match(currentContext, att, i1, i2, op);
+                wr = wr && tmp;
+
+                await i(currentContext,
+                    `Validated current WhenClause result is [${tmp}] overall WhenClause result is [${wr}] for WhenClause ${whenClause.id} 
+                           (attributeId ${whenClause.attributeId} attributeName ${whenClause.attributeName} op ${whenClause.operator} 
+                           against itemValueTypes ${itemValueTypesToString.toString(whenClause.condition)})
+                           for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
             }
 
+            if (!wr) {
+                await i(currentContext, `WhenClauses for ruleId ${rule.id} on itemId ${item.id} is false, this rule will be skipped `);
+            }
             if (wr) { // whenClause evaluates to true, need to do validation
 
                 let vr = true;
@@ -530,15 +554,34 @@ export const runValidation = async (viewId: number, validationId: number) => {
                     const op: OperatorType = validateClause.operator;
                     currentContext.attribute = att;
 
+
+                    await i(currentContext,
+                        `Validating ValidateClause ${validateClause.id} 
+                           (attributeId ${validateClause.attributeId} attributeName ${validateClause.attributeName} op ${validateClause.operator} 
+                           against itemValueTypes ${itemValueTypesToString.toString(validateClause.condition)})
+                           for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
+
                     const tmp = match(currentContext, att, i1, i2, op);
                     if (!tmp) { // this validation failed
                        currentContext.errornousValues.push(value);
                     }
 
                     vr = vr && tmp;
+
+                    await i(currentContext,
+                        `Validated current ValidateClause result is [${tmp}] overall ValidateClause result is [${wr}] for ValidateClause ${validateClause.id} 
+                           (attributeId ${validateClause.attributeId} attributeName ${validateClause.attributeName} op ${validateClause.operator} 
+                           against itemValueTypes ${itemValueTypesToString.toString(validateClause.condition)})
+                           for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
                 }
 
+                if (vr) {
+                    await i(currentContext, `ValidateClauses for ruleId ${rule.id} on itemId ${item.id} is true`);
+                    await i(currentContext, `ItemId ${item.id} pass ruleId ${rule.id} validation`);
+                }
                 if (!vr) { // validateClause is false (failed validation)
+                    await i(currentContext, `ValidateClauses for ruleId ${rule.id} on itemId ${item.id} is FALSE`);
+                    await i(currentContext, `ItemId ${item.id} FAILED ruleId ${rule.id} validation, error will be logged in db`);
                     await doInDbConnection(async (conn: Connection) => {
                         const qry1: QueryResponse = await conn.query(`
                             INSERT INTO TBL_VIEW_VALIDATION_ERROR (VIEW_VALIDATION_ID, ITEM_ID, ATTRIBUTE_ID) VALUES (?,?,?)
@@ -574,14 +617,28 @@ const w = async (context: Context, msg: string) => { await log(context, 'WARN', 
 const d = async (context: Context, msg: string) => { await log(context, 'DEBUG', msg); }
 const e = async (context: Context, msg: string) => { await log(context, 'ERROR', msg); }
 const log = async (context: Context, level: Level, msg: string) => {
+    const m = `[validationId=${context.validationId}]
+             [itemId=${context.item ? context.item.id : 'unknown'}]
+             [attributeId=${context.attribute ? context.attribute.id : 'unknown'}] 
+             - ${msg}`;
+    switch (level) {
+        case "DEBUG":
+            logger.d(msg);
+            break;
+        case "ERROR":
+            logger.e(msg);
+            break;
+        case "INFO":
+            logger.i(msg);
+            break;
+        case "WARN":
+            logger.w(msg);
+            break;
+    }
     await doInDbConnection(async (conn: Connection) => {
         await conn.query(`
             INSERT INTO TBL_VIEW_VALIDATION_LOG (VIEW_VALIDATION_ID, LEVEL, MESSAGE) VALUES (?,?,?)
-        `, [context.validationId, level,
-            `[validationId=${context.validationId}]
-             [itemId=${context.item ? context.item.id : 'unknown'}]
-             [attributeId=${context.attribute ? context.attribute.id : 'unknown'}] 
-             - ${msg}`]);
+        `, [context.validationId, level, m]);
     })
 }
 
