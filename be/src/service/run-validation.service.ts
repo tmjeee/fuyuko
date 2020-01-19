@@ -28,15 +28,13 @@ import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
 import moment from 'moment';
 import * as logger from '../logger';
 import * as itemValueTypesToString from '../shared-utils/item-val-types-to-string.utils';
-import validate = WebAssembly.validate;
-import {valid} from "semver";
 
 interface Context {
    validationId: number;
    attribute?: Attribute;
    item?: Item;
    rule?: Rule;
-   errornousValues: Value[]
+   errornousMessages: {item: Item, attribute: Attribute, message: string}[];
 }
 
 const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: ItemValTypes, op: OperatorType): boolean => {
@@ -489,7 +487,6 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
 export const runValidation = async (viewId: number, validationId: number) => {
     let currentContext = {
         validationId,
-        errornousValues: []
     } as Context;
 
     await i(currentContext, `Running validation for viewId ${viewId} validationId ${validationId}`);
@@ -513,6 +510,7 @@ export const runValidation = async (viewId: number, validationId: number) => {
         currentContext.item = item;
         for (const rule of rules) {
             currentContext.rule = rule;
+            currentContext.errornousMessages = [];
             let wr  = true;
             await i(currentContext, `Validating itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
             for (const whenClause of rule.whenClauses) {
@@ -563,7 +561,11 @@ export const runValidation = async (viewId: number, validationId: number) => {
 
                     const tmp = match(currentContext, att, i1, i2, op);
                     if (!tmp) { // this validation failed
-                       currentContext.errornousValues.push(value);
+                       currentContext.errornousMessages.push({
+                           attribute: att,
+                           item,
+                           message: `Attribute ${att.name} (${att.id}) value ${itemValueTypesToString.toString(i1)} ${op} ${itemValueTypesToString.toString(i2)} FAILED `
+                       });
                     }
 
                     vr = vr && tmp;
@@ -583,27 +585,12 @@ export const runValidation = async (viewId: number, validationId: number) => {
                     await i(currentContext, `ValidateClauses for ruleId ${rule.id} on itemId ${item.id} is FALSE`);
                     await i(currentContext, `ItemId ${item.id} FAILED ruleId ${rule.id} validation, error will be logged in db`);
                     await doInDbConnection(async (conn: Connection) => {
-                        const qry1: QueryResponse = await conn.query(`
-                            INSERT INTO TBL_VIEW_VALIDATION_ERROR (VIEW_VALIDATION_ID, ITEM_ID, ATTRIBUTE_ID) VALUES (?,?,?)
-                        `, [currentContext.validationId, currentContext.item.id, currentContext.attribute.id])
 
-                        for (const vv of currentContext.errornousValues) {
-
-                            const value: Value = vv;
-                            const i1: ItemValTypes = value.val;
-                            const ms: ItemMetadata2[] = await itemValueTypesConverter.revert(i1, vv.attributeId);
-
-                            for (const m of ms) {
-                                const qry2: QueryResponse = await conn.query(`
-                                    INSERT INTO TBL_VIEW_VALIDATION_ERROR_METADATA (VIEW_VALIDATION_ERROR_ID, NAME) VALUES (?,?)
-                                `, [qry1.insertId, `Error on validationId=${currentContext.validationId} ItemId=${currentContext.item.id} attributeId=${vv.attributeId}`]);
-
-                                for (const e of m.entries) {
-                                    const qry3: QueryResponse = await conn.query(`
-                                        INSERT INTO TBL_VIEW_VALIDATION_ERROR_METADATA_ENTRY (VIEW_VALIDATION_ERROR_METADATA_ID, KEY, VALUE, DATA_TYPE) VALUES (?,?,?,?)
-                                    `, [qry2.insertId, e.key, e.value, e.dataType]);
-                                }
-                            }
+                        // insert error messages
+                        for (const msg of currentContext.errornousMessages) {
+                            const qry2: QueryResponse = await conn.query(`
+                                INSERT INTO TBL_VIEW_VALIDATION_ERROR (VIEW_VALIDATION_ID, ITEM_ID, ATTRIBUTE_ID, MESSAGE) VALUES (?,?,?,?)
+                            `, [validationId, msg.item.id, msg.attribute.id]);
                         }
                     });
                 }

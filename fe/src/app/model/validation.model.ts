@@ -43,7 +43,6 @@ export interface ValidationError {
     id: number;
     itemId: number;
     attributeId: number;
-    errors: string[];
-    value: Value;
+    message: string;
 }
 

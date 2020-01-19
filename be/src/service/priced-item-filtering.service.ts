@@ -7,7 +7,7 @@ import {
     AttributeMetadata2,
     AttributeMetadataEntry2, Item2,
     ItemMetadata2,
-    ItemMetadataEntry2, PricedItem2
+    ItemMetadataEntry2, ItemValue2, PricedItem2
 } from "../route/model/server-side.model";
 import {
     AreaValue,
@@ -23,7 +23,6 @@ import {_convert as _attributeConvert} from "./conversion-attribute.service";
 import {OperatorType} from "../model/operator.model";
 import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../model/unit.model";
 import moment from "moment";
-import {ItemValue2} from "../route/v1/POST-preview-bulk-edit.route";
 
 const SQL: string = `
            SELECT 

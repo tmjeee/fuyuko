@@ -6,7 +6,7 @@ import {ROLE_VIEW} from "../../model/role.model";
 import {getRule2} from "../../service/rule.service";
 import {Rule2} from "../model/server-side.model";
 import {Rule} from "../../model/rule.model";
-import {convert} from "../../service/rule-conversion.service";
+import {convert} from "../../service/conversion-rule.service";
 
 
 const httpAction: any[] = [
