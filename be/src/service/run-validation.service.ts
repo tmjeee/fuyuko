@@ -484,7 +484,30 @@ const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: Ite
     return false;
 };
 
+
 export const runValidation = async (viewId: number, validationId: number) => {
+    try {
+
+       await doInDbConnection(async (conn: Connection) => {
+            await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['IN_PROGRESS', validationId]);
+       });
+
+        await _runValidation(viewId, validationId);
+
+        await doInDbConnection(async (conn: Connection) => {
+            await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['COMPLETED', validationId]);
+        });
+
+    } catch (e) {
+        e(`${e.toString()}`, e);
+
+        await doInDbConnection(async (conn: Connection) => {
+            await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['FAILED', validationId]);
+        });
+    }
+};
+
+const _runValidation = async (viewId: number, validationId: number) => {
     let currentContext = {
         validationId,
     } as Context;
