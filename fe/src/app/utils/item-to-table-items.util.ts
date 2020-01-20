@@ -4,7 +4,6 @@ import {
   PricingStructureItemWithPrice,
   TablePricingStructureItemWithPrice
 } from '../model/pricing-structure.model';
-import {root} from "rxjs/internal-compatibility";
 
 ////// common
 export function copyAttrProperties(from: any, to: any) {

@@ -17,20 +17,24 @@ export class ValidationResultListingComponent {
 
     toDataSource(validation: Validation): {}[] {
         return [
-            { id: validation.id },
-            { name: validation.name},
-            { description: validation.description },
-            { viewId: validation.viewId },
-            { progress: validation.progress },
-            { lastUpdate: validation.lastUpdate },
-            { creationDate: validation.creationDate }
+            { key: 'id', value: validation.id },
+            { key: 'name', value: validation.name},
+            { key: 'description', value: validation.description },
+            { key: 'viewId', value: validation.viewId },
+            { key: 'progress', value: validation.progress },
+            { key: 'lastUpdate', value: validation.lastUpdate },
+            { key: 'creationDate', value: validation.creationDate }
         ];
     }
 
     async details($event: MouseEvent, validation: Validation) {
-        await this.router.navigate([{outlets: {
-            primary: ['/view-gen-layout', 'view', this.view.id, 'validation', validation.id],
-            help: ['view-help']
+        $event.preventDefault();
+        $event.stopImmediatePropagation();
+        console.log(this.view);
+        console.log(validation);
+        await this.router.navigate(['/view-gen-layout', {outlets: {
+            primary: ['validation-details', 'view', this.view.id, 'validation', validation.id],
+            // help: ['view-help']
         }}]);
     }
 }

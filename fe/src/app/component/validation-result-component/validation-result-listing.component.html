@@ -12,34 +12,17 @@
             </mat-expansion-panel-header>
             <mat-icon (click)="details($event, validation)">subdirectory_arrow_right</mat-icon>
             <table mat-table [dataSource]="toDataSource(validation)" class="mat-elevation-z8">
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef>Id</th>
-                    <td mat-cell *matCellDef="let element">{{element.id}}</td>
-                </ng-container>
-                <ng-container matColumnDef="name">
+                <ng-container matColumnDef="key">
                     <th mat-header-cell *matHeaderCellDef>Name</th>
-                    <td mat-cell *matCellDef="let element">{{element.name}}</td>
+                    <td mat-cell *matCellDef="let element">{{element.key}}</td>
                 </ng-container>
-                <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef>Description</th>
-                    <td mat-cell *matCelLDef="let element">{{element.description}}</td>
+                <ng-container matColumnDef="value">
+                    <th mat-header-cell *matHeaderCellDef>Value</th>
+                    <td mat-cell *matCellDef="let element">{{element.value}}</td>
                 </ng-container>
-                <ng-container matColumnDef="viewId">
-                    <th mat-header-cell *matHeaderCellDef>View Id</th>
-                    <td mat-cell *matCellDef="let element">{{element.viewId}}</td>
-                </ng-container>
-                <ng-container matColumnDef="progress">
-                    <th mat-header-cell *matHeaderCellDef>Progress</th>
-                    <td mat-cell *matCellDef="let element">{{element.progress}}</td>
-                </ng-container>
-                <ng-container matColumnDef="creationDate">
-                    <th mat-header-cell *matHeaderCellDef>Creation Date</th>
-                    <td mat-cell *matCellDef="let element">{{element.creationDate | date}}</td>
-                </ng-container>
-                <ng-container matColumnDef="lastUpdate">
-                    <td mat-header-cell *matHeaderCellDef>Last Update</td>
-                    <td mat-cell *matCellDef="let element">{{element.lastUpdate | date}}</td>
-                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['key', 'value']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['key', 'value']"></tr>
             </table>
         </mat-expansion-panel>
     </mat-accordion>

@@ -56,7 +56,7 @@ const httpAction: any[] = [
             `, [validationId, viewId])).reduce((validationResults: ValidationResult[], q: QueryI) => {
 
                 const m_validationResult_key = `${q.V_ID}`;
-                if (m_validationResult.has(m_validationResult_key)) {
+                if (!m_validationResult.has(m_validationResult_key)) {
                     const validationResult: ValidationResult = {
                         id : q.V_ID,
                         viewId : q.V_VIEW_ID,
@@ -69,6 +69,7 @@ const httpAction: any[] = [
                         errors: []
                     };
                     m_validationResult.set(m_validationResult_key, validationResult);
+                    validationResults.push(validationResult);
                 }
 
                 const m_validationError_key = `${q.E_ID}`;
@@ -92,7 +93,7 @@ const httpAction: any[] = [
                        creationDate: q.CREATION_DATE
                     }
                     m_validationLog.set(m_validationLog_key, validationLog);
-                    m_validationResult.get(m_validationLog_key).logs.push(validationLog);
+                    m_validationResult.get(m_validationResult_key).logs.push(validationLog);
                 }
 
                 return validationResults;

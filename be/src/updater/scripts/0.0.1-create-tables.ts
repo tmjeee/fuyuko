@@ -94,6 +94,7 @@ const TBL_VIEW_VALIDATION_ERROR = async () => {
            CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION_ERROR (
               ID INT PRIMARY KEY AUTO_INCREMENT,
               VIEW_VALIDATION_ID INT,
+              RULE_ID INT,
               ITEM_ID INT,
               ATTRIBUTE_ID INT,
               MESSAGE TEXT,

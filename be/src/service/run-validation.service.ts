@@ -34,7 +34,7 @@ interface Context {
    attribute?: Attribute;
    item?: Item;
    rule?: Rule;
-   errornousMessages: {item: Item, attribute: Attribute, message: string}[];
+   errornousMessages: {rule: Rule, item: Item, attribute: Attribute, message: string}[];
 }
 
 const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: ItemValTypes, op: OperatorType): boolean => {
@@ -498,8 +498,8 @@ export const runValidation = async (viewId: number, validationId: number) => {
             await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['COMPLETED', validationId]);
         });
 
-    } catch (e) {
-        e(`${e.toString()}`, e);
+    } catch (err) {
+        logger.e(`${err.toString()}`, err);
 
         await doInDbConnection(async (conn: Connection) => {
             await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['FAILED', validationId]);
@@ -585,6 +585,7 @@ const _runValidation = async (viewId: number, validationId: number) => {
                     const tmp = match(currentContext, att, i1, i2, op);
                     if (!tmp) { // this validation failed
                        currentContext.errornousMessages.push({
+                           rule,
                            attribute: att,
                            item,
                            message: `Attribute ${att.name} (${att.id}) value ${itemValueTypesToString.toString(i1)} ${op} ${itemValueTypesToString.toString(i2)} FAILED `
@@ -612,8 +613,8 @@ const _runValidation = async (viewId: number, validationId: number) => {
                         // insert error messages
                         for (const msg of currentContext.errornousMessages) {
                             const qry2: QueryResponse = await conn.query(`
-                                INSERT INTO TBL_VIEW_VALIDATION_ERROR (VIEW_VALIDATION_ID, ITEM_ID, ATTRIBUTE_ID, MESSAGE) VALUES (?,?,?,?)
-                            `, [validationId, msg.item.id, msg.attribute.id]);
+                                INSERT INTO TBL_VIEW_VALIDATION_ERROR (VIEW_VALIDATION_ID, RULE_ID, ITEM_ID, ATTRIBUTE_ID, MESSAGE) VALUES (?,?,?,?,?)
+                            `, [validationId, msg.rule.id, msg.item.id, msg.attribute.id, msg.message]);
                         }
                     });
                 }
