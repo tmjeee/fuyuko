@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {Rule, ValidateClause, WhenClause} from 'src/app/model/rule.model';
-import {StringValue} from '../../model/item.model';
+import {Item, StringValue} from '../../model/item.model';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '../../model/response.model';
 import config from '../../utils/config.util';
@@ -11,6 +11,7 @@ const URL_GET_ALL_RULES_BY_VIEW = () => `${config().api_host_url}/view/:viewId/r
 const URL_GET_RULE_BY_VIEW = () => `${config().api_host_url}/view/:viewId/rule/:ruleId`;
 const URL_POST_UPDATE_RULE_STATUS = () => `${config().api_host_url}/view/:viewId/rule/:ruleId/status/:status`;
 const URL_POST_UPDATE_RULES = () => `${config().api_host_url}/view/:viewId/rules`;
+const URL_GET_ITEMS = () => `${config().api_host_url}/view/:viewId/items/:itemIds`;
 
 @Injectable()
 export class RuleService {
@@ -58,5 +59,12 @@ export class RuleService {
         .replace(':viewId', `${viewId}`)
         .replace(':ruleId', `${rule.id}`)
         .replace(':status', 'DISABLED'), {});
+  }
+
+  getRulesById(viewId: number, itemIds: number[]): Observable<Item[]> {
+      return this.httpClient.get<Item[]>(
+          URL_GET_ITEMS()
+              .replace(':viewId', String(viewId))
+              .replace(':itemIds', itemIds.join(',')));
   }
 }

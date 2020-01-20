@@ -42,7 +42,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `view/:viewId/validation`;
+    const p = `/view/:viewId/validation`;
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
 }

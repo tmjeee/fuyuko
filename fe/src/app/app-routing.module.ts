@@ -49,6 +49,7 @@ import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-h
 import {EditRulePageComponent} from "./page/view-rules-page/edit-rule.page";
 import {ViewValidationPageComponent} from "./page/view-validation-page/view-validation.page";
 import {EditAttributePageComponent} from "./page/view-attributes-page/edit-attribute.page";
+import {ViewValidationDetailsPageComponent} from "./page/view-validation-details-page/view-validation-details.page";
 
 const routes: Routes = [
 
@@ -351,6 +352,14 @@ const routes: Routes = [
         path: 'validation',
         canActivate: [AuthGuard],
         component: ViewValidationPageComponent,
+        data: {
+          subSideNav: 'validation'
+        }
+      } as Route,
+      {
+        path: 'validation-details/view/:viewId/validation/:validationId',
+        canActivate: [AuthGuard],
+        component: ViewValidationDetailsPageComponent,
         data: {
           subSideNav: 'validation'
         }

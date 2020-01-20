@@ -5,8 +5,12 @@
             <mat-card-subtitle>Validation of view (it's attribute, item and data)</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            View Validation page
-            <app-validation-result></app-validation-result>
+            <div *ngIf="loading">Loading ...</div>
+            <app-validation-result-listing
+                            *ngIf="!loading"
+                            [view]="view"
+                            [validations]="validations">
+            </app-validation-result-listing>
         </mat-card-content>
     </mat-card>
 </div>

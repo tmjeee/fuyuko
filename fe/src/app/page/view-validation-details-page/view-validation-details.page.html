@@ -1,0 +1,10 @@
+<div class="view-validation-page">
+    <div *ngIf="loading">Loading ...</div>
+    <app-validation-result *ngIf="!loading"
+                           [validationResult]="validationResult"
+                           [view]="view"
+                           [items]="items"
+                           [rules]="rules"
+                           [attributes]="attributes">
+    </app-validation-result>
+</div>

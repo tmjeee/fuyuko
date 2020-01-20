@@ -1,18 +1,42 @@
 
 <div class="validation-result-component">
-    <div fxLayout="column">
-        <div fxFlex>
-            <div fxLayout="row">
-                <div fxFlex="1 1 auto">
-                    top left
+    <mat-tab-group>
+        <mat-tab label="Results">
+            <div fxLayout="column">
+                <div fxFlex>
+                    <div fxLayout="row">
+                        <div fxFlex="1 1 auto">
+                            top left
+                            <app-validation-result-tree
+                                    [items]="items"
+                                    [validationResult]="validationResult">
+                            </app-validation-result-tree>
+                        </div>
+                        <div fxFlex="1 1 auto">
+                            top right
+                            <div *ngIf="!currentRule || !currentItem">Select an item</div>
+                            <app-validation-result-console
+                                    *ngIf="currentRule && currentItem"
+                                    [rule]="currentRule"
+                                    [item]="currentItem"
+                                    [validationResult]="validationResult">
+                            </app-validation-result-console>
+                        </div>
+                    </div>
                 </div>
-                <div fxFlex="1 1 auto">
-                    top right
+                <div fxFlex>
+                    bottom
+                    <app-data-table
+                            (events)="onDataTableEvent($event)"
+                            (searchEvents)="onDataTableSearchEvent($event)"
+                            [itemAndAttributeSet]="itemAndAttributeSet">
+                    </app-data-table>
                 </div>
             </div>
-        </div>
-        <div fxFlex>
-            bottom
-        </div>
-    </div>
+        </mat-tab>
+        <mat-tab label="Logs">
+            <app-validation-result-log [validationResult]="validationResult">
+            </app-validation-result-log>
+        </mat-tab>
+    </mat-tab-group>
 </div>

@@ -123,8 +123,9 @@ import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-h
 import {EditRulePageComponent} from './page/view-rules-page/edit-rule.page';
 import {ViewValidationPageComponent} from './page/view-validation-page/view-validation.page';
 import {EditAttributePageComponent} from './page/view-attributes-page/edit-attribute.page';
-import {ValidationService} from "./service/validation-service/validation.service";
-import {ValidationResultModule} from "./component/validation-result-component/validation-result.module";
+import {ValidationService} from './service/validation-service/validation.service';
+import {ValidationResultModule} from './component/validation-result-component/validation-result.module';
+import { ViewValidationDetailsPageComponent } from './page/view-validation-details-page/view-validation-details.page';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -191,6 +192,7 @@ const appInitializer = (settingsService: SettingsService,
     ViewAttributesPageComponent,
     EditAttributePageComponent,
     ViewValidationPageComponent,
+    ViewValidationDetailsPageComponent,
     ViewDataTabularPageComponent,
     ViewDataThumbnailPageComponent,
     ViewDataListPageComponent,

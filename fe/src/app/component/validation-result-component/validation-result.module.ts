@@ -7,6 +7,10 @@ import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {ValidationResultComponent} from './validation-result.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {ValidationResultTreeComponent} from './validation-result-tree.component';
+import {ValidationResultConsoleComponent} from './validation-result-console.component';
+import {DataTableModule} from '../data-table-component/data-table.module';
+import {ValidationResultListingComponent} from './validation-result-listing.component';
+import {ValidationResultLogComponent} from './validation-result-log.component';
 
 @NgModule({
    imports: [
@@ -15,16 +19,22 @@ import {ValidationResultTreeComponent} from './validation-result-tree.component'
       FormsModule,
       ReactiveFormsModule,
       AppMaterialsModule,
-      DataEditorModule,
+      DataTableModule,
       FlexLayoutModule,
    ],
    declarations: [
        ValidationResultComponent,
        ValidationResultTreeComponent,
+       ValidationResultConsoleComponent,
+       ValidationResultListingComponent,
+       ValidationResultLogComponent,
    ],
    exports: [
       ValidationResultComponent,
       ValidationResultTreeComponent,
+      ValidationResultConsoleComponent,
+      ValidationResultListingComponent,
+      ValidationResultLogComponent,
    ]
 })
 export class ValidationResultModule {
