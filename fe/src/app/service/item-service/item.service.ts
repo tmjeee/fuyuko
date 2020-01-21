@@ -10,6 +10,7 @@ import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '../../model/response.model';
 
 
+const URL_GET_ITEMS = () => `${config().api_host_url}/view/:viewId/items/:itemIds`;
 const URL_GET_ALL_ITEMS = () => `${config().api_host_url}/view/:viewId/items`;
 const URL_UPDATE_ITEMS = () => `${config().api_host_url}/view/:viewId/items/update`;
 const URL_UPDATE_ITEM_STATUS = () => `${config().api_host_url}/view/:viewId/items/status/:status`;
@@ -58,5 +59,18 @@ export class ItemService {
           itemIds: items.map((i: Item) => i.id)
         });
     const deletedItems: Item[] = [];
+  }
+
+
+  getItemsById(viewId: number, itemIds: number[]): Observable<Item[]> {
+    return this.httpClient.get<Item[]>(
+        URL_GET_ITEMS()
+            .replace(':viewId', String(viewId))
+            .replace(':itemIds',
+                itemIds
+                    .filter((i: number) => i) // no nulls, undefined or zeros
+                    .filter((i: number, index: number, self: number[]) => self.indexOf(i) === index) // unique ones only
+                    .join(',')
+            ));
   }
 }

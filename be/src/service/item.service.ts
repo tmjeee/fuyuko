@@ -175,7 +175,7 @@ export const getItemsByIds = async (viewId: number, itemIds: number[]): Promise<
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
                 LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
-                WHERE I.VIEW_ID IN ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
+                WHERE I.VIEW_ID =? AND I.ID IN ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
             `, [viewId, itemIds]);
 
         return _doQ(q);

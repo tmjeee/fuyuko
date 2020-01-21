@@ -447,6 +447,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         ]
     });
 
+    /*
     const itemDef: CreateItemType =
         createAnItemType([
             createAnItemType([
@@ -462,15 +463,34 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
             ]),
             createAnItemType(),
         ]);
+     */
 
-    await _createItem(conn, pricingStructureId, itemDef);
-    await _createItem(conn, pricingStructureId, itemDef);
-    await _createItem(conn, pricingStructureId, itemDef);
-    await _createItem(conn, pricingStructureId, itemDef);
-    await _createItem(conn, pricingStructureId, itemDef);
-    await _createItem(conn, pricingStructureId, itemDef);
-    await _createItem(conn, pricingStructureId, itemDef);
-    await _createItem(conn, pricingStructureId, itemDef);
+    const itemDef1: CreateItemType =
+        createAnItemType([
+            createAnItemType(),
+            createAnItemType()
+        ]);
+    const itemDef2: CreateItemType =
+        createAnItemType();
+    const itemDef3: CreateItemType =
+        createAnItemType();
+    const itemDef4: CreateItemType =
+        createAnItemType();
+    const itemDef5: CreateItemType =
+        createAnItemType();
+    const itemDef6: CreateItemType =
+        createAnItemType();
+    const itemDef7: CreateItemType =
+        createAnItemType();
+
+
+    await _createItem(conn, pricingStructureId, itemDef1);
+    await _createItem(conn, pricingStructureId, itemDef2);
+    await _createItem(conn, pricingStructureId, itemDef3);
+    await _createItem(conn, pricingStructureId, itemDef4);
+    await _createItem(conn, pricingStructureId, itemDef5);
+    await _createItem(conn, pricingStructureId, itemDef6);
+    await _createItem(conn, pricingStructureId, itemDef7);
 }
 
 const _createItem = async (conn: Connection, pricingStructureId: number, args: CreateItemType, parentItemId: number = null) => {

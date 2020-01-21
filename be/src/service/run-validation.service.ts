@@ -27,7 +27,7 @@ import {getAttributesInView} from "./attribute.service";
 import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
 import moment from 'moment';
 import * as logger from '../logger';
-import * as itemValueTypesToString from '../shared-utils/item-val-types-to-string.utils';
+import {convertToDebugString} from "../shared-utils/ui-item-value-converters.util";
 
 interface Context {
    validationId: number;
@@ -546,8 +546,10 @@ const _runValidation = async (viewId: number, validationId: number) => {
 
                 await i(currentContext,
                     `Validating WhenClause ${whenClause.id} 
-                           (attributeId ${whenClause.attributeId} attributeName ${whenClause.attributeName} op ${whenClause.operator} 
-                           against itemValueTypes ${itemValueTypesToString.toString(whenClause.condition)})
+                           (attributeId ${whenClause.attributeId} attributeName ${whenClause.attributeName} 
+                           whenClause condition ${convertToDebugString(whenClause.condition)}
+                           op ${whenClause.operator} 
+                           against itemValueTypes ${convertToDebugString(whenClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
 
                 const tmp = match(currentContext, att, i1, i2, op);
@@ -555,8 +557,10 @@ const _runValidation = async (viewId: number, validationId: number) => {
 
                 await i(currentContext,
                     `Validated current WhenClause result is [${tmp}] overall WhenClause result is [${wr}] for WhenClause ${whenClause.id} 
-                           (attributeId ${whenClause.attributeId} attributeName ${whenClause.attributeName} op ${whenClause.operator} 
-                           against itemValueTypes ${itemValueTypesToString.toString(whenClause.condition)})
+                           (attributeId ${whenClause.attributeId} attributeName ${whenClause.attributeName} 
+                           whenClause condition ${convertToDebugString(whenClause.condition)}
+                           op ${whenClause.operator} 
+                           against itemValueTypes ${convertToDebugString(whenClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
             }
 
@@ -579,7 +583,7 @@ const _runValidation = async (viewId: number, validationId: number) => {
                     await i(currentContext,
                         `Validating ValidateClause ${validateClause.id} 
                            (attributeId ${validateClause.attributeId} attributeName ${validateClause.attributeName} op ${validateClause.operator} 
-                           against itemValueTypes ${itemValueTypesToString.toString(validateClause.condition)})
+                           against itemValueTypes ${convertToDebugString(validateClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
 
                     const tmp = match(currentContext, att, i1, i2, op);
@@ -588,7 +592,7 @@ const _runValidation = async (viewId: number, validationId: number) => {
                            rule,
                            attribute: att,
                            item,
-                           message: `Attribute ${att.name} (${att.id}) value ${itemValueTypesToString.toString(i1)} ${op} ${itemValueTypesToString.toString(i2)} FAILED `
+                           message: `Attribute ${att.name} (${att.id}) value ${convertToDebugString(i1)} ${op} ${convertToDebugString(i2)} FAILED `
                        });
                     }
 
@@ -596,8 +600,10 @@ const _runValidation = async (viewId: number, validationId: number) => {
 
                     await i(currentContext,
                         `Validated current ValidateClause result is [${tmp}] overall ValidateClause result is [${wr}] for ValidateClause ${validateClause.id} 
-                           (attributeId ${validateClause.attributeId} attributeName ${validateClause.attributeName} op ${validateClause.operator} 
-                           against itemValueTypes ${itemValueTypesToString.toString(validateClause.condition)})
+                           (attributeId ${validateClause.attributeId} attributeName ${validateClause.attributeName} 
+                           validateClause condition ${convertToDebugString(validateClause.condition)} 
+                           op ${validateClause.operator} 
+                           against itemValueTypes ${convertToDebugString(validateClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
                 }
 

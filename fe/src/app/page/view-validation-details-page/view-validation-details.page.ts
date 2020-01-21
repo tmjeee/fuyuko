@@ -67,7 +67,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
                 this.rules = r.rules;
                 this.validationResult = r.validationResult;
                 const itemIds: number[] = r.validationResult.errors.map((e: ValidationError) => e.itemId);
-                this.ruleService.getRulesById(this.view.id, itemIds)
+                this.itemService.getItemsById(this.view.id, itemIds)
                     .pipe(
                         tap((i: Item[]) => {
                             this.items = i;

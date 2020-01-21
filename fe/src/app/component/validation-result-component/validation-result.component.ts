@@ -7,7 +7,7 @@ import {View} from '../../model/view.model';
 import {Attribute} from '../../model/attribute.model';
 import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
 import {DataTableComponentEvent} from '../data-table-component/data-table.component';
-import {toTableItem} from "../../utils/item-to-table-items.util";
+import {toTableItem} from '../../utils/item-to-table-items.util';
 
 @Component({
     selector: 'app-validation-result',
