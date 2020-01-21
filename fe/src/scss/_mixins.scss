@@ -36,3 +36,16 @@
     }
   }
 }
+
+@mixin fix-mat-tab-no-scroll() {
+  ::ng-deep mat-tab-group {
+    .mat-tab-body-wrapper {
+      mat-tab-body {
+        overflow-y: hidden !important;
+        .mat-tab-body-content {
+          overflow-y: hidden !important;
+        }
+      }
+    }
+  }
+}

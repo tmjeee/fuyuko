@@ -1,3 +1,19 @@
-.validation-result-component {
+@import '../../../scss/mixins';
 
+.validation-result-component {
+  .content {
+    @include fix-mat-tab-no-scroll();
+    .left {
+      padding: 10px;
+      margin: 10px;
+    }
+    .right {
+      padding: 10px;
+      margin: 10px;
+    }
+    .bottom {
+      padding: 10px;
+      margin: 10px;
+    }
+  }
 }

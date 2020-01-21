@@ -2,35 +2,36 @@
 <div class="validation-result-component">
     <mat-tab-group>
         <mat-tab label="Results">
-            <div fxLayout="column">
+            <div fxLayout="column" class="content">
                 <div fxFlex>
                     <div fxLayout="row">
-                        <div fxFlex="1 1 auto">
-                            top left
-                            <app-validation-result-tree
-                                    [items]="items"
-                                    [validationResult]="validationResult">
-                            </app-validation-result-tree>
+                        <div fxFlex="1 1 auto" class="left mat-elevation-z10">
+                            <div class="">
+                               <app-validation-result-tree
+                                       [items]="items"
+                                       [validationResult]="validationResult">
+                               </app-validation-result-tree>
+                            </div>
                         </div>
-                        <div fxFlex="1 1 auto">
-                            top right
-                            <div *ngIf="!currentRule || !currentItem">Select an item</div>
-                            <app-validation-result-console
-                                    *ngIf="currentRule && currentItem"
-                                    [rule]="currentRule"
-                                    [item]="currentItem"
-                                    [validationResult]="validationResult">
-                            </app-validation-result-console>
+                        <div fxFlex="1 1 auto" class="right mat-elevation-z10">
+                            <div class="">
+                                <div *ngIf="!currentRule || !currentItem">Select an item</div>
+                                <app-validation-result-console
+                                        *ngIf="currentRule && currentItem"
+                                        [rule]="currentRule"
+                                        [item]="currentItem"
+                                        [validationResult]="validationResult">
+                                </app-validation-result-console>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div fxFlex>
-                    bottom
-                    <app-data-table
-                            (events)="onDataTableEvent($event)"
-                            (searchEvents)="onDataTableSearchEvent($event)"
-                            [itemAndAttributeSet]="itemAndAttributeSet">
-                    </app-data-table>
+                <div fxFlex class="bottom mat-elevation-z10">
+                        <app-data-table
+                                (events)="onDataTableEvent($event)"
+                                (searchEvents)="onDataTableSearchEvent($event)"
+                                [itemAndAttributeSet]="itemAndAttributeSet">
+                        </app-data-table>
                 </div>
             </div>
         </mat-tab>

@@ -39,14 +39,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.viewId = this.route.snapshot.params.viewId;
-        this.validationId = this.route.snapshot.params.validationId;
-        this.viewService.asObserver().pipe(
-            tap((v: View) => {
-                this.view = v;
-                this.reload();
-            })
-        ).subscribe();
+        this.reload();
     }
 
     ngOnDestroy(): void {
@@ -57,29 +50,36 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
 
     reload() {
         this.loading = true;
-        forkJoin({
-            attributes: this.attributeService.getAllAttributesByView(this.view.id),
-            rules: this.ruleService.getAllRulesByView(this.view.id),
-            validationResult: this.validationService.getValidationDetails(this.view.id, Number(this.validationId)),
-        }).pipe(
-            tap((r: {attributes: Attribute[], rules: Rule[], validationResult: ValidationResult}) => {
-                this.attributes = r.attributes;
-                this.rules = r.rules;
-                this.validationResult = r.validationResult;
-                const itemIds: number[] = r.validationResult.errors.map((e: ValidationError) => e.itemId);
-                this.itemService.getItemsById(this.view.id, itemIds)
-                    .pipe(
-                        tap((i: Item[]) => {
-                            this.items = i;
-                        }),
-                        finalize(() => {
-                            this.loading = false;
-                        })
-                    ).subscribe();
-            }),
-            catchError((e: Error) => {
-                this.loading = false;
-                return throwError(e);
+        this.viewId = this.route.snapshot.params.viewId;
+        this.validationId = this.route.snapshot.params.validationId;
+        this.viewService.getViewById(this.viewId).pipe(
+            tap((v: View) => {
+                this.view = v;
+                forkJoin({
+                    attributes: this.attributeService.getAllAttributesByView(this.view.id),
+                    rules: this.ruleService.getAllRulesByView(this.view.id),
+                    validationResult: this.validationService.getValidationDetails(this.view.id, Number(this.validationId)),
+                }).pipe(
+                    tap((r: {attributes: Attribute[], rules: Rule[], validationResult: ValidationResult}) => {
+                        this.attributes = r.attributes;
+                        this.rules = r.rules;
+                        this.validationResult = r.validationResult;
+                        const itemIds: number[] = r.validationResult.errors.map((e: ValidationError) => e.itemId);
+                        this.itemService.getItemsById(this.view.id, itemIds)
+                            .pipe(
+                                tap((i: Item[]) => {
+                                    this.items = i;
+                                }),
+                                finalize(() => {
+                                    this.loading = false;
+                                })
+                            ).subscribe();
+                    }),
+                    catchError((e: Error) => {
+                        this.loading = false;
+                        return throwError(e);
+                    })
+                ).subscribe();
             })
         ).subscribe();
     }

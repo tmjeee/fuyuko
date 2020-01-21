@@ -86,6 +86,7 @@ import registerGetItemsByViewRotue from './GET-items-by-view.route';
 import registerGetAllViewValidationsRoute from './GET-all-view-validations.route';
 import registerGetViewValidationResultRoute from './GET-view-validation-result.route';
 import registerPostViewValidationRoute from './POST-view-validation.route';
+import registerGetViewById from './GET-view-by-id.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -179,6 +180,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetAllViewValidationsRoute(v1AppRouter, registry);
     registerGetViewValidationResultRoute(v1AppRouter, registry);
     registerPostViewValidationRoute(v1AppRouter, registry);
+    registerGetViewById(v1AppRouter, registry);
 }
 
 
