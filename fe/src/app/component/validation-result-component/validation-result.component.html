@@ -27,11 +27,17 @@
                     </div>
                 </div>
                 <div fxFlex class="bottom mat-elevation-z10">
-                        <app-data-table
-                                (events)="onDataTableEvent($event)"
-                                (searchEvents)="onDataTableSearchEvent($event)"
-                                [itemAndAttributeSet]="itemAndAttributeSet">
-                        </app-data-table>
+                    <!--
+                    <app-data-table
+                            (events)="onDataTableEvent($event)"
+                            (searchEvents)="onDataTableSearchEvent($event)"
+                            [itemAndAttributeSet]="itemAndAttributeSet">
+                    </app-data-table>
+                    -->
+                    <app-validation-result-table
+                        (events)="onValidationResultTableEvent($event)"
+                        [itemAndAttributeSet]="itemAndAttributeSet">
+                    </app-validation-result-table>
                 </div>
             </div>
         </mat-tab>

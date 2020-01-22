@@ -12,6 +12,10 @@ import {RuleService} from '../../service/rule-service/rule.service';
 import {ViewService} from '../../service/view-service/view.service';
 import {catchError, finalize, tap} from 'rxjs/operators';
 import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ValidationResultTableComponentEvent} from '../../component/validation-result-component/validation-result-table.component';
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
     templateUrl: './view-validation-details.page.html',
@@ -32,6 +36,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
 
     constructor(private attributeService: AttributeService,
                 private itemService: ItemService,
+                private notificationService: NotificationsService,
                 private validationService: ValidationService,
                 private ruleService: RuleService,
                 private viewService: ViewService,
@@ -82,5 +87,22 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
                 ).subscribe();
             })
         ).subscribe();
+    }
+
+    onValidationResultEvent($event: ValidationResultTableComponentEvent) {
+        switch ($event.type) {
+            case 'modification':
+                forkJoin([
+                    this.itemService.saveTableItems(this.view.id, $event.modifiedItems)
+                ]).pipe(
+                    tap((r: [ApiResponse]) => {
+                        toNotifications(this.notificationService, r[0]);
+                        this.reload();
+                    })
+                ).subscribe();
+                break;
+            case 'reload':
+                break;
+        }
     }
 }

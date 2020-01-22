@@ -1,13 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ItemAndAttributeSet, TableItemAndAttributeSet} from '../../model/item-attribute.model';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {TableItemAndAttributeSet} from '../../model/item-attribute.model';
 import {Item, TableItem} from '../../model/item.model';
 import {ValidationResult} from '../../model/validation.model';
 import {Rule} from '../../model/rule.model';
 import {View} from '../../model/view.model';
 import {Attribute} from '../../model/attribute.model';
-import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
-import {DataTableComponentEvent} from '../data-table-component/data-table.component';
 import {toTableItem} from '../../utils/item-to-table-items.util';
+import {ValidationResultTableComponentEvent} from './validation-result-table.component';
+import {forkJoin} from 'rxjs';
+import {tap} from 'rxjs/operators';
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
 
 @Component({
     selector: 'app-validation-result',
@@ -24,10 +27,16 @@ export  class ValidationResultComponent implements OnInit {
     @Input() rules: Rule[];
     @Input() view: View;
 
+    @Output() events: EventEmitter<ValidationResultTableComponentEvent>;
+
     tableItems: TableItem[];
 
     currentRule: Rule;
     currentItem: Item;
+
+    constructor() {
+        this.events = new EventEmitter<ValidationResultTableComponentEvent>();
+    }
 
     ngOnInit(): void {
         this.tableItems = toTableItem(this.items);
@@ -37,9 +46,7 @@ export  class ValidationResultComponent implements OnInit {
         };
     }
 
-    onDataTableSearchEvent($event: ItemSearchComponentEvent) {
-    }
-
-    onDataTableEvent($event: DataTableComponentEvent) {
+    onValidationResultTableEvent($event: ValidationResultTableComponentEvent) {
+        this.events.emit($event);
     }
 }

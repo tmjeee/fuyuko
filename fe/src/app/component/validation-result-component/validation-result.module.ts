@@ -11,6 +11,7 @@ import {ValidationResultConsoleComponent} from './validation-result-console.comp
 import {DataTableModule} from '../data-table-component/data-table.module';
 import {ValidationResultListingComponent} from './validation-result-listing.component';
 import {ValidationResultLogComponent} from './validation-result-log.component';
+import {ValidationResultTableComponent} from "./validation-result-table.component";
 
 @NgModule({
    imports: [
@@ -28,6 +29,7 @@ import {ValidationResultLogComponent} from './validation-result-log.component';
        ValidationResultConsoleComponent,
        ValidationResultListingComponent,
        ValidationResultLogComponent,
+       ValidationResultTableComponent,
    ],
    exports: [
       ValidationResultComponent,
@@ -35,6 +37,7 @@ import {ValidationResultLogComponent} from './validation-result-log.component';
       ValidationResultConsoleComponent,
       ValidationResultListingComponent,
       ValidationResultLogComponent,
+      ValidationResultTableComponent,
    ]
 })
 export class ValidationResultModule {

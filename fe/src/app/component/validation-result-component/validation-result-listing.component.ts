@@ -34,7 +34,7 @@ export class ValidationResultListingComponent {
         console.log(validation);
         await this.router.navigate(['/view-gen-layout', {outlets: {
             primary: ['validation-details', 'view', this.view.id, 'validation', validation.id],
-            // help: ['view-help']
+            help: ['view-help']
         }}]);
     }
 }
