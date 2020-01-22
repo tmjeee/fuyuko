@@ -24,15 +24,11 @@
         <mat-table [dataSource]="datasource">
             <ng-container matColumnDef="selection" sticky>
                 <mat-header-cell class="selection-header" *matHeaderCellDef>
-                    <mat-checkbox (change)="masterToggle($event)"
-                                  [checked]="isMasterToggleChecked()"
-                                  [indeterminate]="isMasterToggleIndetermine()">
-                    </mat-checkbox>
                 </mat-header-cell>
                 <mat-cell class="selection" *matCellDef="let tableItem">
-                    <mat-checkbox (change)="nonMasterToggle($event, tableItem)"
+                    <mat-radio-button (change)="nonMasterToggle($event, tableItem)"
                                   [checked]="isNonMasterToggleChecked(tableItem)">
-                    </mat-checkbox>
+                    </mat-radio-button>
                 </mat-cell>
             </ng-container>
 
@@ -97,8 +93,10 @@
             </ng-container>
 
             <mat-header-row class="item-header" *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row class="item" *matRowDef="let tableItem; columns: displayedColumns;"></mat-row>
-            <mat-row class="item" *matRowDef="let tableItem; columns: childrenDisplayedColumns; when: isChildRow"
+            <mat-row class="item" [ngClass]="{'selected': rowSelectedCss(tableItem)}"
+                     *matRowDef="let tableItem; columns: displayedColumns;"></mat-row>
+            <mat-row class="item" [ngClass]="{'selected': rowSelectedCss(tableItem)}"
+                     *matRowDef="let tableItem; columns: childrenDisplayedColumns; when: isChildRow"
                      [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
         </mat-table>
     </div>

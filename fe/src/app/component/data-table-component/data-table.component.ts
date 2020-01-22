@@ -158,7 +158,7 @@ export class DataTableComponent implements OnInit, OnChanges {
       this.selectionModel.selected.length < this.itemAndAttributeSet.tableItems.length);
   }
 
-  nonMasterToggle($event: MatCheckboxChange, item: any) {
+  nonMasterToggle($event: MatCheckboxChange, item: TableItem) {
     if (this.selectionModel.isSelected(item)) {
       this.selectionModel.deselect(item);
     } else {

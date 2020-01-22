@@ -102,6 +102,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
                 ).subscribe();
                 break;
             case 'reload':
+                this.reload();
                 break;
         }
     }

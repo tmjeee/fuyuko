@@ -1,13 +1,26 @@
 import {CollectionViewer, DataSource, SelectionModel} from '@angular/cdk/collections';
-import {ItemValTypes, TableItem, Value} from '../../model/item.model';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Item, ItemValTypes, TableItem, Value} from '../../model/item.model';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChange,
+    SimpleChanges
+} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ItemValueAndAttribute, TableItemAndAttributeSet} from '../../model/item-attribute.model';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
-import {createNewItemValue, createNewTableItem} from '../../shared-utils/ui-item-value-creator.utils';
+import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
+import {MatRadioChange} from '@angular/material/radio';
+import {tap} from "rxjs/operators";
 
 export class ValidationResultTableDataSource extends DataSource<TableItem> {
 
@@ -27,7 +40,7 @@ export class ValidationResultTableDataSource extends DataSource<TableItem> {
 }
 
 export interface ValidationResultTableComponentEvent {
-    type: 'reload' | 'modification';
+    type: 'reload' | 'modification' | 'selection-changed';
     modifiedItems?: TableItem[];
 }
 
@@ -55,13 +68,16 @@ export interface AttributeInfo {
         ]),
     ],
 })
-export class DataTableComponent implements OnInit, OnChanges {
+export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChanges {
 
 
     counter = -1;
 
     @Output() events: EventEmitter<ValidationResultTableComponentEvent>;
     @Input() itemAndAttributeSet: TableItemAndAttributeSet;
+    @Input() observable: Observable<Item>;
+
+    subscription: Subscription;
 
     pendingSavingItems: Map<number, TableItem>;
 
@@ -77,10 +93,10 @@ export class DataTableComponent implements OnInit, OnChanges {
 
     filterOptionsVisible: boolean;
 
-    constructor() {
+    constructor(private changeDetectorRef: ChangeDetectorRef) {
         this.filterOptionsVisible = false;
         this.events = new EventEmitter();
-        this.selectionModel = new SelectionModel(true, []);
+        this.selectionModel = new SelectionModel(false, []);
         this.datasource = new ValidationResultTableDataSource();
         this.pendingSavingItems = new Map();
         this.rowInfoMap = new Map();
@@ -103,6 +119,35 @@ export class DataTableComponent implements OnInit, OnChanges {
         });
         this.populateDisplayColumns();
         this.datasource.update([...this.itemAndAttributeSet.tableItems]);
+        if (this.observable) {
+            this.subscription = this.observable
+                .pipe(
+                    tap((i: Item) => {
+                        if (i) {
+                            this.handleExternalItemChange(i);
+                        }
+
+                    })
+                ).subscribe();
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+    }
+
+    rowSelectedCss(n: TableItem): boolean {
+        return this.selectionModel.isSelected(n);
+    }
+
+    handleExternalItemChange(i: Item) {
+        const t: TableItem = this.itemAndAttributeSet.tableItems.find((ti: TableItem) => ti.id === i.id);
+        if (t) {
+            this.selectionModel.select(t);
+            // this.changeDetectorRef.detectChanges();
+        }
     }
 
     populateDisplayColumns()  {
@@ -125,38 +170,18 @@ export class DataTableComponent implements OnInit, OnChanges {
     }
 
 
-    masterToggle($event: MatCheckboxChange) {
-        if (this.itemAndAttributeSet.tableItems.length > 0 &&
-            this.selectionModel.selected.length === this.itemAndAttributeSet.tableItems.length) {
-            this.selectionModel.clear();
-        } else {
-            this.itemAndAttributeSet.tableItems.forEach((i: TableItem) => {
-                this.selectionModel.select(i);
-            });
-        }
-    }
 
     hasItemModification(): boolean {
         return (this.pendingSavingItems.size > 0);
     }
 
-    isMasterToggleChecked(): boolean {
-        return (this.itemAndAttributeSet.tableItems.length > 0 &&
-            this.selectionModel.selected.length === this.itemAndAttributeSet.tableItems.length);
-    }
 
-    isMasterToggleIndetermine(): boolean {
-        return (this.itemAndAttributeSet.tableItems.length > 0 &&
-            this.selectionModel.selected.length > 0 &&
-            this.selectionModel.selected.length < this.itemAndAttributeSet.tableItems.length);
-    }
-
-    nonMasterToggle($event: MatCheckboxChange, item: any) {
-        if (this.selectionModel.isSelected(item)) {
-            this.selectionModel.deselect(item);
-        } else {
-            this.selectionModel.select(item);
-        }
+    nonMasterToggle($event: MatRadioChange, item: TableItem) {
+        this.selectionModel.select(item);
+        this.events.emit({
+            type: 'selection-changed',
+            modifiedItems: [item]
+        });
     }
 
     isNonMasterToggleChecked(item: TableItem): boolean {
@@ -278,5 +303,7 @@ export class DataTableComponent implements OnInit, OnChanges {
         }
         return value;
     }
+
 }
+
 

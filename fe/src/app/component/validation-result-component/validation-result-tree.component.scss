@@ -1,0 +1,13 @@
+.validation-result-tree-component {
+  ::ng-deep mat-tree {
+    mat-tree-node {
+      &.selected {
+        background-color: var(--my-app-primary-default);
+        color: var(--my-app-primary-default-contrast);
+      }
+      .icon-text {
+        margin-left: 15px;
+      }
+    }
+  }
+}
