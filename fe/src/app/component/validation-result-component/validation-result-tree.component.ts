@@ -7,6 +7,8 @@ import {ValidationError, ValidationResult} from '../../model/validation.model';
 interface Node {
     i: Item;
     e: ValidationError[];
+    isItem: boolean;
+    isError: boolean;
     name: string;
     children: Node[];
 }
@@ -15,6 +17,8 @@ const createNode = (i: Item, vr: ValidationResult): Node => {
     const n: Node = {
         i,
         name: i ? i.name : '',
+        isItem: true,
+        isError: false,
         e: [],
         children: []
     };
@@ -24,6 +28,8 @@ const createNode = (i: Item, vr: ValidationResult): Node => {
             const nn: Node = {
                 i: null,
                 name: `Validation Error #${errr.id}`,
+                isError: true,
+                isItem: false,
                 e: [],
                 children: []
             };
@@ -90,7 +96,7 @@ export class ValidationResultTreeComponent implements OnInit {
         this.treeFlattener = new MatTreeFlattener<Node, Flattened>(
             (n: Node, level: number) => ({
                 node: n,
-                expandable: !!n.children,
+                expandable: (!!n.children && !!n.children.length),
                 level
             } as Flattened),
             getLevelFn, isExpandableFn, getChildrenFn

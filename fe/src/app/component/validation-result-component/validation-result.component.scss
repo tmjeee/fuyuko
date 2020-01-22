@@ -1,8 +1,8 @@
 @import '../../../scss/mixins';
 
 .validation-result-component {
+  @include fix-mat-tab-no-scroll();
   .content {
-    @include fix-mat-tab-no-scroll();
     .left {
       padding: 10px;
       margin: 10px;

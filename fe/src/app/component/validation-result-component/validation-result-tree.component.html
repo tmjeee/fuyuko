@@ -7,7 +7,7 @@
       <mat-tree-node *matTreeNodeDef="let n; when: hasChild" matTreeNodePadding>
          <button mat-icon-button matTreeNodeToggle>
             <mat-icon class="mat-icon-rtl-mirror">
-               {{treeControl.isExpandable(n) ? 'expand_more' : 'chevron_right'}}
+               {{treeControl.isExpanded(n) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
          </button>
          {{n.node.name}}
