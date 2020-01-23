@@ -95,10 +95,7 @@ const _addItem = async (conn: Connection, viewId: number, item2: Item2, parentId
     return newItemId;
 }
 
-
-export const getAllItemsInView = async (viewId: number): Promise<Item2[]> => {
-    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryA = await conn.query(`
+const SQL_1_A = `
                 SELECT
                     I.ID AS I_ID,
                     I.PARENT_ID AS I_PARENT_ID,
@@ -129,8 +126,20 @@ export const getAllItemsInView = async (viewId: number): Promise<Item2[]> => {
                 LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
-            `, [viewId]);
+`;
 
+const SQL_1_B = `${SQL_1_A} AND I.PARENT_ID IS NULL`;
+
+const SQL_2_A = `${SQL_1_A} AND I.ID IN ?`;
+
+const SQL_2_B = `${SQL_2_A} AND I.PARENT_ID IS NULL`;
+
+
+
+
+export const getAllItemsInView = async (viewId: number, parentOnly: boolean = true): Promise<Item2[]> => {
+    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(parentOnly ? SQL_1_B : SQL_1_A, [viewId]);
         return _doQ(q);
     });
 
@@ -143,40 +152,9 @@ export const getAllItemsInView = async (viewId: number): Promise<Item2[]> => {
     return item2s;
 }
 
-export const getItemsByIds = async (viewId: number, itemIds: number[]): Promise<Item2[]> => {
+export const getItemsByIds = async (viewId: number, itemIds: number[], parentOnly: boolean = true): Promise<Item2[]> => {
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryA = await conn.query(`
-                SELECT
-                    I.ID AS I_ID,
-                    I.PARENT_ID AS I_PARENT_ID,
-                    I.VIEW_ID AS I_VIEW_ID,
-                    I.NAME AS I_NAME,
-                    I.DESCRIPTION AS I_DESCRIPTION,
-                    I.STATUS AS I_STATUS,
-                    A.ID AS A_ID,
-                    A.TYPE AS A_TYPE,
-                    A.NAME AS A_NAME,
-                    A.STATUS AS A_STATUS,
-                    A.DESCRIPTION AS A_DESCRIPTION,
-                    V.ID AS V_ID,
-                    M.ID AS M_ID,
-                    M.NAME AS M_NAME,
-                    E.ID AS E_ID,
-                    E.KEY AS E_KEY,
-                    E.VALUE AS E_VALUE,
-                    E.DATA_TYPE AS E_DATA_TYPE,
-                    IMG.ID AS IMG_ID,
-                    IMG.MIME_TYPE AS IMG_MIME_TYPE,
-                    IMG.NAME AS IMG_NAME,
-                    IMG.SIZE AS IMG_SIZE
-                FROM TBL_ITEM AS I
-                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
-                LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
-                LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
-                LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
-                WHERE I.VIEW_ID =? AND I.ID IN ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
-            `, [viewId, itemIds]);
+        const q: QueryA = await conn.query(parentOnly ? SQL_2_B : SQL_2_A, [viewId, itemIds]);
 
         return _doQ(q);
     });

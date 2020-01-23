@@ -60,7 +60,11 @@
 
             <ng-container matColumnDef="children-selection" sticky>
                 <mat-header-cell class="selection-header" *matHeaderCellDef></mat-header-cell>
-                <mat-cell class="selection" *matCellDef="let tableItem"></mat-cell>
+                <mat-cell class="selection" *matCellDef="let tableItem">
+                    <mat-radio-button (change)="nonMasterToggle($event, tableItem)"
+                                      [checked]="isNonMasterToggleChecked(tableItem)">
+                    </mat-radio-button>
+                </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="expansion" sticky>

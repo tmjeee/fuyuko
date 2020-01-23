@@ -1,6 +1,8 @@
 .validation-result-log-component {
   margin: 10px;
   .logs {
+    height: 90vh;
+    overflow-y: scroll;
     .log {
       .id {
         min-width: 50px;

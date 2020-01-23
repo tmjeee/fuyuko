@@ -173,15 +173,30 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
         return (n === this.selected);
     }
 
-    handleExternalItemChange(i: Item) {
-        console.log('*** tree received item change event', i);
-        const f: Flattened = this.treeControl.dataNodes.find((n: Flattened) => n.node.i && n.node.i.id === i.id);
-        if (this.selected !== f) {
-            if (f) {
-                this.selected = f;
-                this.treeControl.expand(f);
-                // this.fireEvent(f);
+    private b(ns: Flattened[], itemId: number) {
+        for (const n of ns) {
+            if (n.node.i && n.node.i.id === itemId) {
+                return n;
             }
+            const children: Flattened[] = this.treeControl.getDescendants(n);
+            if (children) {
+                const d: Flattened = this.b(children, itemId);
+                if (d) {
+                    return d;
+                }
+            }
+        }
+        return null;
+    }
+
+    handleExternalItemChange(i: Item) {
+        console.log('******* handleExternalItemChange (tree)');
+        const f: Flattened = this.b(this.treeControl.dataNodes, i.id);
+        console.log('*** f', f);
+        if (f && this.selected !== f) {
+            this.selected = f;
+            this.treeControl.expand(f);
+            // this.fireEvent(f);
         }
     }
 
@@ -215,7 +230,7 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
 
     onNodeClicked($event: MouseEvent, n: Flattened) {
         this.selected = n;
-        // this.fireEvent(n);
+        this.fireEvent(n);
     }
 
     hasChild(index: number, n: Flattened)  {
@@ -231,7 +246,6 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
                     }
                 })
             ).subscribe();
-            console.log('*** tree subscribed');
         }
         const n: Node[] = merge(this.items, this.validationResult, this.rules);
         this.datasource.update(n);

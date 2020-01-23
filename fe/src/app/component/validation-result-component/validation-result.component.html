@@ -5,21 +5,21 @@
             <div fxLayout="column" class="content left mat-elevation-z10">
                 <div fxFlex>
                     <div fxLayout="row">
-                        <div fxFlex="1 1 auto" class="left">
+                        <div fxFlex="0 0 40%" class="left">
                             <div class="">
                                <app-validation-result-tree
                                        (event)="onValidationResultTreeEvent($event)"
-                                       [observable]="itemChangeEvents"
+                                       [observable]="treeItemChangeEvents"
                                        [items]="items"
                                        [rules]="rules"
                                        [validationResult]="validationResult">
                                </app-validation-result-tree>
                             </div>
                         </div>
-                        <div fxFlex="1 1 auto" class="right">
+                        <div fxFlex="0 0 58%" class="right">
                             <div class="">
                                 <app-validation-result-console
-                                        [itemObservable]="itemChangeEvents.asObservable()"
+                                        [itemObservable]="tableItemChangeEvents"
                                         [validationErrorObservable]="validationErrorChangeEvents.asObservable()"
                                         [validationResult]="validationResult">
                                 </app-validation-result-console>
@@ -30,7 +30,7 @@
                 <div fxFlex class="bottom">
                     <app-validation-result-table
                         (events)="onValidationResultTableEvent($event)"
-                        [observable]="itemChangeEvents"
+                        [observable]="tableItemChangeEvents"
                         [itemAndAttributeSet]="itemAndAttributeSet">
                     </app-validation-result-table>
                 </div>

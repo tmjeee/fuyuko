@@ -27,14 +27,16 @@ export  class ValidationResultComponent implements OnInit {
 
     @Output() events: EventEmitter<ValidationResultTableComponentEvent>;
 
-    itemChangeEvents: BehaviorSubject<Item>;
-    validationErrorChangeEvents: BehaviorSubject<ValidationError[]>;
+    treeItemChangeEvents: BehaviorSubject<Item>; // for tree  @input
+    tableItemChangeEvents: BehaviorSubject<Item>; // for table and console @Input
+    validationErrorChangeEvents: BehaviorSubject<ValidationError[]>; // for console @Input
 
     tableItems: TableItem[];
 
     constructor() {
         this.events = new EventEmitter<ValidationResultTableComponentEvent>();
-        this.itemChangeEvents = new BehaviorSubject<Item>(null);
+        this.tableItemChangeEvents = new BehaviorSubject<Item>(null);
+        this.treeItemChangeEvents = new BehaviorSubject<Item>(null);
         this.validationErrorChangeEvents = new BehaviorSubject<ValidationError[]>(null);
     }
 
@@ -46,15 +48,30 @@ export  class ValidationResultComponent implements OnInit {
         };
     }
 
+    private b(items: Item[], itemId: number): Item {
+        for (const i of items) {
+            if (i.id === itemId) {
+                return i;
+            }
+            if (i.children) {
+                const ii: Item = this.b(i.children, itemId);
+                if (ii) {
+                    return ii;
+                }
+            }
+        }
+        return null;
+    }
+
     onValidationResultTableEvent($event: ValidationResultTableComponentEvent) {
         this.events.emit($event);
         switch ($event.type) {
             case 'selection-changed':
                 const tableItems: TableItem[] = $event.modifiedItems;
                 if (tableItems && tableItems.length) {
-                    const it: Item = this.items.find((i: Item) => i.id === tableItems[0].id);
+                    const it: Item = this.b(this.items, tableItems[0].id);
                     if (it) {
-                        this.fireItemChangeEvent(it);
+                        this.fireTreeItemChangeEvent(it);
                     }
                 }
                 break;
@@ -64,24 +81,29 @@ export  class ValidationResultComponent implements OnInit {
     onValidationResultTreeEvent($event: ValidationResultTreeComponentEvent) {
         switch ( $event.type) {
             case 'selection-error-changed':
-                this.fireItemChangeEvent($event.item);
                 // if $event.error is truthy that means a 'validation' node is clicked, else an 'item' node is clicked
+                this.fireTableItemChangeEvent($event.item);
                 this.fireValidationErrorEvent($event.error ? [$event.error] : $event.errors);
                 break;
             case 'selection-item-changed':
-                this.fireItemChangeEvent($event.item);
+                this.fireTableItemChangeEvent($event.item);
                 this.fireValidationErrorEvent($event.errors);
                 break;
             case 'selection-rule-changed':
-                this.fireItemChangeEvent($event.item);
+                this.fireTableItemChangeEvent($event.item);
                 this.fireValidationErrorEvent($event.errors);
                 break;
         }
     }
 
-    fireItemChangeEvent(i: Item) {
-        console.log('****** validation-result-comp item change', i);
-        this.itemChangeEvents.next(i);
+    fireTableItemChangeEvent(i: Item) {
+        console.log('****** validation-result-comp table item change', i);
+        this.tableItemChangeEvents.next(i);
+    }
+
+    fireTreeItemChangeEvent(i: Item) {
+        console.log('****** validation-result-comp tree item change', i);
+        this.treeItemChangeEvents.next(i);
     }
 
     fireValidationErrorEvent(e: ValidationError[]) {
