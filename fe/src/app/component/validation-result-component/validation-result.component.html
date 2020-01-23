@@ -2,48 +2,45 @@
 <div class="validation-result-component">
     <mat-tab-group>
         <mat-tab label="Results">
-            <div fxLayout="column" class="content">
+            <div fxLayout="column" class="content left mat-elevation-z10">
                 <div fxFlex>
                     <div fxLayout="row">
-                        <div fxFlex="1 1 auto" class="left mat-elevation-z10">
+                        <div fxFlex="1 1 auto" class="left">
                             <div class="">
                                <app-validation-result-tree
+                                       (event)="onValidationResultTreeEvent($event)"
+                                       [observable]="itemChangeEvents"
                                        [items]="items"
+                                       [rules]="rules"
                                        [validationResult]="validationResult">
                                </app-validation-result-tree>
                             </div>
                         </div>
-                        <div fxFlex="1 1 auto" class="right mat-elevation-z10">
+                        <div fxFlex="1 1 auto" class="right">
                             <div class="">
-                                <div *ngIf="!currentRule || !currentItem">Select an item</div>
                                 <app-validation-result-console
-                                        *ngIf="currentRule && currentItem"
-                                        [rule]="currentRule"
-                                        [item]="currentItem"
+                                        [itemObservable]="itemChangeEvents.asObservable()"
+                                        [validationErrorObservable]="validationErrorChangeEvents.asObservable()"
                                         [validationResult]="validationResult">
                                 </app-validation-result-console>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div fxFlex class="bottom mat-elevation-z10">
-                    <!--
-                    <app-data-table
-                            (events)="onDataTableEvent($event)"
-                            (searchEvents)="onDataTableSearchEvent($event)"
-                            [itemAndAttributeSet]="itemAndAttributeSet">
-                    </app-data-table>
-                    -->
+                <div fxFlex class="bottom">
                     <app-validation-result-table
                         (events)="onValidationResultTableEvent($event)"
+                        [observable]="itemChangeEvents"
                         [itemAndAttributeSet]="itemAndAttributeSet">
                     </app-validation-result-table>
                 </div>
             </div>
         </mat-tab>
         <mat-tab label="Logs">
-            <app-validation-result-log [validationResult]="validationResult">
-            </app-validation-result-log>
+            <div class="mat-elevation-z10">
+                <app-validation-result-log [validationResult]="validationResult">
+                </app-validation-result-log>
+            </div>
         </mat-tab>
     </mat-tab-group>
 </div>

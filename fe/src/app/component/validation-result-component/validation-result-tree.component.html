@@ -1,17 +1,22 @@
 <div class="validation-result-tree-component">
    <mat-tree [dataSource]="datasource" [treeControl]="treeControl">
+      <!-- tree node leaf -->
       <mat-tree-node *matTreeNodeDef="let n" matTreeNodePadding [ngClass]="{'selected': isNodeSelected(n) }">
          <button mat-icon-button class="mat-icon-rtl-mirror" (click)="onNodeClicked($event, n)">
+            <mat-icon *ngIf="n.node.isItem" class="mat-icon-rtl-mirror">work_outline</mat-icon>
             <mat-icon *ngIf="n.node.isError" class="mat-icon-rtl-mirror">error_outline</mat-icon>
+            <mat-icon *ngIf="n.node.isRule" class="mat-icon-rtl-mirror">restore</mat-icon>
          </button>
          <span class="icon-text">{{n.node.name}}</span>
       </mat-tree-node>
+      <!-- tree node parent -->
       <mat-tree-node *matTreeNodeDef="let n; when: hasChild" matTreeNodePadding [ngClass]="{'selected': isNodeSelected(n)}">
          <button mat-icon-button matTreeNodeToggle (click)="onNodeClicked($event, n)">
             <mat-icon class="mat-icon-rtl-mirror">
                {{treeControl.isExpanded(n) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
             <mat-icon *ngIf="n.node.isItem" class="mat-icon-rtl-mirror">work_outline</mat-icon>
+            <mat-icon *ngIf="n.node.isRule" class="mat-icon-rtl-mirror">restore</mat-icon>
             <mat-icon *ngIf="n.node.isError" class="mat-icon-rtl-mirror">error_outline</mat-icon>
          </button>
          <span class="icon-text">{{n.node.name}}</span>

@@ -29,7 +29,9 @@ export class GlobalErrorhandler extends ErrorHandler {
                     // unauthorized 401
                     if (httpErrorResponse.error.context === 'login') { // when trying to login
                     } else {
-                        this.locationHistoryService.storeLastUrlKey(location.href);
+                        if (!location.href.endsWith('/login-layout/login')) {
+                            this.locationHistoryService.storeLastUrlKey(location.href);
+                        }
                     }
                     this.getNgZone().run(() => {
                         this.notificationService.error('Unauthorized', httpErrorResponse.error.errors.map((e) => e.msg).join(', '));

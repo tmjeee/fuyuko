@@ -1,11 +1,11 @@
 @import '../../../scss/mixins';
 
-$spacing: 20px;
+$spacing: 5px;
 
 .validation-result-component {
   @include fix-mat-tab-no-scroll();
   .content {
-    margin-top: 10px;
+    margin: 10px;
     .left {
       padding: $spacing;
       margin: $spacing;

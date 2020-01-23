@@ -32,6 +32,13 @@ export interface ValidationResult {
     errors: ValidationError[];
 }
 
+export interface ValidationRule {
+    id: number;
+    name: string;
+    description: string;
+    errors: ValidationError[];
+}
+
 export interface ValidationLog {
     id: number;
     level: Level;
@@ -41,6 +48,7 @@ export interface ValidationLog {
 
 export interface ValidationError {
     id: number;
+    ruleId: number;
     itemId: number;
     attributeId: number;
     message: string;

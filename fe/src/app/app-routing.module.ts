@@ -46,10 +46,10 @@ import {PartnerDataListPageComponent} from './page/partner-data-list-page/partne
 import {PartnerDataThumbnailPageComponent} from './page/partner-data-thumbnail-page/partner-data-thumbnail.page';
 import {PartnerHelpPageComponent} from './page/partner-help-page/partner-help.page';
 import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-help.page';
-import {EditRulePageComponent} from "./page/view-rules-page/edit-rule.page";
-import {ViewValidationPageComponent} from "./page/view-validation-page/view-validation.page";
-import {EditAttributePageComponent} from "./page/view-attributes-page/edit-attribute.page";
-import {ViewValidationDetailsPageComponent} from "./page/view-validation-details-page/view-validation-details.page";
+import {EditRulePageComponent} from './page/view-rules-page/edit-rule.page';
+import {ViewValidationPageComponent} from './page/view-validation-page/view-validation.page';
+import {EditAttributePageComponent} from './page/view-attributes-page/edit-attribute.page';
+import {ViewValidationDetailsPageComponent} from './page/view-validation-details-page/view-validation-details.page';
 
 const routes: Routes = [
 
@@ -479,7 +479,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { enableTracing: true, scrollPositionRestoration: 'enabled'})],
+  imports: [RouterModule.forRoot(routes, { enableTracing: false, scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

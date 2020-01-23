@@ -20,7 +20,7 @@ import {MatCheckboxChange} from '@angular/material/checkbox';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
 import {MatRadioChange} from '@angular/material/radio';
-import {tap} from "rxjs/operators";
+import {tap} from 'rxjs/operators';
 
 export class ValidationResultTableDataSource extends DataSource<TableItem> {
 
@@ -126,9 +126,9 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
                         if (i) {
                             this.handleExternalItemChange(i);
                         }
-
                     })
                 ).subscribe();
+            console.log('**** table subscribed');
         }
     }
 
@@ -143,10 +143,11 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
     }
 
     handleExternalItemChange(i: Item) {
+        console.log('*** table received item change ', i);
         const t: TableItem = this.itemAndAttributeSet.tableItems.find((ti: TableItem) => ti.id === i.id);
         if (t) {
             this.selectionModel.select(t);
-            // this.changeDetectorRef.detectChanges();
+            this.changeDetectorRef.detectChanges();
         }
     }
 

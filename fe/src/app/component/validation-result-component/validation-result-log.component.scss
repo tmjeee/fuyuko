@@ -1,0 +1,18 @@
+.validation-result-log-component {
+  margin: 10px;
+  .logs {
+    .log {
+      .id {
+        min-width: 50px;
+      }
+      .level {
+        min-width: 100px;
+      }
+      .date {
+        min-width: 150px;
+      }
+      .message {
+      }
+    }
+  }
+}
