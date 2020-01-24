@@ -1,7 +1,8 @@
 import {AbstractPage} from "./abstract.page";
+import {ActualPage} from "./actual.page";
 
 
-export class DashboardPage extends AbstractPage {
+export class DashboardPage extends AbstractPage implements ActualPage<DashboardPage> {
 
     visit(): DashboardPage {
         cy.visit('/dashboard-layout/(dashboard//help:dashboard-help)');

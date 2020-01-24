@@ -1,6 +1,8 @@
 import {DashboardPage} from "./dashboard.page";
+import {ActualPage} from "./actual.page";
 
-export class LoginPage {
+export class LoginPage implements ActualPage<LoginPage> {
+
     visit(): LoginPage {
          cy.visit(`/login-layout/login`);
          return this;

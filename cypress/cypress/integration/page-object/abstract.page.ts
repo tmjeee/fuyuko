@@ -11,7 +11,7 @@ import {JobsPage} from "./jobs.page";
 import {PartnerPage} from "./partner.page";
 
 
-export class AbstractPage {
+export abstract class AbstractPage {
 
     visitProfilePage() {
         cy.get(`[test-sidenav]='profile'`).click();

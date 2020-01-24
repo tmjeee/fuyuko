@@ -9,6 +9,7 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
+    "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
