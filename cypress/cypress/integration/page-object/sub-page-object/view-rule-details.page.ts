@@ -1,10 +1,8 @@
-import {AbstractPage} from "../abstract.page";
 import {ActualPage} from "../actual.page";
 
-export class ViewRuleDetailsPage extends AbstractPage implements ActualPage<ViewRuleDetailsPage> {
+export class ViewRuleDetailsPage implements ActualPage<ViewRuleDetailsPage> {
 
     constructor(private ruleId: number) {
-        super();
     }
 
     validateTitle(): ViewRuleDetailsPage {

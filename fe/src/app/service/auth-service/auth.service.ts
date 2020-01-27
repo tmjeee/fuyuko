@@ -52,7 +52,7 @@ export class AuthService {
   logout(): Observable<void> {
      return this.httpClient.post<void>(`${URL_LOGOUT()}`, {
      }).pipe(
-         tap((_) => {
+         tap((x: void) => {
              this.destroyToken();
              this.subject.next(null);
          })
@@ -66,7 +66,7 @@ export class AuthService {
         lastName: myself.lastName,
         email: myself.email
     }).pipe(
-        tap(this.afterSaveCallback.bind(this))
+        tap((u: User) => this.afterSaveCallback(u))
     );
   }
 
@@ -75,7 +75,7 @@ export class AuthService {
         userId: myself.id,
         theme
     }).pipe(
-        tap(this.afterSaveCallback.bind(this))
+        tap(this.afterSaveCallback.bind(this) as (u: User) => void)
     );
   }
 
@@ -84,7 +84,7 @@ export class AuthService {
           userId: myself.id,
           password
       }).pipe(
-          tap(this.afterSaveCallback.bind(this))
+          tap(this.afterSaveCallback.bind(this) as (u: User) => void)
       );
   }
   private afterSaveCallback(u: User) {

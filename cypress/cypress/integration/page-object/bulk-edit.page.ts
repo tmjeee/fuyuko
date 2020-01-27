@@ -1,8 +1,9 @@
-import {AbstractPage} from "./abstract.page";
 import {ActualPage} from "./actual.page";
 
 
-export class BulkEditPage extends AbstractPage implements ActualPage<BulkEditPage> {
+export class BulkEditPage implements ActualPage<BulkEditPage> {
+
+    constructor() { }
 
     visit(): BulkEditPage {
         cy.visit('/gen-layout/(bulk-edit//help:bulk-edit-help)');

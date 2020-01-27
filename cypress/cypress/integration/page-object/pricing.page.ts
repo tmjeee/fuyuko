@@ -1,8 +1,9 @@
-import {AbstractPage} from "./abstract.page";
 import {ActualPage} from "./actual.page";
 
 
-export class PricingPage extends AbstractPage implements ActualPage<PricingPage> {
+export class PricingPage implements ActualPage<PricingPage> {
+
+    constructor() { }
 
     visit(): PricingPage {
         cy.visit('/gen-layout/(pricing-structure//help:pricing-help)');

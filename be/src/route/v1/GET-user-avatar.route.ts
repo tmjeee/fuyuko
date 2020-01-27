@@ -1,10 +1,9 @@
-import {Router, Request, Response, NextFunction} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {NextFunction, Request, Response, Router} from "express";
+import {validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {Registry} from "../../registry";
-import {valid} from "semver";
 
 const sendNoAvatarAvatar = async (res: Response, conn: Connection) => {
     const q: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_IMAGE WHERE TAG = ?',
@@ -21,7 +20,7 @@ const sendNoAvatarAvatar = async (res: Response, conn: Connection) => {
 
 const httpAction = [
     [
-        check('userId')
+        check('userId').exists()
     ],
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {

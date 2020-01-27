@@ -3,27 +3,27 @@
   <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" class="form">
     <mat-form-field>
       <mat-label>First Name</mat-label>
-      <input matInput placeholder="First Name" required [formControl]="formControlFirstName">
+      <input matInput placeholder="First Name" required [formControl]="formControlFirstName" [attr.test-field-firstName]="''">
       <mat-hint align="end">Your first name</mat-hint>
       <mat-error *ngIf="formControlFirstName.invalid">First name is invalid</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Last Name</mat-label>
-      <input matInput placeholder="Last Name" required [formControl]="formControlLastName">
+      <input matInput placeholder="Last Name" required [formControl]="formControlLastName" [attr.test-field-lastName]="''">
       <mat-hint align="end">Your last name</mat-hint>
       <mat-error *ngIf="formControlLastName.invalid">Last name is invalid</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Email</mat-label>
-      <input matInput placeholder="Email" required [formControl]="formControlEmail">
+      <input matInput placeholder="Email" required [formControl]="formControlEmail" [attr.test-field-email]="''">
       <mat-hint align="end">Your email address</mat-hint>
       <mat-error *ngIf="formControlEmail.invalid">Email is invalid</mat-error>
     </mat-form-field>
 
     <div class="control">
-      <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid">Update Profile Info</button>
+      <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid" [attr.test-profile-submit-button]="''">Update Profile Info</button>
     </div>
   </form>
 </div>

@@ -1,9 +1,8 @@
-import {AbstractPage} from "./abstract.page";
 import {ImportPage} from "./sub-page-object/import.page";
 import {ExportPage} from "./sub-page-object/export.page";
 
 
-export class ImportExportPage extends AbstractPage {
+export class ImportExportPage {
 
     visit(): ImportPage {
         cy.visit('/import-export-gen-layout/(import//help:import-help)');

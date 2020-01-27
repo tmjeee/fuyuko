@@ -10,6 +10,7 @@
       <div class="predefined-avatar-list">
         <div class="predefined-avatar" *ngFor="let predefinedAvatar of allPredifinedAvatars()">
           <img [ngClass]="{'selected': (selectedAvatar && predefinedAvatar.name == selectedAvatar.name)}"
+               [attr.test-predefined-avatar-name]="predefinedAvatar.name"
                [attr.src]="globalAvatarUrl(predefinedAvatar)"
                (click)="onPredefinedAvatarClicked($event, predefinedAvatar)">
         </div>
@@ -26,6 +27,6 @@
     </div>
   </div>
   <div mat-dialog-actions>
-    <button type="button" mat-flat-button color="primary" (click)="onDone($event)">Ok</button>
+    <button type="button" [attr.test-change-avatar-button]="''" mat-flat-button color="primary" (click)="onDone($event)">Ok</button>
   </div>
 </div>

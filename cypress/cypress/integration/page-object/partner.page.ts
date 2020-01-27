@@ -4,7 +4,7 @@ import {PartnerListPage} from "./sub-page-object/partner-list.page";
 import {PartnerThubnailPage} from "./sub-page-object/partner-thumbnail.page";
 
 
-export class PartnerPage extends AbstractPartnerPage {
+export class PartnerPage {
 
     visitPartnerTablePage(): PartnerTablePage {
         cy.visit('/partner-layout/(table//help:partner-help)');

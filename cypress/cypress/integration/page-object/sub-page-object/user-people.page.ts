@@ -1,7 +1,6 @@
 import {ActualPage} from "../actual.page";
-import {AbstractPage} from "../abstract.page";
 
-export class UserPeoplePage extends AbstractPage implements ActualPage<UserPeoplePage> {
+export class UserPeoplePage implements ActualPage<UserPeoplePage> {
 
     validateTitle(): UserPeoplePage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'user-people');

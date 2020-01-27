@@ -8,6 +8,7 @@ import registerPostActivateInvirationRoute from './POST-activate-invitation.rout
 import registerPostApproveSelfRegistrationRoute from './POST-approve-self-registration.route';
 import registerPostCreateInvitationRoute from './POST-create-invitation.route';
 import registerGetUserAvatarRoutes from './GET-user-avatar.route';
+import registerGetUserAvatarInfoRoutes from './GET-user-avatar-info.route';
 import registerGetGlobalAvatarRoute from './GET-global-avatar.route';
 import registerGetInvitationByCodeRoute from './GET-invitation-by-code.route';
 import registerGetAllGlobalAvatarsRoute from './GET-all-global-avatars.route';
@@ -101,6 +102,7 @@ const reg = (router: Router, regi: Registry) => {
     registerPostApproveSelfRegistrationRoute(v1AppRouter, registry);
     registerPostCreateInvitationRoute(v1AppRouter, registry);
     registerGetUserAvatarRoutes(v1AppRouter, registry);
+    registerGetUserAvatarInfoRoutes(v1AppRouter, registry);
     registerGetGlobalAvatarRoute(v1AppRouter, registry);
     registerGetAllGlobalAvatarsRoute(v1AppRouter, registry);
     registerGetInvitationByCodeRoute(v1AppRouter, registry);
@@ -109,7 +111,6 @@ const reg = (router: Router, regi: Registry) => {
     registerPostSelfRegisterRoute(v1AppRouter, registry);
     registerPostSaveUserAvatarRoute(v1AppRouter, registry);
     registerPostSaveUserRoute(v1AppRouter, registry);
-    registerGetUserAvatarRoutes(v1AppRouter, registry);
     registerGetUserRoute(v1AppRouter, registry);
     registerGetAllGroupsRoute(v1AppRouter, registry);
     registerGetGroupByIdRoute(v1AppRouter, registry);

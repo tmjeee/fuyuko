@@ -1,4 +1,3 @@
-import {AbstractPage} from "./abstract.page";
 import {ViewRulePage} from "./sub-page-object/view-rule.page";
 import {ViewRuleDetailsPage} from "./sub-page-object/view-rule-details.page";
 import {ViewAttributePage} from "./sub-page-object/view-attribute.page";
@@ -11,7 +10,7 @@ import {ViewValidationDetailsPage} from "./sub-page-object/view-validation-detai
 import {ViewViewPage} from "./sub-page-object/view-view.page";
 
 
-export class ViewPage extends AbstractPage {
+export class ViewPage  {
 
     visit(): ViewRulePage {
         cy.visit(`/view-gen-layout/(rules//help:view-help)`);

@@ -277,6 +277,7 @@ const TBL_USER_AVATAR = async () => {
             ID INT PRIMARY KEY AUTO_INCREMENT,
             USER_ID INT,
             GLOBAL_AVATAR_ID INT,
+            NAME VARCHAR(200),
             MIME_TYPE VARCHAR(200),
             SIZE INT,
             CONTENT LONGBLOB

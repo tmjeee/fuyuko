@@ -9,7 +9,7 @@ export class LoginPage implements ActualPage<LoginPage> {
     }
 
     validateTitle(): LoginPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'login');
+         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'login');
         return this;
     }
 
@@ -19,5 +19,4 @@ export class LoginPage implements ActualPage<LoginPage> {
         cy.get(`[test-button-login]`).should('not.be.disabled').click();
         return new DashboardPage();
     }
-
 }

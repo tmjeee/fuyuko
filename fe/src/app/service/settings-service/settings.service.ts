@@ -19,6 +19,8 @@ let RUNTIME_SETTINGS: RuntimeSettings = {
 
 export const KEY = `MY_APP_RUNTIME_SETTINGS`;
 
+// todo: RuntimeSettings and Settings need to be consolidated into just one and create API for saving them in downstream service
+
 @Injectable()
 export class SettingsService {
 
@@ -34,6 +36,7 @@ export class SettingsService {
     }
 
     saveRuntimeSettings(r: RuntimeSettings): RuntimeSettings {
+        // todo: save using API
         RUNTIME_SETTINGS = {...r};
         localStorage.setItem(KEY, JSON.stringify(RUNTIME_SETTINGS));
         return RUNTIME_SETTINGS;
@@ -41,8 +44,9 @@ export class SettingsService {
 
     getLocalRuntimeSettings(): RuntimeSettings {
         let r = JSON.parse(localStorage.getItem(KEY));
-        if (!r) {
-          this.saveRuntimeSettings(r);
+        if (!r) { // should always have it in localStorage
+          // this.saveRuntimeSettings(r);
+          console.error(`Cannot find runtime settings from local storage !!!`);
           r = {...SETTINGS};
         }
         return r;
@@ -51,6 +55,7 @@ export class SettingsService {
     // use only when logged in, after that 'getLocalRuntimeSettings()' would suffice (see appInitializer function)
     getRuntimeSettings(u: User): Observable<RuntimeSettings> {
         const runtimeSettings: RuntimeSettings = this.ms(RUNTIME_SETTINGS, SETTINGS);
+        localStorage.setItem(KEY, JSON.stringify(runtimeSettings));
         return of(runtimeSettings);
     }
 

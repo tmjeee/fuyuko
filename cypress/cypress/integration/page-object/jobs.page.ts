@@ -1,8 +1,9 @@
-import {AbstractPage} from "./abstract.page";
 import {ActualPage} from "./actual.page";
 
 
-export class JobsPage extends AbstractPage implements ActualPage<JobsPage> {
+export class JobsPage implements ActualPage<JobsPage> {
+
+    constructor() { }
 
     visit(): JobsPage {
         cy.visit('/gen-layout/(jobs//help:jobs-help)');

@@ -13,3 +13,11 @@ export interface UserAvatarResponse {
   message: string;
   status: ResponseStatus;
 }
+
+export interface UserAvatar {
+    global: boolean;
+    name: string;
+    mimeType: string;
+    size: number;
+    id: number
+}

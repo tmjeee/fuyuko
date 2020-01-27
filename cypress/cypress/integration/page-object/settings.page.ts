@@ -1,8 +1,9 @@
-import {AbstractPage} from "./abstract.page";
 import {ActualPage} from "./actual.page";
 
 
-export class SettingsPage extends AbstractPage implements ActualPage<SettingsPage> {
+export class SettingsPage implements ActualPage<SettingsPage> {
+
+    constructor() { }
 
     visit(): SettingsPage {
         cy.visit(`/gen-layout/(settings//help:settings-help)`);

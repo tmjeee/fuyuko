@@ -73,7 +73,7 @@ export const getUserById = async (userId: number): Promise<User>  => {
         return q.reduce((u: User, i: QueryI, index: number) => {
            if (index === 0) {
                u.id = i.U_ID;
-               u.firstName = i.U_USERNAME;
+               u.firstName = i.U_FIRSTNAME;
                u.lastName = i.U_LASTNAME;
                u.username = i.U_USERNAME;
                u.theme = i.UT_THEME;

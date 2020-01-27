@@ -1,10 +1,8 @@
-import {AbstractPage} from "../abstract.page";
 import {ActualPage} from "../actual.page";
 
-export class ViewValidationDetailsPage extends AbstractPage implements ActualPage<ViewValidationDetailsPage> {
+export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetailsPage> {
 
     constructor(private viewId: number, private validationId: number) {
-        super();
     }
 
     validateTitle(): ViewValidationDetailsPage {

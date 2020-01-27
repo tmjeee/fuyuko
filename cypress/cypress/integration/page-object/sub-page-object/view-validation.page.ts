@@ -1,7 +1,6 @@
-import {AbstractPage} from "../abstract.page";
 import {ActualPage} from "../actual.page";
 
-export class ViewValidationPage extends AbstractPage implements ActualPage<ViewValidationPage> {
+export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
     validateTitle(): ViewValidationPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-validations');

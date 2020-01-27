@@ -1,10 +1,8 @@
-import {AbstractPage} from "../abstract.page";
 import {ActualPage} from "../actual.page";
 
-export class ViewAttributeDetailsPage extends AbstractPage implements ActualPage<ViewAttributeDetailsPage> {
+export class ViewAttributeDetailsPage implements ActualPage<ViewAttributeDetailsPage> {
 
     constructor(private attributeId: number) {
-        super();
     }
 
     validateTitle(): ViewAttributeDetailsPage {
