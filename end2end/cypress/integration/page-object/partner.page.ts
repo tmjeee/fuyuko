@@ -1,4 +1,3 @@
-import {AbstractPartnerPage} from "./abstract-partner.page";
 import {PartnerTablePage} from "./sub-page-object/partner-table.page";
 import {PartnerListPage} from "./sub-page-object/partner-list.page";
 import {PartnerThubnailPage} from "./sub-page-object/partner-thumbnail.page";

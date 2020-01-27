@@ -56,4 +56,50 @@ describe("user-role", () => {
             util.validateHelpNavStateOpen(false);
         });
     });
+
+    it ('VIEW should toggle between exapand and collapsed', () => {
+        userRolePage
+            .toggleRole('VIEW')
+            .verifyRolePanelExpanded('VIEW', true);
+        userRolePage
+            .toggleRole('VIEW')
+            .verifyRolePanelExpanded('VIEW', false);
+    });
+
+
+    it ('EDIT should toggle between exapand and collapsed', () => {
+        userRolePage
+            .toggleRole('EDIT')
+            .verifyRolePanelExpanded('EDIT', true);
+        userRolePage
+            .toggleRole('EDIT')
+            .verifyRolePanelExpanded('EDIT', false);
+    });
+
+
+    it ('ADMIN should toggle between exapand and collapsed', () => {
+        userRolePage
+            .toggleRole('ADMIN')
+            .verifyRolePanelExpanded('ADMIN', true);
+        userRolePage
+            .toggleRole('ADMIN')
+            .verifyRolePanelExpanded('ADMIN', false);
+    });
+
+
+    it ('EDIT should toggle between exapand and collapsed', () => {
+        userRolePage
+            .toggleRole('PARTNER')
+            .verifyRolePanelExpanded('PARTER', true);
+        userRolePage
+            .toggleRole('PARTNER')
+            .verifyRolePanelExpanded('PARTNER', false);
+    });
+
+
+    it ('should be able to add group to VIEW role', () => {
+        userRolePage
+            .toggleRole('VIEW')
+            .searchRole('VIEW', 'Group', 'EDIT Group');
+    });
 });

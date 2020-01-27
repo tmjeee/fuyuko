@@ -6,6 +6,7 @@
     <input type="text"
            placeholder="Group Name to add to role"
            matInput
+           [attr.test-field-search]="''"
            [matAutocomplete]="auto"
            [formControl]="formControlGroupSearch">
     <mat-hint>Search from auto suggest group to add to role</mat-hint>
@@ -14,7 +15,9 @@
                     autoActiveFirstOption
                     [displayWith]="displayFn"
                     (optionSelected)="onGroupSearchSelected($event)">
-    <mat-option *ngFor="let group of groupSearchResult | async" [value]="group">
+    <mat-option *ngFor="let group of groupSearchResult | async"
+                [attr.test-auto-complete-option]="group.name"
+                [value]="group">
       {{group['name']}}
     </mat-option>
   </mat-autocomplete>
