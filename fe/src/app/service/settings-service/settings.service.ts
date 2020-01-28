@@ -2,6 +2,10 @@ import {Injectable} from '@angular/core';
 import {User} from '../../model/user.model';
 import {RuntimeSettings, Settings} from '../../model/settings.model';
 import {Observable, of} from 'rxjs';
+import config from "../../utils/config.util";
+import {HttpClient} from "@angular/common/http";
+import {map, tap} from "rxjs/operators";
+import {run} from "tslint/lib/runner";
 
 let SETTINGS: Settings = {
     id: 1,
@@ -19,24 +23,36 @@ let RUNTIME_SETTINGS: RuntimeSettings = {
 
 export const KEY = `MY_APP_RUNTIME_SETTINGS`;
 
-// todo: RuntimeSettings and Settings need to be consolidated into just one and create API for saving them in downstream service
+const URL_GET_USER_SETTINGS = () => `${config().api_host_url}/user/:userId/settings`;
+const URL_POST_USER_SETTINGS = () => `${config().api_host_url}/user/:userId/settings`;
 
 @Injectable()
 export class SettingsService {
 
-    saveSettings(s: Settings): Observable<Settings> {
-        SETTINGS = {...s};
-        this.ms(RUNTIME_SETTINGS, SETTINGS);
-        return of(SETTINGS);
+    constructor(private httpClient: HttpClient) { }
+
+    saveSettings(user: User, s: Settings): Observable<Settings> {
+        return this.httpClient.post(URL_POST_USER_SETTINGS().replace(':userId', String(user.id)), SETTINGS)
+            .pipe(
+                map((_: any) => {
+                    SETTINGS = {...s};
+                    this.mergeAndSaveToLocal(RUNTIME_SETTINGS, SETTINGS);
+                    return SETTINGS;
+                })
+            );
     }
 
     getSettings(u: User): Observable<Settings> {
-        // todo:
-        return of (SETTINGS);
+        return this.httpClient.get<Settings>(URL_GET_USER_SETTINGS().replace(':userId', String(u.id)))
+            .pipe(
+                tap((s: Settings) => {
+                    SETTINGS = {...s};
+                    this.mergeAndSaveToLocal(RUNTIME_SETTINGS, SETTINGS);
+                })
+            );
     }
 
     saveRuntimeSettings(r: RuntimeSettings): RuntimeSettings {
-        // todo: save using API
         RUNTIME_SETTINGS = {...r};
         localStorage.setItem(KEY, JSON.stringify(RUNTIME_SETTINGS));
         return RUNTIME_SETTINGS;
@@ -45,18 +61,24 @@ export class SettingsService {
     getLocalRuntimeSettings(): RuntimeSettings {
         let r = JSON.parse(localStorage.getItem(KEY));
         if (!r) { // should always have it in localStorage
-          // this.saveRuntimeSettings(r);
           console.error(`Cannot find runtime settings from local storage !!!`);
           r = {...SETTINGS};
+          this.saveRuntimeSettings(r);
         }
         return r;
     }
 
     // use only when logged in, after that 'getLocalRuntimeSettings()' would suffice (see appInitializer function)
     getRuntimeSettings(u: User): Observable<RuntimeSettings> {
-        const runtimeSettings: RuntimeSettings = this.ms(RUNTIME_SETTINGS, SETTINGS);
-        localStorage.setItem(KEY, JSON.stringify(runtimeSettings));
-        return of(runtimeSettings);
+        return this.httpClient.get<Settings>(URL_GET_USER_SETTINGS().replace(':userId', String(u.id)))
+            .pipe(
+               map((s: Settings) => {
+                   SETTINGS = s;
+                   const runtimeSettings: RuntimeSettings = this.mergeAndSaveToLocal(RUNTIME_SETTINGS, SETTINGS);
+                   localStorage.setItem(KEY, JSON.stringify(runtimeSettings));
+                   return runtimeSettings;
+               })
+            );
     }
 
     // use only when logged out, after that 'getLocalRuntimeSettings()' would suffice (see appInitializer function)
@@ -65,13 +87,13 @@ export class SettingsService {
         return of(null);
     }
 
-    private ms(runtimeSettings: RuntimeSettings, settings: Settings): RuntimeSettings {
-        const rs: RuntimeSettings = this.m(runtimeSettings, settings);
+    private mergeAndSaveToLocal(runtimeSettings: RuntimeSettings, settings: Settings): RuntimeSettings {
+        const rs: RuntimeSettings = this.merge(runtimeSettings, settings);
         localStorage.setItem(KEY, JSON.stringify(rs));
         return rs;
     }
 
-    private m(runtimeSettings: RuntimeSettings, settings: Settings): RuntimeSettings {
+    private merge(runtimeSettings: RuntimeSettings, settings: Settings): RuntimeSettings {
         const rs: RuntimeSettings = ({
             openHelpNav: this.g<boolean>(RUNTIME_SETTINGS.openHelpNav, SETTINGS.defaultOpenHelpNav),
             openSideNav: this.g<boolean>(RUNTIME_SETTINGS.openSideNav, SETTINGS.defaultOpenSideNav),

@@ -1,6 +1,6 @@
 
 
-export interface Settings {
+export class Settings {
     id: number;
 
     defaultOpenHelpNav: boolean;

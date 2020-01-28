@@ -10,8 +10,9 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
-    "tsc": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cypress-open": "npx cypress open",
+    "cypress-run": "npx cypress run",
+    "check-cyclic-dependencies": "madge --cyclic ./integration"
   },
   "author": "",
   "license": "ISC"

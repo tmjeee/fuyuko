@@ -67,7 +67,7 @@ const httpAction: any[] = [
                             E.RULE_ID AS E_RULE_ID,
                             E.ITEM_ID AS E_ITEM_ID,
                             E.MESSAGE AS E_MESSAGE,
-                            E.ATTRIBUTE_ID AS E_ATTRIBUTE_ID,
+                            E.VIEW_ATTRIBUTE_ID AS E_VIEW_ATTRIBUTE_ID,
                             E.CREATION_DATE AS E_CREATION_DATE,
                             E.LAST_UPDATE AS E_LAST_UPDATE
                         FROM TBL_VIEW_VALIDATION_ERROR AS E 
@@ -81,7 +81,7 @@ const httpAction: any[] = [
                                 id: q.E_ID,
                                 itemId: q.E_ITEM_ID,
                                 ruleId: q.E_RULE_ID,
-                                attributeId: q.E_ATTRIBUTE_ID,
+                                attributeId: q.E_VIEW_ATTRIBUTE_ID,
                                 message: q.E_MESSAGE,
                             };
                             m_validationError.set(m_validationError_key, validationError);

@@ -1,6 +1,7 @@
 
 import moment from 'moment';
 import {Level} from "../model/level.model";
+import {EOL} from 'os';
 
 export const l = (level: Level, msg: string, ...a: any[]) => {
    switch(level) {

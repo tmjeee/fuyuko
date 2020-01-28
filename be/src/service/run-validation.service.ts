@@ -619,7 +619,7 @@ const _runValidation = async (viewId: number, validationId: number) => {
                         // insert error messages
                         for (const msg of currentContext.errornousMessages) {
                             const qry2: QueryResponse = await conn.query(`
-                                INSERT INTO TBL_VIEW_VALIDATION_ERROR (VIEW_VALIDATION_ID, RULE_ID, ITEM_ID, ATTRIBUTE_ID, MESSAGE) VALUES (?,?,?,?,?)
+                                INSERT INTO TBL_VIEW_VALIDATION_ERROR (VIEW_VALIDATION_ID, RULE_ID, ITEM_ID, VIEW_ATTRIBUTE_ID, MESSAGE) VALUES (?,?,?,?,?)
                             `, [validationId, msg.rule.id, msg.item.id, msg.attribute.id, msg.message]);
                         }
                     });
