@@ -26,7 +26,7 @@ export const getSettings = async (userId: number, conn: Connection): Promise<Set
                 break;
             case 'boolean':
                 // @ts-ignore
-                s[q.SETTING] = Boolean(q.VALUE);
+                s[q.SETTING] = Boolean(Number(q.VALUE));
                 break;
         }
     }
@@ -35,14 +35,16 @@ export const getSettings = async (userId: number, conn: Connection): Promise<Set
 
 export const createSettingsIfNotExists = async (userId: number, conn: Connection): Promise<boolean> => {
     const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER_SETTING WHERE USER_ID=?`, [userId]);
+    console.log('***** createSettingsIfNotExists', q[0].COUNT);
     if (q[0].COUNT <= 0) { // there is not yet a settings for this user
         for (let p in DEFAULT_SETTINGS) {
             // @ts-ignore
             const v = DEFAULT_SETTINGS[p];
+            console.log('****************** v', v, typeof v);
             if (p !== 'id' && DEFAULT_SETTINGS.hasOwnProperty(p)) {
                 conn.query(`
                             INSERT INTO TBL_USER_SETTING ( USER_ID, SETTING, VALUE, TYPE) VALUES (?,?,?,?)
-                         `, [userId, p, v, (typeof p)]);
+                         `, [userId, p, v, (typeof v)]);
             }
         }
         return true;

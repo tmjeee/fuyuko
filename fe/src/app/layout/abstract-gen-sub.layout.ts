@@ -17,12 +17,12 @@ export class AbstractGenSubLayoutComponent extends AbstractGenLayoutComponent im
               route: ActivatedRoute,
               router: Router) {
     super(notificationService, authService, settingsService, router, route);
-    this.subSideBarOpened = this.runtimeSettings.openSubSideNav;
   }
 
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.subSideBarOpened = this.runtimeSettings.openSubSideNav;
   }
 
   onSubSidebarButtonClicked($event: MouseEvent) {

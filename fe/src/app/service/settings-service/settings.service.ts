@@ -59,12 +59,14 @@ export class SettingsService {
     }
 
     getLocalRuntimeSettings(): RuntimeSettings {
+        console.log('**8 lcoal storage', localStorage.getItem(KEY));
         let r = JSON.parse(localStorage.getItem(KEY));
+        console.log('****** getLocalRuntimeSettings() ', r,    !r);
         if (!r) { // should always have it in localStorage
           console.error(`Cannot find runtime settings from local storage !!!`);
-          r = {...SETTINGS};
-          this.saveRuntimeSettings(r);
+          r = this.mergeAndSaveToLocal(RUNTIME_SETTINGS, SETTINGS);
         }
+        console.log('*** runtime settings', r);
         return r;
     }
 
@@ -75,7 +77,7 @@ export class SettingsService {
                map((s: Settings) => {
                    SETTINGS = s;
                    const runtimeSettings: RuntimeSettings = this.mergeAndSaveToLocal(RUNTIME_SETTINGS, SETTINGS);
-                   localStorage.setItem(KEY, JSON.stringify(runtimeSettings));
+                   console.log('************************ runtimeSettings', runtimeSettings);
                    return runtimeSettings;
                })
             );

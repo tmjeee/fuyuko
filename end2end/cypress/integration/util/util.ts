@@ -12,14 +12,14 @@ export const clearAllMessageToasts = () => {
     cy.get('simple-notifications')
         .find('.simple-notification')
         .each(($el: any, index: number, $list: any[]) => {
-            cy.wrap($el).click();
+            cy.wrap($el).click({force: true});
         });
 }
 
 
 export const clickOnSuccessMessageToasts = (callbackFn: Function) => {
     cy.get('simple-notifications').find('.simple-notification.success').each((n, index, list) => {
-        cy.wrap(n).click();
+        cy.wrap(n).click({force: true});
         if (index === (list.length -1)) { // last one
             callbackFn && callbackFn();
         }
@@ -28,7 +28,7 @@ export const clickOnSuccessMessageToasts = (callbackFn: Function) => {
 
 export const clickOnErrorMessageToasts = (callbackFn: Function) => {
     cy.get('simple-notifications').find('.simple-notification.error').then((n) => {
-        cy.wrap(n).click();
+        cy.wrap(n).click({force: true});
         callbackFn && callbackFn();
     });
 }

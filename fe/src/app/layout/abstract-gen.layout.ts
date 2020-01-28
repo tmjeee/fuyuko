@@ -30,13 +30,14 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
               protected settingsService: SettingsService,
               protected router: Router,
               protected route: ActivatedRoute) {
-    this.runtimeSettings = this.settingsService.getLocalRuntimeSettings();
-    this.helpNavOpened = this.runtimeSettings.openHelpNav;
-    this.sideNavOpened = this.runtimeSettings.openSideNav;
   }
 
 
   ngOnInit(): void {
+    this.runtimeSettings = this.settingsService.getLocalRuntimeSettings();
+    console.log('******** ASbstractGenLayout runtime settings', this.runtimeSettings);
+    this.helpNavOpened = this.runtimeSettings.openHelpNav;
+    this.sideNavOpened = this.runtimeSettings.openSideNav;
     this.routeSubSideNavData = this.findSubSideNavData([this.route.snapshot]);
     this.routerEventSubscription = this.router.events
       .pipe(
