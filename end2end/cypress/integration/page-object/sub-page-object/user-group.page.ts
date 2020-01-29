@@ -24,4 +24,50 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
         return this;
     }
 
+    toggleGroupPanel(groupName: string): UserGroupPage {
+        cy.get(`[test-expansion-panel-header='${groupName}']`).click({force: true});
+        return this;
+    }
+
+    verifyRolePanelExpanded(groupName: string, expanded: boolean): UserGroupPage {
+        cy.get(`[test-expansion-panel-content='${groupName}'] > *`)
+            .should(expanded ? 'be.visible': 'not.be.visible');
+        return this;
+    }
+
+    searchForAutoCompleteUserToAddToGroup(groupName: string, search: string, autoCompleteUsername: string): UserGroupPage {
+        cy.get(`[test-expansion-panel-content='${groupName}'`)
+            .find(`[test-field-search]`)
+            .clear()
+            .type(search)
+            .wait(5000)
+        cy.get(`[test-auto-complete-option='${autoCompleteUsername}']`)
+            .focus();
+        cy.get(`[test-auto-complete-option='${autoCompleteUsername}']`)
+            .focus()
+            .click({force: true});
+        return this;
+    }
+
+    verifyUserInGroup(groupName: string, username: string): UserGroupPage {
+        cy.get(`[test-expansion-panel-content='${groupName}']`)
+            .find(`[test-table-item-user='${username}']`).then((n) => {
+                cy.wrap(n).should('exist');
+            });
+        return this;
+    }
+
+    clickDeleteUserFromGroupTable(groupName: string, username: string): UserGroupPage {
+        cy.get(`[test-expansion-panel-content='${groupName}']`)
+            .find(`[test-icon-delete-user='${username}']`)
+            .click({force: true});
+        return this;
+    }
+
+    verifyUserInGroupDeleted(groupName: string, username: string): UserGroupPage {
+        cy.get(`[test-expansion-panel-content='${groupName}']`)
+            .contains(`[test-table-item-user='${username}']`)
+            .should('not.exist');
+        return this;
+    }
 }

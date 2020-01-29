@@ -56,4 +56,69 @@ describe("user-role", () => {
             util.validateHelpNavStateOpen(false);
         });
     });
+
+    it ('should toggle sub side nav', () => {
+        util.toggleSubSideNav(() => {
+            util.validateSubSideNavStateOpen(false);
+        });
+        util.toggleSubSideNav(() => {
+            util.validateSubSideNavStateOpen(true);
+        });
+    });
+
+    it (`'VIEW Group' panel should toggle between expand and collapse`, () => {
+        userGroupPage
+            .toggleGroupPanel('VIEW Group')
+            .verifyRolePanelExpanded('VIEW Group', true);
+        userGroupPage
+            .toggleGroupPanel('VIEW Group')
+            .verifyRolePanelExpanded('VIEW Group', false);
+    });
+
+    it (`'EDIT Group' panel should toggle between expand and collapse`, () => {
+
+    });
+
+    it (`'ADMIN Group' panel should toggle between expand and collapse`, () => {
+
+    });
+
+    it (`'PARTNER Group' panel should toggle between expand and collapse`, () => {
+
+    });
+
+    it(`should be able to add / remove user to / from 'VIEW Group' panel table`, () => {
+        const groupName = 'VIEW Group';
+        const userName1 = 'admin1';
+        const userName2 = 'admin2';
+        userGroupPage
+            .toggleGroupPanel(groupName)
+            .searchForAutoCompleteUserToAddToGroup(groupName, 'admin', userName1)
+            .verifySuccessMessageExists()
+            .searchForAutoCompleteUserToAddToGroup(groupName, 'admin', userName2)
+            .verifySuccessMessageExists()
+            .verifyUserInGroup(groupName, userName1)
+            .verifyUserInGroup(groupName, userName2)
+            .clickDeleteUserFromGroupTable(groupName, userName1)
+            .verifySuccessMessageExists()
+            .clickDeleteUserFromGroupTable(groupName, userName2)
+            .verifySuccessMessageExists()
+            .verifyUserInGroupDeleted(groupName, userName1)
+            .verifyUserInGroupDeleted(groupName, userName2);
+    });
+
+    it (`should be able to add / remove user to / from 'EDIT Group' panel table`, () => {
+
+    });
+
+    it (`should be able to add / remove user to / from 'ADMIN Group' panel table`, () => {
+
+    });
+
+    it (`should be able to add / remove user to / from 'PARTNER Group' panel table`, () => {
+
+    });
+
+
+
 });

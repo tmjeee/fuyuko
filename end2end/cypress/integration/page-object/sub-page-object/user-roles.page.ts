@@ -14,21 +14,21 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
         return this;
     }
 
-    toggleRole(roleName: string): UserRolesPage {
+    toggleRolePanel(roleName: string): UserRolesPage {
        cy.get(`[test-expansion-panel-header='${roleName}']`).click({force: true});
        return this;
     }
 
-
     verifyRolePanelExpanded(roleName: string, b: boolean): UserRolesPage {
-        cy.get(`[test-expansion-panel-content='${roleName}']`)
-            .should('not.be.disabled');
+        cy.get(`[test-expansion-panel-content='${roleName}'] > *`)
+            .should(b ? 'be.visible' : 'not.be.visible');
         return this;
     }
 
     searchForAutoCompleteGroupToAddToRole(roleName: string, search: string, autoCompleteGroupName: string) {
         cy.get(`[test-expansion-panel-content='${roleName}']`)
-            .find(`[test-field-search]`).clear()
+            .find(`[test-field-search]`)
+            .clear()
             .type(search)
             .wait(5000);
         cy.get(`[test-auto-complete-option='${autoCompleteGroupName}']`)
@@ -45,14 +45,15 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
     verifyGroupInRole(roleName: string, groupName: string) {
         cy.get(`[test-expansion-panel-content='${roleName}']`)
             .find(`[test-table-item-group='${groupName}']`).then((n) => {
-                cy.wrap(n).should('exist')
+                cy.wrap(n).should('exist');
             });
         return this;
     }
 
     verifyGroupInRoleDeleted(roleName: string, groupName: string) {
         cy.get(`[test-expansion-panel-content='${roleName}']`)
-            .contains(`[test-table-item-group='${groupName}']`).should('not.exist');
+            .contains(`[test-table-item-group='${groupName}']`)
+            .should('not.exist');
         return this;
     }
 
@@ -70,6 +71,10 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
 
     verifyErrorMessageExists(): UserRolesPage {
         util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    toggleSubSideNav(): UserRolesPage {
         return this;
     }
 }

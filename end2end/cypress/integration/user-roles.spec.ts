@@ -57,52 +57,61 @@ describe("user-role", () => {
         });
     });
 
-    it ('VIEW should toggle between exapand and collapsed', () => {
+    it ('should toggle sub side nav', () => {
+        util.toggleSubSideNav(() => {
+            util.validateSubSideNavStateOpen(false);
+        });
+        util.toggleSubSideNav(() => {
+            util.validateSubSideNavStateOpen(true);
+        });
+    });
+
+    it.only ('VIEW role panel should toggle between exapand and collapsed', () => {
         userRolePage
-            .toggleRole('VIEW')
+            .toggleRolePanel('VIEW')
             .verifyRolePanelExpanded('VIEW', true);
         userRolePage
-            .toggleRole('VIEW')
+            .toggleRolePanel('VIEW')
             .verifyRolePanelExpanded('VIEW', false);
     });
 
 
-    it ('EDIT should toggle between exapand and collapsed', () => {
+    it ('EDIT role panel should toggle between exapand and collapsed', () => {
         userRolePage
-            .toggleRole('EDIT')
+            .toggleRolePanel('EDIT')
             .verifyRolePanelExpanded('EDIT', true);
         userRolePage
-            .toggleRole('EDIT')
+            .toggleRolePanel('EDIT')
             .verifyRolePanelExpanded('EDIT', false);
     });
 
 
-    it ('ADMIN should toggle between exapand and collapsed', () => {
+    it ('ADMIN role panel should toggle between exapand and collapsed', () => {
         userRolePage
-            .toggleRole('ADMIN')
+            .toggleRolePanel('ADMIN')
             .verifyRolePanelExpanded('ADMIN', true);
         userRolePage
-            .toggleRole('ADMIN')
+            .toggleRolePanel('ADMIN')
             .verifyRolePanelExpanded('ADMIN', false);
     });
 
 
-    it ('EDIT should toggle between exapand and collapsed', () => {
+    it ('PARTNER role panel should toggle between exapand and collapsed', () => {
         userRolePage
-            .toggleRole('PARTNER')
+            .toggleRolePanel('PARTNER')
             .verifyRolePanelExpanded('PARTER', true);
         userRolePage
-            .toggleRole('PARTNER')
+            .toggleRolePanel('PARTNER')
             .verifyRolePanelExpanded('PARTNER', false);
     });
 
 
-    it.only ('should be able to add / remove group to / from VIEW role', () => {
+    it ('should be able to add / remove group to / from VIEW role panel table', () => {
         const roleName = 'VIEW';
         const groupName1 = 'EDIT Group';
         const groupName2 = 'ADMIN Group';
         userRolePage
-            .toggleRole(roleName)
+            .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
             .verifySuccessMessageExists()
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
@@ -117,12 +126,12 @@ describe("user-role", () => {
             .verifyGroupInRoleDeleted(roleName, groupName2);
     });
 
-    it ('should be able to add / remove group to / from EDIT role', () => {
+    it ('should be able to add / remove group to / from EDIT role panel table', () => {
         const roleName = 'EDIT';
         const groupName1 = 'VIEW Group';
         const groupName2 = 'ADMIN Group';
         userRolePage
-            .toggleRole(roleName)
+            .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
             .verifySuccessMessageExists()
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
@@ -137,12 +146,12 @@ describe("user-role", () => {
             .verifyGroupInRoleDeleted(roleName, groupName2);
     });
 
-    it ('should be able to add / remove group to / from ADMIN role', () => {
+    it ('should be able to add / remove group to / from ADMIN role panel table', () => {
         const roleName = 'ADMIN';
         const groupName1 = 'VIEW Group';
         const groupName2 = 'EDIT Group';
         userRolePage
-            .toggleRole(roleName)
+            .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
             .verifySuccessMessageExists()
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
@@ -157,12 +166,12 @@ describe("user-role", () => {
             .verifyGroupInRoleDeleted(roleName, groupName2);
     });
 
-    it ('should be able to add / remove group to / from PARTNER role', () => {
+    it ('should be able to add / remove group to / from PARTNER role panel table', () => {
         const roleName = 'PARTNER';
         const groupName1 = 'VIEW Group';
         const groupName2 = 'EDIT Group';
         userRolePage
-            .toggleRole(roleName)
+            .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
             .verifySuccessMessageExists()
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
