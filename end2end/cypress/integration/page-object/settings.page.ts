@@ -1,4 +1,5 @@
 import {ActualPage} from "./actual.page";
+import * as util from '../util/util';
 
 
 export class SettingsPage implements ActualPage<SettingsPage> {
@@ -12,6 +13,16 @@ export class SettingsPage implements ActualPage<SettingsPage> {
 
     validateTitle(): SettingsPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'settings');
+        return this;
+    }
+
+    verifyErrorMessageExists(): SettingsPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): SettingsPage {
+        util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
 }

@@ -1,4 +1,6 @@
+<div *ngIf="loading">Loading ...</div>
 <div class="dashboard-layout"
+  *ngIf="!loading"
   [attr.test-side-nav-state-open]="''+sideNavOpened"
   [attr.test-help-nav-state-open]="''+helpNavOpened">
   <mat-toolbar color="primary" class="primary-toolbar">

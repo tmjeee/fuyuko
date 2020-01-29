@@ -7,12 +7,6 @@ import {Connection} from "mariadb";
 import {Settings} from "../../model/settings.model";
 import {getSettings} from "../../service/user-settings.service";
 
-const DEFAULT_SETTINGS: Settings = new Settings();
-DEFAULT_SETTINGS.id = 0;
-DEFAULT_SETTINGS.defaultOpenHelpNav = false;
-DEFAULT_SETTINGS.defaultOpenSideNav = true;
-DEFAULT_SETTINGS.defaultOpenSubSideNav = true;
-
 const httpAction: any[] = [
     [
         param('userId').exists().isNumeric(),

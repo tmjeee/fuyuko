@@ -34,6 +34,9 @@ export class ViewService {
     ).subscribe();
   }
 
+  destroy() {
+  }
+
   asObserver(): Observable<View> {
     return this.subject.asObservable();
   }

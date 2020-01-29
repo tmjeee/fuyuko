@@ -130,18 +130,17 @@ import { ViewValidationDetailsPageComponent } from './page/view-validation-detai
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
                         themeService: ThemeService,
-                        viewService: ViewService,
-                        browserLocationHistoryService: BrowserLocationHistoryService) => {
+                        viewService: ViewService) => {
   return () => {
     authService.asObservable()
       .pipe(
         tap((u: User) => {
         if (u == null) { // logout
-          browserLocationHistoryService.storeLastUrlKey('');
-          settingsService.destroyRuntimeSettings().subscribe();
+          viewService.destroy();
+          settingsService.destroy();
         } else { // login
-          settingsService.getRuntimeSettings(u).subscribe();
           themeService.setTheme(u.theme);
+          settingsService.init(u);
           viewService.init();
         }
       })
@@ -293,7 +292,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: ValidationService, useClass: ValidationService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
-        deps: [SettingsService, AuthService, ThemeService, ViewService, BrowserLocationHistoryService] } as Provider,
+        deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,

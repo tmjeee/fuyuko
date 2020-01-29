@@ -40,6 +40,7 @@ describe('profile', () => {
     it ('should change avatar 01', () => {
         profilePage
             .changePredefinedAvatar('avatar-01.png')
+            .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-01.png');
         util.clearAllMessageToasts();
     });
@@ -47,6 +48,7 @@ describe('profile', () => {
     it ('should change avatar 02', () => {
         profilePage
             .changePredefinedAvatar('avatar-02.png')
+            .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-02.png');
         util.clearAllMessageToasts();
     });
@@ -54,6 +56,7 @@ describe('profile', () => {
     it ('should chnage avatar 03', () => {
         profilePage
             .changePredefinedAvatar('avatar-03.png')
+            .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-03.png');
         util.clearAllMessageToasts();
     });
@@ -61,6 +64,7 @@ describe('profile', () => {
     it ('should chnage avatar 04', () => {
         profilePage
             .changePredefinedAvatar('avatar-04.png')
+            .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-04.png');
         util.clearAllMessageToasts();
     });
@@ -68,6 +72,7 @@ describe('profile', () => {
     it ('should chnage avatar 05', () => {
         profilePage
             .changePredefinedAvatar('avatar-05.png')
+            .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-05.png');
         util.clearAllMessageToasts();
     });
@@ -75,6 +80,7 @@ describe('profile', () => {
     it ('should chnage avatar 06', () => {
         profilePage
             .changePredefinedAvatar('avatar-06.png')
+            .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-06.png');
         util.clearAllMessageToasts();
     });
@@ -82,6 +88,7 @@ describe('profile', () => {
     it ('should chnage avatar 07', () => {
         profilePage
             .changePredefinedAvatar('avatar-07.png')
+            .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-07.png');
         util.clearAllMessageToasts();
     });
@@ -89,6 +96,7 @@ describe('profile', () => {
     it ('should chnage avatar 08', () => {
         profilePage
             .changePredefinedAvatar('avatar-08.png')
+            .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-08.png');
         util.clearAllMessageToasts();
     });
@@ -96,6 +104,7 @@ describe('profile', () => {
     it ('should chnage avatar 09', () => {
         profilePage
             .changePredefinedAvatar('avatar-09.png')
+            .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-09.png');
         util.clearAllMessageToasts();
     });
@@ -124,6 +133,7 @@ describe('profile', () => {
         const email = `email-${Math.random().toFixed(5)}@test-xxx.com`;
         profilePage
             .changeProfileDetails(firstName, lastName, email)
+            .verifySuccessMessageExists()
             .validateProfileChanged(firstName, lastName, email)
         ;
     });
@@ -142,6 +152,7 @@ describe('profile', () => {
         const cssClassName  = 'theme-deeppurple-amber-dark';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
 
     });
@@ -150,6 +161,7 @@ describe('profile', () => {
         const cssClassName  = 'theme-deeppurple-amber-light';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
     });
 
@@ -157,6 +169,7 @@ describe('profile', () => {
         const cssClassName  = 'theme-indigo-pink-light';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
     });
 
@@ -164,6 +177,7 @@ describe('profile', () => {
         const cssClassName  = 'theme-indigo-pink-dark';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
     });
 
@@ -171,6 +185,7 @@ describe('profile', () => {
         const cssClassName  = 'theme-pink-bluegrey-light';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
     });
 
@@ -178,6 +193,7 @@ describe('profile', () => {
         const cssClassName  = 'theme-pink-bluegrey-dark';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
     });
 
@@ -185,6 +201,7 @@ describe('profile', () => {
         const cssClassName  = 'theme-purple-green-light';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
     });
 
@@ -192,6 +209,7 @@ describe('profile', () => {
         const cssClassName  = 'theme-purple-green-dark';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
 
     });
@@ -200,6 +218,7 @@ describe('profile', () => {
         const cssClassName  = 'theme-indigo-lightblue-light';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
     });
 
@@ -207,6 +226,7 @@ describe('profile', () => {
         const cssClassName = 'theme-indigo-lightblue-dark';
         profilePage
             .changeTheme(cssClassName)
+            .verifySuccessMessageExists()
             .validateThemeChanged(cssClassName);
     });
 });

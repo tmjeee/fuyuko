@@ -1,5 +1,6 @@
 import {DashboardPage} from "./dashboard.page";
 import {ActualPage} from "./actual.page";
+import * as util from '../util/util';
 
 export class LoginPage implements ActualPage<LoginPage> {
 
@@ -19,4 +20,15 @@ export class LoginPage implements ActualPage<LoginPage> {
         cy.get(`[test-button-login]`).should('not.be.disabled').click();
         return new DashboardPage();
     }
+
+    verifyErrorMessageExists(): LoginPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): LoginPage {
+        util.clickOnSuccessMessageToasts(() => {});
+        return this;
+    }
 }
+

@@ -1,4 +1,5 @@
 import {ActualPage} from "../actual.page";
+import * as util from '../../util/util';
 
 
 export class UserRolesPage implements ActualPage<UserRolesPage> {
@@ -25,12 +26,50 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
         return this;
     }
 
-    searchRole(roleName: string, search: string, autoCompleteGroupName: string) {
+    searchForAutoCompleteGroupToAddToRole(roleName: string, search: string, autoCompleteGroupName: string) {
         cy.get(`[test-expansion-panel-content='${roleName}']`)
-            .find(`[test-field-search]`).clear().type(search);
-        cy.get(`[test-expansion-panel-content='${roleName}'`)
-            .find(`[test-auto-complete-option='${autoCompleteGroupName}']`);
+            .find(`[test-field-search]`).clear()
+            .type(search)
+            .wait(5000);
+        cy.get(`[test-auto-complete-option='${autoCompleteGroupName}']`)
+            .focus();
+        cy.get(`[test-auto-complete-option='${autoCompleteGroupName}']`)
+            .focus()
+            .click({force: true})
+            // .click({force: true})
+            // .click({force: true, multiple: true})
+        ;
+        return this;
+    }
 
+    verifyGroupInRole(roleName: string, groupName: string) {
+        cy.get(`[test-expansion-panel-content='${roleName}']`)
+            .find(`[test-table-item-group='${groupName}']`).then((n) => {
+                cy.wrap(n).should('exist')
+            });
+        return this;
+    }
+
+    verifyGroupInRoleDeleted(roleName: string, groupName: string) {
+        cy.get(`[test-expansion-panel-content='${roleName}']`)
+            .contains(`[test-table-item-group='${groupName}']`).should('not.exist');
+        return this;
+    }
+
+    clickDeleteGroupFromRoleTable(roleName: string, groupName: string) {
+        cy.get(`[test-expansion-panel-content='${roleName}']`)
+            .find(`[test-icon-delete-group='${groupName}']`)
+            .click({force: true});
+        return this;
+    }
+
+    verifySuccessMessageExists() {
+        util.clickOnSuccessMessageToasts(() =>{});
+        return this;
+    }
+
+    verifyErrorMessageExists(): UserRolesPage {
+        util.clickOnErrorMessageToasts(() => {});
         return this;
     }
 }

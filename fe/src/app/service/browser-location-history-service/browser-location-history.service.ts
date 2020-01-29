@@ -2,14 +2,33 @@ import {Injectable} from '@angular/core';
 
 export const LAST_URL_KEY = `LAST_URL_KEY`;
 
+
+export const isNotLoginUrl = (url: string): boolean => {
+    return !isLoginUrl(url);
+};
+
+export const isLoginUrl = (url: string): boolean => {
+    return url.endsWith('/login-layout/login');
+};
+
 @Injectable()
 export class BrowserLocationHistoryService {
 
-   storeLastUrlKey(url: string) {
-       sessionStorage.setItem(LAST_URL_KEY, url);
-   }
+    storeLastUrlKey(url: string) {
+       this._storeLastUrlKey(url, isNotLoginUrl);
+    }
 
-   retrieveLastUrl(): string {
-       return sessionStorage.getItem(LAST_URL_KEY);
-   }
+    _storeLastUrlKey(url: string, predicate: (url: string) => boolean) {
+        if (predicate && predicate(url)) {
+            sessionStorage.setItem(LAST_URL_KEY, url);
+        }
+    }
+
+    clearStoredLastUrl() {
+        sessionStorage.setItem(LAST_URL_KEY, '');
+    }
+
+    retrieveLastUrl(): string {
+        return sessionStorage.getItem(LAST_URL_KEY);
+    }
 }

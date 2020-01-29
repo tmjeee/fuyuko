@@ -1,4 +1,5 @@
 import {ActualPage} from "../actual.page";
+import * as util from '../../util/util';
 
 export class PartnerThubnailPage implements ActualPage<PartnerThubnailPage> {
 
@@ -9,6 +10,16 @@ export class PartnerThubnailPage implements ActualPage<PartnerThubnailPage> {
 
     visit(): PartnerThubnailPage {
         cy.visit('/partner-layout/(thumbnail//help:partner-help)');
+        return this;
+    }
+
+    verifyErrorMessageExists(): PartnerThubnailPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): PartnerThubnailPage {
+        util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
 }

@@ -1,4 +1,5 @@
 import {ActualPage} from "./actual.page";
+import * as util from '../util/util';
 
 
 export class BulkEditPage implements ActualPage<BulkEditPage> {
@@ -12,6 +13,16 @@ export class BulkEditPage implements ActualPage<BulkEditPage> {
 
     validateTitle(): BulkEditPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'bulk-edit');
+        return this;
+    }
+
+    verifyErrorMessageExists(): BulkEditPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): BulkEditPage {
+        util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
 }

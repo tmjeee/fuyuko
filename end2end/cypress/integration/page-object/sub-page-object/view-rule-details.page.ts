@@ -1,4 +1,5 @@
 import {ActualPage} from "../actual.page";
+import * as util from "../../util/util";
 
 export class ViewRuleDetailsPage implements ActualPage<ViewRuleDetailsPage> {
 
@@ -15,4 +16,13 @@ export class ViewRuleDetailsPage implements ActualPage<ViewRuleDetailsPage> {
         return this;
     }
 
+    verifyErrorMessageExists(): ViewRuleDetailsPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): ViewRuleDetailsPage {
+        util.clickOnSuccessMessageToasts(() => {});
+        return this;
+    }
 }

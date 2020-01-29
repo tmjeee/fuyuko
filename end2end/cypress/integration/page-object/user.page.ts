@@ -5,7 +5,7 @@ import {UserInvitationPage} from "./sub-page-object/user-invitation.page";
 import {UserActivationPage} from "./sub-page-object/user-activation.page";
 
 
-export class UserPage /*extends AbstractPage*/ {
+export class UserPage {
 
 
     visit(): UserPage {

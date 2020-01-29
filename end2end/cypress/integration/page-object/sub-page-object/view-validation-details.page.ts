@@ -1,4 +1,5 @@
 import {ActualPage} from "../actual.page";
+import * as util from "../../util/util";
 
 export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetailsPage> {
 
@@ -15,4 +16,13 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         return this;
     }
 
+    verifyErrorMessageExists(): ViewValidationDetailsPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): ViewValidationDetailsPage {
+        util.clickOnSuccessMessageToasts(() => {});
+        return this;
+    }
 }

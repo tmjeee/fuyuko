@@ -43,7 +43,7 @@ export class LoginPageComponent {
         map((u: LoginResponse) => {
           if (u && u.status === 'SUCCESS') {
             const lastUrl: string = this.browserLocationHistoryService.retrieveLastUrl();
-            this.browserLocationHistoryService.storeLastUrlKey('');
+            this.browserLocationHistoryService.clearStoredLastUrl();
             if (!!lastUrl) {
               location.href = lastUrl;
             } else {

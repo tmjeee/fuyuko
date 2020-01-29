@@ -1,4 +1,5 @@
 import {ActualPage} from "../actual.page";
+import * as util from '../../util/util';
 
 export class UserActivationPage implements ActualPage<UserActivationPage> {
 
@@ -9,6 +10,16 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
 
     visit(): UserActivationPage {
         cy.visit('/user-gen-layout/(activation//help:user-help)');
+        return this;
+    }
+
+    verifyErrorMessageExists(): UserActivationPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): UserActivationPage {
+        util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
 

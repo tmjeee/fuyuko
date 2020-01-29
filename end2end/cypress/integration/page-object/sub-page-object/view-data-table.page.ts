@@ -1,4 +1,5 @@
 import {ActualPage} from "../actual.page";
+import * as util from "../../util/util";
 
 export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
@@ -12,4 +13,13 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
         return this;
     }
 
+    verifyErrorMessageExists(): ViewDataTablePage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): ViewDataTablePage {
+        util.clickOnSuccessMessageToasts(() => {});
+        return this;
+    }
 }

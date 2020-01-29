@@ -97,9 +97,83 @@ describe("user-role", () => {
     });
 
 
-    it ('should be able to add group to VIEW role', () => {
+    it.only ('should be able to add / remove group to / from VIEW role', () => {
+        const roleName = 'VIEW';
+        const groupName1 = 'EDIT Group';
+        const groupName2 = 'ADMIN Group';
         userRolePage
-            .toggleRole('VIEW')
-            .searchRole('VIEW', 'Group', 'EDIT Group');
+            .toggleRole(roleName)
+            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
+            .verifySuccessMessageExists()
+            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
+            .verifySuccessMessageExists()
+            .verifyGroupInRole(roleName, groupName1)
+            .verifyGroupInRole(roleName, groupName2)
+            .clickDeleteGroupFromRoleTable(roleName, groupName1)
+            .verifySuccessMessageExists()
+            .clickDeleteGroupFromRoleTable(roleName, groupName2)
+            .verifySuccessMessageExists()
+            .verifyGroupInRoleDeleted(roleName, groupName1)
+            .verifyGroupInRoleDeleted(roleName, groupName2);
+    });
+
+    it ('should be able to add / remove group to / from EDIT role', () => {
+        const roleName = 'EDIT';
+        const groupName1 = 'VIEW Group';
+        const groupName2 = 'ADMIN Group';
+        userRolePage
+            .toggleRole(roleName)
+            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
+            .verifySuccessMessageExists()
+            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
+            .verifySuccessMessageExists()
+            .verifyGroupInRole(roleName, groupName1)
+            .verifyGroupInRole(roleName, groupName2)
+            .clickDeleteGroupFromRoleTable(roleName, groupName1)
+            .verifySuccessMessageExists()
+            .clickDeleteGroupFromRoleTable(roleName, groupName2)
+            .verifySuccessMessageExists()
+            .verifyGroupInRoleDeleted(roleName, groupName1)
+            .verifyGroupInRoleDeleted(roleName, groupName2);
+    });
+
+    it ('should be able to add / remove group to / from ADMIN role', () => {
+        const roleName = 'ADMIN';
+        const groupName1 = 'VIEW Group';
+        const groupName2 = 'EDIT Group';
+        userRolePage
+            .toggleRole(roleName)
+            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
+            .verifySuccessMessageExists()
+            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
+            .verifySuccessMessageExists()
+            .verifyGroupInRole(roleName, groupName1)
+            .verifyGroupInRole(roleName, groupName2)
+            .clickDeleteGroupFromRoleTable(roleName, groupName1)
+            .verifySuccessMessageExists()
+            .clickDeleteGroupFromRoleTable(roleName, groupName2)
+            .verifySuccessMessageExists()
+            .verifyGroupInRoleDeleted(roleName, groupName1)
+            .verifyGroupInRoleDeleted(roleName, groupName2);
+    });
+
+    it ('should be able to add / remove group to / from PARTNER role', () => {
+        const roleName = 'PARTNER';
+        const groupName1 = 'VIEW Group';
+        const groupName2 = 'EDIT Group';
+        userRolePage
+            .toggleRole(roleName)
+            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
+            .verifySuccessMessageExists()
+            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
+            .verifySuccessMessageExists()
+            .verifyGroupInRole(roleName, groupName1)
+            .verifyGroupInRole(roleName, groupName2)
+            .clickDeleteGroupFromRoleTable(roleName, groupName1)
+            .verifySuccessMessageExists()
+            .clickDeleteGroupFromRoleTable(roleName, groupName2)
+            .verifySuccessMessageExists()
+            .verifyGroupInRoleDeleted(roleName, groupName1)
+            .verifyGroupInRoleDeleted(roleName, groupName2);
     });
 });

@@ -7,12 +7,15 @@ import {AppNotification} from '../model/notification.model';
 import {AuthService} from '../service/auth-service/auth.service';
 import {User} from '../model/user.model';
 import {SettingsService} from '../service/settings-service/settings.service';
-import {RuntimeSettings} from '../model/settings.model';
+import {Settings} from '../model/settings.model';
 
 export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
 
+  loading: boolean;
+
   routeSubSideNavData: string;
 
+  subSideBarOpened: boolean ;
   sideNavOpened: boolean;
   helpNavOpened: boolean;
 
@@ -23,7 +26,7 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
   notificationServiceSubscription: Subscription;
   routerEventSubscription: Subscription;
 
-  runtimeSettings: RuntimeSettings;
+  settings: Settings;
 
   constructor(protected notificationService: AppNotificationService,
               protected authService: AuthService,
@@ -34,10 +37,18 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.runtimeSettings = this.settingsService.getLocalRuntimeSettings();
-    console.log('******** ASbstractGenLayout runtime settings', this.runtimeSettings);
-    this.helpNavOpened = this.runtimeSettings.openHelpNav;
-    this.sideNavOpened = this.runtimeSettings.openSideNav;
+    this.loading = true;
+    const u: User = this.authService.myself();
+    this.settingsService.getSettings(u).pipe(
+        tap((s: Settings) => {
+          this.settings = s;
+          this.helpNavOpened = this.settings.openHelpNav;
+          this.sideNavOpened = this.settings.openSideNav;
+          this.subSideBarOpened = this.settings.openSubSideNav;
+          this.loading = false;
+        })
+    ).subscribe();
+    console.log('******** ASbstractGenLayout runtime settings', this.settings);
     this.routeSubSideNavData = this.findSubSideNavData([this.route.snapshot]);
     this.routerEventSubscription = this.router.events
       .pipe(

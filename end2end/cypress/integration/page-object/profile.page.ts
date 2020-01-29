@@ -24,20 +24,18 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
     }
 
     validateAvatarChanged(name: string): ProfilePage {
-        util.clickOnSuccessMessageToasts(() => {
-            const apiBaseUrl = Cypress.env('apiBaseUrl').toString();
-            const userId = util.getMyself().myself.id;
-            cy.request(`${apiBaseUrl}/user/${userId}/avatar-info`)
-                .its("body")
-                .then((body: any) => {
-                    expect(body).to.have.property('name');
-                    expect(body.name).to.eq(name);
-                });
-        });
+        const apiBaseUrl = Cypress.env('apiBaseUrl').toString();
+        const userId = util.getMyself().myself.id;
+        cy.request(`${apiBaseUrl}/user/${userId}/avatar-info`)
+            .its("body")
+            .then((body: any) => {
+                expect(body).to.have.property('name');
+                expect(body.name).to.eq(name);
+            });
         return this;
     }
 
-    changeProfileDetails(firstName: string, lastName: string, email: string) {
+    changeProfileDetails(firstName: string, lastName: string, email: string): ProfilePage {
         cy.get('[test-field-firstName]').clear().type(firstName);
         cy.get('[test-field-lastName]').clear().type(lastName);
         cy.get('[test-field-email]').clear().type(email);
@@ -45,13 +43,12 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
         return this;
     }
 
-    validateProfileChanged(firstName: string, lastName: string, email: string) {
-        util.clickOnSuccessMessageToasts(() => {
-            this.visit();
-            cy.get('[test-field-firstName').should('have.value', firstName);
-            cy.get('[test-field-lastName').should('have.value', lastName);
-            cy.get('[test-field-email').should('have.value', email);
-        });
+    validateProfileChanged(firstName: string, lastName: string, email: string): ProfilePage {
+        this.visit();
+        cy.get('[test-field-firstName').should('have.value', firstName);
+        cy.get('[test-field-lastName').should('have.value', lastName);
+        cy.get('[test-field-email').should('have.value', email);
+        return this;
     }
 
     changePassword(password: string, confirmedPassword: string) {
@@ -71,11 +68,19 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
     }
 
     validateThemeChanged(cssThemeName: string): ProfilePage {
-        util.clickOnSuccessMessageToasts(() => {
-            cy.get(`[test-theme-cssClassName]`).then((n) => {
-                expect(n).to.have.attr('test-theme-cssClassName').eq(cssThemeName);
-            })
-        });
+        cy.get(`[test-theme-cssClassName]`).then((n) => {
+            expect(n).to.have.attr('test-theme-cssClassName').eq(cssThemeName);
+        })
+        return this;
+    }
+
+    verifyErrorMessageExists(): ProfilePage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): ProfilePage {
+        util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
 }

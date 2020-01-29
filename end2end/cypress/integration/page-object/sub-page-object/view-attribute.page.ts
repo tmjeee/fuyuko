@@ -1,4 +1,5 @@
 import {ActualPage} from "../actual.page";
+import * as util from "../../util/util";
 
 export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
@@ -9,6 +10,17 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
     visit(): ViewAttributePage {
         cy.visit('/view-gen-layout/(attributes//help:view-help)');
+        return this;
+    }
+
+
+    verifyErrorMessageExists(): ViewAttributePage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): ViewAttributePage {
+        util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
 

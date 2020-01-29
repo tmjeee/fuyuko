@@ -1,4 +1,5 @@
 import {ActualPage} from "../actual.page";
+import * as util from "../../util/util";
 
 export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> {
 
@@ -9,6 +10,16 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
 
     visit(): ViewDataThumbnailPage {
         cy.visit(`/view-gen-layout/(data-thumbnail//help:view-help)`);
+        return this;
+    }
+
+    verifyErrorMessageExists(): ViewDataThumbnailPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): ViewDataThumbnailPage {
+        util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
 

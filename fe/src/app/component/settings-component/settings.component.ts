@@ -16,9 +16,9 @@ export interface SettingsComponentEvent {
 export class SettingsComponent implements OnInit, OnChanges {
 
     formGroupGeneralTab: FormGroup;
-    formControlDefaultOpenHelpNav: FormControl;
-    formControlDefaultOpenSideNav: FormControl;
-    formControlDefaultOpenSubSideNav: FormControl;
+    formControlOpenHelpNav: FormControl;
+    formControlOpenSideNav: FormControl;
+    formControlOpenSubSideNav: FormControl;
 
     @Input() settings: Settings;
     @Input() user: User;
@@ -29,13 +29,13 @@ export class SettingsComponent implements OnInit, OnChanges {
         this.events = new EventEmitter<SettingsComponentEvent>();
 
         // general tab
-        this.formControlDefaultOpenHelpNav = formBuilder.control('', [Validators.required]);
-        this.formControlDefaultOpenSideNav = formBuilder.control('', [Validators.required]);
-        this.formControlDefaultOpenSubSideNav = formBuilder.control('', [Validators.required]);
+        this.formControlOpenHelpNav = formBuilder.control('', [Validators.required]);
+        this.formControlOpenSideNav = formBuilder.control('', [Validators.required]);
+        this.formControlOpenSubSideNav = formBuilder.control('', [Validators.required]);
         this.formGroupGeneralTab = formBuilder.group({
-            defaultOpenHelpNav: this.formControlDefaultOpenHelpNav,
-            defaultOpenSideNav: this.formControlDefaultOpenSideNav,
-            defaultOpenSubSideNav: this.formControlDefaultOpenSubSideNav
+            defaultOpenHelpNav: this.formControlOpenHelpNav,
+            defaultOpenSideNav: this.formControlOpenSideNav,
+            defaultOpenSubSideNav: this.formControlOpenSubSideNav
         });
     }
 
@@ -53,16 +53,16 @@ export class SettingsComponent implements OnInit, OnChanges {
 
     populate(s: Settings) {
         console.log('****** settings', s);
-        this.formControlDefaultOpenHelpNav.setValue(s.defaultOpenHelpNav);
-        this.formControlDefaultOpenSideNav.setValue(s.defaultOpenSideNav);
-        this.formControlDefaultOpenSubSideNav.setValue(s.defaultOpenSubSideNav);
+        this.formControlOpenHelpNav.setValue(s.openHelpNav);
+        this.formControlOpenSideNav.setValue(s.openSideNav);
+        this.formControlOpenSubSideNav.setValue(s.openSubSideNav);
     }
 
     onGeneralTabSubmit() {
         const s: Settings = {...this.settings};
-        s.defaultOpenHelpNav = this.formControlDefaultOpenHelpNav.value;
-        s.defaultOpenSideNav = this.formControlDefaultOpenSideNav.value;
-        s.defaultOpenSubSideNav = this.formControlDefaultOpenSubSideNav.value;
+        s.openHelpNav = this.formControlOpenHelpNav.value;
+        s.openSideNav = this.formControlOpenSideNav.value;
+        s.openSubSideNav = this.formControlOpenSubSideNav.value;
         this.events.emit({
             settings: s
         } as SettingsComponentEvent);

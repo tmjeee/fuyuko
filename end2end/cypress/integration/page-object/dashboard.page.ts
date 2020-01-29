@@ -8,6 +8,7 @@ import {SettingsPage} from "./settings.page";
 import {ImportExportPage} from "./import-export.page";
 import {JobsPage} from "./jobs.page";
 import {PartnerPage} from "./partner.page";
+import * as util from '../util/util';
 
 
 export class DashboardPage implements ActualPage<DashboardPage> {
@@ -85,6 +86,16 @@ export class DashboardPage implements ActualPage<DashboardPage> {
     visitPartnerPage() {
         cy.get(`[test-sidenav]='partner']`).click();
         return new PartnerPage();
+    }
+
+    verifyErrorMessageExists(): DashboardPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): DashboardPage {
+        util.clickOnSuccessMessageToasts(() => {});
+        return this;
     }
 
     /*

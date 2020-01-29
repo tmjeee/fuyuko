@@ -7,6 +7,7 @@ import {LoginResponse} from '../../model/login.model';
 
 import config from '../../utils/config.util';
 import {tap} from 'rxjs/operators';
+import {BrowserLocationHistoryService} from "../browser-location-history-service/browser-location-history.service";
 
 
 const URL_LOGIN = () => `${config().api_host_url}/login`;
@@ -26,6 +27,7 @@ export class AuthService {
   private subject: BehaviorSubject<User>;
 
  constructor(private httpClient: HttpClient,
+             private browserLocationHistoryService: BrowserLocationHistoryService,
              private themeService: ThemeService) {
    const myself: User = this.myself();
    this.subject = new BehaviorSubject(myself);
@@ -53,6 +55,7 @@ export class AuthService {
      return this.httpClient.post<void>(`${URL_LOGOUT()}`, {
      }).pipe(
          tap((x: void) => {
+             this.browserLocationHistoryService.clearStoredLastUrl();
              this.destroyToken();
              this.subject.next(null);
          })

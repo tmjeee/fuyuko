@@ -1,14 +1,12 @@
 import {Settings} from "../model/settings.model";
 import {Connection} from "mariadb";
-import {doInDbConnection, QueryA} from "../db";
-import {create} from "domain";
+import {QueryA} from "../db";
 
-
-const DEFAULT_SETTINGS: Settings = new Settings();
+export const DEFAULT_SETTINGS: Settings = new Settings();
 DEFAULT_SETTINGS.id = 0;
-DEFAULT_SETTINGS.defaultOpenHelpNav = false;
-DEFAULT_SETTINGS.defaultOpenSideNav = true;
-DEFAULT_SETTINGS.defaultOpenSubSideNav = true;
+DEFAULT_SETTINGS.openHelpNav = false;
+DEFAULT_SETTINGS.openSideNav = true;
+DEFAULT_SETTINGS.openSubSideNav = true;
 
 export const getSettings = async (userId: number, conn: Connection): Promise<Settings> => {
     await createSettingsIfNotExists(userId, conn);

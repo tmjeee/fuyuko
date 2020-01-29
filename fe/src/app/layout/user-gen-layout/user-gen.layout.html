@@ -1,4 +1,6 @@
+<div *ngIf="loading">Loading ...</div>
 <div class="user-layout"
+     *ngIf="!loading"
      [attr.test-sub-side-nav-state-open]="''+subSideBarOpened"
      [attr.test-side-nav-state-open]="''+sideNavOpened"
      [attr.test-help-nav-state-open]="''+helpNavOpened">

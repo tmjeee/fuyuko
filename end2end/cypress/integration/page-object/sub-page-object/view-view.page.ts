@@ -1,5 +1,6 @@
 
 import {ActualPage} from "../actual.page";
+import * as util from "../../util/util";
 
 export class ViewViewPage implements ActualPage<ViewViewPage> {
 
@@ -13,4 +14,13 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
         return this;
     }
 
+    verifyErrorMessageExists(): ViewViewPage {
+        util.clickOnErrorMessageToasts(() => {});
+        return this;
+    }
+
+    verifySuccessMessageExists(): ViewViewPage {
+        util.clickOnSuccessMessageToasts(() => {});
+        return this;
+    }
 }
