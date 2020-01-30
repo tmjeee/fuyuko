@@ -36,7 +36,7 @@ export class UserRolePageComponent implements OnInit {
       this.allRoles = [];
       this.allRoleGroups = new Map();
       this.actions = [
-          { type: 'DELETE', icon: 'remove_circle', tooltip: 'REmove role to this group'} as Action
+          { type: 'DELETE', icon: 'remove_circle', tooltip: 'Remove role to this group'} as Action
       ];
   }
 

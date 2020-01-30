@@ -59,7 +59,8 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
 
     clickDeleteGroupFromRoleTable(roleName: string, groupName: string) {
         cy.get(`[test-expansion-panel-content='${roleName}']`)
-            .find(`[test-icon-delete-group='${groupName}']`)
+            .find(`[test-icon-group-action='DELETE_${groupName}']`)
+            // .find(`[test-icon-delete-group='${groupName}']`)
             .click({force: true});
         return this;
     }

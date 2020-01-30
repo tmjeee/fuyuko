@@ -76,15 +76,30 @@ describe("user-role", () => {
     });
 
     it (`'EDIT Group' panel should toggle between expand and collapse`, () => {
-
+        userGroupPage
+            .toggleGroupPanel('EDIT Group')
+            .verifyRolePanelExpanded('EDIT Group', true);
+        userGroupPage
+            .toggleGroupPanel('EDIT Group')
+            .verifyRolePanelExpanded('EDIT Group', false);
     });
 
     it (`'ADMIN Group' panel should toggle between expand and collapse`, () => {
-
+        userGroupPage
+            .toggleGroupPanel('ADMIN Group')
+            .verifyRolePanelExpanded('ADMIN Group', true);
+        userGroupPage
+            .toggleGroupPanel('ADMIN Group')
+            .verifyRolePanelExpanded('ADMIN Group', false);
     });
 
     it (`'PARTNER Group' panel should toggle between expand and collapse`, () => {
-
+        userGroupPage
+            .toggleGroupPanel('PARTNER Group')
+            .verifyRolePanelExpanded('PARTNER Group', true);
+        userGroupPage
+            .toggleGroupPanel('PARTNER Group')
+            .verifyRolePanelExpanded('PARTNER Group', false);
     });
 
     it(`should be able to add / remove user to / from 'VIEW Group' panel table`, () => {
@@ -108,17 +123,65 @@ describe("user-role", () => {
     });
 
     it (`should be able to add / remove user to / from 'EDIT Group' panel table`, () => {
+        const groupName = 'EDIT Group';
+        const userName1 = 'admin1';
+        const userName2 = 'admin2';
+        userGroupPage
+            .toggleGroupPanel(groupName)
+            .searchForAutoCompleteUserToAddToGroup(groupName, 'admin', userName1)
+            .verifySuccessMessageExists()
+            .searchForAutoCompleteUserToAddToGroup(groupName, 'admin', userName2)
+            .verifySuccessMessageExists()
+            .verifyUserInGroup(groupName, userName1)
+            .verifyUserInGroup(groupName, userName2)
+            .clickDeleteUserFromGroupTable(groupName, userName1)
+            .verifySuccessMessageExists()
+            .clickDeleteUserFromGroupTable(groupName, userName2)
+            .verifySuccessMessageExists()
+            .verifyUserInGroupDeleted(groupName, userName1)
+            .verifyUserInGroupDeleted(groupName, userName2);
 
     });
 
     it (`should be able to add / remove user to / from 'ADMIN Group' panel table`, () => {
 
+        const groupName = 'ADMIN Group';
+        const userName1 = 'viewer1';
+        const userName2 = 'viewer2';
+        userGroupPage
+            .toggleGroupPanel(groupName)
+            .searchForAutoCompleteUserToAddToGroup(groupName, 'viewer', userName1)
+            .verifySuccessMessageExists()
+            .searchForAutoCompleteUserToAddToGroup(groupName, 'viewer', userName2)
+            .verifySuccessMessageExists()
+            .verifyUserInGroup(groupName, userName1)
+            .verifyUserInGroup(groupName, userName2)
+            .clickDeleteUserFromGroupTable(groupName, userName1)
+            .verifySuccessMessageExists()
+            .clickDeleteUserFromGroupTable(groupName, userName2)
+            .verifySuccessMessageExists()
+            .verifyUserInGroupDeleted(groupName, userName1)
+            .verifyUserInGroupDeleted(groupName, userName2);
     });
 
     it (`should be able to add / remove user to / from 'PARTNER Group' panel table`, () => {
 
+        const groupName = 'PARTNER Group';
+        const userName1 = 'admin1';
+        const userName2 = 'admin2';
+        userGroupPage
+            .toggleGroupPanel(groupName)
+            .searchForAutoCompleteUserToAddToGroup(groupName, 'admin', userName1)
+            .verifySuccessMessageExists()
+            .searchForAutoCompleteUserToAddToGroup(groupName, 'admin', userName2)
+            .verifySuccessMessageExists()
+            .verifyUserInGroup(groupName, userName1)
+            .verifyUserInGroup(groupName, userName2)
+            .clickDeleteUserFromGroupTable(groupName, userName1)
+            .verifySuccessMessageExists()
+            .clickDeleteUserFromGroupTable(groupName, userName2)
+            .verifySuccessMessageExists()
+            .verifyUserInGroupDeleted(groupName, userName1)
+            .verifyUserInGroupDeleted(groupName, userName2);
     });
-
-
-
 });

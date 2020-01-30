@@ -62,6 +62,8 @@ const INSERT_DATA = async () => {
                 [`admin${i}`, new Date(), new Date(), `admin${i}@gmail.com`, 'ENABLED', hashedPassword('test'), `admin${i}_firstname`, `admin${i}_lastname`]);
             const uP: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
                 [`partner${i}`, new Date(), new Date(), `partner${i}@gmail.com`, 'ENABLED', hashedPassword('test'), `partner${i}_firstname`, `partner${i}_lastname`]);
+            const uD: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [`disabled${i}`, new Date(), new Date(), `disabled${i}@gamil.com`, 'DISABLED', hashedPassword('test'), `disabled${i}_firstname`, `disabled${i}_lastname`]);
 
 
             await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [uV.insertId, viewGroupId]);

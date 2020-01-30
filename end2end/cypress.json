@@ -1,6 +1,9 @@
 {
   "baseUrl": "http://localhost:4200",
   "testFiles": "**/*.spec.js",
+  "pageLoadTimeout": 70000,
+  "requestTimeout": 50000,
+  "responseTimeout": 50000,
   "env": {
     "apiBaseUrl": "http://localhost:8888/api/v1",
     "username": "cypress",

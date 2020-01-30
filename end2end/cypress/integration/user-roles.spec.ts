@@ -66,7 +66,7 @@ describe("user-role", () => {
         });
     });
 
-    it.only ('VIEW role panel should toggle between exapand and collapsed', () => {
+    it ('VIEW role panel should toggle between exapand and collapsed', () => {
         userRolePage
             .toggleRolePanel('VIEW')
             .verifyRolePanelExpanded('VIEW', true);
@@ -99,7 +99,7 @@ describe("user-role", () => {
     it ('PARTNER role panel should toggle between exapand and collapsed', () => {
         userRolePage
             .toggleRolePanel('PARTNER')
-            .verifyRolePanelExpanded('PARTER', true);
+            .verifyRolePanelExpanded('PARTNER', true);
         userRolePage
             .toggleRolePanel('PARTNER')
             .verifyRolePanelExpanded('PARTNER', false);

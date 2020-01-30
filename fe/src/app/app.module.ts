@@ -225,6 +225,7 @@ const appInitializer = (settingsService: SettingsService,
       clickToClose: true,
       clickIconToClose: true,
       maxLength: 0,
+      maxStack: 10,
       theClass: 'message-toast',
       animate: NotificationAnimationType.Fade
     } as Options),

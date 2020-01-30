@@ -38,8 +38,8 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
     searchForAutoCompleteUserToAddToGroup(groupName: string, search: string, autoCompleteUsername: string): UserGroupPage {
         cy.get(`[test-expansion-panel-content='${groupName}'`)
             .find(`[test-field-search]`)
-            .clear()
-            .type(search)
+            .clear({force: true})
+            .type(search, {force: true})
             .wait(5000)
         cy.get(`[test-auto-complete-option='${autoCompleteUsername}']`)
             .focus();

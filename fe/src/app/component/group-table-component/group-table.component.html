@@ -36,8 +36,8 @@
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let group">
         <mat-icon color="primary"
-                  [attr.test-icon-delete-group]="group.name"
                   *ngFor="let action of actions"
+                  [attr.test-icon-group-action]="action.type + '_' + group.name"
                   [matTooltip]="action.tooltip"
                   (click)="onActionClicked($event, group, action)">
           {{action.icon}}
