@@ -23,4 +23,31 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
         return this;
     }
 
+    search(search: string): UserActivationPage {
+        cy.get(`[test-field-search]`)
+            .focus()
+            .clear({force: true})
+            .type(`${search}{enter}`, {force: true})
+            .wait(3000)
+        return this;
+    }
+
+    verifyActivationEntriesSizeInTable(count: number): UserActivationPage {
+        cy.get(`[test-table-item-user]`).should('have.length', count);
+        return this;
+    }
+
+    activateUser(username: string): UserActivationPage {
+        cy.get(`[test-icon-user-action='ACTIVATE_${username}']`)
+            .focus()
+            .click({force: true});
+        return this;
+    }
+
+    deleteUser(username: string): UserActivationPage {
+        cy.get(`[test-icon-user-action='DELETE_${username}']`)
+            .focus()
+            .click({force: true});
+        return this;
+    }
 }

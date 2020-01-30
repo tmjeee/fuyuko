@@ -55,4 +55,40 @@ describe("user-role", () => {
             util.validateHelpNavStateOpen(false);
         });
     });
+
+    it ('should toggle sub side nav', () => {
+        util.toggleSubSideNav(() => {
+            util.validateSubSideNavStateOpen(false);
+        });
+        util.toggleSubSideNav(() => {
+            util.validateSubSideNavStateOpen(true);
+        });
+    });
+
+
+    it ('should not allow send invitation', () => {
+        userInvitationPage
+            .fillIn('', 'group', null)
+            .verifiedSendInvitationEnabled(false);
+
+        userInvitationPage
+            .fillIn('trest@asds.com', 'group')
+            .verifiedSendInvitationEnabled(false);
+
+        userInvitationPage
+            .fillIn('', 'group', 'VIEW Group')
+            .verifiedSendInvitationEnabled(false);
+    });
+
+
+    it ('should allow send invitation', () => {
+        const random = String(Math.random());
+        const email = `cypress-test-${random}@test.com`;
+        userInvitationPage
+            .fillIn(email, 'group', 'VIEW Group')
+            .verifiedSendInvitationEnabled(true)
+            .submitInvitation(10000)
+            .verifySuccessMessageExists()
+        ;
+    });
 });

@@ -132,7 +132,7 @@ describe("user-role", () => {
         ;
     });
 
-    it.only ('Search inactivate users from Inactive Users Panel', () => {
+    it ('Search inactivate users from Inactive Users Panel', () => {
         //  try to ACTIVATE them
         userPeoplePage
             .openInactiveUserPanel()
@@ -149,10 +149,10 @@ describe("user-role", () => {
             .verifyUserExistsInInactiveUsersPanel('disabled9')
             .activateUser('disabled1')
             .verifySuccessMessageExists()
-            .verifyActiveUsersSizeInTable(8)
+            .verifyInactiveUsersSizeInTable(8)
             .activateUser('disabled2')
             .verifySuccessMessageExists()
-            .verifyActiveUsersSizeInTable(7)
+            .verifyInactiveUsersSizeInTable(7)
             .verifyUserDoesNotExistsInInactiveUsersPanel('disabled1')
             .verifyUserDoesNotExistsInInactiveUsersPanel('disabled2')
             .verifyUserExistsInInactiveUsersPanel('disabled3')
