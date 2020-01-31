@@ -33,9 +33,15 @@ export class RegisterPage implements ActualPage<RegisterPage> {
             cy.get(`[test-field-email]`).focus().type(email, {force: true});
         }
 
+        // username
+        cy.get(`[test-field-username]`).focus().clear({force: true});
+        if (username) {
+            cy.get(`[test-field-username]`).focus().type(username, {force: true});
+        }
+
         // firstname
         cy.get(`[test-field-firstname]`).focus().clear({force: true});
-        if (username) {
+        if (firstname) {
             cy.get(`[test-field-firstname]`).focus().type(firstname, {force: true});
         }
 
@@ -53,8 +59,9 @@ export class RegisterPage implements ActualPage<RegisterPage> {
 
         // confirm password
         cy.get(`[test-field-confirm-password]`).focus().clear({force: true});
-        if (confirmPassword) {}
-        cy.get(`[test-field-confirm-password]`).focus().type(confirmPassword, {force: true});
+        if (confirmPassword) {
+            cy.get(`[test-field-confirm-password]`).focus().type(confirmPassword, {force: true});
+        }
 
         return this;
     }

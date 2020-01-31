@@ -6,7 +6,6 @@ import {DashboardWidgetService} from '../../../../service/dashboard-service/dash
 @Component({
     templateUrl: './sample-1-widget.component.html',
     styleUrls: ['./sample-1-widget.component.scss']
-
 })
 export class Sample1WidgetComponent extends DashboardWidget implements OnInit {
 
