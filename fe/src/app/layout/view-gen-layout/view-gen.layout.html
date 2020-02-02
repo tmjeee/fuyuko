@@ -6,7 +6,9 @@
   [attr.test-help-nav-state-open]="''+helpNavOpened">
   <mat-toolbar class="primary-toolbar mat-elevation-z24" color="primary">
     <mat-toolbar-row>
-      <mat-icon class="action" (click)="onSideNavExpandCollapseButtonClicked($event)">more_horiz</mat-icon>
+      <mat-icon class="action"
+                [attr.test-side-nav-toggle-icon]="''"
+                (click)="onSideNavExpandCollapseButtonClicked($event)">more_horiz</mat-icon>
       <!-- avatar -->
       <div class="avatar-section">
         <app-avatar [user]="myself"
@@ -17,7 +19,9 @@
       </div>
       <div class="spacer"></div>
       <app-notification [notifications]="notifications"></app-notification>
-      <mat-icon class="action" (click)="onHelpNavExpandCollapseButtonClicked($event)">help</mat-icon>
+      <mat-icon class="action"
+                [attr.test-help-nav-toggle-icon]="''"
+                (click)="onHelpNavExpandCollapseButtonClicked($event)">help</mat-icon>
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-sidenav-container class="main-side-nav-container">
@@ -70,7 +74,9 @@
           <mat-sidenav-content class="content-2">
             <mat-toolbar class="secondary-toolbar" color="primary">
               <mat-toolbar-row>
-                <mat-icon class="sub-sidebar-button" (click)="onSubSidebarButtonClicked($event)">menu</mat-icon>
+                <mat-icon class="sub-sidebar-button"
+                          [attr.test-sub-side-nav-toggle-icon]="''"
+                          (click)="onSubSidebarButtonClicked($event)">menu</mat-icon>
                 <mat-form-field class="view-selection">
                   <!--mat-label>View</mat-label -->
                   <mat-select (selectionChange)="onViewSelectionChange($event)" [value]="currentView">

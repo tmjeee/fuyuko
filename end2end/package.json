@@ -12,6 +12,8 @@
   "scripts": {
     "cypress-open": "npx cypress open",
     "cypress-run": "npx cypress run",
+    "copy": "npm run copy-model",
+    "copy-model": "cp -fr ../fe/src/app/model ./cypress/integration/ ; rm -fr ./src/model/dashboard.model.ts ; ",
     "check-cyclic-dependencies": "madge --cyclic ./integration"
   },
   "author": "",

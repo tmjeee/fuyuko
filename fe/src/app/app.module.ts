@@ -70,7 +70,7 @@ import {GlobalErrorhandler} from './error-handler/global.errorhandler';
 import {CarouselModule} from './component/carousel-component/carousel.module';
 import {ViewModule} from './component/view-component/view.module';
 import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
-import {DATE_FORMAT} from './model/item.model';
+import {DATE_FORMAT, MAT_DATE_FORMAT} from './model/item.model';
 import {BulkEditService} from './service/bulk-edit-service/bulk-edit.service';
 import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
@@ -295,7 +295,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
         deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
-    {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true, deps: [AuthService]} as Provider,
     {provide: ErrorHandler, useClass: GlobalErrorhandler} as Provider,

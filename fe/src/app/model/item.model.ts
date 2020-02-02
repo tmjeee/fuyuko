@@ -10,6 +10,18 @@ export const WIDTH_FORMAT = '0.00';
 export const HEIGHT_FORMAT = '0.00';
 export const LENGTH_FORMAT = '0.00';
 
+export const MAT_DATE_FORMAT = {
+  parse: {
+    dateInput: DATE_FORMAT
+  },
+  display: {
+    dateInput: DATE_FORMAT,
+    monthYearLabel: 'MM-YYYY',
+    dateA11yLabel: DATE_FORMAT,
+    monthYearA11yLabel: 'MM-YYYY',
+  }
+};
+
 
 export interface Item {
   id: number;

@@ -38,7 +38,6 @@ export const createSettingsIfNotExists = async (userId: number, conn: Connection
         for (let p in DEFAULT_SETTINGS) {
             // @ts-ignore
             const v = DEFAULT_SETTINGS[p];
-            console.log('****************** v', v, typeof v);
             if (p !== 'id' && DEFAULT_SETTINGS.hasOwnProperty(p)) {
                 conn.query(`
                             INSERT INTO TBL_USER_SETTING ( USER_ID, SETTING, VALUE, TYPE) VALUES (?,?,?,?)

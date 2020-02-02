@@ -243,8 +243,9 @@ type CreateRuleType = {
 }
 
 const createManyRules = async(conn: Connection, viewId: number, att1Id: number, att2Id: number) => {
+    let counter = 1;
     const c = ()=>({
-        name: `Rule #${random()}`,
+        name: `Rule #${counter++}`,
         viewId: viewId,
         validateClauses: [
             {
