@@ -54,15 +54,28 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
         return this;
     }
 
-    editRulePopup(ruleName: string): ViewRulePage {
+    deleteRule(ruleName: string): ViewRulePage {
+        cy.get(`[test-icon-remove-rule='${ruleName}']`).click({force: true});
         return this;
     }
 
-    editRulePopupWhenClause(ruleName: string, attributeName: string, operator: OperatorType, value: string): ViewRulePage {
-       return this;
+    editRulePopup(ruleName: string): ViewRulePage {
+        cy.get(`[test-icon-edit-rule-popup='${ruleName}']`).click({force: true});
+        return this;
     }
 
-    editRulePopupValidateClause(ruleName: string): ViewRulePage {
-       return this;
+    editRuleExternal(ruleName: string): ViewRulePage {
+        cy.get(`[test-icon-edit-rule='${ruleName}']`).click({force: true});
+        return this;
     }
+
+    selectWhenClauseAttribute(whenClauseId: number, attributeName: string): ViewRulePage {
+        return this;
+    }
+
+    selectWhenClauseOperator(operator: OperatorType): ViewRulePage {
+        return this;
+    }
+
+
 }
