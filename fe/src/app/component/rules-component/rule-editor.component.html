@@ -20,12 +20,12 @@
             </div>
             <div class="validate-clauses-section" *ngIf="validateClauses.length > 0">
                 <div class="validate-clause-section" *ngFor="let validateClause of validateClauses; let i = index">
-                    <app-attribute-operator-editor
+                    <app-multi-value-attribute-operator-editor
                             [attr.test-validate-clause-attribute-editor]="validateClause.id"
                             [attributes]="attributes"
-                            [itemValueOperatorAndAttribute]="validateClause"
+                            [itemValueOperatorAndAttributeWithId]="validateClause"
                             (events)="onValidateClauseChange($event, i)">
-                    </app-attribute-operator-editor>
+                    </app-multi-value-attribute-operator-editor>
                     <button type="button" mat-icon-button
                             [attr.test-button-delete-rule-validate-clause]="validateClause.id"
                             matTooltip="Delete this when clause"
@@ -44,12 +44,12 @@
             </div>
             <div class="when-clauses-section" *ngIf="whenClauses.length > 0">
                 <div class="when-clause-section" *ngFor="let whenClause of whenClauses; let i = index">
-                    <app-attribute-operator-editor
+                    <app-multi-value-attribute-operator-editor
                             [attr.test-when-clause-attribute-editor]="whenClause.id"
                             [attributes]="attributes"
-                            [itemValueOperatorAndAttribute]="whenClause"
+                            [itemValueOperatorAndAttributeWithId]="whenClause"
                             (events)="onWhenClauseChange($event, i)">
-                    </app-attribute-operator-editor>
+                    </app-multi-value-attribute-operator-editor>
                     <button mat-icon-button
                             matTooltip="delete this when clause"
                             [attr.test-button-delete-rule-when-clause]="whenClause.id"

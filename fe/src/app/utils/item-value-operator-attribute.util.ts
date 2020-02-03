@@ -1,5 +1,5 @@
 import {operatorNeedsItemValue} from './attribute-operators.util';
-import {hasItemValue} from './ui-item-value-getter.util';
+import {hasItemValues} from './ui-item-value-getter.util';
 import {ItemValueOperatorAndAttributeWithId} from '../component/rules-component/rule-editor.component';
 
 
@@ -13,12 +13,9 @@ export const isItemValueOperatorAndAttributeWithIdValid = (i: ItemValueOperatorA
         } else if (i.operator && !operatorNeedsItemValue(i.operator)) {
             return true;
         }
-        console.log('****** itemValueOperatorAndAttribute', i);
-        if (!hasItemValue(i.attribute, i.itemValue)) {
-           console.log('***** false (invalid)');
+        if (!hasItemValues(i.attribute, i.itemValue)) {
            return false;
         }
-        console.log('***** true (valid)');
         return true;
     }
     return false;

@@ -37,7 +37,9 @@
               <li class="validate-clause">
                 {{validateClause.attributeName}}
                 {{validateClause.operator}}
-                {{validateClause?.condition | itemAttributeValueAsString:findAttribute(validateClause.attributeId)}}
+                <ul *ngFor="let condition of validateClause?.condition">
+                  <li>{{condition | itemAttributeValueAsString:findAttribute(validateClause.attributeId)}}</li>
+                </ul>
               </li>
             </ng-container>
           </ul>
@@ -51,7 +53,9 @@
               <li class="when-clause">
                 {{whenClause.attributeName}}
                 {{whenClause.operator}}
-                {{whenClause?.condition | itemAttributeValueAsString:findAttribute(whenClause.attributeId)}}
+                <ul *ngFor="let condition of whenClause?.condition">
+                  <li>{{condition | itemAttributeValueAsString:findAttribute(whenClause.attributeId)}}</li>
+                </ul>
               </li>
             </ng-container>
           </ul>
