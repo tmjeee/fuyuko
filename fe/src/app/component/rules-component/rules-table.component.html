@@ -22,8 +22,7 @@
               <button type="button" [attr.test-icon-remove-rule]="rule.name" mat-icon-button color="primary" (click)="onDeleteRule($event, rule)" matTooltip="Delete Rule"><mat-icon>delete_outline</mat-icon></button>
               <button type="button" [attr.test-icon-enable-rule]="rule.name" mat-icon-button color="primary" *ngIf="isDisabled(rule)" (click)="onEnableRule($event, rule)" matTooltip="Enable Rule"><mat-icon>add_circle_outline</mat-icon></button>
               <button type="button" [attr.test-icon-disable-rule]="rule.name" mat-icon-button color="primary" *ngIf="isEnabled(rule)" (click)="onDisableRule($event, rule)" matTooltip="Disable Rule"><mat-icon>remove_circle_outline</mat-icon></button>
-              <button type="button" [attr.test-icon-edit-rule-popout]="rule.name" mat-icon-button color="primary" (click)="onEditRule($event, rule)" matTooltip="Edit Rule (popout)"><mat-icon>open_in_new</mat-icon></button>
-              <button type="button" [attr.test-icon-edit-rule]="rule.name" mat-icon-button color="primary" (click)="onExternalEdit($event, rule)" matTooltip="Edit Rule"><mat-icon>edit</mat-icon></button>
+              <button type="button" [attr.test-icon-edit-rule]="rule.name" mat-icon-button color="primary" (click)="onExternalEdit($event, rule)" matTooltip="Edit Rule"><mat-icon>open_in_new</mat-icon></button>
             </div>
         </mat-panel-description>
       </mat-expansion-panel-header>

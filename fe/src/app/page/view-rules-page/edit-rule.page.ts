@@ -59,16 +59,35 @@ export class EditRulePageComponent implements OnInit, OnDestroy {
     reload() {
         this.ready = false;
         const ruleId: string = this.route.snapshot.paramMap.get('ruleId');
-        combineLatest([
-            this.attributeService.getAllAttributesByView(this.currentView.id),
-            this.ruleService.getRuleByView(this.currentView.id, Number(ruleId))
-        ]).pipe(
-            tap((r: [Attribute[], Rule]) => {
-                this.attributes = r[0];
-                this.rule = r[1];
-                this.ready = true;
-            })
-        ).subscribe();
+        if (ruleId) {
+            combineLatest([
+                this.attributeService.getAllAttributesByView(this.currentView.id),
+                this.ruleService.getRuleByView(this.currentView.id, Number(ruleId))
+            ]).pipe(
+                tap((r: [Attribute[], Rule]) => {
+                    this.attributes = r[0];
+                    this.rule = r[1];
+                    this.ready = true;
+                })
+            ).subscribe();
+        } else {
+            combineLatest([
+                this.attributeService.getAllAttributesByView(this.currentView.id),
+            ]).pipe(
+                tap((r: [Attribute[]]) => {
+                    this.attributes = r[0];
+                    this.rule = {
+                        id: -1,
+                        name: '',
+                        status: null,
+                        description: '',
+                        validateClauses: [],
+                        whenClauses: []
+                    },
+                    this.ready = true;
+                })
+            ).subscribe();
+        }
     }
 
     async onRuleEditorEvent($event: RuleEditorComponentEvent) {
@@ -77,13 +96,23 @@ export class EditRulePageComponent implements OnInit, OnDestroy {
                 await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['rules'], help: ['view-help'] }}]);
                 break;
             case 'update':
-                this.ruleService.updateRule(this.currentView.id, $event.rule)
-                    .pipe(
-                        tap((_) => {
-                            this.notificationService.success(`Updated`, `Rule updated`);
-                            this.reload();
-                        })
-                    ).subscribe();
+                if ($event.rule.id) { // existing
+                    this.ruleService.updateRule(this.currentView.id, $event.rule)
+                        .pipe(
+                            tap((_) => {
+                                this.notificationService.success(`Updated`, `Rule updated`);
+                                this.reload();
+                            })
+                        ).subscribe();
+                } else { // new
+                    this.ruleService.addRule(this.currentView.id, $event.rule)
+                        .pipe(
+                            tap((_) => {
+                                this.notificationService.success(`Added`, `Rule added`);
+                                this.reload();
+                            })
+                        ).subscribe();
+                }
                 break;
         }
     }
