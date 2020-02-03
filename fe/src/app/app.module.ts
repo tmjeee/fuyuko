@@ -70,7 +70,7 @@ import {GlobalErrorhandler} from './error-handler/global.errorhandler';
 import {CarouselModule} from './component/carousel-component/carousel.module';
 import {ViewModule} from './component/view-component/view.module';
 import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
-import {DATE_FORMAT} from './model/item.model';
+import {DATE_FORMAT, MAT_DATE_FORMAT} from './model/item.model';
 import {BulkEditService} from './service/bulk-edit-service/bulk-edit.service';
 import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
@@ -123,22 +123,24 @@ import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-h
 import {EditRulePageComponent} from './page/view-rules-page/edit-rule.page';
 import {ViewValidationPageComponent} from './page/view-validation-page/view-validation.page';
 import {EditAttributePageComponent} from './page/view-attributes-page/edit-attribute.page';
+import {ValidationService} from './service/validation-service/validation.service';
+import {ValidationResultModule} from './component/validation-result-component/validation-result.module';
+import { ViewValidationDetailsPageComponent } from './page/view-validation-details-page/view-validation-details.page';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
                         themeService: ThemeService,
-                        viewService: ViewService,
-                        browserLocationHistoryService: BrowserLocationHistoryService) => {
+                        viewService: ViewService) => {
   return () => {
     authService.asObservable()
       .pipe(
         tap((u: User) => {
         if (u == null) { // logout
-          browserLocationHistoryService.storeLastUrlKey('');
-          settingsService.destroyRuntimeSettings().subscribe();
+          viewService.destroy();
+          settingsService.destroy();
         } else { // login
-          settingsService.getRuntimeSettings(u).subscribe();
           themeService.setTheme(u.theme);
+          settingsService.init(u);
           viewService.init();
         }
       })
@@ -189,6 +191,7 @@ const appInitializer = (settingsService: SettingsService,
     ViewAttributesPageComponent,
     EditAttributePageComponent,
     ViewValidationPageComponent,
+    ViewValidationDetailsPageComponent,
     ViewDataTabularPageComponent,
     ViewDataThumbnailPageComponent,
     ViewDataListPageComponent,
@@ -222,6 +225,7 @@ const appInitializer = (settingsService: SettingsService,
       clickToClose: true,
       clickIconToClose: true,
       maxLength: 0,
+      maxStack: 10,
       theClass: 'message-toast',
       animate: NotificationAnimationType.Fade
     } as Options),
@@ -255,6 +259,7 @@ const appInitializer = (settingsService: SettingsService,
     UserSearchModule,
     UserTableModule,
     PartnerViewModule,
+    ValidationResultModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -285,11 +290,12 @@ const appInitializer = (settingsService: SettingsService,
     {provide: GlobalCommunicationService, useClass: GlobalCommunicationService} as Provider,
     {provide: PartnerService, useClass: PartnerService} as Provider,
     {provide: BrowserLocationHistoryService, useClass: BrowserLocationHistoryService} as Provider,
+    {provide: ValidationService, useClass: ValidationService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
-        deps: [SettingsService, AuthService, ThemeService, ViewService, BrowserLocationHistoryService] } as Provider,
+        deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
-    {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true, deps: [AuthService]} as Provider,
     {provide: ErrorHandler, useClass: GlobalErrorhandler} as Provider,

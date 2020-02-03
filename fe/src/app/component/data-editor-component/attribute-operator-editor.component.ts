@@ -6,6 +6,7 @@ import { OperatorType } from '../../model/operator.model';
 import {
     AreaValue,
     CURRENCY_FORMAT,
+    DATE_FORMAT,
     CurrencyValue, DimensionValue, DoubleSelectValue, HeightValue,
     LengthValue, SelectValue,
     Value,
@@ -38,6 +39,8 @@ export class AttributeOperatorEditorComponent implements OnInit {
     operators: OperatorType[];
 
     @Output() events: EventEmitter<ItemValueOperatorAndAttribute>;
+
+    DATE_FORMAT = DATE_FORMAT;
 
     attribute: Attribute;
     operator: OperatorType;

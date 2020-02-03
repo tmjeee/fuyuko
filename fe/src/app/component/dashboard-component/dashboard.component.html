@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <div fxLayout="row" class="dashboard-panel" cdkDropListGroup>
+    <div fxLayout="row" class="dashboard-panel" cdkDropListGroup [attr.test-dashboard-strategy]="getCurrentStrategy()?.id">
         <div *ngFor="let columnIndex of columnIndexes" fxFlex>
             <div fxLayout="column"
                  class="widgets-droplist"

@@ -71,18 +71,19 @@ const httpAction: any[] = [
             });
         } else if (customAvatarFile) {
             await doInDbConnection(async (conn: Connection) => {
+                const name: string = customAvatarFile.name;
                 const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(customAvatarFile.path));
                 const ft: fileType.FileTypeResult = fileType(buffer);
                 const qCount: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT, ID FROM TBL_USER_AVATAR WHERE USER_ID = ? `, [userId]);
                 let q: QueryResponse;
                 let userAvatarId: number;
                 if (qCount[0].COUNT > 0) {
-                    q = await conn.query(`UPDATE TBL_USER_AVATAR SET GLOBAL_AVATAR_ID = ?, MIME_TYPE = ?, SIZE = ?, CONTENT =? WHERE USER_ID = ?`,
-                        [null, ft.mime, buffer.length, buffer, userId]);
+                    q = await conn.query(`UPDATE TBL_USER_AVATAR SET NAME=?, GLOBAL_AVATAR_ID = ?, MIME_TYPE = ?, SIZE = ?, CONTENT =? WHERE USER_ID = ?`,
+                        [name, null, ft.mime, buffer.length, buffer, userId]);
                     userAvatarId = qCount[0].ID;
                 } else {
-                    q = await conn.query(`INSERT INTO TBL_USER_AVATAR (USER_ID, GLOBAL_AVATAR_ID, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?) `,
-                        [userId, null, ft.mime, buffer.length, buffer]);
+                    q = await conn.query(`INSERT INTO TBL_USER_AVATAR (NAME, USER_ID, GLOBAL_AVATAR_ID, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?) `,
+                        [name, userId, null, ft.mime, buffer.length, buffer]);
                     userAvatarId = q.insertId;
                 }
 

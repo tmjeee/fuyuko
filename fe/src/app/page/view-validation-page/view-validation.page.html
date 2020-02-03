@@ -1,11 +1,18 @@
-<div class="view-validation-page">
+<div class="view-validation-page" [attr.test-page-title]="'view-validations'">
     <mat-card>
         <mat-card-header>
             <mat-card-title>Validation</mat-card-title>
             <mat-card-subtitle>Validation of view (it's attribute, item and data)</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            View Validation page
+            <div *ngIf="loading">Loading ...</div>
+            <app-validation-result-listing
+                            *ngIf="!loading"
+
+
+                            [view]="view"
+                            [validations]="validations">
+            </app-validation-result-listing>
         </mat-card-content>
     </mat-card>
 </div>

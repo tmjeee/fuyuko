@@ -41,7 +41,7 @@ export class SettingsPageComponent implements OnInit {
   }
 
   onSettingsEvent($event: SettingsComponentEvent) {
-    this.settingsService.saveSettings($event.settings)
+    this.settingsService.saveSettings(this.currentUser, $event.settings)
         .pipe(
             tap((s: Settings) => {
                 this.settings = s;

@@ -3,6 +3,7 @@
   <mat-form-field>
     <mat-label>Email</mat-label>
     <input type="text"
+           [attr.test-field-email]="''"
            matInput
            [formControl]="formControlEmail"
            placeholder="Email of invitee">
@@ -24,6 +25,7 @@
       </mat-chip>
       <input
         #chipInput
+        [attr.test-field-groups]="''"
         matInput
         placeholder="Groups to add to invitee"
         [formControl]="formControlGroup"
@@ -36,6 +38,7 @@
     <mat-autocomplete #auto="matAutocomplete"
                       (optionSelected)="onGroupSelected($event)">
       <mat-option *ngFor="let group of filteredGroups | async"
+                  [attr.test-autocomplete-option]="group.name"
                   [value]="group">
         {{group.name}}
       </mat-option>
@@ -45,6 +48,7 @@
   </mat-form-field>
 
   <button mat-flat-button
+          [attr.test-button-submit-invitation]="''"
           [disabled]="!isValid()"
           class="send-invite-button"
           color="primary"

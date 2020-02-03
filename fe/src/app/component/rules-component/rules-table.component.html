@@ -1,34 +1,35 @@
 <div class="rules-table-component">
   <div class="main-controls">
-    <button type="button" mat-flat-button color="primary" (click)="onAddRule($event)">Add Rule</button>
+    <button type="button" [attr.test-button-add-rule]="''" mat-flat-button color="primary" (click)="onAddRule($event)">Add Rule</button>
   </div>
   <div *ngIf="rules.length === 0">
     No rules available.
   </div>
   <mat-accordion *ngIf="rules.length > 0">
     <mat-expansion-panel *ngFor="let rule of rules; let i = index;">
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header [attr.test-panel-header-rule]="rule.name"
+                                  [attr.test-panel-rule-status]="rule.status">
         <mat-panel-title>
           <mat-icon *ngIf="isDisabled(rule)" color="primary">label_off</mat-icon>
           <mat-icon *ngIf="isEnabled(rule)" color="primary">label</mat-icon>
           <span>{{rule.name}}</span>
         </mat-panel-title>
-        <mat-panel-description>
+        <mat-panel-description >
             <div class="description">
               {{rule.description}}
             </div>
             <div class="controls">
-              <button type="button" mat-flat-button color="primary" (click)="onDeleteRule($event, rule)">Delete Rule</button>
-              <button type="button" mat-flat-button color="primary" *ngIf="isDisabled(rule)" (click)="onEnableRule($event, rule)">Enable</button>
-              <button type="button" mat-flat-button color="primary" *ngIf="isEnabled(rule)" (click)="onDisableRule($event, rule)">Disable</button>
-              <button type="button" mat-flat-button color="primary" (click)="onEditRule($event, rule)">Edit (popup)</button>
-              <button type="button" mat-flat-button color="primary" (click)="onExternalEdit($event, rule)">Edit</button>
+              <button type="button" [attr.test-icon-remove-rule]="rule.name" mat-icon-button color="primary" (click)="onDeleteRule($event, rule)" matTooltip="Delete Rule"><mat-icon>delete_outline</mat-icon></button>
+              <button type="button" [attr.test-icon-enable-rule]="rule.name" mat-icon-button color="primary" *ngIf="isDisabled(rule)" (click)="onEnableRule($event, rule)" matTooltip="Enable Rule"><mat-icon>add_circle_outline</mat-icon></button>
+              <button type="button" [attr.test-icon-disable-rule]="rule.name" mat-icon-button color="primary" *ngIf="isEnabled(rule)" (click)="onDisableRule($event, rule)" matTooltip="Disable Rule"><mat-icon>remove_circle_outline</mat-icon></button>
+              <button type="button" [attr.test-icon-edit-rule-popout]="rule.name" mat-icon-button color="primary" (click)="onEditRule($event, rule)" matTooltip="Edit Rule (popout)"><mat-icon>open_in_new</mat-icon></button>
+              <button type="button" [attr.test-icon-edit-rule]="rule.name" mat-icon-button color="primary" (click)="onExternalEdit($event, rule)" matTooltip="Edit Rule"><mat-icon>edit</mat-icon></button>
             </div>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
       <!-- content -->
-      <div class="content">
+      <div class="content" [attr.test-panel-content-rule]="rule.name">
         <div class="validate-clauses-section">
           <div>Validate</div>
           <div *ngIf="!rule?.validateClauses || rule?.validateClauses?.length === 0" class="validate-clauses">No validate clause(s)</div>

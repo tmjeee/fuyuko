@@ -46,9 +46,10 @@ import {PartnerDataListPageComponent} from './page/partner-data-list-page/partne
 import {PartnerDataThumbnailPageComponent} from './page/partner-data-thumbnail-page/partner-data-thumbnail.page';
 import {PartnerHelpPageComponent} from './page/partner-help-page/partner-help.page';
 import {DashboardHelpPageComponent} from './page/dashboard-help-page/dashboard-help.page';
-import {EditRulePageComponent} from "./page/view-rules-page/edit-rule.page";
-import {ViewValidationPageComponent} from "./page/view-validation-page/view-validation.page";
-import {EditAttributePageComponent} from "./page/view-attributes-page/edit-attribute.page";
+import {EditRulePageComponent} from './page/view-rules-page/edit-rule.page';
+import {ViewValidationPageComponent} from './page/view-validation-page/view-validation.page';
+import {EditAttributePageComponent} from './page/view-attributes-page/edit-attribute.page';
+import {ViewValidationDetailsPageComponent} from './page/view-validation-details-page/view-validation-details.page';
 
 const routes: Routes = [
 
@@ -64,6 +65,11 @@ const routes: Routes = [
    path: 'login-layout',
    component: LoginLayoutComponent,
    children: [
+     {
+       path: '',
+       pathMatch: 'full',
+       redirectTo: '/login-layout/login',
+     } as Route,
      {
        path: 'login',
        component: LoginPageComponent,
@@ -135,6 +141,11 @@ const routes: Routes = [
     },
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/dashboard-layout/(dashboard//help:dashboard-help)',
+      } as Route,
+      {
         path: 'dashboard',
         canActivate: [AuthGuard],
         component: DashboardPageComponent,
@@ -158,6 +169,11 @@ const routes: Routes = [
      sideNav: 'user'
    },
    children: [
+     {
+       path: '',
+       pathMatch: 'full',
+       redirectTo: '/user-gen-layout/(role//help:user-help)',
+     } as Route,
      {
        path: 'role',
        canActivate: [AuthGuard],
@@ -218,6 +234,11 @@ const routes: Routes = [
     },
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/import-export-gen-layout/(import//help:import-help)',
+      } as Route,
+      {
         path: 'import',
         canActivate: [AuthGuard],
         component: ImportPageComponent,
@@ -258,6 +279,11 @@ const routes: Routes = [
       sideNav: 'view'
     },
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/view-gen-layout/(rules//help:view-help)',
+      } as Route,
       {
         path: 'rules',
         canActivate: [AuthGuard],
@@ -331,6 +357,14 @@ const routes: Routes = [
         }
       } as Route,
       {
+        path: 'validation-details/view/:viewId/validation/:validationId',
+        canActivate: [AuthGuard],
+        component: ViewValidationDetailsPageComponent,
+        data: {
+          subSideNav: 'validation'
+        }
+      } as Route,
+      {
         path: 'view-help',
         canActivate: [AuthGuard],
         component: ViewHelpPageComponent,
@@ -347,6 +381,11 @@ const routes: Routes = [
    component: GenLayoutComponent,
    children: [
      // profile
+     {
+       path: '',
+       pathMatch: 'full',
+       redirectTo: '/gen-layout/(profile//help:profile-help)'
+     } as Route,
      {
        path: 'profile',
        canActivate: [AuthGuard],
@@ -440,7 +479,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { enableTracing: true, scrollPositionRestoration: 'enabled'})],
+  imports: [RouterModule.forRoot(routes, { enableTracing: false, scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

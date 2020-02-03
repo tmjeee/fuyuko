@@ -1,19 +1,7 @@
 import {Connection} from "mariadb";
 import {i} from '../../logger';
 import {doInDbConnection, QueryA, QueryResponse} from '../../db';
-import sha256 from "sha256";
-import config from "../../config";
 import {hashedPassword} from "../../service";
-import path from 'path';
-import fs, {BinaryData, readFile, ReadStream} from 'fs';
-import util, {promisify} from 'util';
-import {fsRead, FsReadResult} from '../../util';
-import fileType from 'file-type';
-import {create} from "domain";
-import * as Path from "path";
-import {ItemImage} from "../../model/item.model";
-import {sprintf} from 'sprintf';
-import {ROLE_ADMIN, ROLE_EDIT, ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
 import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
 import {Themes} from "../../model/theme.model";
 
@@ -32,9 +20,11 @@ const INSERT_DATA = async () => {
     await doInDbConnection(async (conn: Connection) => {
         // users
         const u1: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            ['tmjee', new Date(), new Date(), 'tmjee1@gmail.com', 'ENABLED', hashedPassword('test'), 'toby', 'jee']);
+            ['cypress', new Date(), new Date(), 'tmjeee@gmail.com', 'ENABLED', hashedPassword('test'), 'cypress', 'jee']);
         const u2: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            ['sxjee', new Date(), new Date(), 'sxjee@gmail.com', 'ENABLED', hashedPassword('test'), 'jason', 'jee']);
+            ['tmjee', new Date(), new Date(), 'tmjee1@gmail.com', 'ENABLED', hashedPassword('test'), 'toby', 'jee']);
+        const u3: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            ['sxjee', new Date(), new Date(), 'sxjee@gmail.com', 'ENABLED', hashedPassword('test'), 'song xian', 'jee']);
 
         // lookup group ids
         const viewGroupId: number = (await conn.query(`SELECT ID FROM TBL_GROUP WHERE NAME=?`, [GROUP_VIEW]) as QueryA)[0].ID;
@@ -51,10 +41,15 @@ const INSERT_DATA = async () => {
         await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u2.insertId, editGroupId]);
         await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u2.insertId, adminGroupId]);
         await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u2.insertId, partnerGroupId]);
+        await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u3.insertId, viewGroupId]);
+        await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u3.insertId, editGroupId]);
+        await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u3.insertId, adminGroupId]);
+        await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [u3.insertId, partnerGroupId]);
 
         // user-theme
         await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`, [u1.insertId, nextTheme()]);
         await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`, [u2.insertId, nextTheme()]);
+        await conn.query(`INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)`, [u3.insertId, nextTheme()]);
 
 
         // various users (group, theme etc)
@@ -67,6 +62,8 @@ const INSERT_DATA = async () => {
                 [`admin${i}`, new Date(), new Date(), `admin${i}@gmail.com`, 'ENABLED', hashedPassword('test'), `admin${i}_firstname`, `admin${i}_lastname`]);
             const uP: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
                 [`partner${i}`, new Date(), new Date(), `partner${i}@gmail.com`, 'ENABLED', hashedPassword('test'), `partner${i}_firstname`, `partner${i}_lastname`]);
+            const uD: QueryResponse = await conn.query(`INSERT INTO TBL_USER (USERNAME, CREATION_DATE, LAST_UPDATE, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [`disabled${i}`, new Date(), new Date(), `disabled${i}@gamil.com`, 'DISABLED', hashedPassword('test'), `disabled${i}_firstname`, `disabled${i}_lastname`]);
 
 
             await conn.query('INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?, ?)', [uV.insertId, viewGroupId]);

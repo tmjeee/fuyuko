@@ -6,6 +6,7 @@
     <input type="text"
            placeholder="Group Name to add to role"
            matInput
+           [attr.test-field-search]="''"
            [matAutocomplete]="auto"
            [formControl]="formControlGroupSearch">
     <mat-hint>Search from auto suggest group to add to role</mat-hint>
@@ -14,7 +15,9 @@
                     autoActiveFirstOption
                     [displayWith]="displayFn"
                     (optionSelected)="onGroupSearchSelected($event)">
-    <mat-option *ngFor="let group of groupSearchResult | async" [value]="group">
+    <mat-option *ngFor="let group of groupSearchResult | async"
+                [attr.test-auto-complete-option]="group.name"
+                [value]="group">
       {{group['name']}}
     </mat-option>
   </mat-autocomplete>
@@ -23,7 +26,7 @@
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let group">{{group.name}}</td>
+      <td mat-cell *matCellDef="let group" [attr.test-table-item-group]="group.name">{{group.name}}</td>
     </ng-container>
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef>Description</th>
@@ -32,7 +35,13 @@
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let group">
-        <mat-icon color="primary" *ngFor="let action of actions" [matTooltip]="action.tooltip" (click)="onActionClicked($event, group, action)">{{action.icon}}</mat-icon>
+        <mat-icon color="primary"
+                  *ngFor="let action of actions"
+                  [attr.test-icon-group-action]="action.type + '_' + group.name"
+                  [matTooltip]="action.tooltip"
+                  (click)="onActionClicked($event, group, action)">
+          {{action.icon}}
+        </mat-icon>
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

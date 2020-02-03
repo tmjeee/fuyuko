@@ -31,6 +31,8 @@ export class ItemEditorComponent {
 
   onEdit($event: MouseEvent, name: Type) {
     const matDialogRef: MatDialogRef<ItemEditorDialogComponent> = this.matDialog.open(ItemEditorDialogComponent, {
+      width: '90vw',
+      height: '90vh',
       data:  {
         item: {...this.item},
         type: this.type

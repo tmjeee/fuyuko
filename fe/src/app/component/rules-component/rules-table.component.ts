@@ -40,7 +40,6 @@ export class RulesTableComponent {
   }
 
   onExternalEdit($event: MouseEvent, rule: Rule) {
-    console.log('***** external edit event fired');
     this.events.emit({
       type: 'external-edit',
       rule: {...rule}

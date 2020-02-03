@@ -95,10 +95,7 @@ const _addItem = async (conn: Connection, viewId: number, item2: Item2, parentId
     return newItemId;
 }
 
-
-export const getAllItemsInView = async (viewId: number): Promise<Item2[]> => {
-    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryA = await conn.query(`
+const SQL_1_A = `
                 SELECT
                     I.ID AS I_ID,
                     I.PARENT_ID AS I_PARENT_ID,
@@ -129,11 +126,38 @@ export const getAllItemsInView = async (viewId: number): Promise<Item2[]> => {
                 LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
-            `, [viewId]);
+`;
 
+const SQL_1_B = `${SQL_1_A} AND I.PARENT_ID IS NULL`;
+
+const SQL_2_A = `${SQL_1_A} AND I.ID IN ?`;
+
+const SQL_2_B = `${SQL_2_A} AND I.PARENT_ID IS NULL`;
+
+
+
+
+export const getAllItemsInView = async (viewId: number, parentOnly: boolean = true): Promise<Item2[]> => {
+    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(parentOnly ? SQL_1_B : SQL_1_A, [viewId]);
         return _doQ(q);
     });
 
+
+    for (const item2 of item2s) {
+        const itemId: number = item2.id;
+        item2.children = await findChildrenItems(viewId, itemId);
+    }
+
+    return item2s;
+}
+
+export const getItemsByIds = async (viewId: number, itemIds: number[], parentOnly: boolean = true): Promise<Item2[]> => {
+    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(parentOnly ? SQL_2_B : SQL_2_A, [viewId, itemIds]);
+
+        return _doQ(q);
+    });
 
     for (const item2 of item2s) {
         const itemId: number = item2.id;

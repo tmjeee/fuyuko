@@ -9,6 +9,7 @@ import {catchError, tap} from 'rxjs/operators';
 const URL_ALL_VIEWS = () => `${config().api_host_url}/views`;
 const URL_UPDATE_VIEW = () => `${config().api_host_url}/views/update`;
 const URL_DELETE_VIEW = () => `${config().api_host_url}/views/delete`;
+const URL_GET_VIEW_BY_ID = () => `${config().api_host_url}/view/:viewId`;
 
 @Injectable()
 export class ViewService {
@@ -33,6 +34,9 @@ export class ViewService {
     ).subscribe();
   }
 
+  destroy() {
+  }
+
   asObserver(): Observable<View> {
     return this.subject.asObservable();
   }
@@ -52,5 +56,9 @@ export class ViewService {
 
   deleteViews(deletedViews: View[]): Observable<ApiResponse> {
       return this.httpClient.request<ApiResponse>('delete', URL_DELETE_VIEW(), { body: (deletedViews ? deletedViews : [])});
+  }
+
+  getViewById(viewId: string) {
+    return this.httpClient.get<View>(URL_GET_VIEW_BY_ID().replace(':viewId', viewId));
   }
 }

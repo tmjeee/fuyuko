@@ -1,5 +1,9 @@
-
-<div class="import-export-layout">
+<div *ngIf="loading">Loading ...</div>
+<div class="import-export-layout"
+     *ngIf="!loading"
+     [attr.test-sub-side-nav-state-open]="''+subSideBarOpened"
+     [attr.test-side-nav-state-open]="''+sideNavOpened"
+     [attr.test-help-nav-state-open]="''+helpNavOpened">
   <mat-toolbar class="primary-toolbar mat-elevation-z24" color="primary">
     <mat-toolbar-row>
       <mat-icon class="action" (click)="onSideNavExpandCollapseButtonClicked($event)">more_horiz</mat-icon>

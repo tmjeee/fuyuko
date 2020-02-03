@@ -1,4 +1,4 @@
-<div class="profile-page">
+<div class="profile-page" [attr.test-page-title]="'profile'">
   <ng-container *ngIf="!ready">
     Loading ...
   </ng-container>
@@ -47,8 +47,8 @@
     <div class="theme-section">
       <mat-form-field>
         <mat-label>Themes</mat-label>
-        <mat-select (selectionChange)="onThemeSelectionChanged($event)" [formControl]="formControlTheme">
-          <mat-option *ngFor="let theme of allThemes" [value]="theme">
+        <mat-select (selectionChange)="onThemeSelectionChanged($event)" [formControl]="formControlTheme" [attr.test-theme-select]="''">
+          <mat-option *ngFor="let theme of allThemes" [value]="theme" [attr.test-theme-select-option]="theme.cssClassName">
             {{theme.description}}
           </mat-option>
         </mat-select>

@@ -1,4 +1,4 @@
-<div class="register-page">
+<div class="register-page" [attr.test-page-title]="'register'">
   <form [formGroup]="formGroup" (ngSubmit)="onSubmit();" class="page-form">
     <mat-card class="container">
       <mat-card-header>
@@ -24,32 +24,42 @@
           <mat-form-field>
             <mat-label>Email</mat-label>
             <mat-hint>Enter a valid email</mat-hint>
-            <input matInput placeholder="Email" [formControl]="formControlEmail">
+            <input matInput placeholder="Email"
+                   [attr.test-field-email]="''"
+                   [formControl]="formControlEmail">
             <mat-error *ngIf="formControlEmail?.errors?.required">Email is required</mat-error>
             <mat-error *ngIf="formControlEmail?.errors?.email">Email format must be valid</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Username</mat-label>
             <mat-hint>Enter a valid username</mat-hint>
-            <input matInput placeholder="Username" [formControl]="formControlUsername">
+            <input matInput placeholder="Username"
+                   [attr.test-field-username]="''"
+                   [formControl]="formControlUsername">
             <mat-error *ngIf="formControlEmail?.errors?.required">Username is required</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>First Name</mat-label>
             <mat-hint>Enter a valid First Name</mat-hint>
-            <input matInput placeholder="First Name" [formControl]="formControlFirstName">
+            <input matInput placeholder="First Name"
+                   [attr.test-field-firstname]="''"
+                   [formControl]="formControlFirstName">
             <mat-error *ngIf="formControlFirstName?.errors?.required">First Name is required</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Last Name</mat-label>
             <mat-hint>Enter a valid Last Name</mat-hint>
-            <input matInput placeholder="Last Name" [formControl]="formControlLastName">
+            <input matInput placeholder="Last Name"
+                   [attr.test-field-lastname]="''"
+                   [formControl]="formControlLastName">
             <mat-error *ngIf="formControlLastName?.errors?.required">Last Name is required</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Password</mat-label>
             <mat-hint>Enter a valid password</mat-hint>
-            <input matInput type="password" placeholder="Password" [formControl]="formControlPassword"
+            <input matInput type="password" placeholder="Password"
+                   [attr.test-field-password]="''"
+                   [formControl]="formControlPassword"
                    [errorStateMatcher]="errorStateMatcher">
             <mat-error *ngIf="formControlPassword?.errors?.required">Password is required</mat-error>
             <mat-error *ngIf="formGroupPassword?.errors?.passwordMatch">Password must match</mat-error>
@@ -57,7 +67,9 @@
           <mat-form-field>
             <mat-label>Confirm Password</mat-label>
             <mat-hint>Enter a valid confirmation password</mat-hint>
-            <input matInput type="password" placeholder="Confirm Password" [formControl]="formControlConfirmPassword"
+            <input matInput type="password" placeholder="Confirm Password"
+                   [attr.test-field-confirm-password]="''"
+                   [formControl]="formControlConfirmPassword"
                    [errorStateMatcher]="errorStateMatcher">
             <mat-error *ngIf="formControlPassword?.errors?.required">Confirmation password is required</mat-error>
             <mat-error *ngIf="formGroupPassword?.errors?.passwordMatch">Confirm password must match</mat-error>
@@ -66,10 +78,14 @@
       </mat-card-content>
       <mat-card-actions>
         <div class="control">
-          <button mat-flat-button type="submit" color="primary" [disabled]="formGroup.invalid">Register</button>
+          <button mat-flat-button type="submit" color="primary"
+                  [attr.test-button-submit-registration]="''"
+                  [disabled]="formGroup.invalid">Register</button>
           <div class="link">
             Already registered?
-            Try <a href="#" class="login-link" [routerLink]="['/login-layout', 'login']">Login</a>.
+            Try <a href="#" class="login-link"
+                   [attr.test-link-login]="''"
+                   [routerLink]="['/login-layout', 'login']">Login</a>.
           </div>
         </div>
       </mat-card-actions>

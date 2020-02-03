@@ -5,6 +5,7 @@ import {makeApiError, makeApiErrorObj} from "../../util";
 import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
 import {hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
+import {sprintf} from "sprintf";
 
 
 
@@ -157,7 +158,8 @@ export const timingLogMiddlewareFn = (req: Request, res: Response, next: NextFun
         const diffInMilliSecs = ((elapsedTime[0] * 1000) + (elapsedTime[1] * 1e-6));
 
         const s = res.statusCode;
-        i(`Profiling Request ${httpMethod}-${url} Response ${s} : ${diffInMilliSecs}ms`);
+        // i(`Profiling Request ${httpMethod}-${url} Response ${s} : ${sprintf('%.3s ms', diffInMilliSecs)}`);
+        i(`Profiling Request ${httpMethod}-${url} Response ${s} : ${diffInMilliSecs.toFixed(3)}ms`);
     });
     next();
 }

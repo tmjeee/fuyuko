@@ -1,5 +1,5 @@
 
-<div class="user-people-page">
+<div class="user-people-page" [attr.test-page-title]="'user-people'">
   <mat-card>
     <mat-card-header>
       <mat-card-title>Users</mat-card-title>
@@ -15,33 +15,37 @@
       <mat-accordion>
 
         <!-- active users -->
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
+        <mat-expansion-panel [attr.test-expansion-panel]="'active-users'">
+          <mat-expansion-panel-header [attr.test-expansion-panel-header]="'active-users'">
             <mat-panel-title>Active</mat-panel-title>
             <mat-panel-description>Active users. Users currently active and not disabled in the system</mat-panel-description>
           </mat-expansion-panel-header>
-          <app-user-search-table [userSearchFn]="activeUserSearchFn"
-                          searchFieldHint="Search for users in active list, key in approximate username and press enter to search"
-                          searchFieldLabel="Search users"
-                          searchFieldPlaceholder="Search for users"
-                          [actionTypes]="activeUsersActionTypes"
-                          [users]="activeUsers"
-                          (events)="onActiveUsersTableEvent($event)"></app-user-search-table>
+          <app-user-search-table
+                  [attr.test-expansion-panel-content]="'active-users'"
+                  [userSearchFn]="activeUserSearchFn"
+                  searchFieldHint="Search for users in active list, key in approximate username and press enter to search"
+                  searchFieldLabel="Search users"
+                  searchFieldPlaceholder="Search for users"
+                  [actionTypes]="activeUsersActionTypes"
+                  [users]="activeUsers"
+                  (events)="onActiveUsersTableEvent($event)"></app-user-search-table>
         </mat-expansion-panel>
 
         <!-- inactive users -->
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
+        <mat-expansion-panel [attr.test-expansion-panel]="'inactive-users'">
+          <mat-expansion-panel-header [attr.test-expansion-panel-header]="'inactive-users'">
             <mat-panel-title>Inactive</mat-panel-title>
             <mat-panel-description>Inactive users. Users being disabled and can no longer login to the system.</mat-panel-description>
           </mat-expansion-panel-header>
-          <app-user-search-table [userSearchFn]="inactiveUserSearchFn"
-                          searchFieldHint="Search for users in inactive list, key in approximate username and press enter to search"
-                          searchFieldLabel="Search users"
-                          searchFieldPlaceholder="Search for users"
-                          [actionTypes]="inactiveUsersActionTypes"
-                          [users]="inactiveUsers"
-                          (events)="onInactiveUsersTableEvent($event)"></app-user-search-table>
+          <app-user-search-table
+                 [attr.test-expansion-panel-content]="'inactive-users'"
+                 [userSearchFn]="inactiveUserSearchFn"
+                 searchFieldHint="Search for users in inactive list, key in approximate username and press enter to search"
+                 searchFieldLabel="Search users"
+                 searchFieldPlaceholder="Search for users"
+                 [actionTypes]="inactiveUsersActionTypes"
+                 [users]="inactiveUsers"
+                 (events)="onInactiveUsersTableEvent($event)"></app-user-search-table>
         </mat-expansion-panel>
       </mat-accordion>
     </mat-card-content>

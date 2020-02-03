@@ -29,6 +29,7 @@ export function isItemValueType(v: (Value | ItemValTypes)): v is ItemValTypes {
 }
 
 abstract class AbstractItemValueConverter implements ItemValueConverters {
+  abstract convertToDebugString(i: ItemValTypes): string;
   convertToString(a: Attribute, i: ItemValTypes): string {
       return this._check(a, i, (y, z) => this._convertToString(y, z));
   }
@@ -50,6 +51,9 @@ abstract class AbstractItemValueConverter implements ItemValueConverters {
 }
 
 class StringItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: StringValue): string {
+      return `{type: ${i.type} value: ${i.value}`;
+  }
   protected _convertToString(a: Attribute, i: StringValue): string {
     return i.value;
   }
@@ -65,6 +69,9 @@ class StringItemValueConverter extends AbstractItemValueConverter {
 }
 
 class TextItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: TextValue): string {
+    return `{type: ${i.type} value: ${i.value}}`;
+  }
   protected _convertToString(a: Attribute, i: TextValue): string {
     return i.value;
   }
@@ -80,6 +87,9 @@ class TextItemValueConverter extends AbstractItemValueConverter {
 }
 
 class NumberItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: NumberValue): string {
+    return `{type: ${i.type} value: ${i.value}}`;
+  }
   protected _convertToString(a: Attribute, i: NumberValue): string {
     return '' + i.value;
   }
@@ -95,6 +105,9 @@ class NumberItemValueConverter extends AbstractItemValueConverter {
 }
 
 class DateItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: DateValue): string {
+    return `{type: ${i.type} value ${i.value}}`;
+  }
   protected _convertToString(a: Attribute, i: DateValue): string {
     const m: moment.Moment = moment(i.value, DATE_FORMAT);
     if (a.format) {
@@ -116,6 +129,9 @@ class DateItemValueConverter extends AbstractItemValueConverter {
 }
 
 class CurrencyItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: CurrencyValue): string {
+    return `{type: ${i.type} value: ${i.value} country: ${i.country}`;
+  }
   protected _convertToString(a: Attribute, i: CurrencyValue): string {
     if (a.showCurrencyCountry) {
       return `${numeral(i.value).format(CURRENCY_FORMAT)} ${i.country ? i.country : ''}`;
@@ -136,6 +152,9 @@ class CurrencyItemValueConverter extends AbstractItemValueConverter {
 }
 
 class DimensionItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: DimensionValue): string {
+    return `{type: ${i.type} width: ${i.width} length: ${i.length} height: ${i.height} unit: ${i.unit}}`;
+  }
   protected _convertToString(a: Attribute, i: DimensionValue): string {
     const f: string = a.format ? a.format : DIMENSION_FORMAT;
     return `w:${numeral(i.width).format(f)} ${i.unit},
@@ -159,6 +178,9 @@ class DimensionItemValueConverter extends AbstractItemValueConverter {
 }
 
 class AreaItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: AreaValue): string {
+    return `{type: ${i.type} value: ${i.value} unit: ${i.unit}}`;
+  }
   protected _convertToString(a: Attribute, i: AreaValue): string {
     const f: string = a.format ? a.format : AREA_FORMAT;
     return `${numeral(i.value).format(f)} ${i.unit}`;
@@ -178,6 +200,9 @@ class AreaItemValueConverter extends AbstractItemValueConverter {
 }
 
 class VolumeItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: VolumeValue): string {
+    return `{type: ${i.type} value: ${i.value} unit: ${i.unit}}`;
+  }
   protected _convertToString(a: Attribute, i: VolumeValue): string {
     const f: string = a.format ? a.format : VOLUME_FORMAT;
     return `${numeral(i.value).format(f)} ${i.unit}`;
@@ -197,6 +222,9 @@ class VolumeItemValueConverter extends AbstractItemValueConverter {
 }
 
 class WidthItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: WidthValue): string {
+    return `{type: ${i.type} value: ${i.value} unit: ${i.unit}`;
+  }
   protected _convertToString(a: Attribute, i: WidthValue): string {
     const f: string = a.format ? a.format : WIDTH_FORMAT;
     return `${numeral(i.value).format(f)} ${i.unit}`;
@@ -216,6 +244,9 @@ class WidthItemValueConverter extends AbstractItemValueConverter {
 }
 
 class LengthItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: LengthValue): string {
+    return `{type: ${i.type} value: ${i.value} unit: ${i.unit}`;
+  }
   protected _convertToString(a: Attribute, i: LengthValue): string {
     const f: string = a.format ? a.format : LENGTH_FORMAT;
     return `${numeral(i.value).format(f)} ${i.unit}`;
@@ -235,6 +266,9 @@ class LengthItemValueConverter extends AbstractItemValueConverter {
 }
 
 class HeightItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: HeightValue): string {
+    return `{type: ${i.type} value: ${i.value} unit: ${i.unit}}`;
+  }
   protected _convertToString(a: Attribute, i: HeightValue): string {
     const f: string = a.format ? a.format : HEIGHT_FORMAT;
     return `${numeral(i.value).format(f)} ${i.unit}`;
@@ -254,6 +288,9 @@ class HeightItemValueConverter extends AbstractItemValueConverter {
 }
 
 class SelectItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: SelectValue): string {
+    return `{type: ${i.type} key: ${i.key}}`;
+  }
   protected _convertToString(a: Attribute, i: SelectValue): string {
     const p: Pair1 = a.pair1.find((pp: Pair1) => pp.key === i.key);
     return `${p ? p.value : ''}`;
@@ -270,6 +307,9 @@ class SelectItemValueConverter extends AbstractItemValueConverter {
 }
 
 class DoubleSelectItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: DoubleSelectValue): string {
+    return `{type: ${i.type} key1: ${i.key1} key2: ${i.key2}}`;
+  }
   protected _convertToString(a: Attribute, i: DoubleSelectValue): string {
     const p1: Pair1 = a.pair1.find((p: Pair1) => p.key === i.key1);
     const p2: Pair2 = a.pair2.find((p: Pair2) => p.key2 === i.key2);
@@ -302,10 +342,13 @@ const LENGTH_ITEM_CONVERTER = new LengthItemValueConverter();
 const SELECT_ITEM_CONVERTER = new SelectItemValueConverter();
 const DOUBLESELECT_ITEM_CONVERTER = new DoubleSelectItemValueConverter();
 
-
 export const itemConverter = (a: Attribute): AbstractItemValueConverter => {
+  return itemConverterByType(a.type);
+};
+
+export const itemConverterByType = (t: string): AbstractItemValueConverter => {
   let typeConverter: AbstractItemValueConverter;
-  switch (a.type) {
+  switch (t) {
     case 'string':
       typeConverter = STRING_ITEM_CONVERTER;
       break;
@@ -347,7 +390,7 @@ export const itemConverter = (a: Attribute): AbstractItemValueConverter => {
       break;
   }
   if (!typeConverter) {
-    throw new Error(`Bad attribute type ${a.type}`);
+    throw new Error(`Bad attribute type ${t}`);
   }
   return typeConverter;
 };
@@ -362,6 +405,12 @@ export const convertToString = (a: Attribute, i: Value | ItemValTypes): string =
   const v: ItemValTypes = isItemValueType(i) ? i : (isItemValue(i) ? i.val : undefined);
   const typeConverter: AbstractItemValueConverter = itemConverter(a);
   return typeConverter.convertToString(a, v);
+};
+
+export const convertToDebugString = (i: Value | ItemValTypes): string => {
+  const v: ItemValTypes = isItemValueType(i) ? i : (isItemValue(i) ? i.val : undefined);
+  const typeConverter: AbstractItemValueConverter = itemConverterByType(v.type);
+  return typeConverter.convertToDebugString(v);
 };
 
 

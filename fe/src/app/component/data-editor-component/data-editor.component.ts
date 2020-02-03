@@ -26,6 +26,8 @@ export class DataEditorComponent {
 
   onItemAttributeValueClicked($event: MouseEvent) {
     const matDialogRef: MatDialogRef<DataEditorDialogComponent> = this.matDialog.open(DataEditorDialogComponent, {
+      height: '90vh',
+      width: '90vw',
       data: this.itemValueAndAttribute
     });
     matDialogRef

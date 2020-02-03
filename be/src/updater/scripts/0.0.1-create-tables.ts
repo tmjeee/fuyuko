@@ -48,12 +48,77 @@ export const update = async () => {
    await TBL_BULK_EDIT_LOG();
    await TBL_JOB();
    await TBL_JOB_LOG();
+   await TBL_VIEW_VALIDATION();
+   await TBL_VIEW_VALIDATION_LOG();
+   await TBL_VIEW_VALIDATION_ERROR();
+   await TBL_USER_SETTING();
    await ADD_FK_CONSTRAINT();
    await ADD_INDEXES();
 
    i(`done running update on ${__filename}`);
 };
 
+const TBL_USER_SETTING = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_USER_SETTING (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            USER_ID INT,
+            SETTING VARCHAR(200),
+            VALUE VARCHAR(500),
+            TYPE VARCHAR(200)
+         );
+      `);
+   });
+};
+
+const TBL_VIEW_VALIDATION = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            VIEW_ID INT,
+            NAME VARCHAR(200),
+            DESCRIPTION VARCHAR(500),
+            PROGRESS VARCHAR(200),
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+}
+
+const TBL_VIEW_VALIDATION_LOG = async () => {
+    await doInDbConnection(async (conn: Connection) => {
+       await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION_LOG (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            VIEW_VALIDATION_ID INT,
+            LEVEL VARCHAR(200),
+            MESSAGE TEXT,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP         
+         );
+       `);
+    });
+}
+
+const TBL_VIEW_VALIDATION_ERROR = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+           CREATE TABLE IF NOT EXISTS TBL_VIEW_VALIDATION_ERROR (
+              ID INT PRIMARY KEY AUTO_INCREMENT,
+              VIEW_VALIDATION_ID INT,
+              RULE_ID INT,
+              ITEM_ID INT,
+              VIEW_ATTRIBUTE_ID INT,
+              MESSAGE TEXT,
+              CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+           ); 
+       `);
+   });
+}
 
 const TBL_INVITATION_REGISTRATION = async () => {
    await doInDbConnection(async (conn: Connection) => {
@@ -227,6 +292,7 @@ const TBL_USER_AVATAR = async () => {
             ID INT PRIMARY KEY AUTO_INCREMENT,
             USER_ID INT,
             GLOBAL_AVATAR_ID INT,
+            NAME VARCHAR(200),
             MIME_TYPE VARCHAR(200),
             SIZE INT,
             CONTENT LONGBLOB
@@ -715,6 +781,15 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_BULK_EDIT_LOG ADD CONSTRAINT \`fk_tbl_bulk_edit_log-1\` FOREIGN KEY IF NOT EXISTS (BULK_EDIT_ID) REFERENCES TBL_BULK_EDIT(ID)`);
 
       await conn.query(`ALTER TABLE TBL_JOB_LOG ADD CONSTRAINT \`fk_tbl_job_log-1\` FOREIGN KEY IF NOT EXISTS (JOB_ID) REFERENCES TBL_JOB(ID) ON DELETE CASCADE`);
+
+      await conn.query(`ALTER TABLE TBL_USER_SETTING ADD CONSTRAINT \`fk_tbl_user_setting-1\` FOREIGN KEY IF NOT EXISTS (USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE`);
+
+      await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION ADD CONSTRAINT \`fk_tbl_view_validation-1\` FOREIGN KEY IF NOT EXISTS (VIEW_ID) REFERENCES TBL_VIEW(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION_LOG ADD CONSTRAINT \`fk_tbl_view_validation_log-1\` FOREIGN KEY IF NOT EXISTS (VIEW_VALIDATION_ID) REFERENCES TBL_VIEW_VALIDATION(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION_ERROR ADD CONSTRAINT \`fk_tbl_view_validation_error-1\` FOREIGN KEY IF NOT EXISTS (VIEW_VALIDATION_ID) REFERENCES TBL_VIEW_VALIDATION(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION_ERROR ADD CONSTRAINT \`fk_tbl_view_validation_error-2\` FOREIGN KEY IF NOT EXISTS (RULE_ID) REFERENCES TBL_RULE(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION_ERROR ADD CONSTRAINT \`fk_tbl_view_validation_error-3\` FOREIGN KEY IF NOT EXISTS (ITEM_ID) REFERENCES TBL_ITEM(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION_ERROR ADD CONSTRAINT \`fk_tbl_view_validation_error-4\` FOREIGN KEY IF NOT EXISTS (VIEW_ATTRIBUTE_ID) REFERENCES TBL_VIEW_ATTRIBUTE(ID) ON DELETE CASCADE`);
    });
 }
 

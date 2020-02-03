@@ -1,4 +1,4 @@
 
-import {i, e} from './logger';
+import {d, w, i, e} from './logger';
 
-export {i, e};
+export {d, w, i, e};

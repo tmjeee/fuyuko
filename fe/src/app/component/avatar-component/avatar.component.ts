@@ -48,7 +48,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
       this.subscription = this.globalCommunicationService
           .avatarReloadObservable()
           .pipe(
-              tap((_) => {
+              tap((_: number) => {
                   this.reload();
               })
           ).subscribe();

@@ -1,9 +1,6 @@
 import {Level} from './level.model';
 import {Status} from './status.model';
-
-export type JobProgress = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED';
-
-export type Level = Level;
+import {Progress} from './progress.model';
 
 export type Status = Status;
 
@@ -21,7 +18,7 @@ export interface Job {
     description: string;
     creationDate: Date;
     lastUpdate: Date;
-    progress: JobProgress;
+    progress: Progress;
     status: Status;
 }
 

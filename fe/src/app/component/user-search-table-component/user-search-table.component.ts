@@ -72,12 +72,16 @@ export class UserSearchTableComponent implements OnInit, OnChanges {
   }
 
   onUserSearchTriggered($event: Event) {
+      this.userSearch();
+  }
+
+  userSearch() {
     this.userSearchFn(this.formControlUserSearch.value)
-      .pipe(
-        map((users: User[]) => {
-          this.dataSource.update(users);
-        })
-      ).subscribe();
+        .pipe(
+            map((users: User[]) => {
+              this.dataSource.update(users);
+            })
+        ).subscribe();
   }
 
   onActionTypeClicked($event: MouseEvent, actionType: ActionType, user: any) {
@@ -91,8 +95,9 @@ export class UserSearchTableComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
       const change: SimpleChange = changes.users;
       if (this.dataSource) {
-        const users: User[] = change.currentValue;
-        this.dataSource.update(users);
+        // const users: User[] = change.currentValue;
+        // this.dataSource.update(users);
+        this.userSearch();
       }
   }
 }

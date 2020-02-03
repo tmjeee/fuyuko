@@ -2,6 +2,7 @@
   <!-- profile -->
   <div [class.selected]="routeSideNavData === 'profile'">
     <mat-icon class="action"
+              [attr.test-sidenav]="'profile'"
               matTooltipPosition="after"
               matTooltip="Profile"
               [routerLink]="['/gen-layout', {outlets: {primary:['profile'], help:['profile-help'] }}]">
@@ -13,6 +14,7 @@
   <!-- dashboard -->
   <div [class.selected]="routeSideNavData === 'dashboard'">
     <mat-icon class="action"
+              [attr.test-sidenav]="'dashboard'"
               matTooltipPosition="after"
               matTooltip="Dashboard"
               [routerLink]="['/dashboard-layout', {outlets:{primary:['dashboard'], help:['dashboard-help']}}]">
@@ -24,6 +26,7 @@
   <!-- user management -->
   <div [class.selected]="routeSideNavData === 'user'">
     <mat-icon class="action"
+              [attr.test-sidenav]="'user'"
               matTooltipPosition="after"
               matTooltip="User Management"
               [routerLink]="['/user-gen-layout', {outlets: {primary:['role'], help: ['user-help'] }}]">
@@ -34,6 +37,7 @@
   <!-- view management -->
   <div [class.selected]="routeSideNavData === 'view'">
     <mat-icon class="action"
+              [attr.test-sidenav]="'view'"
               matTooltipPosition="after"
               matTooltip="View Management"
               [routerLink]="['/view-gen-layout', {outlets:{primary:['rules'], help: ['view-help'] }}]">
@@ -44,6 +48,7 @@
   <!-- pricing management -->
   <div [class.selected]="routeSideNavData === 'pricing'">
     <mat-icon class="action"
+              [attr.test-sidenav]="'pricing'"
               matTooltipPosition="after"
               matTooltip="Pricing Management"
               [routerLink]="['/gen-layout', {outlets:{primary:['pricing-structure'], help: ['pricing-help'] }}]">
@@ -54,6 +59,7 @@
   <!-- bulk edit -->
   <div [class.selected]="routeSideNavData === 'bulk-edit'">
     <mat-icon class="action"
+              [attr.test-sidenav]="'bulk-edit'"
               matTooltipPosition="after"
               matTooltip="Bulk Edit Data"
               [routerLink]="['/gen-layout', {outlets:{primary:['bulk-edit'], help:['bulk-edit-help'] }}]">
@@ -64,6 +70,7 @@
   <!-- settings -->
   <div [class.selected]="routeSideNavData === 'settings'">
     <mat-icon class="action"
+              [attr.test-sidenav]="'settings'"
               matTooltipPosition="after"
               matTooltip="Settings"
               [routerLink]="['/gen-layout', {outlets:{primary:['settings'], help:['settings-help'] }}]" >
@@ -74,6 +81,7 @@
   <!-- import / Export -->
   <div [class.selected]="routeSideNavData === 'import-export'">
     <mat-icon class="action"
+              [attr.test-sidenav]="'import-export'"
               matTooltipPosition="after"
               matTooltip="Import / Export"
               [routerLink]="['/import-export-gen-layout', {outlets:{primary:['import'], help:['import-help'] }}]">
@@ -84,6 +92,7 @@
   <!-- jobs -->
   <div [class.selected]="routeSideNavData === 'jobs'">
     <mat-icon class="action"
+              [attr.test-sidenav]="'jobs'"
               matTooltipPosition="after"
               matTooltip="Jobs"
               [routerLink]="['/gen-layout', {outlets:{primary:['jobs'], help:['jobs-help']}}]">
@@ -91,8 +100,10 @@
     </mat-icon>
   </div>
 
+  <!-- partner -->
   <div>
     <mat-icon class="action"
+              [attr.test-sidenav]="'partner'"
               matTooltipPostion="after"
               matTooltip="Partner"
               [routerLink]="['/partner-layout', {outlets:{primary: ['table'], help: ['partner-help']}}]">
@@ -103,6 +114,7 @@
   <!-- exit / log off -->
   <div>
     <mat-icon class="action "
+              [attr.test-sidenav]="'exit'"
               matTooltipPosition="after"
               matTooltip="Exit"
               (click)="logout($event)">

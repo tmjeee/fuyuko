@@ -3,6 +3,7 @@
   <mat-form-field>
     <mat-label>{{searchFieldLabel}}</mat-label>
     <input type="text"
+           [attr.test-field-search]="''"
            (keyup.enter)="onUserSearchTriggered($event)"
            placeholder="{{searchFieldPlaceholder}}"
            [formControl]="formControlUserSearch"
@@ -12,7 +13,7 @@
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef>Username</th>
-      <td mat-cell *matCellDef="let user">{{user.username}}</td>
+      <td mat-cell *matCellDef="let user" [attr.test-table-item-user]="user.username">{{user.username}}</td>
     </ng-container>
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef>Email</th>
@@ -30,6 +31,7 @@
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td class="action" mat-cell *matCellDef="let user">
         <mat-icon *ngFor="let actionType of actionTypes"
+                  [attr.test-icon-user-action]="actionType.type + '_' +user.username"
                   class="action-type" color="primary"
                   (click)="onActionTypeClicked($event, actionType, user)"
                   [matTooltip]="actionType.tooltip">{{actionType.icon}}</mat-icon>

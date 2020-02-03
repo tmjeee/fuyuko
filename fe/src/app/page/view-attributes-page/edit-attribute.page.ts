@@ -72,8 +72,9 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
     }
 
     reload() {
+        const attributeId: string = this.route.snapshot.paramMap.get('attributeId');
         this.attributeLoading = true;
-        this.attributeService.getAttributeByView(this.currentView.id, this.attribute.id).pipe(
+        this.attributeService.getAttributeByView(this.currentView.id, Number(attributeId)).pipe(
             tap((a: Attribute) => {
                 this.attribute = a;
                 this.attributeLoading = false;

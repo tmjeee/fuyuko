@@ -1,4 +1,8 @@
-<div class="partner-layout">
+<div *ngIf="loading">Loading ...</div>
+<div class="partner-layout"
+     *ngIf="!loading"
+     [attr.test-side-nav-state-open]="''+sideNavOpened"
+     [attr.test-help-nav-state-open]="''+helpNavOpened">
     <mat-toolbar color="primary" class="primary-toolbar">
         <mat-toolbar-row>
             <mat-icon class="action" (click)="onSideNavExpandCollapseButtonClicked($event)">more_horiz</mat-icon>

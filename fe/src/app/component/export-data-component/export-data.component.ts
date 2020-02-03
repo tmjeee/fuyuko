@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {View} from '../../model/view.model';
-import {Observable, of} from 'rxjs';
+import {forkJoin, Observable, } from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -18,10 +18,13 @@ import {
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
 import {MatSelectChange} from '@angular/material/select';
+import {PricingStructure} from '../../model/pricing-structure.model';
 
 export type ViewAttributeFn = (viewId: number) => Observable<Attribute[]>;
+export type ViewPricingStructureFn = (viewId: number) => Observable<PricingStructure[]>;
 export type PreviewExportFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
-                               filter: ItemValueOperatorAndAttribute[])
+                               filter: ItemValueOperatorAndAttribute[],
+                               ps?: PricingStructure /* only available when exportType === 'PRICE' */)
     => Observable<AttributeDataExport | ItemDataExport | PriceDataExport>;
 export type SubmitExportJobFn = (exportType: DataExportType, viewId: number,
                                  attributes: Attribute[],
@@ -37,6 +40,7 @@ export class ExportDataComponent implements OnInit {
 
     @Input() views: View[];
     @Input() viewAttributesFn: ViewAttributeFn;
+    @Input() viewPricingStructuresFn: ViewPricingStructureFn;
     @Input() previewExportFn: PreviewExportFn;
     @Input() submitExportJobFn: SubmitExportJobFn;
 
@@ -50,9 +54,12 @@ export class ExportDataComponent implements OnInit {
     secondFormReady: boolean;
     attributeSelectionOptionFormControl: FormControl;
     exportTypeFormControl: FormControl;
+    pricingStructureFormControl: FormControl;
     currentAttributeSelectionOption: string;
     allAttributes: Attribute[];
+    allPricingStructures: PricingStructure[];
     selectedExportType: DataExportType;
+    selectedPricingStructure: PricingStructure;
 
     // 3: items filtering
     thirdFormGroup: FormGroup;
@@ -125,22 +132,31 @@ export class ExportDataComponent implements OnInit {
     onFirstFormSubmit() {
         this.secondFormReady = false;
         const viewId: number = this.viewFormControl.value;
-        this.viewAttributesFn(viewId)
-            .pipe(
-                tap((a: Attribute[]) => {
-                    this.allAttributes = a;
-                    const attributesFormGroup: FormGroup = this.formBuilder.group({});
-                    this.secondFormGroup.removeControl('attributes');
-                    this.secondFormGroup.setControl('attributes', attributesFormGroup);
-                    this.allAttributes.forEach((ia: Attribute) => {
-                        const control: FormControl = this.formBuilder.control(false);
-                        (control as any).internalData = ia;
-                        attributesFormGroup.setControl('' + ia.id, control);
-                    });
-                    this.secondFormReady = true;
+        forkJoin({
+            a: this.viewAttributesFn(viewId),
+            p: this.viewPricingStructuresFn(viewId)
+        }).pipe(
+            tap((r: {a: Attribute[], p: PricingStructure[]}) => {
+                // attributes
+               this.allAttributes = r.a;
+               const attributesFormGroup: FormGroup = this.formBuilder.group({});
+               this.secondFormGroup.removeControl('attributes');
+               this.secondFormGroup.setControl('attributes', attributesFormGroup);
+               this.allAttributes.forEach((ia: Attribute) => {
+                   const control: FormControl = this.formBuilder.control(false);
+                   (control as any).internalData = ia;
+                   attributesFormGroup.setControl('' + ia.id, control);
+               });
 
-                })
-            ).subscribe();
+               // pricing structures
+               this.allPricingStructures = r.p;
+               this.pricingStructureFormControl = this.formBuilder.control(null);
+               this.secondFormGroup.removeControl('pricingStructure');
+               this.secondFormGroup.setControl('pricingStructure', this.pricingStructureFormControl);
+
+               this.secondFormReady = true;
+            })
+        ).subscribe();
     }
 
     onSecondFormSubmit() {
@@ -169,7 +185,8 @@ export class ExportDataComponent implements OnInit {
 
         // figure out item filters (from step 3)
         const f: ItemValueOperatorAndAttribute[] = this.itemValueOperatorAndAttributeList;
-        this.previewExportFn(exportType, viewId, att, f).pipe(
+        const ps: PricingStructure = this.selectedExportType === 'PRICE' ? this.selectedPricingStructure : null;
+        this.previewExportFn(exportType, viewId, att, f, ps).pipe(
             tap((dataExport: AttributeDataExport | ItemDataExport | PriceDataExport) => {
                 this.dataExport = dataExport;
                 this.fourthFormReady = true;
@@ -252,5 +269,15 @@ export class ExportDataComponent implements OnInit {
 
     onExportTypeSelectionChanged($event: MatSelectChange) {
         this.selectedExportType = $event.value;
+        if ($event.value === 'PRICE') {
+            this.secondFormGroup.controls.pricingStructure.setValidators([Validators.required]);
+        } else {
+            this.secondFormGroup.controls.pricingStructure.clearValidators();
+        }
+        this.secondFormGroup.updateValueAndValidity()
+    }
+
+    onPricingStructureSelectionChanged($event: MatSelectChange) {
+        this.selectedPricingStructure = $event.value;
     }
 }

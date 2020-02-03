@@ -1,83 +1,47 @@
 import {Injectable} from '@angular/core';
 import {User} from '../../model/user.model';
-import {RuntimeSettings, Settings} from '../../model/settings.model';
+import {Settings} from '../../model/settings.model';
 import {Observable, of} from 'rxjs';
+import config from '../../utils/config.util';
+import {HttpClient} from '@angular/common/http';
+import {concatMap, map, tap} from 'rxjs/operators';
 
-let SETTINGS: Settings = {
-    id: 1,
-    defaultOpenHelpNav: false,
-    defaultOpenSideNav: true,
-    defaultOpenSubSideNav: true
-};
 
-let RUNTIME_SETTINGS: RuntimeSettings = {
-    settingsId: 1,
-    openSubSideNav: undefined,
-    openHelpNav: undefined,
-    openSideNav: undefined
-};
-
-export const KEY = `MY_APP_RUNTIME_SETTINGS`;
+const URL_GET_USER_SETTINGS = () => `${config().api_host_url}/user/:userId/settings`;
+const URL_POST_USER_SETTINGS = () => `${config().api_host_url}/user/:userId/settings`;
 
 @Injectable()
 export class SettingsService {
 
-    saveSettings(s: Settings): Observable<Settings> {
-        SETTINGS = {...s};
-        this.ms(RUNTIME_SETTINGS, SETTINGS);
-        return of(SETTINGS);
+    cachedSettings: Settings;
+
+    constructor(private httpClient: HttpClient) { }
+
+    saveSettings(user: User, s: Settings): Observable<Settings> {
+        return of(URL_POST_USER_SETTINGS().replace(':userId', String(user.id)))
+            .pipe(
+               concatMap((url: string) => {
+                    return this.httpClient.post(url, s);
+               }),
+               concatMap((_) => {
+                   return this.httpClient.get<Settings>(URL_GET_USER_SETTINGS().replace(':userId', String(user.id)))
+                       .pipe(tap((settings: Settings) => (this.cachedSettings = settings)));
+               })
+            );
     }
 
     getSettings(u: User): Observable<Settings> {
-        // todo:
-        return of (SETTINGS);
+        return this.httpClient.get<Settings>(URL_GET_USER_SETTINGS().replace(':userId', String(u.id)));
     }
 
-    saveRuntimeSettings(r: RuntimeSettings): RuntimeSettings {
-        RUNTIME_SETTINGS = {...r};
-        localStorage.setItem(KEY, JSON.stringify(RUNTIME_SETTINGS));
-        return RUNTIME_SETTINGS;
+
+    // initialization (see appInitializer function in app.module)
+    init(u: User)  {
+        return this.getSettings(u).subscribe();
     }
 
-    getLocalRuntimeSettings(): RuntimeSettings {
-        let r = JSON.parse(localStorage.getItem(KEY));
-        if (!r) {
-          this.saveRuntimeSettings(r);
-          r = {...SETTINGS};
-        }
-        return r;
+    // destruction (see appInitializer function in app.module)
+    destroy()  {
+        this.cachedSettings = null;
     }
-
-    // use only when logged in, after that 'getLocalRuntimeSettings()' would suffice (see appInitializer function)
-    getRuntimeSettings(u: User): Observable<RuntimeSettings> {
-        const runtimeSettings: RuntimeSettings = this.ms(RUNTIME_SETTINGS, SETTINGS);
-        return of(runtimeSettings);
-    }
-
-    // use only when logged out, after that 'getLocalRuntimeSettings()' would suffice (see appInitializer function)
-    destroyRuntimeSettings(): Observable<null> {
-        localStorage.removeItem(KEY);
-        return of(null);
-    }
-
-    private ms(runtimeSettings: RuntimeSettings, settings: Settings): RuntimeSettings {
-        const rs: RuntimeSettings = this.m(runtimeSettings, settings);
-        localStorage.setItem(KEY, JSON.stringify(rs));
-        return rs;
-    }
-
-    private m(runtimeSettings: RuntimeSettings, settings: Settings): RuntimeSettings {
-        const rs: RuntimeSettings = ({
-            openHelpNav: this.g<boolean>(RUNTIME_SETTINGS.openHelpNav, SETTINGS.defaultOpenHelpNav),
-            openSideNav: this.g<boolean>(RUNTIME_SETTINGS.openSideNav, SETTINGS.defaultOpenSideNav),
-            openSubSideNav: this.g<boolean>(RUNTIME_SETTINGS.openSubSideNav, SETTINGS.defaultOpenSubSideNav)
-        } as RuntimeSettings);
-
-        return rs;
-    }
-
-    private g<T>(fromRuntimeSettings: T, fromSettings: T): T {
-        return ((fromRuntimeSettings === null || fromRuntimeSettings === undefined) ? fromSettings : fromRuntimeSettings);
-    }
-
 }

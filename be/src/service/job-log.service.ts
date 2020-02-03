@@ -1,9 +1,9 @@
 import {doInDbConnection, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Level} from "../model/level.model";
-import {JobProgress} from "../model/job.model";
 import {e} from '../logger';
 import {l} from "../logger/logger";
+import {Progress} from "../model/progress.model";
 
 export interface LoggingCallback  {
     (level: Level, msg: string): void;
@@ -25,7 +25,7 @@ export class JobLogger {
                 private description: string) {
     }
 
-    async updateProgress(progress: JobProgress) {
+    async updateProgress(progress: Progress) {
         await doInDbConnection(async (conn: Connection) => {
             await conn.query(`UPDATE TBL_JOB SET PROGRESS=? WHERE ID=?`, [progress, this.jobId]);
         });

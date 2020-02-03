@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {Rule, ValidateClause, WhenClause} from 'src/app/model/rule.model';
-import {StringValue} from '../../model/item.model';
+import {Item, StringValue} from '../../model/item.model';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '../../model/response.model';
 import config from '../../utils/config.util';
@@ -59,4 +59,5 @@ export class RuleService {
         .replace(':ruleId', `${rule.id}`)
         .replace(':status', 'DISABLED'), {});
   }
+
 }

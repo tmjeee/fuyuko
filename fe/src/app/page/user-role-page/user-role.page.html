@@ -1,6 +1,5 @@
 
-
-<div class="user-role-page">
+<div class="user-role-page" [attr.test-page-title]="'user-role'">
   <mat-card>
     <mat-card-header>
       <mat-card-title>Roles</mat-card-title>
@@ -10,8 +9,8 @@
 
     <mat-accordion>
 
-      <mat-expansion-panel *ngFor="let role of allRoles">
-        <mat-expansion-panel-header>
+      <mat-expansion-panel *ngFor="let role of allRoles" [attr.test-expansion-panel]="role.name">
+        <mat-expansion-panel-header [attr.test-expansion-panel-header]="role.name">
           <mat-panel-title>
               {{role.name}}
           </mat-panel-title>
@@ -20,6 +19,7 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <app-group-table
+                [attr.test-expansion-panel-content]="role.name"
                 searchFieldPlaceholder="Group Name to add to role"
                 searchFieldHint="Search from auto suggest group to add to role"
                 searchFieldLabel="Search for a group to add to role."

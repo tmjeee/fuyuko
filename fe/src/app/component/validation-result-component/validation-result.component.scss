@@ -1,0 +1,26 @@
+@import '../../../scss/mixins';
+
+$spacing: 5px;
+
+.validation-result-component {
+  @include fix-mat-tab-no-scroll();
+  .content {
+    margin: 10px;
+    .left {
+      height: 40vh;
+      overflow-y: scroll;
+      padding: $spacing;
+      margin: $spacing;
+    }
+    .right {
+      height: 40vh;
+      overflow-y: scroll;
+      padding: $spacing;
+      margin: $spacing;
+    }
+    .bottom {
+      padding: $spacing;
+      margin: $spacing;
+    }
+  }
+}

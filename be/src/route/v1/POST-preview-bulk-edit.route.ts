@@ -107,35 +107,6 @@ interface BulkEditItem2 {
     children: BulkEditItem2[]
 }
 
-/////
-export interface Item2 {
-    id: number;
-    name: string;
-    description: string;
-    images: ItemImage[];
-    parentId: number;
-    values: ItemValue2[];
-    children: Item2[];
-}
-
-export interface ItemValue2 {
-    id: number;
-    attributeId: number;
-    metadatas: ItemMetadata2[];
-}
-
-export interface Item {
-    id: number;
-    name: string;
-    description: string;
-    images: ItemImage[];
-    parentId: number;
-    [attributeId: number]: Value;
-
-    children: Item[];
-}
-//////
-
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),

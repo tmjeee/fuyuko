@@ -12,7 +12,7 @@ import {Rule} from "../../model/rule.model";
 import {
     Rule2,
 } from "../model/server-side.model";
-import {convert} from "../../service/rule-conversion.service";
+import {convert} from '../../service/conversion-rule.service';
 import {ROLE_VIEW} from "../../model/role.model";
 import {getRule2s} from "../../service/rule.service";
 

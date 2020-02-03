@@ -1,5 +1,5 @@
 
-import express, {Router, Express} from 'express';
+import express, {Router} from 'express';
 import {Registry} from "../../registry";
 
 // routes
@@ -8,6 +8,7 @@ import registerPostActivateInvirationRoute from './POST-activate-invitation.rout
 import registerPostApproveSelfRegistrationRoute from './POST-approve-self-registration.route';
 import registerPostCreateInvitationRoute from './POST-create-invitation.route';
 import registerGetUserAvatarRoutes from './GET-user-avatar.route';
+import registerGetUserAvatarInfoRoutes from './GET-user-avatar-info.route';
 import registerGetGlobalAvatarRoute from './GET-global-avatar.route';
 import registerGetInvitationByCodeRoute from './GET-invitation-by-code.route';
 import registerGetAllGlobalAvatarsRoute from './GET-all-global-avatars.route';
@@ -82,6 +83,13 @@ import registerGetSearchUserByUsernameAndStatusRoute from './GET-search-user-by-
 import registerGetSearchSelfRegistrationByUsernameRoute from './GET-search-self-registrations-by-username.route';
 import registerGetRuleByViewRoute from './GET-rule-by-view.route';
 import registerGetAttributeByViewRoute from './GET-attribute-by-view.route';
+import registerGetItemsByViewRotue from './GET-items-by-view.route';
+import registerGetAllViewValidationsRoute from './GET-all-view-validations.route';
+import registerGetViewValidationResultRoute from './GET-view-validation-result.route';
+import registerPostViewValidationRoute from './POST-view-validation.route';
+import registerGetViewById from './GET-view-by-id.route';
+import registerGetUserSettings from './GET-user-settings.route';
+import registerPostUserSettings from './POST-user-settings.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -96,6 +104,7 @@ const reg = (router: Router, regi: Registry) => {
     registerPostApproveSelfRegistrationRoute(v1AppRouter, registry);
     registerPostCreateInvitationRoute(v1AppRouter, registry);
     registerGetUserAvatarRoutes(v1AppRouter, registry);
+    registerGetUserAvatarInfoRoutes(v1AppRouter, registry);
     registerGetGlobalAvatarRoute(v1AppRouter, registry);
     registerGetAllGlobalAvatarsRoute(v1AppRouter, registry);
     registerGetInvitationByCodeRoute(v1AppRouter, registry);
@@ -104,7 +113,6 @@ const reg = (router: Router, regi: Registry) => {
     registerPostSelfRegisterRoute(v1AppRouter, registry);
     registerPostSaveUserAvatarRoute(v1AppRouter, registry);
     registerPostSaveUserRoute(v1AppRouter, registry);
-    registerGetUserAvatarRoutes(v1AppRouter, registry);
     registerGetUserRoute(v1AppRouter, registry);
     registerGetAllGroupsRoute(v1AppRouter, registry);
     registerGetGroupByIdRoute(v1AppRouter, registry);
@@ -171,6 +179,13 @@ const reg = (router: Router, regi: Registry) => {
     registerGetSearchSelfRegistrationByUsernameRoute(v1AppRouter, registry);
     registerGetRuleByViewRoute(v1AppRouter, registry);
     registerGetAttributeByViewRoute(v1AppRouter, registry);
+    registerGetItemsByViewRotue(v1AppRouter, registry);
+    registerGetAllViewValidationsRoute(v1AppRouter, registry);
+    registerGetViewValidationResultRoute(v1AppRouter, registry);
+    registerPostViewValidationRoute(v1AppRouter, registry);
+    registerGetViewById(v1AppRouter, registry);
+    registerGetUserSettings(v1AppRouter, registry);
+    registerPostUserSettings(v1AppRouter, registry);
 }
 
 

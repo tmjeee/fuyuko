@@ -38,6 +38,7 @@ export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implement
   ngOnInit(): void {
     super.ngOnInit();
 
+    this.ready = false;
     this.viewService
       .getAllViews()
       .pipe(

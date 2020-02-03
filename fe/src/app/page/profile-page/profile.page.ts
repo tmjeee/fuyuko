@@ -54,7 +54,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
           if (this.myself) { // myself can be null after logged out callback
               // @ts-ignore
               // tslint:disable-next-line:triple-equals
-              const theme: Theme = this.allThemes.find((t: Theme) => t.theme == this.myself.theme);
+              const theme: Theme = this.allThemes.find((t: Theme) => t.theme as string == this.myself.theme);
               this.formControlTheme.setValue(theme);
           }
           this.ready = true;
@@ -74,7 +74,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.myself.theme = theme.theme.toString();
     this.formControlTheme.setValue(theme);
     this.authService.saveTheme(this.myself, this.myself.theme).pipe(
-        tap((_) => {
+        tap((_: User) => {
             this.notificationsService.success('Success', 'Theme changed');
         })
     ).subscribe();
@@ -88,10 +88,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     };
     if (avatar instanceof File) {
       this.avatarService.saveUserCustomAvatar(this.myself.id, avatar)
-          .pipe( tap(f.bind(this))).subscribe();
+          .pipe( tap(f.bind(this) as (r: UserAvatarResponse) => void)).subscribe();
     } else if (avatar) { // not falsy
       this.avatarService.saveUserAvatar(this.myself.id, avatar.name)
-          .pipe(tap(f.bind(this))).subscribe();
+          .pipe(tap(f.bind(this) as (r: UserAvatarResponse) => void)).subscribe();
     }
   }
 
@@ -102,14 +102,13 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.authService
         .saveMyself(this.myself)
         .pipe(
-            tap((_) => {
+            tap((_: User) => {
               this.notificationsService.success('Success', 'Profile information updated');
             })
         ).subscribe();
   }
 
   onPasswordEvent(event: PasswordComponentEvent) {
-    console.log('******************************** password', event.password);
     this.authService
         .savePassword(this.myself, event.password)
         .pipe(

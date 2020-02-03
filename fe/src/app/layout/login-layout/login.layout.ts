@@ -16,6 +16,7 @@ export class LoginLayoutComponent implements OnInit, OnDestroy {
               private ngZone: NgZone) {}
 
   ngOnInit(): void {
+    // eagerly cache all background images for smooth transition
     for (const bgImage of this.backgroundImageService.allBackgroundImages()) {
         const img = new Image();
         img.src = bgImage.location;

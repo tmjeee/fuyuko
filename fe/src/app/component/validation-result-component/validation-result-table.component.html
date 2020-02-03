@@ -1,0 +1,107 @@
+<div class="validation-result-table-component">
+    <div class="main-controls">
+        <button type="button" mat-flat-button color="primary" [disabled]="!hasItemModification()" (click)="onSave($event)">Save</button>
+        <button type="button" mat-flat-button color="primary" (click)="onReload($event)">Reload</button>
+        <button type="button" mat-flat-button color="primary" (click)="onFilter($event)">Filter</button>
+    </div>
+    <div class="filtering-container" [@detailExpand]="filterOptionsVisible ? 'expanded' : 'collapsed'">
+        <mat-nav-list>
+            <mat-list-item *ngFor="let attribute of itemAndAttributeSet.attributes; first as isFirst; last as isLast">
+                <div class="filtering-attribute">
+                    <div class="name">{{attribute.name}}</div>
+                    <div class="spacer"></div>
+                    <div class="controls">
+                        <mat-icon *ngIf="!isFirst" (click)="onUpAttributeOrdering($event, attribute)">arrow_upward</mat-icon>
+                        <mat-icon *ngIf="isLast">&nbsp;</mat-icon> <!-- spacer placeholder -->
+                        <mat-icon *ngIf="!isLast" (click)="onDownAttributeOrdering($event, attribute)">arrow_downward</mat-icon>
+                        <mat-checkbox name="Visible" [checked]="true" (change)="onAttributeFilteringChanged($event, attribute)"></mat-checkbox>
+                    </div>
+                </div>
+            </mat-list-item>
+        </mat-nav-list>
+    </div>
+    <div class="table-container">
+        <mat-table [dataSource]="datasource">
+            <ng-container matColumnDef="selection" sticky>
+                <mat-header-cell class="selection-header" *matHeaderCellDef>
+                </mat-header-cell>
+                <mat-cell class="selection" *matCellDef="let tableItem">
+                    <mat-radio-button (change)="nonMasterToggle($event, tableItem)"
+                                  [checked]="isNonMasterToggleChecked(tableItem)">
+                    </mat-radio-button>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <mat-header-cell class="attribute-header" *matHeaderCellDef>Name</mat-header-cell>
+                <mat-cell class="attribute" *matCellDef="let tableItem">
+                    <app-item-editor [item]="tableItem" [type]="'name'" (events)="onItemEditEvent($event, tableItem)"></app-item-editor>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <mat-header-cell class="attribute-header" *matHeaderCellDef>Description</mat-header-cell>
+                <mat-cell class="attribute" *matCellDef="let tableItem">
+                    <app-item-editor [item]="tableItem" [type]="'description'" (events)="onItemEditEvent($event, tableItem)"></app-item-editor>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions" sticky>
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let tableItem">
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="children-actions" sticky>
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let tableItem">
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="children-selection" sticky>
+                <mat-header-cell class="selection-header" *matHeaderCellDef></mat-header-cell>
+                <mat-cell class="selection" *matCellDef="let tableItem">
+                    <mat-radio-button (change)="nonMasterToggle($event, tableItem)"
+                                      [checked]="isNonMasterToggleChecked(tableItem)">
+                    </mat-radio-button>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="expansion" sticky>
+                <mat-header-cell class="expansion-header" *matHeaderCellDef></mat-header-cell>
+                <mat-cell class="expansion" *matCellDef="let tableItem">
+                    <mat-icon class="selectable" *ngIf="!isRowExpanded(tableItem)" (click)="rowClicked(tableItem)">chevron_right</mat-icon>
+                    <mat-icon class="selectable" *ngIf="isRowExpanded(tableItem)" (click)="rowClicked(tableItem)">expand_more</mat-icon>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="children-expansion" sticky>
+                <mat-header-cell class="expansion-header" *matHeaderCellDef></mat-header-cell>
+                <mat-cell class="expansion" *matCellDef="let tableItem">
+                    <div class="depth-{{tableItem.depth}}">
+                        <mat-icon>last_page</mat-icon>
+                    </div>
+                </mat-cell>
+            </ng-container>
+
+
+            <ng-container *ngFor="let attribute of itemAndAttributeSet.attributes">
+                <ng-container [matColumnDef]="''+attribute.id">
+                    <mat-header-cell class="attribute-header" *matHeaderCellDef>{{attribute.name}}</mat-header-cell>
+                    <mat-cell class="attribute" *matCellDef="let tableItem">
+                        <app-data-editor [itemValueAndAttribute]="{itemValue: getItemValue(tableItem, attribute), attribute: attribute }"
+                                         (events)="onDataEditEvent($event, tableItem)">
+                        </app-data-editor>
+                    </mat-cell>
+                </ng-container>
+            </ng-container>
+
+            <mat-header-row class="item-header" *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row class="item" [ngClass]="{'selected': rowSelectedCss(tableItem)}"
+                     *matRowDef="let tableItem; columns: displayedColumns;"></mat-row>
+            <mat-row class="item" [ngClass]="{'selected': rowSelectedCss(tableItem)}"
+                     *matRowDef="let tableItem; columns: childrenDisplayedColumns; when: isChildRow"
+                     [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
+        </mat-table>
+    </div>
+</div>
