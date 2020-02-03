@@ -1,7 +1,6 @@
 import {ItemImage, ItemValTypes, Value} from './item.model';
 import {Attribute} from './attribute.model';
-import {ItemValueOperatorAndAttribute} from "./item-attribute.model";
-import {OperatorType} from "./operator.model";
+import {OperatorType} from './operator.model';
 
 
 export interface BulkEditPackage {
@@ -29,7 +28,7 @@ export interface BulkEditItem {
             operator: OperatorType,
             val: ItemValTypes
         }
-    }
+    };
 
     children: BulkEditItem[];
 }
@@ -53,7 +52,7 @@ export interface BulkEditTableItem {
             operator: OperatorType,
             val: ItemValTypes
         }
-    }
+    };
 
     rootParentId: number;
 }

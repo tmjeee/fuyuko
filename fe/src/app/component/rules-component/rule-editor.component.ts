@@ -7,8 +7,11 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {isItemValueOperatorAndAttributeValid} from '../../utils/item-value-operator-attribute.util';
 import {OperatorType} from '../../model/operator.model';
 import {Value} from '../../model/item.model';
-import {ItemValueOperatorAndAttribute, ItemValueOperatorAndAttributeWithId} from '../../model/item-attribute.model';
+import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 
+export interface ItemValueOperatorAndAttributeWithId extends ItemValueOperatorAndAttribute {
+    id: number;
+}
 
 export interface RuleEditorComponentEvent {
     type: 'cancel' | 'update';
@@ -149,7 +152,7 @@ export class RuleEditorComponent implements OnChanges {
         this.formGroup.updateValueAndValidity();
     }
 
-    onDeleteRuleValidation($event: MouseEvent, index: number, validateClause: ItemValueOperatorAndAttribute) {
+    onDeleteRuleValidation($event: MouseEvent, index: number, validateClause: ItemValueOperatorAndAttributeWithId) {
         this.validateClauses.splice(index, 1);
         this.formGroup.updateValueAndValidity();
     }
@@ -168,7 +171,7 @@ export class RuleEditorComponent implements OnChanges {
         this.formGroup.updateValueAndValidity();
     }
 
-    onDeleteRuleWhen($event: MouseEvent, index: number, whenClause: ItemValueOperatorAndAttribute) {
+    onDeleteRuleWhen($event: MouseEvent, index: number, whenClause: ItemValueOperatorAndAttributeWithId) {
         this.whenClauses.splice(index, 1);
         this.formGroup.updateValueAndValidity();
     }
