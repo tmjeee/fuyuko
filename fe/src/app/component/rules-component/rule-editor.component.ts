@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {ItemValueOperatorAndAttributeWithId} from './rule-editor-dialog.component';
 import {Attribute} from '../../model/attribute.model';
 import {Rule, ValidateClause, WhenClause} from '../../model/rule.model';
 import {Subscription} from 'rxjs';
@@ -8,7 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {isItemValueOperatorAndAttributeValid} from '../../utils/item-value-operator-attribute.util';
 import {OperatorType} from '../../model/operator.model';
 import {Value} from '../../model/item.model';
-import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
+import {ItemValueOperatorAndAttribute, ItemValueOperatorAndAttributeWithId} from '../../model/item-attribute.model';
 
 
 export interface RuleEditorComponentEvent {

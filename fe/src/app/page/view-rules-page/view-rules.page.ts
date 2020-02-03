@@ -5,10 +5,9 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {Attribute} from '../../model/attribute.model';
 import {RuleService} from '../../service/rule-service/rule.service';
 import {Rule} from '../../model/rule.model';
-import {OperatorType, ALL_OPERATOR_TYPES} from '../../model/operator.model';
 import {RulesTableComponentEvent} from '../../component/rules-component/rules-table.component';
 import {CounterService} from '../../service/counter-service/counter.service';
-import {combineAll, concatMap, finalize, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {combineLatest, of, Subscription} from 'rxjs';
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';
@@ -73,7 +72,6 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
   }
 
   reload() {
-    console.log('************************** reload');
     this.ready = false;
 
     setTimeout(() => {
@@ -94,25 +92,9 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
     async onRulesTableEvent($event: RulesTableComponentEvent) {
         switch ($event.type) {
       case 'add':
-        this.ruleService.addRule(this.currentView.id, $event.rule)
-          .pipe(
-            map( (r: ApiResponse) => {
-              toNotifications(this.notificationService, r);
-              this.reload();
-            })
-          ).subscribe();
+        await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['rule', ``], help: ['view-help']}}]);
         break;
       case 'edit':
-        this.ruleService.updateRule(this.currentView.id, $event.rule)
-          .pipe(
-            map( (r: ApiResponse) => {
-              toNotifications(this.notificationService, r);
-              this.reload();
-            })
-          ).subscribe();
-        break;
-      case 'external-edit':
-        console.log('***************** external-edit', $event);
         await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['rule', `${$event.rule.id}`], help: ['view-help']}}]);
         break;
       case 'delete':

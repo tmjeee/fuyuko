@@ -23,6 +23,10 @@ export interface ItemValueOperatorAndAttribute {
   attribute: Attribute;
 }
 
+export interface ItemValueOperatorAndAttributeWithId extends ItemValueOperatorAndAttribute {
+  id: number;
+}
+
 export interface TableItemAndAttributeSet {
   attributes: Attribute[];
   tableItems: TableItem[];
