@@ -1,9 +1,9 @@
-import {ItemValueOperatorAndAttribute} from '../model/item-attribute.model';
 import {operatorNeedsItemValue} from './attribute-operators.util';
 import {hasItemValue} from './ui-item-value-getter.util';
+import {ItemValueOperatorAndAttributeWithId} from '../component/rules-component/rule-editor.component';
 
 
-export const isItemValueOperatorAndAttributeValid = (i: ItemValueOperatorAndAttribute): boolean => {
+export const isItemValueOperatorAndAttributeWithIdValid = (i: ItemValueOperatorAndAttributeWithId): boolean => {
     if (i) {
         if (!i.attribute) {
             return false;

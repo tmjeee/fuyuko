@@ -4,13 +4,16 @@ import {Attribute} from '../../model/attribute.model';
 import {Rule, ValidateClause, WhenClause} from '../../model/rule.model';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import {isItemValueOperatorAndAttributeValid} from '../../utils/item-value-operator-attribute.util';
+import {isItemValueOperatorAndAttributeWithIdValid} from '../../utils/item-value-operator-attribute.util';
 import {OperatorType} from '../../model/operator.model';
 import {Value} from '../../model/item.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 
-export interface ItemValueOperatorAndAttributeWithId extends ItemValueOperatorAndAttribute {
+export interface ItemValueOperatorAndAttributeWithId {
     id: number;
+    itemValue: Value[];
+    operator: OperatorType;
+    attribute: Attribute;
 }
 
 export interface RuleEditorComponentEvent {
@@ -64,7 +67,7 @@ export class RuleEditorComponent implements OnChanges {
                     hasError = true;
                 } else {
                     for (const validationClause of this.validateClauses) {
-                        if (!isItemValueOperatorAndAttributeValid(validationClause)) {
+                        if (!isItemValueOperatorAndAttributeWithIdValid(validationClause)) {
                             validationErrors.badValidateClause = true;
                             hasError = true;
                         }
@@ -75,7 +78,7 @@ export class RuleEditorComponent implements OnChanges {
                     hasError = true;
                 } else {
                     for (const whenClause of this.whenClauses) {
-                        if (!isItemValueOperatorAndAttributeValid(whenClause)) {
+                        if (!isItemValueOperatorAndAttributeWithIdValid(whenClause)) {
                             validationErrors.badValidateClause = true;
                             hasError = true;
                         }
