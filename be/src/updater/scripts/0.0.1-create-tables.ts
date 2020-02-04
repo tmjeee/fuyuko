@@ -24,6 +24,8 @@ export const update = async () => {
    await TBL_PRICING_STRUCTURE();
    await TBL_LOOKUP_PRICING_STRUCTURE_GROUP();
    await TBL_PRICING_STRUCTURE_ITEM();
+   await TBL_CUSTOM_RULE();
+   await TBL_CUSTOM_RULE_VIEW();
    await TBL_RULE();
    await TBL_RULE_VALIDATE_CLAUSE();
    await TBL_RULE_VALIDATE_CLAUSE_METADATA();
@@ -110,6 +112,7 @@ const TBL_VIEW_VALIDATION_ERROR = async () => {
               ID INT PRIMARY KEY AUTO_INCREMENT,
               VIEW_VALIDATION_ID INT,
               RULE_ID INT,
+              CUSTOM_RULE_ID INT,
               ITEM_ID INT,
               VIEW_ATTRIBUTE_ID INT,
               MESSAGE TEXT,
@@ -378,6 +381,35 @@ const TBL_PRICING_STRUCTURE_ITEM = async () => {
             PRICING_STRUCTURE_ID INT,
             COUNTRY VARCHAR(200),
             PRICE DECIMAL
+         );
+      `);
+   });
+}
+
+const TBL_CUSTOM_RULE = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_CUSTOM_RULE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(200) NOT NULL,
+            DESCRIPTION VARCHAR(200) NOT NULL,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+}
+
+const TBL_CUSTOM_RULE_VIEW = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_CUSTOM_RULE_VIEW (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            CUSTOM_RULE_ID INT,
+            STATUS VARCHAR(200),
+            VIEW_ID INT,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
          );
       `);
    });
@@ -790,6 +822,10 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION_ERROR ADD CONSTRAINT \`fk_tbl_view_validation_error-2\` FOREIGN KEY IF NOT EXISTS (RULE_ID) REFERENCES TBL_RULE(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION_ERROR ADD CONSTRAINT \`fk_tbl_view_validation_error-3\` FOREIGN KEY IF NOT EXISTS (ITEM_ID) REFERENCES TBL_ITEM(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION_ERROR ADD CONSTRAINT \`fk_tbl_view_validation_error-4\` FOREIGN KEY IF NOT EXISTS (VIEW_ATTRIBUTE_ID) REFERENCES TBL_VIEW_ATTRIBUTE(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_VIEW_VALIDATION_ERROR ADD CONSTRAINT \`fk_tbl_view_validation_error-5\` FOREIGN KEY IF NOT EXISTS (CUSTOM_RULE_ID) REFERENCES TBL_CUSTOM_RULE(ID) ON DELETE CASCADE`);
+
+      await conn.query(`ALTER TABLE TBL_CUSTOM_RULE_VIEW ADD CONSTRAINT \`fk_tbl_custom_rule-1\` FOREIGN KEY IF NOT EXISTS (VIEW_ID) REFERENCES TBL_VIEW(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_CUSTOM_RULE_VIEW ADD CONSTRAINT \`fk_tbl_custom_rule-2\` FOREIGN KEY IF NOT EXISTS (CUSTOM_RULE_ID) REFERENCES TBL_CUSTOM_RULE(ID) ON DELETE CASCADE`);
    });
 }
 

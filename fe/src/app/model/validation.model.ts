@@ -1,7 +1,17 @@
-import {Value} from './item.model';
+import {Item, Value} from './item.model';
 import {Level} from './level.model';
 import {Progress} from './progress.model';
+import {Attribute} from './attribute.model';
 
+export interface CustomValidationContext {
+    log: (msg: string) => void;
+    viewId: () => number;
+    validationId: () => number;
+    itemId: () => number;
+    item: () => Item;
+    attribute: (attributeId: number) => Attribute;
+    reportError: (attributeId: number, message: string) => void;
+}
 
 export interface CreateValidation {
     id: number;

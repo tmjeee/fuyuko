@@ -8,6 +8,10 @@ import * as semver from 'semver';
 import {i, e} from '../logger';
 import config from '../config';
 
+export interface UpdateScript {
+    update: () => void;
+}
+
 export const runUpdater = async () => {
     const runUpdater: boolean = config['db-runUpdater'];
     if (runUpdater) {
@@ -44,7 +48,7 @@ export const runUpdate = async () => {
         .sort((f1: string, f2: string) => semver.compare(f1, f2))
     for (const script of orderedScripts) {
         const scriptFileFullPath: string = (path.join(scriptsDir, script));
-        const s = await import(scriptFileFullPath);
+        const s: UpdateScript = await import(scriptFileFullPath);
         const hasBeenUpdated = updaterEntryNames.includes(script);
         if (hasBeenUpdated) {
             i(`script ${scriptFileFullPath} has already been executed before, skip excution`);

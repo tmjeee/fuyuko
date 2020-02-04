@@ -1,7 +1,6 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Attribute} from "../../model/attribute.model";
-import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import {OperatorType} from "../../model/operator.model";
+import {Component, EventEmitter, Input, Output, OnInit} from '@angular/core';
+import {Attribute} from '../../model/attribute.model';
+import {OperatorType} from '../../model/operator.model';
 import {
     AreaValue,
     CURRENCY_FORMAT,
@@ -11,14 +10,14 @@ import {
     Value,
     VolumeValue,
     WidthValue
-} from "../../model/item.model";
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {operatorNeedsItemValue, operatorsForAttribute} from "../../utils/attribute-operators.util";
-import {convertToString} from "../../shared-utils/ui-item-value-converters.util";
-import * as numeral from "numeral";
-import {MatSelectChange} from "@angular/material/select";
-import {MatDatepickerInputEvent} from "@angular/material/datepicker";
-import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
+} from '../../model/item.model';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {operatorNeedsItemValue, operatorsForAttribute} from '../../utils/attribute-operators.util';
+import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
+import * as numeral from 'numeral';
+import {MatSelectChange} from '@angular/material/select';
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
 import {
     setItemAreaValue,
     setItemCurrencyValue,
@@ -26,8 +25,8 @@ import {
     setItemNumberValue, setItemSelectValue,
     setItemStringValue,
     setItemTextValue, setItemVolumeValue, setItemWidthValue
-} from "../../shared-utils/ui-item-value-setter.util";
-import {ItemValueOperatorAndAttributeWithId} from "../rules-component/rule-editor.component";
+} from '../../shared-utils/ui-item-value-setter.util';
+import {ItemValueOperatorAndAttributeWithId} from '../rules-component/rule-editor.component';
 
 
 @Component({
@@ -35,7 +34,7 @@ import {ItemValueOperatorAndAttributeWithId} from "../rules-component/rule-edito
     templateUrl: './multi-value-attribute-operator-editor.component.html',
     styleUrls: ['./multi-value-attribute-operator-editor.component.scss']
 })
-export class MultiValueAttributeOperatorEditorComponent {
+export class MultiValueAttributeOperatorEditorComponent implements OnInit {
 
     @Input() attributes: Attribute[];
     @Input() itemValueOperatorAndAttributeWithId: ItemValueOperatorAndAttributeWithId;
@@ -60,6 +59,10 @@ export class MultiValueAttributeOperatorEditorComponent {
         this.operators = [];
     }
 
+    controlsInFormArray(): FormGroup[] {
+        return this.formArray.controls as FormGroup[];
+    }
+
     ngOnInit(): void {
         if (this.itemValueOperatorAndAttributeWithId) {
             if (this.itemValueOperatorAndAttributeWithId.attribute) {
@@ -73,6 +76,101 @@ export class MultiValueAttributeOperatorEditorComponent {
             }
         }
         this.reload();
+    }
+
+    w(itemValue: Value) {
+        const fg: FormGroup = this.formBuilder.group({});
+        this.formArray.push(fg);
+        switch (this.attribute.type) {
+            case 'string':
+            case 'text':
+            case 'number':
+            case 'date': {
+                const v = itemValue ? convertToString(this.attribute, itemValue) : '';
+                const formControl: FormControl = this.formBuilder.control(v, [Validators.required]);
+                fg.addControl('formControl', formControl);
+                break;
+            }
+            case 'currency': {
+                let currencyValue = ``;
+                let currencyCountry = ``;
+                if (itemValue && itemValue.val) {
+                    const itemValueType: CurrencyValue = itemValue.val as CurrencyValue;
+                    currencyValue = `${numeral(itemValueType.value).format(CURRENCY_FORMAT)}`;
+                    currencyCountry = `${itemValueType.country}`;
+                }
+                const formControl: FormControl = this.formBuilder.control(currencyValue, [Validators.required]);
+                const formControl2: FormControl = this.formBuilder.control(currencyCountry, [Validators.required]);
+                fg.addControl('formControl', formControl);
+                fg.addControl('formControl2', formControl2);
+                break;
+            }
+            case 'area':
+            case 'volume':
+            case 'width':
+            case 'length':
+            case 'height': {
+                let v = ``;
+                let u = ``;
+                if (itemValue && itemValue.val) {
+                    const itemValueType: AreaValue | VolumeValue | WidthValue | LengthValue | HeightValue =
+                        itemValue.val as any;
+                    v = String(itemValueType.value);
+                    u = itemValueType.unit;
+                }
+                const formControl: FormControl = this.formBuilder.control(v, [Validators.required]);
+                const formControl2: FormControl = this.formBuilder.control(u, [Validators.required]);
+                fg.addControl('formControl', formControl);
+                fg.addControl('formControl2', formControl2);
+                break;
+            }
+            case 'dimension': {
+                let l = '';
+                let w = '';
+                let h = '';
+                let u = '';
+                if (itemValue && itemValue.val) {
+                    const itemValueType: DimensionValue = itemValue.val as DimensionValue;
+                    l = String(itemValueType.length);
+                    w = String(itemValueType.width);
+                    h = String(itemValueType.height);
+                    u = itemValueType.unit;
+                }
+                const formControl: FormControl = this.formBuilder.control(l, [Validators.required]);
+                const formControl2: FormControl = this.formBuilder.control(w, [Validators.required]);
+                const formControl3: FormControl = this.formBuilder.control(h, [Validators.required]);
+                const formControl4: FormControl = this.formBuilder.control(u, [Validators.required]);
+                fg.addControl('formControl', formControl);
+                fg.addControl('formControl2', formControl2);
+                fg.addControl('formControl3', formControl3);
+                fg.addControl('formControl4', formControl4);
+                break;
+            }
+            case 'select': {
+                let k = '';
+                if (itemValue && itemValue.val) {
+                    const itemValueType: SelectValue = itemValue.val as SelectValue;
+                    k = itemValueType.key;
+                }
+                const formControl: FormControl = this.formBuilder.control(k, [Validators.required]);
+                fg.addControl('formControl', formControl);
+                break;
+            }
+            case 'doubleselect': {
+                let k1 = '';
+                let k2 = '';
+                if (itemValue && itemValue.val) {
+                    const itemValueType: DoubleSelectValue = itemValue.val as DoubleSelectValue;
+                    k1 = itemValueType.key1;
+                    k2 = itemValueType.key2;
+                }
+                const formControl: FormControl = this.formBuilder.control(k1, [Validators.required]);
+                const formControl2: FormControl = this.formBuilder.control(k2, [Validators.required]);
+                fg.addControl('formControl', formControl);
+                fg.addControl('formControl2', formControl2);
+                break;
+            }
+        }
     }
 
     reload() {
@@ -93,99 +191,12 @@ export class MultiValueAttributeOperatorEditorComponent {
             }
             const hasItemValueForOperator = this.formControlOperator && operatorNeedsItemValue(this.formControlOperator.value);
             if (/*this.itemValue &&*/ hasItemValueForOperator) {
-                for (const itemValue of this.itemValues) {
-                    const fg: FormGroup = this.formBuilder.group({});
-                    this.formArray.push(fg);
-                    switch (this.attribute.type) {
-                        case 'string':
-                        case 'text':
-                        case 'number':
-                        case 'date': {
-                            const v = this.itemValues ? convertToString(this.attribute, itemValue) : '';
-                            const formControl: FormControl = this.formBuilder.control(v, [Validators.required]);
-                            fg.addControl('formControl', formControl);
-                            break;
-                        }
-                        case 'currency': {
-                            let currencyValue = ``;
-                            let currencyCountry = ``;
-                            if (itemValue && itemValue.val) {
-                                const itemValueType: CurrencyValue = itemValue.val as CurrencyValue;
-                                currencyValue = `${numeral(itemValueType.value).format(CURRENCY_FORMAT)}`;
-                                currencyCountry = `${itemValueType.country}`;
-                            }
-                            const formControl: FormControl = this.formBuilder.control(currencyValue, [Validators.required]);
-                            const formControl2: FormControl = this.formBuilder.control(currencyCountry, [Validators.required]);
-                            fg.addControl('formControl', formControl);
-                            fg.addControl('formControl2', formControl2);
-                            break;
-                        }
-                        case 'area':
-                        case 'volume':
-                        case 'width':
-                        case 'length':
-                        case 'height': {
-                            let v = ``;
-                            let u = ``;
-                            if (itemValue && itemValue.val) {
-                                const itemValueType: AreaValue | VolumeValue | WidthValue | LengthValue | HeightValue =
-                                    itemValue.val as any;
-                                v = String(itemValueType.value);
-                                u = itemValueType.unit;
-                            }
-                            const formControl: FormControl = this.formBuilder.control(v, [Validators.required]);
-                            const formControl2: FormControl = this.formBuilder.control(u, [Validators.required]);
-                            fg.addControl('formControl', formControl);
-                            fg.addControl('formControl2', formControl2);
-                            break;
-                        }
-                        case 'dimension': {
-                            let l = '';
-                            let w = '';
-                            let h = '';
-                            let u = '';
-                            if (itemValue && itemValue.val) {
-                                const itemValueType: DimensionValue = itemValue.val as DimensionValue;
-                                l = String(itemValueType.length);
-                                w = String(itemValueType.width);
-                                h = String(itemValueType.height);
-                                u = itemValueType.unit;
-                            }
-                            const formControl: FormControl = this.formBuilder.control(l, [Validators.required]);
-                            const formControl2: FormControl = this.formBuilder.control(w, [Validators.required]);
-                            const formControl3: FormControl = this.formBuilder.control(h, [Validators.required]);
-                            const formControl4: FormControl = this.formBuilder.control(u, [Validators.required]);
-                            fg.addControl('formControl', formControl);
-                            fg.addControl('formControl2', formControl2);
-                            fg.addControl('formControl3', formControl3);
-                            fg.addControl('formControl4', formControl4);
-                            break;
-                        }
-                        case 'select': {
-                            let k = '';
-                            if (itemValue && itemValue.val) {
-                                const itemValueType: SelectValue = itemValue.val as SelectValue;
-                                k = itemValueType.key;
-                            }
-                            const formControl: FormControl = this.formBuilder.control(k, [Validators.required]);
-                            fg.addControl('formControl', formControl);
-                            break;
-                        }
-                        case 'doubleselect': {
-                            let k1 = '';
-                            let k2 = '';
-                            if (itemValue && itemValue.val) {
-                                const itemValueType: DoubleSelectValue = itemValue.val as DoubleSelectValue;
-                                k1 = itemValueType.key1;
-                                k2 = itemValueType.key2;
-                            }
-                            const formControl: FormControl = this.formBuilder.control(k1, [Validators.required]);
-                            const formControl2: FormControl = this.formBuilder.control(k2, [Validators.required]);
-                            fg.addControl('formControl', formControl);
-                            fg.addControl('formControl2', formControl2);
-                            break;
-                        }
+                if (this.itemValues && this.itemValues.length) {
+                    for (const itemValue of this.itemValues) {
+                        this.w(itemValue);
                     }
+                } else { // just so there is a condition value
+                    this.w(null);
                 }
             }
         }

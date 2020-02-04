@@ -14,7 +14,10 @@
     "exec": "npm run tsc",
     "postexec": "npm run start",
     "runUpdater": "node -- src/runUpdater.js",
-    "test": "npx jasmine --reporter=jasmine-ts-console-reporter"
+    "test": "npx jasmine --reporter=jasmine-ts-console-reporter",
+    "prebuild": "npm run copy",
+    "build": "npm run tsc",
+    "postbuild": ""
   },
   "author": "",
   "license": "GPL",

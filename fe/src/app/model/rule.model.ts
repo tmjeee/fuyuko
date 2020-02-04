@@ -1,6 +1,21 @@
 import {AttributeType} from './attribute.model';
 import {ItemValTypes} from './item.model';
 import {OperatorType} from './operator.model';
+import {Status} from './status.model';
+
+export interface CustomRule {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface CustomRuleForView {
+  id: number;
+  name: string;
+  description: string;
+  status: Status;
+}
+
 
 export interface Rule {
   id: number;
