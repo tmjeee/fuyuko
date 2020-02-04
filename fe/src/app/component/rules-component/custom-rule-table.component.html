@@ -1,0 +1,38 @@
+<div class="custom-rule-table-component">
+    <div class="main-controls">
+
+    </div>
+
+    <div class="main-content">
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let customRuleInView of customRulesInView">
+                <mat-expansion-panel-header>
+                    <mat-icon *ngIf="isDisabled(customRuleInView)" color="primary">label_off</mat-icon>
+                    <mat-icon *ngIf="isEnabled(customRuleInView)" color="primary">label</mat-icon>
+                    <span>{{customRuleInView.name}}</span>
+                </mat-expansion-panel-header>
+                <mat-expansion-panel-description>
+                    <div class="description">
+                        {{customRuleInView.description}}
+                    </div>
+                    <div class="controls">
+                        <button type="button" [attr.test-icon-remove-rule]="customRuleInView.name" mat-icon-button color="primary" (click)="onDeleteRule($event, customRuleInView)" matTooltip="Remove this Custom Rule From View"><mat-icon>delete_outline</mat-icon></button>
+                        <button type="button" [attr.test-icon-enable-rule]="customRuleInView.name" mat-icon-button color="primary" *ngIf="isDisabled(customRuleInView)" (click)="onEnableRule($event, customRuleInView)" matTooltip="Enable this Custom Rule"><mat-icon>add_circle_outline</mat-icon></button>
+                        <button type="button" [attr.test-icon-disable-rule]="customRuleInView.name" mat-icon-button color="primary" *ngIf="isEnabled(customRuleInView)" (click)="onDisableRule($event, customRuleInView)" matTooltip="Disable this Custom Rule"><mat-icon>remove_circle_outline</mat-icon></button>
+                    </div>
+                </mat-expansion-panel-description>
+                <div class="content">
+                    <div flexLayout="column">
+                        <div flex="1 1 auto">
+                            <ul>
+                                <li>Name: {{customRuleInView.name}}</li>
+                                <li>Description: {{customRuleInView.description}}</li>
+                                <li>Status: {{customRuleInView.status}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>

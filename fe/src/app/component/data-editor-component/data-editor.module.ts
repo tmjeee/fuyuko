@@ -11,6 +11,7 @@ import {ItemEditorDialogComponent} from './item-editor-dialog.component';
 import {DataEditorNoPopupComponent} from './data-editor-no-popup.component';
 import {AttributeOperatorEditorComponent} from './attribute-operator-editor.component';
 import {MultiValueAttributeOperatorEditorComponent} from "./multi-value-attribute-operator-editor.component";
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import {MultiValueAttributeOperatorEditorComponent} from "./multi-value-attribut
     FormsModule,
     ReactiveFormsModule,
     AppMaterialsModule,
+    FlexLayoutModule,
   ],
   declarations: [
     DataEditorComponent,

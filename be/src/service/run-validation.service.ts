@@ -527,7 +527,7 @@ const _runValidation = async (viewId: number, validationId: number) => {
 
     const a2s: Attribute2[] = await getAttributesInView(viewId);
     const as: Attribute[] = await attributeConverter.convert(a2s);
-    await i(currentContext,`Succesfully retrieved attributes for viewId ${viewId}`);
+    await i(currentContext,`Successfully retrieved attributes for viewId ${viewId}`);
 
     const item2s: Item2[] = await getAllItemsInView(viewId);
     const items: Item[] = itemConverter.convert(item2s);
@@ -536,6 +536,11 @@ const _runValidation = async (viewId: number, validationId: number) => {
     const rule2s: Rule2[] = await getRule2s(viewId);
     const rules: Rule[] = ruleConverter.convert(rule2s);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
+
+
+    // todo: custom rule validation
+    // runRule()
+
 
     for (const item of items) {
         currentContext.item = item;

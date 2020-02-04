@@ -9,7 +9,7 @@ import {CustomValidationContext} from "../model/validation.model";
 import {Attribute} from "../model/attribute.model";
 import {Item} from "../model/item.model";
 import {View} from "../model/view.model";
-import {CustomRule} from "../model/rule.model";
+import {CustomRule} from "../model/custom-rule.model";
 
 export interface RuleScript {
     description: () => string;
@@ -100,7 +100,8 @@ export const runRuleSync = async () => {
 
     i(`Forward sync, files to db`);
     for (const ruleFile of sortedRuleFilesInDir) {
-        const s: RuleScript  = await import(ruleFile);
+        const fullRuleFilePath = path.join(__dirname, 'rules', ruleFile);
+        const s: RuleScript  = await import(fullRuleFilePath);
         if (!s) {
             continue;
         }
@@ -108,7 +109,7 @@ export const runRuleSync = async () => {
             const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_CUSTOM_RULE WHERE NAME=?`, [ruleFile]);
             if (q[0].COUNT <= 0) { // does not exists in db yet, register it
                 const description = (s && s.description) ? s.description() : `no description`;
-                await conn.query(`INSERT INT TBL_CUSTOM_RULE (NAME, DESCRIPTION) VALUES (?,?) `, [ruleFile, description]);
+                await conn.query(`INSERT INTO TBL_CUSTOM_RULE (NAME, DESCRIPTION) VALUES (?,?) `, [ruleFile, description]);
                 i(`Created db entry for rule ${ruleFile}`);
             } else {
                 i(`Rule file ${ruleFile} already registered before`);

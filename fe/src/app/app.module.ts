@@ -126,6 +126,7 @@ import {EditAttributePageComponent} from './page/view-attributes-page/edit-attri
 import {ValidationService} from './service/validation-service/validation.service';
 import {ValidationResultModule} from './component/validation-result-component/validation-result.module';
 import { ViewValidationDetailsPageComponent } from './page/view-validation-details-page/view-validation-details.page';
+import {CustomRuleService} from "./service/custom-rule-service/custom-rule.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -291,6 +292,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: PartnerService, useClass: PartnerService} as Provider,
     {provide: BrowserLocationHistoryService, useClass: BrowserLocationHistoryService} as Provider,
     {provide: ValidationService, useClass: ValidationService} as Provider,
+    {provide: CustomRuleService, useClass: CustomRuleService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
         deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,

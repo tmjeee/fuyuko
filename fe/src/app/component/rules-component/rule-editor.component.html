@@ -21,6 +21,7 @@
             <div class="validate-clauses-section" *ngIf="validateClauses.length > 0">
                 <div class="validate-clause-section" *ngFor="let validateClause of validateClauses; let i = index">
                     <app-multi-value-attribute-operator-editor
+                            class="editor"
                             [attr.test-validate-clause-attribute-editor]="validateClause.id"
                             [attributes]="attributes"
                             [itemValueOperatorAndAttributeWithId]="validateClause"
@@ -28,7 +29,7 @@
                     </app-multi-value-attribute-operator-editor>
                     <button type="button" mat-icon-button
                             [attr.test-button-delete-rule-validate-clause]="validateClause.id"
-                            matTooltip="Delete this when clause"
+                            matTooltip="Delete this validate clause"
                             color="primary"
                             (click)="onDeleteRuleValidation($event, i, validateClause)">
                         <mat-icon>delete_outline</mat-icon>
@@ -45,6 +46,7 @@
             <div class="when-clauses-section" *ngIf="whenClauses.length > 0">
                 <div class="when-clause-section" *ngFor="let whenClause of whenClauses; let i = index">
                     <app-multi-value-attribute-operator-editor
+                            class="editor"
                             [attr.test-when-clause-attribute-editor]="whenClause.id"
                             [attributes]="attributes"
                             [itemValueOperatorAndAttributeWithId]="whenClause"
@@ -55,7 +57,7 @@
                             [attr.test-button-delete-rule-when-clause]="whenClause.id"
                             color="primary"
                             type="button" (click)="onDeleteRuleWhen($event, i, whenClause)">
-                        <mat-icon>delete</mat-icon>
+                        <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>
             </div>

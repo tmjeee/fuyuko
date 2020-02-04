@@ -207,6 +207,7 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
         this.operators = [];
         this.operator = null;
         this.itemValues = [];
+        this.formArray.clear();
         this.reload();
         this.emitEvent();
     }
@@ -224,7 +225,7 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
     }
 
     onValueChange() {
-        for (let i = 0; i < this.itemValues.length; i++) {
+        for (let i = 0; i < this.formArray.length; i++) {
             let itemValue: Value = this.itemValues[i];
             if (!itemValue) {
                 itemValue = createNewItemValue(this.attribute);
@@ -349,4 +350,11 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
         this.events.emit(event);
     }
 
+    addConditionValue($event: MouseEvent) {
+        this.w(null);
+    }
+
+    removeConditionValue($event: MouseEvent, index: number) {
+        this.formArray.removeAt(index);
+    }
 }

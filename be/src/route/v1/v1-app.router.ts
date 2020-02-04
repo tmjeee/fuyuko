@@ -90,6 +90,11 @@ import registerPostViewValidationRoute from './POST-view-validation.route';
 import registerGetViewById from './GET-view-by-id.route';
 import registerGetUserSettings from './GET-user-settings.route';
 import registerPostUserSettings from './POST-user-settings.route';
+import registerGetAllCustomRulesRoute from './GET-all-custom-rules.route';
+import registerGetAllCustomRulesByViewRoute from './GET-all-custom-rules-by-view.route';
+import registerPostAddCustomRuleToViewRoute from './POST-add-custom-rule-to-view.route';
+import registerPostChangeCustomRuleStatusRoute from './POST-change-custom-rule-status.route';
+import registerPostRemoveCustomRuleFromViewRoute from './POST-remove-custom-rule-from-view.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -186,6 +191,11 @@ const reg = (router: Router, regi: Registry) => {
     registerGetViewById(v1AppRouter, registry);
     registerGetUserSettings(v1AppRouter, registry);
     registerPostUserSettings(v1AppRouter, registry);
+    registerGetAllCustomRulesRoute(v1AppRouter, registry);
+    registerGetAllCustomRulesByViewRoute(v1AppRouter, registry);
+    registerPostAddCustomRuleToViewRoute(v1AppRouter, registry);
+    registerPostChangeCustomRuleStatusRoute(v1AppRouter, registry);
+    registerPostRemoveCustomRuleFromViewRoute(v1AppRouter, registry);
 }
 
 

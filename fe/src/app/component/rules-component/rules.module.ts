@@ -6,6 +6,8 @@ import {AppMaterialsModule} from '../../app-materials.module';
 import {RulesTableComponent} from './rules-table.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {RuleEditorComponent} from './rule-editor.component';
+import {CustomRuleTableComponent} from "./custom-rule-table.component";
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 
 @NgModule({
@@ -16,14 +18,17 @@ import {RuleEditorComponent} from './rule-editor.component';
     ReactiveFormsModule,
     AppMaterialsModule,
     DataEditorModule,
+    FlexLayoutModule,
   ],
   declarations: [
     RulesTableComponent,
     RuleEditorComponent,
+    CustomRuleTableComponent,
   ],
   exports: [
     RulesTableComponent,
     RuleEditorComponent,
+    CustomRuleTableComponent,
   ],
   entryComponents: [
   ]

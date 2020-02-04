@@ -7,6 +7,9 @@
     }
     .validate-clauses-section {
       .validate-clause-section {
+        .editor {
+          width: 100%;
+        }
         margin-top: 5px;
         display: flex;
         .mat-form-field {
@@ -30,6 +33,9 @@
     }
     .when-clauses-section {
       .when-clause-section {
+        .editor {
+          width: 100%;
+        }
         display: flex;
         .mat-form-field {
           flex-grow: 1;
