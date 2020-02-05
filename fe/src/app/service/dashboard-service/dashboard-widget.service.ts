@@ -3,7 +3,7 @@ import {DashboardWidgetInstance} from '../../model/dashboard.model';
 import {HttpClient} from '@angular/common/http';
 import {DataMap, SerializedDashboardWidgetInstanceDataFormat} from '../../model/dashboard-serialzable.model';
 import config from '../../utils/config.util';
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 
 const URL_GET_WIDGET_DATA = () => `${config().api_host_url}/user/:userId/dashboard-widget-instance/:dashboardWidgetInstanceId`;
 const URL_POST_WIDGET_DATA = () => `${config().api_host_url}/user/:userId/dashboard-widget-instance-data`;

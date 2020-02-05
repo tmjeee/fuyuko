@@ -16,7 +16,11 @@
           </app-rules-table>
         </mat-tab>
         <mat-tab label="Custom">
-          Under work!!!
+            <app-custom-rule-table *ngIf="ready && customRules"
+                                   [allCustomRules]="customRules"
+                                   (events)="onCustomRuleTableEvent($event)"
+                                   [customRulesInView]="customRulesForView">
+            </app-custom-rule-table>
         </mat-tab>
       </mat-tab-group>
     </mat-card-content>

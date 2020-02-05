@@ -94,7 +94,9 @@ import registerGetAllCustomRulesRoute from './GET-all-custom-rules.route';
 import registerGetAllCustomRulesByViewRoute from './GET-all-custom-rules-by-view.route';
 import registerPostAddCustomRuleToViewRoute from './POST-add-custom-rule-to-view.route';
 import registerPostChangeCustomRuleStatusRoute from './POST-change-custom-rule-status.route';
-import registerPostRemoveCustomRuleFromViewRoute from './POST-remove-custom-rule-from-view.route';
+import registerPostRemoveCustomRuleFromViewRoute from './DELETE-remove-custom-rule-from-view.route';
+import registerGetUserNotifications from './GET-user-notification.route';
+import registerPostUserNotification from './POST-user-notification.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -196,6 +198,8 @@ const reg = (router: Router, regi: Registry) => {
     registerPostAddCustomRuleToViewRoute(v1AppRouter, registry);
     registerPostChangeCustomRuleStatusRoute(v1AppRouter, registry);
     registerPostRemoveCustomRuleFromViewRoute(v1AppRouter, registry);
+    registerGetUserNotifications(v1AppRouter, registry);
+    registerPostUserNotification(v1AppRouter, registry);
 }
 
 

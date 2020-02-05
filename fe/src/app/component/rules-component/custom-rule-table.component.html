@@ -1,26 +1,44 @@
 <div class="custom-rule-table-component">
     <div class="main-controls">
-
+        <mat-icon *ngIf="mainControlsHidden" (click)="toggleCustomRulePanel($event)">add_circle_outline</mat-icon>
+        <mat-icon *ngIf="!mainControlsHidden" (click)="toggleCustomRulePanel($event)">remove_circle_outline</mat-icon>
+        <div [ngClass]="{'hidden': mainControlsHidden}">
+            <form (ngSubmit)="onCustomRulesUpdateSubmit()">
+                <div class="options" [ngClass]="{'hidden': mainControlsHidden}"
+                     *ngFor="let customRule of allCustomRules">
+                    <mat-label>{{customRule.name}}</mat-label>
+                    <mat-checkbox [formControl]="formGroupAllCustomRules.controls[customRule.name]">{{customRule.description}}</mat-checkbox>
+                </div>
+                <div>
+                    <button mat-flat-button type="submit" color="primary">Update</button>
+                </div>
+            </form>
+        </div>
     </div>
 
+    <mat-divider></mat-divider>
+
     <div class="main-content">
-        <mat-accordion>
+        <div *ngIf="!customRulesInView.length">No custom rules!</div>
+        <mat-accordion *ngIf="customRulesInView.length">
             <mat-expansion-panel *ngFor="let customRuleInView of customRulesInView">
                 <mat-expansion-panel-header>
-                    <mat-icon *ngIf="isDisabled(customRuleInView)" color="primary">label_off</mat-icon>
-                    <mat-icon *ngIf="isEnabled(customRuleInView)" color="primary">label</mat-icon>
-                    <span>{{customRuleInView.name}}</span>
+                    <mat-panel-title>
+                        <mat-icon *ngIf="isDisabled(customRuleInView)" color="primary">label_off</mat-icon>
+                        <mat-icon *ngIf="isEnabled(customRuleInView)" color="primary">label</mat-icon>
+                        <span>{{customRuleInView.name}}</span>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <div class="description">
+                            {{customRuleInView.description}}
+                        </div>
+                        <div class="controls">
+                            <button type="button" [attr.test-icon-remove-rule]="customRuleInView.name" mat-icon-button color="primary" (click)="onDeleteRule($event, customRuleInView)" matTooltip="Remove this Custom Rule From View"><mat-icon>delete_outline</mat-icon></button>
+                            <button type="button" [attr.test-icon-enable-rule]="customRuleInView.name" mat-icon-button color="primary" *ngIf="isDisabled(customRuleInView)" (click)="onEnableRule($event, customRuleInView)" matTooltip="Enable this Custom Rule"><mat-icon>add_circle_outline</mat-icon></button>
+                            <button type="button" [attr.test-icon-disable-rule]="customRuleInView.name" mat-icon-button color="primary" *ngIf="isEnabled(customRuleInView)" (click)="onDisableRule($event, customRuleInView)" matTooltip="Disable this Custom Rule"><mat-icon>remove_circle_outline</mat-icon></button>
+                        </div>
+                    </mat-panel-description>
                 </mat-expansion-panel-header>
-                <mat-expansion-panel-description>
-                    <div class="description">
-                        {{customRuleInView.description}}
-                    </div>
-                    <div class="controls">
-                        <button type="button" [attr.test-icon-remove-rule]="customRuleInView.name" mat-icon-button color="primary" (click)="onDeleteRule($event, customRuleInView)" matTooltip="Remove this Custom Rule From View"><mat-icon>delete_outline</mat-icon></button>
-                        <button type="button" [attr.test-icon-enable-rule]="customRuleInView.name" mat-icon-button color="primary" *ngIf="isDisabled(customRuleInView)" (click)="onEnableRule($event, customRuleInView)" matTooltip="Enable this Custom Rule"><mat-icon>add_circle_outline</mat-icon></button>
-                        <button type="button" [attr.test-icon-disable-rule]="customRuleInView.name" mat-icon-button color="primary" *ngIf="isEnabled(customRuleInView)" (click)="onDisableRule($event, customRuleInView)" matTooltip="Disable this Custom Rule"><mat-icon>remove_circle_outline</mat-icon></button>
-                    </div>
-                </mat-expansion-panel-description>
                 <div class="content">
                     <div flexLayout="column">
                         <div flex="1 1 auto">

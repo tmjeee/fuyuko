@@ -93,7 +93,7 @@ import {ForumService} from './service/forum-service/forum.service';
 import {ForumModule} from './component/forum-component/forum.module';
 import {DashboardModule} from './component/dashboard-component/dashboard.module';
 import {DashboardService} from './service/dashboard-service/dashboard.service';
-import {DashboardWidgetService} from './service/dashboard-service/dashbowd-widget.service';
+import {DashboardWidgetService} from './service/dashboard-service/dashboard-widget.service';
 import {ActivatePageComponent} from './page/activate-page/activate.page';
 import {UserInvitationPageComponent} from './page/user-invitation-page/user-invitation.page';
 import {ActivationService} from './service/activation-service/activation.service';

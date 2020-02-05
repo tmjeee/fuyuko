@@ -11,5 +11,7 @@ export interface CustomRuleForView {
     name: string;
     description: string;
     status: Status;
+    customRuleViewId: number;
+    viewId: number;
 }
 

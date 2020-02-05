@@ -5,6 +5,10 @@
   @include fix-mat-accordion-description-panel();
   .main-controls {
     margin-bottom: 10px;
+    .hidden {
+      display: none;
+      visibility: hidden;
+    }
   }
   .main-content {
     .mat-accordion {

@@ -1,5 +1,5 @@
 import {Type} from '@angular/core';
-import {DashboardWidgetService} from '../service/dashboard-service/dashbowd-widget.service';
+import {DashboardWidgetService} from '../service/dashboard-service/dashboard-widget.service';
 import {DataMap, SerializedDashboardWidgetInstanceFormat} from './dashboard-serialzable.model';
 import {Observable} from 'rxjs';
 

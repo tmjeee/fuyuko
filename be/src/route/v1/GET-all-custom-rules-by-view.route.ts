@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
-import {CustomRuleForView} from "../../model/custom-rule.model";
+import {CustomRuleForView} from '../../model/custom-rule.model';
 import { param } from "express-validator";
 import {ROLE_VIEW} from "../../model/role.model";
 
