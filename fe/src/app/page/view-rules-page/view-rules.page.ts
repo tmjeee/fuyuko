@@ -97,7 +97,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
             case 'add':
                 await this.router.navigate(['/view-gen-layout', {
                     outlets: {
-                        primary: ['rule', ``],
+                        primary: ['add-rule'],
                         help: ['view-help']
                     }
                 }]);
@@ -105,7 +105,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
             case 'edit':
                 await this.router.navigate(['/view-gen-layout', {
                     outlets: {
-                        primary: ['rule', `${$event.rule.id}`],
+                        primary: ['edit-rule', `${$event.rule.id}`],
                         help: ['view-help']
                     }
                 }]);

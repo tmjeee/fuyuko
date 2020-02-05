@@ -19,8 +19,8 @@
     "build": "npm run tsc",
     "postbuild": ""
   },
-  "author": "",
-  "license": "GPL",
+  "author": "tmjeee",
+  "license": "LGPL",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",

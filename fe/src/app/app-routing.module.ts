@@ -50,6 +50,7 @@ import {EditRulePageComponent} from './page/view-rules-page/edit-rule.page';
 import {ViewValidationPageComponent} from './page/view-validation-page/view-validation.page';
 import {EditAttributePageComponent} from './page/view-attributes-page/edit-attribute.page';
 import {ViewValidationDetailsPageComponent} from './page/view-validation-details-page/view-validation-details.page';
+import {AddRulePageComponent} from "./page/view-rules-page/add-rule.page";
 
 const routes: Routes = [
 
@@ -293,9 +294,17 @@ const routes: Routes = [
         }
       } as Route,
       {
-        path: 'rule/:ruleId',
+        path: 'edit-rule/:ruleId',
         canActivate: [AuthGuard],
         component: EditRulePageComponent,
+        data: {
+          subSideNav: 'rules'
+        }
+      } as Route,
+      {
+        path: 'add-rule',
+        canActivate: [AuthGuard],
+        component: AddRulePageComponent,
         data: {
           subSideNav: 'rules'
         }

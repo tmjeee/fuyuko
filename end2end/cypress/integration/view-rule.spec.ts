@@ -63,8 +63,21 @@ describe('view-rule', () => {
         });
     });
 
+    it ('should switch tabs', () => {
+        viewRulePage
+            .selectTab('custom')
+            .verifyTabSelected('custom');
+
+        viewRulePage
+            .selectTab('predefined')
+            .verifyTabSelected('predefined');
+
+
+    });
+
     it ('should toggle rule expansion panel', () => {
         viewRulePage
+            .selectTab('predefined')
             .togglePanel('Rule #1')
             .verifyPanelExpanded('Rule #1', true)
             .togglePanel('Rule #1')
@@ -94,6 +107,7 @@ describe('view-rule', () => {
 
     it ('should be able to enable and disable rules', () => {
         viewRulePage
+            .selectTab('predefined')
             .disableRule('Rule #1')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #1')
@@ -103,6 +117,7 @@ describe('view-rule', () => {
         ;
 
         viewRulePage
+            .selectTab('predefined')
             .disableRule('Rule #2')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #2')
@@ -113,6 +128,7 @@ describe('view-rule', () => {
 
 
         viewRulePage
+            .selectTab('predefined')
             .disableRule('Rule #3')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #3')
@@ -123,6 +139,7 @@ describe('view-rule', () => {
 
 
         viewRulePage
+            .selectTab('predefined')
             .disableRule('Rule #4')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #4')
@@ -132,6 +149,7 @@ describe('view-rule', () => {
         ;
 
         viewRulePage
+            .selectTab('predefined')
             .disableRule('Rule #5')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #5')
@@ -141,6 +159,7 @@ describe('view-rule', () => {
         ;
 
         viewRulePage
+            .selectTab('predefined')
             .disableRule('Rule #6')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #6')
@@ -150,10 +169,22 @@ describe('view-rule', () => {
         ;
     });
 
-    it ('should be editable', () => {
+    it('should be able to add rule', () => {
         viewRulePage
-            .editRulePopup('Rule #1')
+            .selectTab('predefined')
+            .selectAddRule()
+            .selectValidateClauseAttribute(0, 'string attribute')
+        ;
+    });
+
+
+    /*
+    it ('should be editable rule', () => {
+        viewRulePage
+            .selectTab('predefined')
+            .editRule('Rule #1')
 
         ;
     });
+     */
 });

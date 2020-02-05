@@ -28,7 +28,7 @@
                             (events)="onValidateClauseChange($event, i)">
                     </app-multi-value-attribute-operator-editor>
                     <button type="button" mat-icon-button
-                            [attr.test-button-delete-rule-validate-clause]="validateClause.id"
+                            [attr.test-button-delete-rule-validate-clause]="i"
                             matTooltip="Delete this validate clause"
                             color="primary"
                             (click)="onDeleteRuleValidation($event, i, validateClause)">
@@ -54,7 +54,7 @@
                     </app-multi-value-attribute-operator-editor>
                     <button mat-icon-button
                             matTooltip="delete this when clause"
-                            [attr.test-button-delete-rule-when-clause]="whenClause.id"
+                            [attr.test-button-delete-rule-when-clause]="i"
                             color="primary"
                             type="button" (click)="onDeleteRuleWhen($event, i, whenClause)">
                         <mat-icon>delete_outline</mat-icon>

@@ -1,6 +1,7 @@
 import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {OperatorType} from "../../model/operator.model";
+import {ViewRuleAddPage} from "./sub-sub-page-object/view-rule-add.page";
 
 export class ViewRulePage implements ActualPage<ViewRulePage> {
 
@@ -44,6 +45,16 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
         return this;
     }
 
+    selectTab(tabId: string): ViewRulePage {
+       cy.get(`[test-tab='${tabId}']`).click();
+       return this;
+    }
+
+    verifyTabSelected(tabId: string): ViewRulePage {
+        cy.get(`[test-tab='${tabId}']`).should('be.visible');
+        return this;
+    }
+
     disableRule(ruleName: string): ViewRulePage {
         cy.get(`[test-icon-disable-rule='${ruleName}']`).click({force: true});
         return this;
@@ -59,22 +70,16 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
         return this;
     }
 
-    editRulePopup(ruleName: string): ViewRulePage {
-        cy.get(`[test-icon-edit-rule-popup='${ruleName}']`).click({force: true});
-        return this;
-    }
-
-    editRuleExternal(ruleName: string): ViewRulePage {
+    editRule(ruleName: string): ViewRulePage {
         cy.get(`[test-icon-edit-rule='${ruleName}']`).click({force: true});
         return this;
     }
 
-    selectWhenClauseAttribute(whenClauseId: number, attributeName: string): ViewRulePage {
-        return this;
-    }
 
-    selectWhenClauseOperator(operator: OperatorType): ViewRulePage {
-        return this;
+
+    selectAddRule(): ViewRuleAddPage {
+        cy.get(`[test-button-add-rule]`).click({force: true});
+        return new ViewRuleAddPage();
     }
 
 

@@ -27,7 +27,7 @@ const httpAction: any[] = [
                   MESSAGE,
                   CREATION_DATE,
                   LAST_UPDATE
-                FROM TBL_USER_NOTIFICATION WHERE USRE_ID=?
+                FROM TBL_USER_NOTIFICATION WHERE USER_ID=?
             `, [userId]) as QueryA).reduce((a: AppNotification[], i: QueryI) => {
                 const n: AppNotification = {
                     id: i.ID,

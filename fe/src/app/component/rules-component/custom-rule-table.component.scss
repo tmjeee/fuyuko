@@ -2,14 +2,27 @@
 @import '../../../scss/mixins';
 
 .custom-rule-table-component {
+
   @include fix-mat-accordion-description-panel();
+  @include fix-mat-tab-no-scroll();
+
   .main-controls {
     margin-bottom: 10px;
     .hidden {
       display: none;
       visibility: hidden;
     }
+    .mat-icon {
+      cursor: pointer;
+    }
+    form {
+      .options {
+        margin: 20px;
+      }
+    }
   }
+
+
   .main-content {
     .mat-accordion {
       .mat-expansion-panel {

@@ -6,8 +6,22 @@
             <form (ngSubmit)="onCustomRulesUpdateSubmit()">
                 <div class="options" [ngClass]="{'hidden': mainControlsHidden}"
                      *ngFor="let customRule of allCustomRules">
-                    <mat-label>{{customRule.name}}</mat-label>
-                    <mat-checkbox [formControl]="formGroupAllCustomRules.controls[customRule.name]">{{customRule.description}}</mat-checkbox>
+                    <div fxLayout="column" fxLayoutGap="20px">
+                        <div fxFlex="1 1 auto" >
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <div fxFlex="0 0 auto" fxLayoutAlign="center">
+                                    <mat-checkbox [formControl]="formGroupAllCustomRules.controls[customRule.name]">
+                                    </mat-checkbox>
+                                </div>
+                                <div fxFlex="1 1 auto" fxLayoutAlign="start">
+                                    {{customRule.name}}
+                                </div>
+                                <div fxFlex="1 1 auto" fxLayoutAlign="start">
+                                    {{customRule.description}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <button mat-flat-button type="submit" color="primary">Update</button>
@@ -16,7 +30,6 @@
         </div>
     </div>
 
-    <mat-divider></mat-divider>
 
     <div class="main-content">
         <div *ngIf="!customRulesInView.length">No custom rules!</div>

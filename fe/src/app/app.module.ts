@@ -127,6 +127,7 @@ import {ValidationService} from './service/validation-service/validation.service
 import {ValidationResultModule} from './component/validation-result-component/validation-result.module';
 import { ViewValidationDetailsPageComponent } from './page/view-validation-details-page/view-validation-details.page';
 import {CustomRuleService} from "./service/custom-rule-service/custom-rule.service";
+import {AddRulePageComponent} from "./page/view-rules-page/add-rule.page";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -198,6 +199,7 @@ const appInitializer = (settingsService: SettingsService,
     ViewDataListPageComponent,
     ViewRulesPageComponent,
     EditRulePageComponent,
+    AddRulePageComponent,
     ViewViewsPageComponent,
     JobsPageComponent,
     JobsHelpPageComponent,
