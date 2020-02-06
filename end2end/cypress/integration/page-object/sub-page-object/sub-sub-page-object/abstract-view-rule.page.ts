@@ -204,485 +204,500 @@ export class AbstractViewRulePage {
         return this;
     }
 
-    fillInWhenClauseText1(whenClauseIndex: number, val: string): AbstractViewRulePage {
+    fillInWhenClauseText1(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
             .clear({force: true})
             .type(val, {force: true});
         return this;
     }
-    verifyWhenClauseText1(whenClauseIndex: number, val: string): AbstractViewRulePage {
+    verifyWhenClauseText1(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
             .should('have.value', val);
         return this;
     }
-    fillInWhenClauseText2(whenClauseIndex: number, val: string): AbstractViewRulePage {
+    fillInWhenClauseText2(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value2]`)
             .clear({force: true})
             .type(val, {force: true});
         return this;
     }
-    verifyWhenClauseText2(whenClauseIndex: number, val: string): AbstractViewRulePage {
+    verifyWhenClauseText2(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value2]`)
             .should('have.value', val);
         return this;
     }
-    fillInWhenClauseText3(whenClauseIndex: number, val: string): AbstractViewRulePage {
+    fillInWhenClauseText3(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value3]`)
             .clear({force: true})
             .type(val, {force: true});
         return this;
     }
-    verifyWhenClauseText3(whenClauseIndex: number, val: string): AbstractViewRulePage {
+    verifyWhenClauseText3(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value3]`)
             .should('have.value', val);
         return this;
     }
-    fillInWhenClauseText4(whenClauseIndex: number, val: string): AbstractViewRulePage {
+    fillInWhenClauseText4(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value4]`)
             .clear({force: true})
             .type(val, {force: true});
         return this;
     }
-    verifyWhenClauseText4(whenClauseIndex: number, val: string): AbstractViewRulePage {
+    verifyWhenClauseText4(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value4]`)
             .should('have.value', val);
         return this;
     }
 
-    fillInValidateClauseText1(validateClauseIndex: number, val: string): AbstractViewRulePage {
+    fillInValidateClauseText1(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
             .clear({force: true})
             .type(val, {force: true});
         return this;
     }
-    verifyValidateClauseText1(validateClauseIndex: number, val: string): AbstractViewRulePage {
+    verifyValidateClauseText1(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
             .should('have.value',val);
         return this;
     }
 
-    fillInValidateClauseText2(validateClauseIndex: number, val: string): AbstractViewRulePage {
+    fillInValidateClauseText2(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value2]`)
             .clear({force: true})
             .type(val, {force: true});
         return this;
     }
-    verifyValidateClauseText2(validateClauseIndex: number, val: string): AbstractViewRulePage {
+    verifyValidateClauseText2(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value2]`)
             .should('have.value', val);
         return this;
     }
-    fillInValidateClauseText3(validateClauseIndex: number, val: string): AbstractViewRulePage {
+    fillInValidateClauseText3(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value3]`)
             .clear({force: true})
             .type(val, {force: true});
         return this;
     }
-    verifyValidateClauseText3(validateClauseIndex: number, val: string): AbstractViewRulePage {
+    verifyValidateClauseText3(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value3]`)
             .should('have.value', val);
         return this;
     }
-    fillInValidateClauseText4(validateClauseIndex: number, val: string): AbstractViewRulePage {
+    fillInValidateClauseText4(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value4]`)
             .clear({force: true})
             .type(val, {force: true});
         return this;
     }
-    verifyValidateClauseText4(validateClauseIndex: number, val: string): AbstractViewRulePage {
+    verifyValidateClauseText4(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value4]`)
             .should('have.value', val);
         return this;
     }
-
-    fillInWhenClauseStringAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
+    fillInWhenClauseStringAttribute(whenClauseIndex: number, fieldsContainerIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, val);
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, val);
         return this;
     }
-    verifyWhenClauseStringAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
+    verifyWhenClauseStringAttribute(whenClauseIndex: number, fieldsContainerIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, val);
+            .verifyWhenClauseText1(whenClauseIndex, fieldsContainerIndex, val);
         return this;
     }
-    fillInWhenClauseTextAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
+    fillInWhenClauseTextAttribute(whenClauseIndex: number, fieldsContainerIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, val);
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, val);
         return this;
     }
-    verifyWhenClauseTextAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
+    verifyWhenClauseTextAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, val);
+            .verifyWhenClauseText1(whenClauseIndex, fieldsContainerIndex, val);
         return this;
     }
-    fillInWhenClauseSelectAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, key: string): AbstractViewRulePage{
+    fillInWhenClauseSelectAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, key: string): AbstractViewRulePage{
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, key);
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, key);
         return this;
     }
-    verifyWhenClauseSelectAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, key: string): AbstractViewRulePage{
+    verifyWhenClauseSelectAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, key: string): AbstractViewRulePage{
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyValidateClauseText1(whenClauseIndex, key);
+            .verifyValidateClauseText1(whenClauseIndex, fieldsContainerIndex, key);
         return this;
     }
-    fillInWhenClauseDoubleSelectAttribute(whenClauseIndex: number,  attributeName: string,op: OperatorType, key1: string, key2: string): AbstractViewRulePage {
+    fillInWhenClauseDoubleSelectAttribute(whenClauseIndex: number, fieldsContainerIndex: number, attributeName: string,op: OperatorType, key1: string, key2: string): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, key1)
-            .fillInWhenClauseText2(whenClauseIndex, key1)
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, key1)
+            .fillInWhenClauseText2(whenClauseIndex, fieldsContainerIndex, key1)
         ;
         return this;
     }
-    verifyWhenClauseDoubleSelectAttribute(whenClauseIndex: number,  attributeName: string,op: OperatorType, key1: string, key2: string): AbstractViewRulePage {
+    verifyWhenClauseDoubleSelectAttribute(whenClauseIndex: number, fieldsContainerIndex: number, attributeName: string,op: OperatorType, key1: string, key2: string): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyValidateClauseText1(whenClauseIndex, key1)
-            .verifyValidateClauseText2(whenClauseIndex, key2);
+            .verifyValidateClauseText1(whenClauseIndex, fieldsContainerIndex, key1)
+            .verifyValidateClauseText2(whenClauseIndex, fieldsContainerIndex, key2);
         return this;
     }
-    fillInWhenClauseNumberAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number): AbstractViewRulePage {
+    fillInWhenClauseNumberAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, String(val))
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
         ;
         return this;
     }
-    verifyWhenClauseNumberAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number): AbstractViewRulePage {
+    verifyWhenClauseNumberAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, String(val));
+            .verifyWhenClauseText1(whenClauseIndex,fieldsContainerIndex, String(val));
         return this;
     }
-    fillInWhenClauseDateAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string /* DD-MM-YYYY */): AbstractViewRulePage {
+    fillInWhenClauseDateAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string /* DD-MM-YYYY */): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, val)
+            .fillInWhenClauseText1(whenClauseIndex,fieldsContainerIndex, val)
         ;
         return this;
     }
-    verifyWhenClauseDateAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string /* DD-MM-YYYY */): AbstractViewRulePage {
+    verifyWhenClauseDateAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string /* DD-MM-YYYY */): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, val);
+            .verifyWhenClauseText1(whenClauseIndex, fieldsContainerIndex ,val);
         return this;
     }
-    fillInWhenClauseCurrencyAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string, unit: CountryCurrencyUnits): AbstractViewRulePage {
+    fillInWhenClauseCurrencyAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string, unit: CountryCurrencyUnits): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, val)
-            .fillInWhenClauseText2(whenClauseIndex, unit)
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, val)
+            .fillInWhenClauseText2(whenClauseIndex,fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyWhenClauseCurrencyAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string, unit: CountryCurrencyUnits): AbstractViewRulePage {
+    verifyWhenClauseCurrencyAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string, unit: CountryCurrencyUnits): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, val)
-            .verifyWhenClauseText2(whenClauseIndex, unit);
+            .verifyWhenClauseText1(whenClauseIndex,fieldsContainerIndex, val)
+            .verifyWhenClauseText2(whenClauseIndex,fieldsContainerIndex, unit);
         return this;
     }
-    fillInWhenClauseVolumeAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: VolumeUnits): AbstractViewRulePage {
+    fillInWhenClauseVolumeAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: VolumeUnits): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, String(val))
-            .fillInWhenClauseText2(whenClauseIndex, unit)
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex,String(val))
+            .fillInWhenClauseText2(whenClauseIndex,fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyWhenClauseVolumeAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: VolumeUnits): AbstractViewRulePage {
+    verifyWhenClauseVolumeAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: VolumeUnits): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, String(val))
-            .verifyWhenClauseText2(whenClauseIndex, unit);
+            .verifyWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
+            .verifyWhenClauseText2(whenClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
-    fillInWhenClauseAreaAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: AreaUnits): AbstractViewRulePage {
+    fillInWhenClauseAreaAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: AreaUnits): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, String(val))
-            .fillInWhenClauseText2(whenClauseIndex, unit)
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
+            .fillInWhenClauseText2(whenClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyWhenClauseAreaAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: AreaUnits): AbstractViewRulePage {
+    verifyWhenClauseAreaAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: AreaUnits): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, String(val))
-            .verifyWhenClauseText2(whenClauseIndex, unit);
+            .verifyWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
+            .verifyWhenClauseText2(whenClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
-    fillInWhenClauseDimensionAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val1: number, val2: number, val3: number, unit: DimensionUnits): AbstractViewRulePage {
+    fillInWhenClauseDimensionAttribute(whenClauseIndex: number, fieldsContainerIndex: number, attributeName: string, op: OperatorType, val1: number, val2: number, val3: number, unit: DimensionUnits): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, String(val1))
-            .fillInWhenClauseText2(whenClauseIndex, String(val2))
-            .fillInWhenClauseText3(whenClauseIndex, String(val2))
-            .fillInWhenClauseText4(whenClauseIndex, unit)
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val1))
+            .fillInWhenClauseText2(whenClauseIndex, fieldsContainerIndex, String(val2))
+            .fillInWhenClauseText3(whenClauseIndex, fieldsContainerIndex, String(val2))
+            .fillInWhenClauseText4(whenClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyWhenClauseDimensionAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val1: number, val2: number, val3: number, unit: DimensionUnits): AbstractViewRulePage {
+    verifyWhenClauseDimensionAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val1: number, val2: number, val3: number, unit: DimensionUnits): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, String(val1))
-            .verifyWhenClauseText2(whenClauseIndex, String(val2))
-            .verifyWhenClauseText3(whenClauseIndex, String(val3))
-            .verifyWhenClauseText4(whenClauseIndex, unit);
+            .verifyWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val1))
+            .verifyWhenClauseText2(whenClauseIndex, fieldsContainerIndex, String(val2))
+            .verifyWhenClauseText3(whenClauseIndex, fieldsContainerIndex, String(val3))
+            .verifyWhenClauseText4(whenClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
-    fillInWhenClauseWidthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: WidthUnits): AbstractViewRulePage {
+    fillInWhenClauseWidthAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: WidthUnits): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, String(val))
-            .fillInWhenClauseText2(whenClauseIndex, unit)
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
+            .fillInWhenClauseText2(whenClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyWhenClauseWidthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: WidthUnits): AbstractViewRulePage {
+    verifyWhenClauseWidthAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: WidthUnits): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, String(val))
-            .verifyWhenClauseText2(whenClauseIndex, unit);
+            .verifyWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
+            .verifyWhenClauseText2(whenClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
-    fillInWhenClauseLengthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: LengthUnits): AbstractViewRulePage {
+    fillInWhenClauseLengthAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: LengthUnits): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, String(val))
-            .fillInWhenClauseText2(whenClauseIndex, unit)
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
+            .fillInWhenClauseText2(whenClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyWhenClauseLengthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: LengthUnits): AbstractViewRulePage {
+    verifyWhenClauseLengthAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: LengthUnits): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, String(val))
-            .verifyWhenClauseText2(whenClauseIndex, unit);
+            .verifyWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
+            .verifyWhenClauseText2(whenClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
-    fillInWhenClauseHeightAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: HeightUnits): AbstractViewRulePage {
+    fillInWhenClauseHeightAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: HeightUnits): AbstractViewRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
-            .fillInWhenClauseText1(whenClauseIndex, String(val))
-            .fillInWhenClauseText2(whenClauseIndex, unit)
+            .fillInWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
+            .fillInWhenClauseText2(whenClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyWhenClauseHeightAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: HeightUnits): AbstractViewRulePage {
+    verifyWhenClauseHeightAttribute(whenClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: HeightUnits): AbstractViewRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op)
-            .verifyWhenClauseText1(whenClauseIndex, String(val))
-            .verifyWhenClauseText2(whenClauseIndex, unit);
+            .verifyWhenClauseText1(whenClauseIndex, fieldsContainerIndex, String(val))
+            .verifyWhenClauseText2(whenClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
     //////////////
 
-    fillInValidateClauseStringAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
+    fillInValidateClauseStringAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, val);
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, val);
         return this;
     }
-    verifyValidateClauseStringAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
+    verifyValidateClauseStringAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, val);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, val);
         return this;
     }
-    fillInValidateClauseTextAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
+    fillInValidateClauseTextAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, val);
+            .fillInValidateClauseText1(validateClauseIndex,fieldsContainerIndex, val);
         return this;
     }
-    verifyValidateClauseTextAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
+    verifyValidateClauseTextAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, val);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, val);
         return this;
     }
-    fillInValidateClauseSelectAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, key: string): AbstractViewRulePage{
+    fillInValidateClauseSelectAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, key: string): AbstractViewRulePage{
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, key);
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, key);
         return this;
     }
-    verifyValidateClauseSelectAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, key: string): AbstractViewRulePage{
+    verifyValidateClauseSelectAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, key: string): AbstractViewRulePage{
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, key);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, key);
         return this;
     }
-    fillInValidateClauseDoubleSelectAttribute(validateClauseIndex: number,  attributeName: string,op: OperatorType, key1: string, key2: string): AbstractViewRulePage {
+    fillInValidateClauseDoubleSelectAttribute(validateClauseIndex: number, fieldsContainerIndex: number, attributeName: string,op: OperatorType, key1: string, key2: string): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, key1)
-            .fillInValidateClauseText2(validateClauseIndex, key1)
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, key1)
+            .fillInValidateClauseText2(validateClauseIndex, fieldsContainerIndex, key1)
         ;
         return this;
     }
-    verifyValidateClauseDoubleSelectAttribute(validateClauseIndex: number,  attributeName: string,op: OperatorType, key1: string, key2: string): AbstractViewRulePage {
+    verifyValidateClauseDoubleSelectAttribute(validateClauseIndex: number, fieldsContainerIndex: number, attributeName: string,op: OperatorType, key1: string, key2: string): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, key1)
-            .verifyValidateClauseText2(validateClauseIndex, key2);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, key1)
+            .verifyValidateClauseText2(validateClauseIndex, fieldsContainerIndex, key2);
         return this;
     }
-    fillInValidateClauseNumberAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number): AbstractViewRulePage {
+    fillInValidateClauseNumberAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, String(val))
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val))
         ;
         return this;
     }
-    verifyValidateClauseNumberAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number): AbstractViewRulePage {
+    verifyValidateClauseNumberAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, String(val));
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val));
         return this;
     }
-    fillInValidateClauseDateAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string /* DD-MM-YYYY */): AbstractViewRulePage {
+    fillInValidateClauseDateAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string /* DD-MM-YYYY */): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, val)
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, val)
         ;
         return this;
     }
-    verifyValidateClauseDateAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string /* DD-MM-YYYY */): AbstractViewRulePage {
+    verifyValidateClauseDateAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string /* DD-MM-YYYY */): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, val);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, val);
         return this;
     }
-    fillInValidateClauseCurrencyAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string, unit: CountryCurrencyUnits): AbstractViewRulePage {
+    fillInValidateClauseCurrencyAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string, unit: CountryCurrencyUnits): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, val)
-            .fillInValidateClauseText2(validateClauseIndex, unit)
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, val)
+            .fillInValidateClauseText2(validateClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyValidateClauseCurrencyAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string, unit: CountryCurrencyUnits): AbstractViewRulePage {
+    verifyValidateClauseCurrencyAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: string, unit: CountryCurrencyUnits): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, val)
-            .verifyValidateClauseText2(validateClauseIndex, unit);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, val)
+            .verifyValidateClauseText2(validateClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
-    fillInValidateClauseVolumeAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: VolumeUnits): AbstractViewRulePage {
+    fillInValidateClauseVolumeAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: VolumeUnits): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, String(val))
-            .fillInValidateClauseText2(validateClauseIndex, unit)
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val))
+            .fillInValidateClauseText2(validateClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyValidateClauseVolumeAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: VolumeUnits): AbstractViewRulePage {
+    verifyValidateClauseVolumeAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: VolumeUnits): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, String(val))
-            .verifyValidateClauseText2(validateClauseIndex, unit);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val))
+            .verifyValidateClauseText2(validateClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
-    fillInValidateClauseAreaAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: AreaUnits): AbstractViewRulePage {
+    fillInValidateClauseAreaAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: AreaUnits): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, String(val))
-            .fillInValidateClauseText2(validateClauseIndex, unit)
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val))
+            .fillInValidateClauseText2(validateClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyValidateClauseAreaAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: AreaUnits): AbstractViewRulePage {
+    verifyValidateClauseAreaAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: AreaUnits): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, String(val))
-            .verifyValidateClauseText2(validateClauseIndex, unit);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex,String(val))
+            .verifyValidateClauseText2(validateClauseIndex, fieldsContainerIndex,unit);
         return this;
     }
-    fillInValidateClauseDimensionAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val1: number, val2: number, val3: number, unit: DimensionUnits): AbstractViewRulePage {
+    fillInValidateClauseDimensionAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val1: number, val2: number, val3: number, unit: DimensionUnits): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, String(val1))
-            .fillInValidateClauseText2(validateClauseIndex, String(val2))
-            .fillInValidateClauseText3(validateClauseIndex, String(val2))
-            .fillInValidateClauseText4(validateClauseIndex, unit)
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val1))
+            .fillInValidateClauseText2(validateClauseIndex, fieldsContainerIndex, String(val2))
+            .fillInValidateClauseText3(validateClauseIndex, fieldsContainerIndex, String(val2))
+            .fillInValidateClauseText4(validateClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyValidateClauseDimensionAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val1: number, val2: number, val3: number, unit: DimensionUnits): AbstractViewRulePage {
+    verifyValidateClauseDimensionAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val1: number, val2: number, val3: number, unit: DimensionUnits): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, String(val1))
-            .verifyValidateClauseText2(validateClauseIndex, String(val2))
-            .verifyValidateClauseText3(validateClauseIndex, String(val3))
-            .verifyValidateClauseText4(validateClauseIndex, unit);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val1))
+            .verifyValidateClauseText2(validateClauseIndex, fieldsContainerIndex, String(val2))
+            .verifyValidateClauseText3(validateClauseIndex, fieldsContainerIndex, String(val3))
+            .verifyValidateClauseText4(validateClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
-    fillInValidateClauseWidthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: WidthUnits): AbstractViewRulePage {
+    fillInValidateClauseWidthAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: WidthUnits): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, String(val))
-            .fillInValidateClauseText2(validateClauseIndex, unit)
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val))
+            .fillInValidateClauseText2(validateClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyValidateClauseWidthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: WidthUnits): AbstractViewRulePage {
+    verifyValidateClauseWidthAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: WidthUnits): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, String(val))
-            .verifyValidateClauseText2(validateClauseIndex, unit);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val))
+            .verifyValidateClauseText2(validateClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
-    fillInValidateClauseLengthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: LengthUnits): AbstractViewRulePage {
+    fillInValidateClauseLengthAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: LengthUnits): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, String(val))
-            .fillInValidateClauseText2(validateClauseIndex, unit)
+            .fillInValidateClauseText1(validateClauseIndex,fieldsContainerIndex, String(val))
+            .fillInValidateClauseText2(validateClauseIndex,fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyValidateClauseLengthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: LengthUnits): AbstractViewRulePage {
+    verifyValidateClauseLengthAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: LengthUnits): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, String(val))
-            .verifyValidateClauseText2(validateClauseIndex, unit);
+            .verifyValidateClauseText1(validateClauseIndex,fieldsContainerIndex, String(val))
+            .verifyValidateClauseText2(validateClauseIndex,fieldsContainerIndex, unit);
         return this;
     }
-    fillInValidateClauseHeightAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: HeightUnits): AbstractViewRulePage {
+    fillInValidateClauseHeightAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: HeightUnits): AbstractViewRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op)
-            .fillInValidateClauseText1(validateClauseIndex, String(val))
-            .fillInValidateClauseText2(validateClauseIndex, unit)
+            .fillInValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val))
+            .fillInValidateClauseText2(validateClauseIndex, fieldsContainerIndex, unit)
         ;
         return this;
     }
-    verifyValidateClauseHeightAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number, unit: HeightUnits): AbstractViewRulePage {
+    verifyValidateClauseHeightAttribute(validateClauseIndex: number, fieldsContainerIndex: number,attributeName: string, op: OperatorType, val: number, unit: HeightUnits): AbstractViewRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op)
-            .verifyValidateClauseText1(validateClauseIndex, String(val))
-            .verifyValidateClauseText2(validateClauseIndex, unit);
+            .verifyValidateClauseText1(validateClauseIndex, fieldsContainerIndex, String(val))
+            .verifyValidateClauseText2(validateClauseIndex, fieldsContainerIndex, unit);
         return this;
     }
 
@@ -696,4 +711,47 @@ export class AbstractViewRulePage {
         cy.get(`[test-field-rule-description]`).should('have.value', ruleDescription);
         return this;
     }
+
+    clickAddWhenClauseCondition(whenClauseIndex: number): AbstractViewRulePage {
+       cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+           .find(`[test-button-add-condition]`)
+           .click({force: true});
+       return this;
+    }
+
+    clickAddValidateClauseCondition(validateClauseIndex: number): AbstractViewRulePage {
+        cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-button-add-condition]`)
+            .click({force: true});
+        return this;
+    }
+
+    clickRemoveWhenClauseCondition(whenClauseIndex: number, index: number): AbstractViewRulePage {
+        cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-button-remove-condition='${index}']`)
+            .click({force: true});
+        return this;
+    }
+
+    clickRemoveValidateClauseCondition(validateClauseIndex: number, index: number): AbstractViewRulePage {
+        cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-button-remove-condition='${index}']`)
+            .click({force: true});
+        return this;
+    }
+
+    verifyValidateClauseConditionCount(validateClauseIndex: number, count: number): AbstractViewRulePage {
+        cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
+            .find(`[test-fields-container]`)
+            .should('have.length', count)
+        return this;
+    }
+
+    verifyWhenClauseConditionCount(whenClauseIndex: number, count: number): AbstractViewRulePage {
+        cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
+            .find(`[test-fields-container]`)
+            .should('have.length', count)
+        return this;
+    }
+
 }

@@ -170,7 +170,7 @@ describe('view-rule', () => {
         ;
     });
 
-    it ('should be able to add / remove validate clauses', () => {
+    it('should be able to add / remove validate clauses', () => {
         viewRulePage
             .selectTab('predefined')
             .clickAddRule()
@@ -183,6 +183,16 @@ describe('view-rule', () => {
             .verifyValidateClauseCount(2)
             .removeValidateClause(1)
             .verifyValidateClauseCount(1)
+            .selectValidateClauseAttribute(0, 'string attribute')
+            .selectValidateClauseOperator(0, 'eq')
+            .clickAddValidateClauseCondition(0)
+            .verifyValidateClauseConditionCount(0, 2)
+            .clickAddValidateClauseCondition(0)
+            .verifyValidateClauseConditionCount(0, 3)
+            .clickRemoveValidateClauseCondition(0, 1)
+            .verifyValidateClauseConditionCount(0, 2)
+            .clickRemoveValidateClauseCondition(0, 1)
+            .verifyValidateClauseConditionCount(0, 1)
         ;
     });
 
@@ -199,6 +209,16 @@ describe('view-rule', () => {
             .verifyWhenClauseCount(2)
             .removeWhenClause(1)
             .verifyWhenClauseCount(1)
+            .selectValidateClauseAttribute(0, 'string attribute')
+            .selectValidateClauseOperator(0, 'eq')
+            .clickAddWhenClauseCondition(0)
+            .verifyWhenClauseConditionCount(0, 2)
+            .clickAddWhenClauseCondition(0)
+            .verifyWhenClauseConditionCount(0, 3)
+            .clickRemoveWhenClauseCondition(0, 1)
+            .verifyWhenClauseConditionCount(0, 2)
+            .clickRemoveWhenClauseCondition(0, 1)
+            .verifyWhenClauseConditionCount(0, 1)
         ;
     });
 
@@ -1887,7 +1907,7 @@ describe('view-rule', () => {
         ;
     });
 
-    it.only ('should be add and edit rule (string eq)', () => {
+    it.only('should be add and edit rule (string eq)', () => {
         const r = Math.random();
         const ruleName = `name-${r}`;
         const ruleDescription = `description-${r}`;
@@ -1897,12 +1917,21 @@ describe('view-rule', () => {
             .validateTitle()
             .fillInRuleName(ruleName)
             .fillInRuleDescription(ruleDescription)
-            .fillInWhenClauseStringAttribute(0, `string attribute`, `eq`, `test1`)
-            .fillInValidateClauseStringAttribute(0, `string attribute`, `eq`, `test1`)
+
+            .fillInWhenClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
+            .fillInValidateClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
             .verifyRuleName(ruleName)
             .verifyRuleDescription(ruleDescription)
-            .verifyValidateClauseStringAttribute(0, `string attribute`, `eq`, `test1`)
-            .verifyWhenClauseStringAttribute(0, `string attribute`, `eq`, `test1`)
+            .verifyValidateClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
+            .verifyWhenClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
+
+            .clickAddWhenClauseCondition(0)
+            .fillInWhenClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
+            .clickAddValidateClauseCondition(0)
+            .fillInValidateClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
+            .verifyValidateClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
+            .verifyWhenClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
+
             .verifySubmittable(true)
             .submit()
             .verifySuccessMessageExists()
@@ -1916,8 +1945,10 @@ describe('view-rule', () => {
             .validateTitle()
             .verifyRuleName(ruleName)
             .verifyRuleDescription(ruleDescription)
-            .verifyWhenClauseStringAttribute(0, `string attribute`, `eq`, `test1`)
-            .verifyValidateClauseStringAttribute(0, `string attribute`, `eq`, `test1`);
+            .verifyWhenClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
+            .verifyValidateClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
+            .verifyWhenClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
+            .verifyValidateClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`);
         ;
     });
 });

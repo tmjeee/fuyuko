@@ -18,7 +18,7 @@
 
         <!-- formControl -->
         <ng-container *ngFor=" let formGroup of controlsInFormArray(); index as i;">
-            <div fxLayout="row">
+            <div fxLayout="row" [attr.test-fields-container]="i">
                 <div fxFlex="1 0 auto">
                     <mat-form-field *ngIf="formGroup.controls.formControl && attribute && attribute.type === 'date'">
                         <mat-label>Value</mat-label>
@@ -56,10 +56,10 @@
                 </div>
                 <div fxFlex="0 0 auto">
                     <ng-container *ngIf="i == 0">
-                        <mat-icon matTooltip="Add another condition value" (click)="addConditionValue($event)">add_circle_outline</mat-icon>
+                        <mat-icon matTooltip="Add another condition value" [attr.test-button-add-condition]="''" (click)="addConditionValue($event)">add_circle_outline</mat-icon>
                     </ng-container>
                     <ng-container *ngIf="i > 0">
-                        <mat-icon matTooltip="Remove this condition value" (click)="removeConditionValue($event, i)">remove_circle_outline</mat-icon>
+                        <mat-icon matTooltip="Remove this condition value" [attr.test-button-remove-condition]="i" (click)="removeConditionValue($event, i)">remove_circle_outline</mat-icon>
                     </ng-container>
                 </div>
             </div>
