@@ -22,7 +22,7 @@
                 <div class="validate-clause-section" *ngFor="let validateClause of validateClauses; let i = index">
                     <app-multi-value-attribute-operator-editor
                             class="editor"
-                            [attr.test-validate-clause-attribute-editor]="validateClause.id"
+                            [attr.test-validate-clause-attribute-editor]="i"
                             [attributes]="attributes"
                             [itemValueOperatorAndAttributeWithId]="validateClause"
                             (events)="onValidateClauseChange($event, i)">
@@ -47,7 +47,7 @@
                 <div class="when-clause-section" *ngFor="let whenClause of whenClauses; let i = index">
                     <app-multi-value-attribute-operator-editor
                             class="editor"
-                            [attr.test-when-clause-attribute-editor]="whenClause.id"
+                            [attr.test-when-clause-attribute-editor]="i"
                             [attributes]="attributes"
                             [itemValueOperatorAndAttributeWithId]="whenClause"
                             (events)="onWhenClauseChange($event, i)">

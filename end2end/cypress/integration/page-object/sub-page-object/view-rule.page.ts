@@ -2,6 +2,7 @@ import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {OperatorType} from "../../model/operator.model";
 import {ViewRuleAddPage} from "./sub-sub-page-object/view-rule-add.page";
+import {ViewRuleEditPage} from "./sub-sub-page-object/view-rule-edit.page";
 
 export class ViewRulePage implements ActualPage<ViewRulePage> {
 
@@ -70,17 +71,19 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
         return this;
     }
 
-    editRule(ruleName: string): ViewRulePage {
+    editRule(ruleName: string): ViewRuleEditPage {
         cy.get(`[test-icon-edit-rule='${ruleName}']`).click({force: true});
-        return this;
+        return new ViewRuleEditPage();
     }
 
-
-
-    selectAddRule(): ViewRuleAddPage {
+    clickAddRule(): ViewRuleAddPage {
         cy.get(`[test-button-add-rule]`).click({force: true});
         return new ViewRuleAddPage();
     }
 
 
+    verifyRulePanelExists(ruleName: string, b: boolean): ViewRulePage {
+       cy.get(`[test-panel-header-rule='${ruleName}']`).should(b ? 'exist' : 'not.exist');
+       return this;
+    }
 }
