@@ -175,9 +175,9 @@ describe('view-rule', () => {
             .selectTab('predefined')
             .clickAddRule()
             .verifyValidateClauseCount(1)
-            .addValidateClause()
+            .clickAddValidateClause()
             .verifyValidateClauseCount(2)
-            .addValidateClause()
+            .clickAddValidateClause()
             .verifyValidateClauseCount(3)
             .removeValidateClause(1)
             .verifyValidateClauseCount(2)
@@ -201,9 +201,9 @@ describe('view-rule', () => {
             .selectTab('predefined')
             .clickAddRule()
             .verifyWhenClauseCount(1)
-            .addWhenClause()
+            .clickAddWhenClause()
             .verifyWhenClauseCount(2)
-            .addWhenClause()
+            .clickAddWhenClause()
             .verifyWhenClauseCount(3)
             .removeWhenClause(2)
             .verifyWhenClauseCount(2)
@@ -1907,7 +1907,63 @@ describe('view-rule', () => {
         ;
     });
 
-    it.only('should be add and edit rule (string eq)', () => {
+    it.only ('should allow saving / deleting multiple when / validate clauses with many conditions on each clauses', () => {
+        const r = Math.random();
+        const ruleName = `name-${r}`;
+        const ruleDescription = `description-${r}`;
+
+        viewRulePage
+            .selectTab('predefined')
+            .clickAddRule()
+            .validateTitle()
+            .fillInRuleName(ruleName)
+            .fillInRuleDescription(ruleDescription)
+            .clickAddValidateClause()
+            .verifyValidateClauseSize(2)
+            .clickAddWhenClause()
+            .verifyWhenClauseSize(2)
+            .selectWhenClauseAttribute(0, 'string attribute')
+            .verifyWhenClauseAttributeSelected(0, 'string attribute')
+            .selectWhenClauseOperator(0, 'eq')
+            .verifyWhenClauseOperatorSelected(0, 'eq')
+            .selectWhenClauseAttribute(1, 'number attribute')
+            .verifyWhenClauseAttributeSelected(1, 'number attribute')
+            .selectWhenClauseOperator(1, 'eq')
+            .verifyWhenClauseOperatorSelected(1, 'eq')
+            .selectValidateClauseAttribute(0, 'string attribute')
+            .verifyValidateClauseAttributeSelected(0, 'string attribute')
+            .selectValidateClauseOperator(0, 'eq')
+            .verifyValidateClauseOperatorSelected(0, 'eq')
+            .selectValidateClauseAttribute(1, 'number attribute')
+            .verifyValidateClauseAttributeSelected(1, 'number attribute')
+            .selectValidateClauseOperator(1, 'eq')
+            .verifyValidateClauseOperatorSelected(1, 'eq')
+            .clickAddValidateClauseCondition(0)
+            .verifyValidateClauseConditionCount(0, 2)
+            .clickAddValidateClauseCondition(1)
+            .verifyValidateClauseConditionCount(1, 2)
+            .clickAddWhenClauseCondition(0)
+            .verifyWhenClauseConditionCount(0, 2)
+            .clickAddWhenClauseCondition(1)
+            .verifyWhenClauseConditionCount(1, 2)
+            // .verifySubmittable(false)
+            .fillInWhenClauseStringAttribute(0, 0, 'string attribute', 'eq', 'text1')
+            .fillInWhenClauseNumberAttribute(0, 1, 'number attribute', 'eq', 1)
+            // .fillInWhenClauseStringAttribute(1, 0, 'string attribute', 'eq', 'text2')
+            // .fillInWhenClauseNumberAttribute(1, 1, 'number attribute', 'eq', 2)
+            // .fillInValidateClauseStringAttribute(0, 0, 'string attribute', 'eq', 'text1')
+            // .fillInValidateClauseNumberAttribute(0, 1, 'number attribute', 'eq', 1)
+            // .fillInValidateClauseStringAttribute(1, 0, 'string attribute', 'eq', 'text2')
+            // .fillInValidateClauseNumberAttribute(1, 1, 'number attribute', 'eq', 2)
+            // .verifySubmittable(true)
+        ;
+
+        // todo: got to viewRulePage check fields after submission
+
+        // todo: delete created rule
+    });
+
+    it ('should be add and edit rule (string eq)', () => {
         const r = Math.random();
         const ruleName = `name-${r}`;
         const ruleDescription = `description-${r}`;
