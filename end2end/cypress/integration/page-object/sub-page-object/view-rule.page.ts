@@ -1,8 +1,7 @@
 import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
-import {OperatorType} from "../../model/operator.model";
-import {ViewRuleAddPage} from "./sub-sub-page-object/view-rule-add.page";
-import {ViewRuleEditPage} from "./sub-sub-page-object/view-rule-edit.page";
+import {ViewPredefinedRulePage} from "./sub-sub-page-object/view-predefine-rule.page";
+import {ViewCustomRulePage} from "./sub-sub-page-object/view-custom-rule.page";
 
 export class ViewRulePage implements ActualPage<ViewRulePage> {
 
@@ -26,64 +25,14 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
         return this;
     }
 
-    togglePanel(ruleName: string): ViewRulePage {
-        cy.get(`[test-panel-header-rule='${ruleName}']`).click({force: true});
-        return this;
+    selectCustomTab(): ViewCustomRulePage {
+        cy.get(`[test-tab='custom']`).click();
+        return new ViewCustomRulePage();
     }
 
-    verifyPanelExpanded(ruleName: string, b: boolean): ViewRulePage {
-        cy.get(`[test-panel-content-rule='${ruleName}']`).should(b ? 'be.visible' : 'not.be.visible');
-        return this;
+    selectPredefinedTab(): ViewPredefinedRulePage {
+        cy.get(`[test-tab='predefined']`).click();
+        return new ViewPredefinedRulePage();
     }
 
-    verifyPanelRuleDisabled(ruleName: string): ViewRulePage {
-        cy.get(`[test-panel-header-rule='${ruleName}']`).should('have.attr', 'test-panel-rule-status', 'DISABLED');
-        return this;
-    }
-
-    verifyPanelRuleEnabled(ruleName: string): ViewRulePage {
-        cy.get(`[test-panel-header-rule='${ruleName}']`).should('have.attr', 'test-panel-rule-status', 'ENABLED');
-        return this;
-    }
-
-    selectTab(tabId: string): ViewRulePage {
-       cy.get(`[test-tab='${tabId}']`).click();
-       return this;
-    }
-
-    verifyTabSelected(tabId: string): ViewRulePage {
-        cy.get(`[test-tab='${tabId}']`).should('be.visible');
-        return this;
-    }
-
-    disableRule(ruleName: string): ViewRulePage {
-        cy.get(`[test-icon-disable-rule='${ruleName}']`).click({force: true});
-        return this;
-    }
-
-    enableRule(ruleName: string): ViewRulePage {
-        cy.get(`[test-icon-enable-rule='${ruleName}']`).click({force: true});
-        return this;
-    }
-
-    deleteRule(ruleName: string): ViewRulePage {
-        cy.get(`[test-icon-remove-rule='${ruleName}']`).click({force: true});
-        return this;
-    }
-
-    editRule(ruleName: string): ViewRuleEditPage {
-        cy.get(`[test-icon-edit-rule='${ruleName}']`).click({force: true});
-        return new ViewRuleEditPage();
-    }
-
-    clickAddRule(): ViewRuleAddPage {
-        cy.get(`[test-button-add-rule]`).click({force: true});
-        return new ViewRuleAddPage();
-    }
-
-
-    verifyRulePanelExists(ruleName: string, b: boolean): ViewRulePage {
-       cy.get(`[test-panel-header-rule='${ruleName}']`).should(b ? 'exist' : 'not.exist');
-       return this;
-    }
 }

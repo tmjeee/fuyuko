@@ -1,16 +1,16 @@
 <div class="custom-rule-table-component">
     <div class="main-controls">
-        <mat-icon *ngIf="mainControlsHidden" (click)="toggleCustomRulePanel($event)">add_circle_outline</mat-icon>
-        <mat-icon *ngIf="!mainControlsHidden" (click)="toggleCustomRulePanel($event)">remove_circle_outline</mat-icon>
-        <div [ngClass]="{'hidden': mainControlsHidden}">
+        <mat-icon *ngIf="mainControlsHidden" [attr.test-button-show-custom-rule-list]="''" (click)="toggleCustomRulePanel($event)">add_circle_outline</mat-icon>
+        <mat-icon *ngIf="!mainControlsHidden" [attr.test-button-hide-custom-rule-list]="''" (click)="toggleCustomRulePanel($event)">remove_circle_outline</mat-icon>
+        <div [ngClass]="{'hidden': mainControlsHidden}" [attr.test-custom-rule-list-shown]="'' + mainControlsHidden">
             <form (ngSubmit)="onCustomRulesUpdateSubmit()">
                 <div class="options" [ngClass]="{'hidden': mainControlsHidden}"
-                     *ngFor="let customRule of allCustomRules">
+                     *ngFor="let customRule of allCustomRules; let i = index">
                     <div fxLayout="column" fxLayoutGap="20px">
                         <div fxFlex="1 1 auto" >
                             <div fxLayout="row" fxLayoutGap="20px">
                                 <div fxFlex="0 0 auto" fxLayoutAlign="center">
-                                    <mat-checkbox [formControl]="formGroupAllCustomRules.controls[customRule.name]">
+                                    <mat-checkbox [formControl]="formGroupAllCustomRules.controls[customRule.name]" [attr.test-checkbox-custom-rule]="customRule.name">
                                     </mat-checkbox>
                                 </div>
                                 <div fxFlex="1 1 auto" fxLayoutAlign="start">
@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div>
-                    <button mat-flat-button type="submit" color="primary">Update</button>
+                    <button mat-flat-button type="submit" color="primary" [attr.test-button-update-custom-rule-list]="''">Update</button>
                 </div>
             </form>
         </div>
@@ -34,8 +34,8 @@
     <div class="main-content">
         <div *ngIf="!customRulesInView.length">No custom rules!</div>
         <mat-accordion *ngIf="customRulesInView.length">
-            <mat-expansion-panel *ngFor="let customRuleInView of customRulesInView">
-                <mat-expansion-panel-header>
+            <mat-expansion-panel *ngFor="let customRuleInView of customRulesInView" [attr.test-expansion-panel]="customRuleInView.name">
+                <mat-expansion-panel-header [attr.test-expansion-panel-header]="customRuleInView.name">
                     <mat-panel-title>
                         <mat-icon *ngIf="isDisabled(customRuleInView)" color="primary">label_off</mat-icon>
                         <mat-icon *ngIf="isEnabled(customRuleInView)" color="primary">label</mat-icon>
@@ -52,7 +52,7 @@
                         </div>
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <div class="content">
+                <div class="content" [attr.test-expansion-panel-content]="customRuleInView.name">
                     <div flexLayout="column">
                         <div flex="1 1 auto">
                             <ul>

@@ -20,6 +20,9 @@ const httpAction: any[] = [
         const customRuleIds: number[] = req.body.customRuleIds;
 
         await doInDbConnection(async (conn: Connection) => {
+
+            await conn.query(`DELETE FROM TBL_CUSTOM_RULE_VIEW WHERE VIEW_ID=?`, [viewId]);
+
             for (const customRuleId of customRuleIds) {
                 await conn.query(`
                     INSERT INTO TBL_CUSTOM_RULE_VIEW (CUSTOM_RULE_ID, STATUS, VIEW_ID) VALUES (?,?,?)

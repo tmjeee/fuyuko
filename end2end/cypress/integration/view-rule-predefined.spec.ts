@@ -1,8 +1,9 @@
 import * as util from "./util/util";
 import {LoginPage} from "./page-object/login.page";
 import {ViewRulePage} from "./page-object/sub-page-object/view-rule.page";
+import { OperatorType } from "./model/operator.model";
 
-describe('view-rule', () => {
+describe('view-rule-predefined', () => {
 
     let viewRulePage: ViewRulePage;
 
@@ -66,19 +67,17 @@ describe('view-rule', () => {
 
     it ('should switch tabs', () => {
         viewRulePage
-            .selectTab('custom')
-            .verifyTabSelected('custom');
+            .selectCustomTab()
+            .verifyCustomTabSelected();
 
         viewRulePage
-            .selectTab('predefined')
-            .verifyTabSelected('predefined');
-
-
+            .selectPredefinedTab()
+            .verifyPredefinedTabSelected();
     });
 
     it ('should toggle rule expansion panel', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .togglePanel('Rule #1')
             .verifyPanelExpanded('Rule #1', true)
             .togglePanel('Rule #1')
@@ -108,7 +107,7 @@ describe('view-rule', () => {
 
     it ('should be able to enable and disable rules', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .disableRule('Rule #1')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #1')
@@ -118,7 +117,7 @@ describe('view-rule', () => {
         ;
 
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .disableRule('Rule #2')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #2')
@@ -129,7 +128,7 @@ describe('view-rule', () => {
 
 
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .disableRule('Rule #3')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #3')
@@ -140,7 +139,7 @@ describe('view-rule', () => {
 
 
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .disableRule('Rule #4')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #4')
@@ -150,7 +149,7 @@ describe('view-rule', () => {
         ;
 
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .disableRule('Rule #5')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #5')
@@ -160,7 +159,7 @@ describe('view-rule', () => {
         ;
 
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .disableRule('Rule #6')
             .verifySuccessMessageExists()
             .verifyPanelRuleDisabled('Rule #6')
@@ -172,7 +171,7 @@ describe('view-rule', () => {
 
     it('should be able to add / remove validate clauses', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
             .verifyValidateClauseCount(1)
             .clickAddValidateClause()
@@ -198,7 +197,7 @@ describe('view-rule', () => {
 
     it ('should be able to add / remove when clauses', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
             .verifyWhenClauseCount(1)
             .clickAddWhenClause()
@@ -224,7 +223,7 @@ describe('view-rule', () => {
 
     it ('should be able to string attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -288,7 +287,7 @@ describe('view-rule', () => {
 
     it ('should be able to text attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -351,7 +350,7 @@ describe('view-rule', () => {
 
     it ('should be able to select attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -414,7 +413,7 @@ describe('view-rule', () => {
 
     it ('should be able to double select attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -477,7 +476,7 @@ describe('view-rule', () => {
 
     it ('should be able to number attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -636,7 +635,7 @@ describe('view-rule', () => {
 
     it ('should be able to date attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -795,7 +794,7 @@ describe('view-rule', () => {
 
     it ('should be able to currency attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -954,7 +953,7 @@ describe('view-rule', () => {
 
     it('should be able to volume attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -1113,7 +1112,7 @@ describe('view-rule', () => {
 
     it('should be able to area attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -1272,7 +1271,7 @@ describe('view-rule', () => {
 
     it('should be able to width attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -1431,7 +1430,7 @@ describe('view-rule', () => {
 
     it('should be able to height attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -1590,7 +1589,7 @@ describe('view-rule', () => {
 
     it('should be able to length attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -1750,7 +1749,7 @@ describe('view-rule', () => {
 
     it('should be able to dimension attribute in when and validate clause', () => {
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
 
             // when clause
@@ -1907,13 +1906,29 @@ describe('view-rule', () => {
         ;
     });
 
-    it.only ('should allow saving / deleting multiple when / validate clauses with many conditions on each clauses', () => {
+    const w = (opts: {
+        fillInWhenClauseFnName: string,
+        verifyWhenClauseFnName: string,
+        fillInValidateClauseFnName: string,
+        verifyValidateClauseFnName: string,
+        attributeName: string,
+        whenClause_opForAdd: OperatorType,
+        whenClause_valForAdd: any[],
+        validateClause_opForAdd: OperatorType,
+        validateClause_valForAdd: any[],
+        whenClause_opForEdit: OperatorType,
+        whenClause_valForEdit: any[],
+        validateClause_opForEdit: OperatorType,
+        validateClause_valForEdit: any[]
+    }) => {
+
         const r = Math.random();
         const ruleName = `name-${r}`;
         const ruleDescription = `description-${r}`;
 
+        // add rule
         viewRulePage
-            .selectTab('predefined')
+            .selectPredefinedTab()
             .clickAddRule()
             .validateTitle()
             .fillInRuleName(ruleName)
@@ -1922,89 +1937,150 @@ describe('view-rule', () => {
             .verifyValidateClauseSize(2)
             .clickAddWhenClause()
             .verifyWhenClauseSize(2)
-            .selectWhenClauseAttribute(0, 'string attribute')
-            .verifyWhenClauseAttributeSelected(0, 'string attribute')
-            .selectWhenClauseOperator(0, 'eq')
-            .verifyWhenClauseOperatorSelected(0, 'eq')
-            .selectWhenClauseAttribute(1, 'number attribute')
-            .verifyWhenClauseAttributeSelected(1, 'number attribute')
-            .selectWhenClauseOperator(1, 'eq')
-            .verifyWhenClauseOperatorSelected(1, 'eq')
-            .selectValidateClauseAttribute(0, 'string attribute')
-            .verifyValidateClauseAttributeSelected(0, 'string attribute')
-            .selectValidateClauseOperator(0, 'eq')
-            .verifyValidateClauseOperatorSelected(0, 'eq')
-            .selectValidateClauseAttribute(1, 'number attribute')
-            .verifyValidateClauseAttributeSelected(1, 'number attribute')
-            .selectValidateClauseOperator(1, 'eq')
-            .verifyValidateClauseOperatorSelected(1, 'eq')
-            .clickAddValidateClauseCondition(0)
-            .verifyValidateClauseConditionCount(0, 2)
-            .clickAddValidateClauseCondition(1)
-            .verifyValidateClauseConditionCount(1, 2)
-            .clickAddWhenClauseCondition(0)
-            .verifyWhenClauseConditionCount(0, 2)
-            .clickAddWhenClauseCondition(1)
-            .verifyWhenClauseConditionCount(1, 2)
-            // .verifySubmittable(false)
-            .fillInWhenClauseStringAttribute(0, 0, 'string attribute', 'eq', 'text1')
-            .fillInWhenClauseNumberAttribute(0, 1, 'number attribute', 'eq', 1)
-            // .fillInWhenClauseStringAttribute(1, 0, 'string attribute', 'eq', 'text2')
-            // .fillInWhenClauseNumberAttribute(1, 1, 'number attribute', 'eq', 2)
-            // .fillInValidateClauseStringAttribute(0, 0, 'string attribute', 'eq', 'text1')
-            // .fillInValidateClauseNumberAttribute(0, 1, 'number attribute', 'eq', 1)
-            // .fillInValidateClauseStringAttribute(1, 0, 'string attribute', 'eq', 'text2')
-            // .fillInValidateClauseNumberAttribute(1, 1, 'number attribute', 'eq', 2)
-            // .verifySubmittable(true)
-        ;
-
-        // todo: got to viewRulePage check fields after submission
-
-        // todo: delete created rule
-    });
-
-    it ('should be add and edit rule (string eq)', () => {
-        const r = Math.random();
-        const ruleName = `name-${r}`;
-        const ruleDescription = `description-${r}`;
-        viewRulePage
-            .selectTab('predefined')
-            .clickAddRule()
-            .validateTitle()
-            .fillInRuleName(ruleName)
-            .fillInRuleDescription(ruleDescription)
-
-            .fillInWhenClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
-            .fillInValidateClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
-            .verifyRuleName(ruleName)
-            .verifyRuleDescription(ruleDescription)
-            .verifyValidateClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
-            .verifyWhenClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
-
-            .clickAddWhenClauseCondition(0)
-            .fillInWhenClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
-            .clickAddValidateClauseCondition(0)
-            .fillInValidateClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
-            .verifyValidateClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
-            .verifyWhenClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
-
+            .verifySubmittable(false)
+            [opts.fillInWhenClauseFnName](0, opts.attributeName, opts.whenClause_opForAdd, opts.whenClause_valForAdd) // (1)
+            [opts.verifyWhenClauseFnName](0, opts.attributeName, opts.whenClause_opForAdd, opts.whenClause_valForAdd) // (2)
+            .fillInWhenClauseNumberAttribute(1, 'number attribute', 'eq', [1, 2])
+            .verifyWhenClauseNumberAttribute(1, 'number attribute', 'eq', [1, 2])
+            [opts.fillInValidateClauseFnName](0, opts.attributeName, opts.validateClause_opForAdd, opts.validateClause_valForAdd) // (3)
+            [opts.verifyValidateClauseFnName](0, opts.attributeName, opts.validateClause_opForAdd, opts.validateClause_valForAdd) // (4)
+            .fillInValidateClauseNumberAttribute(1, 'number attribute', 'eq', [3,4])
+            .verifyValidateClauseNumberAttribute(1, 'number attribute', 'eq', [3,4])
             .verifySubmittable(true)
             .submit()
             .verifySuccessMessageExists()
         ;
 
+        // verify rule added
         viewRulePage
             .visit()
-            .selectTab('predefined')
-            .verifyRulePanelExists(ruleName, true)
-            .editRule(ruleName)
-            .validateTitle()
-            .verifyRuleName(ruleName)
-            .verifyRuleDescription(ruleDescription)
-            .verifyWhenClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
-            .verifyValidateClauseStringAttribute(0, 0, `string attribute`, `eq`, `test1`)
-            .verifyWhenClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`)
-            .verifyValidateClauseStringAttribute(0, 1, `string attribute`, `eq`, `test2`);
+            .selectPredefinedTab()
+            .togglePanel(ruleName)
+            .verifyPanelExpanded(ruleName, true)
+            .verifyPanelWhenClauseContains(ruleName, opts.attributeName, opts.whenClause_opForAdd, opts.whenClause_valForAdd)  // (5)
+            .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'eq', ['1', '2'])
+            .verifyPanelValidateClauseContains(ruleName, opts.attributeName, opts.validateClause_opForAdd, opts.validateClause_valForAdd) // (6)
+            .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'eq', ['3', '4'])
         ;
+
+        // edit added rule
+        viewRulePage
+            .visit()
+            .selectPredefinedTab()
+            .clickEditRule(ruleName)
+            .fillInWhenClauseNumberAttribute(0, 'number attribute', 'not eq', [10, 20])
+            .verifyWhenClauseNumberAttribute(0, 'number attribute', 'not eq', [10, 20])
+            [opts.fillInWhenClauseFnName](1, opts.attributeName, opts.whenClause_opForEdit, opts.whenClause_valForEdit) // (7)
+            [opts.verifyWhenClauseFnName](1, opts.attributeName, opts.whenClause_opForEdit, opts.whenClause_valForEdit) // (8)
+            .fillInValidateClauseNumberAttribute(0, 'number attribute', 'not eq', [30, 40])
+            .verifyValidateClauseNumberAttribute(0, 'number attribute', 'not eq', [30, 40])
+            [opts.fillInValidateClauseFnName](1, opts.attributeName, opts.validateClause_opForEdit, opts.validateClause_valForEdit) // (9)
+            [opts.verifyValidateClauseFnName](1, opts.attributeName, opts.validateClause_opForEdit, opts.validateClause_valForEdit) // (10)
+            .verifySubmittable(true)
+            .submit()
+            .verifySuccessMessageExists()
+        ;
+
+        // verify edited changes
+        viewRulePage
+            .visit()
+            .selectPredefinedTab()
+            .togglePanel(ruleName)
+            .verifyPanelExpanded(ruleName, true)
+            .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'not eq', ['10', '20'])
+            .verifyPanelWhenClauseContains(ruleName, opts.attributeName, opts.whenClause_opForEdit, opts.whenClause_valForEdit)  // (11)
+            .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'not eq', ['30', '40'])
+            .verifyPanelValidateClauseContains(ruleName, opts.attributeName, opts.validateClause_opForEdit, opts.validateClause_valForEdit) // (12)
+        ;
+
+        // delete rule
+        viewRulePage
+            .visit()
+            .selectPredefinedTab()
+            .clickDeleteRule(ruleName)
+            .verifySuccessMessageExists()
+        ;
+    };
+
+    it.only (`(string, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
+        w({
+            fillInWhenClauseFnName: `fillInWhenClauseStringAttribute`,
+            verifyWhenClauseFnName: `verifyWhenClauseStringAttribute`,
+            fillInValidateClauseFnName: `fillInValidateClauseStringAttribute`,
+            verifyValidateClauseFnName: `verifyValidateClauseStringAttribute`,
+            attributeName: `string attribute`,
+            whenClause_opForAdd: `eq`,
+            whenClause_valForAdd: [`text1`, `text2`],
+            validateClause_opForAdd: `eq`,
+            validateClause_valForAdd: [`text3`, `text4`],
+            whenClause_opForEdit: `not eq`,
+            whenClause_valForEdit: [`text10`, `text20`],
+            validateClause_opForEdit: `not eq`,
+            validateClause_valForEdit: [`text30`, `text40`]
+        });
     });
+
+
+    it (`(string, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(text, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(text, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(select, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(select, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(doubleselect, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(doubleselect, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(number, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(number, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(number, lt, not lt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(number, gt, not gt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(number, lte, not lte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(number, gte, not gte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(number, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(date, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(date, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(date, lt, not lt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(date, gt, not gt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(date, lte, not lte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(date, gte, not gte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(currency, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(currency, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(currency, lt, not lt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(currency, gt, not gt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(currency, lte, not lte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(currency, gte, not gte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(volume, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(volume, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(volume, lt, not lt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(volume, gt, not gt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(volume, lte, not lte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(volume, gte, not gte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(area, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(area, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(area, lt, not lt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(area, gt, not gt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(area, lte, not lte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(area, gte, not gte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(dimension, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(dimension, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(dimension, lt, not lt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(dimension, gt, not gt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(dimension, lte, not lte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(dimension, gte, not gte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(width, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(width, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(width, lt, not lt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(width, gt, not gt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(width, lte, not lte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(width, gte, not gte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(height, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(height, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(height, lt, not lt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(height, gt, not gt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(height, lte, not lte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(height, gte, not gte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(length, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(length, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(length, lt, not lt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(length, gt, not gt) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(length, lte, not lte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
+    it (`(length, gte, not gte) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => { });
 });

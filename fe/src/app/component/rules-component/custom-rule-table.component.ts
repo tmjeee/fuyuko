@@ -32,7 +32,9 @@ export class CustomRuleTableComponent implements OnInit {
         this.mainControlsHidden = true;
         this.formGroupAllCustomRules = this.formBuilder.group({});
         for (const customRule of this.allCustomRules) {
-            this.formGroupAllCustomRules.setControl(customRule.name, this.formBuilder.control(false));
+            this.formGroupAllCustomRules.setControl(customRule.name, this.formBuilder.control(
+                this.customRulesInView.map((c: CustomRule) => c.name).includes(customRule.name)
+            ));
         }
     }
 
@@ -82,5 +84,6 @@ export class CustomRuleTableComponent implements OnInit {
             type: 'add',
             customRules: checkedCustomRules
         });
+        this.mainControlsHidden = true;
     }
 }
