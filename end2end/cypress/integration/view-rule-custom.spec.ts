@@ -74,7 +74,7 @@ describe('view-rule-custom', () => {
         ;
     });
 
-    it('should allow enable and disable custom rules', () => {
+    it ('should allow enable and disable custom rules', () => {
         viewRulePage
             .selectCustomTab()
             .clickShowCustomRulesList()
@@ -98,7 +98,7 @@ describe('view-rule-custom', () => {
             .verifyRuleEnabled('0.0.2-sample-rule-2.js', true)
     });
 
-    it.only ('should allow delete of custom rules', () => {
+    it ('should allow delete of custom rules', () => {
         viewRulePage
             .selectCustomTab()
             .clickShowCustomRulesList()

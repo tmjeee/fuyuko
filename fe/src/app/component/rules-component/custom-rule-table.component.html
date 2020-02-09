@@ -34,7 +34,9 @@
     <div class="main-content">
         <div *ngIf="!customRulesInView.length">No custom rules!</div>
         <mat-accordion *ngIf="customRulesInView.length">
-            <mat-expansion-panel *ngFor="let customRuleInView of customRulesInView" [attr.test-expansion-panel]="customRuleInView.name">
+            <mat-expansion-panel *ngFor="let customRuleInView of customRulesInView"
+                                 [attr.test-rule-status]="isEnabled(customRuleInView) ? 'enabled' : 'disabled'"
+                                 [attr.test-expansion-panel]="customRuleInView.name">
                 <mat-expansion-panel-header [attr.test-expansion-panel-header]="customRuleInView.name">
                     <mat-panel-title>
                         <mat-icon *ngIf="isDisabled(customRuleInView)" color="primary">label_off</mat-icon>

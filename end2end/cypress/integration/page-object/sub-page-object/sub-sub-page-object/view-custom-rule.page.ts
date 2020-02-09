@@ -93,7 +93,8 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
     }
 
     verifyRuleEnabled(ruleName: string, b: boolean): ViewCustomRulePage {
-        cy.get(`[test-icon-enable-rule='${ruleName}']`).click({force: true});
+        cy.get(`[test-expansion-panel='${ruleName}']`)
+            .should('have.attr', 'test-rule-status', b ? 'enabled' : 'disabled');
         return this;
     }
 
