@@ -12,25 +12,25 @@ import {
 import {wheat} from "color-name";
 import validate = WebAssembly.validate;
 
-export class AbstractViewRulePage {
+export class AbstractViewPredefinedRulePage {
 
-    verifyErrorMessageExists(): AbstractViewRulePage {
+    verifyErrorMessageExists(): AbstractViewPredefinedRulePage {
         util.clickOnErrorMessageToasts(() => {});
         return this;
     }
 
-    verifySuccessMessageExists(): AbstractViewRulePage {
+    verifySuccessMessageExists(): AbstractViewPredefinedRulePage {
         util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
 
-    verifySubmittable(b: boolean): AbstractViewRulePage {
+    verifySubmittable(b: boolean): AbstractViewPredefinedRulePage {
         cy.get(`[test-button-cancel]`).focus(); // code requires 'change' events to recalculate if done can be enabled
         cy.get(`[test-button-done]`).should(b ? 'be.enabled' : 'not.be.enabled');
         return this;
     }
 
-    submit(): AbstractViewRulePage {
+    submit(): AbstractViewPredefinedRulePage {
         cy.get(`[test-button-done]`).click({force: true});
         return this;
     }
@@ -39,54 +39,54 @@ export class AbstractViewRulePage {
         return new ViewRulePage();
     }
 
-    clickAddValidateClause(): AbstractViewRulePage {
+    clickAddValidateClause(): AbstractViewPredefinedRulePage {
         cy.get(`[test-button-add-rule-validate-clause]`).click({force: true});
         return this;
     }
 
-    deleteValidateClause(index: number): AbstractViewRulePage {
+    deleteValidateClause(index: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-button-delete-rule-validate-clause='${index}']`).click({force: true});
         return this;
     }
 
-    clickAddWhenClause(): AbstractViewRulePage {
+    clickAddWhenClause(): AbstractViewPredefinedRulePage {
         cy.get(`[test-button-add-rule-when-clause]`).click({force: true});
         return this;
     }
 
-    deleteWhenClause(index: number): AbstractViewRulePage {
+    deleteWhenClause(index: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-button-delete-rule-when-clause='${index}']`).click({force: true});
         return this;
     }
-    removeValidateClause(index: number): AbstractViewRulePage {
+    removeValidateClause(index: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-button-delete-rule-validate-clause='${index}']`).click({force: true});
         return this;
     }
 
-    removeWhenClause(index: number): AbstractViewRulePage {
+    removeWhenClause(index: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-button-delete-rule-when-clause='${index}']`).click({force: true});
         return this;
     }
 
-    verifyValidateClauseCount(count: number): AbstractViewRulePage {
+    verifyValidateClauseCount(count: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor]`).should('have.length', count);
         return this;
     }
 
-    verifyWhenClauseCount(count: number): AbstractViewRulePage {
+    verifyWhenClauseCount(count: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor]`).should('have.length', count);
         return this;
     }
 
 
-    selectWhenClauseAttribute(whenClauseIndex: number, attributeName: string): AbstractViewRulePage {
+    selectWhenClauseAttribute(whenClauseIndex: number, attributeName: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-select-attribute]`).click({force: true});
         cy.get(`[test-select-option-attribute='${attributeName}']`).click({force: true});
         return this;
     }
 
-    verifyWhenClauseAttributeSelected(whenClauseIndex: number, attributeName: string): AbstractViewRulePage {
+    verifyWhenClauseAttributeSelected(whenClauseIndex: number, attributeName: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-select-attribute]`)
             .find(`.mat-select-value`)
@@ -98,7 +98,7 @@ export class AbstractViewRulePage {
         return this;
     }
 
-    selectValidateClauseAttribute(validateClauseIndex: number, attributeName: string): AbstractViewRulePage {
+    selectValidateClauseAttribute(validateClauseIndex: number, attributeName: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-select-attribute]`).click({force: true});
         cy.get(`[test-select-option-attribute='${attributeName}']`).click({force: true});
@@ -106,7 +106,7 @@ export class AbstractViewRulePage {
     }
 
 
-    verifyValidateClauseAttributeSelected(validateClauseIndex: number, attributeName: string): AbstractViewRulePage {
+    verifyValidateClauseAttributeSelected(validateClauseIndex: number, attributeName: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-select-attribute]`)
             .find(`.mat-select-value`)
@@ -117,14 +117,14 @@ export class AbstractViewRulePage {
         return this;
     }
 
-    selectWhenClauseOperator(whenClauseIndex: number, operator: OperatorType): AbstractViewRulePage {
+    selectWhenClauseOperator(whenClauseIndex: number, operator: OperatorType): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-select-attribute-operator]`).click({force: true});
         cy.get(`[test-select-option-attribute-operator='${operator}']`).click({force: true});
         return this;
     }
 
-    verifyWhenClauseOperatorSelected(whenClauseIndex: number, operator: OperatorType): AbstractViewRulePage {
+    verifyWhenClauseOperatorSelected(whenClauseIndex: number, operator: OperatorType): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-select-attribute-operator]`)
             .find(`.mat-select-value`)
@@ -134,14 +134,14 @@ export class AbstractViewRulePage {
         return this;
     }
 
-    selectValidateClauseOperator(validateClauseIndex: number, operator: OperatorType): AbstractViewRulePage {
+    selectValidateClauseOperator(validateClauseIndex: number, operator: OperatorType): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-select-attribute-operator]`).click({force: true});
         cy.get(`[test-select-option-attribute-operator='${operator}']`).click({force: true});
         return this;
     }
 
-    verifyValidateClauseOperatorSelected(validateClauseIndex: number, operator: OperatorType): AbstractViewRulePage {
+    verifyValidateClauseOperatorSelected(validateClauseIndex: number, operator: OperatorType): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-select-attribute-operator]`)
             .find(`.mat-select-value`)
@@ -151,61 +151,61 @@ export class AbstractViewRulePage {
         return this;
     }
 
-    verifyValidateClauseField1Exists(validateClauseIndex: number, b: boolean): AbstractViewRulePage {
+    verifyValidateClauseField1Exists(validateClauseIndex: number, b: boolean): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-field-value1]`).should(b ? 'exist' : 'not.exist');
         return this;
     }
-    verifyValidateClauseField2Exists(validateClauseIndex: number, b: boolean): AbstractViewRulePage {
+    verifyValidateClauseField2Exists(validateClauseIndex: number, b: boolean): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-field-value2]`).should(b ? 'exist' : 'not.exist');
         return this;
     }
-    verifyValidateClauseField3Exists(validateClauseIndex: number, b: boolean): AbstractViewRulePage {
+    verifyValidateClauseField3Exists(validateClauseIndex: number, b: boolean): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-field-value3]`).should(b ? 'exist' : 'not.exist');
         return this;
     }
-    verifyValidateClauseField4Exists(validateClauseIndex: number, b: boolean): AbstractViewRulePage {
+    verifyValidateClauseField4Exists(validateClauseIndex: number, b: boolean): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-field-value4]`).should(b ? 'exist' : 'not.exist');
         return this;
     }
 
 
-    verifyWhenClauseField1Exists(whenClauseIndex: number, b: boolean): AbstractViewRulePage {
+    verifyWhenClauseField1Exists(whenClauseIndex: number, b: boolean): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-field-value1]`).should(b ? 'exist' : 'not.exist');
         return this;
     }
-    verifyWhenClauseField2Exists(whenClauseIndex: number, b: boolean): AbstractViewRulePage {
+    verifyWhenClauseField2Exists(whenClauseIndex: number, b: boolean): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-field-value2]`).should(b ? 'exist' : 'not.exist');
         return this;
     }
-    verifyWhenClauseField3Exists(whenClauseIndex: number, b: boolean): AbstractViewRulePage {
+    verifyWhenClauseField3Exists(whenClauseIndex: number, b: boolean): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-field-value3]`).should(b ? 'exist' : 'not.exist');
         return this;
     }
-    verifyWhenClauseField4Exists(whenClauseIndex: number, b: boolean): AbstractViewRulePage {
+    verifyWhenClauseField4Exists(whenClauseIndex: number, b: boolean): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-field-value4]`).should(b ? 'exist' : 'not.exist');
         return this;
     }
 
 
-    fillInRuleName(name: string): AbstractViewRulePage {
+    fillInRuleName(name: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-field-rule-name]`).clear({force: true}).type(name, {force: true});
         return this;
     }
 
-    fillInRuleDescription(description: string): AbstractViewRulePage {
+    fillInRuleDescription(description: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-field-rule-description]`).clear({force: true}).type(description, {force: true});
         return this;
     }
 
-    fillInWhenClauseText1(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    fillInWhenClauseText1(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
@@ -216,14 +216,14 @@ export class AbstractViewRulePage {
             .type(val, {force: true});
         return this;
     }
-    verifyWhenClauseText1(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    verifyWhenClauseText1(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
             .should('have.value', val);
         return this;
     }
-    fillInWhenClauseText2(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    fillInWhenClauseText2(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value2]`)
@@ -234,14 +234,14 @@ export class AbstractViewRulePage {
             .type(val, {force: true});
         return this;
     }
-    verifyWhenClauseText2(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    verifyWhenClauseText2(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value2]`)
             .should('have.value', val);
         return this;
     }
-    fillInWhenClauseText3(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    fillInWhenClauseText3(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value3]`)
@@ -252,14 +252,14 @@ export class AbstractViewRulePage {
             .type(val, {force: true});
         return this;
     }
-    verifyWhenClauseText3(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    verifyWhenClauseText3(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value3]`)
             .should('have.value', val);
         return this;
     }
-    fillInWhenClauseText4(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    fillInWhenClauseText4(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value4]`)
@@ -270,7 +270,7 @@ export class AbstractViewRulePage {
             .type(val, {force: true});
         return this;
     }
-    verifyWhenClauseText4(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    verifyWhenClauseText4(whenClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value4]`)
@@ -278,7 +278,7 @@ export class AbstractViewRulePage {
         return this;
     }
 
-    fillInValidateClauseText1(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    fillInValidateClauseText1(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
@@ -289,7 +289,7 @@ export class AbstractViewRulePage {
             .type(val, {force: true});
         return this;
     }
-    verifyValidateClauseText1(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    verifyValidateClauseText1(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
@@ -297,7 +297,7 @@ export class AbstractViewRulePage {
         return this;
     }
 
-    fillInValidateClauseText2(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    fillInValidateClauseText2(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value2]`)
@@ -308,14 +308,14 @@ export class AbstractViewRulePage {
             .type(val, {force: true});
         return this;
     }
-    verifyValidateClauseText2(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    verifyValidateClauseText2(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value2]`)
             .should('have.value', val);
         return this;
     }
-    fillInValidateClauseText3(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    fillInValidateClauseText3(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value3]`)
@@ -326,14 +326,14 @@ export class AbstractViewRulePage {
             .type(val, {force: true});
         return this;
     }
-    verifyValidateClauseText3(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    verifyValidateClauseText3(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value3]`)
             .should('have.value', val);
         return this;
     }
-    fillInValidateClauseText4(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    fillInValidateClauseText4(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value4]`)
@@ -344,7 +344,7 @@ export class AbstractViewRulePage {
             .type(val, {force: true});
         return this;
     }
-    verifyValidateClauseText4(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewRulePage {
+    verifyValidateClauseText4(validateClauseIndex: number, fieldsContainerIndex: number, val: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value4]`)
@@ -352,7 +352,7 @@ export class AbstractViewRulePage {
         return this;
     }
     // todo: needs changing fieldsContainerIndex needs to go, val turns into array, index of array is fieldContainerIndex
-    fillInWhenClauseStringAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewRulePage {
+    fillInWhenClauseStringAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
         this.selectWhenClauseOperator(whenClauseIndex, op)
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -363,7 +363,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseStringAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewRulePage {
+    verifyWhenClauseStringAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
@@ -371,7 +371,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseTextAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewRulePage {
+    fillInWhenClauseTextAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -382,7 +382,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseTextAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewRulePage {
+    verifyWhenClauseTextAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
@@ -390,7 +390,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseSelectAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, key: string[]): AbstractViewRulePage{
+    fillInWhenClauseSelectAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, key: string[]): AbstractViewPredefinedRulePage{
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(key.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -401,7 +401,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseSelectAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, key: string[]): AbstractViewRulePage{
+    verifyWhenClauseSelectAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, key: string[]): AbstractViewPredefinedRulePage{
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(key).each((e, i, a) => {
@@ -409,7 +409,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseDoubleSelectAttribute(whenClauseIndex: number, attributeName: string,op: OperatorType, v: {key1: string, key2: string}[]): AbstractViewRulePage {
+    fillInWhenClauseDoubleSelectAttribute(whenClauseIndex: number, attributeName: string,op: OperatorType, v: {key1: string, key2: string}[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -421,7 +421,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseDoubleSelectAttribute(whenClauseIndex: number, attributeName: string,op: OperatorType, v: {key1: string, key2: string}[]): AbstractViewRulePage {
+    verifyWhenClauseDoubleSelectAttribute(whenClauseIndex: number, attributeName: string,op: OperatorType, v: {key1: string, key2: string}[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -430,7 +430,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseNumberAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number[]): AbstractViewRulePage {
+    fillInWhenClauseNumberAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -441,7 +441,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseNumberAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number[]): AbstractViewRulePage {
+    verifyWhenClauseNumberAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: number[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
@@ -449,7 +449,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseDateAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[] /* DD-MM-YYYY */): AbstractViewRulePage {
+    fillInWhenClauseDateAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[] /* DD-MM-YYYY */): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -460,7 +460,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseDateAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[] /* DD-MM-YYYY */): AbstractViewRulePage {
+    verifyWhenClauseDateAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[] /* DD-MM-YYYY */): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
@@ -468,7 +468,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseCurrencyAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: string, unit: CountryCurrencyUnits}[]): AbstractViewRulePage {
+    fillInWhenClauseCurrencyAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: string, unit: CountryCurrencyUnits}[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -480,7 +480,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseCurrencyAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: string, unit: CountryCurrencyUnits}[]): AbstractViewRulePage {
+    verifyWhenClauseCurrencyAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: string, unit: CountryCurrencyUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -489,7 +489,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseVolumeAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: VolumeUnits}[]): AbstractViewRulePage {
+    fillInWhenClauseVolumeAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: VolumeUnits}[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -501,7 +501,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseVolumeAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: VolumeUnits}[]): AbstractViewRulePage {
+    verifyWhenClauseVolumeAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: VolumeUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -510,7 +510,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseAreaAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: AreaUnits}[]): AbstractViewRulePage {
+    fillInWhenClauseAreaAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: AreaUnits}[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -522,7 +522,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseAreaAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: AreaUnits}[]): AbstractViewRulePage {
+    verifyWhenClauseAreaAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: AreaUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -531,7 +531,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseDimensionAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val1: number, val2: number, val3: number, unit: DimensionUnits}[]): AbstractViewRulePage {
+    fillInWhenClauseDimensionAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val1: number, val2: number, val3: number, unit: DimensionUnits}[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op)
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -545,7 +545,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseDimensionAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val1: number, val2: number, val3: number, unit: DimensionUnits}[]): AbstractViewRulePage {
+    verifyWhenClauseDimensionAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val1: number, val2: number, val3: number, unit: DimensionUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -556,7 +556,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseWidthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: WidthUnits}[]): AbstractViewRulePage {
+    fillInWhenClauseWidthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: WidthUnits}[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -568,7 +568,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseWidthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: WidthUnits}[]): AbstractViewRulePage {
+    verifyWhenClauseWidthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: WidthUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -577,7 +577,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseLengthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: LengthUnits}[]): AbstractViewRulePage {
+    fillInWhenClauseLengthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: LengthUnits}[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -589,7 +589,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseLengthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: LengthUnits}[]): AbstractViewRulePage {
+    verifyWhenClauseLengthAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: LengthUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -598,7 +598,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInWhenClauseHeightAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: HeightUnits}[]): AbstractViewRulePage {
+    fillInWhenClauseHeightAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: HeightUnits}[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -610,7 +610,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyWhenClauseHeightAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: HeightUnits}[]): AbstractViewRulePage {
+    verifyWhenClauseHeightAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: HeightUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyWhenClauseAttributeSelected(whenClauseIndex, attributeName)
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -621,7 +621,7 @@ export class AbstractViewRulePage {
     }
     ////////////// validate clauses
 
-    fillInValidateClauseStringAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewRulePage {
+    fillInValidateClauseStringAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -632,7 +632,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseStringAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewRulePage {
+    verifyValidateClauseStringAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
@@ -640,7 +640,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseTextAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewRulePage {
+    fillInValidateClauseTextAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -651,7 +651,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseTextAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewRulePage {
+    verifyValidateClauseTextAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
@@ -659,7 +659,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseSelectAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, key: string[]): AbstractViewRulePage{
+    fillInValidateClauseSelectAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, key: string[]): AbstractViewPredefinedRulePage{
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(key.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -670,7 +670,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseSelectAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, key: string): AbstractViewRulePage{
+    verifyValidateClauseSelectAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, key: string): AbstractViewPredefinedRulePage{
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(key).each((e, i, a) => {
@@ -678,7 +678,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseDoubleSelectAttribute(validateClauseIndex: number, attributeName: string,op: OperatorType, v: {key1: string, key2: string}[]): AbstractViewRulePage {
+    fillInValidateClauseDoubleSelectAttribute(validateClauseIndex: number, attributeName: string,op: OperatorType, v: {key1: string, key2: string}[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -690,7 +690,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseDoubleSelectAttribute(validateClauseIndex: number, attributeName: string,op: OperatorType, v: {key1: string, key2: string}[]): AbstractViewRulePage {
+    verifyValidateClauseDoubleSelectAttribute(validateClauseIndex: number, attributeName: string,op: OperatorType, v: {key1: string, key2: string}[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -699,7 +699,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseNumberAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number[]): AbstractViewRulePage {
+    fillInValidateClauseNumberAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -710,7 +710,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseNumberAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number[]): AbstractViewRulePage {
+    verifyValidateClauseNumberAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: number[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
@@ -718,7 +718,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseDateAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[] /* DD-MM-YYYY */): AbstractViewRulePage {
+    fillInValidateClauseDateAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[] /* DD-MM-YYYY */): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -729,7 +729,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseDateAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[] /* DD-MM-YYYY */): AbstractViewRulePage {
+    verifyValidateClauseDateAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, val: string[] /* DD-MM-YYYY */): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
@@ -737,7 +737,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseCurrencyAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: string, unit: CountryCurrencyUnits}[]): AbstractViewRulePage {
+    fillInValidateClauseCurrencyAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: string, unit: CountryCurrencyUnits}[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -749,7 +749,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseCurrencyAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: string, unit: CountryCurrencyUnits}[]): AbstractViewRulePage {
+    verifyValidateClauseCurrencyAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: string, unit: CountryCurrencyUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -758,7 +758,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseVolumeAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: VolumeUnits}[]): AbstractViewRulePage {
+    fillInValidateClauseVolumeAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: VolumeUnits}[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -770,7 +770,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseVolumeAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: VolumeUnits}[]): AbstractViewRulePage {
+    verifyValidateClauseVolumeAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: VolumeUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -779,7 +779,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseAreaAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: AreaUnits}[]): AbstractViewRulePage {
+    fillInValidateClauseAreaAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: AreaUnits}[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -791,7 +791,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseAreaAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: AreaUnits}[]): AbstractViewRulePage {
+    verifyValidateClauseAreaAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: AreaUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -800,7 +800,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseDimensionAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val1: number, val2: number, val3: number, unit: DimensionUnits}[]): AbstractViewRulePage {
+    fillInValidateClauseDimensionAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val1: number, val2: number, val3: number, unit: DimensionUnits}[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -814,7 +814,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseDimensionAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val1: number, val2: number, val3: number, unit: DimensionUnits}[]): AbstractViewRulePage {
+    verifyValidateClauseDimensionAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val1: number, val2: number, val3: number, unit: DimensionUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -825,7 +825,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseWidthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: WidthUnits}[]): AbstractViewRulePage {
+    fillInValidateClauseWidthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: WidthUnits}[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -837,7 +837,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseWidthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: WidthUnits}[]): AbstractViewRulePage {
+    verifyValidateClauseWidthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: WidthUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -846,7 +846,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseLengthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: LengthUnits}[]): AbstractViewRulePage {
+    fillInValidateClauseLengthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: LengthUnits}[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -858,7 +858,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseLengthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: LengthUnits}[]): AbstractViewRulePage {
+    verifyValidateClauseLengthAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: LengthUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(v).each((e, i, a) => {
@@ -867,7 +867,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    fillInValidateClauseHeightAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: HeightUnits}[]): AbstractViewRulePage {
+    fillInValidateClauseHeightAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: HeightUnits}[]): AbstractViewPredefinedRulePage {
         this.selectValidateClauseAttribute(validateClauseIndex, attributeName)
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -879,7 +879,7 @@ export class AbstractViewRulePage {
         });
         return this;
     }
-    verifyValidateClauseHeightAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: HeightUnits}[]): AbstractViewRulePage {
+    verifyValidateClauseHeightAttribute(validateClauseIndex: number, attributeName: string, op: OperatorType, v: {val: number, unit: HeightUnits}[]): AbstractViewPredefinedRulePage {
         this.verifyValidateClauseAttributeSelected(validateClauseIndex, attributeName)
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
@@ -895,64 +895,64 @@ export class AbstractViewRulePage {
     //// === end validation clauses
 
 
-    verifyRuleName(ruleName: string): AbstractViewRulePage {
+    verifyRuleName(ruleName: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-field-rule-name]`).should('have.value', ruleName);
         return this;
     }
 
-    verifyRuleDescription(ruleDescription: string): AbstractViewRulePage {
+    verifyRuleDescription(ruleDescription: string): AbstractViewPredefinedRulePage {
         cy.get(`[test-field-rule-description]`).should('have.value', ruleDescription);
         return this;
     }
 
-    clickAddWhenClauseCondition(whenClauseIndex: number): AbstractViewRulePage {
+    clickAddWhenClauseCondition(whenClauseIndex: number): AbstractViewPredefinedRulePage {
        cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
            .find(`[test-button-add-condition]`)
            .click({force: true});
        return this;
     }
 
-    clickAddValidateClauseCondition(validateClauseIndex: number): AbstractViewRulePage {
+    clickAddValidateClauseCondition(validateClauseIndex: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-button-add-condition]`)
             .click({force: true});
         return this;
     }
 
-    clickRemoveWhenClauseCondition(whenClauseIndex: number, index: number): AbstractViewRulePage {
+    clickRemoveWhenClauseCondition(whenClauseIndex: number, index: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-button-remove-condition='${index}']`)
             .click({force: true});
         return this;
     }
 
-    clickRemoveValidateClauseCondition(validateClauseIndex: number, index: number): AbstractViewRulePage {
+    clickRemoveValidateClauseCondition(validateClauseIndex: number, index: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-button-remove-condition='${index}']`)
             .click({force: true});
         return this;
     }
 
-    verifyValidateClauseConditionCount(validateClauseIndex: number, count: number): AbstractViewRulePage {
+    verifyValidateClauseConditionCount(validateClauseIndex: number, count: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container]`)
             .should('have.length', count)
         return this;
     }
 
-    verifyWhenClauseConditionCount(whenClauseIndex: number, count: number): AbstractViewRulePage {
+    verifyWhenClauseConditionCount(whenClauseIndex: number, count: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container]`)
             .should('have.length', count)
         return this;
     }
 
-    verifyValidateClauseSize(size: number): AbstractViewRulePage {
+    verifyValidateClauseSize(size: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor]`).should('have.length', size);
        return this;
     }
 
-    verifyWhenClauseSize(size: number): AbstractViewRulePage {
+    verifyWhenClauseSize(size: number): AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor]`).should('have.length', size);
         return this;
     }

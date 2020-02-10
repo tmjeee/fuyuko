@@ -84,26 +84,12 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
           ).subscribe();
         break;
       case 'add':
-        this.attributeService.addAttribute($event.view, $event.attribute)
-          .pipe(
-            map((a: ApiResponse) => {
-              toNotifications(this.notificationsService, a);
-              this.reloadAttributes();
-            })
-          ).subscribe();
+          await this.router.navigate(['/view-gen-layout',
+              {outlets: {primary: ['add-attribute'], help: ['view-help']}}]);
         break;
       case 'edit':
-        this.attributeService.updateAttribute($event.view, $event.attribute)
-          .pipe(
-            map((a: ApiResponse) => {
-              toNotifications(this.notificationsService, a);
-              this.reloadAttributes();
-            })
-          ).subscribe();
-        break;
-      case 'external-edit':
         await this.router.navigate(['/view-gen-layout',
-            {outlets: {primary: ['attribute', `${$event.attribute.id}`], help: ['view-help']}}]);
+              {outlets: {primary: ['edit-attribute', `${$event.attribute.id}`], help: ['view-help']}}]);
         break;
     }
   }

@@ -1,6 +1,6 @@
-import {AbstractViewRulePage} from "./abstract-view-rule.page";
+import {AbstractViewPredefinedRulePage} from "./abstract-view-predefined-rule.page";
 
-export class ViewPredefinedRuleAddPage extends AbstractViewRulePage {
+export class ViewPredefinedRuleAddPage extends AbstractViewPredefinedRulePage {
 
 
     validateTitle(): ViewPredefinedRuleAddPage {

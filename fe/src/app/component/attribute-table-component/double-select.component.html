@@ -1,14 +1,15 @@
 <div class="double-select-component">
   <div class="pair1-controls">
-    <button type="button" mat-flat-button color="primary" (click)="onAddPair1Clicked($event)">Add</button>
+    <button type="button" mat-flat-button color="primary" [attr.test-button-add-kp1]="''" (click)="onAddPair1Clicked($event)">Add</button>
   </div>
   <div class="pair1-selection-pairs">
-    <div class="selection-pair" *ngFor="let pair1 of pairs1">
+    <div class="selection-pair" *ngFor="let pair1 of pairs1; let i = index;">
       <mat-icon color="primary" (click)="onDeletePair1Clicked($event, pair1)">delete</mat-icon>
       <mat-form-field>
         <mat-label>First Selection Key</mat-label>
         <input matInput
                type="text"
+               [attr.test-doubleselect-key1]="i"
                [formControl]="formGroup.get('p1-k-'+pair1.id)">
         <mat-hint>Enter the selection key, must be unique within first selection keys</mat-hint>
         <mat-error *ngIf="formGroup.get('p1-k-'+pair1.id)?.errors?.required">Selection key is required</mat-error>
@@ -18,6 +19,7 @@
         <mat-label>First Selection Value</mat-label>
         <input matInput
                type="text"
+               [attr.test-doubleselect-value1]="i"
                [formControl]="formGroup.get('p1-v-'+pair1.id)">
         <mat-hint>Enter the first selection value</mat-hint>
         <mat-error *ngIf="formGroup.get('p1-k-'+pair1.id)?.errors?.required">Value is required</mat-error>
@@ -27,15 +29,16 @@
 
 
   <div class="pair2-controls">
-    <button type="button" mat-flat-button color="primary" (click)="onAddPair2Clicked($event)">Add</button>
+    <button type="button" [attr.test-button-add-kp2]="''" mat-flat-button color="primary" (click)="onAddPair2Clicked($event)">Add</button>
   </div>
   <div class="pair2-selection-pairs">
-    <div class="selection-pair" *ngFor="let pair2 of pairs2">
+    <div class="selection-pair" *ngFor="let pair2 of pairs2; let i = index;">
       <mat-icon color="primary" (click)="onDeletePair2Clicked($event, pair2)">delete</mat-icon>
       <mat-form-field>
         <mat-label>First Selection Key</mat-label>
         <input matInput
                type="text"
+               [attr.test-doubleselect-key2-1]="i"
                [formControl]="formGroup.get('p2-k1-'+pair2.id)">
         <mat-hint>Enter the first selection key, must be a valid one as enter above</mat-hint>
         <mat-error *ngIf="formGroup.get('p2-k1-'+pair2.id)?.errors?.required">Selection Key is required</mat-error>
@@ -45,6 +48,7 @@
         <mat-label>Second Selection Key</mat-label>
         <input matInput
                type="text"
+               [attr.test-doubleselect-key2-2]="i"
                [formControl]="formGroup.get('p2-k2-'+pair2.id)">
         <mat-hint>Enter the Second Selection Key, must be unique within second selection keys</mat-hint>
         <mat-error *ngIf="formGroup.get('p2-k2-'+pair2.id)?.errors?.required">Selection Key is required</mat-error>
@@ -54,6 +58,7 @@
         <mat-label>Second Selection Value</mat-label>
         <input matInput
                type="text"
+               [attr.test-doubleselect-value2]="i"
                [formControl]="formGroup.get('p2-v-'+pair2.id)">
         <mat-hint>Enter Second selection value</mat-hint>
         <mat-error *ngIf="formGroup.get('p2-v-'+pair2.id)?.errors?.required">Selection Value is required</mat-error>

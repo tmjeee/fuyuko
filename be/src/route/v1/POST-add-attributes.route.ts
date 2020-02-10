@@ -13,6 +13,8 @@ import {Attribute2} from "../model/server-side.model";
 import {ApiResponse} from "../../model/response.model";
 import {saveAttribute2s} from "../../service/attribute.service";
 import {ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
+import {LoggingCallback, newConsoleLogger} from "../../service/job-log.service";
+import {Level} from "../../model/level.model";
 
 const httpAction: any[] = [
     [
@@ -27,10 +29,11 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
+
         const viewId: number = Number(req.params.viewId);
         const attrs2: Attribute2[] = revert(req.body.attributes);
 
-        await saveAttribute2s(viewId, attrs2);
+        await saveAttribute2s(viewId, attrs2, newConsoleLogger);
 
         res.status(200).json({
             status: 'SUCCESS',
@@ -40,7 +43,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p1 = `/view/:viewId/attrbutes/add`;
+    const p1 = `/view/:viewId/attributes/add`;
     registry.addItem('POST', p1);
     router.post(p1, ...httpAction);
 }

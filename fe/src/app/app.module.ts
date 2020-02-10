@@ -49,7 +49,7 @@ import {ViewService} from './service/view-service/view.service';
 import {AuthService} from './service/auth-service/auth.service';
 import {AuthGuard} from './guard/auth-guard/auth.guard';
 import {AppNotificationService} from './service/app-notification-service/app-notification.service';
-import {EditAttributeDialogComponent} from './component/attribute-table-component/edit-attribute-dialog.component';
+import {AddAttributePageComponent} from "./page/view-attributes-page/add-attribute.page";
 import {AttributeService} from './service/attribute-service/attribute.service';
 import {AttributeTableModule} from './component/attribute-table-component/attribute-table.module';
 import {DataTableModule} from './component/data-table-component/data-table.module';
@@ -192,6 +192,7 @@ const appInitializer = (settingsService: SettingsService,
     FileNotFoundPageComponent,
     ViewAttributesPageComponent,
     EditAttributePageComponent,
+    AddAttributePageComponent,
     ViewValidationPageComponent,
     ViewValidationDetailsPageComponent,
     ViewDataTabularPageComponent,
@@ -305,7 +306,6 @@ const appInitializer = (settingsService: SettingsService,
     {provide: ErrorHandler, useClass: GlobalErrorhandler} as Provider,
   ],
   entryComponents: [
-    EditAttributeDialogComponent,
   ],
   exports: [
     BrowserModule,

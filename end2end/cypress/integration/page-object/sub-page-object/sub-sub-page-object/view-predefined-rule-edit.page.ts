@@ -1,6 +1,6 @@
-import {AbstractViewRulePage} from "./abstract-view-rule.page";
+import {AbstractViewPredefinedRulePage} from "./abstract-view-predefined-rule.page";
 
-export class ViewPredefinedRuleEditPage extends AbstractViewRulePage {
+export class ViewPredefinedRuleEditPage extends AbstractViewPredefinedRulePage {
 
     validateTitle(): ViewPredefinedRuleEditPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-edit-rule');

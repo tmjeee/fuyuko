@@ -1,13 +1,30 @@
 import {doInDbConnection, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Level} from "../model/level.model";
-import {e} from '../logger';
+import {d, e, i, w} from '../logger';
 import {l} from "../logger/logger";
 import {Progress} from "../model/progress.model";
 
 export interface LoggingCallback  {
     (level: Level, msg: string): void;
 }
+
+export const newConsoleLogger: LoggingCallback = (level: Level, msg: string) => {
+    switch (level) {
+        case "DEBUG":
+            d(msg);
+            break
+        case "INFO":
+            i(msg);
+            break
+        case "ERROR":
+            e(msg);
+            break
+        case "WARN":
+            w(msg);
+            break;
+        }
+    };
 
 export const newLoggingCallback = (jobLogger?: JobLogger) => {
     return (level: Level, msg: string) => {

@@ -1,8 +1,9 @@
-<div class="edit-attribute-component">
+<div class="edit-attribute-component" [attr.test-current-selected-attribute-type]="'' + currentSelectedAttributeType">
     <form [formGroup]="formGroupCommon" (ngSubmit)="onSubmit()">
         <mat-form-field>
             <mat-label>Attribute Name:</mat-label>
             <input matInput
+                   [attr.test-field-attribute-name]="''"
                    type="text"
                    [formControl]="formControlAttributeName"
                    placeholder="Attribute Name">
@@ -13,6 +14,7 @@
         <mat-form-field>
             <mat-label>Attribute Description:</mat-label>
             <textarea matInput
+                      [attr.test-field-attribute-description]="''"
                       [formControl]="formControlAttributeDescription"
                       placeholder="Attribute Description">
       </textarea>
@@ -23,9 +25,11 @@
         <mat-form-field>
             <mat-label>Attribute Type</mat-label>
             <mat-select (selectionChange)="onAttributeTypeChange($event)"
+                        [attr.test-select-attribute-type]="''"
                         [formControl]="formControlAttributeType"
                         [value]="currentSelectedAttributeType">
-                <mat-option *ngFor="let attributeType of attributeTypes" [value]="attributeType">
+                <mat-option *ngFor="let attributeType of attributeTypes" [value]="attributeType"
+                        [attr.test-select-option-attribute-type]="attributeType">
                     {{attributeType}}
                 </mat-option>
             </mat-select>
@@ -44,8 +48,9 @@
                 <mat-label>Format</mat-label>
                 <input matInput
                        type="string"
+                       [attr.test-field-number-format]="''"
                        [formControl]="formControlNumberAttributeFormat">
-                <mat-hint>Enter a number format</mat-hint>
+                <mat-hint>Enter a number format eg. 0.0</mat-hint>
                 <mat-error *ngIf="formControlNumberAttributeFormat?.errors?.numberFormat">Invalid number format</mat-error>
             </mat-form-field>
         </ng-container>
@@ -55,9 +60,10 @@
                 <mat-label>Format</mat-label>
                 <input matInput
                        type="text"
+                       [attr.test-field-date-format]="''"
                        [formControl]="formControlDateAttributeFormat"
                        placeholder="Min Date">
-                <mat-hint>Enter a date format</mat-hint>
+                <mat-hint>Enter a date format eg. DD-MM-YYYY</mat-hint>
                 <mat-error *ngIf="formControlDateAttributeFormat?.errors?.dateFormat">Invalid date format</mat-error>
             </mat-form-field>
         </ng-container>
@@ -66,8 +72,8 @@
             <div class="currency-attribute-type-options">
                 <mat-label class="mat-small">Country</mat-label>
                 <mat-radio-group [formControl]="formControlCurrencyAttributeCountry">
-                    <mat-radio-button [value]="true" class="mat-small">Enable</mat-radio-button>
-                    <mat-radio-button [value]="false" class="mat-small">Disabled</mat-radio-button>
+                    <mat-radio-button [attr.test-radio-option-enable-country]="''" [value]="true" class="mat-small">Enable</mat-radio-button>
+                    <mat-radio-button [attr.test-radio-option-disable-country]="''" [value]="false" class="mat-small">Disabled</mat-radio-button>
                 </mat-radio-group>
                 <mat-hint class="mat-small">Force a country currency to be selected</mat-hint>
             </div>
@@ -78,6 +84,7 @@
                 <mat-label>Format</mat-label>
                 <input matInput
                        type="text"
+                       [attr.test-field-dimension-format]="''"
                        placeholder="Number format"
                        [formControl]="formControlDimensionAttributeFormat">
                 <mat-hint>Enter a number format</mat-hint>
@@ -90,6 +97,7 @@
                 <mat-label>Format</mat-label>
                 <input matInput
                        type="text"
+                       [attr.test-field-volume-format]="''"
                        placeholder="Number format"
                        [formControl]="formControlVolumeAttributeFormat">
                 <mat-hint>Enter a number format</mat-hint>
@@ -103,6 +111,7 @@
                 <input matInput
                        type="text"
                        placeholder="Number format"
+                       [attr.test-field-area-format]="''"
                        [formControl]="formControlAreaAttributeFormat">
                 <mat-hint>Enter a number format</mat-hint>
                 <mat-error *ngIf="formControlAreaAttributeFormat?.errors?.numberFormat">Invalid number format</mat-error>
@@ -115,6 +124,7 @@
                 <input matInput
                        type="text"
                        placeholder="Number format"
+                       [attr.test-field-width-format]="''"
                        [formControl]="formControlWidthAttributeFormat">
                 <mat-hint>Enter a number format</mat-hint>
                 <mat-error *ngIf="formControlWidthAttributeFormat?.errors?.numberFormat">Invalid number format</mat-error>
@@ -126,6 +136,7 @@
                 <mat-label>Format</mat-label>
                 <input matInput
                        type="text"
+                       [attr.test-field-height-format]="''"
                        placeholder="Number format"
                        [formControl]="formControlHeightAttributeFormat">
                 <mat-hint>Enter a number format</mat-hint>
@@ -138,6 +149,7 @@
                 <mat-label>Format</mat-label>
                 <input matInput
                        type="text"
+                       [attr.test-field-length-format]="''"
                        placeholder="Number format"
                        [formControl]="formControlLengthAttributeFormat">
                 <mat-hint>Enter a number format</mat-hint>
@@ -165,8 +177,8 @@
         </ng-container>
 
         <div class="controls">
-            <button type="submit" mat-flat-button color="primary" [disabled]="formGroupCommon.invalid">Done</button>
-            <button type="button" mat-flat-button color="primary" (click)="onCancelClicked($event)">Cancel</button>
+            <button type="submit" mat-flat-button color="primary" [attr.test-button-done]="''" [disabled]="this.formGroupCommon.invalid">Done</button>
+            <button type="button" mat-flat-button color="primary" [attr.test-button-back]="''" (click)="onCancelClicked($event)">Back</button>
         </div>
     </form>
 </div>

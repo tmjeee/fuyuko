@@ -3,18 +3,19 @@
     <mat-label>{{searchFieldLabel}}</mat-label>
     <input type="text"
            matInput
+           [attr.test-field-search]="''"
            (keyup.enter)="onAttributeSearchTriggered($event)"
            placeholder="{{searchFieldPlaceholder}}"
            [formControl]="formControlAttributeSearch">
     <mat-hint>{{searchFieldHint}}</mat-hint>
   </mat-form-field>
   <div class="controls">
-    <button mat-flat-button color="primary" button (click)="onAddAttributeClick($event)">Add Attribute</button>
+    <button mat-flat-button color="primary" [attr.test-button-add-attribute]="''" button (click)="onAddAttributeClick($event)">Add Attribute</button>
   </div>
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let attribute">{{attribute.name}}</td>
+      <td mat-cell *matCellDef="let attribute" [attr.test-attribute-name]="attribute.name">{{attribute.name}}</td>
     </ng-container>
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef>Type</th>
@@ -94,9 +95,8 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let attribute">
-        <mat-icon class="edit" color="primary" matTooltip="Edit (popup)" (click)="onEditPopupClicked($event, attribute)">edit</mat-icon>
-        <mat-icon class="edit" color="primary" matTooltip="Edit" (click)="onEditClicked($event, attribute)">brush</mat-icon>
-        <mat-icon class="delete" color="primary" matTooltip="Delete" (click)="onCancelClicked($event, attribute)">cancel</mat-icon>
+        <mat-icon class="edit" color="primary" [attr.test-button-edit-attribute]="attribute.name" matTooltip="Edit" (click)="onEditClicked($event, attribute)">edit</mat-icon>
+        <mat-icon class="delete" color="primary" [attr.test-button-delete-attribute]="" matTooltip="Delete" (click)="onCancelClicked($event, attribute)">cancel</mat-icon>
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
