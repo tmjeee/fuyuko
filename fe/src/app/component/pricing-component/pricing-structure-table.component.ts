@@ -6,7 +6,8 @@ import {
     TablePricingStructureItemWithPrice
 } from '../../model/pricing-structure.model';
 import {BehaviorSubject, Observable, pipe} from 'rxjs';
-import {MatDialog, MatDialogConfig, MatSelectChange} from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
 import {tap} from 'rxjs/operators';
 import {DataSource} from '@angular/cdk/table';
