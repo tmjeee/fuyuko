@@ -95,9 +95,10 @@ import registerGetAllCustomRulesByViewRoute from './GET-all-custom-rules-by-view
 import registerPostAddCustomRuleToViewRoute from './POST-add-custom-rule-to-view.route';
 import registerPostChangeCustomRuleStatusRoute from './POST-change-custom-rule-status.route';
 import registerPostRemoveCustomRuleFromViewRoute from './DELETE-remove-custom-rule-from-view.route';
-import registerGetUserNotifications from './GET-user-notification.route';
-import registerPostUserNotification from './POST-user-notification.route';
-import registerPostAddAttribute from './POST-add-attributes.route';
+import registerGetUserNotificationsRoute from './GET-user-notification.route';
+import registerPostUserNotificationRoute from './POST-user-notification.route';
+import registerPostAddAttributeRoute from './POST-add-attributes.route';
+import registerPostChangeAttributeStatusRoute from './POST-change-attribute-status.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -199,9 +200,10 @@ const reg = (router: Router, regi: Registry) => {
     registerPostAddCustomRuleToViewRoute(v1AppRouter, registry);
     registerPostChangeCustomRuleStatusRoute(v1AppRouter, registry);
     registerPostRemoveCustomRuleFromViewRoute(v1AppRouter, registry);
-    registerGetUserNotifications(v1AppRouter, registry);
-    registerPostUserNotification(v1AppRouter, registry);
-    registerPostAddAttribute(v1AppRouter, registry);
+    registerGetUserNotificationsRoute(v1AppRouter, registry);
+    registerPostUserNotificationRoute(v1AppRouter, registry);
+    registerPostAddAttributeRoute(v1AppRouter, registry);
+    registerPostChangeAttributeStatusRoute(v1AppRouter, registry);
 }
 
 

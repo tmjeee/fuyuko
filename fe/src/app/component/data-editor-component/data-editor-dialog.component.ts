@@ -1,11 +1,11 @@
 import {Component, Inject} from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {
   AREA_UNITS,
   COUNTRY_CURRENCY_UNITS,
-  DIMENSTION_UNITS,
+  DIMENSION_UNITS,
   HEIGHT_UNITS,
   LENGTH_UNITS,
   VOLUME_UNITS,
@@ -103,7 +103,7 @@ export class DataEditorDialogComponent {
   readonly currencyUnits: string[] = COUNTRY_CURRENCY_UNITS;
   readonly areaUnits: string[] = AREA_UNITS;
   readonly volumeUnits: string[] = VOLUME_UNITS;
-  readonly dimensionUnits: string[] = DIMENSTION_UNITS;
+  readonly dimensionUnits: string[] = DIMENSION_UNITS;
   readonly widthUnits: string[] = WIDTH_UNITS;
   readonly lengthUnits: string[] = LENGTH_UNITS;
   readonly heightUnits: string[] = HEIGHT_UNITS;
@@ -115,51 +115,51 @@ export class DataEditorDialogComponent {
               private matDialogRef: MatDialogRef<DataEditorDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: ItemValueAndAttribute) {
 
-    this.formControlStringAttributeValue = formBuilder.control('');
+    this.formControlStringAttributeValue = formBuilder.control('', [Validators.required]);
     this.formGroupStringAttribute = formBuilder.group({
       value: this.formControlStringAttributeValue
     });
 
-    this.formControlTextAttributeValue = formBuilder.control('');
+    this.formControlTextAttributeValue = formBuilder.control('', [Validators.required]);
     this.formGroupTextAttribute = formBuilder.group({
       value: this.formControlTextAttributeValue
     });
 
-    this.formControlNumberAttributeValue = formBuilder.control('');
+    this.formControlNumberAttributeValue = formBuilder.control('', [Validators.required, Validators.pattern('[0-9]*')]);
     this.formGroupNumberAttribute = formBuilder.group({
       value: this.formControlNumberAttributeValue
     });
 
-    this.formControlDateAttributeValue = formBuilder.control('');
+    this.formControlDateAttributeValue = formBuilder.control('', [Validators.required]);
     this.formGroupDateAttribute = formBuilder.group({
       value: this.formControlDateAttributeValue ,
     });
 
-    this.formControlCurrencyAttributeValue = formBuilder.control('');
-    this.formControlCurrencyAttributeCountry = formBuilder.control('');
+    this.formControlCurrencyAttributeValue = formBuilder.control('', [Validators.required]);
+    this.formControlCurrencyAttributeCountry = formBuilder.control('', [Validators.required]);
     this.formGroupCurrencyAttribute = formBuilder.group({
       value: this.formControlCurrencyAttributeValue,
       country: this.formControlCurrencyAttributeCountry
     });
 
-    this.formControlAreaAttributeValue = formBuilder.control('');
-    this.formControlAreaAttributeUnit = formBuilder.control('');
+    this.formControlAreaAttributeValue = formBuilder.control('', [Validators.required]);
+    this.formControlAreaAttributeUnit = formBuilder.control('', [Validators.required]);
     this.formGroupAreaAttribute = formBuilder.group({
       value: this.formControlAreaAttributeValue,
       unit: this.formControlAreaAttributeUnit
     });
 
-    this.formControlVolumeAttributeValue = formBuilder.control('');
-    this.formControlVolumeAttributeUnit = formBuilder.control('');
+    this.formControlVolumeAttributeValue = formBuilder.control('', [Validators.required]);
+    this.formControlVolumeAttributeUnit = formBuilder.control('', [Validators.required]);
     this.formGroupVolumeAttribute = formBuilder.group({
       value: this.formControlVolumeAttributeValue,
       unit: this.formControlVolumeAttributeUnit
     });
 
-    this.formControlDimensionAttributeWidthValue = formBuilder.control('');
-    this.formControlDimensionAttributeHeightValue = formBuilder.control('');
-    this.formControlDimensionAttributeLengthValue = formBuilder.control('');
-    this.formControlDimensionAttributeUnit = formBuilder.control('');
+    this.formControlDimensionAttributeWidthValue = formBuilder.control('', [Validators.required]);
+    this.formControlDimensionAttributeHeightValue = formBuilder.control('', [Validators.required]);
+    this.formControlDimensionAttributeLengthValue = formBuilder.control('', [Validators.required]);
+    this.formControlDimensionAttributeUnit = formBuilder.control('', [Validators.required]);
     this.formGroupDimensionAttribute = formBuilder.group({
       unit: this.formControlDimensionAttributeUnit,
       width: this.formControlDimensionAttributeWidthValue,
@@ -167,35 +167,35 @@ export class DataEditorDialogComponent {
       length: this.formControlDimensionAttributeLengthValue
     });
 
-    this.formControlWidthAttributeValue = formBuilder.control('');
-    this.formControlWidthAttributeUnit = formBuilder.control('');
+    this.formControlWidthAttributeValue = formBuilder.control('', [Validators.required]);
+    this.formControlWidthAttributeUnit = formBuilder.control('', [Validators.required]);
     this.formGroupWidthAttribtue = formBuilder.group({
       value: this.formControlWidthAttributeValue,
       unit: this.formControlWidthAttributeUnit
     });
 
 
-    this.formControlHeightAttributeValue = formBuilder.control('');
-    this.formControlHeightAttributeUnit = formBuilder.control('');
+    this.formControlHeightAttributeValue = formBuilder.control('', [Validators.required]);
+    this.formControlHeightAttributeUnit = formBuilder.control('', [Validators.required]);
     this.formGroupHeightAttribute = formBuilder.group({
       value: this.formControlHeightAttributeValue,
       unit: this.formControlHeightAttributeUnit
     });
 
-    this.formControlLengthAttributeValue = formBuilder.control('');
-    this.formControlLengthAttribtueUnit = formBuilder.control('');
+    this.formControlLengthAttributeValue = formBuilder.control('', [Validators.required]);
+    this.formControlLengthAttribtueUnit = formBuilder.control('', [Validators.required]);
     this.formGroupLengthAttribute = formBuilder.group({
       value: this.formControlLengthAttributeValue,
       unit: this.formControlLengthAttribtueUnit
     });
 
-    this.formControlSelectAttributeKey = formBuilder.control('');
+    this.formControlSelectAttributeKey = formBuilder.control('', [Validators.required]);
     this.formGroupSelectAttribute = formBuilder.group({
       key: this.formControlSelectAttributeKey
     });
 
-    this.formControlDoubleSelectKey1 = formBuilder.control('');
-    this.formControlDoubleSelectKey2 = formBuilder.control('');
+    this.formControlDoubleSelectKey1 = formBuilder.control('', [Validators.required]);
+    this.formControlDoubleSelectKey2 = formBuilder.control('', [Validators.required]);
     this.formGroupDoubleSelectAttribute = formBuilder.group({
       key1: this.formControlDoubleSelectKey1,
       key2: this.formControlDoubleSelectKey2
@@ -264,7 +264,7 @@ export class DataEditorDialogComponent {
         }
         this.formControlDimensionAttributeWidthValue.setValue(dimensionVal.width);
         this.formControlDimensionAttributeHeightValue.setValue(dimensionVal.height);
-        this.formControlLengthAttributeValue.setValue(dimensionVal.length);
+        this.formControlDimensionAttributeLengthValue.setValue(dimensionVal.length);
         this.formControlDimensionAttributeUnit.setValue(dimensionVal.unit);
         break;
       case 'area':

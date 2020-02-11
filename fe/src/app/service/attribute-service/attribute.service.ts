@@ -11,7 +11,7 @@ const URL_ATTRIBUTE_BY_VIEW = () => `${config().api_host_url}/attribute/:attribu
 const URL_SEARCH_ALL_ATTRIBUTES_BY_VIEW = () => `${config().api_host_url}/attributes/view/:viewId/search/:attribute`;
 const URL_ADD_ATTRIBUTE_TO_VIEW = () => `${config().api_host_url}/view/:viewId/attributes/add`;
 const URL_UPDATE_ATTRIBUTE = () => `${config().api_host_url}/attributes/update`;
-const URL_UPDATE_ATTRIBUTE_STATUS = () => `${config().api_host_url}/attributes/:attributeId/state/:state`;
+const URL_UPDATE_ATTRIBUTE_STATUS = () => `${config().api_host_url}/attribute/:attributeId/state/:state`;
 
 @Injectable()
 export class AttributeService {

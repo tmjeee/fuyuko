@@ -386,7 +386,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
                     entries: [
                         { key: 'type', value: 'currency', dataType: 'string'},
                         { key: 'value', value: `${random()}.10`, dataType: 'number'},
-                        { key: 'country', value: 'AU', dataType: 'string'}
+                        { key: 'country', value: 'AUD', dataType: 'string'}
                     ]}]},
             {attributeId: att6Id, // volume
                 metadatas: [{

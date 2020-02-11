@@ -104,7 +104,7 @@ describe('view attribute spec', () => {
         ;
     });
 
-    it('should create string attribute type', () => {
+    it.only('should create string attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
@@ -134,6 +134,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
 
@@ -167,6 +168,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
 
@@ -200,6 +202,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
 
@@ -233,6 +236,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
     it('should create currency attribute type', () => {
@@ -265,6 +269,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
     it ('should create volume attribute type', () => {
@@ -297,6 +302,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
     it ('should create dimension attribute type', () => {
@@ -330,6 +336,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
     it ('should create area attribute type', () => {
@@ -362,6 +369,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
     it ('should create width attribute type', () => {
@@ -394,6 +402,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
     it ('should create length attribute type', () => {
@@ -427,6 +436,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
     it ('should create height attribute type', () => {
@@ -462,6 +472,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
     it('should create select attribute type', () => {
@@ -511,6 +522,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
     it('should create doubleselect attribute type', () => {
@@ -562,6 +574,7 @@ describe('view attribute spec', () => {
             .verifyAttributeTableHaveAttribute(newName)
 
             .clickDeleteAttribute(newName)
+            .verifySuccessMessageExists()
         ;
     });
 
