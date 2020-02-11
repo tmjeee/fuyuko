@@ -96,7 +96,7 @@
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let attribute">
         <mat-icon class="edit" color="primary" [attr.test-button-edit-attribute]="attribute.name" matTooltip="Edit" (click)="onEditClicked($event, attribute)">edit</mat-icon>
-        <mat-icon class="delete" color="primary" [attr.test-button-delete-attribute]="" matTooltip="Delete" (click)="onCancelClicked($event, attribute)">cancel</mat-icon>
+        <mat-icon class="delete" color="primary" [attr.test-button-delete-attribute]="attribute.name" matTooltip="Delete" (click)="onCancelClicked($event, attribute)">cancel</mat-icon>
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

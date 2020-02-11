@@ -104,7 +104,7 @@ describe('view attribute spec', () => {
         ;
     });
 
-    it.only('should create string attribute type', () => {
+    it('should create string attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
@@ -133,7 +133,7 @@ describe('view attribute spec', () => {
             .clickBack()
             .verifyAttributeTableHaveAttribute(newName)
 
-             // .clickDeleteAttribute(name)
+            .clickDeleteAttribute(newName)
         ;
     });
 
@@ -141,6 +141,10 @@ describe('view attribute spec', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
@@ -149,6 +153,20 @@ describe('view attribute spec', () => {
             .fillInForTextAttribute()
             .clickDone()
             .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForStringAttribute()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
 
@@ -156,6 +174,10 @@ describe('view attribute spec', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
@@ -164,6 +186,20 @@ describe('view attribute spec', () => {
             .fillInForNumberAttribute()
             .clickDone()
             .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForDateAttribute()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
 
@@ -171,42 +207,96 @@ describe('view attribute spec', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
             .fillInAttributeName(name)
             .fillInAttributeDescription(description)
             .fillInForDateAttribute()
-            // .clickDone()
-            // .verifySuccessMessageExists()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForCurrencyAttribute()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
     it('should create currency attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
             .fillInAttributeName(name)
             .fillInAttributeDescription(description)
             .fillInForCurrencyAttribute()
-            // .clickDone()
-            // .verifySuccessMessageExists()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForVolumeAttribute()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
     it ('should create volume attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
             .fillInAttributeName(name)
             .fillInAttributeDescription(description)
             .fillInForVolumeAttribute()
-        // .clickDone()
-        // .verifySuccessMessageExists()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForDimensionAttribute()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
     it ('should create dimension attribute type', () => {
@@ -214,42 +304,96 @@ describe('view attribute spec', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
             .fillInAttributeName(name)
             .fillInAttributeDescription(description)
             .fillInForDimensionAttribute()
-        // .clickDone()
-        // .verifySuccessMessageExists()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForAreaAttribute()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
     it ('should create area attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
             .fillInAttributeName(name)
             .fillInAttributeDescription(description)
             .fillInForAreaAttribute()
-        // .clickDone()
-        // .verifySuccessMessageExists()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForWidthAttribute()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
     it ('should create width attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
             .fillInAttributeName(name)
             .fillInAttributeDescription(description)
             .fillInForWidthAttribute()
-        // .clickDone()
-        // .verifySuccessMessageExists()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForLengthAttribute()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
     it ('should create length attribute type', () => {
@@ -257,34 +401,77 @@ describe('view attribute spec', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
             .fillInAttributeName(name)
             .fillInAttributeDescription(description)
             .fillInForLengthAttribute()
-        // .clickDone()
-        // .verifySuccessMessageExists()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForHeightAttribute()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
     it ('should create height attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
             .fillInAttributeName(name)
             .fillInAttributeDescription(description)
             .fillInForHeightAttribute()
-        // .clickDone()
-        // .verifySuccessMessageExists()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForSelectAttribute([
+                {key: 'key1', value: 'value1'},
+                {key: 'key2', value: 'value2'},
+            ])
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
     it('should create select attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
@@ -297,14 +484,43 @@ describe('view attribute spec', () => {
                 {key: 'key4', value: 'value4'},
                 {key: 'key5', value: 'value5'},
             ])
-        // .clickDone()
-        // .verifySuccessMessageExists()
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
+
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForDoubleSelectAttribute([
+                {key: 'key1', value: 'value1', entries: [
+                        {key2: 'akey1', value2: 'avalue1'},
+                        {key2: 'akey2', value2: 'avalue2'},
+                        {key2: 'akey3', value2: 'avalue3'},
+                    ]},
+                {key: 'key2', value: 'value2', entries: [
+                        {key2: 'akey4', value2: 'avalue4'},
+                        {key2: 'akey5', value2: 'avalue5'},
+                        {key2: 'akey6', value2: 'avalue6'},
+                    ]},
+            ])
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
         ;
     });
     it('should create doubleselect attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;
+
+        const newName = `new-${name}`;
+        const newDescription = `new-${description}`;
+
         viewAttributePage
             .clickAddAttribute()
             .verifyTitle()
@@ -327,10 +543,26 @@ describe('view attribute spec', () => {
                         {key2: 'akey9', value2: 'avalue9'},
                     ]},
             ])
-        // .clickDone()
-        // .verifySuccessMessageExists()
-        ;
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(name)
 
+            .clickEditAttribute(name)
+            .verifyTitle()
+            .fillInAttributeName(newName)
+            .fillInAttributeDescription(newDescription)
+            .fillInForSelectAttribute([
+                {key: 'key1', value: 'value1'},
+                {key: 'key2', value: 'value2'},
+            ])
+            .clickDone()
+            .verifySuccessMessageExists()
+            .clickBack()
+            .verifyAttributeTableHaveAttribute(newName)
+
+            .clickDeleteAttribute(newName)
+        ;
     });
 
 });
