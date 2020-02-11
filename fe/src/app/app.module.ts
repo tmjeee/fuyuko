@@ -26,7 +26,6 @@ import {ImportHelpPageComponent} from './page/import-help-page/import-help.page'
 import {ExportPageComponent} from './page/export-page/export.page';
 import {ExportHelpPageComponent} from './page/export-help-page/export-help.page';
 import {AvatarService} from './service/avatar-service/avatar.service';
-import {AngularFileUploaderModule} from 'angular-file-uploader';
 import {NotificationAnimationType, Options, Position, SimpleNotificationsModule} from 'angular2-notifications';
 import {UserRolePageComponent} from './page/user-role-page/user-role.page';
 import {UserGroupPageComponent} from './page/user-group-page/user-group.page';
@@ -49,7 +48,7 @@ import {ViewService} from './service/view-service/view.service';
 import {AuthService} from './service/auth-service/auth.service';
 import {AuthGuard} from './guard/auth-guard/auth.guard';
 import {AppNotificationService} from './service/app-notification-service/app-notification.service';
-import {AddAttributePageComponent} from "./page/view-attributes-page/add-attribute.page";
+import {AddAttributePageComponent} from './page/view-attributes-page/add-attribute.page';
 import {AttributeService} from './service/attribute-service/attribute.service';
 import {AttributeTableModule} from './component/attribute-table-component/attribute-table.module';
 import {DataTableModule} from './component/data-table-component/data-table.module';
@@ -126,8 +125,8 @@ import {EditAttributePageComponent} from './page/view-attributes-page/edit-attri
 import {ValidationService} from './service/validation-service/validation.service';
 import {ValidationResultModule} from './component/validation-result-component/validation-result.module';
 import { ViewValidationDetailsPageComponent } from './page/view-validation-details-page/view-validation-details.page';
-import {CustomRuleService} from "./service/custom-rule-service/custom-rule.service";
-import {AddRulePageComponent} from "./page/view-rules-page/add-rule.page";
+import {CustomRuleService} from './service/custom-rule-service/custom-rule.service';
+import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -217,7 +216,6 @@ const appInitializer = (settingsService: SettingsService,
     ReactiveFormsModule,
     AppRoutingModule,
     AppMaterialsModule,
-    AngularFileUploaderModule,
     FlexLayoutModule,
     HttpClientModule,
     SimpleNotificationsModule.forRoot({

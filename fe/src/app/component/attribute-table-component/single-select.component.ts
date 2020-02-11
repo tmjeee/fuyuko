@@ -21,7 +21,7 @@ export const uniqueKeyValidator = (currentPair: Pair1, pairs: Pair1[], formGroup
 })
 export class SingleSelectComponent implements OnInit {
 
-  counter = -1;
+  counter = -2;
 
   @Input() rootFormGroup: FormGroup;
   @Input() pairs: Pair1[] = [];
@@ -42,10 +42,11 @@ export class SingleSelectComponent implements OnInit {
       });
       setTimeout(() => {
         this.pairs.forEach((p: Pair1) => {
-          this.formGroup.controls[`k-${p.id}`].setValidators([Validators.required, uniqueKeyValidator(p, this.pairs, this.formGroup, this.changeDetectorRef)]);
+          this.formGroup.controls[`k-${p.id}`].setValidators(
+              [Validators.required, uniqueKeyValidator(p, this.pairs, this.formGroup, this.changeDetectorRef)]);
           this.formGroup.controls[`v-${p.id}`].setValidators([Validators.required]);
         });
-      })
+      });
     }
   }
 
@@ -53,9 +54,13 @@ export class SingleSelectComponent implements OnInit {
     const c = this.counter--;
     const p = {id: c, key: '', value: ''};
     this.formGroup.setControl(`k-${p.id}`, this.formBuilder.control(p.key));
-    this.formGroup.setControl(`v-${p.id}`, this.formBuilder.control(p.value, [Validators.required]));
+    this.formGroup.setControl(`v-${p.id}`, this.formBuilder.control(p.value));
     this.pairs.push({id: c, key: '', value: ''} as Pair1);
-    this.formGroup.controls[`k-${p.id}`].setValidators([Validators.required, uniqueKeyValidator(p, this.pairs, this.formGroup, this.changeDetectorRef)]);
+    setTimeout(() => {
+      this.formGroup.controls[`k-${p.id}`].setValidators(
+          [Validators.required, uniqueKeyValidator(p, this.pairs, this.formGroup, this.changeDetectorRef)]);
+      this.formGroup.controls[`v-${p.id}`].setValidators([Validators.required]);
+    });
   }
 
   getModifiedPair1() {

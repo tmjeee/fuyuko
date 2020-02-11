@@ -38,7 +38,7 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
     verifyAttributeTableEntriesCount(count: number): ViewAttributePage {
         cy.get(`[test-attribute-name]`)
-            .should('have.length', count);
+            .should('have.length.gte', count);
         return this;
     }
 

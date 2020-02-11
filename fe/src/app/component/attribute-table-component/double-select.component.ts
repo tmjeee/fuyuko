@@ -114,11 +114,14 @@ export class DoubleSelectComponent implements OnInit {
     const p = {id: c, key: '', value: ''} as Pair1;
     this.pairs1.push(p);
     this.formGroup.setControl(`p1-k-${p.id}`, this.formBuilder.control(p.key));
-    this.formGroup.setControl(`p1-v-${p.id}`, this.formBuilder.control(p.value, [Validators.required]));
-    this.formGroup.controls[`p1-k-${p.id}`].setValidators([
-      Validators.required,
-      uniqueP1KeyValidator(p, this.pairs1, this.formGroup)
-    ]);
+    this.formGroup.setControl(`p1-v-${p.id}`, this.formBuilder.control(p.value));
+    setTimeout(() => {
+      this.formGroup.controls[`p1-k-${p.id}`].setValidators([
+        Validators.required,
+        uniqueP1KeyValidator(p, this.pairs1, this.formGroup)
+      ]);
+      this.formGroup.controls[`p1-v-${p.id}`].setValidators([Validators.required]);
+    });
   }
 
   onAddPair2Clicked($event: MouseEvent) {
@@ -127,15 +130,18 @@ export class DoubleSelectComponent implements OnInit {
     this.pairs2.push(p);
     this.formGroup.setControl(`p2-k1-${p.id}`, this.formBuilder.control(p.key1));
     this.formGroup.setControl(`p2-k2-${p.id}`, this.formBuilder.control(p.key2));
-    this.formGroup.setControl(`p2-v-${p.id}`, this.formBuilder.control(p.value, [Validators.required]));
-    this.formGroup.controls[`p2-k1-${p.id}`].setValidators([
-      Validators.required,
-      uniqueP2Key1Validator(this.formGroup)
-    ]);
-    this.formGroup.controls[`p2-k2-${p.id}`].setValidators([
-      Validators.required,
-      uniqueP2Key2Validator(p, this.pairs2, this.formGroup)
-    ]);
+    this.formGroup.setControl(`p2-v-${p.id}`, this.formBuilder.control(p.value));
+    setTimeout(() => {
+      this.formGroup.controls[`p2-k1-${p.id}`].setValidators([
+        Validators.required,
+        uniqueP2Key1Validator(this.formGroup)
+      ]);
+      this.formGroup.controls[`p2-k2-${p.id}`].setValidators([
+        Validators.required,
+        uniqueP2Key2Validator(p, this.pairs2, this.formGroup)
+      ]);
+      this.formGroup.controls[`p2-v-${p.id}`].setValidators([Validators.required]);
+    });
   }
 
   onDeletePair1Clicked($event: MouseEvent, pair1: Pair1) {
