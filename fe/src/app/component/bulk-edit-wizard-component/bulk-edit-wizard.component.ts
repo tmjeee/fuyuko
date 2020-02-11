@@ -28,7 +28,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     editable: boolean;  // when in third steps, all other steps are not editable
 
-    @ViewChild('stepper', { static: false}) stepper: MatStepper;
+    @ViewChild('stepper') stepper: MatStepper;
 
     // first step
     formGroupFirstStep: FormGroup;

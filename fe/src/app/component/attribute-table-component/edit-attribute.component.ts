@@ -55,7 +55,7 @@ export class EditAttributeComponent implements OnChanges {
     formGroupLengthAttribtue: FormGroup;
     formControlLengthAttributeFormat: FormControl;
 
-    @ViewChild('singleSelectComponent', { static: false }) singleSelectComponent: SingleSelectComponent;
+    @ViewChild('singleSelectComponent') singleSelectComponent: SingleSelectComponent;
 
 
     isFormValid: boolean;
