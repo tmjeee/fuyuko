@@ -25,7 +25,6 @@
     "@angular/platform-browser": "~9.0.0",
     "@angular/platform-browser-dynamic": "~9.0.0",
     "@angular/router": "~9.0.0",
-    "angular-file-uploader": "^5.0.2",
     "angular2-notifications": "^2.0.0",
     "bson": "^4.0.2",
     "buffer": "^5.4.3",
