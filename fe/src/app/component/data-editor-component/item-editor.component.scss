@@ -4,10 +4,11 @@
 }
 .item-editor-component {
   display: flex;
-  input {
+  span {
     outline: none;
     background-color: transparent;
     color: var(--my-app-foreground-text);
     border: none;
+    cursor: pointer;
   }
 }

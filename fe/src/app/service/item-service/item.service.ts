@@ -35,7 +35,6 @@ export class ItemService {
   }
 
   saveItems(viewId: number, items: Item[]): Observable<ApiResponse> {
-      console.log('************ saveItems', items);
       return this.httpClient.post<ApiResponse>(URL_UPDATE_ITEMS().replace('viewId', String(viewId)), {
       items
     });
@@ -54,7 +53,6 @@ export class ItemService {
 
   saveTableItems(viewId: number, tableItems: TableItem[]): Observable<ApiResponse> {
     const items: Item[] = toItemIgnoreParent(tableItems);
-    console.log('******************* saveTableItems', items);
     return this.httpClient.post<ApiResponse>(URL_UPDATE_ITEMS().replace(':viewId', String(viewId)), {
       items
     });

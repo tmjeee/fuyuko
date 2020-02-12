@@ -91,6 +91,9 @@
               justify-content: flex-start;
               align-items: center;
               line-height: 50px;
+              mat-icon {
+                cursor: pointer;
+              }
             }
             &.expansion {
               min-width: 50px;

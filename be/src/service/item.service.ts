@@ -137,7 +137,17 @@ const SQL_2_A = `${SQL_1_A} AND I.ID IN ?`;
 const SQL_2_B = `${SQL_2_A} AND I.PARENT_ID IS NULL`;
 
 
-const SQL_SEARCH = `${SQL_1_B} 
+const SQL_SEARCH = ` 
+    SELECT DISTINCT
+       I.ID AS I_ID
+    FROM TBL_ITEM AS I
+    LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+    LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
+    LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
+    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
+    LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
+    WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
+    AND I.PARENT_ID IS NULL
     AND (I.NAME LIKE ? OR 
          I.DESCRIPTION LIKE ? OR
          (E.KEY = 'value' AND E.VALUE LIKE ?)
@@ -147,13 +157,23 @@ const SQL_SEARCH = `${SQL_1_B}
 export const searchForItemsInView = async (viewId: number, searchType: ItemSearchType, search: string) => {
     // todo: support advance search type
     const iSearch = `%${search}%`;
-    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+    const itemIds: number[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_SEARCH, [viewId, iSearch, iSearch, iSearch]);
-        return _doQ(q);
+        return q.reduce((acc: number[], curr: QueryI) => {
+            acc.push(curr.I_ID)
+            return acc;
+        }, []);
     });
 
-    await w(viewId, item2s);
-    return item2s;
+    if (itemIds.length) {
+        const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`${SQL_2_B}`, [viewId, itemIds]);
+            return _doQ(q);
+        });
+        await w(viewId, item2s);
+        return item2s;
+    }
+    return [];
 };
 
 
@@ -162,7 +182,6 @@ export const getAllItemsInView = async (viewId: number, parentOnly: boolean = tr
         const q: QueryA = await conn.query(parentOnly ? SQL_1_B : SQL_1_A, [viewId]);
         return _doQ(q);
     });
-
 
     await w(viewId, item2s);
     return item2s;

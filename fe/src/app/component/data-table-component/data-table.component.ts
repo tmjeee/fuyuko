@@ -325,7 +325,6 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onItemSearchEvent($event: ItemSearchComponentEvent) {
-    console.log('****** emit onItemSearchEvent', $event);
     this.searchEvents.emit($event);
   }
 
