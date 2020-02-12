@@ -32,8 +32,6 @@ const httpAction = [
 
         doInDbConnection(async (conn: Connection) => {
 
-            console.log('************** approve self registration', selfRegistrationId);
-
             const q1: QueryA = await conn.query(`
                 SELECT ID, USERNAME, EMAIL, CREATION_DATE, ACTIVATED, FIRSTNAME, LASTNAME, PASSWORD FROM TBL_SELF_REGISTRATION WHERE ID = ? AND ACTIVATED = ?
             `, [selfRegistrationId, false]);

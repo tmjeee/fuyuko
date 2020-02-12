@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ItemSearchType} from '../../model/item.model';
 
 
-export type SearchType = 'basic' | 'advance';
 
 export interface ItemSearchComponentEvent {
-  type: SearchType;
+  type: ItemSearchType;
   search: string;
 }
 
@@ -22,17 +22,16 @@ export class ItemSearchComponent {
 
   constructor(private formBuilder: FormBuilder) {
     this.events = new EventEmitter();
-    this.formControlValue = formBuilder.control('', [Validators.required]);
+    this.formControlValue = formBuilder.control('');
   }
 
 
   onBasicSearch($event: Event) {
-    if (this.formControlValue.invalid) {
-      this.events.emit({
-        type: 'basic',
-        search: this.formControlValue.value
-      } as ItemSearchComponentEvent);
-    }
+    console.log('***** onBasicSearch', $event);
+    this.events.emit({
+      type: 'basic',
+      search: this.formControlValue.value
+    } as ItemSearchComponentEvent);
   }
 
   onAdvanceSearch($event) {

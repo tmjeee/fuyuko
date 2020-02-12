@@ -1,21 +1,20 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ItemAndAttributeSet, TableItemAndAttributeSet} from '../../model/item-attribute.model';
-import {SearchType} from '../../component/item-search-component/item-search.component';
+import {ItemAndAttributeSet} from '../../model/item-attribute.model';
 import {View} from '../../model/view.model';
-import {combineLatest, forkJoin, Subscription} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {NotificationsService} from 'angular2-notifications';
 import {ViewService} from '../../service/view-service/view.service';
 import {Attribute} from '../../model/attribute.model';
 import {map} from 'rxjs/operators';
-import {Item, TableItem} from '../../model/item.model';
+import {Item, ItemSearchType, TableItem} from '../../model/item.model';
 import {ItemService} from '../../service/item-service/item.service';
 import {
   DataThumbnailComponentEvent,
   DataThumbnailSearchComponentEvent
 } from '../../component/data-thumbnail-component/data-thumbnail.component';
-import {ApiResponse} from "../../model/response.model";
-import {toNotifications} from "../../service/common.service";
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
 
 
 @Component({
@@ -30,7 +29,7 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
 
 
   search: string;
-  searchType: SearchType;
+  searchType: ItemSearchType;
   currentView: View;
   subscription: Subscription;
 

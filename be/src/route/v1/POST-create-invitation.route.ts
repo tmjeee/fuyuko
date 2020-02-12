@@ -33,14 +33,10 @@ export const createInvitation = async (email: string, groupIds: number[] = []): 
         }
 
 
-        console.log('*************************** create invitation');
-
         const hasInvitationQuery: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_INVITATION_REGISTRATION WHERE EMAIL = ?`, [email]);
         if (hasInvitationQuery[0].COUNT > 0) {
             await conn.query(`DELETE FROM TBL_INVITATION_REGISTRATION WHERE EMAIL = ? `, [email]);
         }
-
-        console.log('****** count ', hasInvitationQuery[0].COUNT);
 
         const code: string = uuid();
 
@@ -49,15 +45,11 @@ export const createInvitation = async (email: string, groupIds: number[] = []): 
             [email, new Date(), false, code]);
         const registrationId: number = q1.insertId;
 
-        console.log('**** insertId', registrationId);
-
         for (const gId of groupIds) {
             await conn.query(
                 `INSERT INTO TBL_INVITATION_REGISTRATION_GROUP (INVITATION_REGISTRATION_ID, GROUP_ID) VALUES (?, ?)`,
                 [registrationId, gId]);
         }
-
-        console.log('groupids', groupIds);
 
         const info: SendMailOptions = await sendEmail(email, 'Invitation to join Fukyko MDM',
             `

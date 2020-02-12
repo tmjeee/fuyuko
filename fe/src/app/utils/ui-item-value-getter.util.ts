@@ -11,6 +11,15 @@ import {
   VolumeValue, WidthValue, Value
 } from '../model/item.model';
 
+export const hasItemValues = (attribute: Attribute, values: Value[]): boolean => {
+  let b = true;
+  for (const value of values) {
+    b = b && hasItemValue(attribute, value);
+  }
+  return b;
+}
+
+
 export const hasItemValue = (attribute: Attribute, value: Value): boolean => {
     if (!value || !value.val) {
       return false;

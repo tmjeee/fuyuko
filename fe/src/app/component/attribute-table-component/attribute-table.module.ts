@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {EditAttributeDialogComponent} from './edit-attribute-dialog.component';
 import {AttributeTableComponent} from './attribute-table.component';
 import {SingleSelectComponent} from './single-select.component';
 import {CommonModule} from '@angular/common';
@@ -20,7 +19,6 @@ import {EditAttributeComponent} from "./edit-attribute.component";
   ],
   declarations: [
     AttributeTableComponent,
-    EditAttributeDialogComponent,
     SingleSelectComponent,
     DoubleSelectComponent,
     ViewOnlyAttributeTableComponent,
@@ -28,14 +26,12 @@ import {EditAttributeComponent} from "./edit-attribute.component";
   ],
   exports: [
     AttributeTableComponent,
-    EditAttributeDialogComponent,
     SingleSelectComponent,
     DoubleSelectComponent,
     ViewOnlyAttributeTableComponent,
     EditAttributeComponent,
   ],
   entryComponents: [
-    EditAttributeDialogComponent
   ]
 })
 export class AttributeTableModule {

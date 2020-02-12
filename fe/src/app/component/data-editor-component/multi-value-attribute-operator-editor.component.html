@@ -1,0 +1,69 @@
+<div class="multi-value-attribute-operator-editor-component">
+    <form [formGroup]="formGroup">
+        <mat-form-field *ngIf="attributes">
+            <mat-label>Attribute</mat-label>
+            <mat-select (selectionChange)="onAttributeSelectionChange($event)" [attr.test-select-attribute]="''" [formControl]="formControlAttribute">
+                <mat-option *ngFor="let attribute of attributes" [value]="attribute" [attr.test-select-option-attribute]="attribute.name">{{attribute.name}}</mat-option>
+            </mat-select>
+            <mat-hint>Select attribute</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="operators">
+            <mat-label>Operator</mat-label>
+            <mat-select (selectionChange)="onOperatorSelectionChange($event)" [attr.test-select-attribute-operator]="''" [formControl]="formControlOperator">
+                <mat-option *ngFor="let operator of operators" [value]="operator" [attr.test-select-option-attribute-operator]="operator">{{operator}}</mat-option>
+            </mat-select>
+            <mat-hint>Select operator {{this.operator}}</mat-hint>
+        </mat-form-field>
+
+        <!-- formControl -->
+        <ng-container *ngFor=" let formGroup of controlsInFormArray(); index as i;">
+            <div fxLayout="row" [attr.test-fields-container]="i">
+                <div fxFlex="1 0 auto">
+                    <mat-form-field *ngIf="formGroup.controls.formControl && attribute && attribute.type === 'date'">
+                        <mat-label>Value</mat-label>
+                        <input matInput [matDatepicker]="picker" [attr.test-field-value1]="''" [formControl]="formGroup.controls.formControl" (dateChance)="onDateChange($event)">
+                        <mat-datepicker-toggle matSuffix [for]="picker" [attr.test-datepicker-toggle]="''"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-hint>Enter value ({{DATE_FORMAT}} format)</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="formGroup.controls.formControl && attribute && attribute.type !== 'date'">
+                        <mat-label>Value</mat-label>
+                        <input matInput [formControl]="formGroup.controls.formControl" [attr.test-field-value1]="''" (focusout)="onValueChange()">
+                        <mat-hint>Enter value</mat-hint>
+                    </mat-form-field>
+
+                    <!-- formControl2 -->
+                    <mat-form-field *ngIf="formGroup.controls.formControl2">
+                        <mat-label>Value</mat-label>
+                        <input matInput [formControl]="formGroup.controls.formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
+                        <mat-hint>Enter value</mat-hint>
+                    </mat-form-field>
+
+                    <!-- formControl3 -->
+                    <mat-form-field *ngIf="formGroup.controls.formControl3">
+                        <mat-label>Value</mat-label>
+                        <input matInput [formControl]="formGroup.controls.formControl3" [attr.test-field-value3]="''" (focusout)="onValueChange()">
+                        <mat-hint>Enter value</mat-hint>
+                    </mat-form-field>
+
+                    <!-- formControl4 -->
+                    <mat-form-field *ngIf="formGroup.controls.formControl4">
+                        <mat-label>Value</mat-label>
+                        <input matInput [formControl]="formGroup.controls.formControl4" [attr.test-field-value4]="''" (focusout)="onValueChange()">
+                        <mat-hint>Enter value</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div fxFlex="0 0 auto">
+                    <ng-container *ngIf="i == 0">
+                        <mat-icon matTooltip="Add another condition value" [attr.test-button-add-condition]="''" (click)="addConditionValue($event)">add_circle_outline</mat-icon>
+                    </ng-container>
+                    <ng-container *ngIf="i > 0">
+                        <mat-icon matTooltip="Remove this condition value" [attr.test-button-remove-condition]="i" (click)="removeConditionValue($event, i)">remove_circle_outline</mat-icon>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </form>
+
+</div>

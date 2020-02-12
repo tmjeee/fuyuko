@@ -407,6 +407,14 @@ export const convertToString = (a: Attribute, i: Value | ItemValTypes): string =
   return typeConverter.convertToString(a, v);
 };
 
+export const convertToDebugStrings = (i: Value[] | ItemValTypes[]): string => {
+  let s = ``;
+  for (const x of i) {
+    s = s + convertToDebugString(x);
+  }
+  return s;
+}
+
 export const convertToDebugString = (i: Value | ItemValTypes): string => {
   const v: ItemValTypes = isItemValueType(i) ? i : (isItemValue(i) ? i.val : undefined);
   const typeConverter: AbstractItemValueConverter = itemConverterByType(v.type);

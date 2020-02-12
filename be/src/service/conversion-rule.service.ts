@@ -61,7 +61,7 @@ export const _revert = (rule: Rule): Rule2 => {
            attributeName: w.attributeName,
            attributeType: w.attributeType,
            operator: w.operator,
-           metadatas: [toMetadata(w.attributeId, w.condition)].filter((r)=>r)
+           metadatas: toMetadata(w.attributeId, w.condition).filter((r)=>r)
         } as WhenClause2)),
         validateClauses: rule.validateClauses.map((w: WhenClause) => ({
             id: w.id,
@@ -69,19 +69,21 @@ export const _revert = (rule: Rule): Rule2 => {
             attributeName: w.attributeName,
             attributeType: w.attributeType,
             operator: w.operator,
-            metadatas: [toMetadata(w.attributeId, w.condition)].filter((r)=>r)
+            metadatas: toMetadata(w.attributeId, w.condition).filter((r)=>r)
         } as ValidateClause2)),
 
     } as Rule2;
 }
 
-const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2 | ValidateClauseMetadata2 => {
-    if (val) {
-        let i: WhenClauseMetadata2 | ValidateClauseMetadata2 = null;
-        switch (val.type) {
-            case 'string': {
-                const v: StringValue = val as StringValue;
-                i = {
+const toMetadata = (attributeId: number, vals: ItemValTypes[]): WhenClauseMetadata2[] | ValidateClauseMetadata2[] => {
+    const r = [];
+    if (vals) {
+        for (const val of vals) {
+            let i: WhenClauseMetadata2 | ValidateClauseMetadata2 = null;
+            switch (val.type) {
+                case 'string': {
+                    const v: StringValue = val as StringValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId,
@@ -100,12 +102,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'text': {
-                const v: TextValue = val as TextValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'text': {
+                    const v: TextValue = val as TextValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -124,12 +126,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'number': {
-                const v: NumberValue = val as NumberValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'number': {
+                    const v: NumberValue = val as NumberValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -148,12 +150,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'number'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'area': {
-                const v: AreaValue = val as AreaValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'area': {
+                    const v: AreaValue = val as AreaValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -178,12 +180,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'number'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'dimension': {
-                const v: DimensionValue = val as DimensionValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'dimension': {
+                    const v: DimensionValue = val as DimensionValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -220,12 +222,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'width': {
-                const v: WidthValue = val as WidthValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'width': {
+                    const v: WidthValue = val as WidthValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -250,12 +252,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'length': {
-                const v: LengthValue = val as LengthValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'length': {
+                    const v: LengthValue = val as LengthValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -280,12 +282,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'height': {
-                const v: HeightValue = val as HeightValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'height': {
+                    const v: HeightValue = val as HeightValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -310,12 +312,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case "volume": {
-                const v: VolumeValue = val as VolumeValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case "volume": {
+                    const v: VolumeValue = val as VolumeValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -340,12 +342,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'date': {
-                const v: DateValue = val as DateValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'date': {
+                    const v: DateValue = val as DateValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -364,12 +366,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'currency': {
-                const v: CurrencyValue = val as CurrencyValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'currency': {
+                    const v: CurrencyValue = val as CurrencyValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -394,12 +396,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'select': {
-                const v: SelectValue = val as SelectValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'select': {
+                    const v: SelectValue = val as SelectValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -418,12 +420,12 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
-            }
-            case 'doubleselect': {
-                const v: DoubleSelectValue = val as DoubleSelectValue;
-                i = {
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'doubleselect': {
+                    const v: DoubleSelectValue = val as DoubleSelectValue;
+                    i = {
                         id: -1,
                         attributeType: val.type,
                         attributeId: attributeId,
@@ -448,18 +450,20 @@ const toMetadata = (attributeId: number, val: ItemValTypes): WhenClauseMetadata2
                                 dataType: 'string'
                             } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
                         ]
-                } as ValidateClauseMetadata2 | WhenClauseMetadata2;
-                break;
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
             }
+            r.push(i);
         }
-        return i;
     }
-    return null;
+    return r;
 }
 
-const toItemValTypes = (metadatas: ValidateClauseMetadata2[] | WhenClauseMetadata2[]): ItemValTypes => {
-    const o: any = {};
+const toItemValTypes = (metadatas: ValidateClauseMetadata2[] | WhenClauseMetadata2[]): ItemValTypes[] => {
+    const a: any[] = [];
     for (const metadata of metadatas) {
+        const o: any = {};
         for (const entry of metadata.entries) {
             const k: string = entry.key;
             const t: string = entry.dataType;
@@ -475,6 +479,7 @@ const toItemValTypes = (metadatas: ValidateClauseMetadata2[] | WhenClauseMetadat
             }
             o[k] = _v;
         }
+        a.push(o);
     }
-    return o;
+    return a;
 }

@@ -103,7 +103,7 @@ export const saveAttribute2s = async (viewId: number, attrs2: Attribute2[], logg
     await doInDbConnection(async (conn: Connection) => {
         for (const att2 of attrs2) {
 
-            loggingCallback('INFO', `adding attribute ${att2.name}`);
+            loggingCallback && loggingCallback('INFO', `adding attribute ${att2.name}`);
 
             const qAtt: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?, 'ENABLED') `, [viewId, att2.type, att2.name, att2.description]);
             const attrbuteId: number = qAtt.insertId;

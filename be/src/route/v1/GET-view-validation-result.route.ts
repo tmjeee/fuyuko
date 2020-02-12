@@ -27,7 +27,6 @@ const httpAction: any[] = [
         const m_validationLog: Map<string /* validationLogId */, ValidationLog> = new Map();
         const validationResults: ValidationResult[] = [];
 
-        console.log('***** start');
         await doInDbConnection(async (conn: Connection) => {
             const q1: QueryA = (await conn.query(`
                 SELECT 

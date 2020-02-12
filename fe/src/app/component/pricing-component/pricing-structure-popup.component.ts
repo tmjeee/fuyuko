@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {PricingStructure, PricingStructureWithItems} from '../../model/pricing-structure.model';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";

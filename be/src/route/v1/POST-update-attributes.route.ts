@@ -50,7 +50,7 @@ const httpAction: any[] = [
                     const qMeta: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?,?)`, [att2.id, metadata.name]);
                     const metadataId: number = qMeta.insertId;
                     for (const entry of metadata.entries) {
-                        await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, KEY, VALUE) VALUES (?,?,?)`, [metadataId, entry.key, entry.value]);
+                        await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, \`KEY\`, \`VALUE\`) VALUES (?,?,?)`, [metadataId, entry.key, entry.value]);
                     }
                 }
             }

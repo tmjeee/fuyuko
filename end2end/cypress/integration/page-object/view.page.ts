@@ -1,5 +1,4 @@
 import {ViewRulePage} from "./sub-page-object/view-rule.page";
-import {ViewRuleDetailsPage} from "./sub-page-object/view-rule-details.page";
 import {ViewAttributePage} from "./sub-page-object/view-attribute.page";
 import {ViewAttributeDetailsPage} from "./sub-page-object/view-attribute-details.page";
 import {ViewDataTablePage} from "./sub-page-object/view-data-table.page";
@@ -20,11 +19,6 @@ export class ViewPage  {
     visitViewRule(): ViewRulePage {
         cy.visit(`/view-gen-layout/(rules//help:view-help)`);
         return new ViewRulePage();
-    }
-
-    visitViewRuleWithId(ruleId: number) {
-        cy.visit(`/view-gen-layout/(rule/${ruleId}//help:view-help)`);
-        return new ViewRuleDetailsPage(ruleId);
     }
 
     visitViewAttributes() {

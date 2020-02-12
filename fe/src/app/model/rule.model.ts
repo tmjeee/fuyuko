@@ -17,7 +17,7 @@ export interface ValidateClause {
   attributeName: string;
   attributeType: AttributeType;
   operator: OperatorType;
-  condition: ItemValTypes;
+  condition: ItemValTypes[];
 }
 
 export interface WhenClause {
@@ -26,5 +26,5 @@ export interface WhenClause {
   attributeName: string;
   attributeType: AttributeType;
   operator: OperatorType;
-  condition: ItemValTypes;
+  condition: ItemValTypes[];
 }

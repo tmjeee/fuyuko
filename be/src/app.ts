@@ -9,6 +9,7 @@ import {runBanner} from './banner';
 import config from './config';
 import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from "./route/v1/common-middleware";
 import {Registry} from "./registry";
+import {runRuleSync} from "./custom-rule";
 
 runBanner();
 
@@ -30,12 +31,36 @@ registerV1AppRouter(apiRouter, registry);
 i('URL Mappings :-\n' + registry.print({indent: 2, text: ''}).text);
 app.use(catchErrorMiddlewareFn);
 
+export type PromiseFn = () => Promise<any>;
 
-i(`running db updater`);
-runUpdater()
-    .then((_: any) => {
-        i(`done with db updater`);
-        i(`Fuyuko listening at port ${port} is now ready for operation !!!`);
-    });
+const fns: PromiseFn[] = [
+    // db updater
+    () => {
+        i(`running db updater`);
+        return runUpdater()
+            .then((_: any) => {
+                i(`done with db updater`);
+            });
+    },
 
-app.listen(port, () => i(`Fuyuko API started at port ${port}`));
+    // rule sync
+    () => {
+        i(`running rule sync`)
+        return runRuleSync()
+            .then((_: any) => {
+                i(`done with rule sync`);
+            });
+    },
+
+    // ready message
+    () => {
+        i(`Fuyuko ready for operation !!!`);
+       return Promise.resolve();
+    }
+];
+
+fns.reduce((p: Promise<any>, fn: PromiseFn) => {
+    return p.then(_ => fn())
+}, Promise.resolve());
+
+app.listen(port, () => i(`Fuyuko API started listening at port ${port}`));

@@ -14,10 +14,13 @@
     "exec": "npm run tsc",
     "postexec": "npm run start",
     "runUpdater": "node -- src/runUpdater.js",
-    "test": "npx jasmine --reporter=jasmine-ts-console-reporter"
+    "test": "npx jasmine --reporter=jasmine-ts-console-reporter",
+    "prebuild": "npm run copy",
+    "build": "npm run tsc",
+    "postbuild": ""
   },
-  "author": "",
-  "license": "GPL",
+  "author": "tmjeee",
+  "license": "LGPL",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",

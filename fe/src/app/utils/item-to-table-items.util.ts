@@ -48,6 +48,38 @@ export function toTableItem(items: Item[]): TableItem[] {
   return internalToTableItem(items, -1);
 }
 
+
+// do not take into account parent
+export function toItemIgnoreParent(tableItems: TableItem[]): Item[] {
+  const m: Map<number, Item> = tableItems.reduce((acc: Map<number, Item>, tableItem: TableItem) => {
+    const itemId = tableItem.id;
+    const itemParentId = tableItem.parentId;
+    const item: Item = {
+      id: itemId,
+      name: tableItem.name,
+      description: tableItem.description,
+      images: tableItem.images,
+      parentId: itemParentId,
+      children: []
+    } as Item;
+
+    // item
+    if (!acc.has(itemId)) {
+      copyAttrProperties(tableItem, item);
+      acc.set(itemId, item);
+    } else {
+      const i: Item = acc.get(itemId);
+      i.images = tableItem.images;
+      i.name = tableItem.name;
+      i.description = tableItem.description;
+      copyAttrProperties(tableItem, i);
+    }
+
+    return acc;
+  }, new Map());
+  return Array.from(m.values());
+}
+
 // danger: without all of the TableItem[], Item[] returned will be incomplete
 export function toItem(tableItems: TableItem[]): Item[] {
   const m: Map<number, Item> = tableItems.reduce((acc: Map<number, Item>, tableItem: TableItem) => {

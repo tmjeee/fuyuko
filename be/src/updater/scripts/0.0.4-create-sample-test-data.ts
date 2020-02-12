@@ -347,9 +347,9 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
     const c = () => {
         return (((_c++)%351)+1);
     }
-    const createAnItemType = (children: CreateItemType[] = []): CreateItemType => ({
+    const createAnItemType = (itemName: string, children: CreateItemType[] = []): CreateItemType => ({
         viewId: viewId,
-        itemName: `item #${random()}`,
+        itemName: itemName,
         images: [
             { fileName: sprintf('%04s.jpg', c()), primary: true },
             { fileName: sprintf('%04s.jpg', c()), primary: false },
@@ -386,7 +386,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
                     entries: [
                         { key: 'type', value: 'currency', dataType: 'string'},
                         { key: 'value', value: `${random()}.10`, dataType: 'number'},
-                        { key: 'country', value: 'AU', dataType: 'string'}
+                        { key: 'country', value: 'AUD', dataType: 'string'}
                     ]}]},
             {attributeId: att6Id, // volume
                 metadatas: [{
@@ -467,23 +467,22 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
      */
 
     const itemDef1: CreateItemType =
-        createAnItemType([
-            createAnItemType(),
-            createAnItemType()
+        createAnItemType(`Item-1`, [
+            createAnItemType(`Item-1-1`),
+            createAnItemType(`Item-1-2`)
         ]);
     const itemDef2: CreateItemType =
-        createAnItemType();
+        createAnItemType(`Item-2`);
     const itemDef3: CreateItemType =
-        createAnItemType();
+        createAnItemType(`Item-3`);
     const itemDef4: CreateItemType =
-        createAnItemType();
+        createAnItemType(`Item-4`);
     const itemDef5: CreateItemType =
-        createAnItemType();
+        createAnItemType(`Item-5`);
     const itemDef6: CreateItemType =
-        createAnItemType();
+        createAnItemType(`Item-6`);
     const itemDef7: CreateItemType =
-        createAnItemType();
-
+        createAnItemType(`Item-7`);
 
     await _createItem(conn, pricingStructureId, itemDef1);
     await _createItem(conn, pricingStructureId, itemDef2);

@@ -1,4 +1,8 @@
 
 .view-rules-page {
   margin: 0 10px;
+
+  ::ng-deep .mat-tab-header {
+    margin-bottom: 20px;
+  }
 }

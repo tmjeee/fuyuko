@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {User} from '../../model/user.model';
-import {UserSearchFn} from '../user-table-component/user-table.component';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';

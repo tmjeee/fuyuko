@@ -1,8 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {Pair1} from '../../model/attribute.model';
 
-export const uniqueKeyValidator = (currentPair: Pair1, pairs: Pair1[], formGroup: FormGroup) => (c: AbstractControl): ValidationErrors => {
+export const uniqueKeyValidator = (currentPair: Pair1, pairs: Pair1[], formGroup: FormGroup, changeDetectorRef: ChangeDetectorRef) => (c: AbstractControl): ValidationErrors => {
     const count: number = pairs.filter((p: Pair1) => {
       const v =  (currentPair.id !== p.id && formGroup.get(`k-${p.id}`) && formGroup.get(`k-${p.id}`).value === c.value);
       return v;
@@ -10,7 +10,7 @@ export const uniqueKeyValidator = (currentPair: Pair1, pairs: Pair1[], formGroup
     if (count > 0) {
       return { uniqueKey: true };
     }
-    return null;
+  return null;
 };
 
 
@@ -21,14 +21,14 @@ export const uniqueKeyValidator = (currentPair: Pair1, pairs: Pair1[], formGroup
 })
 export class SingleSelectComponent implements OnInit {
 
-  counter = -1;
+  counter = -2;
 
   @Input() rootFormGroup: FormGroup;
   @Input() pairs: Pair1[] = [];
 
   formGroup: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -38,11 +38,14 @@ export class SingleSelectComponent implements OnInit {
     if (this.pairs) {
       this.pairs.forEach((p: Pair1) => {
         this.formGroup.setControl(`k-${p.id}`, this.formBuilder.control(p.key));
-        this.formGroup.setControl(`v-${p.id}`, this.formBuilder.control(p.value,
-          [Validators.required]));
+        this.formGroup.setControl(`v-${p.id}`, this.formBuilder.control(p.value));
       });
-      this.pairs.forEach((p: Pair1) => {
-        this.formGroup.controls[`k-${p.id}`].setValidators([Validators.required, uniqueKeyValidator(p, this.pairs, this.formGroup)]);
+      setTimeout(() => {
+        this.pairs.forEach((p: Pair1) => {
+          this.formGroup.controls[`k-${p.id}`].setValidators(
+              [Validators.required, uniqueKeyValidator(p, this.pairs, this.formGroup, this.changeDetectorRef)]);
+          this.formGroup.controls[`v-${p.id}`].setValidators([Validators.required]);
+        });
       });
     }
   }
@@ -51,9 +54,13 @@ export class SingleSelectComponent implements OnInit {
     const c = this.counter--;
     const p = {id: c, key: '', value: ''};
     this.formGroup.setControl(`k-${p.id}`, this.formBuilder.control(p.key));
-    this.formGroup.setControl(`v-${p.id}`, this.formBuilder.control(p.value, [Validators.required]));
+    this.formGroup.setControl(`v-${p.id}`, this.formBuilder.control(p.value));
     this.pairs.push({id: c, key: '', value: ''} as Pair1);
-    this.formGroup.controls[`k-${p.id}`].setValidators([Validators.required, uniqueKeyValidator(p, this.pairs, this.formGroup)]);
+    setTimeout(() => {
+      this.formGroup.controls[`k-${p.id}`].setValidators(
+          [Validators.required, uniqueKeyValidator(p, this.pairs, this.formGroup, this.changeDetectorRef)]);
+      this.formGroup.controls[`v-${p.id}`].setValidators([Validators.required]);
+    });
   }
 
   getModifiedPair1() {

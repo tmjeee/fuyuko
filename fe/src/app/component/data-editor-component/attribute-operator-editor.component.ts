@@ -14,7 +14,8 @@ import {
     WidthValue
 } from '../../model/item.model';
 import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
-import {MatDatepickerInputEvent, MatSelectChange} from '@angular/material';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatSelectChange } from '@angular/material/select';
 import {
     setItemAreaValue,
     setItemCurrencyValue,

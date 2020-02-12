@@ -14,7 +14,7 @@ import {BulkEditItem, BulkEditPackage, BulkEditTableItem} from '../../model/bulk
 import {tap} from 'rxjs/operators';
 import {toBulkEditTableItem} from '../../utils/item-to-table-items.util';
 import {StepperSelectionEvent} from '@angular/cdk/stepper';
-import {MatStepper} from '@angular/material';
+import { MatStepper } from '@angular/material/stepper';
 import {JobsService} from '../../service/jobs-service/jobs.service';
 import {Job, JobAndLogs} from '../../model/job.model';
 import {Observable} from 'rxjs';
@@ -28,7 +28,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     editable: boolean;  // when in third steps, all other steps are not editable
 
-    @ViewChild('stepper', { static: false}) stepper: MatStepper;
+    @ViewChild('stepper') stepper: MatStepper;
 
     // first step
     formGroupFirstStep: FormGroup;

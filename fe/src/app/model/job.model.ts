@@ -2,8 +2,6 @@ import {Level} from './level.model';
 import {Status} from './status.model';
 import {Progress} from './progress.model';
 
-export type Status = Status;
-
 export interface JobLog {
     id: number;
     creationDate: Date;

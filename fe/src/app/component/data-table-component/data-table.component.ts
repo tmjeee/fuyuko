@@ -209,9 +209,12 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onAddChildrenItem(rootParentItem: TableItem) {
+    console.log('*************** addChildrenItem', rootParentItem);
     const nextId = this.counter--;
     const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes,
-        rootParentItem.id, rootParentItem.rootParentId);
+        rootParentItem.id, rootParentItem.rootParentId ? rootParentItem.rootParentId : rootParentItem.id);
+    newItem.name = `name-${Math.random()}`;
+    newItem.description = ``;
     this.pendingSavingItems.set(nextId, newItem);
     const indexOfRootParentItem = this.itemAndAttributeSet.tableItems.findIndex((i: TableItem) => i.id === rootParentItem.id);
     this.itemAndAttributeSet.tableItems.splice(indexOfRootParentItem + 1, 0, newItem);
@@ -234,12 +237,14 @@ export class DataTableComponent implements OnInit, OnChanges {
         );
       });
       this.pendingDeletionItems.set(selectedItem.id, selectedItem);
+      this.pendingSavingItems.delete(selectedItem.id); // if it is deleted it doesn't need saving anymore.
     });
     this.itemAndAttributeSet.tableItems = existingItems;
     this.datasource.update(existingItems);
   }
 
   onSave($event: MouseEvent) {
+    console.log('**** on save');
     const e: DataTableComponentEvent = {
       type: 'modification',
       modifiedItems: Array.from(this.pendingSavingItems.values()),
@@ -320,6 +325,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onItemSearchEvent($event: ItemSearchComponentEvent) {
+    console.log('****** emit onItemSearchEvent', $event);
     this.searchEvents.emit($event);
   }
 

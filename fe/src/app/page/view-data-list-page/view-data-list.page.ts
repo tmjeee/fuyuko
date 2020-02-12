@@ -1,18 +1,17 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ItemAndAttributeSet} from '../../model/item-attribute.model';
-import {SearchType} from '../../component/item-search-component/item-search.component';
 import {View} from '../../model/view.model';
 import {Subscription, combineLatest} from 'rxjs';
 import {DataListComponentEvent, DataListSearchComponentEvent} from '../../component/data-list-component/data-list.component';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ViewService} from '../../service/view-service/view.service';
 import {ItemService} from '../../service/item-service/item.service';
-import {Item} from '../../model/item.model';
+import {Item, ItemSearchType} from '../../model/item.model';
 import {map} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
-import {ApiResponse} from "../../model/response.model";
-import {toNotifications} from "../../service/common.service";
-import {NotificationsService} from "angular2-notifications";
+import {ApiResponse} from '../../model/response.model';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
 
 
 @Component({
@@ -25,7 +24,7 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   done: boolean;
 
   search: string;
-  searchType: SearchType;
+  searchType: ItemSearchType;
   currentView: View;
   subscription: Subscription;
 

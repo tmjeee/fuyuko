@@ -55,9 +55,10 @@ export class EditAttributeComponent implements OnChanges {
     formGroupLengthAttribtue: FormGroup;
     formControlLengthAttributeFormat: FormControl;
 
-    @ViewChild('singleSelectComponent', { static: false }) singleSelectComponent: SingleSelectComponent;
+    @ViewChild('singleSelectComponent') singleSelectComponent: SingleSelectComponent;
 
 
+    isFormValid: boolean;
 
     currentSelectedAttributeType: string;
 
@@ -153,9 +154,18 @@ export class EditAttributeComponent implements OnChanges {
                 break;
             case 'select':
                 // done in single-select-component.ts upon initialization
+                const a = {...this.attribute};
+                a.pair1 = [
+                    {id: -1, key: '', value: ''}
+                ];
+                this.attribute = a;
                 break;
             case 'doubleselect':
                 // done in double-select-component.ts upon initialization
+                this.attribute = {...this.attribute};
+                this.attribute.pair2 = [
+                    {id: -1, key1: '', key2:'', value: '', }
+                ];
                 break;
         }
     }
@@ -262,6 +272,10 @@ export class EditAttributeComponent implements OnChanges {
                 this.reload();
             }
         }
+    }
+
+    isDisabled() {
+        setTimeout(() => this.formGroupCommon.disabled);
     }
 }
 

@@ -1,0 +1,56 @@
+
+@import '../../../scss/mixins';
+
+.custom-rule-table-component {
+
+  @include fix-mat-accordion-description-panel();
+  @include fix-mat-tab-no-scroll();
+
+  .main-controls {
+    margin-bottom: 10px;
+    .hidden {
+      display: none;
+      visibility: hidden;
+    }
+    .mat-icon {
+      cursor: pointer;
+    }
+    form {
+      .options {
+        margin: 20px;
+      }
+    }
+  }
+
+
+  .main-content {
+    .mat-accordion {
+      .mat-expansion-panel {
+        .mat-expansion-panel-header {
+          .mat-expansion-panel-header-title {
+            span {
+              margin-left: 10px;
+            }
+          }
+          .mat-expansion-panel-header-description {
+            display: flex;
+            .description {
+              align-self: flex-start;
+              flex-grow: 1;
+            }
+            .controls {
+              align-self: flex-end;
+              flex-grow: 0;
+              button {
+                margin-right: 5px;
+              }
+            }
+          }
+        }
+
+        .content {
+        }
+      }
+    }
+  }
+}

@@ -102,7 +102,7 @@ const httpAction: any[] = [
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/attributes/view/:viewId/search/:attribute`;
+    const p = `/attributes/view/:viewId/search/:attribute?`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 };

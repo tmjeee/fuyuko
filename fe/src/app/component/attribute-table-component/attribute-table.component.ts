@@ -3,10 +3,7 @@ import {FormBuilder, FormControl} from '@angular/forms';
 import {DataSource} from '@angular/cdk/table';
 import {Attribute} from '../../model/attribute.model';
 import {CollectionViewer} from '@angular/cdk/collections';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import {EditAttributeDialogComponent} from './edit-attribute-dialog.component';
-import {map} from 'rxjs/operators';
+import {BehaviorSubject, Observable } from 'rxjs';
 import {View} from '../../model/view.model';
 
 class AttributeTableDataSource extends DataSource<Attribute> {
@@ -26,13 +23,13 @@ class AttributeTableDataSource extends DataSource<Attribute> {
   }
 }
 
-type EventType = 'delete' | 'search' | 'add' | 'edit' | 'external-edit';
+type EventType = 'delete' | 'search' | 'add' | 'edit'
 
 export interface AttributeTableComponentEvent {
   type: EventType;
-  search?: string;
-  view?: View;
-  attribute?: Attribute;
+  search?: string; // only available when search
+  view?: View; // available in all delete search add and edit
+  attribute?: Attribute; // only available when delete, edit
 }
 
 @Component({
@@ -54,7 +51,7 @@ export class AttributeTableComponent implements OnChanges {
   dataSource: AttributeTableDataSource;
   displayedColumns: string[] = ['name', 'type', 'description', 'metadata', 'actions'];
 
-  constructor(private formBuilder: FormBuilder, private matDialog: MatDialog) {
+  constructor(private formBuilder: FormBuilder) {
     this.formControlAttributeSearch = this.formBuilder.control('');
     this.dataSource = new AttributeTableDataSource();
     this.events = new EventEmitter();
@@ -86,44 +83,18 @@ export class AttributeTableComponent implements OnChanges {
   }
 
   onAddAttributeClick($event: MouseEvent) {
-    const attribute: Attribute = {
-      id: -1,
-      type: 'string',
-      name: '',
-      description: ''
-    };
-    this.popupEditDialog('add', attribute);
-  }
-
-  onEditPopupClicked($event: MouseEvent, attribute: Attribute) {
-    this.popupEditDialog('edit', attribute);
-  }
-
-  onEditClicked($event: MouseEvent, attribute: any) {
     this.events.emit({
-      type: 'external-edit',
-      attribute,
+      type: 'add',
+      attribute: null,
       view: this.view
     } as AttributeTableComponentEvent);
   }
 
-  private popupEditDialog(command: EventType, attribute: Attribute) {
-    const matDialogRef: MatDialogRef<EditAttributeDialogComponent> = this.matDialog.open(EditAttributeDialogComponent, {
-      data: attribute,
-      minWidth: 600,
-    });
-    matDialogRef.afterClosed()
-      .pipe(
-        map((a: Attribute) => {
-          if (a) {
-            this.events.emit({
-              type: command,
-              view: this.view,
-              attribute: a
-            });
-          }
-        })
-      ).subscribe();
+  onEditClicked($event: MouseEvent, attribute: any) {
+    this.events.emit({
+      type: 'edit',
+      attribute,
+      view: this.view
+    } as AttributeTableComponentEvent);
   }
-
 }

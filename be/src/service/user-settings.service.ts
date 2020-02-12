@@ -33,7 +33,6 @@ export const getSettings = async (userId: number, conn: Connection): Promise<Set
 
 export const createSettingsIfNotExists = async (userId: number, conn: Connection): Promise<boolean> => {
     const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER_SETTING WHERE USER_ID=?`, [userId]);
-    console.log('***** createSettingsIfNotExists', q[0].COUNT);
     if (q[0].COUNT <= 0) { // there is not yet a settings for this user
         for (let p in DEFAULT_SETTINGS) {
             // @ts-ignore

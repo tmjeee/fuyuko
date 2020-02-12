@@ -1,5 +1,5 @@
 
-export const DIMENSTION_UNITS = ['mm', 'cm', 'm'];
+export const DIMENSION_UNITS = ['mm', 'cm', 'm'];
 export type DimensionUnits = 'mm' | 'cm' | 'm';
 
 export const VOLUME_UNITS = ['l', 'ml'];

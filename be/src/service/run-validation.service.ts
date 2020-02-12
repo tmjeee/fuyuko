@@ -19,7 +19,6 @@ import {
 import * as itemConverter from "./conversion-item.service";
 import * as ruleConverter from "./conversion-rule.service";
 import * as attributeConverter from "./conversion-attribute.service";
-import * as itemValueTypesConverter from  './conversion-item-value-types.service';
 import {getRule2s} from "./rule.service";
 import {Rule, WhenClause} from "../model/rule.model";
 import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from "../model/operator.model";
@@ -27,7 +26,7 @@ import {getAttributesInView} from "./attribute.service";
 import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
 import moment from 'moment';
 import * as logger from '../logger';
-import {convertToDebugString} from "../shared-utils/ui-item-value-converters.util";
+import {convertToDebugString, convertToDebugStrings} from "../shared-utils/ui-item-value-converters.util";
 
 interface Context {
    validationId: number;
@@ -35,6 +34,15 @@ interface Context {
    item?: Item;
    rule?: Rule;
    errornousMessages: {rule: Rule, item: Item, attribute: Attribute, message: string}[];
+}
+
+
+const matchs = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: ItemValTypes[], op: OperatorType): boolean => {
+    let r = true;
+    for (const i of i2) {
+        r = r && match(context, attribute, i1, i, op);
+    }
+    return r;
 }
 
 const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: ItemValTypes, op: OperatorType): boolean => {
@@ -519,7 +527,7 @@ const _runValidation = async (viewId: number, validationId: number) => {
 
     const a2s: Attribute2[] = await getAttributesInView(viewId);
     const as: Attribute[] = await attributeConverter.convert(a2s);
-    await i(currentContext,`Succesfully retrieved attributes for viewId ${viewId}`);
+    await i(currentContext,`Successfully retrieved attributes for viewId ${viewId}`);
 
     const item2s: Item2[] = await getAllItemsInView(viewId);
     const items: Item[] = itemConverter.convert(item2s);
@@ -528,6 +536,11 @@ const _runValidation = async (viewId: number, validationId: number) => {
     const rule2s: Rule2[] = await getRule2s(viewId);
     const rules: Rule[] = ruleConverter.convert(rule2s);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
+
+
+    // todo: custom rule validation
+    // runRule()
+
 
     for (const item of items) {
         currentContext.item = item;
@@ -540,27 +553,27 @@ const _runValidation = async (viewId: number, validationId: number) => {
                 const att: Attribute = as.find((a: Attribute) => a.id === whenClause.attributeId);
                 const value: Value = item[whenClause.attributeId];
                 const i1: ItemValTypes = value.val;
-                const i2: ItemValTypes = whenClause.condition;
+                const i2: ItemValTypes[] = whenClause.condition;
                 const op: OperatorType = whenClause.operator;
                 currentContext.attribute = att;
 
                 await i(currentContext,
                     `Validating WhenClause ${whenClause.id} 
                            (attributeId ${whenClause.attributeId} attributeName ${whenClause.attributeName} 
-                           whenClause condition ${convertToDebugString(whenClause.condition)}
+                           whenClause condition ${convertToDebugStrings(whenClause.condition)}
                            op ${whenClause.operator} 
-                           against itemValueTypes ${convertToDebugString(whenClause.condition)})
+                           against itemValueTypes ${convertToDebugStrings(whenClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
 
-                const tmp = match(currentContext, att, i1, i2, op);
+                const tmp = matchs(currentContext, att, i1, i2, op);
                 wr = wr && tmp;
 
                 await i(currentContext,
                     `Validated current WhenClause result is [${tmp}] overall WhenClause result is [${wr}] for WhenClause ${whenClause.id} 
                            (attributeId ${whenClause.attributeId} attributeName ${whenClause.attributeName} 
-                           whenClause condition ${convertToDebugString(whenClause.condition)}
+                           whenClause condition ${convertToDebugStrings(whenClause.condition)}
                            op ${whenClause.operator} 
-                           against itemValueTypes ${convertToDebugString(whenClause.condition)})
+                           against itemValueTypes ${convertToDebugStrings(whenClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
             }
 
@@ -575,7 +588,7 @@ const _runValidation = async (viewId: number, validationId: number) => {
                     const att: Attribute = as.find((a: Attribute) => a.id === validateClause.attributeId);
                     const value: Value = item[validateClause.attributeId];
                     const i1: ItemValTypes = value.val;
-                    const i2: ItemValTypes = validateClause.condition;
+                    const i2: ItemValTypes[] = validateClause.condition;
                     const op: OperatorType = validateClause.operator;
                     currentContext.attribute = att;
 
@@ -583,16 +596,16 @@ const _runValidation = async (viewId: number, validationId: number) => {
                     await i(currentContext,
                         `Validating ValidateClause ${validateClause.id} 
                            (attributeId ${validateClause.attributeId} attributeName ${validateClause.attributeName} op ${validateClause.operator} 
-                           against itemValueTypes ${convertToDebugString(validateClause.condition)})
+                           against itemValueTypes ${convertToDebugStrings(validateClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
 
-                    const tmp = match(currentContext, att, i1, i2, op);
+                    const tmp = matchs(currentContext, att, i1, i2, op);
                     if (!tmp) { // this validation failed
                        currentContext.errornousMessages.push({
                            rule,
                            attribute: att,
                            item,
-                           message: `Attribute ${att.name} (${att.id}) value ${convertToDebugString(i1)} ${op} ${convertToDebugString(i2)} FAILED `
+                           message: `Attribute ${att.name} (${att.id}) value ${convertToDebugString(i1)} ${op} ${convertToDebugStrings(i2)} FAILED `
                        });
                     }
 
@@ -601,9 +614,9 @@ const _runValidation = async (viewId: number, validationId: number) => {
                     await i(currentContext,
                         `Validated current ValidateClause result is [${tmp}] overall ValidateClause result is [${wr}] for ValidateClause ${validateClause.id} 
                            (attributeId ${validateClause.attributeId} attributeName ${validateClause.attributeName} 
-                           validateClause condition ${convertToDebugString(validateClause.condition)} 
+                           validateClause condition ${convertToDebugStrings(validateClause.condition)} 
                            op ${validateClause.operator} 
-                           against itemValueTypes ${convertToDebugString(validateClause.condition)})
+                           against itemValueTypes ${convertToDebugStrings(validateClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
                 }
 

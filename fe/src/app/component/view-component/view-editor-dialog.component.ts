@@ -17,7 +17,7 @@ export class ViewEditorDialogComponent {
 
     constructor(private matDialogRef: MatDialogRef<ViewEditorDialogComponent>,
                 private formBuilder: FormBuilder,
-                @Inject(MAT_DIALOG_DATA) private data: {view: View, type: Type}) {
+                @Inject(MAT_DIALOG_DATA) public data: {view: View, type: Type}) {
         this.formGroup = formBuilder.group({});
         switch (data.type) {
             case 'name':

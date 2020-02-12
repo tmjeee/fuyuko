@@ -47,7 +47,7 @@ export class ViewTableComponent implements OnInit {
 
     dataSource: ViewTableDataSource;
 
-    @ViewChild('masterCheckbox', { static: false }) masterCheckbox: MatCheckbox;
+    @ViewChild('masterCheckbox') masterCheckbox: MatCheckbox;
     @ViewChildren('checkboxes')checkboxes: QueryList<MatCheckbox>;
 
     displayedColumns: string[];
