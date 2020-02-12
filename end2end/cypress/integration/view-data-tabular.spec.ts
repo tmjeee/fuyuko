@@ -49,6 +49,13 @@ describe('view attribute spec', () => {
     });
 
     it(`should do column filtering and ordering`, () => {
+        viewDataTablePage
+            .openFilterBox()
+            .verifyFilterBoxOpen(true)
+            .closeFilterBox()
+            .verifyFilterBoxOpen(true)
+            .openFilterBox()
+            .checkFilterCheckbox(`string attribute`, true)
 
     });
 });

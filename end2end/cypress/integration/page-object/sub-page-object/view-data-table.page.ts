@@ -67,5 +67,47 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
 
+    checkFilterCheckbox(attributeName: string, b: boolean): ViewDataTablePage {
+        cy.wrap(document).then((e) => {
+            const c = e.find(`[test-checkbox-item-filtering='${attributeName}'].mat-checkbox-checked `).length;
+            if (c && !b) { // already checked but we want to uncheck it
+                cy.get(`[test-checkbox-item-filtering='${attributeName}']`).click({force: true});
+            } if (!c && b) { // already unchecked but we want to check it
+                cy.get(`[test-checkbox-item-filtering='${attributeName}']`).click({force: true});
+            }
+        });
+        return this;
+    }
+
+    verifyAttributeCellDoNotExists(attributeName: string, b: boolean) : ViewDataTablePage {
+        cy.get(`[test-data-table-attribute='${attributeName}']`).should(b ? 'exist' : 'not.exist');
+        return this;
+    }
+
+    moveAttributeFilterOrderUp(attributeName: string): ViewDataTablePage {
+        cy.wrap(document).then((e) => {
+            const l = e.find(`[test-button-item-filtering-up]`).length;
+            if (l) {
+               cy.get(`[test-button-item-filtering-up]`).click({force: true});
+            }
+        })
+        return this;
+    }
+
+    moveAttributeFilterOrderDown(attributeName: string): ViewDataTablePage {
+        cy.wrap(document).then((e) => {
+            const l = e.find(`[test-button-item-filtering-down]`).length;
+            if (l) {
+                cy.get(`[test-button-item-filtering-down]`).click({force: true});
+            }
+        })
+        return this;
+    }
+
+    verifyAttributeCellOrder(attributeName: string, order: number): ViewDataTablePage {
+        cy.get(`[test-data-table-attribute='${attributeName}']`)
+            .should('have.attr', `test-data-table-attribute-index`, order);
+        return this;
+    }
 
 }

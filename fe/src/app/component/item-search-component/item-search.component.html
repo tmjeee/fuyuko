@@ -1,6 +1,9 @@
 <div class="item-search-component">
-  <mat-tab-group mat-align-tabs="start">
-    <mat-tab label="Basic Search" [attr.test-mat-tab-basic-search]="''">
+  <mat-tab-group mat-align-tabs="start" [attr.test-mat-tab-search]="''">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span [attr.test-mat-tab-basic-search]="''">Basic Search</span>
+      </ng-template>
       <mat-form-field>
         <mat-label>Search</mat-label>
         <input type="text"
