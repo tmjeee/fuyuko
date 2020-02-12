@@ -3,14 +3,14 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {ItemService} from '../../service/item-service/item.service';
 import {combineLatest, forkJoin, Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {Item, TableItem} from '../../model/item.model';
+import {Item, ItemSearchType, TableItem} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';
 import {TableItemAndAttributeSet} from '../../model/item-attribute.model';
 import {ViewService} from '../../service/view-service/view.service';
 import {View} from '../../model/view.model';
 import {DataTableComponentEvent} from '../../component/data-table-component/data-table.component';
 import {toTableItem} from '../../utils/item-to-table-items.util';
-import {ItemSearchComponentEvent, SearchType} from '../../component/item-search-component/item-search.component';
+import {ItemSearchComponentEvent} from '../../component/item-search-component/item-search.component';
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
@@ -27,7 +27,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
 
   search: string;
-  searchType: SearchType;
+  searchType: ItemSearchType;
   currentView: View;
   subscription: Subscription;
 
@@ -56,12 +56,14 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  reload() {
+  reload(searchType?: ItemSearchType, search?: string) {
     this.done = false;
     const viewId = this.currentView.id;
     combineLatest([
       this.attributeService.getAllAttributesByView(viewId),
-      this.itemService.getAllItems(viewId)
+      searchType ?
+          this.itemService.searchForItems(viewId, searchType, search) :
+          this.itemService.getAllItems(viewId)
     ]).pipe(
       map( (r: [Attribute[], Item[]]) => {
        const attributes: Attribute[] = r[0];
@@ -78,6 +80,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
 
   onDataTableEvent($event: DataTableComponentEvent) {
+    console.log('**** on DataTableEvent', $event);
     switch ($event.type) {
       case 'modification':
         forkJoin([
@@ -98,8 +101,9 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   }
 
   onDataTableSearchEvent($event: ItemSearchComponentEvent) {
+    console.log('**************** onDataTableSearrchEvent', $event);
     this.search = $event.search;
     this.searchType = $event.type;
-    this.reload();
+    this.reload(this.searchType, this.search);
   }
 }

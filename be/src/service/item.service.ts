@@ -1,7 +1,7 @@
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../route/model/server-side.model";
-import {ItemImage, ItemValTypes, Value} from "../model/item.model";
+import {ItemImage, ItemSearchType, ItemValTypes, Value} from "../model/item.model";
 
 
 export const updateItemValue = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
@@ -60,15 +60,16 @@ const _updateItem = async (conn: Connection, viewId: number, item2: Item2) => {
     }
 }
 
-export const addItem = async (viewId: number, item2: Item2, parentId: number = null): Promise<number> => {
+export const addItem = async (viewId: number, item2: Item2): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
-        return await _addItem(conn, viewId, item2, parentId);
+        return await _addItem(conn, viewId, item2);
     });
 }
-const _addItem = async (conn: Connection, viewId: number, item2: Item2, parentId: number = null): Promise<number> => {
+const _addItem = async (conn: Connection, viewId: number, item2: Item2): Promise<number> => {
 
     const name: string = item2.name;
     const description: string = item2.description;
+    const parentId: number = item2.parentId;
 
     const q: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`,[parentId, viewId, name, description]);
     const newItemId: number = q.insertId;
@@ -89,7 +90,8 @@ const _addItem = async (conn: Connection, viewId: number, item2: Item2, parentId
     }
 
     for (const child of item2.children) {
-        _addItem(conn, viewId, child, newItemId);
+        child.parentId = newItemId;
+        _addItem(conn, viewId, child);
     }
 
     return newItemId;
@@ -135,6 +137,24 @@ const SQL_2_A = `${SQL_1_A} AND I.ID IN ?`;
 const SQL_2_B = `${SQL_2_A} AND I.PARENT_ID IS NULL`;
 
 
+const SQL_SEARCH = `${SQL_1_B} 
+    AND (I.NAME LIKE ? OR 
+         I.DESCRIPTION LIKE ? OR
+         (E.KEY = 'value' AND E.VALUE LIKE ?)
+    ) 
+`
+
+export const searchForItemsInView = async (viewId: number, searchType: ItemSearchType, search: string) => {
+    // todo: support advance search type
+    const iSearch = `%${search}%`;
+    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(SQL_SEARCH, [viewId, iSearch, iSearch, iSearch]);
+        return _doQ(q);
+    });
+
+    await w(viewId, item2s);
+    return item2s;
+};
 
 
 export const getAllItemsInView = async (viewId: number, parentOnly: boolean = true): Promise<Item2[]> => {
@@ -144,11 +164,7 @@ export const getAllItemsInView = async (viewId: number, parentOnly: boolean = tr
     });
 
 
-    for (const item2 of item2s) {
-        const itemId: number = item2.id;
-        item2.children = await findChildrenItems(viewId, itemId);
-    }
-
+    await w(viewId, item2s);
     return item2s;
 }
 
@@ -159,11 +175,7 @@ export const getItemsByIds = async (viewId: number, itemIds: number[], parentOnl
         return _doQ(q);
     });
 
-    for (const item2 of item2s) {
-        const itemId: number = item2.id;
-        item2.children = await findChildrenItems(viewId, itemId);
-    }
-
+    await w(viewId, item2s);
     return item2s;
 }
 
@@ -207,14 +219,17 @@ export const getItemById = async (viewId: number, itemId: number): Promise<Item2
     });
 
 
+    await w(viewId, item2s);
+    return (item2s && item2s.length > 0 ? item2s[0] : undefined);
+}
+
+// work out the children in each item
+const w = async (viewId: number, item2s: Item2[]) => {
     for (const item2 of item2s) {
         const itemId: number = item2.id;
         item2.children = await findChildrenItems(viewId, itemId);
     }
-
-    return (item2s && item2s.length > 0 ? item2s[0] : undefined);
 }
-
 
 export const findChildrenItems = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
 

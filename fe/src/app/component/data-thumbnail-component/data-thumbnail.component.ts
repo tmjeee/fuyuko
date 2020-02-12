@@ -1,19 +1,18 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ItemAndAttributeSet, ItemValueAndAttribute} from '../../model/item-attribute.model';
-import {Item, ItemImage} from '../../model/item.model';
+import {Item, ItemImage, ItemSearchType} from '../../model/item.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ItemDataEditorDialogComponent} from './item-data-editor-dialog.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {map} from 'rxjs/operators';
-import {ItemSearchComponentEvent, SearchType} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 import {createNewItem} from '../../shared-utils/ui-item-value-creator.utils';
 import config from '../../utils/config.util';
 
 
 export interface DataThumbnailSearchComponentEvent {
-  type: SearchType;
+  type: ItemSearchType;
   search: string;
 }
 

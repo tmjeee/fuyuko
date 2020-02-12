@@ -33,6 +33,22 @@ describe('view attribute spec', () => {
     it('should load', () => {
         viewDataTablePage
             .visit()
-            .validateTitle();
+            .validateTitle()
+        ;
+    });
+
+    it('should be searchable (basic search)', () => {
+        viewDataTablePage
+            .doBasicSearch(`Item-2`)
+            .verifyDataTableResultSize(1)
+            .verifyDataTableHasItem(`Item-2`, true)
+            .doBasicSearch('asdsdsdsdsdsdsdsds')
+            .verifyDataTableResultSize(0)
+            .verifyDataTableHasItem('asdsdsdsdsdsdsdsds', false)
+        ;
+    });
+
+    it(`should do column filtering and ordering`, () => {
+
     });
 });

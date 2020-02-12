@@ -99,6 +99,7 @@ import registerGetUserNotificationsRoute from './GET-user-notification.route';
 import registerPostUserNotificationRoute from './POST-user-notification.route';
 import registerPostAddAttributeRoute from './POST-add-attributes.route';
 import registerPostChangeAttributeStatusRoute from './POST-change-attribute-status.route';
+import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -204,6 +205,7 @@ const reg = (router: Router, regi: Registry) => {
     registerPostUserNotificationRoute(v1AppRouter, registry);
     registerPostAddAttributeRoute(v1AppRouter, registry);
     registerPostChangeAttributeStatusRoute(v1AppRouter, registry);
+    registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
 }
 
 

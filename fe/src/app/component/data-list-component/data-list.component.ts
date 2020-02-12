@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ItemAndAttributeSet, ItemValueAndAttribute} from '../../model/item-attribute.model';
-import {ItemSearchComponentEvent, SearchType} from '../item-search-component/item-search.component';
-import {Item, ItemImage} from '../../model/item.model';
+import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
+import {Item, ItemImage, ItemSearchType} from '../../model/item.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ItemDataEditorDialogComponent} from '../data-thumbnail-component/item-data-editor-dialog.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -18,7 +18,7 @@ export interface DataListComponentEvent {
 }
 
 export interface DataListSearchComponentEvent {
-    type: SearchType;
+    type: ItemSearchType;
     search: string;
 }
 

@@ -1,5 +1,6 @@
-import {AttributeType} from './attribute.model';
 import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from './unit.model';
+
+export type ItemSearchType = 'basic' | 'advance';
 
 export const DATE_FORMAT = 'DD-MM-YYYY';
 export const CURRENCY_FORMAT = '$0.00';
