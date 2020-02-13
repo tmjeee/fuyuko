@@ -48,8 +48,9 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     openFilterBox(): ViewDataTablePage {
-        cy.get('document').then((e) => {
-            if (e.find(`[test-filtering-container]`).length <= 0) {
+        cy.get('[test-page-title]').then((e) => {
+            const visible = e.find(`[test-filtering-container]`).is(':visible');
+            if (!visible) {
                 // not opened yet
                 cy.get(`[test-button-filter-items]`).click({force: true});
             }
@@ -58,9 +59,10 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     closeFilterBox(): ViewDataTablePage {
-        cy.get('document').then((e) => {
-            if (e.find(`[test-filtering-container]`).length > 0) {
-                // not opened yet
+        cy.get('[test-page-title]').then((e) => {
+            const visible = e.find(`[test-filtering-container]`).is(':visible');
+            if (visible) {
+                // already open
                 cy.get(`[test-button-filter-items]`).click({force: true});
             }
         });
@@ -68,18 +70,19 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     verifyFilterBoxOpen(b: boolean): ViewDataTablePage {
-        cy.get(`[test-filtering-container]`).should(b ? 'exist' : 'not.exist');
+        cy.get(`[test-filtering-container]`).should(b ? 'be.visible' : 'not.be.visible');
         return this;
     }
 
 
     checkFilterCheckbox(attributeName: string, b: boolean): ViewDataTablePage {
-        cy.wrap(document).then((e) => {
+        cy.get(`[test-page-title]`).then((e) => {
             const c = e.find(`[test-checkbox-item-filtering='${attributeName}'].mat-checkbox-checked `).length;
+            console.log('*** already checked', c);
             if (c && !b) { // already checked but we want to uncheck it
-                cy.get(`[test-checkbox-item-filtering='${attributeName}']`).click({force: true});
+                cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`).click({force: true});
             } if (!c && b) { // already unchecked but we want to check it
-                cy.get(`[test-checkbox-item-filtering='${attributeName}']`).click({force: true});
+                cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`).click({force: true});
             }
         });
         return this;
@@ -91,7 +94,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     moveAttributeFilterOrderUp(attributeName: string): ViewDataTablePage {
-        cy.wrap(document).then((e) => {
+        cy.get('[test-page-title]').then((e) => {
             const l = e.find(`[test-button-item-filtering-up]`).length;
             if (l) {
                cy.get(`[test-button-item-filtering-up]`).click({force: true});
@@ -101,7 +104,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     moveAttributeFilterOrderDown(attributeName: string): ViewDataTablePage {
-        cy.wrap(document).then((e) => {
+        cy.get('[test-page-title]').then((e) => {
             const l = e.find(`[test-button-item-filtering-down]`).length;
             if (l) {
                 cy.get(`[test-button-item-filtering-down]`).click({force: true});
@@ -130,10 +133,10 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     clickOnDeleteItem(itemNames: string[]): ViewDataTablePage {
         cy.wrap(itemNames).each((e, i, a) => {
-            cy.wrap(document).then((_) => {
+            cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-checkbox-data-table-item='${itemNames[i]}].mat-checkbox-checked`).length;
                 if (!l) { // not already checked
-                    cy.get(`[test-checkbox-data-table-item='${itemNames[i]}']`).click({force: true});
+                    cy.get(`[test-checkbox-data-table-item='${itemNames[i]}'] label`).click({force: true});
                 }
             })
         });
