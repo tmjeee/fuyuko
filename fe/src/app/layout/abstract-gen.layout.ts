@@ -48,7 +48,6 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
           this.loading = false;
         })
     ).subscribe();
-    console.log('******** ASbstractGenLayout runtime settings', this.settings);
     this.routeSubSideNavData = this.findSubSideNavData([this.route.snapshot]);
     this.routerEventSubscription = this.router.events
       .pipe(

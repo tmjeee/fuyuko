@@ -56,13 +56,13 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  reload(searchType?: ItemSearchType, search?: string) {
+  reload() {
     this.done = false;
     const viewId = this.currentView.id;
     combineLatest([
       this.attributeService.getAllAttributesByView(viewId),
-      searchType ?
-          this.itemService.searchForItems(viewId, searchType, search) :
+      (this.search && this.searchType) ?
+          this.itemService.searchForItems(viewId, this.searchType, this.search) :
           this.itemService.getAllItems(viewId)
     ]).pipe(
       map( (r: [Attribute[], Item[]]) => {
@@ -80,7 +80,6 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
 
   onDataTableEvent($event: DataTableComponentEvent) {
-    console.log('**** on DataTableEvent', $event);
     switch ($event.type) {
       case 'modification':
         forkJoin([
@@ -101,9 +100,8 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   }
 
   onDataTableSearchEvent($event: ItemSearchComponentEvent) {
-    console.log('**************** onDataTableSearrchEvent', $event);
     this.search = $event.search;
     this.searchType = $event.type;
-    this.reload(this.searchType, this.search);
+    this.reload();
   }
 }

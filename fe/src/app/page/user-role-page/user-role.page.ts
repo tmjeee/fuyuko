@@ -44,7 +44,6 @@ export class UserRolePageComponent implements OnInit {
       this.userManagementService.allRoles()
           .pipe(
             tap((r: Role[]) => {
-                console.log('**************** roles', r);
                 this.allRoles = r;
                 this.allRoleGroups = r.reduce((a: Map<Role, Group[]>, role: Role) => {
                    a.set(role, []);
@@ -82,9 +81,6 @@ export class UserRolePageComponent implements OnInit {
 
 
     onRoleGroupTableEvent($event: GroupTableComponentEvent, role: Role) {
-        console.log('**************** role group table $event', $event);
-        console.log('role', role);
-        console.log('group', $event.group);
         switch ($event.type) {
             case this.actions[0].type: // 'DELETE' type
                 this.userManagementService.removeRoleFromGroup(role, $event.group)
