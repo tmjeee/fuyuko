@@ -13,6 +13,10 @@ export class ViewDataEditorPopupPage {
         return this;
     }
 
+    editTextValue(): ViewDataEditorPopupPage {
+        return this;
+    }
+
     clickCancel(): ViewDataEditorPopupPage {
         cy.get(`[test-button-cancel]`).click({force: true});
         return this;

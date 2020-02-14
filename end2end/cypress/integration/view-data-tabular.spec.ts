@@ -4,6 +4,18 @@ import {ViewDataTablePage} from "./page-object/sub-page-object/view-data-table.p
 describe('view attribute spec', () => {
     const attrs = [
         'string attribute',
+        'text attribute',
+        'select attribute',
+        'doubleselect attribute',
+        'number attribute',
+        'date attribute',
+        'currency attribute',
+        'volume attribute',
+        'area attribute',
+        'dimension attribute',
+        'width attribute',
+        'length attribute',
+        'height attribute',
     ];
 
     let viewDataTablePage: ViewDataTablePage;
