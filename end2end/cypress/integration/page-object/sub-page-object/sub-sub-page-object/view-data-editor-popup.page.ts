@@ -28,9 +28,10 @@ export class ViewDataEditorPopupPage {
     editTextValue(v: string): ViewDataEditorPopupPage {
         cy.get(`[test-field-text]`)
             .clear({force: true})
-            .type(v, {force: true})
+            .type(v, {force: true});
         return this;
     }
+
 
     editNumberValue(v: number): ViewDataEditorPopupPage {
         cy.get(`[test-field-number]`)

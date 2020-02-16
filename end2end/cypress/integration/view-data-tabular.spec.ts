@@ -5,6 +5,8 @@ describe('view attribute spec', () => {
     const attrs = [
         'string attribute',
         'text attribute',
+        'select attribute',
+        'doubleselect attribute',
         'number attribute',
         'date attribute',
         'currency attribute',
