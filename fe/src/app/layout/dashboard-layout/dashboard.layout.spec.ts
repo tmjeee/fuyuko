@@ -12,6 +12,7 @@ import {ThemeService} from '../../service/theme-service/theme.service';
 import {SettingsService} from '../../service/settings-service/settings.service';
 import {RouterTestingModule} from '@angular/router/testing';
 import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
+import {BrowserLocationHistoryService} from "../../service/browser-location-history-service/browser-location-history.service";
 
 
 describe('DashboardLayoutComponent', () => {
@@ -23,7 +24,7 @@ describe('DashboardLayoutComponent', () => {
         TestBed.configureTestingModule({
             imports: [AppMaterialsModule, RouterTestingModule, HttpClientTestingModule],
             declarations: [DashboardLayoutComponent, AvatarComponent, NotificationComponent, SideNavComponent],
-            providers: [AppNotificationService, AuthService, ThemeService, SettingsService, GlobalCommunicationService]
+            providers: [AppNotificationService, AuthService, ThemeService, SettingsService, GlobalCommunicationService, BrowserLocationHistoryService]
         }).compileComponents();
     }));
 
