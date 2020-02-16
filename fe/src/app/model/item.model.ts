@@ -2,6 +2,7 @@ import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthU
 
 export type ItemSearchType = 'basic' | 'advance';
 
+export const NUMBER_FORMAT = '0.00';
 export const DATE_FORMAT = 'DD-MM-YYYY';
 export const CURRENCY_FORMAT = '$0.00';
 export const AREA_FORMAT = '0.00';

@@ -13,7 +13,7 @@ import {Item2} from "../model/server-side.model";
 import {revert as itemRevert} from "../../service/conversion-item.service";
 import {ApiResponse} from "../../model/response.model";
 import util from 'util';
-import {addItem, updateItem} from "../../service/item.service";
+import {addItem, addOrUpdateItem, updateItem} from "../../service/item.service";
 import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
@@ -35,12 +35,7 @@ const httpAction: any[] = [
         const item2s: Item2[]  = itemRevert(items);
 
         for (const item2 of item2s) {
-
-            if (item2.id > 0) {
-               await updateItem(viewId, item2);
-            } else {
-               await addItem(viewId, item2);
-            }
+            await addOrUpdateItem(viewId, item2);
         }
 
         res.status(200).json({

@@ -1,5 +1,5 @@
 
-<div class="data-editor-dialog-component" [attr.test-popup-dialog-title="'data-editor-dialog-popup'">
+<div class="data-editor-dialog-component" [attr.test-popup-dialog-title]="'data-editor-dialog-popup'">
 
   <!-- string attribute value -->
   <ng-container *ngIf="data.attribute.type === 'string'">
@@ -14,8 +14,8 @@
         <mat-hint>Enter a string value</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button color="primary" [attr.test-button-done]="''" [disabled]="formGroupStringAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button color="primary" [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button color="primary" [attr.test-button-popup-done]="''" [disabled]="formGroupStringAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button color="primary" [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -33,8 +33,8 @@
         <mat-hint>Enter a text value</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupTextAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupTextAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -52,8 +52,8 @@
         <mat-hint>Enter a numeric value</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupNumberAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupNumberAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -69,8 +69,8 @@
         <mat-hint>Enter a date</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupDateAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupDateAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -94,8 +94,8 @@
         <mat-hint>Enter a currency unit</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupCurrencyAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupCurrencyAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -112,15 +112,15 @@
         <input matInput hidden [formControl]="formControlAreaAttributeUnit">
         <mat-label>Unit</mat-label>
         <mat-select [formControl]="formControlAreaAttributeUnit" [attr.test-mat-select-area]="''">
-          <mat-option *ngFor="let areaUnit of areaUnits" [value]="areaUnit" [attr.test-mat-option-area]="areaUnit">
+          <mat-option *ngFor="let areaUnit of areaUnits" [value]="areaUnit" [attr.test-mat-select-option-area]="areaUnit">
             {{areaUnit}}
           </mat-option>
         </mat-select>
         <mat-hint>Enter an Area unit</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupAreaAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupAreaAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -130,22 +130,22 @@
     <form [formGroup]="formGroupVolumeAttribute" (ngSubmit)="onEditDone()">
       <mat-form-field>
         <mat-label>Value</mat-label>
-        <input type="text" matInput [formControl]="formControlVolumeAttributeUnit" placeholder="Enter a volume" [attr.test-field-volume]="''">
+        <input type="text" matInput [formControl]="formControlVolumeAttributeValue" placeholder="Enter a volume" [attr.test-field-volume]="''">
         <mat-hint>Enter a volume value</mat-hint>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Unit</mat-label>
         <input hidden matInput [formControl]="formControlVolumeAttributeUnit">
         <mat-select [formControl]="formControlVolumeAttributeUnit" [attr.test-mat-select-volume]="''">
-          <mat-option *ngFor="let volumeUnit of volumeUnits" [value]="volumeUnit" [attr.test-mat-option-volume]="volumeUnit">
+          <mat-option *ngFor="let volumeUnit of volumeUnits" [value]="volumeUnit" [attr.test-mat-select-option-volume]="volumeUnit">
             {{volumeUnit}}
           </mat-option>
         </mat-select>
         <mat-hint>Enter a volume unit</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupVolumeAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupVolumeAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -172,14 +172,14 @@
         <input hidden matInput [formControl]="formControlDimensionAttributeUnit">
         <mat-label>Unit</mat-label>
         <mat-select [formControl]="formControlDimensionAttributeUnit" placeholder="Enter a unit" [attr.test-mat-select-dimension]="''">
-          <mat-option *ngFor="let dimensionUnit of dimensionUnits" [value]="dimensionUnit" [attr.test-mat-option-dimension]="dimensionUnit">
+          <mat-option *ngFor="let dimensionUnit of dimensionUnits" [value]="dimensionUnit" [attr.test-mat-select-option-dimension]="dimensionUnit">
             {{dimensionUnit}}
           </mat-option>
         </mat-select>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupDimensionAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupDimensionAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -189,22 +189,22 @@
     <form [formGroup]="formGroupWidthAttribtue" (ngSubmit)="onEditDone()">
       <mat-form-field>
         <mat-label>Value</mat-label>
-        <input type="text" matInput [formControl]="formControlDimensionAttributeWidthValue" placeholder="Enter a width">
+        <input type="text" matInput [attr.test-field-width]="''" [formControl]="formControlWidthAttributeValue" placeholder="Enter a width">
         <mat-hint>Enter a width value</mat-hint>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Unit</mat-label>
         <input matInput hidden [formControl]="formControlWidthAttributeUnit">
-        <mat-select [formControl]="formControlWidthAttributeUnit">
-          <mat-option *ngFor="let widthUnit of widthUnits" [value]="widthUnit">
+        <mat-select [formControl]="formControlWidthAttributeUnit" [attr.test-mat-select-width]="''">
+          <mat-option *ngFor="let widthUnit of widthUnits" [value]="widthUnit" [attr.test-mat-select-option-width]="widthUnit">
             {{widthUnit}}
           </mat-option>
         </mat-select>
         <mat-hint>Enter a width</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupWidthAttribtue.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupWidthAttribtue.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -214,21 +214,21 @@
     <form [formGroup]="formGroupLengthAttribute" (ngSubmit)="onEditDone()">
       <mat-form-field>
         <mat-label>Value</mat-label>
-        <input type="text" type="text" matInput placeholder="Enter a length">
+        <input type="text" type="text" matInput placeholder="Enter a length" [formControl]="formControlLengthAttributeValue" [attr.test-field-length]="''">
         <mat-hint>Enter a Length value</mat-hint>
       </mat-form-field>
       <mat-form-field>
         <input matInput hidden [formControl]="formControlLengthAttribtueUnit">
-        <mat-select [formControl]="formControlLengthAttributeValue">
-          <mat-option *ngFor="let lengthUnit of lengthUnits" [value]="lengthUnit">
+        <mat-select [formControl]="formControlLengthAttribtueUnit" [attr.test-mat-select-length]="''">
+          <mat-option *ngFor="let lengthUnit of lengthUnits" [value]="lengthUnit" [attr.test-mat-select-option-length]="lengthUnit">
             {{lengthUnit}}
           </mat-option>
         </mat-select>
         <mat-hint>Enter a Length</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupLengthAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupLengthAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -238,24 +238,24 @@
     <form [formGroup]="formGroupHeightAttribute" (ngSubmit)="onEditDone()">
       <mat-form-field>
         <mat-label>Value</mat-label>
-        <input type="text" matInput placeholder="Enter a height">
+        <input type="text" matInput placeholder="Enter a height" [formControl]="formControlHeightAttributeValue" [attr.test-field-height]="''">
         <mat-hint>Enter a height value</mat-hint>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Unit</mat-label>
         <input hidden matInput [formControl]="formControlHeightAttributeUnit">
-        <mat-select [formControl]="formControlHeightAttributeUnit">
-          <mat-option *ngFor="let heightUnit of heightUnits" [value]="heightUnit">
+        <mat-select [formControl]="formControlHeightAttributeUnit" [attr.test-mat-select-height]="''">
+          <mat-option *ngFor="let heightUnit of heightUnits" [value]="heightUnit" [attr.test-mat-select-option-height]="heightUnit">
             {{heightUnit}}
           </mat-option>
         </mat-select>
         <mat-hint>Enter a height</mat-hint>
       </mat-form-field>
+      <div class="controls">
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupHeightAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+      </div>
     </form>
-    <div class="controls">
-      <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupHeightAttribute.invalid">Done</button>
-      <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
-    </div>
   </ng-container>
 
   <!-- select attribute type -->
@@ -264,16 +264,16 @@
       <mat-form-field>
         <mat-label>Selection</mat-label>
         <input hidden matInput [formControl]="formControlSelectAttributeKey">
-        <mat-select [formControl]="formControlSelectAttributeKey">
-          <mat-option *ngFor="let pair of data.attribute.pair1" [value]="pair.key">
+        <mat-select [formControl]="formControlSelectAttributeKey" [attr.test-mat-select-select-key]="''">
+          <mat-option *ngFor="let pair of data.attribute.pair1" [value]="pair.key" [attr.test-mat-select-option-select-key]="pair.key">
             {{pair.value}}
           </mat-option>
         </mat-select>
         <mat-hint>Select a choice</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupSelectAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupSelectAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>
@@ -284,8 +284,10 @@
       <mat-form-field>
         <mat-label>Selection #1</mat-label>
         <input hidden matInput [formControl]="formControlDoubleSelectKey1">
-        <mat-select [formControl]="formControlDoubleSelectKey1">
-          <mat-option *ngFor="let pair1 of data.attribute.pair1" [value]="pair1.key" (onSelectionChange)="onDoubleSelectPair1Change($event)">
+        <mat-select [formControl]="formControlDoubleSelectKey1" [attr.test-mat-select-doubleselect-key1]="''">
+          <mat-option *ngFor="let pair1 of data.attribute.pair1"
+                      [attr.test-mat-select-option-doubleselect-key1]="pair1.key"
+                      [value]="pair1.key" (onSelectionChange)="onDoubleSelectPair1Change($event)">
             {{pair1.value}}
           </mat-option>
         </mat-select>
@@ -294,16 +296,16 @@
       <mat-form-field>
         <mat-label>Selection #2</mat-label>
         <input hidden matInput [formControl]="formControlDoubleSelectKey2">
-        <mat-select [formControl]="formControlDoubleSelectKey2">
-          <mat-option *ngFor="let pair2 of pairs2" [value]="pair2.key">
+        <mat-select [formControl]="formControlDoubleSelectKey2" [attr.test-mat-select-doubleselect-key2]="''">
+          <mat-option *ngFor="let pair2 of pairs2" [value]="pair2.key" [attr.test-mat-select-option-doubleselect-key2]="pair2.key">
             {{pair2.value}}
           </mat-option>
         </mat-select>
         <mat-hint>Choose another selection</mat-hint>
       </mat-form-field>
       <div class="controls">
-        <button type="submit" mat-flat-button  [attr.test-button-done]="''" color="primary" [disabled]="formGroupDoubleSelectAttribute.invalid">Done</button>
-        <button type="button" mat-flat-button  [attr.test-button-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupDoubleSelectAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
       </div>
     </form>
   </ng-container>

@@ -56,7 +56,7 @@ const _updateItem = async (conn: Connection, viewId: number, item2: Item2) => {
     }
 
     for (const child of item2.children) {
-        _updateItem(conn, viewId, child);
+        await _addOrUpdateItem(conn, viewId, child);
     }
 }
 
@@ -67,9 +67,11 @@ export const addItem = async (viewId: number, item2: Item2): Promise<number> => 
 }
 const _addItem = async (conn: Connection, viewId: number, item2: Item2): Promise<number> => {
 
+    console.log(`*************** additem for ${item2.name} with id ${item2.id} and parentId ${item2.parentId} children ${item2.children} `);
+
     const name: string = item2.name;
     const description: string = item2.description;
-    const parentId: number = item2.parentId;
+    const parentId: number = item2.parentId ? item2.parentId : null;
 
     const q: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`,[parentId, viewId, name, description]);
     const newItemId: number = q.insertId;
@@ -91,10 +93,24 @@ const _addItem = async (conn: Connection, viewId: number, item2: Item2): Promise
 
     for (const child of item2.children) {
         child.parentId = newItemId;
-        _addItem(conn, viewId, child);
+        await _addOrUpdateItem(conn, viewId, child);
     }
 
     return newItemId;
+}
+
+const _addOrUpdateItem = async (conn: Connection, viewId: number, item2: Item2) => {
+    if (item2.id > 0) {
+        await _updateItem(conn, viewId, item2);
+    } else {
+        await _addItem(conn, viewId, item2);
+    }
+}
+
+export const addOrUpdateItem = async (viewId: number, item2: Item2) => {
+    await doInDbConnection(async (conn: Connection) => {
+        await _addOrUpdateItem(conn, viewId, item2);
+    }) ;
 }
 
 const SQL_1_A = `

@@ -62,7 +62,8 @@ export interface AttributeInfo {
 export class DataTableComponent implements OnInit, OnChanges {
 
 
-  counter = -1;
+  negativeCounter = -1;
+  positiveCounter = 1;
 
   @Output() events: EventEmitter<DataTableComponentEvent>;
   @Output() searchEvents: EventEmitter<ItemSearchComponentEvent>;
@@ -200,23 +201,46 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onAddItem($event: MouseEvent) {
-    const nextId = this.counter--;
+    const nextId = this.negativeCounter--;
     const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes);
+    newItem.name = `New-Item-${this.positiveCounter++}`;
+    newItem.depth = 0;
     this.pendingSavingItems.set(nextId, newItem);
     this.itemAndAttributeSet.tableItems.push(newItem);
     this.rowInfoMap.set(newItem.id, { tableItem: newItem, expanded: false } as RowInfo);
     this.datasource.update(this.itemAndAttributeSet.tableItems);
   }
 
-  onAddChildrenItem(rootParentItem: TableItem) {
-    console.log('*************** addChildrenItem', rootParentItem);
-    const nextId = this.counter--;
+  onAddChildrenItem(parentItem: TableItem) {
+    console.log('****** addChildrenItem', parentItem.name, parentItem.depth);
+    const nextId = this.negativeCounter--;
     const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes,
-        rootParentItem.id, rootParentItem.rootParentId ? rootParentItem.rootParentId : rootParentItem.id);
-    newItem.name = `name-${Math.random()}`;
+        parentItem.id, parentItem.rootParentId ? parentItem.rootParentId : parentItem.id);
+    newItem.name = `New-Item-${this.positiveCounter++}`;
     newItem.description = ``;
+    newItem.depth = parentItem.depth + 1;
+
+    const f = (tableItem) => {
+      if (tableItem) {
+        if (tableItem.parentId > 0) {
+          const p = this.itemAndAttributeSet.tableItems.find((i: TableItem) => i.id === tableItem.parentId);
+          f(p);
+        }
+        this.pendingSavingItems.set(tableItem.id, tableItem);
+      }
+    };
+
+    // Note: hack
+    // so that  'onDataTabularEvent(..)#view-data-tabluar.page.ts' when calling item.service.ts#saveTableItem
+    // itemitem-to-table-items.util.ts#toItem(...) can construct the full parent child object for saving in the BE.
+    // this.pendingSavingItems.set(parentItem.id, parentItem);
+    f(parentItem);
     this.pendingSavingItems.set(nextId, newItem);
-    const indexOfRootParentItem = this.itemAndAttributeSet.tableItems.findIndex((i: TableItem) => i.id === rootParentItem.id);
+    console.log('*********************** on add children item', this.pendingSavingItems);
+
+
+
+    const indexOfRootParentItem = this.itemAndAttributeSet.tableItems.findIndex((i: TableItem) => i.id === parentItem.id);
     this.itemAndAttributeSet.tableItems.splice(indexOfRootParentItem + 1, 0, newItem);
     this.datasource.update(this.itemAndAttributeSet.tableItems);
   }
@@ -231,20 +255,26 @@ export class DataTableComponent implements OnInit, OnChanges {
     let existingItems: TableItem[]  = this.itemAndAttributeSet.tableItems;
     items.forEach((selectedItem: TableItem) => {
       existingItems = existingItems.filter((existingItem: TableItem) => {
-        return ( // filter out the item and all of it's children
-          existingItem.id !== selectedItem.id ||           // the item itself
-          existingItem.rootParentId === selectedItem.id   // all of the item's children
+        const b1 = (existingItem.id === selectedItem.id);             // keep items that are not this deleted item
+        const b2 = (existingItem.rootParentId === selectedItem.id);   // keep child items whose root parent is not this deleted item
+        const b3 = (existingItem.parentId === selectedItem.id);       // keep child items whose immediate parent is not this deleted item
+        const r = ( // filter out the item and all of it's children
+            !(b1 || b2 || b3)
         );
+        // console.log(` exixting id ${existingItem.id} rootParentId ${existingItem.rootParentId} parentId ${existingItem.parentId} vs selected item id ${selectedItem.id} ==> ${b1} || ${b2} || ${b3} = ${r}`);
+        return r;
       });
-      this.pendingDeletionItems.set(selectedItem.id, selectedItem);
+      if (selectedItem.id > 0) { // if it is newly added item that have not been saved before deleting it doesn't need savings
+        this.pendingDeletionItems.set(selectedItem.id, selectedItem);
+      }
       this.pendingSavingItems.delete(selectedItem.id); // if it is deleted it doesn't need saving anymore.
     });
     this.itemAndAttributeSet.tableItems = existingItems;
     this.datasource.update(existingItems);
+    console.log(this.pendingSavingItems, this.pendingDeletionItems);
   }
 
   onSave($event: MouseEvent) {
-    console.log('**** on save');
     const e: DataTableComponentEvent = {
       type: 'modification',
       modifiedItems: Array.from(this.pendingSavingItems.values()),
@@ -253,6 +283,7 @@ export class DataTableComponent implements OnInit, OnChanges {
     this.events.emit(e);
     this.pendingSavingItems.clear();
     this.pendingDeletionItems.clear();
+    console.log('****** onSave', e, this.pendingSavingItems, this.pendingDeletionItems);
   }
 
   onReload($event: MouseEvent) {
@@ -299,7 +330,7 @@ export class DataTableComponent implements OnInit, OnChanges {
     const r: AttributeInfo[] = Array.from(this.attributeInfoMap.values())
       .sort((a: AttributeInfo, b: AttributeInfo) => a.order - b.order);
     const i: number = r.findIndex((a: AttributeInfo) => a.attribute.id === attribute.id);
-    if ((i < r.length - 2) && (i >= 0) && (r.length >= 2)) {
+    if ((i <= r.length - 2) && (i >= 0) && (r.length >= 2)) {
       const [x, y] = [r[i].order, r[i + 1].order];
       r[i].order = y;
       r[i + 1].order = x;
@@ -311,7 +342,7 @@ export class DataTableComponent implements OnInit, OnChanges {
     const r: AttributeInfo[] = Array.from(this.attributeInfoMap.values())
       .sort((a: AttributeInfo, b: AttributeInfo) => a.order - b.order);
     const i: number = r.findIndex((a: AttributeInfo) => a.attribute.id === attribute.id);
-    if (i < (r.length - 1) && (i > 0) && (r.length >= 2)) {
+    if (i <= (r.length - 1) && (i > 0) && (r.length >= 2)) {
       const [x, y] = [r[i - 1].order, r[i].order];
       r[i].order = x;
       r[i - 1].order = y;
