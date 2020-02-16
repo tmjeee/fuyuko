@@ -20,7 +20,7 @@ import {
   StringValue,
   TextValue,
   Value,
-  VolumeValue, WidthValue, ItemValTypes
+  VolumeValue, WidthValue, ItemValTypes, DATE_FORMAT
 } from '../../model/item.model';
 import {ItemValueAndAttribute, TableItemAndAttribute} from '../../model/item-attribute.model';
 import {
@@ -42,6 +42,7 @@ import {
   getItemVolumeValue, getItemWidthValue
 } from '../../utils/ui-item-value-getter.util';
 import {Pair2Map, doubleSelectToObjectMap} from '../../utils/doubleselect-helper.util';
+import * as moment from 'moment';
 
 
 
@@ -125,7 +126,7 @@ export class DataEditorDialogComponent {
       value: this.formControlTextAttributeValue
     });
 
-    this.formControlNumberAttributeValue = formBuilder.control('', [Validators.required, Validators.pattern('[0-9]*')]);
+    this.formControlNumberAttributeValue = formBuilder.control('', [Validators.required]);
     this.formGroupNumberAttribute = formBuilder.group({
       value: this.formControlNumberAttributeValue
     });
@@ -236,7 +237,9 @@ export class DataEditorDialogComponent {
           dateVal = { type: 'date', value: undefined };
           itemValue.val = dateVal;
         }
-        this.formControlDateAttributeValue.setValue(dateVal.value);
+        const m = moment(dateVal.value, attribute.format ? attribute.format : DATE_FORMAT);
+        console.log('******** date', attribute.format, dateVal.value);
+        this.formControlDateAttributeValue.setValue(m);
         break;
       case 'currency':
         let currencyVal: CurrencyValue = itemValue.val as CurrencyValue;
@@ -328,6 +331,7 @@ export class DataEditorDialogComponent {
   }
 
   onEditDone() {
+    console.log('**** onEditDone ', this.data);
     const attanditem: ItemValueAndAttribute = this.data;
     const attribute: Attribute = attanditem.attribute;
     const value: Value = attanditem.itemValue;

@@ -4,7 +4,7 @@ import {
   CurrencyValue, DATE_FORMAT,
   DateValue, DIMENSION_FORMAT,
   DimensionValue, DoubleSelectValue, HEIGHT_FORMAT, HeightValue,
-  ItemValTypes, LENGTH_FORMAT, LengthValue, NumberValue, SelectValue,
+  ItemValTypes, LENGTH_FORMAT, LengthValue, NUMBER_FORMAT, NumberValue, SelectValue,
   StringValue,
   TextValue, Value, VOLUME_FORMAT,
   VolumeValue, WIDTH_FORMAT, WidthValue
@@ -91,7 +91,8 @@ class NumberItemValueConverter extends AbstractItemValueConverter {
     return `{type: ${i.type} value: ${i.value}}`;
   }
   protected _convertToString(a: Attribute, i: NumberValue): string {
-    return '' + i.value;
+    const f: string = a.format ? a.format : NUMBER_FORMAT;
+    return '' + numeral(i.value).format(f);
   }
   protected _convertToCsv(a: Attribute, i: NumberValue): string {
       return this._convertToString(a, i);
@@ -109,11 +110,17 @@ class DateItemValueConverter extends AbstractItemValueConverter {
     return `{type: ${i.type} value ${i.value}}`;
   }
   protected _convertToString(a: Attribute, i: DateValue): string {
-    const m: moment.Moment = moment(i.value, DATE_FORMAT);
-    if (a.format) {
-      return m.format(a.format);
+    if (i.value) {
+      const m: moment.Moment = moment(i.value, DATE_FORMAT);
+      if (m.isValid()) {
+        if (a.format) {
+          return m.format(a.format);
+        }
+        return m.format(DATE_FORMAT);
+      }
+      return 'Invalid Date';
     }
-    return m.format(DATE_FORMAT);
+    return '';
   }
   protected _convertToCsv(a: Attribute, i: DateValue): string {
       return this._convertToString(a, i);
@@ -158,7 +165,7 @@ class DimensionItemValueConverter extends AbstractItemValueConverter {
   protected _convertToString(a: Attribute, i: DimensionValue): string {
     const f: string = a.format ? a.format : DIMENSION_FORMAT;
     return `w:${numeral(i.width).format(f)} ${i.unit},
-            h:${numeral(i.height).format(f)} ${i.unit}
+            h:${numeral(i.height).format(f)} ${i.unit},
             l:${numeral(i.length).format(f)} ${i.unit}`;
   }
   protected _convertToCsv(a: Attribute, i: DimensionValue): string {

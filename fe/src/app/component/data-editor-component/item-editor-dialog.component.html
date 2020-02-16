@@ -2,27 +2,27 @@
   <form *ngIf="type === 'name'" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label>Name</mat-label>
-      <input type="text" matInput [formControl]="formControlName">
+      <input type="text" [attr.test-field-name]="''" matInput [formControl]="formControlName">
       <mat-hint>Item name</mat-hint>
       <mat-error *ngIf="formControlName?.errors?.required">Item name is required</mat-error>
     </mat-form-field>
     <div class="controls">
-      <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid">Ok</button>
-      <button type="button" mat-flat-button color="primary" (click)="cancel($event)">Cancel</button>
+      <button type="submit" mat-flat-button color="primary" [attr.test-button-popup-ok]="''" [disabled]="formGroup.invalid">Ok</button>
+      <button type="button" mat-flat-button color="primary" [attr.test-button-popup-cancel]="''" (click)="cancel($event)">Cancel</button>
     </div>
   </form>
 
   <form *ngIf="type === 'description'" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label>Description</mat-label>
-      <input type="text" matInput [formControl]="formControlDescription">
+      <input type="text" matInput [attr.test-field-description]="''" [formControl]="formControlDescription">
       <mat-hint>Item name</mat-hint>
       <mat-error *ngIf="formControlDescription?.errors?.required">Item description is required</mat-error>
     </mat-form-field>
 
     <div class="controls">
-      <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid">Ok</button>
-      <button type="button" mat-flat-button color="primary" (click)="cancel($event)">Cancel</button>
+      <button type="submit" mat-flat-button color="primary" [attr.test-button-popup-ok]="''" [disabled]="formGroup.invalid">Ok</button>
+      <button type="button" mat-flat-button color="primary" [attr.test-button-popup-cancel]="''" (click)="cancel($event)">Cancel</button>
     </div>
   </form>
 </div>
