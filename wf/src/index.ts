@@ -4,7 +4,7 @@ export interface Engine {
     register(state: State): Engine;
     endsWith(state: State): Engine;
     init(arg: Argument): Engine;
-    next(): EngineResponse;
+    next(): Promise<EngineResponse>;
 }
 
 export interface EngineResponse {
@@ -52,7 +52,7 @@ export const createEngine = (): Engine => {
 /**
  *     <start> -> step1 -> step2 -> step3 -> <end>
  */
-{
+(async ()=>{
     const state1 = createState(`step1`, () => Promise.resolve(`e1`));
     const state2 = createState(`step2`, () => Promise.resolve(`e2`));
     const state3 = createState(`step3`, () => Promise.resolve(`e3`));
@@ -67,8 +67,8 @@ export const createEngine = (): Engine => {
         .init({} as Argument)
     ;
 
-    while(engine.next().end) {}
-}
+    while(!(await engine.next()).end) {}
+})();
 
 
 /**

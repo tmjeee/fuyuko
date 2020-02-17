@@ -1,8 +1,9 @@
-import {Argument, Engine, EngineResponse, NextState, State} from "./index";
+import {Argument, Engine, EngineResponse, NextState, State, StateProcessFn} from "./index";
 
 export class InternalState implements State, NextState {
 
     name: string;
+    fn: StateProcessFn;
     map: Map<string, State> = new Map();
 
     currentEvent: string;
@@ -26,7 +27,17 @@ export class InternalEngine implements Engine {
     endState: State;
     arg: Argument;
 
-    map: Map<string /* from_state_name_event */, string /* to_state_name */>;
+    transitionMap: Map<string /* from_state_name_event */, string /* to_state_name */>;
+    stateMap: Map<string /* state name */, State>;
+
+    status: 'UNIITIALIZED' | 'INIT' | 'STARTED' | 'ENDED';
+    currentState: State;
+
+    constructor() {
+        this.transitionMap = new Map();
+        this.stateMap = new Map();
+        this.status = 'UNIITIALIZED';
+    }
 
 
     startsWith(state: State): Engine {
@@ -58,16 +69,23 @@ export class InternalEngine implements Engine {
     init(arg: Argument): Engine {
         this.arg = arg;
         for (const state of this.states) {
-            const m: Map<string, State> = (state as InternalState).map;
-            for (const k of m.keys()) {
-                this.map.set(``, ``);
+            const fromState: InternalState = state as InternalState;
+            this.stateMap.set(fromState.name, fromState);
+            const m: Map<string, InternalState> = fromState.map as Map<string, InternalState>;
+            for (const fromStateEvent of m.keys()) {
+                const toState: InternalState = m.get(fromStateEvent);
+                this.transitionMap.set(`${fromState.name}_${fromStateEvent}`, `${toState.name}`);
+                this.stateMap.set(toState.name, toState);
             }
         }
+        this.status = 'INIT';
+        this.currentState = this.startState;
         return this;
     }
 
-    next(): EngineResponse {
+    async next(): Promise<EngineResponse> {
         // todo:
+        const event = await (this.currentState as InternalState).fn();
         return { end: false } as EngineResponse;
     }
 }
