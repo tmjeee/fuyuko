@@ -9,6 +9,10 @@ module.exports = function (config) {
         flag: [
           '--headless'
         ]
+      },
+      ChromeHeadlessCustom: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-gpu']
       }
     },
     basePath: '',
@@ -33,14 +37,8 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeCustom'],
+    browsers: ['ChromeHeadlessCustom'],
     singleRun: false,
     restartOnFileChange: true,
-    customLaunchers: {
-      ChromeHeadlessCustom: {
-        base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu']
-      }
-    }
   });
 };
