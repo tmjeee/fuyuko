@@ -1,30 +1,32 @@
 
 .item-search-component {
-  .advance-search-help {
+  .content {
     margin-top: 10px;
-    table {
-      border-spacing: 10px;
-      border-collapse: collapse;
-      width: 100%;
-      thead {
-        tr {
-          th {
-            text-align: left;
-            vertical-align: top;
-            &:first-child {
-              padding-right: 20px;
+    .advance-search-help {
+      table {
+        border-spacing: 10px;
+        border-collapse: collapse;
+        width: 100%;
+        thead {
+          tr {
+            th {
+              text-align: left;
+              vertical-align: top;
+              &:first-child {
+                padding-right: 20px;
+              }
             }
           }
         }
-      }
-      tbody {
-        tr {
-          td {
-            text-align: left;
-            vertical-align: top;
+        tbody {
+          tr {
+            td {
+              text-align: left;
+              vertical-align: top;
 
-            pre {
-              white-space: pre-line;
+              pre {
+                white-space: pre-line;
+              }
             }
           }
         }

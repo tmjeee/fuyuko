@@ -23,4 +23,10 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         return this;
     }
 
+    search(search: string): ViewDataThumbnailPage {
+        cy.get(`[test-field-data-table-search]`)
+            .clear({force: true})
+            .type(`${search}{enter}`, {force: true});
+        return this;
+    }
 }

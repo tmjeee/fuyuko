@@ -9,7 +9,7 @@
     <mat-card-content>
       <div *ngIf="!done"> Loading ... </div>
       <div *ngIf="done && !itemAndAttributeSet">No Items</div>
-      <ng-container *ngIf="done && itemAndAttributeSet">
+      <ng-container *ngIf="itemAndAttributeSet">
         <app-data-thumbnail [itemAndAttributeSet]="itemAndAttributeSet"
                             (searchEvents)="onDataThumbnailSearchEvent($event)"
                             (events)="onDataThumbnailEvent($event)">

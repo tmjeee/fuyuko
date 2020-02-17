@@ -37,4 +37,10 @@ describe('view-data-thumbnail spec', () => {
             .validateTitle()
         ;
     });
+
+    it ('should do basic search', () => {
+        viewDataThumbnailPage
+            .search(``)
+        ;
+    });
 });

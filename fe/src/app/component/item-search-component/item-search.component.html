@@ -4,19 +4,22 @@
       <ng-template mat-tab-label>
         <span [attr.test-mat-tab-basic-search]="''">Basic Search</span>
       </ng-template>
-      <mat-form-field>
-        <mat-label>Search</mat-label>
-        <input type="text"
-               [attr.test-field-data-table-search]="''"
-               matInput
-               [formControl]="formControlValue"
-               (keydown.enter)="onBasicSearch($event)"
-               placeholder="Search ...">
-        <mat-hint>Type in text to search across all items (name, description) and their attributes</mat-hint>
-      </mat-form-field>
+      <div class="content">
+        <mat-form-field>
+          <mat-label>Search</mat-label>
+          <input type="text"
+                 [attr.test-field-data-table-search]="''"
+                 matInput
+                 [formControl]="formControlValue"
+                 (keydown.enter)="onBasicSearch($event)"
+                 placeholder="Search ...">
+          <mat-hint>Type in text to search across all items (name, description) and their attributes</mat-hint>
+        </mat-form-field>
+      </div>
     </mat-tab>
     <!-- todo: not implemented yet
     <mat-tab label="Advance Search">
+      <div class="content">
       <mat-form-field>
         <mat-label>Advance Search</mat-label>
         <input type="text"
@@ -49,6 +52,7 @@
             </tbody>
           </table>
         </div>
+      </div>
       </div>
     </mat-tab>
     -->
