@@ -122,7 +122,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     verifyAttributeCellOrder(attributeName: string, order: number): ViewDataTablePage {
-        cy.get(`[test-data-table-attribute='${attributeName}']`)
+        cy.get(`[test-data-table-attribute-name='${attributeName}']`)
             .should('have.attr', `test-data-table-attribute-index`, String(order));
         return this;
     }
@@ -194,17 +194,21 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
 
-    verifyAttributeCellValue(itemName: string, attributeName: string, value: string): ViewDataTablePage {
-        cy.get(`[test-data-table-row='${itemName}']`)
-            .find(`[test-data-table-attribute='${attributeName}']`)
-            .find(`[test-data-editor-value]`).should('contain.text', value);
+    verifyAttributeCellValue(itemName: string, attributeName: string, ...value: string[]): ViewDataTablePage {
+        cy.wrap(value).each((e, i, a) => {
+            cy.get(`[test-data-table-row='${itemName}']`)
+                .find(`[test-data-table-attribute='${attributeName}']`)
+                .find(`[test-data-editor-value]`).should('contain.text', value[i]);
+        })
         return this;
     }
 
-    verifyAttributeCellNotValue(itemName: string, attributeName: string, value: string): ViewDataTablePage {
-        cy.get(`[test-data-table-row='${itemName}']`)
-            .find(`[test-data-table-attribute='${attributeName}']`)
-            .find(`[test-data-editor-value]`).should('not.contain.text', value);
+    verifyAttributeCellNotValue(itemName: string, attributeName: string, ...value: string[]): ViewDataTablePage {
+        cy.wrap(value).each((e, i, a) => {
+            cy.get(`[test-data-table-row='${itemName}']`)
+                .find(`[test-data-table-attribute='${attributeName}']`)
+                .find(`[test-data-editor-value]`).should('not.contain.text', value[i]);
+        });
         return this;
     }
 

@@ -1,12 +1,10 @@
 import {LoginPage} from "./page-object/login.page";
 import {ViewDataTablePage} from "./page-object/sub-page-object/view-data-table.page";
 
-describe('view attribute spec', () => {
+describe('view-data-tabular spec', () => {
     const attrs = [
         'string attribute',
         'text attribute',
-        'select attribute',
-        'doubleselect attribute',
         'number attribute',
         'date attribute',
         'currency attribute',
@@ -19,6 +17,7 @@ describe('view attribute spec', () => {
         'select attribute',
         'doubleselect attribute',
     ];
+
 
     let viewDataTablePage: ViewDataTablePage;
 
@@ -65,7 +64,7 @@ describe('view attribute spec', () => {
         ;
     });
 
-    it(`should do column filtering and ordering`, () => {
+    it(`should do column filtering`, () => {
         viewDataTablePage
             .selectBasicSearch()
             .openFilterBox()
@@ -83,6 +82,17 @@ describe('view attribute spec', () => {
                 .checkFilterCheckbox(attrs[i], true)
                 .verifyAttributeCellExists(attrs[i], true)
         });
+    });
+
+    it(`should do column ordering`, () => {
+        viewDataTablePage
+            .selectBasicSearch()
+            .openFilterBox()
+            .verifyFilterBoxOpen(true)
+            .closeFilterBox()
+            .verifyFilterBoxOpen(false)
+            .openFilterBox()
+        ;
 
         // test ordering attributes up and down
         cy.wrap(attrs).each((e, i, a) => {
@@ -332,7 +342,7 @@ describe('view attribute spec', () => {
         // text attribute
         {
             const attributeName = `number attribute`;
-            const attributeValue = Number(Math.random().toFixed(1));
+            const attributeValue = (Math.random().toFixed(1));
             const v = `${attributeValue}`;
 
             viewDataTablePage
@@ -342,7 +352,7 @@ describe('view attribute spec', () => {
                 .verifyDataTableHasItem(itemName, true)
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editNumberValue(attributeValue)
+                .editNumberValue(Number(attributeValue))
                 .clickDone()
 
                 // save
@@ -370,12 +380,12 @@ describe('view attribute spec', () => {
         // number attribute
         {
             const attributeName = `number attribute`;
-            const attributeValue = Number(Math.random().toFixed(1));
+            const attributeValue = (Math.random().toFixed(1));
             const v = `${attributeValue}`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editNumberValue(attributeValue)
+                .editNumberValue(Number(attributeValue))
                 .clickCancel()
                 .verifyAttributeCellExists(attributeName, true)
                 .verifyAttributeCellNotValue(itemName, attributeName, v)
@@ -455,7 +465,7 @@ describe('view attribute spec', () => {
         // text attribute
         {
             const attributeName = `currency attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(2));
+            const attributeValue = ((Math.random() * 10).toFixed(2));
             const attributeUnit = 'AUD'
             const v = `$${attributeValue} ${attributeUnit}`;
 
@@ -466,7 +476,7 @@ describe('view attribute spec', () => {
                 .verifyDataTableHasItem(itemName, true)
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editCurrencyValue(attributeValue, attributeUnit)
+                .editCurrencyValue(Number(attributeValue), attributeUnit)
                 .clickDone()
 
                 // save
@@ -496,13 +506,13 @@ describe('view attribute spec', () => {
         // currency attribute
         {
             const attributeName = `currency attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(2));
+            const attributeValue = ((Math.random() * 10).toFixed(2));
             const attributeUnit = 'AUD'
             const v = `$${attributeValue} ${attributeUnit}`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editCurrencyValue(attributeValue, attributeUnit)
+                .editCurrencyValue(Number(attributeValue), attributeUnit)
                 .clickCancel()
                 .verifyAttributeCellExists(attributeName, true)
                 .verifyAttributeCellNotValue(itemName, attributeName, v)
@@ -522,7 +532,7 @@ describe('view attribute spec', () => {
         // volume attribute
         {
             const attributeName = `volume attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'ml';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -533,7 +543,7 @@ describe('view attribute spec', () => {
                 .verifyDataTableHasItem(itemName, true)
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editVolumeValue(attributeValue, attributeUnit)
+                .editVolumeValue(Number(attributeValue), attributeUnit)
                 .clickDone()
 
                 // save
@@ -567,13 +577,13 @@ describe('view attribute spec', () => {
         // volume attribute
         {
             const attributeName = `volume attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'ml';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editVolumeValue(attributeValue, attributeUnit)
+                .editVolumeValue(Number(attributeValue), attributeUnit)
                 .clickCancel()
                 .verifyAttributeCellExists(attributeName, true)
                 .verifyAttributeCellNotValue(itemName, attributeName, v)
@@ -586,17 +596,21 @@ describe('view attribute spec', () => {
 
 
 
-    it.only(`[dimension attribute] add item, edit attribute and delete item`, () => {
+    it(`[dimension attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
         // dimension attribute
         {
             const attributeName = `dimension attribute`;
-            const attributeLengthValue = Number((Math.random() * 10).toFixed(1));
-            const attributeWidthValue = Number((Math.random() * 10).toFixed(1));
-            const attributeHeightValue = Number((Math.random() * 10).toFixed(1));
+            const attributeLengthValue = ((Math.random() * 10).toFixed(1));
+            const attributeWidthValue = ((Math.random() * 10).toFixed(1));
+            const attributeHeightValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'cm';
-            const v = ` w:${attributeWidthValue} ${attributeUnit},\nh:${attributeHeightValue} ${attributeUnit},\nl:${attributeLengthValue} ${attributeUnit}`;
+            const v = [
+                `w:${attributeWidthValue} ${attributeUnit}`,
+                `h:${attributeHeightValue} ${attributeUnit}`,
+                `l:${attributeLengthValue} ${attributeUnit}`
+            ];
 
             viewDataTablePage
                 // create new item
@@ -605,13 +619,13 @@ describe('view attribute spec', () => {
                 .verifyDataTableHasItem(itemName, true)
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editDimensionValue(attributeLengthValue, attributeWidthValue, attributeHeightValue, attributeUnit)
+                .editDimensionValue(Number(attributeLengthValue), Number(attributeWidthValue), Number(attributeHeightValue), attributeUnit)
                 .clickDone()
 
                 // save
                 .verifySaveEnable(true)
                 .verifyAttributeCellExists(attributeName, true)
-                .verifyAttributeCellValue(itemName, attributeName, v)
+                .verifyAttributeCellValue(itemName, attributeName, ...v)
                 .clickOnSaveItem()
                 .verifySuccessMessageExists()
                 .verifySaveEnable(false)
@@ -639,18 +653,22 @@ describe('view attribute spec', () => {
         // dimension attribute
         {
             const attributeName = `dimension attribute`;
-            const attributeLengthValue = Number((Math.random() * 10).toFixed(1));
-            const attributeWidthValue = Number((Math.random() * 10).toFixed(1));
-            const attributeHeightValue = Number((Math.random() * 10).toFixed(1));
+            const attributeLengthValue = ((Math.random() * 10).toFixed(1));
+            const attributeWidthValue = ((Math.random() * 10).toFixed(1));
+            const attributeHeightValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'cm';
-            const v = ` w:${attributeWidthValue} ${attributeUnit},\nh:${attributeHeightValue} ${attributeUnit},\nl:${attributeLengthValue} ${attributeUnit}`;
+            const v = [
+                `w:${attributeWidthValue} ${attributeUnit}`,
+                `h:${attributeHeightValue} ${attributeUnit}`,
+                `l:${attributeLengthValue} ${attributeUnit}`
+            ];
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editDimensionValue(attributeLengthValue, attributeWidthValue, attributeHeightValue, attributeUnit)
+                .editDimensionValue(Number(attributeLengthValue), Number(attributeWidthValue), Number(attributeHeightValue), attributeUnit)
                 .clickCancel()
                 .verifyAttributeCellExists(attributeName, true)
-                .verifyAttributeCellNotValue(itemName, attributeName, v)
+                .verifyAttributeCellNotValue(itemName, attributeName, ...v)
                 .verifySaveEnable(false)
             ;
         }
@@ -665,7 +683,7 @@ describe('view attribute spec', () => {
         // area attribute
         {
             const attributeName = `area attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'm2';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -676,7 +694,7 @@ describe('view attribute spec', () => {
                 .verifyDataTableHasItem(itemName, true)
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editAreaValue(attributeValue, attributeUnit)
+                .editAreaValue(Number(attributeValue), attributeUnit)
                 .clickDone()
 
                 // save
@@ -708,13 +726,13 @@ describe('view attribute spec', () => {
         // area attribute
         {
             const attributeName = `area attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'm2';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editAreaValue(attributeValue, attributeUnit)
+                .editAreaValue(Number(attributeValue), attributeUnit)
                 .clickCancel()
                 .verifyAttributeCellExists(attributeName, true)
                 .verifyAttributeCellNotValue(itemName, attributeName, v)
@@ -732,7 +750,7 @@ describe('view attribute spec', () => {
         // length attribute
         {
             const attributeName = `length attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -743,7 +761,7 @@ describe('view attribute spec', () => {
                 .verifyDataTableHasItem(itemName, true)
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editLengthValue(attributeValue, attributeUnit)
+                .editLengthValue(Number(attributeValue), attributeUnit)
                 .clickDone()
 
                 // save
@@ -773,13 +791,13 @@ describe('view attribute spec', () => {
         // length attribute
         {
             const attributeName = `length attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editLengthValue(attributeValue, attributeUnit)
+                .editLengthValue(Number(attributeValue), attributeUnit)
                 .clickCancel()
                 .verifyAttributeCellExists(attributeName, true)
                 .verifyAttributeCellNotValue(itemName, attributeName, v)
@@ -797,7 +815,7 @@ describe('view attribute spec', () => {
         // width attribute
         {
             const attributeName = `width attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -808,7 +826,7 @@ describe('view attribute spec', () => {
                 .verifyDataTableHasItem(itemName, true)
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editWidthValue(attributeValue, attributeUnit)
+                .editWidthValue(Number(attributeValue), attributeUnit)
                 .clickDone()
 
                 // save
@@ -838,13 +856,13 @@ describe('view attribute spec', () => {
         // width attribute
         {
             const attributeName = `width attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editWidthValue(attributeValue, attributeUnit)
+                .editWidthValue(Number(attributeValue), attributeUnit)
                 .clickCancel()
                 .verifyAttributeCellExists(attributeName, true)
                 .verifyAttributeCellNotValue(itemName, attributeName, v)
@@ -862,7 +880,7 @@ describe('view attribute spec', () => {
         // height attribute
         {
             const attributeName = `height attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -873,7 +891,7 @@ describe('view attribute spec', () => {
                 .verifyDataTableHasItem(itemName, true)
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editHeightValue(attributeValue, attributeUnit)
+                .editHeightValue(Number(attributeValue), attributeUnit)
                 .clickDone()
 
                 // save
@@ -904,13 +922,13 @@ describe('view attribute spec', () => {
         // height attribute
         {
             const attributeName = `height attribute`;
-            const attributeValue = Number((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
-                .editHeightValue(attributeValue, attributeUnit)
+                .editHeightValue(Number(attributeValue), attributeUnit)
                 .clickCancel()
                 .verifyAttributeCellExists(attributeName, true)
                 .verifyAttributeCellNotValue(itemName, attributeName, v)
@@ -1030,7 +1048,7 @@ describe('view attribute spec', () => {
 
 
 
-    it ('[doubleselect attribute] edit and cancel should not be saveable', () => {
+    it('[doubleselect attribute] edit and cancel should not be saveable', () => {
         const itemName = `Item-1`;
 
         // doubleselect attribute
@@ -1038,7 +1056,7 @@ describe('view attribute spec', () => {
             const attributeName = `doubleselect attribute`;
             const attributeValue1 = `key2`
             const attributeValue2 = `xkey22`
-            const v = `value2-xvalue22`;
+            const v = `value2 - xvalue22`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()

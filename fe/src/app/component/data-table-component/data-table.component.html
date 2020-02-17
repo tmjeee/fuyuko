@@ -98,8 +98,10 @@
 
       <ng-container *ngFor="let attribute of itemAndAttributeSet.attributes; index as i;">
         <ng-container [matColumnDef]="''+attribute.id">
-          <mat-header-cell class="attribute-header" *matHeaderCellDef>{{attribute.name}}</mat-header-cell>
-          <mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-data-table-attribute-index]="i" [attr.test-data-table-attribute]="attribute.name">
+          <mat-header-cell class="attribute-header" *matHeaderCellDef
+                           [attr.test-data-table-attribute-name]="attribute.name"
+                           [attr.test-data-table-attribute-index]="i" >{{attribute.name}}</mat-header-cell>
+          <mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-data-table-attribute]="attribute.name">
             <app-data-editor [itemValueAndAttribute]="{itemValue: getItemValue(tableItem, attribute), attribute: attribute }"
                              (events)="onDataEditEvent($event, tableItem)">
             </app-data-editor>
