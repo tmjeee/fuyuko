@@ -37,7 +37,7 @@ describe('item-to-table-items.util.ts', () => {
     ];
 
     const tableItems: TableItem[] = toTableItem(items);
-    console.log(util.inspect(tableItems, {depth: 1000}));
+    // console.log(util.inspect(tableItems, {depth: 1000}));
   });
 
 
@@ -63,6 +63,6 @@ describe('item-to-table-items.util.ts', () => {
   ];
 
   const items: Item[] = toItem(tableItems);
-  console.log(util.inspect(items, {depth: 100}));
+  // console.log(util.inspect(items, {depth: 100}));
   });
 });
