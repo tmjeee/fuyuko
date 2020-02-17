@@ -2,6 +2,7 @@ import {Argument, Engine, EngineResponse, NextState, State} from "./index";
 
 export class InternalState implements State, NextState {
 
+    name: string;
     map: Map<string, State> = new Map();
 
     currentEvent: string;
@@ -25,7 +26,7 @@ export class InternalEngine implements Engine {
     endState: State;
     arg: Argument;
 
-    map: Map<string, State>;
+    map: Map<string /* from_state_name_event */, string /* to_state_name */>;
 
 
     startsWith(state: State): Engine {
@@ -57,7 +58,9 @@ export class InternalEngine implements Engine {
     init(arg: Argument): Engine {
         this.arg = arg;
         for (const state of this.states) {
-            for (const e of (state as InternalState).map.keys()) {
+            const m: Map<string, State> = (state as InternalState).map;
+            for (const k of m.keys()) {
+                this.map.set(``, ``);
             }
         }
         return this;
