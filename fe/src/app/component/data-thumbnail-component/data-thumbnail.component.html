@@ -14,22 +14,22 @@
 
   <!-- thumbnails -->
   <div class="container">
-    <div class="grid" *ngFor="let item of itemAndAttributeSet.items; index as i" [attr.test-grid-item-name]="item.name" [attr.test-grid-item-index]="i">
+    <div class="grid" *ngFor="let item of itemAndAttributeSet.items; index as i" [attr.test-thumbnail-item-name]="item.name" [attr.test-thumbnail-item-index]="i">
       <div class="controls">
-        <mat-checkbox [attr.test-checkbox-item]="item.name" (change)="onCheckboxChangeEvent($event, item)"></mat-checkbox>
-        <mat-icon [attr.test-icon-edit-item]="item.name" color="primary" (click)="editItem(item)">edit</mat-icon>
+        <mat-checkbox [attr.test-checkbox-thumbnail-item]="item.name" (change)="onCheckboxChangeEvent($event, item)"></mat-checkbox>
+        <mat-icon [attr.test-icon-thumbnail-edit-item]="item.name" color="primary" (click)="editItem(item)">edit</mat-icon>
       </div>
       <div class="carousel">
         <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Name</mat-label>
-        <app-item-editor [item]="item" [type]="'name'" (events)="onItemEditorEvent($event)"></app-item-editor>
+        <app-item-editor [attr.test-item-editor]="'name'" [item]="item" [type]="'name'" (events)="onItemEditorEvent($event)"></app-item-editor>
         <mat-hint class="mat-small mat-hint">Item name</mat-hint>
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Description</mat-label>
-        <app-item-editor [item]="item" [type]="'description'" (events)="onItemEditorEvent($event)"></app-item-editor>
+        <app-item-editor [attr.test-item-editor]="'description'" [item]="item" [type]="'description'" (events)="onItemEditorEvent($event)"></app-item-editor>
         <mat-hint class="mat-small mat-hint">Item description</mat-hint>
       </div>
       <div class="attribute" *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index">

@@ -36,7 +36,7 @@ describe('item-to-table-items.util.ts', () => {
         ]} as Item,
     ];
 
-    const tableItems: TableItem[] = toTableItem(items);
+    // const tableItems: TableItem[] = toTableItem(items);
     // console.log(util.inspect(tableItems, {depth: 1000}));
   });
 
@@ -62,7 +62,7 @@ describe('item-to-table-items.util.ts', () => {
   {id: 8, name: '', description: '', images: [], depth: 0, rootParentId: undefined, parentId: undefined, 1: { attributeId: 1, val: { type: 'string', value: 's2' } as StringValue} as Value } as TableItem,
   ];
 
-  const items: Item[] = toItem(tableItems);
+  // const items: Item[] = toItem(tableItems);
   // console.log(util.inspect(items, {depth: 100}));
   });
 });

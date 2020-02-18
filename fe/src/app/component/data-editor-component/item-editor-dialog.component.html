@@ -1,4 +1,4 @@
-<div class="item-editor-dialog-component">
+<div class="item-editor-dialog-component" [attr.test-popup-dialog-title="'item-editor-dialog-popup'">
   <form *ngIf="type === 'name'" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label>Name</mat-label>
