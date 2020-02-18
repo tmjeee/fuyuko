@@ -19,6 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: cypress-io/github-action@v1
+        working-directory: ./end2end
         with:
           browser: chrome
           headless: true
