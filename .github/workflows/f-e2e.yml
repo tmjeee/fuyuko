@@ -1,28 +1,28 @@
-name: f-e2e
+#name: f-e2e
 
-on:
-  push:
-    branches:
-      - master
-      - angular9
+#on:
+#  push:
+#    branches:
+#      - master
+#      - angular9
 
 
-jobs:
-  build:
+#jobs:
+#  build:
 
-    runs-on: ubuntu-latest
+#    runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x]
+#    strategy:
+#      matrix:
+#        node-version: [12.x]
 
-    steps:
-      - uses: actions/checkout@v1
-      - uses: cypress-io/github-action@v1
-        with:
-          browser: chrome
-          headless: true
-          spec: end2end/cypress/integration/*.spec.js
-        working-directory: ./end2end
-        env:
-          CI: true
+#    steps:
+#      - uses: actions/checkout@v1
+#      - uses: cypress-io/github-action@v1
+#        with:
+#          browser: chrome
+#          headless: true
+#          spec: end2end/cypress/integration/*.spec.js
+#        working-directory: ./end2end
+#        env:
+#          CI: true
