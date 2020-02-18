@@ -1,4 +1,4 @@
-name: f-fe
+name: f-e2e
 
 on:
   push:
