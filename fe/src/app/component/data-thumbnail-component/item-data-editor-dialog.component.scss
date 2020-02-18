@@ -1,11 +1,11 @@
 .item-data-editor-dialog-component {
+  overflow-y: hidden;
   .form {
-    height: 60vh;
-    width: 50vh;
+    width: 100%;
     overflow-y: scroll;
   }
   .control {
-    margin-top: 10px;
+    width: 100%;
     button:not(:last-child) {
       margin-right: 5px;
     }

@@ -54,12 +54,16 @@ describe('view-data-thumbnail spec', () => {
         viewDataThumbnailPage
             .clickAddThumbnail(itemName)
             .verifyThumbnailsHasItem(itemName, true)
-            .clickDeleteThumnail([itemName])
+            .clickOnSave()
+            .verifySuccessMessageExists()
+            .clickOnDeleteThumbnail([itemName])
+            .clickOnSave()
+            .verifySuccessMessageExists()
             .verifyThumbnailsHasItem(itemName, false)
         ;
     });
 
-    it('should change name / description of thumbnail', ()=> {
+    it.only('should change name / description of thumbnail', ()=> {
         const itemName = `Test-Item-${Math.random()}`;
         const newItemName = `New-Test-Item-${Math.random()}`;
         viewDataThumbnailPage

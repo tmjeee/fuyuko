@@ -46,17 +46,24 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
 
     clickAddThumbnail(newItemName: string): ViewDataThumbnailPage {
         cy.get(`[test-button-add-item]`).click({force: true});
-        cy.get(`[test-thumbnail-item-index='0']`)
-            .find(`[test-item-editor='name']`)
-            .find(`[test-item-editor-value='name']`).click({force: true});
-        cy.get(`[test-field-name]`)
+        cy.get(`[test-popup-dialog-title='item-data-editor-popup']`)
+            .find(`[test-item-editor-value='name']`)
+            .click({force: true});
+        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
+            .find(`[test-field-name]`)
             .clear({force: true})
-            .type(`${newItemName}{enter}`, {force: true});
-        cy.get(`[test-button-popup-ok]`).click({force: true});
+            .type(`${newItemName}`, {force: true})
+        cy.get(`[test-button-item-editor-popup-ok]`)
+            .click({force: true})
+        cy.wait(100);
+        cy.get(`[test-popup-dialog-title='item-data-editor-popup']`)
+            .find(`[test-button-item-data-editor-popup-ok]`)
+            .click({force: true})
+        ;
         return this;
     }
 
-    clickDeleteThumnail(itemNames: string[]): ViewDataThumbnailPage {
+    clickOnDeleteThumbnail(itemNames: string[]): ViewDataThumbnailPage {
         cy.wrap(itemNames).each((e, i, a) => {
             cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-checkbox-thumbnail-item='${itemNames[i]}'].mat-checkbox-checked`).length;
@@ -97,5 +104,15 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             .find(`[test-data-editor-value='${attributeName}']`)
             .click({force: true});
         return new ViewDataThumbnailAttributePopupPage();
+    }
+
+    clickOnSave(): ViewDataThumbnailPage {
+        cy.get(`[test-button-save-items]`).click({force: true});
+        return this;
+    }
+
+    clickOnReload(): ViewDataThumbnailPage {
+        cy.get(`[test-button-reload]`).click({force: true});
+        return this;
     }
 }

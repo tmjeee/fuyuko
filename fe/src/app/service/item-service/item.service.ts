@@ -35,7 +35,7 @@ export class ItemService {
   }
 
   saveItems(viewId: number, items: Item[]): Observable<ApiResponse> {
-      return this.httpClient.post<ApiResponse>(URL_UPDATE_ITEMS().replace('viewId', String(viewId)), {
+      return this.httpClient.post<ApiResponse>(URL_UPDATE_ITEMS().replace(':viewId', String(viewId)), {
       items
     });
   }
