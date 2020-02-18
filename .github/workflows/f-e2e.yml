@@ -22,5 +22,6 @@ jobs:
         with:
           browser: chrome
           headless: true
+          spec: end2end/cypress/integration/*.spec.js
         env:
           CI: true
