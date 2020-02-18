@@ -6,36 +6,37 @@
 
   <!-- main control -->
   <div class="main-control">
-    <button type="button" (click)="addItem($event)" color="primary" mat-flat-button>Add</button>
-    <button type="button" (click)="save($event)" [disabled]="!canSave()" color="primary" mat-flat-button>Save</button>
-    <button type="button" (click)="delete($event)" [disabled]="!canDelete()" color="primary" mat-flat-button>Delete</button>
-    <button type="button" (click)="reload($event)" color="primary" mat-flat-button>Reload</button>
+    <button type="button" [attr.test-button-add-item]="''" (click)="addItem($event)" color="primary" mat-flat-button>Add</button>
+    <button type="button" [attr.test-button-save-items]="''" (click)="save($event)" [disabled]="!canSave()" color="primary" mat-flat-button>Save</button>
+    <button type="button" [attr.test-button-delete-items]="''" (click)="delete($event)" [disabled]="!canDelete()" color="primary" mat-flat-button>Delete</button>
+    <button type="button" [attr.test-button-reload]="''" (click)="reload($event)" color="primary" mat-flat-button>Reload</button>
   </div>
 
   <!-- thumbnails -->
   <div class="container">
-    <div class="grid" *ngFor="let item of itemAndAttributeSet.items">
+    <div class="grid" *ngFor="let item of itemAndAttributeSet.items; index as i" [attr.test-thumbnail-item-name]="item.name" [attr.test-thumbnail-item-index]="i">
       <div class="controls">
-        <mat-checkbox (change)="onCheckboxChangeEvent($event, item)"></mat-checkbox>
-        <mat-icon color="primary" (click)="editItem(item)">edit</mat-icon>
+        <mat-checkbox [attr.test-checkbox-thumbnail-item]="item.name" (change)="onCheckboxChangeEvent($event, item)"></mat-checkbox>
+        <mat-icon [attr.test-icon-thumbnail-edit-item]="item.name" color="primary" (click)="editItem(item)">edit</mat-icon>
       </div>
       <div class="carousel">
         <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Name</mat-label>
-        <app-item-editor [item]="item" [type]="'name'" (events)="onItemEditorEvent($event)"></app-item-editor>
+        <app-item-editor [attr.test-item-editor]="'name'" [item]="item" [type]="'name'" (events)="onItemEditorEvent($event)"></app-item-editor>
         <mat-hint class="mat-small mat-hint">Item name</mat-hint>
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Description</mat-label>
-        <app-item-editor [item]="item" [type]="'description'" (events)="onItemEditorEvent($event)"></app-item-editor>
+        <app-item-editor [attr.test-item-editor]="'description'" [item]="item" [type]="'description'" (events)="onItemEditorEvent($event)"></app-item-editor>
         <mat-hint class="mat-small mat-hint">Item description</mat-hint>
       </div>
       <div class="attribute" *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index">
         <ng-container *ngIf="i < 2">
           <mat-label class="mat-caption mat-hint">{{attribute.name}}</mat-label>
           <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute }"
+                           [attr.test-data-editor]="attribute.name"
                             (events)="onDataEditorEvent($event, item)">
           </app-data-editor>
           <mat-hint class="mat-caption mat-hint">{{attribute.description}}</mat-hint>
@@ -44,15 +45,16 @@
           <div *ngIf="isShowMore(item)">
             <mat-label class="mat-caption mat-hint">{{attribute.name}}</mat-label>
             <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute }"
-              (events)="onDataEditorEvent($event, item)">
+                             [attr.test-data-editor]="attribute.name"
+                             (events)="onDataEditorEvent($event, item)">
             </app-data-editor>
             <mat-hint class="mat-caption mat-hint">{{attribute.description}}</mat-hint>
           </div>
         </ng-container>
       </div>
       <div><a href="#" class="show-more-link mat-hint mat-caption" (click)="showMore($event, item)">
-        <ng-container *ngIf="isShowMore(item)">Show less ...</ng-container>
-        <ng-container *ngIf="!isShowMore(item)">Show more ...</ng-container>
+        <ng-container *ngIf="isShowMore(item)"><span [attr.test-link-show-less]="item.name">Show less ...</span></ng-container>
+        <ng-container *ngIf="!isShowMore(item)"><span [attr.test-link-show-more]="item.name">Show more ...</span></ng-container>
       </a></div>
     </div>
   </div>

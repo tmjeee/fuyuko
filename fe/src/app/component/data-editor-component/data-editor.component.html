@@ -1,6 +1,6 @@
 
-<div class="data-editor-component">
-  <span [attr.test-data-editor-value]="itemValueAndAttribute.attribute.name" (click)="onItemAttributeValueClicked($event)">
+<div class="data-editor-component" fxLayout="column">
+  <span [attr.test-data-editor-value]="itemValueAndAttribute.attribute.name" fxFlex="1 1 20px" (click)="onItemAttributeValueClicked($event)">
       <!--
       <input type="text" [disabled]="false" [readOnly]="true"
              value="{{itemValueAndAttribute?.itemValue | itemAttributeValueAsString:itemValueAndAttribute.attribute}}">

@@ -6,9 +6,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {ItemSearchModule} from '../item-search-component/item-search.module';
-import {CarouselComponent} from '../carousel-component/carousel.component';
 import {ItemDataEditorDialogComponent} from './item-data-editor-dialog.component';
 import {CarouselModule} from '../carousel-component/carousel.module';
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 
 @NgModule({
@@ -21,6 +21,7 @@ import {CarouselModule} from '../carousel-component/carousel.module';
     DataEditorModule,
     ItemSearchModule,
     CarouselModule,
+    FlexLayoutModule,
   ],
   declarations: [
     DataThumbnailComponent,

@@ -1,10 +1,10 @@
 
 export interface Engine {
-    startsWith: (state: State) => Engine;
-    register: (state: State) => Engine;
-    endsWith: (state: State) => Engine;
-    init: () => Engine;
-    next: () => EngineResponse;
+    startsWith(state: State): Engine;
+    register(state: State): Engine;
+    endsWith(state: State): Engine;
+    init(arg: Argument): Engine;
+    next(): Promise<EngineResponse>;
 }
 
 export interface EngineResponse {
@@ -15,13 +15,13 @@ export interface Argument {
     [key: string]: any;
 }
 
-export interface StepProcessFn  {
+export interface StateProcessFn  {
     ():  Promise<string> | null | undefined;
 }
 
 export abstract class Step {
     abstract arguments(): Argument;
-    abstract process(): StepProcessFn
+    abstract process(): StateProcessFn
 }
 
 export interface Index {
@@ -30,37 +30,32 @@ export interface Index {
 
 
 export interface State {
-    on: (event?: string) => InternalState1;
+    on(event?: string): NextState;
 }
 
-export interface InternalState1 {
-    to: (nextState: State) => State;
+export interface NextState {
+    to(nextState: State): State;
 }
 
 
-export const createState = (step: Step): State => {
+export const createState = (name: string, fn?: StateProcessFn): State => {
+    // todo:
     return {} as State;
 }
 
-export const createStep = (processFn?: StepProcessFn): Step => {
-    return {} as Step;
-}
 
 export const createEngine = (): Engine => {
+   // todo:
    return {} as Engine;
 }
 
 /**
  *     <start> -> step1 -> step2 -> step3 -> <end>
  */
-{
-    const step1 = createStep();
-    const step2 = createStep();
-    const step3 = createStep();
-
-    const state1 = createState(step1)
-    const state2 = createState(step2)
-    const state3 = createState(step3)
+(async ()=>{
+    const state1 = createState(`step1`, () => Promise.resolve(`e1`));
+    const state2 = createState(`step2`, () => Promise.resolve(`e2`));
+    const state3 = createState(`step3`, () => Promise.resolve(`e3`));
 
     state1.on().to(state2);
     state2.on().to(state3);
@@ -69,11 +64,11 @@ export const createEngine = (): Engine => {
         .startsWith(state1)
         .register(state2)
         .endsWith(state3)
-        .init()
+        .init({} as Argument)
     ;
 
-    while(engine.next().end) {}
-}
+    while(!(await engine.next()).end) {}
+})();
 
 
 /**
@@ -82,21 +77,15 @@ export const createEngine = (): Engine => {
  *                    \-(*)------>  step4 +
  */
 {
-    const step1 = createStep();
-    const step2 = createStep();
-    const step3 = createStep();
-    const step4 = createStep();
-    const step5 = createStep();
-
-    const state1 = createState(step1);
-    const state2 = createState(step2);
-    const state3 = createState(step3);
-    const state4 = createState(step4);
-    const state5 = createState(step5);
+    const state1 = createState(`step1`, () => Promise.resolve('e1'));
+    const state2 = createState(`step2`, () => Promise.resolve('e2'));
+    const state3 = createState(`step3`, () => Promise.resolve('e3'));
+    const state4 = createState(`step4`, () => Promise.resolve('e4'));
+    const state5 = createState(`step5`, () => Promise.resolve('e5'));
 
     state1
-        .on('event1').to(state2)
-        .on('event2').to(state2)
+        .on('e1').to(state2)
+        .on('e2').to(state2)
         .on().to(state4);
     state2.on().to(state5);
     state3.on().to(state5);
@@ -108,6 +97,6 @@ export const createEngine = (): Engine => {
         .register(state3)
         .register(state4)
         .endsWith(state5)
-        .init()
+        .init({} as Argument)
     ;
 }

@@ -21,6 +21,9 @@
       width: 300px;
       padding: 5px;
       .controls {
+        .mat-icon {
+          cursor: pointer;
+        }
         display: flex;
         justify-content: flex-start;
         align-items: center;

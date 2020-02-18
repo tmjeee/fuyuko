@@ -1,6 +1,10 @@
-name: Node.js CI
+name: f-be
 
-on: []
+on:
+  push:
+    branches:
+      - master
+      - angular9
 
 jobs:
   build:
@@ -13,13 +17,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: f-be with nodejs ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd be
-    - run: npm install
-    - run: npm run build --if-present
-    - run: npm run test
+    - run: cd be && npm install
+    - run: cd be && npm run build --if-present
+    - run: cd be && npm run test
       env:
         CI: true

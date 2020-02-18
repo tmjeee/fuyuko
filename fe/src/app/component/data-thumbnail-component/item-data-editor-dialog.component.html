@@ -1,5 +1,5 @@
-<div class="item-data-editor-dialog-component">
-  <div class="form">
+<div class="item-data-editor-dialog-component" [attr.test-popup-dialog-title]="'item-data-editor-popup'" fxLayout="column" fxLayoutAlign="center center">
+  <div class="form" fxFlex="1 0 75vh">
     <div>
       <mat-label class="mat-hint mat-small">Name</mat-label>
       <app-item-editor [item]="item" [type]="'name'"
@@ -25,8 +25,8 @@
     </div>
   </div>
 
-  <div class="control">
-    <button type="button" mat-flat-button color="primary" (click)="onSubmit($event)" [disabled]="!hasChange">Ok</button>
-    <button type="button" mat-flat-button color="primary" (click)="onCancel($event)">Cancel</button>
+  <div class="control" fxFlex="0 0 10vh" fxLayout="row" fxLayoutAlign="start center">
+    <button type="button" [attr.test-button-item-data-editor-popup-ok]="''" mat-flat-button color="primary" (click)="onSubmit($event)" [disabled]="!hasChange">Ok</button>
+    <button type="button" [attr.test-button-item-data-editor-popup-cancel]="''" mat-flat-button color="primary" (click)="onCancel($event)">Cancel</button>
   </div>
 </div>
