@@ -44,6 +44,22 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         return this;
     }
 
+    verifyThumbnailItemHasDescription(itemName: string, description: string): ViewDataThumbnailPage {
+        cy.get(`[test-thumbnail-item-name='${itemName}']`)
+            .find(`[test-item-editor='description']`)
+            .find(`[test-item-editor-value='description']`).should('contain', description);
+        return this;
+    }
+
+    verifyThumbnailItemHasAttribute(itemName: string, attributeName: string, value: string[]): ViewDataThumbnailPage {
+        cy.wrap(value).each((e, i, a) => {
+            cy.get(`[test-thumbnail-item-name='${itemName}']`)
+                .find(`[test-data-editor='${attributeName}']`)
+                .find(`[test-item-editor-value='${attributeName}']`).should('contain', value[i]);
+        });
+        return this;
+    }
+
     clickAddThumbnail(newItemName: string): ViewDataThumbnailPage {
         cy.get(`[test-button-add-item]`).click({force: true});
         cy.get(`[test-popup-dialog-title='item-data-editor-popup']`)
@@ -63,7 +79,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         return this;
     }
 
-    clickOnDeleteThumbnail(itemNames: string[]): ViewDataThumbnailPage {
+    clickDeleteThumbnail(itemNames: string[]): ViewDataThumbnailPage {
         cy.wrap(itemNames).each((e, i, a) => {
             cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-checkbox-thumbnail-item='${itemNames[i]}'].mat-checkbox-checked`).length;
@@ -88,6 +104,40 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             .find(`[test-item-editor-value='name']`)
             .click({force: true});
         return new ViewDataThumbnailItemPopupPage();
+    }
+
+    clickItemShowMore(itemName: string): ViewDataThumbnailPage {
+        cy.get(`[test-thumbnail-item-name='${itemName}']`).then((_) => {
+            const l = _.find(`[test-link-show-more]`).length;
+            if (!l) { // exists
+               cy.get(`[test-thumbnail-item-name='${itemName}']`)
+                   .find(`[test-link-show-more]`).click({force: true})
+            }
+        });
+        return this;
+    }
+
+    clickItemShowLess(itemName: string): ViewDataThumbnailPage {
+        cy.get(`[test-thumbnail-item-name='${itemName}']`).then((_) => {
+            const l = _.find(`[test-link-show-less]`).length;
+            if (!l) { // exists
+                cy.get(`[test-thumbnail-item-name='${itemName}']`)
+                    .find(`[test-link-show-less]`).click({force: true})
+            }
+        });
+        return this;
+    }
+
+    verifyIsShowLess(itemName: string): ViewDataThumbnailPage {
+        cy.get(`[test-thumbnail-item-name='${itemName}']`)
+            .find(`[test-data-editor]`).should('have.length.lte', 2);
+        return this;
+    }
+
+    verifyIsShowMore(itemName: string): ViewDataThumbnailPage {
+        cy.get(`[test-thumbnail-item-name='${itemName}']`)
+            .find(`[test-data-editor]`).should('have.length.gt', 2);
+        return this;
     }
 
     clickThumbnailItemDescription(itemName: string): ViewDataThumbnailItemPopupPage {

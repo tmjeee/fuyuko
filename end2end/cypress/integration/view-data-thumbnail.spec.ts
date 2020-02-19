@@ -56,23 +56,58 @@ describe('view-data-thumbnail spec', () => {
             .verifyThumbnailsHasItem(itemName, true)
             .clickOnSave()
             .verifySuccessMessageExists()
-            .clickOnDeleteThumbnail([itemName])
+            .clickDeleteThumbnail([itemName])
             .clickOnSave()
             .verifySuccessMessageExists()
             .verifyThumbnailsHasItem(itemName, false)
         ;
     });
 
+    //////////////////////////////////
+
+    it (`should show more / show less when clicked`, () => {
+        const itemName = `Item-2`;
+        viewDataThumbnailPage
+            .clickItemShowMore(itemName)
+            .verifyIsShowMore(itemName)
+            .clickItemShowLess(itemName)
+            .verifyIsShowLess(itemName)
+    });
+
+
+
     it.only('should change name / description of thumbnail', ()=> {
         const itemName = `Test-Item-${Math.random()}`;
         const newItemName = `New-Test-Item-${Math.random()}`;
+        const description = `New-Test-Item-Description-${Math.random()}`;
         viewDataThumbnailPage
+            // verify name
             .clickAddThumbnail(itemName)
             .clickThumbnailItemName(itemName)
             .verifyPopupTitle()
             .editItemName(newItemName)
             .clickOk()
             .verifyThumbnailsHasItem(newItemName, true)
+            .verifyThumbnailsHasItem(itemName, false)
+            .clickOnSave()
+            .verifySuccessMessageExists()
+            .verifyThumbnailsHasItem(newItemName, true)
+            .verifyThumbnailsHasItem(itemName, false)
+
+            // verify description
+            .clickThumbnailItemName(newItemName)
+            .verifyPopupTitle()
+            .editItemDescription(description)
+            .clickOk()
+            .verifyThumbnailItemHasDescription(newItemName, description)
+            .clickOnSave()
+            .verifySuccessMessageExists()
+            .verifyThumbnailItemHasDescription(newItemName, description)
+
+            // delete item
+            .clickDeleteThumbnail([itemName])
+            .clickOnSave()
+            .verifySuccessMessageExists()
             .verifyThumbnailsHasItem(itemName, false)
         ;
     });
