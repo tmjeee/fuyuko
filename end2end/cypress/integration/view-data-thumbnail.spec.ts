@@ -54,16 +54,15 @@ describe('view-data-thumbnail spec', () => {
         viewDataThumbnailPage
             .clickAddThumbnail(itemName)
             .verifyThumbnailsHasItem(itemName, true)
-            .clickOnSave()
+            .clickSave()
             .verifySuccessMessageExists()
             .clickDeleteThumbnail([itemName])
-            .clickOnSave()
+            .clickSave()
             .verifySuccessMessageExists()
             .verifyThumbnailsHasItem(itemName, false)
         ;
     });
 
-    //////////////////////////////////
 
     it (`should show more / show less when clicked`, () => {
         const itemName = `Item-2`;
@@ -76,7 +75,7 @@ describe('view-data-thumbnail spec', () => {
 
 
 
-    it.only('should change name / description of thumbnail', ()=> {
+    it('should change name / description of thumbnail', ()=> {
         const itemName = `Test-Item-${Math.random()}`;
         const newItemName = `New-Test-Item-${Math.random()}`;
         const description = `New-Test-Item-Description-${Math.random()}`;
@@ -89,27 +88,74 @@ describe('view-data-thumbnail spec', () => {
             .clickOk()
             .verifyThumbnailsHasItem(newItemName, true)
             .verifyThumbnailsHasItem(itemName, false)
-            .clickOnSave()
+            .clickSave()
             .verifySuccessMessageExists()
             .verifyThumbnailsHasItem(newItemName, true)
             .verifyThumbnailsHasItem(itemName, false)
 
             // verify description
-            .clickThumbnailItemName(newItemName)
+            .clickThumbnailItemDescription(newItemName)
             .verifyPopupTitle()
             .editItemDescription(description)
             .clickOk()
             .verifyThumbnailItemHasDescription(newItemName, description)
-            .clickOnSave()
+            .clickSave()
             .verifySuccessMessageExists()
             .verifyThumbnailItemHasDescription(newItemName, description)
 
             // delete item
-            .clickDeleteThumbnail([itemName])
-            .clickOnSave()
+            .clickDeleteThumbnail([newItemName])
+            .clickSave()
             .verifySuccessMessageExists()
             .verifyThumbnailsHasItem(itemName, false)
         ;
     });
 
+    it(`[string attribute] should change attributes of thumbnail`, () => {
+
+        const itemName = `Test-Item-${Math.random()}`;
+        const attributeName = `string attribute`;
+        const value = `string-value-${Math.random()}`;
+
+        viewDataThumbnailPage
+            .clickAddThumbnail(itemName)
+            .clickThumbnailItemAttribute(itemName, attributeName)
+            .verifyPopupTitle()
+            .editStringAttribute(value)
+            .clickCancel(viewDataThumbnailPage)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, attributeName, [value])
+
+            .clickThumbnailItemAttribute(itemName, attributeName)
+            .editStringAttribute(value)
+            .clickOk(viewDataThumbnailPage)
+            .clickSave()
+            .verifySuccessMessageExists()
+            .verifyThumbnailItemHasAttributeValue(itemName, attributeName, [value])
+        ;
+    });
+
+
+    it.only (`[string attribute] should allow editing of attributes through edit icon`, () => {
+
+        const itemName = `Test-Item-${Math.random()}`;
+        const attributeName = `string attribute`;
+        const value = `string-value-${Math.random()}`;
+
+        viewDataThumbnailPage
+            .clickAddThumbnail(itemName)
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editStringAttribute(attributeName, value)
+            .clickCancel()
+            .verifyThumbnailItemHasNoAttributeValue(itemName, attributeName, [value])
+
+            // .clickEditThumbnailIcon(`Item-2`)
+            // .verifyPopupTitle()
+            // .editStringAttribute(attributeName, value)
+            // .clickOk()
+            // .clickSave()
+            // .verifySuccessMessageExists()
+            // .verifyThumbnailItemHasAttributeValue(itemName, attributeName, [value])
+        ;
+    });
 });

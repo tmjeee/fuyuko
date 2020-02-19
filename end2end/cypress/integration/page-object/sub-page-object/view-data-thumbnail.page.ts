@@ -51,18 +51,28 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         return this;
     }
 
-    verifyThumbnailItemHasAttribute(itemName: string, attributeName: string, value: string[]): ViewDataThumbnailPage {
+    verifyThumbnailItemHasAttributeValue(itemName: string, attributeName: string, value: string[]): ViewDataThumbnailPage {
         cy.wrap(value).each((e, i, a) => {
             cy.get(`[test-thumbnail-item-name='${itemName}']`)
                 .find(`[test-data-editor='${attributeName}']`)
-                .find(`[test-item-editor-value='${attributeName}']`).should('contain', value[i]);
+                .find(`[test-data-editor-value='${attributeName}']`).should('contain', value[i]);
+        });
+        return this;
+    }
+
+
+    verifyThumbnailItemHasNoAttributeValue(itemName: string, attributeName: string, value: string[]): ViewDataThumbnailPage {
+        cy.wrap(value).each((e, i, a) => {
+            cy.get(`[test-thumbnail-item-name='${itemName}']`)
+                .find(`[test-data-editor='${attributeName}']`)
+                .find(`[test-data-editor-value='${attributeName}']`).should('not.contain', value[i]);
         });
         return this;
     }
 
     clickAddThumbnail(newItemName: string): ViewDataThumbnailPage {
         cy.get(`[test-button-add-item]`).click({force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-popup']`)
+        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-item-editor-value='name']`)
             .click({force: true});
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
@@ -72,7 +82,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         cy.get(`[test-button-item-editor-popup-ok]`)
             .click({force: true})
         cy.wait(100);
-        cy.get(`[test-popup-dialog-title='item-data-editor-popup']`)
+        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-button-item-data-editor-popup-ok]`)
             .click({force: true})
         ;
@@ -109,7 +119,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
     clickItemShowMore(itemName: string): ViewDataThumbnailPage {
         cy.get(`[test-thumbnail-item-name='${itemName}']`).then((_) => {
             const l = _.find(`[test-link-show-more]`).length;
-            if (!l) { // exists
+            if (l) { // exists
                cy.get(`[test-thumbnail-item-name='${itemName}']`)
                    .find(`[test-link-show-more]`).click({force: true})
             }
@@ -120,7 +130,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
     clickItemShowLess(itemName: string): ViewDataThumbnailPage {
         cy.get(`[test-thumbnail-item-name='${itemName}']`).then((_) => {
             const l = _.find(`[test-link-show-less]`).length;
-            if (!l) { // exists
+            if (l) { // exists
                 cy.get(`[test-thumbnail-item-name='${itemName}']`)
                     .find(`[test-link-show-less]`).click({force: true})
             }
@@ -156,12 +166,12 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         return new ViewDataThumbnailAttributePopupPage();
     }
 
-    clickOnSave(): ViewDataThumbnailPage {
+    clickSave(): ViewDataThumbnailPage {
         cy.get(`[test-button-save-items]`).click({force: true});
         return this;
     }
 
-    clickOnReload(): ViewDataThumbnailPage {
+    clickReload(): ViewDataThumbnailPage {
         cy.get(`[test-button-reload]`).click({force: true});
         return this;
     }
