@@ -1,4 +1,4 @@
-import {Argument, Engine, EngineResponse, NextState, State, StateProcessFn} from "./index";
+import {Argument, Engine, EngineResponse, EngineStatus, NextState, State, StateProcessFn} from "./index";
 
 export class InternalState implements State, NextState {
 
@@ -7,6 +7,11 @@ export class InternalState implements State, NextState {
     map: Map<string, State> = new Map();
 
     currentEvent: string;
+
+    constructor(name: string, fn: StateProcessFn) {
+        this.name = name;
+        this.fn = fn ? fn : () => null ;
+    }
 
     on(event?: string): NextState {
         this.currentEvent = event;
@@ -30,7 +35,7 @@ export class InternalEngine implements Engine {
     transitionMap: Map<string /* from_state_name_event */, string /* to_state_name */>;
     stateMap: Map<string /* state name */, State>;
 
-    status: 'UNIITIALIZED' | 'INIT' | 'STARTED' | 'ENDED';
+    status: EngineStatus;
     currentState: State;
 
     constructor() {
@@ -84,8 +89,37 @@ export class InternalEngine implements Engine {
     }
 
     async next(): Promise<EngineResponse> {
-        // todo:
-        const event = await (this.currentState as InternalState).fn();
-        return { end: false } as EngineResponse;
+        if (this.status === 'INIT') {
+            this.status = 'STARTED';
+        }
+        if (this.status === 'ENDED') {
+            return { end: true } as EngineResponse;
+        }
+
+        const currentState: InternalState = this.currentState as InternalState;
+
+        try {
+            const event: string = await currentState.fn();
+
+            if (currentState.name === (this.endState as InternalState).name) { // end
+                this.status = 'ENDED';
+                return {end: true, status} as EngineResponse;
+            }
+
+            const nextStateName: string = this.transitionMap.get(`${currentState.name}_${event}`);
+            const nextState: InternalState = this.stateMap.get(nextStateName) as InternalState;
+
+            if (!nextState) {
+                this.status = 'ERROR';
+                throw new Error(`current state named ${currentState.name} fired event ${event} result in no possible next state`);
+            }
+
+            this.currentState = nextState;
+
+            return {end: false, status } as EngineResponse;
+        } catch (e) {
+            this.status = 'ERROR';
+            throw e;
+        }
     }
 }

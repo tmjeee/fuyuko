@@ -1,53 +1,26 @@
+import {InternalEngine, InternalState} from "./engine-impl";
+import {Argument, Engine, State, StateProcessFn, EngineResponse, NextState} from "./engine-interface";
 
-export interface Engine {
-    startsWith(state: State): Engine;
-    register(state: State): Engine;
-    endsWith(state: State): Engine;
-    init(arg: Argument): Engine;
-    next(): Promise<EngineResponse>;
+
+const createState = (name: string, fn?: StateProcessFn): State => {
+    return  new InternalState(name, fn);
 }
 
-export interface EngineResponse {
-    end: boolean;
+const createEngine = (): Engine => {
+    return new InternalEngine();
 }
 
-export interface Argument {
-    [key: string]: any;
-}
+export {
+    Argument,
+    Engine,
+    State,
+    StateProcessFn,
+    EngineResponse,
+    NextState,
+    createState,
+    createEngine
+};
 
-export interface StateProcessFn  {
-    ():  Promise<string> | null | undefined;
-}
-
-export abstract class Step {
-    abstract arguments(): Argument;
-    abstract process(): StateProcessFn
-}
-
-export interface Index {
-    next(): Step;
-}
-
-
-export interface State {
-    on(event?: string): NextState;
-}
-
-export interface NextState {
-    to(nextState: State): State;
-}
-
-
-export const createState = (name: string, fn?: StateProcessFn): State => {
-    // todo:
-    return {} as State;
-}
-
-
-export const createEngine = (): Engine => {
-   // todo:
-   return {} as Engine;
-}
 
 /**
  *     <start> -> step1 -> step2 -> step3 -> <end>

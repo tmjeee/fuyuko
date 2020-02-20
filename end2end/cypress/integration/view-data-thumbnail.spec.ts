@@ -111,6 +111,7 @@ describe('view-data-thumbnail spec', () => {
         ;
     });
 
+    /////////////// set 1
     it(`[string attribute] should change attributes of thumbnail`, () => {
 
         const itemName = `Test-Item-${Math.random()}`;
@@ -135,6 +136,7 @@ describe('view-data-thumbnail spec', () => {
     });
 
 
+    //////////// set 2
     it.only (`[string attribute] should allow editing of attributes through edit icon`, () => {
 
         const itemName = `Test-Item-${Math.random()}`;
@@ -149,13 +151,13 @@ describe('view-data-thumbnail spec', () => {
             .clickCancel()
             .verifyThumbnailItemHasNoAttributeValue(itemName, attributeName, [value])
 
-            // .clickEditThumbnailIcon(`Item-2`)
-            // .verifyPopupTitle()
-            // .editStringAttribute(attributeName, value)
-            // .clickOk()
-            // .clickSave()
-            // .verifySuccessMessageExists()
-            // .verifyThumbnailItemHasAttributeValue(itemName, attributeName, [value])
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editStringAttribute(attributeName, value)
+            .clickOk()
+            .clickSave()
+            .verifySuccessMessageExists()
+            .verifyThumbnailItemHasAttributeValue(itemName, attributeName, [value])
         ;
     });
 });
