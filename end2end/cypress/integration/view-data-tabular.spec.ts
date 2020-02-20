@@ -402,7 +402,7 @@ describe('view-data-tabular spec', () => {
         // text attribute
         {
             const attributeName = `date attribute`;
-            const attributeValue = `0${(Math.random() * 9).toFixed(0)}-0${(Math.random() * 9).toFixed(0)}-${2000 + Number((Math.random() * 10).toFixed(0))}`;
+            const attributeValue = `0${(Math.random() * 8 + 1).toFixed(0)}-0${(Math.random() * 8 + 1).toFixed(0)}-${2000 + Number((Math.random() * 10).toFixed(0))}`;
             const v = `${attributeValue}`;
 
             viewDataTablePage
@@ -442,7 +442,7 @@ describe('view-data-tabular spec', () => {
         // date attribute
         {
             const attributeName = `date attribute`;
-            const attributeValue = `${(Math.random() * 10).toFixed(0)}-${(Math.random() * 10).toFixed(0)}-${2000 + Number((Math.random() * 10).toFixed(0))}`;
+            const attributeValue = `0${(Math.random() * 8 + 1).toFixed(0)}-0${(Math.random() * 8 + 1).toFixed(0)}-${2000 + Number((Math.random() * 10).toFixed(0))}`;
             const v = `${attributeValue}`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
@@ -591,8 +591,6 @@ describe('view-data-tabular spec', () => {
             ;
         }
     });
-
-
 
 
 

@@ -346,6 +346,8 @@ export class DataEditorDialogComponent {
         setItemNumberValue(attribute, value, this.formControlNumberAttributeValue.value);
         break;
       case 'date':
+        console.log('********************* ', this.formControlDateAttributeValue.value);
+        // todo: this.formControlDateAttributeValue.value is momnet need to make it string in format defined in attribute.format
         setItemDateValue(attribute, value, this.formControlDateAttributeValue.value);
         break;
       case 'currency':
