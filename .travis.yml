@@ -10,12 +10,17 @@ cache:
   directories:
     - ./node_modules
 
-before_install:
+#before_install:
 #  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
-  - cd be
+#  - cd be
 
-install:
-  - npm install
+#install:
+#  - npm install
 
 script:
-  - npm run build
+  - cd be && >
+    npm install && >
+    npm run build
+  - cd fe && >
+    npm install && >
+    npx ng build
