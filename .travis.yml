@@ -20,8 +20,8 @@ cache:
 script:
   - cd be &&
     npm install &&
-    npm run test &&
-    npm run build
+    npm run build &&
+    npm run test
   - cd ../fe &&
     npm install &&
     npx ng test &&

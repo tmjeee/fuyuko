@@ -5,6 +5,7 @@ import * as util from 'util';
 
 describe('item-to-table-items.util.ts', () => {
   it ('toTableItems() test', () => {
+    /*
     const items: Item[] =  [
       {id: 1, parentId: undefined, name: '', description: '', images: [],
         1: { attributeId: 1, val: { type: 'string', value: 's1'} as StringValue } as Value,
@@ -35,6 +36,7 @@ describe('item-to-table-items.util.ts', () => {
           {id: 100, parentId: 1, name: '', description: '', images: [], children: []}
         ]} as Item,
     ];
+     */
 
     // const tableItems: TableItem[] = toTableItem(items);
     // console.log(util.inspect(tableItems, {depth: 1000}));
@@ -43,7 +45,8 @@ describe('item-to-table-items.util.ts', () => {
 
 
   it ('test toItems()', () => {
-  const tableItems: TableItem[] = [
+     // tslint:disable-next-line:max-line-length
+/*const tableItems: TableItem[] = [
     // tslint:disable-next-line:max-line-length
   {id: 1, name: '', description: '', images: [], depth: 0, rootParentId: undefined, parentId: undefined, 1: { attributeId: 1, val: { type: 'string', value: 's1' } as StringValue} as Value } as TableItem,
     // tslint:disable-next-line:max-line-length
@@ -61,6 +64,7 @@ describe('item-to-table-items.util.ts', () => {
     // tslint:disable-next-line:max-line-length
   {id: 8, name: '', description: '', images: [], depth: 0, rootParentId: undefined, parentId: undefined, 1: { attributeId: 1, val: { type: 'string', value: 's2' } as StringValue} as Value } as TableItem,
   ];
+       */
 
   // const items: Item[] = toItem(tableItems);
   // console.log(util.inspect(items, {depth: 100}));
