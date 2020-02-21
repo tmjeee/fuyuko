@@ -21,6 +21,8 @@ script:
   - cd be &&
     npm install &&
     npm run build
-  - cd fe &&
+  - cd ../fe &&
     npm install &&
     npx ng build
+  - cd ../end2end &&
+    npm install
