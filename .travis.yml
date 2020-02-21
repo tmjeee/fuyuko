@@ -2,5 +2,22 @@
 language: node_js
 node_js:
   - 12
+
+addons:
+  apt:
+    source:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+cache:
+  directories:
+    - ./node_modules
+
 before_install:
   - cd be
+
+install:
+  - npm install
+
+script:
+  - npm build
