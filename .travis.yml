@@ -18,9 +18,9 @@ cache:
 #  - npm install
 
 script:
-  - cd be && >
-    npm install && >
+  - cd be &&
+    npm install &&
     npm run build
-  - cd fe && >
-    npm install && >
+  - cd fe &&
+    npm install &&
     npx ng build
