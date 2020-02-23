@@ -157,6 +157,8 @@ export class DataThumbnailComponent implements OnInit {
   editItem(item: Item) {
     const id =  --this.counter;
     this.matDialog.open(ItemDataEditorDialogComponent, {
+      width: `90vw`,
+      height: `90vh`,
       data: {
         attributes: this.itemAndAttributeSet.attributes,
         item

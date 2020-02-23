@@ -1,8 +1,9 @@
-<div class="item-data-editor-dialog-component" [attr.test-popup-dialog-title]="'item-data-editor-popup'" fxLayout="column" fxLayoutAlign="center center">
+<div class="item-data-editor-dialog-component" [attr.test-popup-dialog-title]="'item-data-editor-dialog-popup'" fxLayout="column" fxLayoutAlign="center center">
   <div class="form" fxFlex="1 0 75vh">
     <div>
       <mat-label class="mat-hint mat-small">Name</mat-label>
       <app-item-editor [item]="item" [type]="'name'"
+                       [attr.test-item-editor]="'name'"
                        (events)="onItemNameChange($event)">
       </app-item-editor>
       <mat-hint class="mat-hint mat-small">Item name</mat-hint>
@@ -11,6 +12,7 @@
     <div>
       <mat-label class="mat-hint mat-small">Description</mat-label>
       <app-item-editor [item]="item" [type]="'description'"
+                       [attr.test-item-editor]="'description'"
                        (events)="onItemDescriptionChange($event)">
       </app-item-editor>
       <mat-hint class="mat-hint mat-small">Item description</mat-hint>
@@ -19,6 +21,7 @@
     <div *ngFor="let attribute of attributes; let i = index">
       <mat-label class="mat-hint mat-small">{{attribute.name}}</mat-label>
       <app-data-editor [itemValueAndAttribute]="{attribute: attribute, itemValue: item[attribute.id]}"
+                       [attr.test-data-editor]="attribute.name"
                        (events)="onItemAttributeChange($event)">
       </app-data-editor>
       <mat-hint class="mat-hint mat-small">{{attribute.description}}</mat-hint>

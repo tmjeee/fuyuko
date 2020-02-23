@@ -3,11 +3,16 @@
 
 module.exports = function (config) {
   config.set({
+    browesers: ['Chrome', 'Chrome_without_security'],
     customLaunchers: {
+      Chrome_without_security: {
+        base: 'Chrome',
+        flags: ['--disable-web-security', '--disable-site-isolation-trials']
+      },
       ChromeCustom: {
         base: 'ChromeHeadless',
         flag: [
-          '--headless'
+           '--headless'
         ]
       },
       ChromeHeadlessCustom: {
@@ -25,7 +30,10 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false,  // leave Jasmine Spec Runner output visible in browser
+      jasmine: {
+        random: false
+      }
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../coverage/mat-test'),
@@ -37,8 +45,8 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadlessCustom'],
-    singleRun: false,
+    browsers: ['ChromeHeadless'],
+    singleRun: true,
     restartOnFileChange: true,
   });
 };

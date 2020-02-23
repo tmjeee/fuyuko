@@ -11,7 +11,7 @@ import {
   VOLUME_UNITS,
   WIDTH_UNITS
 } from '../../model/unit.model';
-import {Attribute, Pair2} from '../../model/attribute.model';
+import {Attribute, DEFAULT_DATE_FORMAT, Pair2} from '../../model/attribute.model';
 import {
   AreaValue,
   CurrencyValue,
@@ -32,15 +32,6 @@ import {
   setItemTextValue,
   setItemVolumeValue, setItemWidthValue
 } from '../../shared-utils/ui-item-value-setter.util';
-import {
-  getItemAreaValue,
-  getItemCurrencyValue,
-  getItemDateValue, getItemDimensionValue, getItemDoubleSelectValue, getItemHeightValue, getItemLengthValue,
-  getItemNumberValue, getItemSelectValue,
-  getItemStringValue,
-  getItemTextValue,
-  getItemVolumeValue, getItemWidthValue
-} from '../../utils/ui-item-value-getter.util';
 import {Pair2Map, doubleSelectToObjectMap} from '../../utils/doubleselect-helper.util';
 import * as moment from 'moment';
 
@@ -346,7 +337,16 @@ export class DataEditorDialogComponent {
         setItemNumberValue(attribute, value, this.formControlNumberAttributeValue.value);
         break;
       case 'date':
-        setItemDateValue(attribute, value, this.formControlDateAttributeValue.value);
+        console.log('********************* ', this.formControlDateAttributeValue.value);
+        let dateInStringFormat = '';
+        const format = attanditem.attribute.format ? attanditem.attribute.format : DEFAULT_DATE_FORMAT;
+        if (moment.isMoment(this.formControlDateAttributeValue.value)) {
+          dateInStringFormat = this.formControlDateAttributeValue.value ?
+              this.formControlDateAttributeValue.value.format(format) : '';
+        } else if (typeof this.formControlDateAttributeValue.value === 'string') {
+          dateInStringFormat = moment((this.formControlDateAttributeValue.value), format).format(format);
+        }
+        setItemDateValue(attribute, value, dateInStringFormat);
         break;
       case 'currency':
         setItemCurrencyValue(attribute, value, this.formControlCurrencyAttributeValue.value,

@@ -1,0 +1,30 @@
+dist: bionic
+language: node_js
+node_js:
+  - 12
+
+addons:
+  chrome: stable
+
+cache:
+  directories:
+    - ./node_modules
+
+#before_install:
+#  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+#  - cd be
+
+#install:
+#  - npm install
+
+script:
+  - cd be &&
+    npm install &&
+    npm run build &&
+    npm run test
+  - cd ../fe &&
+    npm install &&
+    npx ng test &&
+    npx ng build
+  - cd ../end2end &&
+    npm install

@@ -8,7 +8,7 @@
         <mat-label>Value</mat-label>
         <input matInput
                type="text"
-               [attr.test-field-string]="''"
+               [attr.test-field-string]="data.attribute.name"
                placeholder="Enter a value"
                [formControl]="formControlStringAttributeValue">
         <mat-hint>Enter a string value</mat-hint>
