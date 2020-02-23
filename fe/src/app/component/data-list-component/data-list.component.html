@@ -7,44 +7,48 @@
 
     <!-- main controls -->
     <div class="main-control">
-        <button type="button" (click)="addItem($event)" color="primary" mat-flat-button>Add</button>
-        <button type="button" (click)="save($event)" [disabled]="!canSave()" color="primary" mat-flat-button>Save</button>
-        <button type="button" (click)="delete($event)" [disabled]="!canDelete()" color="primary" mat-flat-button>Delete</button>
-        <button type="button" (click)="reload($event)" color="primary" mat-flat-button>Reload</button>
+        <button type="button" [attr.test-button-add-item]="''" (click)="addItem($event)" color="primary" mat-flat-button>Add</button>
+        <button type="button" [attr.test-button-save]="''" (click)="save($event)" [disabled]="!canSave()" color="primary" mat-flat-button>Save</button>
+        <button type="button" [attr.test-button-delete-items]="''" (click)="delete($event)" [disabled]="!canDelete()" color="primary" mat-flat-button>Delete</button>
+        <button type="button" [attr.test-button-reload-items]="''" (click)="reload($event)" color="primary" mat-flat-button>Reload</button>
     </div>
 
     <!-- item list -->
     <div class="container">
         <mat-accordion>
-            <mat-expansion-panel *ngFor="let item of itemAndAttributeSet.items; let i = index;">
+            <mat-expansion-panel *ngFor="let item of itemAndAttributeSet.items; let i = index;" [attr.test-panel-item]="item.name">
                <mat-expansion-panel-header>
                    <mat-panel-title>
                        <section>
                            <mat-checkbox (click)="$event.stopImmediatePropagation();"
+                                         [attr.test-mat-checkbox-item]="item.name"
                                          (change)="onCheckboxStateChange($event, item)"></mat-checkbox>
                        </section>
                        <section>
-                           {{item.name}}
+                           <span [attr.test-item-name]="item.name">{{item.name}}</span>
                        </section>
                    </mat-panel-title>
-                   <mat-panel-description>{{item.description}}</mat-panel-description>
+                   <mat-panel-description>
+                       <span [attr.test-item-description]="item.name">{{item.description}}</span>
+                   </mat-panel-description>
                </mat-expansion-panel-header>
                 <div>
                     <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
                 </div>
                 <div>
                     <mat-label>Name</mat-label>
-                    <app-item-editor [item]="item" [type]="'name'" (events)="onItemDataChange($event)"></app-item-editor>
+                    <app-item-editor [item]="item" [attr.test-item-editor]="'name'" [type]="'name'" (events)="onItemDataChange($event)"></app-item-editor>
                     <mat-hint>Item name</mat-hint>
                 </div>
                 <div>
                     <mat-label>Description</mat-label>
-                    <app-item-editor [item]="item" [type]="'description'" (events)="onItemDataChange($event)"></app-item-editor>
+                    <app-item-editor [item]="item" [attr.test-item-editor]="'description'" [type]="'description'" (events)="onItemDataChange($event)"></app-item-editor>
                     <mat-hint>Item description</mat-hint>
                 </div>
                 <div *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index;">
                    <mat-label>{{attribute.name}}</mat-label>
                    <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute}"
+                                    [attr.test-data-editor]="attribute.name"
                                     (events)="onAttributeDataChange($event, item)"></app-data-editor>
                    <mat-hint>{{attribute.description}}</mat-hint>
                 </div>

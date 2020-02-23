@@ -1,5 +1,6 @@
 import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
+import {ViewDataListEditPopupPage} from "./sub-sub-page-object/view-data-list-edit-popup.page";
 
 export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
@@ -20,6 +21,19 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
     verifySuccessMessageExists(): ViewDataListPage {
         util.clickOnSuccessMessageToasts(() => {});
+        return this;
+    }
+
+
+    clickAdd(): ViewDataListEditPopupPage {
+        return new ViewDataListEditPopupPage();
+    }
+
+    clickReload(): ViewDataListPage {
+        return this;
+    }
+
+    clickDelete(itemNames: string[]): ViewDataListPage {
         return this;
     }
 }

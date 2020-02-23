@@ -1,6 +1,6 @@
 import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
-import {ViewDataEditorPopupPage} from "./sub-sub-page-object/view-data-editor-popup.page";
+import {ViewDataTableEditPopupPage} from "./sub-sub-page-object/view-data-table-edit-popup.page";
 
 export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
@@ -127,11 +127,11 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
         return this;
     }
 
-    clickOnItemAttributeCellToEdit(itemName: string, attributeName: string): ViewDataEditorPopupPage {
+    clickOnItemAttributeCellToEdit(itemName: string, attributeName: string): ViewDataTableEditPopupPage {
         cy.get(`[test-data-table-row='${itemName}']`)
             .find(`[test-data-editor-value='${attributeName}']`)
             .click({force: true});
-        return new ViewDataEditorPopupPage();
+        return new ViewDataTableEditPopupPage();
     }
 
     clickOnAddItem(newItemName: string): ViewDataTablePage {

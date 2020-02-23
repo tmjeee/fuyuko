@@ -13,7 +13,7 @@ describe(`view-data-list spec`, () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitViewDataThumbnail();
+            .visitViewDataList();
     });
 
     after(() => {

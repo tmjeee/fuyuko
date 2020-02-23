@@ -1,29 +1,11 @@
 import {ViewDataThumbnailPage} from "../view-data-thumbnail.page";
 import {ViewDataThumbnailEditPopupPage} from "./view-data-thumbnail-edit-popup.page";
+import {AbstractViewDataItemPopupPage} from "./abstract-view-data-item-popup.page";
 
 
-export class ViewDataThumbnailItemPopupPage {
-    verifyPopupTitle(): ViewDataThumbnailItemPopupPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .should('exist');
-        return this;
-    }
+export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPage {
 
-    editItemName(itemName: string): ViewDataThumbnailItemPopupPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-field-name]`)
-            .clear({force: true})
-            .type(`${itemName}`, {force: true});
-        return this;
-    }
-
-    editItemDescription(itemDescription: string): ViewDataThumbnailItemPopupPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-field-description]`)
-            .clear({force: true})
-            .type(itemDescription, {force: true});
-        return this;
-    }
+    //////////////////////////////////////////////////////////////////////
 
     clickOk(): ViewDataThumbnailPage {
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
