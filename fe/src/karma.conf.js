@@ -3,11 +3,16 @@
 
 module.exports = function (config) {
   config.set({
+    browesers: ['Chrome', 'Chrome_without_security'],
     customLaunchers: {
+      Chrome_without_security: {
+        base: 'Chrome',
+        flags: ['--disable-web-security', '--disable-site-isolation-trials']
+      },
       ChromeCustom: {
         base: 'ChromeHeadless',
         flag: [
-          '--headless'
+           '--headless'
         ]
       },
       ChromeHeadlessCustom: {
@@ -37,7 +42,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadlessCustom'],
+    browsers: ['ChromeHeadless'],
     singleRun: false,
     restartOnFileChange: true,
   });
