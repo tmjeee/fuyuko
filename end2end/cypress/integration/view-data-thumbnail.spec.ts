@@ -802,10 +802,11 @@ describe('view-data-thumbnail spec', () => {
     });
 
 
-    it.only ('should change item name and description through edit icon', () => {
-        const itemName = `Test-Item-${Math.random()}`;
-        const newItemName = `New-Test-Item-${Math.random()}`;
-        const newItemDescription = `New-Test-Item-Description-${Math.random()}`;
+    it('should change item name and description through edit icon', () => {
+        const m = Math.random();
+        const itemName = `Test-Item-${m}`;
+        const newItemName = `New-Test-Item-${m}`;
+        const newItemDescription = `New-Test-Item-Description-${m}`;
 
         viewDataThumbnailPage
             .clickAddThumbnail(itemName)
@@ -819,6 +820,7 @@ describe('view-data-thumbnail spec', () => {
             .verifyThumbnailsHasItem(newItemName, false)
             .clickEditThumbnailIcon(itemName)
             .editItemDescription(newItemDescription)
+            .clickOk2()
             .clickCancel()
             .verifyThumbnailItemHasNoDescription(itemName, newItemDescription)
 
@@ -827,23 +829,24 @@ describe('view-data-thumbnail spec', () => {
             .editItemName(newItemName)
             .clickOk2()
             .clickOk()
-            .clickEditThumbnailIcon(itemName)
+            .clickEditThumbnailIcon(newItemName)
             .editItemDescription(newItemDescription)
+            .clickOk2()
             .clickOk()
             .verifyThumbnailsHasItem(itemName, false)
             .verifyThumbnailsHasItem(newItemName, true)
-            .verifyThumbnailItemHasDescription(itemName, newItemDescription)
+            .verifyThumbnailItemHasDescription(newItemName, newItemDescription)
             .clickSave()
             .verifySuccessMessageExists()
             .verifyThumbnailsHasItem(itemName, false)
             .verifyThumbnailsHasItem(newItemName, true)
-            .verifyThumbnailItemHasDescription(itemName, newItemDescription)
+            .verifyThumbnailItemHasDescription(newItemName, newItemDescription)
 
             // delete (clean up)
-            // .clickDeleteThumbnail([newItemName])
-            // .clickSave()
-            // .verifySuccessMessageExists()
-            // .verifyThumbnailsHasItem(newItemName, false)
+            .clickDeleteThumbnail([newItemName])
+            .clickSave()
+            .verifySuccessMessageExists()
+            .verifyThumbnailsHasItem(newItemName, false)
         ;
     });
 });

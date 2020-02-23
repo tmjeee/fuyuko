@@ -154,14 +154,16 @@ export class ViewDataThumbnailEditPopupPage {
     clickOk(): ViewDataThumbnailPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-button-item-data-editor-popup-ok]`)
-            .click({force: true});
+            .click({force: true})
+            .wait(100);
         return new ViewDataThumbnailPage();
     }
 
     clickCancel(): ViewDataThumbnailPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-button-item-data-editor-popup-cancel]`)
-            .click({force: true});
+            .click({force: true})
+            .wait(100);
         return new ViewDataThumbnailPage();
     }
 
@@ -178,8 +180,8 @@ export class ViewDataThumbnailEditPopupPage {
 
     editItemDescription(description: string): ViewDataThumbnailItemPopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-item-editor='name']`)
-            .find(`[test-item-editor-value='name']`)
+            .find(`[test-item-editor='description']`)
+            .find(`[test-item-editor-value='description']`)
             .click({force: true});
 
         const e = new ViewDataThumbnailItemPopupPage();
