@@ -1,4 +1,5 @@
 import {ViewDataThumbnailPage} from "../view-data-thumbnail.page";
+import {ViewDataThumbnailEditPopupPage} from "./view-data-thumbnail-edit-popup.page";
 
 
 export class ViewDataThumbnailItemPopupPage {
@@ -30,5 +31,19 @@ export class ViewDataThumbnailItemPopupPage {
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
             .find(`[test-button-item-editor-popup-cancel]`).click({force: true});
         return new ViewDataThumbnailPage();
+    }
+
+
+    clickCancel2(): ViewDataThumbnailEditPopupPage {
+        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
+            .find(`[test-button-item-editor-popup-cancel]`).click({force: true});
+        return new ViewDataThumbnailEditPopupPage();
+    }
+
+
+    clickOk2(): ViewDataThumbnailEditPopupPage {
+        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
+            .find(`[test-button-item-editor-popup-ok]`).click({force: true});
+        return new ViewDataThumbnailEditPopupPage();
     }
 }

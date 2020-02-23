@@ -157,6 +157,7 @@ export class ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-button-popup-done]`)
             .click({force: true});
+        cy.wait(100);
         return rootPage;
     }
 
@@ -164,6 +165,15 @@ export class ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-button-popup-cancel]`)
             .click({force: true});
+        cy.wait(100);
         return rootPage;
+    }
+
+    clickCancel1(): ViewDataThumbnailEditPopupPage {
+        return this.clickCancel(new ViewDataThumbnailEditPopupPage());
+    }
+
+    clickOk1(): ViewDataThumbnailEditPopupPage {
+        return this.clickOk(new ViewDataThumbnailEditPopupPage());
     }
 }

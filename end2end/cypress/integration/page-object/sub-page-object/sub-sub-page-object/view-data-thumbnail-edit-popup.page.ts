@@ -7,6 +7,8 @@ import {
     WidthUnits
 } from "../../../model/unit.model";
 import {ViewDataThumbnailPage} from "../view-data-thumbnail.page";
+import {ViewDataThumbnailAttributePopupPage} from "./view-data-thumbnail-attribute-popup.page";
+import {ViewDataThumbnailItemPopupPage} from "./view-data-thumbnail-item-popup.page";
 
 
 // this is the page where you can edit all attributes, item name and item description
@@ -17,186 +19,136 @@ export class ViewDataThumbnailEditPopupPage {
         return this;
     }
 
-    editStringAttribute(attributeName: string, v: string): ViewDataThumbnailEditPopupPage {
+    editStringAttribute(attributeName: string, v: string): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
             .find(`[test-data-editor-value='${attributeName}']`)
             .click({force: true})
 
-        cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-field-string='${attributeName}']`)
-            .clear({force: true})
-            .type(v);
-        return this;
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editStringAttribute(v);
+        return e;
     }
 
-    editTextAttribute(attributeName: string, v: string): ViewDataThumbnailEditPopupPage {
+    editTextAttribute(attributeName: string, v: string): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-text]`)
-            .clear({force: true})
-            .type(v, {force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editTextAttribute(v);
+        return e;
     }
 
-    editNumericAttribute(attributeName: string, v: number): ViewDataThumbnailEditPopupPage {
+    editNumericAttribute(attributeName: string, v: number): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-number]`)
-            .clear({force: true})
-            .type(String(v), {force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editNumericAttribute(v);
+        return e;
     }
 
-    editDateAttribute(attributeName: string, v: string /* DD-MM-YYYY */): ViewDataThumbnailEditPopupPage {
+    editDateAttribute(attributeName: string, v: string /* DD-MM-YYYY */): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-date]`)
-            .clear({force: true})
-            .type(v, {force: true})
-        ;
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editDateAttribute(v);
+        return e;
     }
 
-    editCurrencyAttribute(attributeName: string, v: number, unit: CountryCurrencyUnits): ViewDataThumbnailEditPopupPage {
+    editCurrencyAttribute(attributeName: string, v: number, unit: CountryCurrencyUnits): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find((`[test-field-currency]`))
-            .clear({force: true})
-            .type(String(v), {force: true})
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-currency] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-currency='${unit}']`).click({force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editCurrencyAttribute(v, unit);
+        return e;
     }
 
-    editAreaAttribute(attributeName: string, v: number, unit: AreaUnits): ViewDataThumbnailEditPopupPage {
+    editAreaAttribute(attributeName: string, v: number, unit: AreaUnits): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-area]`)
-            .clear({force: true})
-            .type(String(v), {force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-area] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-area='${unit}]`).click({force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editAreaAttribute(v, unit);
+        return e;
     }
 
-    editVolumeAttribute(attributeName: string, v: number, unit: VolumeUnits): ViewDataThumbnailEditPopupPage {
+    editVolumeAttribute(attributeName: string, v: number, unit: VolumeUnits): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-volume]`)
-            .clear({force: true})
-            .type(String(v), {force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-volume] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-volume='${unit}]`).click({force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editVolumeAttribute(v, unit);
+        return e;
     }
 
-    editDimensionAttribute(attributeName: string, l: number, w: number, h: number, unit: DimensionUnits): ViewDataThumbnailEditPopupPage {
+    editDimensionAttribute(attributeName: string, l: number, w: number, h: number, unit: DimensionUnits): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-dimension-length]`)
-            .clear({force: true})
-            .type(String(l), {force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-dimension-width]`)
-            .clear({force: true})
-            .type(String(l), {force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-dimension-height]`)
-            .clear({force: true})
-            .type(String(l), {force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-dimension] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-dimension='${unit}]`).click({force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editDimensionAttribute(l, w, h, unit);
+        return e;
     }
 
-    editWidthAttribute(attributeName: string, v: number, unit: WidthUnits): ViewDataThumbnailEditPopupPage {
+    editWidthAttribute(attributeName: string, v: number, unit: WidthUnits): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-width]`)
-            .clear({force: true})
-            .type(String(v), {force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-width] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-width='${unit}]`).click({force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editWidthAttribute(v, unit);
+        return e;
     }
 
-    editLengthAttribute(attributeName: string, v: number, unit: LengthUnits): ViewDataThumbnailEditPopupPage {
+    editLengthAttribute(attributeName: string, v: number, unit: LengthUnits): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-length]`)
-            .clear({force: true})
-            .type(String(v), {force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-length] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-length='${unit}]`).click({force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editLengthAttribute(v, unit);
+        return e;
     }
 
-    editHeightAttribute(attributeName: string, v: number, unit: HeightUnits): ViewDataThumbnailEditPopupPage {
+    editHeightAttribute(attributeName: string, v: number, unit: HeightUnits): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-field-height]`)
-            .clear({force: true})
-            .type(String(v), {force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-height] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-height='${unit}]`).click({force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editHeightAttribute(v, unit);
+        return e;
     }
 
-    editSelectAttribute(attributeName: string, key: string): ViewDataThumbnailEditPopupPage {
+    editSelectAttribute(attributeName: string, key: string): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-select-key] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-select-key='${key}]`).click({force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editSelectAttribute(key);
+        return e;
     }
 
-    editDoubleSelectAttribute(attributeName: string, key1: string, key2: string): ViewDataThumbnailEditPopupPage {
+    editDoubleSelectAttribute(attributeName: string, key1: string, key2: string): ViewDataThumbnailAttributePopupPage {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-doubleselect-key1] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-doubleselect-key1='${key1}]`).click({force: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-doubleselect-key2] div`).click({force: true, multiple: true});
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-mat-select-option-doubleselect-key2='${key2}]`).click({force: true});
-        return this;
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true})
+        const e = new ViewDataThumbnailAttributePopupPage();
+        e.editDoubleSelectAttribute(key1, key2);
+        return e;
     }
 
     clickOk(): ViewDataThumbnailPage {
@@ -211,5 +163,27 @@ export class ViewDataThumbnailEditPopupPage {
             .find(`[test-button-item-data-editor-popup-cancel]`)
             .click({force: true});
         return new ViewDataThumbnailPage();
+    }
+
+    editItemName(name: string) : ViewDataThumbnailItemPopupPage {
+        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
+            .find(`[test-item-editor='name']`)
+            .find(`[test-item-editor-value='name']`)
+            .click({force: true});
+
+        const e = new ViewDataThumbnailItemPopupPage();
+        e.editItemName(name)
+        return e;
+    }
+
+    editItemDescription(description: string): ViewDataThumbnailItemPopupPage {
+        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
+            .find(`[test-item-editor='name']`)
+            .find(`[test-item-editor-value='name']`)
+            .click({force: true});
+
+        const e = new ViewDataThumbnailItemPopupPage();
+        e.editItemDescription(description)
+        return e;
     }
 }

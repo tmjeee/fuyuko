@@ -167,12 +167,17 @@ export class DataThumbnailComponent implements OnInit {
       .pipe(
         map((r: Item) => {
           if (r) {
-            const tmpItem: Item = this.itemAndAttributeSet.items.find((i: Item) => i.id === r.id);
+            const index0: number = this.itemAndAttributeSet.items.findIndex((i: Item) => i.id === r.id);
+            if (index0 >= 0) {
+              this.itemAndAttributeSet.items.splice(index0, 1, r);
+            } else {
+              this.itemAndAttributeSet.items.push(r);
+            }
             const index1 = this.pendingSaving.findIndex((i: Item) => i.id === r.id);
             if (index1 >= 0) {
-              this.pendingSaving.splice(index1, 1, tmpItem);
+              this.pendingSaving.splice(index1, 1, r);
             } else {
-              this.pendingSaving.push(tmpItem);
+              this.pendingSaving.push(r);
             }
           }
         })
