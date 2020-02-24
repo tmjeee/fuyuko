@@ -37,4 +37,9 @@ describe(`view-data-list spec`, () => {
             .validateTitle()
         ;
     });
+
+
+    it('should be searchable (basic search)', () => {
+
+    });
 });

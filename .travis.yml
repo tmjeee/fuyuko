@@ -41,7 +41,7 @@ script:
     npx ng test &&
     npx ng build &&
     cd ..
-  - echo 'Building End 2 End1 &&
+  - echo 'Building End 2 End1' &&
     cd end2end &&
     npm install &&
     cd ..
