@@ -15,13 +15,13 @@ import {AbstractViewDataItemPopupPage} from "./abstract-view-data-item-popup.pag
 
 
 // this is the page where you can edit all attributes, item name and item description
-export class ViewDataThumbnailEditPopupPage extends AbstractViewDataEditPopupPage {
+export class ViewDataThumbnailEditPopupPage extends AbstractViewDataEditPopupPage<ViewDataThumbnailItemPopupPage, ViewDataThumbnailAttributePopupPage> {
 
-    createAbstractViewDataAttributePopupPage(): AbstractViewDataAttributePopupPage {
+    createAbstractViewDataAttributePopupPage(): ViewDataThumbnailAttributePopupPage {
         return new ViewDataThumbnailAttributePopupPage();
     }
 
-    createAbstractViewDataItemPopupPage(): AbstractViewDataItemPopupPage {
+    createAbstractViewDataItemPopupPage(): ViewDataThumbnailItemPopupPage {
         return new ViewDataThumbnailItemPopupPage();
     }
 

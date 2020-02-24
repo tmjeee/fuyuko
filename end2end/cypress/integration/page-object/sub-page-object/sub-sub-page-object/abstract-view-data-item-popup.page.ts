@@ -2,13 +2,13 @@
 
 export class AbstractViewDataItemPopupPage {
 
-    verifyPopupTitle(): AbstractViewDataItemPopupPage {
+    verifyPopupTitle(): this {
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
             .should('exist');
         return this;
     }
 
-    editItemName(itemName: string): AbstractViewDataItemPopupPage {
+    editItemName(itemName: string): this {
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
             .find(`[test-field-name]`)
             .clear({force: true})
@@ -16,7 +16,7 @@ export class AbstractViewDataItemPopupPage {
         return this;
     }
 
-    editItemDescription(itemDescription: string): AbstractViewDataItemPopupPage {
+    editItemDescription(itemDescription: string): this {
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
             .find(`[test-field-description]`)
             .clear({force: true})

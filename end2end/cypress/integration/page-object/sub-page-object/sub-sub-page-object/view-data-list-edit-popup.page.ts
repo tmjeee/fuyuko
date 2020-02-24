@@ -5,22 +5,13 @@ import {AbstractViewDataItemPopupPage} from "./abstract-view-data-item-popup.pag
 import {ViewDataListItemPopupPage} from "./view-data-list-item-popup.page";
 
 
-export class ViewDataListEditPopupPage extends AbstractViewDataEditPopupPage {
+export class ViewDataListEditPopupPage extends AbstractViewDataEditPopupPage<ViewDataListItemPopupPage, ViewDataListAttributePopupPage> {
 
-    createAbstractViewDataAttributePopupPage(): AbstractViewDataAttributePopupPage {
+    createAbstractViewDataAttributePopupPage(): ViewDataListAttributePopupPage {
         return new ViewDataListAttributePopupPage();
     }
 
-    createAbstractViewDataItemPopupPage(): AbstractViewDataItemPopupPage {
+    createAbstractViewDataItemPopupPage(): ViewDataListItemPopupPage {
         return new ViewDataListItemPopupPage();
     }
-
-    ////////////////////////////////////////////////
-
-    verifyPopupTitle(): ViewDataListEditPopupPage {
-        cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
-            .should('exist');
-        return this;
-    }
-
 }

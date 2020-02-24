@@ -10,13 +10,13 @@ import {
 
 export class AbstractViewDataAttributePopupPage {
 
-    verifyPopupTitle(): AbstractViewDataAttributePopupPage {
+    verifyPopupTitle(): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .should('exist');
         return this;
     }
 
-    editStringAttribute(v: string): AbstractViewDataAttributePopupPage {
+    editStringAttribute(v: string): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-string]`)
             .clear({force: true})
@@ -24,7 +24,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editTextAttribute(v: string): AbstractViewDataAttributePopupPage {
+    editTextAttribute(v: string): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-text]`)
             .clear({force: true})
@@ -32,7 +32,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editNumericAttribute(v: number): AbstractViewDataAttributePopupPage {
+    editNumericAttribute(v: number): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-number]`)
             .clear({force: true})
@@ -40,7 +40,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editDateAttribute(v: string /* DD-MM-YYYY */): AbstractViewDataAttributePopupPage {
+    editDateAttribute(v: string /* DD-MM-YYYY */): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-date]`)
             .clear({force: true})
@@ -49,7 +49,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editCurrencyAttribute(v: number, unit: CountryCurrencyUnits): AbstractViewDataAttributePopupPage {
+    editCurrencyAttribute(v: number, unit: CountryCurrencyUnits): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find((`[test-field-currency]`))
             .clear({force: true})
@@ -60,7 +60,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editAreaAttribute(v: number, unit: AreaUnits): AbstractViewDataAttributePopupPage {
+    editAreaAttribute(v: number, unit: AreaUnits): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-area]`)
             .clear({force: true})
@@ -71,7 +71,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editVolumeAttribute(v: number, unit: VolumeUnits): AbstractViewDataAttributePopupPage {
+    editVolumeAttribute(v: number, unit: VolumeUnits): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-volume]`)
             .clear({force: true})
@@ -82,7 +82,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editDimensionAttribute(l: number, w: number, h: number, unit: DimensionUnits): AbstractViewDataAttributePopupPage {
+    editDimensionAttribute(l: number, w: number, h: number, unit: DimensionUnits): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-dimension-length]`)
             .clear({force: true})
@@ -101,7 +101,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editWidthAttribute(v: number, unit: WidthUnits): AbstractViewDataAttributePopupPage {
+    editWidthAttribute(v: number, unit: WidthUnits): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-width]`)
             .clear({force: true})
@@ -112,7 +112,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editLengthAttribute(v: number, unit: LengthUnits): AbstractViewDataAttributePopupPage {
+    editLengthAttribute(v: number, unit: LengthUnits): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-length]`)
             .clear({force: true})
@@ -123,7 +123,7 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editHeightAttribute(v: number, unit: HeightUnits): AbstractViewDataAttributePopupPage {
+    editHeightAttribute(v: number, unit: HeightUnits): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-field-height]`)
             .clear({force: true})
@@ -134,14 +134,14 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
-    editSelectAttribute(key: string): AbstractViewDataAttributePopupPage {
+    editSelectAttribute(key: string): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-select-key] div`).click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-select-key='${key}']`).click({force: true});
         return this;
     }
 
-    editDoubleSelectAttribute(key1: string, key2: string): AbstractViewDataAttributePopupPage {
+    editDoubleSelectAttribute(key1: string, key2: string): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-doubleselect-key1] div`).click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-doubleselect-key1='${key1}']`).click({force: true});
