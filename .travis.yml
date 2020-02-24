@@ -5,7 +5,7 @@ node_js:
 
 addons:
   chrome: stable
-  mariadb: '10.4'
+  mariadb: '10.3'
 
 services:
   - mariadb
