@@ -29,20 +29,28 @@ before_install:
 #  - npm install
 
 script:
-  - cd be &&
+  - echo 'Building & testing BE' &&
+    cd be &&
     npm install &&
     npm run build &&
     npm run test &&
     cd ..
-  - cd fe &&
+  - echo 'Building & testing FE' &&
+    cd fe &&
     npm install &&
     npx ng test &&
     npx ng build &&
     cd ..
-  - cd end2end &&
+  - echo 'Building End 2 End1 &&
+    cd end2end &&
     npm install &&
     cd ..
-  - cd be &&
+  - echo 'Running BE in background' &&
+    cd be &&
     npm run exec &
+    cd ..
+  - echo 'Running FE in background' &&
+    cd fe &&
+    npx ng serve &
     cd ..
 #  - kill $(jobs -p) || true
