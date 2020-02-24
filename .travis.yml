@@ -51,6 +51,6 @@ script:
     cd ..
   - echo 'Running FE in background' &&
     cd fe &&
-    npx ng serve &
+    npx ng serve -prod &&
     cd ..
 #  - kill $(jobs -p) || true
