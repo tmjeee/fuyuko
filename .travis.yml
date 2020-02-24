@@ -42,7 +42,6 @@ script:
     npm install &&
     cd ..
   - cd be &&
-    npm run exec & &&
+    npm run exec &
     cd ..
-
 #  - kill $(jobs -p) || true
