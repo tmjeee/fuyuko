@@ -41,7 +41,7 @@ script:
     npx ng test &&
     npx ng build &&
     cd ..
-  - echo 'Building End 2 End1' &&
+  - echo 'Building End 2 End' &&
     cd end2end &&
     npm install &&
     cd ..
@@ -53,4 +53,8 @@ script:
     cd fe &&
     npx ng serve --prod &&
     cd ..
-#  - kill $(jobs -p) || true
+  - echo 'Run cypress test' &&
+    cd end2end &&
+    npm run cypress-run
+  - echo 'kill jobs' &&
+    kill $(jobs -p) || true
