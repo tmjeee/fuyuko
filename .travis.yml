@@ -5,9 +5,10 @@ node_js:
 
 addons:
   chrome: stable
+  mariadb: '10.0'
 
 services:
-  - mysql
+  - mariadb
 
 cache:
   directories:
@@ -19,8 +20,8 @@ cache:
     - ~/.cache
 
 before_install:
-  - mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS fuyuko;'
-  - mysql -uroot -e "USE mysql; ALTER USER 'root'@'localhost' IDENTIFIED BY 'root'; FLUSH PRIVILEGES;"
+  - mariadb -uroot -e 'CREATE DATABASE IF NOT EXISTS fuyuko;'
+  - mariadb -uroot -e "USE mysql; ALTER USER 'root'@'localhost' IDENTIFIED BY 'root'; FLUSH PRIVILEGES;"
 #  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 #  - cd be
 
