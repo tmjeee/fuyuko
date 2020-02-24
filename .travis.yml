@@ -37,6 +37,6 @@ script:
     npx ng test &&
     npx ng build
   - cd ../end2end &&
-    npm install &&
-    $(npm bin)/print-env TRAVIS
+    npm install
+  - cd ../ && $(npm bin)/print-env TRAVIS
   - kill $(jobs -p) || true
