@@ -6,11 +6,21 @@ node_js:
 addons:
   chrome: stable
 
+services:
+  - mariadb
+
 cache:
   directories:
     - ./node_modules
+    - ./fe/node_modules
+    - ./be/node_modules
+    - ./end2end/node_modules
+    - ~/.npm
+    - ~/.cache
 
-#before_install:
+before_install:
+  - mariadb -e 'CREATE DATABASE IF NOT EXIST fuyuko;'
+  - echo "USE mysql; UPDATE user SET password=PASSWORD('root') WHERE user='root'; FLUSH PRIVILEGES;" | mariadb -u root
 #  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 #  - cd be
 
@@ -27,4 +37,6 @@ script:
     npx ng test &&
     npx ng build
   - cd ../end2end &&
-    npm install
+    npm install &&
+    $(npm bin)/print-env TRAVIS
+  - kill $(jobs -p) || true
