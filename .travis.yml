@@ -20,7 +20,7 @@ cache:
 
 before_install:
   - mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS fuyuko;'
-  - mysql -uroot -e "USE mysql; ALTER USER 'root' IDENTIFIED BY 'root'; FLUSH PRIVILEGES;"
+  - mysql -uroot -e "USE mysql; ALTER USER 'root'@'localhost' IDENTIFIED BY 'root'; FLUSH PRIVILEGES;"
 #  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 #  - cd be
 
