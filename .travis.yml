@@ -31,12 +31,18 @@ script:
   - cd be &&
     npm install &&
     npm run build &&
-    npm run test
-  - cd ../fe &&
+    npm run test &&
+    cd ..
+  - cd fe &&
     npm install &&
     npx ng test &&
-    npx ng build
-  - cd ../end2end &&
-    npm install
-  - cd ../ && $(npm bin)/print-env TRAVIS
-  - kill $(jobs -p) || true
+    npx ng build &&
+    cd ..
+  - cd end2end &&
+    npm install &&
+    cd ..
+  - cd be &&
+    npm run exec & &&
+    cd ..
+
+#  - kill $(jobs -p) || true
