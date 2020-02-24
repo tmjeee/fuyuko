@@ -15,6 +15,7 @@
 
     <!-- item list -->
     <div class="container">
+        <div class="no-items" *ngIf="itemAndAttributeSet && itemAndAttributeSet.items && itemAndAttributeSet.items.length == 0">No Items</div>
         <mat-accordion>
             <mat-expansion-panel *ngFor="let item of itemAndAttributeSet.items; let i = index;" [attr.test-panel-item]="item.name">
                <mat-expansion-panel-header>

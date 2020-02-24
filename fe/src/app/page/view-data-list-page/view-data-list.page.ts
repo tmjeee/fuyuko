@@ -59,7 +59,9 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
     const viewId = this.currentView.id;
     combineLatest(
         this.attributeService.getAllAttributesByView(viewId),
-        this.itemService.getAllItems(viewId)
+        (this.search && this.searchType) ?
+            this.itemService.searchForItems(viewId, this.searchType, this.search) :
+            this.itemService.getAllItems(viewId)
     ).pipe(
         map( (r: [Attribute[], Item[]]) => {
           const attributes: Attribute[] = r[0];

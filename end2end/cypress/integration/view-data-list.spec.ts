@@ -38,8 +38,25 @@ describe(`view-data-list spec`, () => {
         ;
     });
 
+    it.only ('should expand and collapse panel', () => {
+        const itemName  = `Item-2`;
+        viewDataListPage
+            .clickOnPanel(itemName)
+            .verifyPanelExpanded(itemName)
+            .clickOnPanel(itemName)
+            .verifyPanelCollapsed(itemName)
+        ;
+    });
+
 
     it('should be searchable (basic search)', () => {
-
+        viewDataListPage
+            .doBasicSearch(`Item-2`)
+            .verifyListResultSize(1)
+            .verifyListHasItem(`Item-2`, true)
+            .doBasicSearch('asdsdsdsdsdsdsdsds')
+            .verifyListResultSize(0)
+            .verifyListHasItem('asdsdsdsdsdsdsdsds', false)
+            .doBasicSearch('')
     });
 });

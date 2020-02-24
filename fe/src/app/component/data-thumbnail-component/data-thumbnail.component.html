@@ -14,6 +14,7 @@
 
   <!-- thumbnails -->
   <div class="container">
+    <div class="no-items" *ngIf="itemAndAttributeSet && itemAndAttributeSet.items && itemAndAttributeSet.items.length == 0">No Items</div>
     <div class="grid" *ngFor="let item of itemAndAttributeSet.items; index as i" [attr.test-thumbnail-item-name]="item.name" [attr.test-thumbnail-item-index]="i">
       <div class="controls">
         <mat-checkbox [attr.test-checkbox-thumbnail-item]="item.name" (change)="onCheckboxChangeEvent($event, item)"></mat-checkbox>

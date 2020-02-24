@@ -36,4 +36,47 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     clickDelete(itemNames: string[]): ViewDataListPage {
         return this;
     }
+
+    clickOnPanel(itemName: string): ViewDataListPage {
+       cy.get(`[test-panel-item='${itemName}'] section:first-child`).click({force: true});
+       return this;
+    }
+
+    verifyPanelExpanded(itemName: string): ViewDataListPage {
+       cy.get(`[test-panel-item='${itemName}']`)
+         .find(`[test-item-editor='name']`)
+         .should( 'exist')
+       ;
+       cy.get(`[test-panel-item='${itemName}']`)
+         .find(`[test-item-editor='name']`)
+         .should( 'contain.text' , itemName)
+       ;
+       return this;
+    }
+
+    verifyPanelCollapsed(itemName: string): ViewDataListPage {
+        cy.get(`[test-panel-item='${itemName}']`)
+            .find(`[test-item-editor='name']`)
+            .should( 'not.be.visible')
+        ;
+        return this;
+    }
+
+    doBasicSearch(search: string): ViewDataListPage {
+        cy.get(`[test-mat-tab-basic-search]`).click({force: true});
+        cy.get(`[test-field-data-table-search]`)
+            .clear({force: true})
+            .type(`${search}{enter}`, {force: true})
+        return this;
+    }
+
+    verifyListResultSize(number: number): ViewDataListPage {
+        cy.get(`[test-panel-item]`).should('have.length', number);
+        return this;
+    }
+
+    verifyListHasItem(itemName: string, b: boolean): ViewDataListPage {
+       cy.get(`[test-panel-item='${itemName}']`).should(b ? 'exist' : 'not.exist');
+       return this;
+    }
 }
