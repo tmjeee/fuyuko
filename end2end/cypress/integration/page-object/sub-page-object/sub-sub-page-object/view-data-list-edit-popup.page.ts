@@ -31,4 +31,5 @@ export class ViewDataListEditPopupPage extends AbstractViewDataEditPopupPage<Vie
             .wait(100);
         return new ViewDataListPage();
     }
+
 }

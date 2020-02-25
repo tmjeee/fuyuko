@@ -1,6 +1,7 @@
 
 import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
+import {ViewViewEditPopupPage} from "./sub-sub-page-object/view-view-edit-popup.page";
 
 export class ViewViewPage implements ActualPage<ViewViewPage> {
 
@@ -23,4 +24,52 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
         util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
+
+    clickAdd(): ViewViewEditPopupPage {
+        cy.get(`[test-button-add-view]`).click({force: true});
+        return new ViewViewEditPopupPage();
+    }
+
+    clickDelete(viewNames: string[]): ViewViewPage {
+        cy.wrap(viewNames).each((e, i, a) => {
+            cy.get(`[test-page-title]`).then((_) => {
+                const length = _.find(`[test-mat-checkbox='${viewNames[i]}'].mat-checkbox-checked`).length;
+                if (length <= 0) { // not already checked
+                    cy.get(`[test-mat-checkbox='${viewNames[i]}']`).click({force: true});
+                }
+            })
+        });
+        cy.get(`[test-button-delete-view]`).click({force: true});
+        return this;
+    }
+
+    clickSave(): ViewViewPage {
+        return this;
+    }
+
+    clickReload(): ViewViewPage {
+        return this;
+    }
+
+    verifyViewExits(viewName: string): ViewViewPage {
+        cy.get(`[test-row-view='${viewName}']`).should('exist');
+        return this;
+    }
+
+    verifyViewDescription(viewName: string, viewDescription: string): ViewViewPage {
+        cy.get(`[test-row-view='${viewName}']`)
+            .find(`[test-view-editor='description']`)
+            .find(`[test-view-editor-value='description']`)
+            .should('contain.value', viewDescription);
+        return this;
+    }
+
+    verifyViewName(viewName: string): ViewViewPage {
+        cy.get(`[test-row-view='${viewName}']`)
+            .find(`[test-view-editor='name']`)
+            .find(`[test-view-editor-value='name']`)
+            .should('contain.value', name);
+        return this;
+    }
+
 }

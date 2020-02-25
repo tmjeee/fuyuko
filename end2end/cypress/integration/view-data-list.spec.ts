@@ -62,7 +62,7 @@ describe(`view-data-list spec`, () => {
 
     ///////////////////////////////////////
 
-    it ('should not create item', () => {
+    it('should not create item', () => {
         const itemName = `New-Item-${Math.random()}`;
         const itemDescription = `New-Item-Description-${Math.random()}`;
 
@@ -137,7 +137,7 @@ describe(`view-data-list spec`, () => {
             .clickAdd()
                 // item name
             .editItemName(itemName)
-            .clickCancel2() // done with item name edit popup
+            .clickOk2() // done with item name edit popup
                 // item description
             .editItemDescription(itemDescription)
             .clickCancel2()
@@ -185,7 +185,7 @@ describe(`view-data-list spec`, () => {
             .clickOk()
 
             .clickOnPanel(itemName)
-            .verifyInPanelItemNotName(itemName)
+            .verifyInPanelItemName(itemName)
             .verifyInPanelItemNotDescription(itemName, itemDescription)
             .verifyInPanelAttributeNotValue(itemName, string_attributeName, [string_attributeValue])
             .verifyInPanelAttributeNotValue(itemName, text_attributeName, [text_attributeValue])
@@ -203,7 +203,7 @@ describe(`view-data-list spec`, () => {
     });
 
 
-    it ('should create item', () => {
+    it('should create item', () => {
         const itemName = `New-Item-${Math.random()}`;
         const itemDescription = `New-Item-Description-${Math.random()}`;
 
@@ -341,12 +341,17 @@ describe(`view-data-list spec`, () => {
             .verifyInPanelAttributeValue(itemName, height_attributeName, [height_attributeValue])
             .verifyInPanelAttributeValue(itemName, select_attributeName, [select_v])
             .verifyInPanelAttributeValue(itemName, doubleselect_attributeName, [doubleselect_v])
+
+
+            .clickDelete([itemName])
+            .clickSave()
     });
 
 
     it('should edit item', () => {
 
         const itemName = `New-Item-${Math.random()}`;
+        const newItemName=`New-New-Item-${Math.random()}`;
         const itemDescription = `New-Item-Description-${Math.random()}`;
 
         const string_attributeName = `string attribute`;
@@ -432,20 +437,101 @@ describe(`view-data-list spec`, () => {
 
             // item name
             .clickOnItemName(itemName)
-            .clickOk2()
+            .editItemName(newItemName)
+            .clickOk()
 
             // item description
+            .clickOnItemDescription(newItemName)
+            .editItemDescription(itemDescription)
+            .clickOk()
 
             // string
-
-
+            .clickOnAttribute(newItemName, string_attributeName)
+            .editStringAttribute(string_attributeValue)
             .clickOk()
+
+            // text
+            .clickOnAttribute(newItemName, text_attributeName)
+            .editTextAttribute(text_attributeValue)
+            .clickOk()
+
+            // number
+            .clickOnAttribute(newItemName, number_attributeName)
+            .editNumericAttribute(Number(number_attributeValue))
+            .clickOk()
+
+            // date
+            .clickOnAttribute(newItemName, date_attributeName)
+            .editDateAttribute(date_attributeValue)
+            .clickOk()
+
+            // currency
+            .clickOnAttribute(newItemName, currency_attributeName)
+            .editCurrencyAttribute(Number(currency_attributeValue), currency_attributeUnit)
+            .clickOk()
+
+            // volume
+            .clickOnAttribute(newItemName, volume_attributeName)
+            .editVolumeAttribute(Number(volume_attributeValue), volume_attributeUnit)
+            .clickOk()
+
+            // dimension
+            .clickOnAttribute(newItemName, dimension_attributeName)
+            .editDimensionAttribute(Number(dimension_attributeLengthValue), Number(dimension_attributeWidthValue), Number(dimension_attributeHeightValue), dimension_attributeUnit)
+            .clickOk()
+
+            // area
+            .clickOnAttribute(newItemName, area_attributeName)
+            .editAreaAttribute(Number(area_attributeValue), area_attributeUnit)
+            .clickOk()
+
+            // length
+            .clickOnAttribute(newItemName, length_attributeName)
+            .editLengthAttribute(Number(length_attributeValue), length_attributeUnit)
+            .clickOk()
+
+            // width
+            .clickOnAttribute(newItemName, width_attributeName)
+            .editWidthAttribute(Number(width_attributeValue), width_attributeUnit)
+            .clickOk()
+
+            // height
+            .clickOnAttribute(newItemName, height_attributeName)
+            .editHeightAttribute(Number(height_attributeValue), height_attributeUnit)
+            .clickOk()
+
+            // select
+            .clickOnAttribute(newItemName, select_attributeName)
+            .editSelectAttribute(select_attributeValue)
+            .clickOk()
+
+            // doubleselect
+            .clickOnAttribute(newItemName, doubleselect_attributeName)
+            .editDoubleSelectAttribute(doubleselect_attributeValue1, doubleselect_attributeValue2)
+            .clickOk()
+
             .clickSave()
             .verifySuccessMessageExists()
 
-            .verifyInPanelItemName(itemName)
-            .verifyInPanelItemDescription(itemName, itemDescription)
-            .verifyInPanelAttributeValue(itemName, string_attributeName, [string_attributeValue])
+            .verifyInPanelItemName(newItemName)
+            .verifyInPanelItemDescription(newItemName, itemDescription)
+            .verifyInPanelAttributeValue(newItemName, string_attributeName, [string_attributeValue])
+            .verifyInPanelAttributeValue(newItemName, text_attributeName, [text_attributeValue])
+            .verifyInPanelAttributeValue(newItemName, number_attributeName, [number_attributeValue])
+            .verifyInPanelAttributeValue(newItemName, date_attributeName, [date_attributeValue])
+            .verifyInPanelAttributeValue(newItemName, currency_attributeName, [currency_attributeValue, currency_attributeUnit])
+            .verifyInPanelAttributeValue(newItemName, volume_attributeName, [volume_attributeValue, volume_attributeUnit])
+            .verifyInPanelAttributeValue(newItemName, dimension_attributeName, [dimension_attributeLengthValue, dimension_attributeWidthValue, dimension_attributeHeightValue, dimension_attributeUnit])
+            .verifyInPanelAttributeValue(newItemName, area_attributeName, [area_attributeValue, area_attributeUnit])
+            .verifyInPanelAttributeValue(newItemName, length_attributeName, [length_attributeValue, length_attributeUnit])
+            .verifyInPanelAttributeValue(newItemName, width_attributeName, [width_attributeValue, width_attributeUnit])
+            .verifyInPanelAttributeValue(newItemName, height_attributeName, [height_attributeValue, height_attributeUnit])
+            .verifyInPanelAttributeValue(newItemName, select_attributeName, [select_v])
+            .verifyInPanelAttributeValue(newItemName, doubleselect_attributeName, [doubleselect_v])
+
+
+            .clickDelete([newItemName])
+            .clickSave()
         ;
     });
 });

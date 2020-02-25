@@ -1,10 +1,10 @@
 
 <div class="view-table-component">
     <div class="controls">
-        <button type="button" color="primary" mat-flat-button (click)="onAdd($event)">Add</button>
-        <button type="button" [disabled]="!canSave()" color="primary" (click)="onSave($event)" mat-flat-button>Save</button>
-        <button type="button" [disabled]="!canDelete()" color="primary" (click)="onDelete($event)" mat-flat-button>Delete</button>
-        <button type="button" color="primary" mat-flat-button (click)="onReload($event)">Reload</button>
+        <button type="button" color="primary" mat-flat-button (click)="onAdd($event)" [attr.test-button-add-view]="''">Add</button>
+        <button type="button" [disabled]="!canSave()" color="primary" (click)="onSave($event)" mat-flat-button [attr.test-button-save-view]="''">Save</button>
+        <button type="button" [disabled]="!canDelete()" color="primary" (click)="onDelete($event)" mat-flat-button [attr.test-button-delete-view]="''">Delete</button>
+        <button type="button" color="primary" mat-flat-button (click)="onReload($event)" [attr.test-button-reload-view]="''">Reload</button>
     </div>
 
     <div class="table">
@@ -12,25 +12,26 @@
             <ng-container  matColumnDef="selection" sticky>
                 <mat-header-cell *matHeaderCellDef>
                     <mat-checkbox  #masterCheckbox
+                                   [attr.test-mat-checkbox-master]="''"
                                   (change)="onMasterCheckboxChange($event)">
                     </mat-checkbox>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let view">
-                    <mat-checkbox #checkboxes (change)="onCheckboxChange($event, view)"></mat-checkbox>
+                    <mat-checkbox #checkboxes [attr.test-mat-checkbox]="view.name" (change)="onCheckboxChange($event, view)"></mat-checkbox>
                 </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="name">
                 <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
                 <mat-cell *matCellDef="let view">
-                    <app-view-editor [view]="view" [type]="'name'" (events)="onEdit($event)"></app-view-editor>
+                    <app-view-editor [attr.test-view-editor]="'name'" [view]="view" [type]="'name'" (events)="onEdit($event)"></app-view-editor>
                 </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="description">
                 <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
                 <mat-cell *matCellDef="let view">
-                    <app-view-editor [view]="view" [type]="'description'" (events)="onEdit($event)"></app-view-editor>
+                    <app-view-editor [attr.test-view-editor]="'description'" [view]="view" [type]="'description'" (events)="onEdit($event)"></app-view-editor>
                 </mat-cell>
             </ng-container>
 
@@ -41,7 +42,7 @@
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let view; columns: displayedColumns"></mat-row>
+            <mat-row [attr.test-row-view]="view.name" *matRowDef="let view; columns: displayedColumns"></mat-row>
         </mat-table>
     </div>
 </div>

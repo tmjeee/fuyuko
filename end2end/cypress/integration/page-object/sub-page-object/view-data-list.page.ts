@@ -2,6 +2,7 @@ import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {ViewDataListEditPopupPage} from "./sub-sub-page-object/view-data-list-edit-popup.page";
 import {ViewDataListItemPopupPage} from "./sub-sub-page-object/view-data-list-item-popup.page";
+import {ViewDataListAttributePopupPage} from "./sub-sub-page-object/view-data-list-attribute-popup.page";
 
 export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
@@ -116,7 +117,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
         cy.get(`[test-panel-item='${itemName}']`)
             .find(`[test-item-editor='description']`)
             .find(`[test-item-editor-value='description']`)
-            .should('contain.text', itemName);
+            .should('contain.text', itemDescription);
         return this;
     }
 
@@ -149,7 +150,26 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     }
 
     clickOnItemName(itemName: string): ViewDataListItemPopupPage {
-        cy.et
+        cy.get(`[test-panel-item='itemName']`)
+            .find(`[test-item-editor='name']`)
+            .find(`[test-item-editor-value='name']`)
+            .click({force: true});
         return new ViewDataListItemPopupPage();
+    }
+
+    clickOnItemDescription(itemName: string): ViewDataListItemPopupPage {
+        cy.get(`[test-panel-item='itemName']`)
+            .find(`[test-item-editor='description']`)
+            .find(`[test-item-editor-value='description']`)
+            .click({force: true});
+        return new ViewDataListItemPopupPage();
+    }
+
+    clickOnAttribute(itemName: string, attributeName: string): ViewDataListAttributePopupPage {
+        cy.get(`[test-panel-item='itemName']`)
+            .find(`[test-data-editor='${attributeName}']`)
+            .find(`[test-data-editor-value='${attributeName}']`)
+            .click({force: true});
+        return new ViewDataListAttributePopupPage()
     }
 }
