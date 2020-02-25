@@ -1,6 +1,7 @@
 import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {ViewDataListEditPopupPage} from "./sub-sub-page-object/view-data-list-edit-popup.page";
+import {ViewDataListItemPopupPage} from "./sub-sub-page-object/view-data-list-item-popup.page";
 
 export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
@@ -26,14 +27,29 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
 
     clickAdd(): ViewDataListEditPopupPage {
+        cy.get(`[test-button-add-item]`).click({force: true});
         return new ViewDataListEditPopupPage();
     }
 
+    clickSave(): ViewDataListPage {
+        cy.get(`[test-button-save]`).click({force: true});
+        return this;
+    }
+
     clickReload(): ViewDataListPage {
+        cy.get(`[test-button-reload-items]`).click({force: true});
         return this;
     }
 
     clickDelete(itemNames: string[]): ViewDataListPage {
+        cy.wrap(itemNames).each((e, i, a) => {
+            cy.get('[test-page-title]').then((_) => {
+                const l = _.find(`[test-mat-checkbox-item='${itemNames[i]}'].mat-checkbox-checked`).length;
+                if (l <= 0) { // not already checked
+                    cy.get(`[test-mat-checkbox-item='${itemNames[i]}'] label`).click({force: true});
+                }
+            });
+        });
         return this;
     }
 
@@ -78,5 +94,62 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     verifyListHasItem(itemName: string, b: boolean): ViewDataListPage {
        cy.get(`[test-panel-item='${itemName}']`).should(b ? 'exist' : 'not.exist');
        return this;
+    }
+
+    verifyInPanelItemName(itemName: string): ViewDataListPage {
+        cy.get(`[test-panel-item='${itemName}']`)
+            .find(`[test-item-editor='name']`)
+            .find(`[test-item-editor-value='name']`)
+            .should('contain.text', itemName);
+        return this;
+    }
+
+    verifyInPanelItemNotName(itemName: string): ViewDataListPage {
+        cy.get(`[test-panel-item='${itemName}']`)
+            .find(`[test-item-editor='name']`)
+            .find(`[test-item-editor-value='name']`)
+            .should('not.contain.text', itemName);
+        return this;
+    }
+
+    verifyInPanelItemDescription(itemName: string, itemDescription: string) {
+        cy.get(`[test-panel-item='${itemName}']`)
+            .find(`[test-item-editor='description']`)
+            .find(`[test-item-editor-value='description']`)
+            .should('contain.text', itemName);
+        return this;
+    }
+
+    verifyInPanelItemNotDescription(itemName: string, itemDescription: string) {
+        cy.get(`[test-panel-item='${itemName}']`)
+            .find(`[test-item-editor='description']`)
+            .find(`[test-item-editor-value='description']`)
+            .should('not.contain.text', itemName);
+        return this;
+    }
+
+    verifyInPanelAttributeValue(itemName: string, attributeName: string, value: string[]) {
+        cy.wrap(value).each((e, i, a) => {
+            cy.get(`[test-panel-item='${itemName}']`)
+                .find(`[test-data-editor='${attributeName}']`)
+                .find(`[test-data-editor-value='${attributeName}']`)
+                .should('contain.text', value[i])
+        });
+        return this;
+    }
+
+    verifyInPanelAttributeNotValue(itemName: string, attributeName: string, value: string[]) {
+        cy.wrap(value).each((e, i, a) => {
+            cy.get(`[test-panel-item='${itemName}']`)
+                .find(`[test-data-editor='${attributeName}']`)
+                .find(`[test-data-editor-value='${attributeName}']`)
+                .should('not.contain.text', value[i])
+        });
+        return this;
+    }
+
+    clickOnItemName(itemName: string): ViewDataListItemPopupPage {
+        cy.et
+        return new ViewDataListItemPopupPage();
     }
 }
