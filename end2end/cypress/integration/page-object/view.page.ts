@@ -56,8 +56,7 @@ export class ViewPage  {
         return new ViewValidationPage();
     }
 
-    visitValidationDetails(viewId: number, validationId: number) {
-        cy.visit(`/view-gen-layout/(validation-details/view/${viewId}/validation/${validationId}//help:view-help)`);
-        return new ViewValidationDetailsPage(viewId, validationId);
+    visitValidationDetails(validationName: string): ViewValidationDetailsPage {
+        return new ViewValidationDetailsPage(validationName).visit();
     }
 }

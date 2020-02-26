@@ -32,19 +32,14 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
                 tap((v: View) => {
                     this.view = v;
                     if (v) {
-                        this.validationService.getAllValidations(v.id).pipe(
-                            tap((vals: Validation[]) => {
-                                this.validations = vals;
-                            }),
-                            finalize(() => {
-                                this.loading = false;
-                            })
-                        ).subscribe();
+                        this._reload();
                     }
                 }),
                 catchError((e: Error) => {
-                    this.loading = false;
                     return throwError(e);
+                }),
+                finalize(() => {
+                    this.loading = false;
                 })
             ).subscribe();
     }
@@ -65,6 +60,24 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
                     })
                 ).subscribe()
             ;
+        }
+    }
+
+    reload($event: MouseEvent) {
+        this._reload();
+    }
+    
+    _reload() {
+        if (this.view) {
+            this.loading = true;
+            this.validationService.getAllValidations(this.view.id).pipe(
+                tap((vals: Validation[]) => {
+                    this.validations = vals;
+                }),
+                finalize(() => {
+                    this.loading = false;
+                })
+            ).subscribe();
         }
     }
 }
