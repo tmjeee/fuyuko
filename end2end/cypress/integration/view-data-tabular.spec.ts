@@ -342,7 +342,7 @@ describe('view-data-tabular spec', () => {
         // text attribute
         {
             const attributeName = `number attribute`;
-            const attributeValue = (Math.random().toFixed(1));
+            const attributeValue = ((Math.random() + 1).toFixed(1));
             const v = `${attributeValue}`;
 
             viewDataTablePage
@@ -380,7 +380,7 @@ describe('view-data-tabular spec', () => {
         // number attribute
         {
             const attributeName = `number attribute`;
-            const attributeValue = (Math.random().toFixed(1));
+            const attributeValue = ((Math.random() + 1).toFixed(1));
             const v = `${attributeValue}`;
             viewDataTablePage
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
@@ -465,7 +465,7 @@ describe('view-data-tabular spec', () => {
         // text attribute
         {
             const attributeName = `currency attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(2));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(2));
             const attributeUnit = 'AUD'
             const v = `$${attributeValue} ${attributeUnit}`;
 
@@ -506,7 +506,7 @@ describe('view-data-tabular spec', () => {
         // currency attribute
         {
             const attributeName = `currency attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(2));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(2));
             const attributeUnit = 'AUD'
             const v = `$${attributeValue} ${attributeUnit}`;
             viewDataTablePage
@@ -532,7 +532,7 @@ describe('view-data-tabular spec', () => {
         // volume attribute
         {
             const attributeName = `volume attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'ml';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -577,7 +577,7 @@ describe('view-data-tabular spec', () => {
         // volume attribute
         {
             const attributeName = `volume attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'ml';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
@@ -600,9 +600,9 @@ describe('view-data-tabular spec', () => {
         // dimension attribute
         {
             const attributeName = `dimension attribute`;
-            const attributeLengthValue = ((Math.random() * 10).toFixed(1));
-            const attributeWidthValue = ((Math.random() * 10).toFixed(1));
-            const attributeHeightValue = ((Math.random() * 10).toFixed(1));
+            const attributeLengthValue = ((Math.random() * 10 + 1).toFixed(1));
+            const attributeWidthValue = ((Math.random() * 10 + 1).toFixed(1));
+            const attributeHeightValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'cm';
             const v = [
                 `w:${attributeWidthValue} ${attributeUnit}`,
@@ -651,9 +651,9 @@ describe('view-data-tabular spec', () => {
         // dimension attribute
         {
             const attributeName = `dimension attribute`;
-            const attributeLengthValue = ((Math.random() * 10).toFixed(1));
-            const attributeWidthValue = ((Math.random() * 10).toFixed(1));
-            const attributeHeightValue = ((Math.random() * 10).toFixed(1));
+            const attributeLengthValue = ((Math.random() * 10 + 1).toFixed(1));
+            const attributeWidthValue = ((Math.random() * 10 + 1).toFixed(1));
+            const attributeHeightValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'cm';
             const v = [
                 `w:${attributeWidthValue} ${attributeUnit}`,
@@ -681,7 +681,7 @@ describe('view-data-tabular spec', () => {
         // area attribute
         {
             const attributeName = `area attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'm2';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -724,7 +724,7 @@ describe('view-data-tabular spec', () => {
         // area attribute
         {
             const attributeName = `area attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'm2';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
@@ -748,7 +748,7 @@ describe('view-data-tabular spec', () => {
         // length attribute
         {
             const attributeName = `length attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -789,7 +789,7 @@ describe('view-data-tabular spec', () => {
         // length attribute
         {
             const attributeName = `length attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
@@ -813,7 +813,7 @@ describe('view-data-tabular spec', () => {
         // width attribute
         {
             const attributeName = `width attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -854,7 +854,7 @@ describe('view-data-tabular spec', () => {
         // width attribute
         {
             const attributeName = `width attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
@@ -878,7 +878,7 @@ describe('view-data-tabular spec', () => {
         // height attribute
         {
             const attributeName = `height attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
 
@@ -920,7 +920,7 @@ describe('view-data-tabular spec', () => {
         // height attribute
         {
             const attributeName = `height attribute`;
-            const attributeValue = ((Math.random() * 10).toFixed(1));
+            const attributeValue = ((Math.random() * 10 + 1).toFixed(1));
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage

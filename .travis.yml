@@ -5,12 +5,23 @@ node_js:
 
 addons:
   chrome: stable
+  mariadb: '10.3'
+
+services:
+  - mariadb
 
 cache:
   directories:
     - ./node_modules
+    - ./fe/node_modules
+    - ./be/node_modules
+    - ./end2end/node_modules
+    - ~/.npm
+    - ~/.cache
 
-#before_install:
+before_install:
+  - mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS fuyuko;'
+  - mysql -uroot -e "USE mysql; ALTER USER 'root'@'localhost' IDENTIFIED BY 'root'; FLUSH PRIVILEGES;"
 #  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 #  - cd be
 
@@ -18,13 +29,45 @@ cache:
 #  - npm install
 
 script:
-  - cd be &&
+  - echo 'Building & testing BE' &&
+    cd be &&
     npm install &&
     npm run build &&
-    npm run test
-  - cd ../fe &&
+    cd .. &&
+    echo 'Building & testing FE' &&
+    cd fe &&
     npm install &&
-    npx ng test &&
-    npx ng build
-  - cd ../end2end &&
-    npm install
+    cd .. &&
+    echo 'Building End 2 End' &&
+    cd end2end &&
+    npm install &&
+    cd .. &&
+    echo 'Running BE in background' &&
+    echo "before $(pwd)" &&
+    cd be &&
+    npm run exec &
+    cd .. && echo "after $(pwd)" &&
+    echo 'Running FE in background' &&
+    echo "before $(pwd)" &&
+    cd fe &&
+    echo "middle $(pwd)" &&
+    npx ng serve &
+    echo "sub middle $(pwd)" &&
+    cd .. && echo "after $(pwd)" &&
+    echo 'Run cypress test' &&
+    cd end2end &&
+    sleep 30s && echo `sleep #1` &&
+    sleep 30s && echo `sleep #2` &&
+    sleep 30s && echo `sleep #3` &&
+    sleep 30s && echo `sleep #4` &&
+    sleep 30s && echo `sleep #5` &&
+    sleep 30s && echo `sleep #6` &&
+    sleep 30s && echo `sleep #7` &&
+    sleep 30s && echo `sleep #8` &&
+    sleep 30s && echo `sleep #9` &&
+    sleep 30s && echo `sleep #10` &&
+    sleep 30s && echo `sleep #11` &&
+    npm run cypress-run &&
+    echo "after $(pwd)"
+#    echo 'kill jobs' &&
+#    kill $(jobs -p) || true

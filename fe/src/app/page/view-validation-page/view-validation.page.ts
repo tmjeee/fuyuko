@@ -5,6 +5,8 @@ import {Subscription, throwError} from 'rxjs';
 import {catchError, finalize, tap} from 'rxjs/operators';
 import {View} from '../../model/view.model';
 import {Validation} from '../../model/validation.model';
+import {NotificationsService} from 'angular2-notifications';
+import {ValidationRunComponentEvent} from '../../component/validation-result-component/validation-run.component';
 
 @Component({
     templateUrl: './view-validation.page.html',
@@ -12,13 +14,14 @@ import {Validation} from '../../model/validation.model';
 })
 export class ViewValidationPageComponent implements OnInit, OnDestroy {
 
-    view: View;
+    view: View; // current active view
     validations: Validation[];
     subscription: Subscription;
 
     loading: boolean;
 
     constructor(private viewService: ViewService,
+                private notificationsService: NotificationsService,
                 private validationService: ValidationService) {
     }
 
@@ -52,5 +55,16 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
         }
     }
 
-
+    onValidationRun($event: ValidationRunComponentEvent) {
+        if ($event) {
+            this.validationService
+                .scheduleValidation(this.view.id, $event.name, $event.description)
+                .pipe(
+                    tap((r: {ok: boolean, validationId: number}) => {
+                        this.notificationsService.success(`Validation schduled`, `Validation with id ${r.validationId} is scheduled`);
+                    })
+                ).subscribe()
+            ;
+        }
+    }
 }

@@ -10,22 +10,22 @@ import {
 import {ViewDataTablePage} from "../view-data-table.page";
 
 
-export class ViewDataEditorPopupPage {
+export class ViewDataTableEditPopupPage {
 
-    verifyPopupTitle(): ViewDataEditorPopupPage {
+    verifyPopupTitle(): ViewDataTableEditPopupPage {
         cy.get(`[test-popup-dialog-title]`)
             .should('have.attr', 'test-popup-dialog-title', 'data-editor-dialog-popup');
         return this;
     }
 
-    editStringValue(v: string): ViewDataEditorPopupPage {
+    editStringValue(v: string): ViewDataTableEditPopupPage {
         cy.get(`[test-field-string]`)
             .clear({force: true})
             .type(v, {force: true});
         return this;
     }
 
-    editTextValue(v: string): ViewDataEditorPopupPage {
+    editTextValue(v: string): ViewDataTableEditPopupPage {
         cy.get(`[test-field-text]`)
             .clear({force: true})
             .type(v, {force: true});
@@ -33,21 +33,21 @@ export class ViewDataEditorPopupPage {
     }
 
 
-    editNumberValue(v: number): ViewDataEditorPopupPage {
+    editNumberValue(v: number): ViewDataTableEditPopupPage {
         cy.get(`[test-field-number]`)
             .clear({force: true})
             .type(String(v), {force: true});
         return this;
     }
 
-    editDateValue(v: string /* DD-MM-YYYY */): ViewDataEditorPopupPage {
+    editDateValue(v: string /* DD-MM-YYYY */): ViewDataTableEditPopupPage {
         cy.get(`[test-field-date]`)
             .clear({force: true})
             .type(v, {force: true});
         return this;
     }
 
-    editCurrencyValue(v: number, unit: CountryCurrencyUnits): ViewDataEditorPopupPage {
+    editCurrencyValue(v: number, unit: CountryCurrencyUnits): ViewDataTableEditPopupPage {
         cy.get(`[test-field-currency]`)
             .clear({force: true})
             .type(String(v), {force: true});
@@ -56,7 +56,7 @@ export class ViewDataEditorPopupPage {
         return this;
     }
 
-    editAreaValue(v: number, unit: AreaUnits): ViewDataEditorPopupPage {
+    editAreaValue(v: number, unit: AreaUnits): ViewDataTableEditPopupPage {
         cy.get(`[test-field-area]`)
             .clear({force: true})
             .type(String(v), {force: true});
@@ -65,7 +65,7 @@ export class ViewDataEditorPopupPage {
         return this;
     }
 
-    editVolumeValue(v: number, unit: VolumeUnits): ViewDataEditorPopupPage {
+    editVolumeValue(v: number, unit: VolumeUnits): ViewDataTableEditPopupPage {
         cy.get(`[test-field-volume]`)
             .clear({force: true})
             .type(String(v), {force: true});
@@ -74,7 +74,7 @@ export class ViewDataEditorPopupPage {
         return this;
     }
 
-    editDimensionValue(l: number, w: number, h: number, unit: DimensionUnits): ViewDataEditorPopupPage {
+    editDimensionValue(l: number, w: number, h: number, unit: DimensionUnits): ViewDataTableEditPopupPage {
         cy.get(`[test-field-dimension-length]`)
             .clear({force: true})
             .type(String(l), {force: true});
@@ -89,7 +89,7 @@ export class ViewDataEditorPopupPage {
         return this;
     }
 
-    editLengthValue(v: number, unit: LengthUnits): ViewDataEditorPopupPage {
+    editLengthValue(v: number, unit: LengthUnits): ViewDataTableEditPopupPage {
         cy.get(`[test-field-length]`)
             .clear({force: true})
             .type(String(v), {force: true});
@@ -98,7 +98,7 @@ export class ViewDataEditorPopupPage {
         return this;
     }
 
-    editWidthValue(v: number, unit: WidthUnits): ViewDataEditorPopupPage {
+    editWidthValue(v: number, unit: WidthUnits): ViewDataTableEditPopupPage {
         cy.get(`[test-field-width]`)
             .clear({force: true})
             .type(String(v), {force: true});
@@ -107,7 +107,7 @@ export class ViewDataEditorPopupPage {
         return this;
     }
 
-    editHeightValue(v: number, unit: HeightUnits): ViewDataEditorPopupPage {
+    editHeightValue(v: number, unit: HeightUnits): ViewDataTableEditPopupPage {
         cy.get(`[test-field-height]`)
             .clear({force: true})
             .type(String(v), {force: true});
@@ -116,13 +116,13 @@ export class ViewDataEditorPopupPage {
         return this;
     }
 
-    editSelectValue(key: string): ViewDataEditorPopupPage {
+    editSelectValue(key: string): ViewDataTableEditPopupPage {
         cy.get(`[test-mat-select-select-key] div`).click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-select-key='${key}']`).click({force: true});
         return this;
     }
 
-    editDoubleSelectValue(key1: string, key2: string): ViewDataEditorPopupPage {
+    editDoubleSelectValue(key1: string, key2: string): ViewDataTableEditPopupPage {
         cy.get(`[test-mat-select-doubleselect-key1] div`).click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-doubleselect-key1='${key1}']`).click({force: true});
         cy.get(`[test-mat-select-doubleselect-key2] div`).click({force: true, multiple: true});

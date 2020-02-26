@@ -29,6 +29,8 @@ export class ViewEditorComponent {
 
     onEdit($event: MouseEvent, description: string) {
         this.matDialog.open(ViewEditorDialogComponent, {
+            width: `90vw`,
+            height: `90vh`,
             data: {...{view: this.view, type: this.type}}
         })
         .afterClosed()

@@ -1,5 +1,7 @@
 import {LoginPage} from "./page-object/login.page";
 import {ViewDataThumbnailPage} from "./page-object/sub-page-object/view-data-thumbnail.page";
+import {ViewDataThumbnailEditPopupPage} from "./page-object/sub-page-object/sub-sub-page-object/view-data-thumbnail-edit-popup.page";
+import {AreaUnits} from "./model/unit.model";
 
 
 describe('view-data-thumbnail spec', () => {
@@ -112,7 +114,7 @@ describe('view-data-thumbnail spec', () => {
     });
 
     /////////////// set 1
-    it.only(`[string attribute] should change attributes of thumbnail`, () => {
+    it(`[string attribute] should change attributes of thumbnail`, () => {
 
         const itemName = `Test-Item-${Math.random()}`;
 
@@ -125,7 +127,7 @@ describe('view-data-thumbnail spec', () => {
         const text_v = `${text_attributeValue}`;
 
         const number_attributeName = `number attribute`;
-        const number_attributeValue = (Math.random().toFixed(1));
+        const number_attributeValue = ((Math.random() + 1).toFixed(1));
         const number_v = `${number_attributeValue}`;
 
         const date_attributeName = `date attribute`;
@@ -133,19 +135,19 @@ describe('view-data-thumbnail spec', () => {
         const date_v = `${date_attributeValue}`;
 
         const currency_attributeName = `currency attribute`;
-        const currency_attributeValue = ((Math.random() * 10).toFixed(2));
+        const currency_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const currency_attributeUnit = 'AUD'
         const currency_v = `$${currency_attributeValue} ${currency_attributeUnit}`;
 
         const volume_attributeName = `volume attribute`;
-        const volume_attributeValue = ((Math.random() * 10).toFixed(1));
+        const volume_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const volume_attributeUnit = 'ml';
         const volume_v = `${volume_attributeValue} ${volume_attributeUnit}`;
 
         const dimension_attributeName = `dimension attribute`;
-        const dimension_attributeLengthValue = ((Math.random() * 10).toFixed(1));
-        const dimension_attributeWidthValue = ((Math.random() * 10).toFixed(1));
-        const dimension_attributeHeightValue = ((Math.random() * 10).toFixed(1));
+        const dimension_attributeLengthValue = ((Math.random() * 10 + 1).toFixed(1));
+        const dimension_attributeWidthValue = ((Math.random() * 10 + 1).toFixed(1));
+        const dimension_attributeHeightValue = ((Math.random() * 10 + 1).toFixed(1));
         const dimension_attributeUnit = 'cm';
         const dimension_v = [
             `w:${dimension_attributeWidthValue} ${dimension_attributeUnit}`,
@@ -155,22 +157,22 @@ describe('view-data-thumbnail spec', () => {
 
 
         const area_attributeName = `area attribute`;
-        const area_attributeValue = ((Math.random() * 10).toFixed(1));
+        const area_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const area_attributeUnit = 'm2';
         const area_v = `${area_attributeValue} ${area_attributeUnit}`;
 
         const length_attributeName = `length attribute`;
-        const length_attributeValue = ((Math.random() * 10).toFixed(1));
+        const length_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const length_attributeUnit = 'cm';
         const length_v = `${length_attributeValue} ${length_attributeUnit}`;
 
         const width_attributeName = `width attribute`;
-        const width_attributeValue = ((Math.random() * 10).toFixed(1));
+        const width_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const width_attributeUnit = 'cm';
         const width_v = `${width_attributeValue} ${width_attributeUnit}`;
 
         const height_attributeName = `height attribute`;
-        const height_attributeValue = ((Math.random() * 10).toFixed(1));
+        const height_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const height_attributeUnit = 'cm';
         const height_v = `${height_attributeValue} ${height_attributeUnit}`;
 
@@ -428,12 +430,21 @@ describe('view-data-thumbnail spec', () => {
 
             // doubleselect
             .verifyThumbnailItemHasAttributeValue(itemName, doubleselect_attributeName, [doubleselect_v])
+
+
+
+
+            // delete item
+            .clickDeleteThumbnail([itemName])
+            .clickSave()
+            .verifySuccessMessageExists()
+            .verifyThumbnailsHasItem(itemName, false)
         ;
     });
 
 
     //////////// set 2
-    it(`[string attribute] should allow editing of attributes through edit icon`, () => {
+    it.only(`[string attribute] should allow editing of attributes through edit icon`, () => {
 
         const itemName = `Test-Item-${Math.random()}`;
 
@@ -446,7 +457,7 @@ describe('view-data-thumbnail spec', () => {
         const text_v = `${text_attributeValue}`;
 
         const number_attributeName = `number attribute`;
-        const number_attributeValue = (Math.random().toFixed(1));
+        const number_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const number_v = `${number_attributeValue}`;
 
         const date_attributeName = `date attribute`;
@@ -454,19 +465,19 @@ describe('view-data-thumbnail spec', () => {
         const date_v = `${date_attributeValue}`;
 
         const currency_attributeName = `currency attribute`;
-        const currency_attributeValue = ((Math.random() * 10).toFixed(2));
+        const currency_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const currency_attributeUnit = 'AUD'
         const currency_v = `$${currency_attributeValue} ${currency_attributeUnit}`;
 
         const volume_attributeName = `volume attribute`;
-        const volume_attributeValue = ((Math.random() * 10).toFixed(1));
+        const volume_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const volume_attributeUnit = 'ml';
         const volume_v = `${volume_attributeValue} ${volume_attributeUnit}`;
 
         const dimension_attributeName = `dimension attribute`;
-        const dimension_attributeLengthValue = ((Math.random() * 10).toFixed(1));
-        const dimension_attributeWidthValue = ((Math.random() * 10).toFixed(1));
-        const dimension_attributeHeightValue = ((Math.random() * 10).toFixed(1));
+        const dimension_attributeLengthValue = ((Math.random() * 10 + 1).toFixed(1));
+        const dimension_attributeWidthValue = ((Math.random() * 10 + 1).toFixed(1));
+        const dimension_attributeHeightValue = ((Math.random() * 10 + 1).toFixed(1));
         const dimension_attributeUnit = 'cm';
         const dimension_v = [
             `w:${dimension_attributeWidthValue} ${dimension_attributeUnit}`,
@@ -476,22 +487,22 @@ describe('view-data-thumbnail spec', () => {
 
 
         const area_attributeName = `area attribute`;
-        const area_attributeValue = ((Math.random() * 10).toFixed(1));
-        const area_attributeUnit = 'm2';
+        const area_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const area_attributeUnit: AreaUnits = 'mm2';
         const area_v = `${area_attributeValue} ${area_attributeUnit}`;
 
         const length_attributeName = `length attribute`;
-        const length_attributeValue = ((Math.random() * 10).toFixed(1));
+        const length_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const length_attributeUnit = 'cm';
         const length_v = `${length_attributeValue} ${length_attributeUnit}`;
 
         const width_attributeName = `width attribute`;
-        const width_attributeValue = ((Math.random() * 10).toFixed(1));
+        const width_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const width_attributeUnit = 'cm';
         const width_v = `${width_attributeValue} ${width_attributeUnit}`;
 
         const height_attributeName = `height attribute`;
-        const height_attributeValue = ((Math.random() * 10).toFixed(1));
+        const height_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
         const height_attributeUnit = 'cm';
         const height_v = `${height_attributeValue} ${height_attributeUnit}`;
 
@@ -506,34 +517,233 @@ describe('view-data-thumbnail spec', () => {
 
         viewDataThumbnailPage
             .clickAddThumbnail(itemName)
-            .clickEditThumbnailIcon(itemName)
-            .verifyPopupTitle()
 
             // string
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
             .editStringAttribute(string_attributeName, string_attributeValue)
+            .clickOk1()
             .clickCancel()
+            .clickItemShowMore(itemName)
             .verifyThumbnailItemHasNoAttributeValue(itemName, string_attributeName, [string_attributeValue])
 
+
+            // text
             .clickEditThumbnailIcon(itemName)
             .verifyPopupTitle()
+            .editTextAttribute(text_attributeName, text_attributeValue)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, text_attributeName, [text_attributeValue])
+
+            // number
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editNumericAttribute(number_attributeName, Number(number_attributeValue))
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, text_attributeName, [text_attributeValue])
+
+            // date
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editDateAttribute(date_attributeName, date_attributeValue)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, date_attributeName, [date_attributeValue])
+
+
+            // currency
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editCurrencyAttribute(currency_attributeName, Number(currency_attributeValue), currency_attributeUnit)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, currency_attributeName, [currency_attributeValue, currency_attributeUnit])
+
+            // volume
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editVolumeAttribute(volume_attributeName, Number(volume_attributeValue), volume_attributeUnit)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, volume_attributeName, [volume_attributeValue, volume_attributeUnit])
+
+            // dimension
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editDimensionAttribute(dimension_attributeName, Number(dimension_attributeLengthValue), Number(dimension_attributeWidthValue), Number(dimension_attributeHeightValue), dimension_attributeUnit)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, dimension_attributeName, [dimension_attributeLengthValue, dimension_attributeWidthValue, dimension_attributeHeightValue])
+
+            // area
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editAreaAttribute(area_attributeName, Number(area_attributeValue), area_attributeUnit)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, area_attributeName, [area_attributeValue, area_attributeUnit])
+
+            // length
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editLengthAttribute(length_attributeName, Number(length_attributeValue), length_attributeUnit)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, length_attributeName, [length_attributeValue, length_attributeUnit])
+
+            // width
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editWidthAttribute(width_attributeName, Number(width_attributeValue), width_attributeUnit)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, width_attributeName, [width_attributeValue, width_attributeUnit])
+
+            // height
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editHeightAttribute(height_attributeName, Number(height_attributeValue), height_attributeUnit)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, height_attributeName, [height_attributeValue, height_attributeUnit])
+
+            // select
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editSelectAttribute(select_attributeName, select_attributeValue)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, select_attributeName, [select_v])
+
+            // doubleselect
+            .clickEditThumbnailIcon(itemName)
+            .verifyPopupTitle()
+            .editDoubleSelectAttribute(doubleselect_attributeName, doubleselect_attributeValue1, doubleselect_attributeValue2)
+            .clickOk1()
+            .clickCancel()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasNoAttributeValue(itemName, doubleselect_attributeName, [doubleselect_v])
+
+
 
 
             // string
+            .clickEditThumbnailIcon(itemName)
             .editStringAttribute(string_attributeName, string_attributeValue)
+            .clickOk1()
             .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, string_attributeName, [string_attributeValue])
+
 
             // text
+            .clickEditThumbnailIcon(itemName)
+            .editTextAttribute(text_attributeName, text_attributeValue)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, text_attributeName, [text_attributeValue])
+
             // number
+            .clickEditThumbnailIcon(itemName)
+            .editNumericAttribute(number_attributeName, Number(number_attributeValue))
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, number_attributeName, [number_attributeValue])
+
             // date
+            .clickEditThumbnailIcon(itemName)
+            .editDateAttribute(date_attributeName, date_attributeValue)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, date_attributeName, [date_attributeValue])
+
             // currency
+            .clickEditThumbnailIcon(itemName)
+            .editCurrencyAttribute(currency_attributeName, Number(currency_attributeValue), currency_attributeUnit)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, currency_attributeName, [currency_attributeValue])
+
             // volume
+            .clickEditThumbnailIcon(itemName)
+            .editVolumeAttribute(volume_attributeName, Number(volume_attributeValue), volume_attributeUnit)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, volume_attributeName, [volume_attributeValue, volume_attributeUnit])
+
             // dimension
+            .clickEditThumbnailIcon(itemName)
+            .editDimensionAttribute(dimension_attributeName, Number(dimension_attributeLengthValue), Number(dimension_attributeWidthValue), Number(dimension_attributeHeightValue), dimension_attributeUnit)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, dimension_attributeName, [dimension_attributeLengthValue, dimension_attributeWidthValue, dimension_attributeHeightValue, dimension_attributeUnit])
+
             // area
+            .clickEditThumbnailIcon(itemName)
+            .editAreaAttribute(area_attributeName, Number(area_attributeValue), area_attributeUnit)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, area_attributeName, [area_attributeValue, area_attributeUnit])
+
             // length
+            .clickEditThumbnailIcon(itemName)
+            .editLengthAttribute(length_attributeName, Number(length_attributeValue), length_attributeUnit)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, length_attributeName, [length_attributeValue, length_attributeUnit])
+
             // width
+            .clickEditThumbnailIcon(itemName)
+            .editWidthAttribute(width_attributeName, Number(width_attributeValue), width_attributeUnit)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, width_attributeName, [width_attributeValue, width_attributeUnit])
+
             // height
+            .clickEditThumbnailIcon(itemName)
+            .editHeightAttribute(height_attributeName, Number(height_attributeValue), height_attributeUnit)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, height_attributeName, [height_attributeValue, height_attributeUnit])
+
             // select
+            .clickEditThumbnailIcon(itemName)
+            .editSelectAttribute(select_attributeName, select_attributeValue)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, select_attributeName, [select_v])
+
             // doubleselect
+            .clickEditThumbnailIcon(itemName)
+            .editDoubleSelectAttribute(doubleselect_attributeName, doubleselect_attributeValue1, doubleselect_attributeValue2)
+            .clickOk1()
+            .clickOk()
+            .clickItemShowMore(itemName)
+            .verifyThumbnailItemHasAttributeValue(itemName, doubleselect_attributeName, [doubleselect_v])
 
 
 
@@ -579,6 +789,64 @@ describe('view-data-thumbnail spec', () => {
 
             // doubleselect
             .verifyThumbnailItemHasAttributeValue(itemName, doubleselect_attributeName, [doubleselect_v])
+
+
+
+            // delete item
+            .clickDeleteThumbnail([itemName])
+            .clickSave()
+            .verifySuccessMessageExists()
+            .verifyThumbnailsHasItem(itemName, false)
+
+        ;
+    });
+
+
+    it('should change item name and description through edit icon', () => {
+        const m = Math.random();
+        const itemName = `Test-Item-${m}`;
+        const newItemName = `New-Test-Item-${m}`;
+        const newItemDescription = `New-Test-Item-Description-${m}`;
+
+        viewDataThumbnailPage
+            .clickAddThumbnail(itemName)
+
+            // edit and cancel
+            .clickEditThumbnailIcon(itemName)
+            .editItemName(newItemName)
+            .clickOk2()
+            .clickCancel()
+            .verifyThumbnailsHasItem(itemName, true)
+            .verifyThumbnailsHasItem(newItemName, false)
+            .clickEditThumbnailIcon(itemName)
+            .editItemDescription(newItemDescription)
+            .clickOk2()
+            .clickCancel()
+            .verifyThumbnailItemHasNoDescription(itemName, newItemDescription)
+
+            // edit and save
+            .clickEditThumbnailIcon(itemName)
+            .editItemName(newItemName)
+            .clickOk2()
+            .clickOk()
+            .clickEditThumbnailIcon(newItemName)
+            .editItemDescription(newItemDescription)
+            .clickOk2()
+            .clickOk()
+            .verifyThumbnailsHasItem(itemName, false)
+            .verifyThumbnailsHasItem(newItemName, true)
+            .verifyThumbnailItemHasDescription(newItemName, newItemDescription)
+            .clickSave()
+            .verifySuccessMessageExists()
+            .verifyThumbnailsHasItem(itemName, false)
+            .verifyThumbnailsHasItem(newItemName, true)
+            .verifyThumbnailItemHasDescription(newItemName, newItemDescription)
+
+            // delete (clean up)
+            .clickDeleteThumbnail([newItemName])
+            .clickSave()
+            .verifySuccessMessageExists()
+            .verifyThumbnailsHasItem(newItemName, false)
         ;
     });
 });

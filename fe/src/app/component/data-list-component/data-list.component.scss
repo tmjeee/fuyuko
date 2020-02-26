@@ -8,6 +8,11 @@
     }
   }
   .container {
+
+    .no-items {
+      padding: 30px 0;
+    }
+
     .mat-accordion {
       .mat-expansion-panel {
         .mat-expansion-panel-header {

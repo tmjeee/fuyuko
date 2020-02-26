@@ -11,6 +11,8 @@ import {ValidationResultListingComponent} from './validation-result-listing.comp
 import {ValidationResultLogComponent} from './validation-result-log.component';
 import {ValidationResultTableComponent} from './validation-result-table.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
+import {ValidationRunComponent} from './validation-run.component';
+import {ValidationCreationDialogComponent} from './validation-creation-dialog.component';
 
 @NgModule({
    imports: [
@@ -29,6 +31,8 @@ import {DataEditorModule} from '../data-editor-component/data-editor.module';
        ValidationResultListingComponent,
        ValidationResultLogComponent,
        ValidationResultTableComponent,
+       ValidationRunComponent,
+       ValidationCreationDialogComponent,
    ],
    exports: [
       ValidationResultComponent,
@@ -37,6 +41,11 @@ import {DataEditorModule} from '../data-editor-component/data-editor.module';
       ValidationResultListingComponent,
       ValidationResultLogComponent,
       ValidationResultTableComponent,
+      ValidationRunComponent,
+      ValidationCreationDialogComponent,
+   ],
+   entryComponents: [
+      ValidationCreationDialogComponent,
    ]
 })
 export class ValidationResultModule {

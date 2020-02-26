@@ -1,0 +1,22 @@
+<div class="validation-creation-dialog-component" [attr.test-popup-dialog-title]="'validation-creation-dialog-popup'">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+       <mat-form-field>
+           <mat-label>Name</mat-label>
+           <input matInput [formControl]="formControlName" [attr.test-field-validation-name]="''">
+           <mat-hint>Enter validation name</mat-hint>
+           <mat-error *ngIf="formControlName?.errors?.required">Validation name is required</mat-error>
+       </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <input matInput [formControl]="formControlDescription" [attr.test-field-validation-description]="''">
+            <mat-hint>Enter validation descrption</mat-hint>
+            <mat-error *ngIf="formControlDescription?.errors?.required">Validation description is required</mat-error>
+        </mat-form-field>
+
+        <div class="controls">
+            <button type="submit" color="primary" mat-flat-button [disabled]="formGroup.invalid" [attr.test-button-ok]="''">Ok</button>
+            <button type="button" color="accent" mat-flat-button [attr.test-button-cancel]="''" (click)="onCancel($event)">Cancel</button>
+        </div>
+    </form>
+</div>

@@ -36,6 +36,14 @@
     }
   }
   .table-container {
+
+    .no-items {
+      padding: 30px;
+      div {
+        position: absolute;
+      }
+    }
+
     overflow-x: scroll;
     ::ng-deep mat-table {
       width: 100%;

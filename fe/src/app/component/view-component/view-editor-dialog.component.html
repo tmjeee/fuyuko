@@ -1,20 +1,20 @@
-<div class="view-editor-dialog-component">
+<div class="view-editor-dialog-component" [attr.test-popup-dialog-title]="'view-editor-dialog-popup'">
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
         <mat-form-field *ngIf="data.type === 'name' || data.type === 'all'">
             <mat-label>Name</mat-label>
-            <input type="text" matInput [formControl]="formControlName">
+            <input type="text" [attr.test-field-name]="''" matInput [formControl]="formControlName">
             <mat-hint>View's name</mat-hint>
             <mat-error *ngIf="formControlName?.errors?.required">View name is required</mat-error>
         </mat-form-field>
         <mat-form-field *ngIf="data.type === 'description' || data.type === 'all'">
             <mat-label>Description</mat-label>
-            <input type="text" matInput [formControl]="formControlDescription">
+            <input type="text" matInput [attr.test-field-description]="''" [formControl]="formControlDescription">
             <mat-hint>View's Description</mat-hint>
             <mat-error *ngIf="formControlDescription?.errors?.required">View description is required</mat-error>
         </mat-form-field>
         <div class="controls">
-            <button mat-flat-button type="submit" color="primary">Ok</button>
-            <button mat-flat-button type="button" color="primary" (click)="onCancel($event)">Cancel</button>
+            <button mat-flat-button type="submit" [attr.test-button-ok]="''" color="primary" [disabled]="formGroup.invalid">Ok</button>
+            <button mat-flat-button type="button" [attr.test-button-cancel]="''" color="primary" (click)="onCancel($event)">Cancel</button>
         </div>
     </form>
 </div>

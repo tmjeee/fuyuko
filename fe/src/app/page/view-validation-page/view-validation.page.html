@@ -6,13 +6,18 @@
         </mat-card-header>
         <mat-card-content>
             <div *ngIf="loading">Loading ...</div>
-            <app-validation-result-listing
-                            *ngIf="!loading"
-
-
+            <div fxLayout="column">
+                <div fxFlex="1 1 auto">
+                    <app-validation-run *ngIf="view" [view]="view" (events)="onValidationRun($event)"></app-validation-run>
+                </div>
+                <div fxFlex="1 1 auto">
+                    <app-validation-result-listing
+                            *ngIf="view"
                             [view]="view"
                             [validations]="validations">
-            </app-validation-result-listing>
+                    </app-validation-result-listing>
+                </div>
+            </div>
         </mat-card-content>
     </mat-card>
 </div>

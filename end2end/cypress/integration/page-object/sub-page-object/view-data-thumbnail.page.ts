@@ -51,11 +51,21 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         return this;
     }
 
+
+    verifyThumbnailItemHasNoDescription(itemName: string, description: string): ViewDataThumbnailPage {
+        cy.get(`[test-thumbnail-item-name='${itemName}']`)
+            .find(`[test-item-editor='description']`)
+            .find(`[test-item-editor-value='description']`).should('not.contain', description);
+        return this;
+    }
+
     verifyThumbnailItemHasAttributeValue(itemName: string, attributeName: string, value: string[]): ViewDataThumbnailPage {
         cy.wrap(value).each((e, i, a) => {
-            cy.get(`[test-thumbnail-item-name='${itemName}']`)
+            cy.wait(100)
+                .get(`[test-thumbnail-item-name='${itemName}']`)
                 .find(`[test-data-editor='${attributeName}']`)
-                .find(`[test-data-editor-value='${attributeName}']`).should('contain', value[i]);
+                .find(`[test-data-editor-value='${attributeName}']`)
+                .should('contain', value[i]);
         });
         return this;
     }

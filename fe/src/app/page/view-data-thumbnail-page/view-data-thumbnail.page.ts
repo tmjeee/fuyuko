@@ -61,10 +61,12 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
   reload() {
     this.done = false;
     const viewId = this.currentView.id;
-    combineLatest(
+    combineLatest([
       this.attributeService.getAllAttributesByView(viewId),
-      this.itemService.getAllItems(viewId)
-    ).pipe(
+      (this.search && this.searchType) ?
+          this.itemService.searchForItems(viewId, this.searchType, this.search) :
+          this.itemService.getAllItems(viewId)
+    ]).pipe(
       map( (r: [Attribute[], Item[]]) => {
         const attributes: Attribute[] = r[0];
         const items: Item[] = r[1];

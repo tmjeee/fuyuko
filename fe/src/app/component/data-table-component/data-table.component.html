@@ -109,14 +109,46 @@
         </ng-container>
       </ng-container>
 
+
+
       <mat-header-row class="item-header" *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row class="item" *matRowDef="let tableItem; columns: displayedColumns; let i = index;"
                [attr.test-data-table-row-index]="i"
                [attr.test-data-table-row]="tableItem.name"></mat-row>
       <mat-row class="item" *matRowDef="let tableItem; columns: childrenDisplayedColumns; when: isChildRow; let i = index;"
-           [attr.test-data-table-row]="tableItem.name"
-           [attr.test-data-table-row-index]="i"
-           [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
+               [attr.test-data-table-row]="tableItem.name"
+               [attr.test-data-table-row-index]="i"
+               [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
     </mat-table>
+    <div class="no-items" *ngIf="itemAndAttributeSet && itemAndAttributeSet.tableItems && itemAndAttributeSet.tableItems.length == 0">
+      <div>No Items</div>
+    </div>
   </div>
 </div>
+
+
+<!--
+
+     <ng-container [matColumnDef]="'no-data'">
+        <mat-cell class="no-data">
+          No Datat
+        </mat-cell>
+     </ng-container>
+
+      <mat-header-row class="item-header" *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <ng-container *ngIf="itemAndAttributeSet && itemAndAttributeSet.tableItems && itemAndAttributeSet.tableItems.length == 0">
+          <mat-row class="item" *matRowDef="let tableItem; columns: ['no-data']">
+          </mat-row>
+        </ng-container>
+        <ng-container *ngIf="itemAndAttributeSet && itemAndAttributeSet.tableItems && itemAndAttributeSet.tableItems.length > 0">
+          <mat-row class="item"
+                   *matRowDef="let tableItem; columns: displayedColumns; let i = index;"
+                   [attr.test-data-table-row-index]="i"
+                   [attr.test-data-table-row]="tableItem.name"></mat-row>
+          <mat-row class="item" *matRowDef="let tableItem; columns: childrenDisplayedColumns; when: isChildRow; let i = index;"
+                   [attr.test-data-table-row]="tableItem.name"
+                   [attr.test-data-table-row-index]="i"
+                   [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
+        </ng-container>
+
+-->

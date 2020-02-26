@@ -3,7 +3,7 @@
 
 module.exports = function (config) {
   config.set({
-    browesers: ['Chrome', 'Chrome_without_security'],
+    browsers: ['Chrome', 'Chrome_without_security'],
     customLaunchers: {
       Chrome_without_security: {
         base: 'Chrome',

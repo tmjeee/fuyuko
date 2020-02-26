@@ -1,10 +1,10 @@
 import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
+import {ViewValidationPage} from "./view-validation.page";
 
 export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetailsPage> {
 
-    constructor(private viewId: number, private validationId: number) {
-    }
+    constructor(private validationName: string){ }
 
     validateTitle(): ViewValidationDetailsPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-validation-details');
@@ -12,7 +12,8 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
     }
 
     visit(): ViewValidationDetailsPage {
-        cy.visit(`/view-gen-layout/(validation-details/view/${this.viewId}/validation/${this.validationId}//help:view-help)`);
+        // cy.visit(`/view-gen-layout/(validation-details/view/${this.viewId}/validation/${this.validationId}//help:view-help)`);
+        new ViewValidationPage().clickOnValidationDetails(this.validationName);
         return this;
     }
 

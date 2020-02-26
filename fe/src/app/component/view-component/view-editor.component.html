@@ -1,4 +1,4 @@
 <div class="view-editor-component">
-    <input *ngIf="type === 'name'" type="text" (click)="onEdit($event, 'name')" [readOnly]="true" [disabled]="false" value="{{view?.name}}">
-    <input *ngIf="type === 'description'" (click)="onEdit($event, 'description')" type="text" [readOnly]="true" [disabled]="false" value="{{view?.description}}">
+    <input *ngIf="type === 'name'" [attr.test-view-editor-value]="'name'" type="text" (click)="onEdit($event, 'name')" [readOnly]="true" [disabled]="false" value="{{view?.name}}">
+    <input *ngIf="type === 'description'" [attr.test-view-editor-value]="'description'" (click)="onEdit($event, 'description')" type="text" [readOnly]="true" [disabled]="false" value="{{view?.description}}">
 </div>

@@ -86,8 +86,10 @@ export class ViewTableComponent implements OnInit {
     }
 
     onAdd($event: MouseEvent) {
-        this.matDialog.open(ViewEditorDialogComponent,
-            { data: {
+        this.matDialog.open(ViewEditorDialogComponent, {
+            width: `90vw`,
+            height: `90vh`,
+            data: {
                 view: {id: this.counter--, name: '', description: ''},
                 type: 'all'
             }
