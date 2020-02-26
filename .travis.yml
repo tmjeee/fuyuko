@@ -45,13 +45,17 @@ script:
     npm install &&
     cd ..
   - echo 'Running BE in background' &&
+    echo "before $(pwd)" &&
     cd be &&
     npm run exec &
-    cd .. && exit 0
+    cd .. && echo "after $(pwd)" && exit 0
   - echo 'Running FE in background' &&
+    echo "before $(pwd)" &&
     cd fe &&
-    npx ng serve --prod &&
-    cd .. && exit 0
+    echo "middle $(pwd)" &&
+    npx ng serve &
+    echo "sub middle $(pwd)" &&
+    cd .. && echo "after $(pwd)" && exit 0
   - echo 'Run cypress test' &&
     cd end2end &&
     sleep 30s && echo `sleep #1` &&
@@ -65,6 +69,7 @@ script:
     sleep 30s && echo `sleep #9` &&
     sleep 30s && echo `sleep #10` &&
     sleep 30s && echo `sleep #11` &&
-    npm run cypress-run
+    npm run cypress-run &&
+    echo "after $(pwd)"
   - echo 'kill jobs' &&
     kill $(jobs -p) || true
