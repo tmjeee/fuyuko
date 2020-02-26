@@ -33,12 +33,10 @@ script:
     cd be &&
     npm install &&
     npm run build &&
-    npm run test &&
     cd ..
   - echo 'Building & testing FE' &&
     cd fe &&
     npm install &&
-    npx ng test &&
     cd ..
   - echo 'Building End 2 End' &&
     cd end2end &&
