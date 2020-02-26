@@ -39,7 +39,6 @@ script:
     cd fe &&
     npm install &&
     npx ng test &&
-    npx ng build &&
     cd ..
   - echo 'Building End 2 End' &&
     cd end2end &&
@@ -48,13 +47,24 @@ script:
   - echo 'Running BE in background' &&
     cd be &&
     npm run exec &
-    cd ..
+    cd .. && exit 0
   - echo 'Running FE in background' &&
     cd fe &&
     npx ng serve --prod &&
-    cd ..
+    cd .. && exit 0
   - echo 'Run cypress test' &&
     cd end2end &&
+    sleep 30s && echo `sleep #1` &&
+    sleep 30s && echo `sleep #2` &&
+    sleep 30s && echo `sleep #3` &&
+    sleep 30s && echo `sleep #4` &&
+    sleep 30s && echo `sleep #5` &&
+    sleep 30s && echo `sleep #6` &&
+    sleep 30s && echo `sleep #7` &&
+    sleep 30s && echo `sleep #8` &&
+    sleep 30s && echo `sleep #9` &&
+    sleep 30s && echo `sleep #10` &&
+    sleep 30s && echo `sleep #11` &&
     npm run cypress-run
   - echo 'kill jobs' &&
     kill $(jobs -p) || true

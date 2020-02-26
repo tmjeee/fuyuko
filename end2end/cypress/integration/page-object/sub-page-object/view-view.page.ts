@@ -56,6 +56,11 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
         return this;
     }
 
+    verifyViewDontExits(viewName: string): ViewViewPage {
+        cy.get(`[test-row-view='${viewName}']`).should('not.exist');
+        return this;
+    }
+
     verifyViewDescription(viewName: string, viewDescription: string): ViewViewPage {
         cy.get(`[test-row-view='${viewName}']`)
             .find(`[test-view-editor='description']`)

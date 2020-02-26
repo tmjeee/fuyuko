@@ -56,6 +56,23 @@ describe(`view view spec`, () => {
             .verifyViewExits(viewName)
             .verifyViewDescription(viewName, viewDescription)
             .clickDelete([viewName])
+            .clickSave()
+            .verifySuccessMessageExists()
+        ;
+    });
+
+    it(`should reload`, () => {
+        const viewName = `New-View=${Math.random()}`;
+        const viewDescription = `New-View-Description-${Math.random()}`;
+
+        viewViewPage
+            .clickAdd()
+            .editName(viewName)
+            .editDescription(viewDescription)
+            .clickOk()
+            .verifyViewExits(viewName)
+            .clickReload()
+            .verifyViewDontExits(viewName)
         ;
     });
 });
