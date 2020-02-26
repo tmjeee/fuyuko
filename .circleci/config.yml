@@ -9,18 +9,19 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
-            - run: cd be
-            - run: npm install
-            - run: npm build
-            - run: npm test
-            - run: cd ..
-            - run: cd fe
-            - run: npm build
-            - run: npm install
-            - run: npx ng test
-            - run: cd ..
-            - run: cd end2end
-            - run: npm install
+            - run: cd be &&
+                   npm install &&
+                   npm build &&
+                   npm test &&
+                   cd .. &&
+                   cd fe &&
+                   npm build &&
+                   npm install &&
+                   npx ng test &&
+                   cd .. &&
+                   cd end2end &&
+                   npm install &&
+                   cd ..
 workflows:
   build-and-test:
     jobs:
