@@ -1,33 +1,34 @@
 <div class="validation-result-table-component">
     <div class="main-controls">
-        <button type="button" mat-flat-button color="primary" [disabled]="!hasItemModification()" (click)="onSave($event)">Save</button>
-        <button type="button" mat-flat-button color="primary" (click)="onReload($event)">Reload</button>
-        <button type="button" mat-flat-button color="primary" (click)="onFilter($event)">Filter</button>
+        <button type="button" mat-flat-button color="primary" [attr.test-button-save]="''" [disabled]="!hasItemModification()" (click)="onSave($event)">Save</button>
+        <button type="button" mat-flat-button color="primary" [attr.test-button-reload]="''" (click)="onReload($event)">Reload</button>
+        <button type="button" mat-flat-button color="primary" [attr.test-button-filter]="''" (click)="onFilter($event)">Filter</button>
     </div>
     <div class="filtering-container" [@detailExpand]="filterOptionsVisible ? 'expanded' : 'collapsed'">
-        <mat-nav-list>
+        <mat-nav-list [attr.test-filtering-panel]="''">
             <mat-list-item *ngFor="let attribute of itemAndAttributeSet.attributes; first as isFirst; last as isLast">
-                <div class="filtering-attribute">
+                <div class="filtering-attribute" [attr.test-filtering-panel-item]="attribute.name">
                     <div class="name">{{attribute.name}}</div>
                     <div class="spacer"></div>
                     <div class="controls">
-                        <mat-icon *ngIf="!isFirst" (click)="onUpAttributeOrdering($event, attribute)">arrow_upward</mat-icon>
+                        <mat-icon *ngIf="!isFirst" [attr.test-icon-filter-up]="attribute.name" (click)="onUpAttributeOrdering($event, attribute)">arrow_upward</mat-icon>
                         <mat-icon *ngIf="isLast">&nbsp;</mat-icon> <!-- spacer placeholder -->
-                        <mat-icon *ngIf="!isLast" (click)="onDownAttributeOrdering($event, attribute)">arrow_downward</mat-icon>
-                        <mat-checkbox name="Visible" [checked]="true" (change)="onAttributeFilteringChanged($event, attribute)"></mat-checkbox>
+                        <mat-icon *ngIf="!isLast" [attr.test-icon-filter-down]="attribute.name" (click)="onDownAttributeOrdering($event, attribute)">arrow_downward</mat-icon>
+                        <mat-checkbox name="Visible" [attr.test-mat-checkbox-visible]="attribute.name" [checked]="true" (change)="onAttributeFilteringChanged($event, attribute)"></mat-checkbox>
                     </div>
                 </div>
             </mat-list-item>
         </mat-nav-list>
     </div>
     <div class="table-container">
-        <mat-table [dataSource]="datasource">
+        <mat-table [dataSource]="datasource" [attr.test-table]="''">
             <ng-container matColumnDef="selection" sticky>
                 <mat-header-cell class="selection-header" *matHeaderCellDef>
                 </mat-header-cell>
                 <mat-cell class="selection" *matCellDef="let tableItem">
                     <mat-radio-button (change)="nonMasterToggle($event, tableItem)"
-                                  [checked]="isNonMasterToggleChecked(tableItem)">
+                                      [attr.test-mat-radio-item]="tableItem.name"
+                                      [checked]="isNonMasterToggleChecked(tableItem)">
                     </mat-radio-button>
                 </mat-cell>
             </ng-container>
@@ -35,14 +36,18 @@
             <ng-container matColumnDef="name">
                 <mat-header-cell class="attribute-header" *matHeaderCellDef>Name</mat-header-cell>
                 <mat-cell class="attribute" *matCellDef="let tableItem">
-                    <app-item-editor [item]="tableItem" [type]="'name'" (events)="onItemEditEvent($event, tableItem)"></app-item-editor>
+                    <app-item-editor [item]="tableItem"
+                                     [attr.test-item-editor]="'name'"
+                                     [type]="'name'" (events)="onItemEditEvent($event, tableItem)"></app-item-editor>
                 </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="description">
                 <mat-header-cell class="attribute-header" *matHeaderCellDef>Description</mat-header-cell>
                 <mat-cell class="attribute" *matCellDef="let tableItem">
-                    <app-item-editor [item]="tableItem" [type]="'description'" (events)="onItemEditEvent($event, tableItem)"></app-item-editor>
+                    <app-item-editor [item]="tableItem"
+                                     [attr.test-item-editor]="'description'"
+                                     [type]="'description'" (events)="onItemEditEvent($event, tableItem)"></app-item-editor>
                 </mat-cell>
             </ng-container>
 
@@ -70,8 +75,8 @@
             <ng-container matColumnDef="expansion" sticky>
                 <mat-header-cell class="expansion-header" *matHeaderCellDef></mat-header-cell>
                 <mat-cell class="expansion" *matCellDef="let tableItem">
-                    <mat-icon class="selectable" *ngIf="!isRowExpanded(tableItem)" (click)="rowClicked(tableItem)">chevron_right</mat-icon>
-                    <mat-icon class="selectable" *ngIf="isRowExpanded(tableItem)" (click)="rowClicked(tableItem)">expand_more</mat-icon>
+                    <mat-icon class="selectable" *ngIf="!isRowExpanded(tableItem)" [attr.test-icon-expand-row]="tableItem.name" (click)="rowClicked(tableItem)">chevron_right</mat-icon>
+                    <mat-icon class="selectable" *ngIf="isRowExpanded(tableItem)" [attr.test-icon-collapse-row]="tableItem.name" (click)="rowClicked(tableItem)">expand_more</mat-icon>
                 </mat-cell>
             </ng-container>
 
@@ -85,11 +90,15 @@
             </ng-container>
 
 
-            <ng-container *ngFor="let attribute of itemAndAttributeSet.attributes">
+            <ng-container *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index">
                 <ng-container [matColumnDef]="''+attribute.id">
-                    <mat-header-cell class="attribute-header" *matHeaderCellDef>{{attribute.name}}</mat-header-cell>
+                    <mat-header-cell class="attribute-header"
+                                     [attr.test-table-attribute-column-index]="i"
+                                     [attr.test-table-attribute-column]="attribute.name"
+                                     *matHeaderCellDef>{{attribute.name}}</mat-header-cell>
                     <mat-cell class="attribute" *matCellDef="let tableItem">
                         <app-data-editor [itemValueAndAttribute]="{itemValue: getItemValue(tableItem, attribute), attribute: attribute }"
+                                         [attr.test-data-editor]="attribute.name"
                                          (events)="onDataEditEvent($event, tableItem)">
                         </app-data-editor>
                     </mat-cell>
@@ -98,8 +107,10 @@
 
             <mat-header-row class="item-header" *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row class="item" [ngClass]="{'selected': rowSelectedCss(tableItem)}"
+                     [attr.test-table-row-item]="tableItem.name"
                      *matRowDef="let tableItem; columns: displayedColumns;"></mat-row>
             <mat-row class="item" [ngClass]="{'selected': rowSelectedCss(tableItem)}"
+                     [attr.test-table-row-item]="tableItem.name"
                      *matRowDef="let tableItem; columns: childrenDisplayedColumns; when: isChildRow"
                      [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
         </mat-table>

@@ -1,7 +1,12 @@
 <div class="validation-result-tree-component">
    <mat-tree [dataSource]="datasource" [treeControl]="treeControl">
       <!-- tree node leaf -->
-      <mat-tree-node *matTreeNodeDef="let n" matTreeNodePadding [ngClass]="{'selected': isNodeSelected(n) }">
+      <mat-tree-node *matTreeNodeDef="let n" matTreeNodePadding
+                     [attr.test-tree-node-item-name]="n.node.name"
+                     [attr.test-tree-node-isItem]="n.node.isItem"
+                     [attr.test-tree-node-isRule]="n.node.isRule"
+                     [attr.test-tree-node-isError]="n.node.isError"
+                     [ngClass]="{'selected': isNodeSelected(n) }">
          <!--button mat-icon-button class="mat-icon-rtl-mirror" (click)="onNodeClicked($event, n)"-->
          <button mat-icon-button class="mat-icon-rtl-mirror">
             <mat-icon *ngIf="n.node.isItem" class="mat-icon-rtl-mirror">work_outline</mat-icon>
@@ -10,8 +15,15 @@
          </button>
          <span class="icon-text" (click)="onNodeClicked($event, n)">{{n.node.name}}</span>
       </mat-tree-node>
+
+
       <!-- tree node parent -->
-      <mat-tree-node *matTreeNodeDef="let n; when: hasChild" matTreeNodePadding [ngClass]="{'selected': isNodeSelected(n)}">
+      <mat-tree-node *matTreeNodeDef="let n; when: hasChild" matTreeNodePadding
+                     [attr.test-tree-node-item-name]="n.node.name"
+                     [attr.test-tree-node-isItem]="n.node.isItem"
+                     [attr.test-tree-node-isRule]="n.node.isRule"
+                     [attr.test-tree-node-isError]="n.node.isError"
+                     [ngClass]="{'selected': isNodeSelected(n)}">
          <!--button mat-icon-button matTreeNodeToggle (click)="onNodeClicked($event, n)"-->
          <button mat-icon-button matTreeNodeToggle class="mat-icon-rtl-mirror">
             <mat-icon class="mat-icon-rtl-mirror">

@@ -173,14 +173,17 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
         return (n === this.selected);
     }
 
-    private b(ns: Flattened[], itemId: number) {
+    // navigate down the hierarchy of each ns (Flattened[]), and see if any of it or its children has n (Flattened) with itemId,
+    // if so return that node (Flattened). This is used to find if a parent tree item has an itemId in itself or its
+    // children / decendent
+    private returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(ns: Flattened[], itemId: number) {
         for (const n of ns) {
             if (n.node.i && n.node.i.id === itemId) {
                 return n;
             }
             const children: Flattened[] = this.treeControl.getDescendants(n);
             if (children) {
-                const d: Flattened = this.b(children, itemId);
+                const d: Flattened = this.returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(children, itemId);
                 if (d) {
                     return d;
                 }
@@ -191,7 +194,7 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
 
     handleExternalItemChange(i: Item) {
         console.log('******* handleExternalItemChange (tree)');
-        const f: Flattened = this.b(this.treeControl.dataNodes, i.id);
+        const f: Flattened = this.returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(this.treeControl.dataNodes, i.id);
         console.log('*** f', f);
         if (f && this.selected !== f) {
             this.selected = f;

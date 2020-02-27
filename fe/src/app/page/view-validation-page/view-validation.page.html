@@ -13,7 +13,7 @@
                             <app-validation-run *ngIf="view" [view]="view" (events)="onValidationRun($event)"></app-validation-run>
                         </div>
                         <div fxFlex="0 0 auto">
-                            <button mat-flat-button color="primary" (click)="reload($event)">Reload</button>
+                            <button mat-flat-button color="primary" [attr.test-button-reload-validation]="''" (click)="reload($event)">Reload</button>
                         </div>
                     </div>
                 </div>
@@ -21,7 +21,8 @@
                     <app-validation-result-listing
                             *ngIf="view"
                             [view]="view"
-                            [validations]="validations">
+                            [validations]="validations"
+                            (events)="onValidationResultListingEvents($event)">
                     </app-validation-result-listing>
                 </div>
             </div>

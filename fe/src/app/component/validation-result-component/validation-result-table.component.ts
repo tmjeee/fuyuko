@@ -21,6 +21,7 @@ import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.com
 import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
 import {MatRadioChange} from '@angular/material/radio';
 import {tap} from 'rxjs/operators';
+import {Validation} from "../../model/validation.model";
 
 export class ValidationResultTableDataSource extends DataSource<TableItem> {
 
@@ -41,7 +42,7 @@ export class ValidationResultTableDataSource extends DataSource<TableItem> {
 
 export interface ValidationResultTableComponentEvent {
     type: 'reload' | 'modification' | 'selection-changed';
-    modifiedItems?: TableItem[];
+    modifiedItems?: TableItem[]; // only when type = 'modification' or 'selection-changed';
 }
 
 export interface RowInfo {

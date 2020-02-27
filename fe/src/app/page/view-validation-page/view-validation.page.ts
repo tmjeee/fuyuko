@@ -7,6 +7,7 @@ import {View} from '../../model/view.model';
 import {Validation} from '../../model/validation.model';
 import {NotificationsService} from 'angular2-notifications';
 import {ValidationRunComponentEvent} from '../../component/validation-result-component/validation-run.component';
+import {ValidationResultListingComponentEvent} from '../../component/validation-result-component/validation-result-listing.component';
 
 @Component({
     templateUrl: './view-validation.page.html',
@@ -66,7 +67,7 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
     reload($event: MouseEvent) {
         this._reload();
     }
-    
+
     _reload() {
         if (this.view) {
             this.loading = true;
@@ -78,6 +79,21 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
                     this.loading = false;
                 })
             ).subscribe();
+        }
+    }
+
+    onValidationResultListingEvents($event: ValidationResultListingComponentEvent) {
+        switch ($event.type) {
+            case 'delete':
+                this.validationService
+                    .deleteValidation($event.validation.viewId, $event.validation.id)
+                    .pipe(
+                        tap((_) => {
+                            this.notificationsService.success(`Success`, `Validation deleted`);
+                            this._reload();
+                        })
+                    ).subscribe();
+                break;
         }
     }
 }

@@ -1,7 +1,12 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Validation} from '../../model/validation.model';
 import {Router} from '@angular/router';
 import {View} from '../../model/view.model';
+
+export interface ValidationResultListingComponentEvent {
+    type: 'delete';
+    validation: Validation;
+}
 
 @Component({
     selector: 'app-validation-result-listing',
@@ -12,8 +17,11 @@ export class ValidationResultListingComponent {
 
     @Input() view: View;
     @Input() validations: Validation[];
+    @Output() events: EventEmitter<ValidationResultListingComponentEvent>;
 
-    constructor(private router: Router) {}
+    constructor(private router: Router) {
+        this.events = new EventEmitter();
+    }
 
     toDataSource(validation: Validation): {}[] {
         return [
@@ -37,4 +45,13 @@ export class ValidationResultListingComponent {
             help: ['view-help']
         }}]);
     }
+
+
+    delete($event: MouseEvent, validation: Validation) {
+        $event.preventDefault();
+        $event.stopImmediatePropagation();
+        this.events.emit({type: 'delete', validation } as ValidationResultListingComponentEvent);
+    }
+
+
 }

@@ -58,6 +58,9 @@ export const aFnAnyFalse: AggregationFn = async (vFns: ValidateFn[], req: Reques
 export const vFnHasAnyUserRoles  = (roleNames: string[]): ValidateFn => {
     return async (req: Request, res: Response) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
+        /*if (!jwtPayload || !jwtPayload.user) {
+            return false;
+        }*/
         const userId: number = jwtPayload.user.id;
         const hasRole: boolean = await hasAnyUserRoles(userId, roleNames);
         if (!hasRole) {

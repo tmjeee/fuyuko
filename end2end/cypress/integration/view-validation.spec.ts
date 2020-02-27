@@ -41,7 +41,7 @@ describe(`view validation spec`, () => {
 
     //////////////////
 
-    it (`should run validation and show details`, () => {
+    it.only (`should run validation and show details and delete validation`, () => {
 
         const validationName = `test-validation-${Math.random()}`;
         const validationDescription = `test-validation-description-${Math.random()}`;
@@ -52,12 +52,14 @@ describe(`view validation spec`, () => {
             .editName(validationName)
             .editDescription(validationDescription)
             .clickOk()
+            .verifySuccessMessageExists()
         ;
 
         cy.wait(1000); // wait for validation to be done
 
         // try expand and collapse
         viewValidationPage
+            .clickReload()
             .expandValidationPanel(validationName)
             .verifyValidationPanelExpanded(validationName)
             .collapseValidationPanel(validationName)
@@ -67,6 +69,14 @@ describe(`view validation spec`, () => {
         // go to validation details page
         viewValidationPage
             .clickOnValidationDetails(validationName)
+            .validateTitle()
+        ;
+
+        // delete validation result
+        viewValidationPage
+            .visit()
+            .clickDelete(validationName)
+        ;
     });
 
 });

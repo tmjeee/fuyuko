@@ -19,10 +19,10 @@ const httpAction: any[] = [
     [
         body().isArray(),
         body('*.id').exists().isNumeric(),
-        v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     ],
-    validateJwtMiddlewareFn,
     validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const views: View[] =  req.body;
 

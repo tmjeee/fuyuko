@@ -100,6 +100,7 @@ import registerPostUserNotificationRoute from './POST-user-notification.route';
 import registerPostAddAttributeRoute from './POST-add-attributes.route';
 import registerPostChangeAttributeStatusRoute from './POST-change-attribute-status.route';
 import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
+import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -206,6 +207,7 @@ const reg = (router: Router, regi: Registry) => {
     registerPostAddAttributeRoute(v1AppRouter, registry);
     registerPostChangeAttributeStatusRoute(v1AppRouter, registry);
     registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
+    registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
 }
 
 

@@ -42,8 +42,8 @@ describe(`view view spec`, () => {
 
     //////////////////
 
-    it ('should add and delete view', () => {
-        const viewName = `New-View=${Math.random()}`;
+    it('should add and delete view', () => {
+        const viewName = `New-View-${Math.random()}`;
         const viewDescription = `New-View-Description-${Math.random()}`;
 
         viewViewPage
@@ -61,8 +61,8 @@ describe(`view view spec`, () => {
         ;
     });
 
-    it(`should reload`, () => {
-        const viewName = `New-View=${Math.random()}`;
+    it.only(`should reload`, () => {
+        const viewName = `New-View-${Math.random()}`;
         const viewDescription = `New-View-Description-${Math.random()}`;
 
         viewViewPage

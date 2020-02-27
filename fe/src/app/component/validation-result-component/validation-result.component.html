@@ -1,8 +1,8 @@
 
 <div class="validation-result-component">
     <mat-tab-group>
-        <mat-tab label="Results">
-            <div fxLayout="column" class="content left mat-elevation-z10">
+        <mat-tab label="Results" [attr.test-mat-tab]="'results'">
+            <div fxLayout="column" class="content left mat-elevation-z10" [attr.test-mat-tab-content]="'results'">
                 <div fxFlex>
                     <div fxLayout="row">
                         <div fxFlex="0 0 40%" class="left">
@@ -29,6 +29,7 @@
                 </div>
                 <div fxFlex class="bottom">
                     <app-validation-result-table
+                        [attr.test-validation-result-table]="''"
                         (events)="onValidationResultTableEvent($event)"
                         [observable]="tableItemChangeEvents"
                         [itemAndAttributeSet]="itemAndAttributeSet">
@@ -36,8 +37,8 @@
                 </div>
             </div>
         </mat-tab>
-        <mat-tab label="Logs">
-            <div class="mat-elevation-z10">
+        <mat-tab label="Logs" [attr.test-mat-tab]="'logs'">
+            <div class="mat-elevation-z10" [attr.test-mat-tab-content]="'logs'">
                 <app-validation-result-log [validationResult]="validationResult">
                 </app-validation-result-log>
             </div>

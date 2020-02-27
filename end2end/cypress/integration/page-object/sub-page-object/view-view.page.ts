@@ -11,7 +11,7 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
     }
 
     visit(): ViewViewPage {
-        cy.visit(`/view-gen-layout/(view//help:view-help)`);
+        cy.visit(`/view-gen-layout/(views//help:view-help)`);
         return this;
     }
 
@@ -35,7 +35,7 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
             cy.get(`[test-page-title]`).then((_) => {
                 const length = _.find(`[test-mat-checkbox='${viewNames[i]}'].mat-checkbox-checked`).length;
                 if (length <= 0) { // not already checked
-                    cy.get(`[test-mat-checkbox='${viewNames[i]}']`).click({force: true});
+                    cy.get(`[test-mat-checkbox='${viewNames[i]}'] label`).click({force: true});
                 }
             })
         });
@@ -44,10 +44,12 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
     }
 
     clickSave(): ViewViewPage {
+        cy.get(`[test-button-save-view]`).click({force: true});
         return this;
     }
 
     clickReload(): ViewViewPage {
+        cy.get(`[test-button-reload-view]`).click({force:true});
         return this;
     }
 

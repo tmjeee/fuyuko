@@ -33,8 +33,8 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
     expandValidationPanel(validationName: string): ViewValidationPage {
         cy.get(`[test-page-title]`).then((_) => {
-            const i = _.find(`[test-panel-content='${validationName}']`).length;
-            if (i <= 0) { // not already expanded, click to expand
+            const visible = _.find(`[test-panel-content='${validationName}']`).is(':visible');
+            if (!visible) { // not already expanded, click to expand
                 cy.get(`[test-panel-header='${validationName}']`)
                     .click({force: true});
             }
@@ -44,8 +44,8 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
     collapseValidationPanel(validationName: string): ViewValidationPage {
         cy.get(`[test-page-title]`).then((_) => {
-            const i = _.find(`[test-panel-content='${validationName}']`).length;
-            if (i > 0) { // already expanded, click to collapse
+            const visible = _.find(`[test-panel-content='${validationName}']`).is(':visible');
+            if (visible) { // already expanded, click to collapse
                 cy.get(`[test-panel-header='${validationName}']`)
                     .click({force: true});
             }
@@ -68,6 +68,19 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
     verifyValidationPanelCollapsed(validationName: string) {
         cy.get(`[test-panel-content='${validationName}']`)
             .should('not.be.visible');
+        return this;
+    }
+
+    clickReload(): ViewValidationPage {
+        cy.get(`[test-button-reload-validation]`).click({force: true});
+        return this;
+    }
+
+    clickDelete(validationName: string) {
+        this.expandValidationPanel(validationName);
+        cy.get(`[test-panel-content='${validationName}']`)
+            .find(`[test-icon-delete-validation='${validationName}']`)
+            .click({force: true});
         return this;
     }
 }
