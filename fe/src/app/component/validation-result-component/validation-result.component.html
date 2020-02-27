@@ -1,7 +1,10 @@
 
 <div class="validation-result-component">
     <mat-tab-group>
-        <mat-tab label="Results" [attr.test-mat-tab]="'results'">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <span [attr.test-mat-tab]="'results'">Results</span>
+            </ng-template>
             <div fxLayout="column" class="content left mat-elevation-z10" [attr.test-mat-tab-content]="'results'">
                 <div fxFlex>
                     <div fxLayout="row">
@@ -37,7 +40,10 @@
                 </div>
             </div>
         </mat-tab>
-        <mat-tab label="Logs" [attr.test-mat-tab]="'logs'">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <span [attr.test-mat-tab]="'logs'">Logs</span>
+            </ng-template>
             <div class="mat-elevation-z10" [attr.test-mat-tab-content]="'logs'">
                 <app-validation-result-log [validationResult]="validationResult">
                 </app-validation-result-log>

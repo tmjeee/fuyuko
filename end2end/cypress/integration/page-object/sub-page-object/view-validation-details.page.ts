@@ -89,16 +89,16 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
 
     checkFilterCheckbox(attributeName: string, check: boolean): ViewValidationDetailsPage {
         cy.get(`[test-validation-result-table] [test-filtering-panel]`).then((_) => {
-            const l = _.find(`[test-mat-checkbox-visible].mat-checkbox-checked`).length;
+            const l = _.find(`[test-mat-checkbox-visible='${attributeName}'].mat-checkbox-checked`).length;
             if (l > 0 && !check) { // already checked, but we want it unchecked
                 cy.get(`[test-validation-result-table]`)
                     .find(`[test-filtering-panel]`)
-                    .find(`test-mat-checkbox-visible] label`)
+                    .find(`[test-mat-checkbox-visible='${attributeName}'] label`)
                     .click({force: true})
             } else if (l <= 0 && check) { // not checked, but we want it checked
                 cy.get(`[test-validation-result-table]`)
                     .find(`[test-filtering-panel]`)
-                    .find(`test-mat-checkbox-visible] label`)
+                    .find(`[test-mat-checkbox-visible='${attributeName}'] label`)
                     .click({force: true})
             }
         });
@@ -116,7 +116,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
     moveAttributeFilterOrderUp(attributeName: string): ViewValidationDetailsPage {
         cy.get(`[test-validation-result-table]`)
             .find(`[test-filtering-panel]`)
-            .find(`test-icon-filter-up='${attributeName}']`)
+            .find(`[test-icon-filter-up='${attributeName}']`)
             .should('be.visible')
             .click({force: true})
         return this;
@@ -126,7 +126,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
     moveAttributeFilterOrderDown(attributeName: string): ViewValidationDetailsPage {
         cy.get(`[test-validation-result-table]`)
             .find(`[test-filtering-panel]`)
-            .find(`test-icon-filter-down='${attributeName}']`)
+            .find(`[test-icon-filter-down='${attributeName}']`)
             .should('be.visible')
             .click({force: true})
         return this;
@@ -136,7 +136,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table]`)
             .find(`[test-table]`)
             .find(`[test-table-attribute-column='${attributeName}']`)
-            .should('have.attr', `test-table-attribute-column-index`, number)
+            .should('have.attr', `test-table-attribute-column-index`, String(number))
         ;
         return this;
     }
@@ -168,14 +168,14 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
     verifyItemExists(itemName: string): ViewValidationDetailsPage {
         cy.get(`[test-validation-result-table]`)
             .find(`[test-table-row-item='${itemName}']`)
-            .should('have.length.gte', 1);
+            .should('be.visible');
         return this;
     }
 
     verifyItemNotExists(itemName: string) {
         cy.get(`[test-validation-result-table]`)
             .find(`[test-table-row-item='${itemName}']`)
-            .should('have.length', 0);
+            .should('not.be.visible' );
         return this;
     }
 

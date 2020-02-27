@@ -49,7 +49,8 @@ describe(`view validation details spec`, () => {
 
         viewValidationDetailsPage =
             viewValidationPage
-            .clickOnValidationDetails(validationName)
+                .clickReload()
+                .clickOnValidationDetails(validationName)
         ;
     });
 
@@ -77,17 +78,17 @@ describe(`view validation details spec`, () => {
 
     //////////////////
 
-    it (`should switch tabs`, () => {
+    it(`should switch tabs`, () => {
         viewValidationDetailsPage
-            .clickTab('results')
-            .verifyTab('results')
             .clickTab('logs')
             .verifyTab('logs')
+            .clickTab('results')
+            .verifyTab('results')
         ;
     });
 
     // test filtering
-    it (`should allow filtering`, () => {
+    it(`should allow filtering`, () => {
         viewValidationDetailsPage
             .openTableFilterPanel();
 
@@ -102,7 +103,7 @@ describe(`view validation details spec`, () => {
     });
 
     // test ordering
-    it (`should allow ordering`, () => {
+    it(`should allow ordering`, () => {
         viewValidationDetailsPage
             .openTableFilterPanel();
 
@@ -125,7 +126,7 @@ describe(`view validation details spec`, () => {
     });
 
     // test expanding item-1, and should see children of it
-    it (`test expanding and collapsing table item`, () => {
+    it.only (`test expanding and collapsing table item`, () => {
         viewValidationDetailsPage
             .expandRow('Item-1')
             .verifyItemExists('Item-1-1')

@@ -53,9 +53,11 @@ export class SettingsComponent implements OnInit, OnChanges {
 
     populate(s: Settings) {
         console.log('****** settings', s);
-        this.formControlOpenHelpNav.setValue(s.openHelpNav);
-        this.formControlOpenSideNav.setValue(s.openSideNav);
-        this.formControlOpenSubSideNav.setValue(s.openSubSideNav);
+        if (s) {
+            this.formControlOpenHelpNav.setValue(s.openHelpNav);
+            this.formControlOpenSideNav.setValue(s.openSideNav);
+            this.formControlOpenSubSideNav.setValue(s.openSubSideNav);
+        }
     }
 
     onGeneralTabSubmit() {

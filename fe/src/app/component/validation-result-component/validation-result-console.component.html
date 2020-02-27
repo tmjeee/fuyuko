@@ -1,23 +1,26 @@
-<div class="validation-result-console">
+<div class="validation-result-console-component">
+   <div *ngIf="!currentItem && !currentValidationErrors">No messages. Click on table entries or tree entries for info.</div>
+
+
     <mat-list *ngIf="currentItem">
         <h3 mat-subheader>Item Details</h3>
         <mat-list-item>
             <mat-icon mat-list-icon></mat-icon>
-            <h4 mat-line>{{currentItem.name}} (id: {{currentItem.id}})</h4>
-            <p mat-line>{{currentItem.description}}</p>
+            <h4 matLine>{{currentItem.name}} (id: {{currentItem.id}})</h4>
+            <p matLine class="multi-line">{{currentItem.description}}</p>
         </mat-list-item>
     </mat-list>
 
-    <hr/>
+    <hr *ngIf="currentValidationErrors" />
 
     <mat-list *ngIf="currentValidationErrors">
         <h3 mat-subheader>Errors</h3>
         <mat-list-item *ngFor="let e of currentValidationErrors">
             <mat-icon mat-list-icon></mat-icon>
-            <h4 mat-line>Item Id: {{e.itemId}}</h4>
-            <p mat-line>Rule Id: {{e.ruleId}}</p>
-            <p mat-line>Attribute Id: {{e.attributeId}}</p>
-            <p mat-line>{{e.message}}</p>
+            <h4 matLine>Item Id: {{e.itemId}}</h4>
+            <p matLine>Rule Id: {{e.ruleId}}</p>
+            <p matLine>Attribute Id: {{e.attributeId}}</p>
+            <p matLine class="multi-line">{{e.message}}</p>
         </mat-list-item>
     </mat-list>
 </div>

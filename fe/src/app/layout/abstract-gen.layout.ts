@@ -59,8 +59,10 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
     this.authServiceSubscription = this.authService.asObservable()
       .pipe(
         map((p: User) => {
-          this.myself = p;
-          this.notificationService.retrieveNotifications(this.myself);
+          if (p) {
+              this.myself = p;
+              this.notificationService.retrieveNotifications(this.myself);
+          }
         })
       ).subscribe();
     this.notificationServiceSubscription = this.notificationService.asObservable()

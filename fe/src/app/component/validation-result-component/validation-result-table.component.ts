@@ -272,7 +272,7 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
         const r: AttributeInfo[] = Array.from(this.attributeInfoMap.values())
             .sort((a: AttributeInfo, b: AttributeInfo) => a.order - b.order);
         const i: number = r.findIndex((a: AttributeInfo) => a.attribute.id === attribute.id);
-        if ((i < r.length - 2) && (i >= 0) && (r.length >= 2)) {
+        if ((i <= r.length - 2) && (i >= 0) && (r.length >= 2)) {
             const [x, y] = [r[i].order, r[i + 1].order];
             r[i].order = y;
             r[i + 1].order = x;
@@ -284,7 +284,7 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
         const r: AttributeInfo[] = Array.from(this.attributeInfoMap.values())
             .sort((a: AttributeInfo, b: AttributeInfo) => a.order - b.order);
         const i: number = r.findIndex((a: AttributeInfo) => a.attribute.id === attribute.id);
-        if (i < (r.length - 1) && (i > 0) && (r.length >= 2)) {
+        if (i <= (r.length - 1) && (i > 0) && (r.length >= 2)) {
             const [x, y] = [r[i - 1].order, r[i].order];
             r[i].order = x;
             r[i - 1].order = y;
