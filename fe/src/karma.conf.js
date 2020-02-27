@@ -3,7 +3,7 @@
 
 module.exports = function (config) {
   config.set({
-    browsers: ['Chrome', 'Chrome_without_security'],
+    browsers: ['Chrome', 'Chrome_without_security', 'ChromeHeadless'],
     customLaunchers: {
       Chrome_without_security: {
         base: 'Chrome',
@@ -18,6 +18,15 @@ module.exports = function (config) {
       ChromeHeadlessCustom: {
         base: 'ChromeHeadless',
         flags: ['--no-sandbox', '--disable-gpu']
+      },
+      ChromeHeadless: {
+        base: 'Chrome',
+        flags: [
+            '--headless',
+            '--disable-gpu',
+            '--no-sandbox',
+            '--remote-debugging-port=9222'
+        ]
       }
     },
     basePath: '',

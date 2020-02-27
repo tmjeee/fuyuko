@@ -235,6 +235,10 @@ describe(`view validation details spec`, () => {
 
     // test clicking items
     it(`should allow clicking on items`, () => {
+        const itemName = `Item-3`;
+        viewValidationDetailsPage
+            .selectTableItem(itemName)
+            .verifyTableItemSelected(itemName)
     });
 
     // test clicking tree items / rules

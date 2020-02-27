@@ -1,8 +1,8 @@
-<div class="validation-result-console-component">
-   <div *ngIf="!currentItem && !currentValidationErrors">No messages. Click on table entries or tree entries for info.</div>
+<div class="validation-result-console-component" [attr.test-console]="''">
+   <div *ngIf="!currentItem && !currentValidationErrors" [attr.test-console-empty]="''">No messages. Click on table entries or tree entries for info.</div>
 
 
-    <mat-list *ngIf="currentItem">
+    <mat-list *ngIf="currentItem" [attr.test-console-items]="''" [attr.test-console-item-name]="currentItem.name">
         <h3 mat-subheader>Item Details</h3>
         <mat-list-item>
             <mat-icon mat-list-icon></mat-icon>
@@ -13,9 +13,9 @@
 
     <hr *ngIf="currentValidationErrors" />
 
-    <mat-list *ngIf="currentValidationErrors">
+    <mat-list *ngIf="currentValidationErrors" [attr.test-console-errors]="''">
         <h3 mat-subheader>Errors</h3>
-        <mat-list-item *ngFor="let e of currentValidationErrors">
+        <mat-list-item *ngFor="let e of currentValidationErrors" [attr.test-console-error-id]="e.id">
             <mat-icon mat-list-icon></mat-icon>
             <h4 matLine>Item Id: {{e.itemId}}</h4>
             <p matLine>Rule Id: {{e.ruleId}}</p>

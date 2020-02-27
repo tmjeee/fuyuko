@@ -203,6 +203,30 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         return new ViewValidationItemPopupPage(this.validationName);
     }
 
+    selectTableItem(itemName: string): ViewValidationDetailsPage {
+        cy.get(`[test-validation-result-table]`).then((_) => {
+            const l = _.find(`[test-mat-radio-item='${itemName}'].mat-radio-checked`).length;
+            if (l <= 0) { // not already selected
+                cy.get(`[test-validation-result-table]`)
+                    .find(`[test-mat-radio-item='${itemName}']`)
+                    .click({force: true})
+            }
+        })
+        return this;
+    }
+
+    unselectTableItem(itemName: string): ViewValidationDetailsPage {
+        cy.get(`[test-validation-result-table]`).then((_) => {
+            const l = _.find(`[test-mat-radio-item='${itemName}'].mat-radio-checked`).length;
+            if (l > 0) { // already selected
+                cy.get(`[test-validation-result-table]`)
+                    .find(`[test-mat-radio-item='${itemName}']`)
+                    .click({force: true})
+            }
+        })
+        return this;
+    }
+
     verifyItemWithAttributeExists(itemName: string, attributeName: string, attributeValues: string[]) {
         cy.wrap(attributeValues).each((e, i, a) => {
             cy.get(`[test-validation-result-table]`)
@@ -211,5 +235,32 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
                 .find(`[test-data-editor-value='${attributeName}']`)
                 .should('contain.text', attributeValues[i]);
         });
+    }
+
+    verifyTableItemSelected(itemName: string): ViewValidationDetailsPage {
+        cy.get(`[test-table]`)
+            .find(`[test-table-row-item='${itemName}']`)
+            .should('have.class', 'selected')
+        return this;
+    }
+
+    verifyTreeItemSelected(itemName: string): ViewValidationDetailsPage {
+        cy.get(`[test-mat-tree]`)
+            .find(`[test-tree-node-item-name='${itemName}']`)
+            .should('have.class', 'selected')
+        return this;
+    }
+
+    verifyConsoleNotEmpty(): ViewValidationDetailsPage {
+        cy.get(`[test-console]`)
+            .find(`[test-console-empty]`)
+            .should('not.exist');
+        return this;
+    }
+
+    verifyConsoleHasItem(itemName: string): ViewValidationDetailsPage {
+        cy.get(`[test-console]`)
+            .find(``)
+        return this;
     }
 }
