@@ -4,7 +4,9 @@ export class InternalState implements State, NextState {
 
     name: string;
     fn: StateProcessFn;
-    map: Map<string, State> = new Map();
+
+    // transition map, indicating when 'event' occurred we proceed to the given State
+    map: Map<string /* event */, State> = new Map();
 
     currentEvent: string;
 
@@ -14,7 +16,7 @@ export class InternalState implements State, NextState {
     }
 
     on(event?: string): NextState {
-        this.currentEvent = event;
+        this.currentEvent = event ? event : '*';
         return this;
     }
 
@@ -85,6 +87,7 @@ export class InternalEngine implements Engine {
         }
         this.status = 'INIT';
         this.currentState = this.startState;
+
         return this;
     }
 
@@ -97,26 +100,32 @@ export class InternalEngine implements Engine {
         }
 
         const currentState: InternalState = this.currentState as InternalState;
-
         try {
             const event: string = await currentState.fn();
+            console.log('**', currentState.name);
 
             if (currentState.name === (this.endState as InternalState).name) { // end
                 this.status = 'ENDED';
-                return {end: true, status} as EngineResponse;
+                return {end: true, status: this.status} as EngineResponse;
             }
 
             const nextStateName: string = this.transitionMap.get(`${currentState.name}_${event}`);
-            const nextState: InternalState = this.stateMap.get(nextStateName) as InternalState;
+            let nextState: InternalState = this.stateMap.get(nextStateName) as InternalState;
 
             if (!nextState) {
-                this.status = 'ERROR';
-                throw new Error(`current state named ${currentState.name} fired event ${event} result in no possible next state`);
+                // try to find a generic transition
+                const nextWildcardStateName: string = this.transitionMap.get(`${currentState.name}_*`);
+                nextState = this.stateMap.get(nextWildcardStateName) as InternalState;
+
+                if (!nextState) {
+                    this.status = 'ERROR';
+                    throw new Error(`current state named ${currentState.name} fired event ${event} result in no possible next state`);
+                }
             }
 
             this.currentState = nextState;
 
-            return {end: false, status } as EngineResponse;
+            return {end: false, status: this.status } as EngineResponse;
         } catch (e) {
             this.status = 'ERROR';
             throw e;

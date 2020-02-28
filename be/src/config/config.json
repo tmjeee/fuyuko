@@ -21,8 +21,5 @@
   "smtp-password": "oeckyqpcyhazcoij",
   "smtp-from-email": "app@fuyuko.com",
 
-  "testArgs1": "testValue1",
-  "testArgs2": "testValue2",
-
   "default-theme": "deeppurple_amber_light"
 }

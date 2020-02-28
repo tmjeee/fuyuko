@@ -1,14 +1,6 @@
-import {InternalEngine, InternalState} from "./engine-impl";
-import {Argument, Engine, State, StateProcessFn, EngineResponse, NextState} from "./engine-interface";
+import {Argument, Engine, State, StateProcessFn, EngineStatus, EngineResponse, NextState} from "./engine-interface";
+import {createEngine, createState} from "./engine-utils";
 
-
-const createState = (name: string, fn?: StateProcessFn): State => {
-    return  new InternalState(name, fn);
-}
-
-const createEngine = (): Engine => {
-    return new InternalEngine();
-}
 
 export {
     Argument,
@@ -16,6 +8,7 @@ export {
     State,
     StateProcessFn,
     EngineResponse,
+    EngineStatus,
     NextState,
     createState,
     createEngine
@@ -49,6 +42,7 @@ export {
  *                    \-(event3)->  step3 +
  *                    \-(*)------>  step4 +
  */
+/*
 {
     const state1 = createState(`step1`, () => Promise.resolve('e1'));
     const state2 = createState(`step2`, () => Promise.resolve('e2'));
@@ -73,3 +67,5 @@ export {
         .init({} as Argument)
     ;
 }
+
+ */
