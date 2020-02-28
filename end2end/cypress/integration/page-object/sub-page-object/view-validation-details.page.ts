@@ -260,7 +260,26 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
 
     verifyConsoleHasItem(itemName: string): ViewValidationDetailsPage {
         cy.get(`[test-console]`)
-            .find(``)
+            .find(`[test-console-items]`)
+            .should('exist');
+        cy.get(`[test-console]`)
+            .find(`[test-console-item-name='${itemName}']`)
+            .should('exist');
+        return this;
+    }
+
+    verifyConsoleHasError(): ViewValidationDetailsPage {
+        cy.get(`[test-console]`)
+            .find(`[test-console-errors]`)
+            .should('exist');
+        return this;
+    }
+
+    selectTreeItem(itemName: string): ViewValidationDetailsPage {
+        cy.get(`[test-mat-tree]`)
+            .find(`[mat-tree-node-item-name='${itemName}'] span`)
+            .click({force: true})
+        ;
         return this;
     }
 }

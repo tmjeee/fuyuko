@@ -239,11 +239,20 @@ describe(`view validation details spec`, () => {
         viewValidationDetailsPage
             .selectTableItem(itemName)
             .verifyTableItemSelected(itemName)
+            .verifyTreeItemSelected(itemName)
+            .verifyConsoleNotEmpty()
+        ;
     });
 
     // test clicking tree items / rules
     it(`should allow click on tree items / rules`, () => {
-
+        const itemName = `Item-2`
+        viewValidationDetailsPage
+            .selectTreeItem(itemName)
+            .verifyTableItemSelected(itemName)
+            .verifyTreeItemSelected(itemName)
+            .verifyConsoleNotEmpty()
+        ;
     });
 
 
