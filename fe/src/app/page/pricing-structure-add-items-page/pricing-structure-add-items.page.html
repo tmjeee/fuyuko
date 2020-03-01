@@ -1,0 +1,20 @@
+<div class="pricing-structure-add-items-page" [attr.test-page-title]="'pricing-add-items'">
+    <mat-card class="mat-elevation-z-20">
+        <mat-card-header>
+            <mat-card-title>Pricing Structure - Add Items</mat-card-title>
+            <mat-card-subtitle>
+                Add Items to pricing structure
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="loading">Loading ...</div>
+            <app-pricing-structure-add-items
+                    *ngIf="!loading"
+                    (events)="onAddPricingStructureAddItemsChange($event)"
+                    [pricingStructure]="pricingStructure"
+                    [pricingStructureItems]="addablePricingStructureItems">
+            </app-pricing-structure-add-items>
+        </mat-card-content>
+    </mat-card>
+
+</div>

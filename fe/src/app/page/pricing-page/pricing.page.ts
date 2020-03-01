@@ -7,6 +7,7 @@ import {tap} from 'rxjs/operators';
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -19,6 +20,7 @@ export class PricingPageComponent implements OnInit  {
     fetchFn: (pricingStructureId: number) => Observable<PricingStructureWithItems>;
 
     constructor(private pricingStructureService: PricingStructureService,
+                private router: Router,
                 private notificationService: NotificationsService) {
         this.pricingStructureInput = {
             pricingStructures: [],
@@ -82,6 +84,16 @@ export class PricingPageComponent implements OnInit  {
                         this.reload($event.pricingStructure);
                     }))
                     .subscribe();
+                break;
+            case 'add-pricing-item':
+                this.router.navigate([`/gen-layout`,
+                    {
+                        outlets: {
+                            primary: ['pricing-structure', $event.pricingStructure.id, 'add-items'],
+                            help: ['pricing-help']
+                        }
+                    }
+                ]);
                 break;
         }
     }

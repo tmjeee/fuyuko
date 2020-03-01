@@ -21,7 +21,9 @@ import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.com
 import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
 import {MatRadioChange} from '@angular/material/radio';
 import {tap} from 'rxjs/operators';
-import {Validation} from "../../model/validation.model";
+import {Validation, ValidationError, ValidationResult} from "../../model/validation.model";
+import {Rule} from "../../model/rule.model";
+import {ValidationErrors} from "@angular/forms";
 
 export class ValidationResultTableDataSource extends DataSource<TableItem> {
 
@@ -43,6 +45,7 @@ export class ValidationResultTableDataSource extends DataSource<TableItem> {
 export interface ValidationResultTableComponentEvent {
     type: 'reload' | 'modification' | 'selection-changed';
     modifiedItems?: TableItem[]; // only when type = 'modification' or 'selection-changed';
+    errors?: ValidationError[]; // only when type = 'selection-changed'
 }
 
 export interface RowInfo {
@@ -77,6 +80,8 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
     @Output() events: EventEmitter<ValidationResultTableComponentEvent>;
     @Input() itemAndAttributeSet: TableItemAndAttributeSet;
     @Input() observable: Observable<Item>;
+    @Input() rules: Rule[];
+    @Input() validationResult: ValidationResult;
 
     subscription: Subscription;
 
@@ -182,7 +187,8 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
         this.selectionModel.select(item);
         this.events.emit({
             type: 'selection-changed',
-            modifiedItems: [item]
+            modifiedItems: [item],
+            errors: this.validationResult.errors
         });
     }
 

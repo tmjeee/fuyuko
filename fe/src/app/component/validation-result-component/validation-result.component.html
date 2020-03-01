@@ -35,6 +35,8 @@
                         [attr.test-validation-result-table]="''"
                         (events)="onValidationResultTableEvent($event)"
                         [observable]="tableItemChangeEvents"
+                        [rules]="rules"
+                        [validationResult]="validationResult"
                         [itemAndAttributeSet]="itemAndAttributeSet">
                     </app-validation-result-table>
                 </div>

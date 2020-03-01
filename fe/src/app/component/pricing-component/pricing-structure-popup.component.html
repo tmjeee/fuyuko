@@ -1,22 +1,22 @@
-<div class="pricing-structure-popup-component">
+<div class="pricing-structure-popup-component" [attr.test-popup-dialog-title]="'pricing-structure-edit-dialog-popup'">
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
         <mat-form-field>
             <mat-label>Name</mat-label>
-            <input matInput [formControl]="formControlName">
+            <input matInput [attr.test-field-pricing-structure-name]="''" [formControl]="formControlName">
             <mat-hint>Pricing Structure Name</mat-hint>
             <mat-error *ngIf="formControlName?.errors?.required">Name is required</mat-error>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>Description</mat-label>
-            <input matInput [formControl]="formControlDescription">
+            <input matInput [attr.test-field-pricing-structure-description]="''" [formControl]="formControlDescription">
             <mat-hint>Pricing Structure Description</mat-hint>
             <mat-error *ngIf="formControlDescription?.errors?.required">Description is required</mat-error>
         </mat-form-field>
 
         <div class="controls">
-            <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid">Ok</button>
-            <button mat-flat-button color="primary" type="button" (click)="onCancel($event)">Cancel</button>
+            <button mat-flat-button color="primary" [attr.test-button-ok]="''" type="submit" [disabled]="formGroup.invalid">Ok</button>
+            <button mat-flat-button color="primary" [attr.test-button-cancel]="''" type="button" (click)="onCancel($event)">Cancel</button>
         </div>
     </form>
 </div>

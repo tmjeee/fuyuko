@@ -9,6 +9,7 @@
     </mat-card-header>
     <mat-card-content>
       <app-pricing-structure-table
+        [attr.test-pricing-structure-table]="''"
         [fetchFn]="fetchFn"
         (events)="onPricingStructureTableEvent($event)"
         [pricingStructureInput]="pricingStructureInput">

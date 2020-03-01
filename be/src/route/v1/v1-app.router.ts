@@ -101,6 +101,9 @@ import registerPostAddAttributeRoute from './POST-add-attributes.route';
 import registerPostChangeAttributeStatusRoute from './POST-change-attribute-status.route';
 import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
+import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
+import registerGetAllAddablePricingStructureItemsRoute from './GET-addable-pricing-structure-item.route';
+import registerPostAddPricingStructureItemRoute from './POST-add-pricing-structure-item.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -208,7 +211,10 @@ const reg = (router: Router, regi: Registry) => {
     registerPostChangeAttributeStatusRoute(v1AppRouter, registry);
     registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
-}
+    registerGetPricingStructureByIdRoute(v1AppRouter, registry);
+    registerGetAllAddablePricingStructureItemsRoute(v1AppRouter, registry);
+    registerPostAddPricingStructureItemRoute(v1AppRouter, registry);
+};
 
 
 export default reg;

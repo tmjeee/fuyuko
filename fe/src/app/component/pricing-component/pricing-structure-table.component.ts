@@ -16,6 +16,7 @@ import {PricingStructurePopupComponent} from './pricing-structure-popup.componen
 import {ItemPricePopupComponent} from './item-price-popup.component';
 import {toTablePricingStructureItemWithPrice} from '../../utils/item-to-table-items.util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {AddPricingItemPopupComponent} from "./add-pricing-item-popup.component";
 
 
 export interface RowInfo {
@@ -46,9 +47,9 @@ export class PricingStructureItemsTableDataSource extends DataSource<TablePricin
 
 export interface PricingStructureEvent {
     type: 'new-pricing-structure' | 'delete-pricing-structure' |
-        'edit-pricing-structure' | 'edit-pricing-item';
-    pricingStructure?: PricingStructure; // for add / edit /remove of PricingStructure
-    pricingStructureItem?: TablePricingStructureItemWithPrice; // for add / edit / remove of PricingStructureItemWithPrice
+        'edit-pricing-structure' | 'edit-pricing-item' | 'add-pricing-items';
+    pricingStructure?: PricingStructure; // for new / add / edit /remove of PricingStructure
+    pricingStructureItem?: TablePricingStructureItemWithPrice; // for edit / remove of PricingStructureItemWithPrice
 }
 
 export interface PricingStructureInput {
@@ -56,16 +57,15 @@ export interface PricingStructureInput {
     currentPricingStructure: PricingStructure;
 }
 
+
 @Component({
     selector: 'app-pricing-structure-table',
     templateUrl: './pricing-structure-table.component.html',
     styleUrls: ['./pricing-structure-table.component.scss'],
     animations: [
         trigger('detailExpand', [
-            // state('collapsed', style({height: '0px', minHeight: '0', display: 'none', visibility: 'hidden'})),
-            // state('expanded', style({height: '*',  display: 'table-row', visibility: 'visible'})),
-            state('collapsed', style({height: '0px', minHeight: '0', opacity: '0'})),
-            state('expanded', style({height: '*',  opacity: '1'})),
+            state('collapsed', style({height: '0px', minHeight: '0', visibility: 'hidden', display: 'none'})),
+            state('expanded', style({height: '*',  visibility: 'visible', display: 'table-row'})),
             transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),
     ],
@@ -117,16 +117,17 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
             this.fetchFn(pricingStructure.id)
                 .pipe(
                     tap((p: PricingStructureWithItems) => {
-                        this.pricingStructureWithItems = p;
-                        this.pricingStructureWithItems.items.forEach((item: PricingStructureItemWithPrice) => {
-                            this.rowInfoMap.set(item.id, { tableItem: item, expanded: false } as RowInfo);
-                        });
-                        this.tablePricingStructureItemsWithPrice =
-                            toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items);
-                        console.log('****************************************xxxxx ', this.tablePricingStructureItemsWithPrice);
-                        setTimeout(() => {
-                            this.dataSource.update([...this.tablePricingStructureItemsWithPrice]);
-                        });
+                        if (p && p.items) {
+                            this.pricingStructureWithItems = p;
+                            this.pricingStructureWithItems.items.forEach((item: PricingStructureItemWithPrice) => {
+                                this.rowInfoMap.set(item.id, { tableItem: item, expanded: false } as RowInfo);
+                            });
+                            this.tablePricingStructureItemsWithPrice =
+                                toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items);
+                            setTimeout(() => {
+                                this.dataSource.update([...this.tablePricingStructureItemsWithPrice]);
+                            });
+                        }
                     })
                 ).subscribe();
         } else {
@@ -137,7 +138,8 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
     onNewPricingStructure($event: MouseEvent) {
         this.matDialog.open(PricingStructurePopupComponent,
             {
-                width: '550px',
+                width: '90vw',
+                height: '90vh',
                 data: null
             } as MatDialogConfig)
             .afterClosed().pipe(
@@ -155,7 +157,8 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
     onEditPricingStructure($event: MouseEvent, pricingStructureWithItems: PricingStructureWithItems) {
         this.matDialog.open(PricingStructurePopupComponent,
             {
-                width: '550px',
+                width: '90vw',
+                height: '90vh',
                 data: pricingStructureWithItems
             } as MatDialogConfig)
             .afterClosed().pipe(
@@ -170,17 +173,18 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
             ).subscribe();
     }
 
-    onDeletePricingStructure($event: MouseEvent, pricingStructureWithItems: PricingStructureWithItems) {
+    onDeletePricingStructure($event: MouseEvent, pricingStructure: PricingStructure) {
         this.events.emit({
             type: 'delete-pricing-structure',
-            pricingStructure: pricingStructureWithItems
+            pricingStructure
         } as PricingStructureEvent);
     }
 
 
     onEditPricingStructureItem($event: MouseEvent, pricingStructureItem: TablePricingStructureItemWithPrice) {
         this.matDialog.open(ItemPricePopupComponent, {
-            width: '250px',
+            width: '90vw',
+            height: '90vh',
             data: pricingStructureItem
         } as MatDialogConfig)
             .afterClosed().pipe(
@@ -220,5 +224,30 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
         this.rowInfoMap.get(item.id).expanded = !this.rowInfoMap.get(item.id).expanded;
     }
 
+    onAddPricingStructureItem($event: MouseEvent, pricingStructure: PricingStructure) {
+        this.events.emit({
+            type: 'add-pricing-items',
+            pricingStructure
+        });
+        this.matDialog.open(AddPricingItemPopupComponent, {
+            width: `90vw`,
+            height: `90vh`,
+            data: {
+                pricingStructure
+            }
+        } as MatDialogConfig)
+        .afterClosed().pipe(
+            tap((r: {pricingStructure: PricingStructure, pricingStructureItemWithPrice: TablePricingStructureItemWithPrice}) => {
+                if (r) {
+                    this.events.emit({
+                        type: 'new-pricing-structure',
+                        pricingStructure: r.pricingStructure,
+                        pricingStructureItem: r.pricingStructureItemWithPrice
+                    });
+                }
+            })
+        ).subscribe();
 
+
+    }
 }

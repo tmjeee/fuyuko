@@ -30,6 +30,12 @@
               }
             }
 
+            &.expansion {
+              .mat-icon {
+                cursor: pointer;
+              }
+            }
+
             .depth-0 {
               margin-left: 0px;
             }

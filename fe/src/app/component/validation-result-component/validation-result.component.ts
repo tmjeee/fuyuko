@@ -72,6 +72,8 @@ export  class ValidationResultComponent implements OnInit {
                     const it: Item = this.b(this.items, tableItems[0].id);
                     if (it) {
                         this.fireTreeItemChangeEvent(it);
+                        this.fireTableItemChangeEvent(it);
+                        this.fireValidationErrorEvent($event.errors);
                     }
                 }
                 break;
