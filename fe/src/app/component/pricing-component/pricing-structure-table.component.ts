@@ -16,7 +16,6 @@ import {PricingStructurePopupComponent} from './pricing-structure-popup.componen
 import {ItemPricePopupComponent} from './item-price-popup.component';
 import {toTablePricingStructureItemWithPrice} from '../../utils/item-to-table-items.util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {AddPricingItemPopupComponent} from "./add-pricing-item-popup.component";
 
 
 export interface RowInfo {
@@ -229,25 +228,5 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
             type: 'add-pricing-items',
             pricingStructure
         });
-        this.matDialog.open(AddPricingItemPopupComponent, {
-            width: `90vw`,
-            height: `90vh`,
-            data: {
-                pricingStructure
-            }
-        } as MatDialogConfig)
-        .afterClosed().pipe(
-            tap((r: {pricingStructure: PricingStructure, pricingStructureItemWithPrice: TablePricingStructureItemWithPrice}) => {
-                if (r) {
-                    this.events.emit({
-                        type: 'new-pricing-structure',
-                        pricingStructure: r.pricingStructure,
-                        pricingStructureItem: r.pricingStructureItemWithPrice
-                    });
-                }
-            })
-        ).subscribe();
-
-
     }
 }

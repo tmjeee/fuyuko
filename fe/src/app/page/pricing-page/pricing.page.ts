@@ -85,7 +85,7 @@ export class PricingPageComponent implements OnInit  {
                     }))
                     .subscribe();
                 break;
-            case 'add-pricing-item':
+            case 'add-pricing-items':
                 this.router.navigate([`/gen-layout`,
                     {
                         outlets: {
