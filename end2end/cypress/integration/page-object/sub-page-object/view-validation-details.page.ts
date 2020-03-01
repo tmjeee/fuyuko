@@ -75,6 +75,22 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         return this;
     }
 
+
+    clickSave(): ViewValidationDetailsPage {
+        cy.get(`[test-validation-result-table]`)
+            .find(`[test-button-save]`)
+            .click({force: true});
+        return this;
+    }
+
+    clickReload(): ViewValidationDetailsPage {
+        cy.get(`[test-validation-result-table]`)
+            .find(`[test-button-reload]`)
+            .click({force: true});
+        return this;
+    }
+
+
     closeTableFilterPanel() {
         cy.get(`[test-validation-result-table]`).then((_) => {
             const visible = _.find(`[test-filtering-panel]`).is(':visible');
@@ -172,6 +188,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         return this;
     }
 
+
     verifyItemNotExists(itemName: string) {
         cy.get(`[test-validation-result-table]`)
             .find(`[test-table-row-item='${itemName}']`)
@@ -183,6 +200,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table]`)
             .find(`[test-table-row-item='${itemName}']`)
             .find(`[test-data-editor='${attributeName}']`)
+            .find(`[test-data-editor-value='${attributeName}']`)
             .click({force: true});
         return new ViewValidationAttributePopupPage(this.validationName);
     }
@@ -191,6 +209,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table]`)
             .find(`[test-table-row-item='${itemName}']`)
             .find(`[test-item-editor='name']`)
+            .find(`[test-item-editor-value='name']`)
             .click({force: true});
         return new ViewValidationItemPopupPage(this.validationName);
     }
@@ -198,7 +217,8 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
     clickTableItemDescription(itemName: string): ViewValidationItemPopupPage {
         cy.get(`[test-validation-result-table]`)
             .find(`[test-table-row-item='${itemName}']`)
-            .find(`[test-item-editor='name']`)
+            .find(`[test-item-editor='description']`)
+            .find(`[test-item-editor-value='description']`)
             .click({force: true});
         return new ViewValidationItemPopupPage(this.validationName);
     }
@@ -208,7 +228,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
             const l = _.find(`[test-mat-radio-item='${itemName}'].mat-radio-checked`).length;
             if (l <= 0) { // not already selected
                 cy.get(`[test-validation-result-table]`)
-                    .find(`[test-mat-radio-item='${itemName}']`)
+                    .find(`[test-mat-radio-item='${itemName}'] label`)
                     .click({force: true})
             }
         })
@@ -220,14 +240,14 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
             const l = _.find(`[test-mat-radio-item='${itemName}'].mat-radio-checked`).length;
             if (l > 0) { // already selected
                 cy.get(`[test-validation-result-table]`)
-                    .find(`[test-mat-radio-item='${itemName}']`)
+                    .find(`[test-mat-radio-item='${itemName}'] label`)
                     .click({force: true})
             }
         })
         return this;
     }
 
-    verifyItemWithAttributeExists(itemName: string, attributeName: string, attributeValues: string[]) {
+    verifyItemWithAttributeExists(itemName: string, attributeName: string, attributeValues: string[]): ViewValidationDetailsPage {
         cy.wrap(attributeValues).each((e, i, a) => {
             cy.get(`[test-validation-result-table]`)
                 .find(`[test-table-row-item='${itemName}']`)
@@ -235,6 +255,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
                 .find(`[test-data-editor-value='${attributeName}']`)
                 .should('contain.text', attributeValues[i]);
         });
+        return this;
     }
 
     verifyTableItemSelected(itemName: string): ViewValidationDetailsPage {
@@ -277,7 +298,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
 
     selectTreeItem(itemName: string): ViewValidationDetailsPage {
         cy.get(`[test-mat-tree]`)
-            .find(`[mat-tree-node-item-name='${itemName}'] span`)
+            .find(`[test-tree-node-item-name='${itemName}'] span.icon-text`)
             .click({force: true})
         ;
         return this;

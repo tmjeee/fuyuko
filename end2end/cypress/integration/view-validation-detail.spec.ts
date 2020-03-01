@@ -126,7 +126,7 @@ describe(`view validation details spec`, () => {
     });
 
     // test expanding item-1, and should see children of it
-    it.only (`test expanding and collapsing table item`, () => {
+    it(`test expanding and collapsing table item`, () => {
         viewValidationDetailsPage
             .expandRow('Item-1')
             .verifyItemExists('Item-1-1')
@@ -137,7 +137,7 @@ describe(`view validation details spec`, () => {
     });
 
     // test editing item name, description and attribute values
-    it (`should allow editing item name, description and attribute values`, () => {
+    it(`should allow editing item name, description and attribute values`, () => {
         const itemName = `Item-3`;
 
         const string_attributeName = `string attribute`;
@@ -214,22 +214,153 @@ describe(`view validation details spec`, () => {
             .clickOk()
 
             // text
+            .clickTableAttribute(itemName, text_attributeName)
+            .editTextAttribute(text_attributeValue)
+            .clickOk()
+
             // numeric
+            .clickTableAttribute(itemName, number_attributeName)
+            .editNumericAttribute(Number(number_attributeValue))
+            .clickOk()
+
             // date
+            .clickTableAttribute(itemName, date_attributeName)
+            .editDateAttribute(date_attributeValue)
+            .clickOk()
+
             // currency
+            .clickTableAttribute(itemName, currency_attributeName)
+            .editCurrencyAttribute(Number(currency_attributeValue), currency_attributeUnit)
+            .clickOk()
+
             // volume
+            .clickTableAttribute(itemName, volume_attributeName)
+            .editVolumeAttribute(Number(volume_attributeValue), volume_attributeUnit)
+            .clickOk()
+
             // dimension
+            .clickTableAttribute(itemName, dimension_attributeName)
+            .editDimensionAttribute(Number(dimension_attributeLengthValue), Number(dimension_attributeWidthValue), Number(dimension_attributeHeightValue), dimension_attributeUnit)
+            .clickOk()
+
             // area
-            // lenght
+            .clickTableAttribute(itemName, area_attributeName)
+            .editAreaAttribute(Number(area_attributeValue), area_attributeUnit)
+            .clickOk()
+
+            // length
+            .clickTableAttribute(itemName, length_attributeName)
+            .editLengthAttribute(Number(length_attributeValue), length_attributeUnit)
+            .clickOk()
+
             // width
+            .clickTableAttribute(itemName, width_attributeName)
+            .editWidthAttribute(Number(width_attributeValue), width_attributeUnit)
+            .clickOk()
+
             // height
+            .clickTableAttribute(itemName, height_attributeName)
+            .editHeightAttribute(Number(height_attributeValue), height_attributeUnit)
+            .clickOk()
+
             // select
+            .clickTableAttribute(itemName, select_attributeName)
+            .editSelectAttribute(select_attributeValue)
+            .clickOk()
+
             // doubleselect
+            .clickTableAttribute(itemName, doubleselect_attributeName)
+            .editDoubleSelectAttribute(doubleselect_attributeValue1, doubleselect_attributeValue2)
+            .clickOk()
         ;
 
         viewValidationDetailsPage
+            // string
             .verifyItemWithAttributeExists(itemName, string_attributeName, [string_attributeValue])
 
+            // text
+            .verifyItemWithAttributeExists(itemName, text_attributeName, [text_attributeValue])
+
+            // numeric
+            .verifyItemWithAttributeExists(itemName, number_attributeName, [number_attributeValue])
+
+            // date
+            .verifyItemWithAttributeExists(itemName, date_attributeName, [date_attributeValue])
+
+            // currency
+            .verifyItemWithAttributeExists(itemName, currency_attributeName, [currency_attributeValue, currency_attributeUnit])
+
+            // volume
+            .verifyItemWithAttributeExists(itemName, volume_attributeName, [volume_attributeValue, volume_attributeUnit])
+
+            // dimension
+            .verifyItemWithAttributeExists(itemName, dimension_attributeName, [dimension_attributeLengthValue, dimension_attributeWidthValue, dimension_attributeHeightValue, dimension_attributeUnit])
+
+            // area
+            .verifyItemWithAttributeExists(itemName, area_attributeName, [area_attributeValue, area_attributeUnit])
+
+            // lenght
+            .verifyItemWithAttributeExists(itemName, length_attributeName, [length_attributeValue, length_attributeUnit])
+
+            // width
+            .verifyItemWithAttributeExists(itemName, width_attributeName, [width_attributeValue, width_attributeUnit])
+
+            // height
+            .verifyItemWithAttributeExists(itemName, height_attributeName, [height_attributeValue, height_attributeUnit])
+
+            // select
+            .verifyItemWithAttributeExists(itemName, select_attributeName, [select_v])
+
+            // doubleselect
+            .verifyItemWithAttributeExists(itemName, doubleselect_attributeName, [doubleselect_v])
+        ;
+
+        viewValidationDetailsPage
+            .clickSave()
+            .verifySuccessMessageExists()
+        ;
+
+        // validate attributes value again
+        viewValidationDetailsPage
+        // string
+            .verifyItemWithAttributeExists(itemName, string_attributeName, [string_attributeValue])
+
+            // text
+            .verifyItemWithAttributeExists(itemName, text_attributeName, [text_attributeValue])
+
+            // numeric
+            .verifyItemWithAttributeExists(itemName, number_attributeName, [number_attributeValue])
+
+            // date
+            .verifyItemWithAttributeExists(itemName, date_attributeName, [date_attributeValue])
+
+            // currency
+            .verifyItemWithAttributeExists(itemName, currency_attributeName, [currency_attributeValue, currency_attributeUnit])
+
+            // volume
+            .verifyItemWithAttributeExists(itemName, volume_attributeName, [volume_attributeValue, volume_attributeUnit])
+
+            // dimension
+            .verifyItemWithAttributeExists(itemName, dimension_attributeName, [dimension_attributeLengthValue, dimension_attributeWidthValue, dimension_attributeHeightValue, dimension_attributeUnit])
+
+            // area
+            .verifyItemWithAttributeExists(itemName, area_attributeName, [area_attributeValue, area_attributeUnit])
+
+            // lenght
+            .verifyItemWithAttributeExists(itemName, length_attributeName, [length_attributeValue, length_attributeUnit])
+
+            // width
+            .verifyItemWithAttributeExists(itemName, width_attributeName, [width_attributeValue, width_attributeUnit])
+
+            // height
+            .verifyItemWithAttributeExists(itemName, height_attributeName, [height_attributeValue, height_attributeUnit])
+
+            // select
+            .verifyItemWithAttributeExists(itemName, select_attributeName, [select_v])
+
+            // doubleselect
+            .verifyItemWithAttributeExists(itemName, doubleselect_attributeName, [doubleselect_v])
+        ;
 
     });
 
