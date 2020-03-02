@@ -8,7 +8,6 @@ import {
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '../../model/response.model';
-import {tap} from "rxjs/operators";
 
 const URL_ALL_PRICING_STRUCTURES = () => `${config().api_host_url}/pricingStructures`;
 const URL_ALL_ITEMS_WITH_PRICE = () => `${config().api_host_url}/pricingStructuresWithItems/:pricingStructureId`;
@@ -17,7 +16,7 @@ const URL_UPDATE_PRICING_STRUCTURE = () => `${config().api_host_url}/pricingStru
 const URL_UPDATE_PRICING_STRUCTURE_ITEM = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/item`;
 
 const URL_ALL_ADDABLE_PRICING_STRUCTURE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/addable-items`;
-const URL_PRICING_STRUCTURE_BY_ID = () => `${config().api_host_url}/pricingStructure/:pricingStructureId`
+const URL_PRICING_STRUCTURE_BY_ID = () => `${config().api_host_url}/pricingStructure/:pricingStructureId`;
 const URL_ADD_PRICING_STRUCURE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/add-items`;
 
 

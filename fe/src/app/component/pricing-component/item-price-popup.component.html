@@ -1,4 +1,4 @@
-<div class="item-price-popup-component">
+<div class="item-price-popup-component" [attr.test-popup-dialog-title]="'pricing-dialog-popup'">
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
        <mat-form-field>
            <mat-label>Price</mat-label>

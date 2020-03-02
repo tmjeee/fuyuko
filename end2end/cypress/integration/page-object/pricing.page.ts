@@ -1,6 +1,7 @@
 import {ActualPage} from "./actual.page";
 import * as util from '../util/util';
-import {PricingStructureAddItemsPage} from "./sub-page-object/pricing-structure-add-items.page";
+import {EditPricingStructurePopupPage} from "./sub-page-object/edit-pricing-structure-popup.page";
+import {EditPricingPopupPage} from "./sub-page-object/edit-pricing-popup.page";
 
 
 export class PricingPage implements ActualPage<PricingPage> {
@@ -50,10 +51,50 @@ export class PricingPage implements ActualPage<PricingPage> {
         return this;
     }
 
-    clickAddNewPricingStructure(pricingStructureId: number): PricingStructureAddItemsPage {
+    clickDeletePricingStructure(pricingStructureName: string): PricingPage {
+        cy.get(`[test-pricing-structure-table]`)
+            .find(`[test-button-delete-pricing-structure='${pricingStructureName}']`)
+            .click({force: true});
+        return this;
+    }
+
+    clickEditPricingStructure(pricingStructureName: string): EditPricingStructurePopupPage {
+        cy.get(`[test-pricing-structure-table]`)
+            .find(`[test-button-edit-pricing-structure='${pricingStructureName}']`)
+            .click({force: true});
+        return new EditPricingStructurePopupPage();
+    }
+
+    clickEditItemPricing(pricingStructureName: string, itemName: string): EditPricingPopupPage {
+        cy.get(`[test-pricing-structure-items-table='${pricingStructureName}']`)
+            .find(`[test-button-edit-pricing='${itemName}']`)
+            .click({force: true});
+        return new EditPricingPopupPage();
+    }
+
+
+    clickAddNewPricingStructure(): EditPricingStructurePopupPage {
         cy.get(`[test-pricing-structure-table]`)
             .find(`[test-button-new-pricing-structure]`)
-            .click({force: true})
-        return new PricingStructureAddItemsPage(pricingStructureId);
+            .click({force: true});
+        return new EditPricingStructurePopupPage();
+    }
+
+    verifyPricingStructureExists(pricingStructureName: string): PricingPage {
+        cy.get(`[test-pricing-structure-table]`)
+            .find(`[test-mat-select-pricing-structure] div`)
+            .click({force: true, multiple: true});
+        cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
+            .should('not.exist');
+        return this;
+    }
+
+    verifyPricingStructureDoNotExist(pricingStructureName: string): PricingPage {
+        cy.get(`[test-pricing-structure-table]`)
+            .find(`[test-mat-select-pricing-structure] div`)
+            .click({force: true, multiple: true});
+        cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
+            .should('exist');
+        return this;
     }
 }

@@ -8,7 +8,7 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {body} from 'express-validator';
-import {doInDbConnection} from "../../db";
+import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {ApiResponse} from "../../model/response.model";
@@ -18,7 +18,8 @@ const httpAction: any[] = [
     [
        body('pricingStructures').isArray(),
        body('pricingStructures.*.name').exists(),
-       body('pricingStructures.*.description').exists()
+       body('pricingStructures.*.description').exists(),
+       body('pricingStructures.*.viewId').exists().isNumeric(),
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -27,25 +28,33 @@ const httpAction: any[] = [
 
         const pricingStructures: PricingStructure[] = req.body.pricingStructures;
 
-        await doInDbConnection(async (conn: Connection) => {
-
+        const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
             for (const pricingStructure of pricingStructures) {
                 if (pricingStructure.id <= 0) { // insert
-                    conn.query(`
-                        INSERT INTO TBL_PRICING_STRUCTURE (NAME, DESCRIPTION, STATUS) VALUE (?,?, 'ENABLED')
-                    `, [pricingStructure.name, pricingStructure.description]);
+                    const q: QueryResponse = await conn.query(`
+                        INSERT INTO TBL_PRICING_STRUCTURE (NAME, DESCRIPTION, VIEW_ID, STATUS) VALUE (?,?,?, 'ENABLED')
+                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.viewId]);
+                    return q;
                 } else { // update
-                    conn.query(`
-                        UPDATE TBL_PRICING_STRUCTURE SET NAME=?, DESCRIPTION=? WHERE ID=? AND STATUS='ENABLED' 
-                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.id]);
+                    const q: QueryResponse = await conn.query(`
+                        UPDATE TBL_PRICING_STRUCTURE SET NAME=?, DESCRIPTION=? WHERE ID=? AND VIEW_ID=? AND STATUS='ENABLED' 
+                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.id, pricingStructure.viewId]);
+                    return q;
                 }
             }
         });
 
-        res.status(200).json({
-            status: "SUCCESS",
-            message: `Pricing structure updated`
-        } as ApiResponse);
+        if (q.affectedRows > 0) {
+            res.status(200).json({
+                status: `SUCCESS`,
+                message: `Pricing structure updated`
+            } as ApiResponse);
+        } else {
+            res.status(400).json({
+                status: `ERROR`,
+                message: `Pricing structure not updated`
+            } as ApiResponse);
+        }
     }
 ];
 

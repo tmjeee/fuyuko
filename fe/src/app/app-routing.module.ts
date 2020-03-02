@@ -51,8 +51,7 @@ import {ViewValidationPageComponent} from './page/view-validation-page/view-vali
 import {EditAttributePageComponent} from './page/view-attributes-page/edit-attribute.page';
 import {ViewValidationDetailsPageComponent} from './page/view-validation-details-page/view-validation-details.page';
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
-import {AddAttributePageComponent} from "./page/view-attributes-page/add-attribute.page";
-import {PricingStructureAddItemsPageComponent} from "./page/pricing-structure-add-items-page/pricing-structure-add-items.page";
+import {AddAttributePageComponent} from './page/view-attributes-page/add-attribute.page';
 
 const routes: Routes = [
 
@@ -479,14 +478,6 @@ const routes: Routes = [
          sideNav: 'pricing'
        }
      } as Route,
-     {
-       path: 'pricing-structure/:pricingStructureId/add-items',
-       canActivate: [AuthGuard],
-       component: PricingStructureAddItemsPageComponent,
-       data: {
-          sideNav: 'pricing'
-       }
-     },
      {
        path: 'pricing-help',
        canActivate: [AuthGuard],

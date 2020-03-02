@@ -1,4 +1,4 @@
-<div class="pricing-structure-popup-component" [attr.test-popup-dialog-title]="'pricing-structure-edit-dialog-popup'">
+<div class="pricing-structure-popup-component" [attr.test-popup-dialog-title]="'pricing-structure-dialog-popup'">
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
         <mat-form-field>
             <mat-label>Name</mat-label>
@@ -12,6 +12,17 @@
             <input matInput [attr.test-field-pricing-structure-description]="''" [formControl]="formControlDescription">
             <mat-hint>Pricing Structure Description</mat-hint>
             <mat-error *ngIf="formControlDescription?.errors?.required">Description is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>View</mat-label>
+            <mat-hint>Select a view</mat-hint>
+            <mat-select [formControl]="formControlView" [attr.test-mat-select-pricing-structure-view]="''">
+                <mat-option *ngFor="let view of data.views" [value]="view" [attr.test-mat-select-option-pricing-structure-view]="view.name">
+                    {{view.name}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="formControlView?.errors?.required">A view is required</mat-error>
         </mat-form-field>
 
         <div class="controls">

@@ -16,6 +16,7 @@ import {PricingStructurePopupComponent} from './pricing-structure-popup.componen
 import {ItemPricePopupComponent} from './item-price-popup.component';
 import {toTablePricingStructureItemWithPrice} from '../../utils/item-to-table-items.util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {View} from '../../model/view.model';
 
 
 export interface RowInfo {
@@ -46,8 +47,8 @@ export class PricingStructureItemsTableDataSource extends DataSource<TablePricin
 
 export interface PricingStructureEvent {
     type: 'new-pricing-structure' | 'delete-pricing-structure' |
-        'edit-pricing-structure' | 'edit-pricing-item' | 'add-pricing-items';
-    pricingStructure?: PricingStructure; // for new / add / edit /remove of PricingStructure
+        'edit-pricing-structure' | 'edit-pricing-item';
+    pricingStructure?: PricingStructure; // for new / edit /remove of PricingStructure
     pricingStructureItem?: TablePricingStructureItemWithPrice; // for edit / remove of PricingStructureItemWithPrice
 }
 
@@ -73,6 +74,7 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
 
     @Input() pricingStructureInput: PricingStructureInput;
     @Input() fetchFn: (pricingStructureId: number) => Observable<PricingStructureWithItems>;
+    @Input() views: View[];
     @Output() events: EventEmitter<PricingStructureEvent>;
 
     // currently selected ones
@@ -88,6 +90,7 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
     constructor(private matDialog: MatDialog) {
         this.dataSource = new PricingStructureItemsTableDataSource();
         this.events = new EventEmitter();
+        this.views = [];
         this.rowInfoMap = new Map();
     }
 
@@ -139,7 +142,7 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
             {
                 width: '90vw',
                 height: '90vh',
-                data: null
+                data: { views: this.views, pricingStructure: null}
             } as MatDialogConfig)
             .afterClosed().pipe(
                 tap((r: PricingStructure) => {
@@ -153,12 +156,12 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
             ).subscribe();
     }
 
-    onEditPricingStructure($event: MouseEvent, pricingStructureWithItems: PricingStructureWithItems) {
+    onEditPricingStructure($event: MouseEvent, pricingStructure: PricingStructure) {
         this.matDialog.open(PricingStructurePopupComponent,
             {
                 width: '90vw',
                 height: '90vh',
-                data: pricingStructureWithItems
+                data: { views: this.views, pricingStructure}
             } as MatDialogConfig)
             .afterClosed().pipe(
                 tap((r: PricingStructure) => {
@@ -221,12 +224,5 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
         this.rowInfoMap.get(item.id).expanded = !this.rowInfoMap.get(item.id).expanded;
-    }
-
-    onAddPricingStructureItem($event: MouseEvent, pricingStructure: PricingStructure) {
-        this.events.emit({
-            type: 'add-pricing-items',
-            pricingStructure
-        });
     }
 }

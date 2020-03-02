@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {PricingStructure, PricingStructureItemWithPrice, PricingStructureWithItems} from '../../model/pricing-structure.model';
 import {PricingStructureEvent, PricingStructureInput} from '../../component/pricing-component/pricing-structure-table.component';
 import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
@@ -7,7 +7,9 @@ import {tap} from 'rxjs/operators';
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
+import {View} from '../../model/view.model';
+import {ViewService} from '../../service/view-service/view.service';
 
 
 @Component({
@@ -16,11 +18,13 @@ import {Router} from "@angular/router";
 })
 export class PricingPageComponent implements OnInit  {
 
+    views: View[];
     pricingStructureInput: PricingStructureInput;
     fetchFn: (pricingStructureId: number) => Observable<PricingStructureWithItems>;
 
     constructor(private pricingStructureService: PricingStructureService,
                 private router: Router,
+                private viewService: ViewService,
                 private notificationService: NotificationsService) {
         this.pricingStructureInput = {
             pricingStructures: [],
@@ -36,15 +40,22 @@ export class PricingPageComponent implements OnInit  {
     }
 
     reload(pricingStructure: PricingStructure) {
-        this.pricingStructureService.allPricingStructures()
-            .pipe(
-                tap((pricingStructures: PricingStructure[]) => {
-                    this.pricingStructureInput = {
-                        pricingStructures,
-                        currentPricingStructure: pricingStructure
-                    } as PricingStructureInput;
-                })
-            ).subscribe();
+        forkJoin([
+            this.viewService.getAllViews(),
+            this.pricingStructureService.allPricingStructures()
+        ]).pipe(
+            tap((r: [View[], PricingStructure[]]) => {
+                // r[0]
+                this.views = r[0];
+
+                // r[1]
+                this.pricingStructureInput = {
+                    pricingStructures:  r[1],
+                    currentPricingStructure: pricingStructure
+                } as PricingStructureInput;
+
+            })
+        ).subscribe();
     }
 
     onPricingStructureTableEvent($event: PricingStructureEvent) {
@@ -84,16 +95,6 @@ export class PricingPageComponent implements OnInit  {
                         this.reload($event.pricingStructure);
                     }))
                     .subscribe();
-                break;
-            case 'add-pricing-items':
-                this.router.navigate([`/gen-layout`,
-                    {
-                        outlets: {
-                            primary: ['pricing-structure', $event.pricingStructure.id, 'add-items'],
-                            help: ['pricing-help']
-                        }
-                    }
-                ]);
                 break;
         }
     }

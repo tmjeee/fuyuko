@@ -113,7 +113,7 @@ export const getChildrenWithConn = async (conn: Connection, pricingStructureId: 
                 
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = I.VIEW_ID
-                LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
+                LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = PS.ID
                 WHERE PS.ID = ? AND I.PARENT_ID = ? AND I.STATUS = 'ENABLED'
     `, [pricingStructureId, parentItemId]);
 

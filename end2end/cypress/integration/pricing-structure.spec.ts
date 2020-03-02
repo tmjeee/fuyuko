@@ -53,21 +53,38 @@ describe(`pricing structure spece`, () => {
 
     it.only (`should create, edit, edit item in pricing structure and then delete pricing structure`, () => {
 
+        const viewName = `Test View 1`;
         const random = `${Math.random()}`;
         const pricingStructureName = `New-Pricing-Structure-${random}`;
         const pricingStructureDescription = `New-Pricing-Structure-Description-${random}`;
 
-        /*
         pricingPage
             .clickAddNewPricingStructure()
-            .editPricingStructureName(pricingStructureName)
-            .editPricingStructureDescription(pricingStructureDescription)
-         */
+            .editName(pricingStructureName)
+            .editDescription(pricingStructureDescription)
+            .selectView(viewName)
+            .clickCancel()
+            .verifyPricingStructureDoNotExist(pricingStructureName)
+
+
+            // create
+            .clickAddNewPricingStructure()
+            .editName(pricingStructureName)
+            .editDescription(pricingStructureDescription)
+            .selectView(viewName)
+            .clickOk()
+            .verifySuccessMessageExists()
+            .verifyPricingStructureDoNotExist(pricingStructureName)
+
+            // edit
 
 
 
 
-
-
+            // delete
+            .clickDeletePricingStructure(pricingStructureName)
+            .verifySuccessMessageExists()
+            .verifyPricingStructureDoNotExist(pricingStructureName)
+        ;
     });
 });

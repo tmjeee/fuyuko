@@ -11,6 +11,7 @@
       <app-pricing-structure-table
         [attr.test-pricing-structure-table]="''"
         [fetchFn]="fetchFn"
+        [views]="views"
         (events)="onPricingStructureTableEvent($event)"
         [pricingStructureInput]="pricingStructureInput">
       </app-pricing-structure-table>

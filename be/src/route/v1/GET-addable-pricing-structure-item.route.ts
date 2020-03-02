@@ -16,7 +16,7 @@ const httpActions: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
-        const pricingStructureId: number = Number(req)
+        const pricingStructureId: number = Number(req.params.pricingStructureId);
 
         await doInDbConnection(async (conn: Connection) => {
 
@@ -34,7 +34,7 @@ const httpActions: any[] = [
                 WHERE I.STATUS <> 'DELETED' AND 
                 I.VIEW_ID IN ( SELECT VIEW_ID FROM TBL_PRICING_STRUCTURE WHERE ID = ?) AND
                 I.ID NOT IN (SELECT ITEM_ID FROM TBL_PRICING_STRUCTURE_ITEM WHERE PRICING_STRUCTURE_ID = ?) 
-            `);
+            `,[pricingStructureId, pricingStructureId]);
 
             const r: PricingStructureItem[] = [];
             for (const qi of q) {

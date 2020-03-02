@@ -127,7 +127,6 @@ import {ValidationResultModule} from './component/validation-result-component/va
 import { ViewValidationDetailsPageComponent } from './page/view-validation-details-page/view-validation-details.page';
 import {CustomRuleService} from './service/custom-rule-service/custom-rule.service';
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
-import {PricingStructureAddItemsPageComponent} from "./page/pricing-structure-add-items-page/pricing-structure-add-items.page";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -188,7 +187,6 @@ const appInitializer = (settingsService: SettingsService,
     ExportHelpPageComponent,
     ExportPageComponent,
     PricingPageComponent,
-    PricingStructureAddItemsPageComponent,
     PricingHelpPageComponent,
     FileNotFoundPageComponent,
     ViewAttributesPageComponent,
