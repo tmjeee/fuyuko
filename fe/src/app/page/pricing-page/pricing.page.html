@@ -8,7 +8,9 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
+      <div *ngIf="loading">Loading ...</div>
       <app-pricing-structure-table
+        *ngIf="!loading"
         [attr.test-pricing-structure-table]="''"
         [fetchFn]="fetchFn"
         [views]="views"

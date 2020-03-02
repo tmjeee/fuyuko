@@ -59,8 +59,8 @@ const httpAction: any[] = [
             `, [pricingStructureId]);
 
             let pricingStructureWithItems: PricingStructureWithItems = null;
+            const mItemMap: Map<string /* itemId */, PricingStructureItemWithPrice> = new Map();
             for (const i of q) {
-               const mItemMap: Map<string /* itemId */, PricingStructureItemWithPrice> = new Map();
 
                if (!!!pricingStructureWithItems) {
                    pricingStructureWithItems = {
@@ -70,7 +70,6 @@ const httpAction: any[] = [
                        description: i.PS_DESCRIPTION,
                        items: []
                    } as PricingStructureWithItems;
-
                }
 
                const itemId: number = i.I_ID;

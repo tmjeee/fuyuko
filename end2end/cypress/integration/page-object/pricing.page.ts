@@ -85,7 +85,7 @@ export class PricingPage implements ActualPage<PricingPage> {
             .find(`[test-mat-select-pricing-structure] div`)
             .click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
-            .should('not.exist');
+            .should('exist');
         return this;
     }
 
@@ -94,7 +94,7 @@ export class PricingPage implements ActualPage<PricingPage> {
             .find(`[test-mat-select-pricing-structure] div`)
             .click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
-            .should('exist');
+            .should('not.exist');
         return this;
     }
 }

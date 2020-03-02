@@ -58,6 +58,9 @@ describe(`pricing structure spece`, () => {
         const pricingStructureName = `New-Pricing-Structure-${random}`;
         const pricingStructureDescription = `New-Pricing-Structure-Description-${random}`;
 
+        const newPricingStructureName = `New-New-Pricing-Structure-${random}`;
+        const newPricingStructureDescription = `New-New-Pricing-Structure-Description-${random}`;
+
         pricingPage
             .clickAddNewPricingStructure()
             .editName(pricingStructureName)
@@ -66,7 +69,6 @@ describe(`pricing structure spece`, () => {
             .clickCancel()
             .verifyPricingStructureDoNotExist(pricingStructureName)
 
-
             // create
             .clickAddNewPricingStructure()
             .editName(pricingStructureName)
@@ -74,15 +76,21 @@ describe(`pricing structure spece`, () => {
             .selectView(viewName)
             .clickOk()
             .verifySuccessMessageExists()
-            .verifyPricingStructureDoNotExist(pricingStructureName)
+            .verifyPricingStructureExists(pricingStructureName)
 
             // edit
-
-
+            .selectPricingStructure(pricingStructureName)
+            .clickEditPricingStructure(pricingStructureName)
+            .editName(newPricingStructureName)
+            .editDescription(newPricingStructureDescription)
+            .clickOk()
+            .verifySuccessMessageExists()
+            .verifyPricingStructureExists(newPricingStructureName)
+            .verifyPricingStructureDoNotExist(pricingStructureName)
 
 
             // delete
-            .clickDeletePricingStructure(pricingStructureName)
+            .clickDeletePricingStructure(newPricingStructureName)
             .verifySuccessMessageExists()
             .verifyPricingStructureDoNotExist(pricingStructureName)
         ;

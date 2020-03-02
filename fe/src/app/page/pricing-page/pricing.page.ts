@@ -3,7 +3,7 @@ import {forkJoin, Observable} from 'rxjs';
 import {PricingStructure, PricingStructureItemWithPrice, PricingStructureWithItems} from '../../model/pricing-structure.model';
 import {PricingStructureEvent, PricingStructureInput} from '../../component/pricing-component/pricing-structure-table.component';
 import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
-import {tap} from 'rxjs/operators';
+import {finalize, tap} from 'rxjs/operators';
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
@@ -18,6 +18,7 @@ import {ViewService} from '../../service/view-service/view.service';
 })
 export class PricingPageComponent implements OnInit  {
 
+    loading: boolean;
     views: View[];
     pricingStructureInput: PricingStructureInput;
     fetchFn: (pricingStructureId: number) => Observable<PricingStructureWithItems>;
@@ -40,6 +41,7 @@ export class PricingPageComponent implements OnInit  {
     }
 
     reload(pricingStructure: PricingStructure) {
+        this.loading = true;
         forkJoin([
             this.viewService.getAllViews(),
             this.pricingStructureService.allPricingStructures()
@@ -54,6 +56,9 @@ export class PricingPageComponent implements OnInit  {
                     currentPricingStructure: pricingStructure
                 } as PricingStructureInput;
 
+            }),
+            finalize(() => {
+               this.loading = false;
             })
         ).subscribe();
     }
