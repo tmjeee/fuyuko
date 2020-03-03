@@ -9,8 +9,8 @@
        <mat-card-content>
            <mat-form-field class="select-view-form-field">
                <mat-label>View</mat-label>
-               <mat-select [value]="currentView" (selectionChange)="onViewSelectionChanged($event)">
-                   <mat-option *ngFor="let view of allViews" [value]="view">
+               <mat-select [value]="currentView" [attr.test-mat-select-current-view]="''" (selectionChange)="onViewSelectionChanged($event)">
+                   <mat-option *ngFor="let view of allViews" [value]="view" [attr.test-mat-select-option-current-view]="view.name">
                        {{view.name}}
                    </mat-option>
                </mat-select>
