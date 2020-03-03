@@ -12,14 +12,16 @@ import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model
 import {ApiResponse} from "../../model/response.model";
 import {setPrices} from "../../service/pricing-structure-item.service";
 import {ROLE_EDIT} from "../../model/role.model";
+import {makeApiError, makeApiErrorObj} from "../../util";
 
 const httpAction: any[] = [
     [
         param('pricingStructureId').exists().isNumeric(),
         body('pricingStructureItems').isArray(),
-        body('pricingStructureItems.*.id').exists().isNumeric(),
+        body('pricingStructureItems.*.id'),
         body('pricingStructureItems.*.itemId').exists().isNumeric(),
-        body('pricingStructureItems.*.price').exists().isNumeric()
+        body('pricingStructureItems.*.price').exists().isNumeric(),
+        body('pricingStructureItems.*.country').exists(),
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -29,12 +31,20 @@ const httpAction: any[] = [
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const pricingStructureItems: PricingStructureItemWithPrice[] =  req.body.pricingStructureItems;
 
-        await setPrices(pricingStructureId, pricingStructureItems);
+        const totalUpdates = await setPrices(pricingStructureId, pricingStructureItems);
 
-        res.status(200).json({
-           status: "SUCCESS",
-           message: `Pricing updated`
-        } as ApiResponse);
+        if (totalUpdates == pricingStructureItems.length) {
+            res.status(200).json({
+                status: "SUCCESS",
+                message: `Pricing updated`
+            } as ApiResponse);
+        } else {
+            res.status(400).json(
+                makeApiErrorObj(
+                    makeApiError(`Pricing not/partiall updated`, 'pricingStructureItemWithPrice', 'api')
+                )
+            );
+        }
     }
 ];
 

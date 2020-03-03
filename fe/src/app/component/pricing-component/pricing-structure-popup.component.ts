@@ -22,7 +22,8 @@ export class PricingStructurePopupComponent {
                 private formBuilder: FormBuilder) {
         this.formControlView =
             this.formBuilder.control(data && data.views && data.pricingStructure ?
-                data.views.find((v: View) => v.id === data.pricingStructure.viewId) : '');
+                data.views.find((v: View) => v.id === data.pricingStructure.viewId) : '',
+                [Validators.required]);
         this.formControlName =
             this.formBuilder.control(data && data.pricingStructure ?
                 data.pricingStructure.name : '', [Validators.required]);

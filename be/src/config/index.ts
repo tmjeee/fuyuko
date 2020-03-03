@@ -1,14 +1,15 @@
+import {i} from "../logger";
 
 const regexp = /--(.*)=(.*)/;
 const SelfReloadJson = require('self-reload-json');
 
 const overrideWithProcessArgv = (config: any) => {
     const args: string[] = process.argv.slice(2);
-    console.log('**** args', args);
     for (const arg of args) {
         const match: string[] = arg.match(regexp);
         if (match && match.length == 3) {
             config[match[1]] = match[2];
+            i(`Command line arguments ${match[1]}=${match[2]} will override the one in config.json`);
         }
     }
 };

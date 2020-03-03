@@ -1,12 +1,13 @@
 import {Connection} from "mariadb";
 import {PricingStructureItemWithPrice} from "../model/pricing-structure.model";
-import {doInDbConnection, QueryA} from "../db";
+import {doInDbConnection, QueryA, QueryResponse} from "../db";
 import {LoggingCallback, newLoggingCallback} from "./job-log.service";
+import {i} from "../logger";
 
 export const setPrices = async (pricingStructureId: number, pricingStructureItems: PricingStructureItemWithPrice[], loggingCallback: LoggingCallback = newLoggingCallback()) => {
+    let totalUpdates = 0;
     for (const pricingStructureItem of pricingStructureItems) {
-        await doInDbConnection(async (conn: Connection) => {
-
+        const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
             const qc: QueryA = await conn.query(`
                     SELECT COUNT(*) AS COUNT 
                     FROM TBL_PRICING_STRUCTURE_ITEM AS I 
@@ -15,19 +16,24 @@ export const setPrices = async (pricingStructureId: number, pricingStructureItem
                 `, [pricingStructureItem.itemId, pricingStructureId]);
 
             if (qc.length <= 0 || qc[0].COUNT <= 0) { // insert
-                await conn.query(`
+                const q: QueryResponse = await conn.query(`
                         INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, PRICE, COUNTRY) VALUES (?,?,?,?)
                     `, [pricingStructureItem.itemId, pricingStructureId, pricingStructureItem.price, pricingStructureItem.country]);
                 loggingCallback(`INFO`, `inserting price ${pricingStructureItem.price} ${pricingStructureItem.country} for item ${pricingStructureItem.itemId}`);
-
+                return q;
             } else { // update
-                await conn.query(`
+                const q: QueryResponse = await conn.query(`
                         UPDATE TBL_PRICING_STRUCTURE_ITEM SET PRICE=?, COUNTRY=? WHERE ITEM_ID=? AND PRICING_STRUCTURE_ID=?
                     `, [pricingStructureItem.price, pricingStructureItem.country, pricingStructureItem.itemId, pricingStructureId]);
                 loggingCallback(`INFO`, `updating price ${pricingStructureItem.price} ${pricingStructureItem.country} for item ${pricingStructureItem.itemId}`);
+                return q;
             }
         });
+        if (q.affectedRows > 0) {
+            totalUpdates++;
+        }
     }
+    return totalUpdates;
 }
 
 export const addItemToPricingStructure = async (viewId: number, pricingStructureId: number, itemId: number): Promise<boolean> => {
@@ -91,6 +97,9 @@ export const getPricingStructureItem = async (viewId: number, pricingStructureId
 }
 
 export const getChildrenWithConn = async (conn: Connection, pricingStructureId: number, parentItemId: number): Promise<PricingStructureItemWithPrice[]> => {
+    return await _getChildrenWithConn(conn, pricingStructureId, parentItemId, new Map<string /* itemId */, PricingStructureItemWithPrice>());
+}
+export const _getChildrenWithConn = async (conn: Connection, pricingStructureId: number, parentItemId: number, m: Map<string /* itemId */, PricingStructureItemWithPrice>): Promise<PricingStructureItemWithPrice[]> => {
 
     const q: QueryA = await conn.query(`
                 SELECT
@@ -109,11 +118,12 @@ export const getChildrenWithConn = async (conn: Connection, pricingStructureId: 
                     PSI.ID AS PSI_ID,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
-                    PSI.PRICE AS PSI_PRICE
+                    PSI.PRICE AS PSI_PRICE,
+                    PSI.COUNTRY AS PSI_COUNTRY
                 
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = I.VIEW_ID
-                LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = PS.ID
+                LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = PS.ID AND PSI.ITEM_ID = I.ID
                 WHERE PS.ID = ? AND I.PARENT_ID = ? AND I.STATUS = 'ENABLED'
     `, [pricingStructureId, parentItemId]);
 
@@ -121,17 +131,19 @@ export const getChildrenWithConn = async (conn: Connection, pricingStructureId: 
     const acc: PricingStructureItemWithPrice[] = [];
     for (const i of q) {
         const itemId: number = i.I_ID;
-        const a: PricingStructureItemWithPrice = {
-            id: i.PSI_ID,
-            itemId: itemId,
-            itemName: i.I_NAME,
-            itemDescription: i.I_DESCRIPTION,
-            price: i.PSI_PRICE,
-            country: '',
-            parentId: i.I_PARENT_ID,
-            children: await getChildrenWithConn(conn, pricingStructureId, itemId),
-        } as PricingStructureItemWithPrice;
-        acc.push(a);
+        if (!m.has(`${itemId}`)) {
+            const a: PricingStructureItemWithPrice = {
+                id: i.PSI_ID,
+                itemId: itemId,
+                itemName: i.I_NAME,
+                itemDescription: i.I_DESCRIPTION,
+                price: i.PSI_PRICE,
+                country: i.PSI_COUNTRY,
+                parentId: i.I_PARENT_ID,
+                children: await getChildrenWithConn(conn, pricingStructureId, itemId),
+            } as PricingStructureItemWithPrice;
+            acc.push(a);
+        }
     }
     return acc;
 }

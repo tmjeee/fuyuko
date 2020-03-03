@@ -50,11 +50,12 @@ const httpAction: any[] = [
                     PSI.ID AS PSI_ID,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
-                    PSI.PRICE AS PSI_PRICE
+                    PSI.PRICE AS PSI_PRICE,
+                    PSI.COUNTRY AS PSI_COUNTRY
                 
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = I.VIEW_ID
-                LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = PS.ID
+                LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = PS.ID AND PSI.ITEM_ID = I.ID
                 WHERE PS.ID=? AND I.PARENT_ID IS NULL AND I.STATUS = 'ENABLED' AND PS.STATUS <> 'DELETED'
             `, [pricingStructureId]);
 
@@ -78,12 +79,12 @@ const httpAction: any[] = [
 
                if (!mItemMap.has(mItemMapKey)) {
                    const item: PricingStructureItemWithPrice = {
-                       id: itemId,
+                       id: i.PSI_ID,
                        itemId: itemId,
                        itemName: i.I_NAME,
                        itemDescription: i.I_DESCRIPTION,
                        parentId: i.I_PARENT_ID,
-                       country: '',
+                       country: i.PSI_COUNTRY,
                        price: i.PSI_PRICE,
                        children: await getChildrenWithConn(conn, pricingStructureId, itemId)
                    } as PricingStructureItemWithPrice;

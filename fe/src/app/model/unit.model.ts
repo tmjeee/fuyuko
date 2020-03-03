@@ -1,23 +1,23 @@
 
-export const DIMENSION_UNITS = ['mm', 'cm', 'm'];
+export const DIMENSION_UNITS: DimensionUnits[] = ['mm', 'cm', 'm'];
 export type DimensionUnits = 'mm' | 'cm' | 'm';
 
-export const VOLUME_UNITS = ['l', 'ml'];
+export const VOLUME_UNITS: VolumeUnits[] = ['l', 'ml'];
 export type VolumeUnits = 'l' | 'ml';
 
-export const AREA_UNITS = ['cm2', 'mm2', 'm2'];
+export const AREA_UNITS: AreaUnits[] = ['cm2', 'mm2', 'm2'];
 export type AreaUnits = 'cm2' | 'mm2' | 'm2';
 
-export const WIDTH_UNITS = ['mm', 'cm', 'm'];
+export const WIDTH_UNITS: WidthUnits[] = ['mm', 'cm', 'm'];
 export type WidthUnits = 'mm' | 'cm' | 'm';
 
-export const LENGTH_UNITS = ['mm', 'cm', 'm'];
+export const LENGTH_UNITS: LengthUnits[] = ['mm', 'cm', 'm'];
 export type LengthUnits = 'mm' | 'cm' | 'm';
 
-export const HEIGHT_UNITS = ['mm', 'cm', 'm'];
+export const HEIGHT_UNITS: HeightUnits[] = ['mm', 'cm', 'm'];
 export type HeightUnits = 'mm' | 'cm' | 'm';
 
-export const COUNTRY_CURRENCY_UNITS = [
+export const COUNTRY_CURRENCY_UNITS: CountryCurrencyUnits[] = [
   'AED' ,
   'AFN' ,
   'ALL' ,

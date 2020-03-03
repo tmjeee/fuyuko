@@ -40,8 +40,8 @@
                     <ng-container matColumnDef="expansion" sticky>
                         <th mat-header-cell class="expansion-header" *matHeaderCellDef></th>
                         <td mat-cell class="expansion" *matCellDef="let pricingStructureItem">
-                            <mat-icon class="selectable" *ngIf="!isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">chevron_right</mat-icon>
-                            <mat-icon class="selectable" *ngIf="isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">expand_more</mat-icon>
+                            <mat-icon class="selectable" [attr.test-table-row-expand]="pricingStructureItem.name" *ngIf="!isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">chevron_right</mat-icon>
+                            <mat-icon class="selectable" [attr.test-table-row-collapse]="pricingStructureItem.name" *ngIf="isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">expand_more</mat-icon>
                         </td>
                     </ng-container>
 
@@ -66,12 +66,12 @@
 
                     <ng-container matColumnDef="pricing">
                         <th mat-header-cell *matHeaderCellDef>Price</th>
-                        <td mat-cell *matCellDef="let pricingStructureItem">{{pricingStructureItem.price}}</td>
+                        <td mat-cell [attr.test-table-column-price]="pricingStructureItem.name" *matCellDef="let pricingStructureItem">{{pricingStructureItem.price}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="country">
                         <th mat-header-cell *matHeaderCellDef>Currency Country</th>
-                        <td mat-cell *matCellDef="let pricingStructureItem">{{pricingStructureItem.country}}</td>
+                        <td mat-cell [attr.test-table-column-unit]="pricingStructureItem.name" *matCellDef="let pricingStructureItem">{{pricingStructureItem.country}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
@@ -82,8 +82,8 @@
                     </ng-container>
 
                     <tr mat-header-row class="item-header" *matHeaderRowDef="['expansion', 'name', 'description', 'pricing', 'country', 'actions']"></tr>
-                    <tr mat-row class="item" *matRowDef="let tableItem; columns: ['expansion', 'name', 'description', 'pricing', 'country', 'actions'];"></tr>
-                    <tr mat-row class="item" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'pricing', 'country', 'actions']; when: isChildRow"
+                    <tr mat-row class="item" [attr.test-table-row-item]="tableItem.name" *matRowDef="let tableItem; columns: ['expansion', 'name', 'description', 'pricing', 'country', 'actions'];"></tr>
+                    <tr mat-row class="item" [attr.test-table-row-item]="tableItem.name" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'pricing', 'country', 'actions']; when: isChildRow"
                              [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></tr>
                 </table>
             </div>

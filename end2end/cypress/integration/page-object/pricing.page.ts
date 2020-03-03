@@ -2,6 +2,7 @@ import {ActualPage} from "./actual.page";
 import * as util from '../util/util';
 import {EditPricingStructurePopupPage} from "./sub-page-object/edit-pricing-structure-popup.page";
 import {EditPricingPopupPage} from "./sub-page-object/edit-pricing-popup.page";
+import {CountryCurrencyUnits} from "../model/unit.model";
 
 
 export class PricingPage implements ActualPage<PricingPage> {
@@ -95,6 +96,46 @@ export class PricingPage implements ActualPage<PricingPage> {
             .click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
             .should('not.exist');
+        return this;
+    }
+
+    clickToExpandItem(pricingStructureName: string, itemName: string): PricingPage {
+        cy.get(`[test-pricing-structure-table]`).then((_) => {
+            const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-pricing-table-row-expand='${itemName}']`).length;
+            if (i > 0) { // expand button exists, click it to expand
+                cy.get(`[test-pricing-structure-table]`)
+                    .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
+                    .find(`[test-pricing-table-row-expand='${itemName}']`)
+                    .click({force: true})
+            }
+        });
+        return this;
+    }
+
+    clickToCollapseItem(pricingStructureName: string, itemName: string): PricingPage {
+        cy.get(`[test-pricing-structure-table]`).then((_) => {
+            const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-pricing-table-row-collapse='${itemName}']`).length;
+            if (i > 0) { // expand button exists, click it to expand
+                cy.get(`[test-pricing-structure-table]`)
+                    .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
+                    .find(`[test-pricing-table-row-collapse='${itemName}']`)
+                    .click({force: true})
+            }
+        });
+        return this;
+    }
+
+    verifyPricingStructureItemHasPrice(pricingStructureName: string, itemName: string, price: number, unit: CountryCurrencyUnits): PricingPage {
+        cy.get(`[test-pricing-structure-table]`)
+            .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
+            .find(`[test-table-row-item='${itemName}']`)
+            .find(`[test-table-column-price='${itemName}']`)
+            .should('contain.text', price);
+        cy.get(`[test-pricing-structure-table]`)
+            .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
+            .find(`[test-table-row-item='${itemName}']`)
+            .find(`[test-table-column-unit='${itemName}']`)
+            .should('contain.text', unit);
         return this;
     }
 }

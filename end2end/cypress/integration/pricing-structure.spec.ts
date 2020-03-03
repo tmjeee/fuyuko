@@ -78,7 +78,7 @@ describe(`pricing structure spece`, () => {
             .verifySuccessMessageExists()
             .verifyPricingStructureExists(pricingStructureName)
 
-            // edit
+            // edit pricing structure
             .selectPricingStructure(pricingStructureName)
             .clickEditPricingStructure(pricingStructureName)
             .editName(newPricingStructureName)
@@ -87,6 +87,32 @@ describe(`pricing structure spece`, () => {
             .verifySuccessMessageExists()
             .verifyPricingStructureExists(newPricingStructureName)
             .verifyPricingStructureDoNotExist(pricingStructureName)
+
+            // edit price
+            .clickEditItemPricing(newPricingStructureName, `Item-1`)
+            .verifyPopupTitle()
+            .editPrice(2.22)
+            .editUnit('AUD')
+            .clickOk()
+            .verifySuccessMessageExists()
+
+            .clickToExpandItem(newPricingStructureName, `Item-1`)
+            .clickEditItemPricing(newPricingStructureName, `Item-1-1`)
+            .editPrice(3.33)
+            .editUnit('AUD')
+            .clickOk()
+            .verifySuccessMessageExists()
+
+            .clickEditItemPricing(newPricingStructureName, `Item-3`)
+            .editPrice(5.55)
+            .editUnit('AUD')
+            .clickOk()
+            .verifySuccessMessageExists()
+
+            .clickToExpandItem(pricingStructureName, `Item-1`)
+            .verifyPricingStructureItemHasPrice(pricingStructureName, `Item-1`, 2.22, 'AUD')
+            .verifyPricingStructureItemHasPrice(pricingStructureName, `Item-1-1`, 3.33, 'AUD')
+            .verifyPricingStructureItemHasPrice(pricingStructureName, `Item-3`, 5.55, 'AUD')
 
 
             // delete

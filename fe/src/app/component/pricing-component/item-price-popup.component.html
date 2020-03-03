@@ -1,14 +1,25 @@
 <div class="item-price-popup-component" [attr.test-popup-dialog-title]="'pricing-dialog-popup'">
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-       <mat-form-field>
+        <mat-form-field>
            <mat-label>Price</mat-label>
-           <input matInput [formControl]="formControlPrice">
+           <input matInput [attr.test-field-price]="''" [formControl]="formControlPrice">
            <mat-hint>Item Price</mat-hint>
            <mat-error *ngIf="formControlPrice?.errors?.required">Price is required</mat-error>
-       </mat-form-field>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Unit</mat-label>
+            <mat-select [attr.test-mat-select-price-unit]="''" [formControl]="formControlPriceUnit">
+                <mat-option *ngFor="let unit of units" [value]="unit" [attr.test-mat-select-option-price-unit]="unit">
+                   {{unit}}
+                </mat-option>
+            </mat-select>
+            <mat-hint>Item Price Currency Unit</mat-hint>
+            <mat-error *ngIf="formControlPriceUnit?.errors?.required">Price is required</mat-error>
+        </mat-form-field>
+
         <div class="controls">
-            <button mat-flat-button color="primary" type="submit">Ok</button>
-            <button mat-flat-button color="primary" type="button" (click)="onCancel($event)">Cancel</button>
+            <button mat-flat-button [attr.test-button-ok]="''" [disabled]="formGroup.invalid" color="primary" type="submit">Ok</button>
+            <button mat-flat-button [attr.test-button-cancel]="''" color="primary" type="button" (click)="onCancel($event)">Cancel</button>
         </div>
     </form>
 </div>
