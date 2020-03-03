@@ -64,17 +64,13 @@ const createCustomValidationContext = async (validationId: number, customRuleId:
     } as CustomValidationContext;
 }
 
-export const runAllCustomRule = async (validationId: number, view: View, attributes: Attribute[], items: Item[]) => {
-
-}
-
-export const runCustomRule = async (customRule: CustomRule, validationId: number, view: View, attributes: Attribute[], items: Item[]) => {
+export const runCustomRule = async (customRule: CustomRule, validationId: number, view: View, attributes: Attribute[], items: Item[], l: (msg: string)=>void) => {
     const ruleName = customRule.name;
-    i(`Running custom rule ${ruleName}`);
+    l(`Running custom rule ${ruleName}`);
     const ruleFilePath: string = path.join(__dirname, 'rules', ruleName);
     const exists: boolean = fs.existsSync(ruleFilePath);
     if (!exists) {
-        i(`Custom rule file for ${ruleName} do not exists`);
+        l(`Custom rule file for ${ruleName} do not exists`);
         return;
     }
 
@@ -89,7 +85,7 @@ export const runCustomRule = async (customRule: CustomRule, validationId: number
             }
         }
     } finally {
-        i(`End of custom rule ${ruleName} run`);
+        l(`End of custom rule ${ruleName} run`);
     }
 }
 

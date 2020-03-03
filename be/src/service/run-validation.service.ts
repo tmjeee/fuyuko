@@ -549,11 +549,15 @@ const _runCustomRulesValidation = async (viewId: number, validationId: number) =
     const rules: Rule[] = ruleConverter.convert(rule2s);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
 
+    const l = async (msg: string) => {
+       await i(currentContext, msg);
+    };
+
     for(const customRule of customRules) {
         currentContext.rule = customRule;
         currentContext.errornousMessages = [];
         await i(currentContext, `Running against custom rule with id ${customRule.id} named ${customRule.name}`);
-        await runCustomRule(customRule, validationId, view, as, items);
+        await runCustomRule(customRule, validationId, view, as, items, l);
     }
 
     /*
