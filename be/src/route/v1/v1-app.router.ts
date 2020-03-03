@@ -86,7 +86,7 @@ import registerGetAttributeByViewRoute from './GET-attribute-by-view.route';
 import registerGetItemsByViewRotue from './GET-items-by-view.route';
 import registerGetAllViewValidationsRoute from './GET-all-view-validations.route';
 import registerGetViewValidationResultRoute from './GET-view-validation-result.route';
-import registerPostViewValidationRoute from './POST-view-validation.route';
+import registerPostScheduleValidationRoute from './POST-schedule-validation.route';
 import registerGetViewById from './GET-view-by-id.route';
 import registerGetUserSettings from './GET-user-settings.route';
 import registerPostUserSettings from './POST-user-settings.route';
@@ -101,9 +101,6 @@ import registerPostAddAttributeRoute from './POST-add-attributes.route';
 import registerPostChangeAttributeStatusRoute from './POST-change-attribute-status.route';
 import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
-import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
-import registerGetAllAddablePricingStructureItemsRoute from './GET-addable-pricing-structure-item.route';
-import registerPostAddPricingStructureItemRoute from './POST-add-pricing-structure-item.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -196,7 +193,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetItemsByViewRotue(v1AppRouter, registry);
     registerGetAllViewValidationsRoute(v1AppRouter, registry);
     registerGetViewValidationResultRoute(v1AppRouter, registry);
-    registerPostViewValidationRoute(v1AppRouter, registry);
+    registerPostScheduleValidationRoute(v1AppRouter, registry);
     registerGetViewById(v1AppRouter, registry);
     registerGetUserSettings(v1AppRouter, registry);
     registerPostUserSettings(v1AppRouter, registry);
@@ -211,9 +208,6 @@ const reg = (router: Router, regi: Registry) => {
     registerPostChangeAttributeStatusRoute(v1AppRouter, registry);
     registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
-    registerGetPricingStructureByIdRoute(v1AppRouter, registry);
-    registerGetAllAddablePricingStructureItemsRoute(v1AppRouter, registry);
-    registerPostAddPricingStructureItemRoute(v1AppRouter, registry);
 };
 
 

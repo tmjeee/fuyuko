@@ -22,7 +22,7 @@ export class EditPricingPopupPage {
         cy.get(`[test-popup-dialog-title='pricing-dialog-popup']`)
             .find(`[test-mat-select-price-unit] div `)
             .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option='${unit}']`)
+        cy.get(`[test-mat-select-option-price-unit='${unit}']`)
             .click({force: true});
         return this;
     }

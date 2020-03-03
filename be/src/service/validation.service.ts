@@ -20,6 +20,8 @@ export const getValidationsByViewId = async (viewId: number): Promise<Validation
     return v;
 }
 
+// export const getCustomValidationByViewId = async (viewId: number, validationId: number): Promise<CustomRu>
+
 export const getValidationByViewIdAndValidationId = async (viewId: number, validationId: number): Promise<Validation> => {
    const v: Validation = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_2, [viewId, validationId]);

@@ -6,7 +6,7 @@ import {HttpClient} from '@angular/common/http';
 
 const URL_GET_ALL_VALIDATIONS = () => `${config().api_host_url}/view/:viewId/validations`;
 const URL_GET_VALIDATION_DETAILS = () => `${config().api_host_url}/view/:viewId/validation/:validationId`;
-const URL_POST_VALIDATION = () => `${config().api_host_url}/view/:viewId/validation`;
+const URL_POST_SCHEDULE_VALIDATION = () => `${config().api_host_url}/view/:viewId/validation`;
 const URL_DELETE_VALIDATION = () => `${config().api_host_url}/view/:viewId/validation/:validationId`;
 
 @Injectable()
@@ -27,7 +27,7 @@ export class ValidationService {
 
     scheduleValidation(viewId: number, name: string, description: string): Observable<{ok: boolean, validationId: number}> {
        return this.httpClient.post<{ok: boolean, validationId: number}>(
-           URL_POST_VALIDATION().replace(':viewId', String(viewId)), {
+           URL_POST_SCHEDULE_VALIDATION().replace(':viewId', String(viewId)), {
                name, description
            });
     }

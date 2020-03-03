@@ -1,4 +1,4 @@
 
-import {RuleScript, runRule, runRuleSync} from './custom-rule-executor';
+import {RuleScript, runCustomRule, runCustomRuleSync} from './custom-rule-executor';
 
-export {RuleScript, runRuleSync, runRule};
+export {RuleScript, runCustomRuleSync, runCustomRule};

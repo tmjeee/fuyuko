@@ -11,7 +11,7 @@ export interface CustomRuleForView {
     name: string;
     description: string;
     status: Status;
-    customRuleViewId: number;
-    viewId: number;
+    customRuleViewId: number; // TBL_CUSTOM_RULE_VIEW's ID
+    viewId: number; // TBL_VIEW's ID ie. view's ID
 }
 

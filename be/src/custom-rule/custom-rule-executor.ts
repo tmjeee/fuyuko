@@ -64,7 +64,11 @@ const createCustomValidationContext = async (validationId: number, customRuleId:
     } as CustomValidationContext;
 }
 
-export const runRule = async (customRule: CustomRule, validationId: number, view: View, attributes: Attribute[], items: Item[]) => {
+export const runAllCustomRule = async (validationId: number, view: View, attributes: Attribute[], items: Item[]) => {
+
+}
+
+export const runCustomRule = async (customRule: CustomRule, validationId: number, view: View, attributes: Attribute[], items: Item[]) => {
     const ruleName = customRule.name;
     i(`Running custom rule ${ruleName}`);
     const ruleFilePath: string = path.join(__dirname, 'rules', ruleName);
@@ -89,7 +93,7 @@ export const runRule = async (customRule: CustomRule, validationId: number, view
     }
 }
 
-export const runRuleSync = async () => {
+export const runCustomRuleSync = async () => {
     i(`Running custom rule sync ...`);
 
     const rulesDirPath: string = path.join(__dirname, 'rules');
@@ -125,7 +129,7 @@ export const runRuleSync = async () => {
             const name = qi.NAME;
             if (!sortedRuleFilesInDir.includes(name)) { // old entries in db where rule script is missing
                 i(`Db rule registry ${name} is outdated, rule script do not exists anymore, removing it from registry`);
-                await conn.query(`DELETE TBL_CUSTOM_RULE WHERE ID=?`, qi.ID);
+                await conn.query(`DELETE FROM TBL_CUSTOM_RULE WHERE ID=?`, [qi.ID]);
             } else {
                 i(`Db rule registry ${name} is in sync with rule script, no action required`);
             }

@@ -109,16 +109,16 @@ describe(`pricing structure spece`, () => {
             .clickOk()
             .verifySuccessMessageExists()
 
-            .clickToExpandItem(pricingStructureName, `Item-1`)
-            .verifyPricingStructureItemHasPrice(pricingStructureName, `Item-1`, 2.22, 'AUD')
-            .verifyPricingStructureItemHasPrice(pricingStructureName, `Item-1-1`, 3.33, 'AUD')
-            .verifyPricingStructureItemHasPrice(pricingStructureName, `Item-3`, 5.55, 'AUD')
+            .clickToExpandItem(newPricingStructureName, `Item-1`)
+            .verifyPricingStructureItemHasPrice(newPricingStructureName, `Item-1`, 2.22, 'AUD')
+            .verifyPricingStructureItemHasPrice(newPricingStructureName, `Item-1-1`, 3.33, 'AUD')
+            .verifyPricingStructureItemHasPrice(newPricingStructureName, `Item-3`, 5.55, 'AUD')
 
 
             // delete
             .clickDeletePricingStructure(newPricingStructureName)
             .verifySuccessMessageExists()
-            .verifyPricingStructureDoNotExist(pricingStructureName)
+            .verifyPricingStructureDoNotExist(newPricingStructureName)
         ;
     });
 });

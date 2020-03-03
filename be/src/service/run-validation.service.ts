@@ -27,15 +27,19 @@ import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
 import moment from 'moment';
 import * as logger from '../logger';
 import {convertToDebugString, convertToDebugStrings} from "../shared-utils/ui-item-value-converters.util";
+import {getViewById} from "./view.service";
+import {View} from "../model/view.model";
+import {CustomRule, CustomRuleForView} from "../model/custom-rule.model";
+import {getAllCustomRulesForView} from "./custom-rule.service";
+import {runCustomRule} from "../custom-rule";
 
 interface Context {
    validationId: number;
    attribute?: Attribute;
    item?: Item;
-   rule?: Rule;
-   errornousMessages: {rule: Rule, item: Item, attribute: Attribute, message: string}[];
+   rule?: Rule | CustomRule;
+   errornousMessages: {rule: Rule | CustomRule, item: Item, attribute: Attribute, message: string}[];
 }
-
 
 const matchs = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: ItemValTypes[], op: OperatorType): boolean => {
     let r = true;
@@ -500,7 +504,8 @@ export const runValidation = async (viewId: number, validationId: number) => {
             await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['IN_PROGRESS', validationId]);
        });
 
-        await _runValidation(viewId, validationId);
+        await _runPredefinedRulesValidation(viewId, validationId);
+        await _runCustomRulesValidation(viewId, validationId);
 
         await doInDbConnection(async (conn: Connection) => {
             await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['COMPLETED', validationId]);
@@ -515,12 +520,63 @@ export const runValidation = async (viewId: number, validationId: number) => {
     }
 };
 
-const _runValidation = async (viewId: number, validationId: number) => {
+const _runCustomRulesValidation = async (viewId: number, validationId: number) => {
+
     let currentContext = {
         validationId,
     } as Context;
 
-    await i(currentContext, `Running validation for viewId ${viewId} validationId ${validationId}`);
+    await i(currentContext, `Running Custom Rule validations for viewId ${viewId} validationId ${validationId}`);
+
+    const view: View = await getViewById(viewId);
+    await i(currentContext, `Successfully retrieve view with id ${viewId}`);
+
+    const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
+    await i(currentContext, `Successfully retrieved validation for validationId ${validationId}`);
+
+    const a2s: Attribute2[] = await getAttributesInView(viewId);
+    const as: Attribute[] = await attributeConverter.convert(a2s);
+    await i(currentContext,`Successfully retrieved attributes for viewId ${viewId}`);
+
+    const item2s: Item2[] = await getAllItemsInView(viewId);
+    const items: Item[] = itemConverter.convert(item2s);
+    await i(currentContext, `Successfully retrieved all items for viewId ${viewId}`);
+
+    const customRules: CustomRuleForView[] = await getAllCustomRulesForView(viewId);
+    await i(currentContext, `Successfully retrieved all custom rules for viewId ${viewId}`);
+
+    const rule2s: Rule2[] = await getRule2s(viewId);
+    const rules: Rule[] = ruleConverter.convert(rule2s);
+    await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
+
+    for(const customRule of customRules) {
+        currentContext.rule = customRule;
+        currentContext.errornousMessages = [];
+        await i(currentContext, `Running against custom rule with id ${customRule.id} named ${customRule.name}`);
+        await runCustomRule(customRule, validationId, view, as, items);
+    }
+
+    /*
+    for (const item of items) {
+        currentContext.item = item;
+        for (const rule of rules) {
+            currentContext.rule = rule;
+            currentContext.errornousMessages = [];
+            let wr = true;
+            await i(currentContext, `Validating itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
+
+            // todo:
+        }
+    }
+     */
+}
+
+const _runPredefinedRulesValidation = async (viewId: number, validationId: number) => {
+    let currentContext = {
+        validationId,
+    } as Context;
+
+    await i(currentContext, `Running Predefined Rules validations for viewId ${viewId} validationId ${validationId}`);
 
     const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
     await i(currentContext, `Successfully retrieved validation for validationId ${validationId}`);
@@ -536,10 +592,6 @@ const _runValidation = async (viewId: number, validationId: number) => {
     const rule2s: Rule2[] = await getRule2s(viewId);
     const rules: Rule[] = ruleConverter.convert(rule2s);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
-
-
-    // todo: custom rule validation
-    // runRule()
 
 
     for (const item of items) {

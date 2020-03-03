@@ -9,7 +9,7 @@ import {runBanner} from './banner';
 import config from './config';
 import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from "./route/v1/common-middleware";
 import {Registry} from "./registry";
-import {runRuleSync} from "./custom-rule";
+import {runCustomRuleSync} from "./custom-rule";
 
 runBanner();
 
@@ -46,7 +46,7 @@ const fns: PromiseFn[] = [
     // rule sync
     () => {
         i(`running rule sync`)
-        return runRuleSync()
+        return runCustomRuleSync()
             .then((_: any) => {
                 i(`done with rule sync`);
             });
