@@ -1,6 +1,9 @@
 
 .bulk-edit-wizard-component {
   ::ng-deep {
+    .cannot-perform-bulk-edit-message {
+      margin: 20px;
+    }
     .mat-divider-horizontal {
       position: relative;
       margin-bottom: 10px;

@@ -38,10 +38,20 @@ describe(`bulk edit spec`, () => {
 
     //////////////////
 
+    it (`should be able switch views`, () => {
+        const testView1 = `Test View 1`;
+        const testView2 = `Test View 2`;
+        const testView3 = `Test View 3`;
+        bulkEditPage
+            .selectView(testView2)
+            .verifySelectedView(testView2)
+            .selectView(testView3)
+            .verifySelectedView(testView3)
+            .selectView(testView1)
+            .verifySelectedView(testView1)
+    });
 
-    it (`should perform bulk edit`, () => {
-
-
+    it (`should perform add and delete change and where clauses`, () => {
 
     });
 

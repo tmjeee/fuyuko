@@ -68,7 +68,10 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.attributes && (changes.attributes as SimpleChange).currentValue) {
-            this.reset();
+            const attrs: Attribute[] =  (changes.attributes as SimpleChange).currentValue;
+            if (attrs && attrs.length > 0) {
+                this.reset();
+            }
         }
     }
 
