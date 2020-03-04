@@ -46,6 +46,7 @@ export class BulkEditReviewTableComponent implements OnInit {
 
     ngOnInit(): void {
         this.attributeHeaderColumns = [
+            'item-number-header',
             'item-info-header',
             ...this.whenAttributes.map((wa: Attribute) => `when-attributes-header-${wa.id}`),
             ...this.changeAttributes.map((ca: Attribute) => `change-attributes-header-${ca.id}`)
@@ -55,6 +56,7 @@ export class BulkEditReviewTableComponent implements OnInit {
             this.changeOldNewValuesHeaderColumns.push(`change-new-values-header-${ca.id}`);
         });
         this.displayedColumns = [
+            `item-number-cell`,
             `item-info-cell`,
             ...this.whenAttributes.map((wa: Attribute) => '' + wa.id),
         ];
