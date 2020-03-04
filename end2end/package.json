@@ -12,6 +12,7 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
+    "tsc": "npx tsc",
     "cypress-open": "npm run copy && npx cypress open",
     "cypress-run": "npm run copy && npx cypress run",
     "copy": "npm run copy-model",
