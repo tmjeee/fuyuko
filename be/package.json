@@ -71,6 +71,7 @@
     "@types/sprintf": "^0.1.0",
     "@types/uuid": "^3.4.6",
     "jasmine": "^3.5.0",
-    "jasmine-ts-console-reporter": "^3.1.1"
+    "jasmine-ts-console-reporter": "^3.1.1",
+    "wait-for": "^2.1.1"
   }
 }
