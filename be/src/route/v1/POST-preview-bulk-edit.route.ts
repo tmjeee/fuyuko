@@ -31,10 +31,26 @@ import {
     ItemMetadata2,
     ItemMetadataEntry2, ItemValue2
 } from "../model/server-side.model";
-import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../../model/unit.model";
+import {
+    AreaUnits,
+    CountryCurrencyUnits,
+    DimensionUnits,
+    HeightUnits,
+    LengthUnits,
+    VolumeUnits,
+    WidthUnits
+} from "../../model/unit.model";
 import {_convert as _attributeConvert, convert as attributeConvert} from "../../service/conversion-attribute.service";
 import {convert as itemValueConvert} from '../../service/conversion-item-value.service';
 import {ROLE_EDIT} from "../../model/role.model";
+import {
+    compareArea, compareCurrency,
+    compareDate, compareDimension, compareDoubleselect, compareHeight, compareLength,
+    compareNumber, compareSelect,
+    compareString, compareVolume, compareWidth,
+    convertToCm,
+    convertToCm2, convertToMl
+} from "../../service/compare-attribute-values.service";
 
 
 const SQL: string = `
@@ -326,18 +342,19 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const v2: number = Number((eValue.value));
                                 const u2: AreaUnits = (eUnit.value) as AreaUnits;
 
-                                const vv1: number = convertToCm2(v1, u1);
-                                const vv2: number = convertToCm2(v2, u2);
-
-                                return compareNumber(vv1, vv2, operator);
+                                return compareArea(v1, u1, v2, u2, operator);
                             }
                             case "currency": {
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const eUnit: ItemMetadataEntry2 = findEntry(m.entries, "country");
 
                                 const v1: number = (value ? (value.val as CurrencyValue).value : null);
-                                const v2: number = Number(eValue.value);
+                                const u1: CountryCurrencyUnits = (value ? (value.val as CurrencyValue).country : null);
 
-                                return compareNumber(v1, v2, operator);
+                                const v2: number = Number(eValue.value);
+                                const u2: CountryCurrencyUnits = (eUnit.value) as CountryCurrencyUnits;
+
+                                return compareCurrency(v1, u1, v2, u2, operator);
                             }
                             case "date": {
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
@@ -364,15 +381,7 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const l2: number = Number(eL.value);
                                 const u2: DimensionUnits = (eU.value) as DimensionUnits;
 
-                                const hh1: number = convertToCm(h1, u1);
-                                const ww1: number = convertToCm(w1, u1);
-                                const ll1: number = convertToCm(l1, u1);
-
-                                const hh2: number = convertToCm(h2, u2);
-                                const ww2: number = convertToCm(w2, u2);
-                                const ll2: number = convertToCm(l2, u2);
-
-                                return (compareNumber(hh1, hh2, operator) && compareNumber(ww1, ww2, operator) && compareNumber(ll1, ll2, operator));
+                                return compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
                             }
                             case "height": {
                                 const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
@@ -384,10 +393,7 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const v2: number = Number(eV.value);
                                 const u2: HeightUnits = eU.value as HeightUnits;
 
-                                const vv1: number = convertToCm(v1, u1);
-                                const vv2: number = convertToCm(v2, u2);
-
-                                return compareNumber(vv1, vv2, operator);
+                                return compareHeight(v1, u1, v2, u2, operator);
                             }
                             case "length": {
                                 const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
@@ -399,10 +405,7 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const v2: number = Number(eV.value);
                                 const u2: LengthUnits = eU.value as LengthUnits;
 
-                                const vv1: number = convertToCm(v1, u1);
-                                const vv2: number = convertToCm(v2, u2);
-
-                                return compareNumber(vv1, vv2, operator);
+                                return compareLength(v1, u1, v2, u2, operator);
                             }
                             case "volume": {
                                 const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
@@ -414,10 +417,7 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const v2: number = Number(eV.value);
                                 const u2: VolumeUnits = eU.value as VolumeUnits;
 
-                                const vv1: number = convertToMl(v1, u1);
-                                const vv2: number = convertToMl(v2, u2);
-
-                                return compareNumber(vv1, vv2, operator);
+                                return compareVolume(v1, u1, v2, u2, operator);
                             }
                             case "width": {
                                 const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
@@ -429,10 +429,7 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const v2: number = Number(eV.value);
                                 const u2: WidthUnits = eU.value as WidthUnits;
 
-                                const vv1: number = convertToCm(v1, u1);
-                                const vv2: number = convertToCm(v2, u2);
-
-                                return compareNumber(vv1, vv2, operator);
+                                return compareWidth(v1, u1, v2, u2, operator);
                             }
                             case "select": {
 
@@ -441,7 +438,7 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const k1: string = (value ? (value.val as SelectValue).key : null);
                                 const k2: string = eK.value;
 
-                                return compareString(k1, k2, operator);
+                                return compareSelect(k1, k2, operator);
                             }
                             case "doubleselect": {
                                 const eOne: ItemMetadataEntry2 = findEntry(m.entries, 'key1');
@@ -452,7 +449,7 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const kOne2: string = eOne.value;
                                 const kTwo2: string = eTwo.value;
 
-                                return (compareString(kOne1, kOne2, operator) && compareString(kTwo1, kTwo2, operator));
+                                return compareDoubleselect(kOne1, kTwo1, kOne1, kOne2, operator);
                             }
                         }
                         return true;
@@ -514,134 +511,9 @@ const convertToBulkEditItem = (b2: BulkEditItem2, changes: ItemValueAndAttribute
     return b;
 }
 
-const convertToCm = (v: number, u: DimensionUnits | WidthUnits | LengthUnits | HeightUnits): number => {
-    switch (u) {
-        case "cm":
-            return v;
-        case "mm":
-            return (v *10);
-        case "m":
-            return (v / 100);
-    }
-}
-
-const convertToCm2 = (v: number, u: AreaUnits): number => {
-    switch(u) {
-        case "cm2":
-            return v;
-        case "m2":
-            return (v / (100 * 100));
-        case "mm2":
-            return (v * 10 * 10);
-    }
-}
-
-const convertToMl = (v: number, u: VolumeUnits): number => {
-    switch(u) {
-        case "l":
-            return (v / 1000);
-        case "ml":
-            return v;
-    }
-}
-
-const compareDate = (a: moment.Moment,  /* from REST Api */
-                     b: moment.Moment,  /* from actual item attribute value */
-                     operator: OperatorType): boolean => {
-    switch (operator) {
-        case "empty":
-            return (!!!b); // when a is falsy
-        case "eq":
-            return b.isSame(a);
-        case "gt":
-            return b.isAfter(a);
-        case "gte":
-            return b.isSameOrAfter(a);
-        case "lt":
-            return b.isBefore(a);
-        case "lte":
-            return b.isSameOrBefore(a);
-        case "not empty":
-            return (!!b);
-        case "not eq":
-            return (!b.isSame(a));
-        case "not gt":
-            return (!b.isAfter(a));
-        case "not gte":
-            return (!b.isSameOrAfter(a));;
-        case "not lt":
-            return (!b.isBefore(a));
-        case "not lte":
-            return (!b.isSameOrBefore(a));
-    }
-}
-
-const compareNumber = (a: number, /* from REST api */
-                       b: number, /* from actual item attribute value */
-                       operator: OperatorType): boolean => {
-    switch (operator) {
-        case "empty":
-            return (!!!b);
-        case "eq":
-            return (b == a);
-        case "gt":
-            return (b > a);
-        case "gte":
-            return (b >= a);
-        case "lt":
-            return (b < a);
-        case "lte":
-            return (b <= a);
-        case "not empty":
-            return (!!b)
-        case "not eq":
-            return (b != a);
-        case "not gt":
-            return (!(b > a));
-        case "not gte":
-            return (!(b >= a));
-        case "not lt":
-            return (!(b < a));
-        case "not lte":
-            return (!(b <= a));
-    }
-}
-
-const compareString = (a: string /* from REST Api */,
-                       b: string /* from actual item attribute value */,
-                       operator: OperatorType): boolean => {
-    switch (operator) {
-        case "empty":
-            return (!!!b);
-        case "eq":
-            return (b == a);
-        case "gt":
-            return (b > a);
-        case "gte":
-            return (b >= a);
-        case "lt":
-            return (b <= a);
-        case "lte":
-            return (b <= a);
-        case "not empty":
-            return (!!b);
-        case "not eq":
-            return ( b != a);
-        case "not gt":
-            return (!(b > a));
-        case "not gte":
-            return (!(b >= a));
-        case "not lt":
-            return (!(b < a));
-        case "not lte":
-            return (!(b <= a));
-    }
-}
-
 const findEntry = (entries: ItemMetadataEntry2[], key: string): ItemMetadataEntry2 => {
     return entries.find((e: ItemMetadataEntry2) => e.key === key);
 }
-
 
 const reg = (router: Router, registry: Registry) => {
    const p = `/view/:viewId/preview-bulk-edit`;

@@ -1,4 +1,12 @@
-import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from './unit.model';
+import {
+  AreaUnits,
+  CountryCurrencyUnits,
+  DimensionUnits,
+  HeightUnits,
+  LengthUnits,
+  VolumeUnits,
+  WidthUnits
+} from './unit.model';
 
 export type ItemSearchType = 'basic' | 'advance';
 
@@ -117,7 +125,7 @@ export interface DateValue {
 export interface CurrencyValue {
   type: 'currency';
   value: number;
-  country: string;
+  country: CountryCurrencyUnits;
 }
 
 export interface VolumeValue {

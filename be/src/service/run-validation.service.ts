@@ -32,6 +32,14 @@ import {View} from "../model/view.model";
 import {CustomRule, CustomRuleForView} from "../model/custom-rule.model";
 import {getAllCustomRulesForView} from "./custom-rule.service";
 import {runCustomRule} from "../custom-rule";
+import {
+    compareArea,
+    compareCurrency,
+    compareDate, compareDimension, compareDoubleselect, compareHeight,
+    compareNumber, compareSelect,
+    compareString,
+    compareVolume, compareWidth
+} from "./compare-attribute-values.service";
 
 interface Context {
    validationId: number;
@@ -41,458 +49,179 @@ interface Context {
    errornousMessages: {rule: Rule | CustomRule, item: Item, attribute: Attribute, message: string}[];
 }
 
-const matchs = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: ItemValTypes[], op: OperatorType): boolean => {
+const matchs = (context: Context, attribute: Attribute, actualItemAttributeValueType: ItemValTypes, conditionValueTypes: ItemValTypes[], op: OperatorType): boolean => {
     let r = true;
-    for (const i of i2) {
-        r = r && match(context, attribute, i1, i, op);
+    for (const i of conditionValueTypes) {
+        r = r && match(context, attribute, actualItemAttributeValueType, i, op);
     }
     return r;
 }
 
-const match = (context: Context, attribute: Attribute, i1: ItemValTypes, i2: ItemValTypes, op: OperatorType): boolean => {
+const match = (context: Context, attribute: Attribute, actualItemAttributeValueType: ItemValTypes, conditionValueType: ItemValTypes, op: OperatorType): boolean => {
 
     if (!OPERATORS_WITHOUT_CONFIGURATBLE_VALUES.includes(op) &&
-        i1.type !== i2.type) {
+        actualItemAttributeValueType.type !== conditionValueType.type) {
         // cannot compare value of different types
         return false;
     }
 
-    switch (i1.type) {
+    switch (actualItemAttributeValueType.type) {
         case "length":
             break;
         case 'string': {
-            const a1 = i1 as StringValue;
-            const a2 = i2 as StringValue;
-            switch (op) {
-                case 'eq':
-                    return (a1.value == a2.value);
-                case 'not eq':
-                    return (a1.value !== a2.value);
-                case 'lt':
-                    return (a1.value < a2.value);
-                case 'not lt':
-                    return !(a1.value < a2.value);
-                case 'gt':
-                    return (a1.value > a2.value);
-                case 'not gt':
-                    return !(a1.value > a2.value);
-                case 'gte':
-                    return (a1.value >= a2.value);
-                case 'not gte':
-                    return !(a1.value >= a2.value);
-                case 'lte':
-                    return (a1.value <= a2.value);
-                case 'not lte':
-                    return !(a1.value <= a2.value);
-                case 'empty':
-                    return !!!a1.value;
-                case 'not empty':
-                    return !!a1.value;
-                default:
-                    e(context, `operator of type ${op} is not defined`);
-                    return false;
+            const a1 = actualItemAttributeValueType as StringValue;
+            const a2 = conditionValueType as StringValue;
+
+            try {
+                return compareString(a2.value, a1.value, op);
+            } catch(e) {
+                e(context, `operator of type ${op} is not defined`);
+                return false;
             }
         }
         case 'text': {
-            const a1 = i1 as TextValue;
-            const a2 = i2 as TextValue;
-            switch (op) {
-                case 'eq':
-                    return (a1.value == a2.value);
-                case 'not eq':
-                    return (a1.value !== a2.value);
-                case 'lt':
-                    return (a1.value < a2.value);
-                case 'not lt':
-                    return !(a1.value < a2.value);
-                case 'gt':
-                    return (a1.value > a2.value);
-                case 'not gt':
-                    return !(a1.value > a2.value);
-                case 'gte':
-                    return (a1.value >= a2.value);
-                case 'not gte':
-                    return !(a1.value >= a2.value);
-                case 'lte':
-                    return (a1.value <= a2.value);
-                case 'not lte':
-                    return !(a1.value <= a2.value);
-                case 'empty':
-                    return !!!a1.value;
-                case 'not empty':
-                    return !!a1.value;
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            const a1 = actualItemAttributeValueType as TextValue;
+            const a2 = conditionValueType as TextValue;
+
+            try {
+                return compareString(a2.value, a1.value, op);
+            } catch(e) {
+                e(context, `operator of type ${op} is not defined`);
+                return false;
             }
         }
         case 'number': {
-            const a1 = i1 as NumberValue;
-            const a2 = i2 as NumberValue;
-            switch (op) {
-                case 'eq':
-                    return (a1.value == a2.value);
-                case 'not eq':
-                    return (a1.value !== a2.value);
-                case 'lt':
-                    return (a1.value < a2.value);
-                case 'not lt':
-                    return !(a1.value < a2.value);
-                case 'gt':
-                    return (a1.value > a2.value);
-                case 'not gt':
-                    return !(a1.value > a2.value);
-                case 'gte':
-                    return (a1.value >= a2.value);
-                case 'not gte':
-                    return !(a1.value >= a2.value);
-                case 'lte':
-                    return (a1.value <= a2.value);
-                case 'not lte':
-                    return !(a1.value <= a2.value);
-                case 'empty':
-                    return !!!a1.value;
-                case 'not empty':
-                    return !!a1.value;
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            const a1 = actualItemAttributeValueType as NumberValue;
+            const a2 = conditionValueType as NumberValue;
+            try {
+                return compareNumber(a2.value, a1.value, op);
+            } catch(e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
         }
         case 'date': {
-            const a1 = i1 as DateValue;
-            const a2 = i2 as DateValue;
+            const a1 = actualItemAttributeValueType as DateValue;
+            const a2 = conditionValueType as DateValue;
             const format: string = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
             const m1: moment.Moment = moment(a1.value, format);
             const m2: moment.Moment = a2 ? moment(a2.value, format) : null;
 
-            switch (op) {
-                case 'eq':
-                    return (m1.isSame(m2));
-                case 'not eq':
-                    return (!m1.isSame(m2));
-                case 'lt':
-                    return (m1.isBefore(m2));
-                case 'not lt':
-                    return (!m1.isBefore(m2));
-                case 'gt':
-                    return (m1.isAfter(m2));
-                case 'not gt':
-                    return (!m1.isAfter(m2));
-                case 'gte':
-                    return (m1.isSame(m2) || m1.isAfter(m2));
-                case 'not gte':
-                    return (!(m1.isSame(m2) || m1.isAfter(m2)));
-                case 'lte':
-                    return (m1.isSame(m2) || m1.isBefore(m2));
-                case 'not lte':
-                    return (!(m1.isSame(m2) || m1.isBefore(m2)));
-                case 'empty':
-                    return !!!a1.value;
-                case 'not empty':
-                    return !!a1.value;
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            try {
+                return compareDate(m2, m1, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
-            break;
         }
         case 'currency': {
-            const a1 = i1 as CurrencyValue;
-            const a2 = i2 as CurrencyValue;
+            const a1 = actualItemAttributeValueType as CurrencyValue;
+            const a2 = conditionValueType as CurrencyValue;
             if (a2 && a1.country !== a2.country) {
                 return false;
             }
-            switch (op) {
-                case 'eq':
-                    return (a1.value == a2.value);
-                case 'not eq':
-                    return (a1.value !== a2.value);
-                case 'lt':
-                    return (a1.value < a2.value);
-                case 'not lt':
-                    return !(a1.value < a2.value);
-                case 'gt':
-                    return (a1.value > a2.value);
-                case 'not gt':
-                    return !(a1.value > a2.value);
-                case 'gte':
-                    return (a1.value >= a2.value);
-                case 'not gte':
-                    return !(a1.value >= a2.value);
-                case 'lte':
-                    return (a1.value <= a2.value);
-                case 'not lte':
-                    return !(a1.value <= a2.value);
-                case 'empty':
-                    return !!!a1.value;
-                case 'not empty':
-                    return !!a1.value;
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            try {
+                return compareCurrency(a2.value, a2.country, a1.value, a1.country, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
-            break;
         }
         case 'volume': {
-            const a1 = i1 as VolumeValue;
-            const a2 = i2 as VolumeValue;
+            const a1 = actualItemAttributeValueType as VolumeValue;
+            const a2 = conditionValueType as VolumeValue;
 
             if (a2 && a1.unit !== a2.unit) {
                 return false;
             }
-            switch (op) {
-                case 'eq':
-                    return (a1.value == a2.value);
-                case 'not eq':
-                    return (a1.value !== a2.value);
-                case 'lt':
-                    return (a1.value < a2.value);
-                case 'not lt':
-                    return !(a1.value < a2.value);
-                case 'gt':
-                    return (a1.value > a2.value);
-                case 'not gt':
-                    return !(a1.value > a2.value);
-                case 'gte':
-                    return (a1.value >= a2.value);
-                case 'not gte':
-                    return !(a1.value >= a2.value);
-                case 'lte':
-                    return (a1.value <= a2.value);
-                case 'not lte':
-                    return !(a1.value <= a2.value);
-                case 'empty':
-                    return !!!a1.value;
-                case 'not empty':
-                    return !!a1.value;
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            try {
+                return compareVolume(a2.value, a2.unit, a1.value, a1.unit, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
-            break;
         }
         case 'dimension': {
-            const a1 = i1 as DimensionValue;
-            const a2 = i2 as DimensionValue;
+            const a1 = actualItemAttributeValueType as DimensionValue;
+            const a2 = conditionValueType as DimensionValue;
 
             if (a2 && a1.unit !== a2.unit) {
                 return false;
             }
-            switch (op) {
-                case 'eq':
-                    return (a1.length == a2.length && a1.width == a2.width && a1.height == a2.height);
-                case 'not eq':
-                    return (a1.length !== a2.length && a1.width !== a2.width && a1.height !== a2.height);
-                case 'lt':
-                    return (a1.length < a2.length && a1.width < a2.width && a1.height < a2.height);
-                case 'not lt':
-                    return !(a1.length < a2.length && a1.width < a2.width && a1.height < a2.height);
-                case 'gt':
-                    return (a1.length > a2.length && a1.width > a2.width && a1.height > a2.height);
-                case 'not gt':
-                    return !(a1.length > a2.length && a1.width > a2.width && a1.height > a2.height);
-                case 'gte':
-                    return (a1.length >= a2.length && a1.width >= a2.width && a1.height >= a2.height);
-                case 'not gte':
-                    return !(a1.length >= a2.length && a1.width >= a2.width && a1.height >= a2.height);
-                case 'lte':
-                    return (a1.length <= a2.length && a1.width <= a2.width && a1.height <= a2.height);
-                case 'not lte':
-                    return !(a1.length <= a2.length && a1.width <= a2.width && a1.height <= a2.height);
-                case 'empty':
-                    return (!!!a1.length) && (!!!a1.width) && (!!!a1.height);
-                case 'not empty':
-                    return (!!a1.length) && (!!a1.width) && (!!a1.height);
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            try {
+                return compareDimension(a2.length, a2.width, a2.height, a2.unit, a1.length, a1.width, a1.height, a1.unit, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
         }
         case 'area': {
-            const a1 = i1 as AreaValue;
-            const a2 = i2 as AreaValue;
+            const a1 = actualItemAttributeValueType as AreaValue;
+            const a2 = conditionValueType as AreaValue;
 
             if (a2 && a1.unit !== a2.unit) {
                 return false;
             }
-            switch (op) {
-                case 'eq':
-                    return (a1.value == a2.value);
-                case 'not eq':
-                    return (a1.value !== a2.value);
-                case 'lt':
-                    return (a1.value < a2.value);
-                case 'not lt':
-                    return !(a1.value < a2.value);
-                case 'gt':
-                    return (a1.value > a2.value);
-                case 'not gt':
-                    return !(a1.value > a2.value);
-                case 'gte':
-                    return (a1.value >= a2.value);
-                case 'not gte':
-                    return !(a1.value >= a2.value);
-                case 'lte':
-                    return (a1.value <= a2.value);
-                case 'not lte':
-                    return !(a1.value <= a2.value);
-                case 'empty':
-                    return !!!a1.value;
-                case 'not empty':
-                    return !!a1.value;
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            try {
+                return compareArea(a2.value, a2.unit, a1.value, a1.unit, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
         }
         case 'width': {
-            const a1 = i1 as WidthValue;
-            const a2 = i2 as WidthValue;
+            const a1 = actualItemAttributeValueType as WidthValue;
+            const a2 = conditionValueType as WidthValue;
 
 
             if (a2 && a1.unit !== a2.unit) {
                 return false;
             }
-            switch (op) {
-                case 'eq':
-                    return (a1.value == a2.value);
-                case 'not eq':
-                    return (a1.value !== a2.value);
-                case 'lt':
-                    return (a1.value < a2.value);
-                case 'not lt':
-                    return !(a1.value < a2.value);
-                case 'gt':
-                    return (a1.value > a2.value);
-                case 'not gt':
-                    return !(a1.value > a2.value);
-                case 'gte':
-                    return (a1.value >= a2.value);
-                case 'not gte':
-                    return !(a1.value >= a2.value);
-                case 'lte':
-                    return (a1.value <= a2.value);
-                case 'not lte':
-                    return !(a1.value <= a2.value);
-                case 'empty':
-                    return !!!a1.value;
-                case 'not empty':
-                    return !!a1.value;
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            try {
+                return compareWidth(a2.value, a2.unit, a1.value, a1.unit, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
         }
         case 'height': {
-            const a1 = i1 as HeightValue;
-            const a2 = i2 as HeightValue;
+            const a1 = actualItemAttributeValueType as HeightValue;
+            const a2 = conditionValueType as HeightValue;
 
 
             if (a2 && a1.unit !== a2.unit) {
                 return false;
             }
-            switch (op) {
-                case 'eq':
-                    return (a1.value == a2.value);
-                case 'not eq':
-                    return (a1.value !== a2.value);
-                case 'lt':
-                    return (a1.value < a2.value);
-                case 'not lt':
-                    return !(a1.value < a2.value);
-                case 'gt':
-                    return (a1.value > a2.value);
-                case 'not gt':
-                    return !(a1.value > a2.value);
-                case 'gte':
-                    return (a1.value >= a2.value);
-                case 'not gte':
-                    return !(a1.value >= a2.value);
-                case 'lte':
-                    return (a1.value <= a2.value);
-                case 'not lte':
-                    return !(a1.value <= a2.value);
-                case 'empty':
-                    return !!!a1.value;
-                case 'not empty':
-                    return !!a1.value;
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            try {
+                return compareHeight(a2.value, a2.unit, a1.value, a1.unit, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
         }
         case 'select': {
-            const a1 = i1 as SelectValue;
-            const a2 = i2 as SelectValue;
+            const a1 = actualItemAttributeValueType as SelectValue;
+            const a2 = conditionValueType as SelectValue;
 
-            switch (op) {
-                case 'eq':
-                    return (a1.key == a2.key);
-                case 'not eq':
-                    return (a1.key !== a2.key);
-                case 'lt':
-                    return (a1.key < a2.key);
-                case 'not lt':
-                    return !(a1.key < a2.key);
-                case 'gt':
-                    return (a1.key > a2.key);
-                case 'not gt':
-                    return !(a1.key > a2.key);
-                case 'gte':
-                    return (a1.key >= a2.key);
-                case 'not gte':
-                    return !(a1.key >= a2.key);
-                case 'lte':
-                    return (a1.key <= a2.key);
-                case 'not lte':
-                    return !(a1.key <= a2.key);
-                case 'empty':
-                    return !!!a1.key;
-                case 'not empty':
-                    return !!a1.key;
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            try {
+                return compareSelect(a2.key, a1.key, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
         }
         case 'doubleselect': {
-            const a1 = i1 as DoubleSelectValue;
-            const a2 = i2 as DoubleSelectValue;
+            const a1 = actualItemAttributeValueType as DoubleSelectValue;
+            const a2 = conditionValueType as DoubleSelectValue;
 
-            switch (op) {
-                case 'eq':
-                    return (a1.key1 == a2.key1 && a1.key2 == a2.key2);
-                case 'not eq':
-                    return (a1.key1 == a2.key1 && a1.key2 !== a2.key2);
-                case 'lt':
-                    return (a1.key1 == a2.key1 && a1.key2 < a2.key2);
-                case 'not lt':
-                    return (a1.key1 == a2.key1 && !(a1.key2 < a2.key2));
-                case 'gt':
-                    return (a1.key1 == a2.key1 && a1.key2 > a2.key2);
-                case 'not gt':
-                    return (a1.key1 == a2.key1 && !(a1.key2 > a2.key2));
-                case 'gte':
-                    return (a1.key1 == a2.key1 && !(a1.key2 >= a2.key2));
-                case 'not gte':
-                    return (a1.key1 == a2.key1 && !(a1.key2 >= a2.key2));
-                case 'lte':
-                    return (a1.key1 == a2.key1 && a1.key2 <= a2.key2);
-                case 'not lte':
-                    return (a1.key1 == a2.key1 && !(a1.key2 <= a2.key2));
-                case 'empty':
-                    return (!!!a1.key1 && !!!a1.key2);
-                case 'not empty':
-                    return (!!a1.key1 && !!a1.key2);
-                default:
-                    e(context,`operator of type ${op} is not defined`);
-                    return false;
+            try {
+                return compareDoubleselect(a2.key1, a2.key2, a1.key1, a1.key2, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
             }
         }
     }
-
-
     return false;
 };
 
@@ -621,7 +350,7 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
                            against itemValueTypes ${convertToDebugStrings(whenClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
 
-                const tmp = matchs(currentContext, att, i1, i2, op);
+                const tmp = matchs(currentContext, att, i1 /* actual value of item attribute */, i2 /* whenClause conditions value types */, op);
                 wr = wr && tmp;
 
                 await i(currentContext,
@@ -655,7 +384,7 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
                            against itemValueTypes ${convertToDebugStrings(validateClause.condition)})
                            for itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
 
-                    const tmp = matchs(currentContext, att, i1, i2, op);
+                    const tmp = matchs(currentContext, att, i1 /* actual item attribute value */, i2 /* validateClause conditions value types */, op);
                     if (!tmp) { // this validation failed
                        currentContext.errornousMessages.push({
                            rule,
