@@ -37,7 +37,7 @@ describe('profile', () => {
             .validateTitle();
     });
 
-    it ('should change avatar 01', () => {
+    it('should change avatar 01', () => {
         profilePage
             .changePredefinedAvatar('avatar-01.png')
             .verifySuccessMessageExists()

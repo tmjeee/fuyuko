@@ -26,7 +26,7 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
     validateAvatarChanged(name: string): ProfilePage {
         const apiBaseUrl = Cypress.env('apiBaseUrl').toString();
         const userId = util.getMyself().myself.id;
-        cy.request(`${apiBaseUrl}/user/${userId}/avatar-info`)
+        cy.wait(100).request(`${apiBaseUrl}/user/${userId}/avatar-info`)
             .its("body")
             .then((body: any) => {
                 expect(body).to.have.property('name');
