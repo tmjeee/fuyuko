@@ -10,14 +10,18 @@ export class LoginPage implements ActualPage<LoginPage> {
     }
 
     validateTitle(): LoginPage {
-         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'login');
+         cy.get(`[test-page-title]`)
+             .should('have.attr', 'test-page-title', 'login');
         return this;
     }
 
     login(username: string, password: string): DashboardPage {
-        cy.get(`[test-field-username]`).clear().type(username);
-        cy.get(`[test-field-password]`).clear().type(password);
-        cy.get(`[test-button-login]`).should('not.be.disabled').click();
+        cy.get(`[test-page-title='login']`)
+            .find(`[test-field-username]`).clear({force: true}).type(username, {force: true});
+        cy.get(`[test-page-title='login']`)
+            .find(`[test-field-password]`).clear({force: true}).type(password, {force: true});
+        cy.get(`[test-page-title='login']`)
+            .find(`[test-button-login]`).should('not.be.disabled').click({force: true});
         return new DashboardPage();
     }
 

@@ -25,7 +25,6 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
 
     search(search: string): UserActivationPage {
         cy.get(`[test-field-search]`)
-            .focus()
             .clear({force: true})
             .type(`${search}{enter}`, {force: true})
             .wait(3000)
@@ -39,14 +38,12 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
 
     activateUser(username: string): UserActivationPage {
         cy.get(`[test-icon-user-action='ACTIVATE_${username}']`)
-            .focus()
             .click({force: true});
         return this;
     }
 
     deleteUser(username: string): UserActivationPage {
         cy.get(`[test-icon-user-action='DELETE_${username}']`)
-            .focus()
             .click({force: true});
         return this;
     }

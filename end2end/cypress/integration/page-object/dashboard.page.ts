@@ -25,10 +25,10 @@ export class DashboardPage implements ActualPage<DashboardPage> {
 
     changeDashboardStrategy(dashboardStrategyId: string): DashboardPage {
         cy.get(`[test-mat-select]`)
-            .click();
+            .click({force: true});
         cy.get(`[test-mat-option='${dashboardStrategyId}']`)
             .focus()
-            .click();
+            .click({force: true});
         return this;
     }
 
@@ -39,52 +39,52 @@ export class DashboardPage implements ActualPage<DashboardPage> {
 
 
     visitProfilePage() {
-        cy.get(`[test-sidenav='profile']`).click();
+        cy.get(`[test-sidenav='profile']`).click({force: true});
         return new ProfilePage();
     }
 
     visitDashboardPage() {
-        cy.get(`[test-sidenav='dashboard']`).click();
+        cy.get(`[test-sidenav='dashboard']`).click({force: true});
         return new DashboardPage();
     }
 
     visitUserPage() {
-        cy.get(`[test-sidenav='user']`).click();
+        cy.get(`[test-sidenav='user']`).click({force: true});
         return new UserPage();
     }
 
     visitViewPage() {
-        cy.get(`[test-sidenav='view']`).click();
+        cy.get(`[test-sidenav='view']`).click({force: true});
         return new ViewPage();
     }
 
     visitPricingPage() {
-        cy.get(`[test-sidenav='pricing']`).click();
+        cy.get(`[test-sidenav='pricing']`).click({force: true});
         return new PricingPage();
     }
 
     visitBulkEditPage() {
-        cy.get(`[test-sidenav='bulk-edit']`).click();
+        cy.get(`[test-sidenav='bulk-edit']`).click({force: true});
         return new BulkEditPage();
     }
 
     visitSettingsPage() {
-        cy.get(`[test-sidenav='settings']`).click();
+        cy.get(`[test-sidenav='settings']`).click({force: true});
         return new SettingsPage();
     }
 
     visitImportExportPage() {
-        cy.get(`[test-sidenav='import-export']`).click();
+        cy.get(`[test-sidenav='import-export']`).click({force: true});
         return new ImportExportPage();
     }
 
     visitJobsPage() {
-        cy.get(`[test-sidenav='jobs']`).click();
+        cy.get(`[test-sidenav='jobs']`).click({force: true});
         return new JobsPage();
     }
 
     visitPartnerPage() {
-        cy.get(`[test-sidenav]='partner']`).click();
+        cy.get(`[test-sidenav]='partner']`).click({force: true});
         return new PartnerPage();
     }
 

@@ -28,40 +28,46 @@ export class RegisterPage implements ActualPage<RegisterPage> {
     fillIn(email: string, username: string, firstname: string, lastname: string, password:
         string, confirmPassword: string): RegisterPage {
         // email
-        cy.get(`[test-field-email]`).focus().clear({force: true});
-        if (email) {
-            cy.get(`[test-field-email]`).focus().type(email, {force: true});
-        }
+        cy.get(`[test-field-email]`).clear({force: true}).then((_) => {
+            if (email) {
+                cy.get(`[test-field-email]`).type(email, {force: true});
+            }
+        });
 
         // username
-        cy.get(`[test-field-username]`).focus().clear({force: true});
-        if (username) {
-            cy.get(`[test-field-username]`).focus().type(username, {force: true});
-        }
+        cy.get(`[test-field-username]`).clear({force: true}).then((_) => {
+            if (username) {
+                cy.get(`[test-field-username]`).type(username, {force: true});
+            }
+        });
 
         // firstname
-        cy.get(`[test-field-firstname]`).focus().clear({force: true});
-        if (firstname) {
-            cy.get(`[test-field-firstname]`).focus().type(firstname, {force: true});
-        }
+        cy.get(`[test-field-firstname]`).clear({force: true}).then((_) => {
+            if (firstname) {
+                cy.get(`[test-field-firstname]`).type(firstname, {force: true});
+            }
+        });
 
         // lastname
-        cy.get(`[test-field-lastname]`).focus().clear({force: true});
-        if (lastname) {
-            cy.get(`[test-field-lastname]`).focus().type(lastname, {force: true});
-        }
+        cy.get(`[test-field-lastname]`).clear({force: true}).then((_) => {
+            if (lastname) {
+                cy.get(`[test-field-lastname]`).type(lastname, {force: true});
+            }
+        });
 
         // password
-        cy.get(`[test-field-password]`).focus().clear({force: true});
-        if (password) {
-            cy.get(`[test-field-password]`).focus().type(password, {force: true});
-        }
+        cy.get(`[test-field-password]`).clear({force: true}).then((_) => {
+            if (password) {
+                cy.get(`[test-field-password]`).type(password, {force: true});
+            }
+        });
 
         // confirm password
-        cy.get(`[test-field-confirm-password]`).focus().clear({force: true});
-        if (confirmPassword) {
-            cy.get(`[test-field-confirm-password]`).focus().type(confirmPassword, {force: true});
-        }
+        cy.get(`[test-field-confirm-password]`).clear({force: true}).then((_) => {
+            if (confirmPassword) {
+                cy.get(`[test-field-confirm-password]`).type(confirmPassword, {force: true});
+            }
+        });
 
         return this;
     }
@@ -72,7 +78,7 @@ export class RegisterPage implements ActualPage<RegisterPage> {
     }
 
     submitRegistration(): RegisterPage {
-        cy.get(`[test-button-submit-registration]`).focus().click({force: true});
+        cy.get(`[test-button-submit-registration]`).click({force: true});
         return this;
     }
 }
