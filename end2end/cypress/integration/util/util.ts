@@ -9,50 +9,32 @@ export const getMyself = (): any => {
 }
 
 export const clearAllMessageToasts = () => {
-    cy.get('simple-notifications')
+    cy.wait(100).get('simple-notifications')
         .find('.simple-notification')
         .each(($el: any, index: number, $list: any[]) => {
             cy.wrap($el).click({force: true});
-        });
+        }).wait(100);
 }
 
 
 export const clickOnSuccessMessageToasts = (callbackFn: Function) => {
-    cy.get('simple-notifications')
+    cy.wait(100).get('simple-notifications')
         .find('.simple-notification.success').each((n, index, list) => {
         cy.wrap(n).click({force: true});
         if (index === (list.length -1)) { // last one
             callbackFn && callbackFn();
         }
     }).wait(100);
-    /*
-    cy.get('simple-notifications')
-        .find('.simple-notification.success').each((n, index, list) => {
-        cy.wrap(n).click({force: true});
-        if (index === (list.length -1)) { // last one
-            callbackFn && callbackFn();
-        }
-    });
-     */
 }
 
 export const clickOnErrorMessageToasts = (callbackFn: Function) => {
-    cy.get('simple-notifications')
+    cy.wait(100).get('simple-notifications')
         .find('.simple-notification.error').each((n, index, list) => {
         cy.wrap(n).click({force: true});
         if (index === (list.length -1)) { // last one
             callbackFn && callbackFn();
         }
     }).wait(100);
-    /*
-    cy.get('simple-notifications')
-        .find('.simple-notification.error').then((n) => {
-        cy.wrap(n).click({force: true});
-        if (index === (list.length -1)) { // last one
-            callbackFn && callbackFn();
-        }
-    });
-     */
 }
 
 export const toggleSideNav = (fn: Function) => {
