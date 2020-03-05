@@ -213,6 +213,7 @@ export class AbstractViewPredefinedRulePage {
         cy.get(`[test-when-clause-attribute-editor='${whenClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
+            .clear({force: true})
             .type(val, {force: true});
         return this;
     }
@@ -286,6 +287,7 @@ export class AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value1]`)
+            .clear({force: true})
             .type(val, {force: true});
         return this;
     }
@@ -305,6 +307,7 @@ export class AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value2]`)
+            .clear({force: true})
             .type(val, {force: true});
         return this;
     }
@@ -323,6 +326,7 @@ export class AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value3]`)
+            .clear({force: true})
             .type(val, {force: true});
         return this;
     }
@@ -341,6 +345,7 @@ export class AbstractViewPredefinedRulePage {
         cy.get(`[test-validate-clause-attribute-editor='${validateClauseIndex}']`)
             .find(`[test-fields-container='${fieldsContainerIndex}']`)
             .find(`[test-field-value4]`)
+            .clear({force: true})
             .type(val, {force: true});
         return this;
     }
@@ -351,7 +356,6 @@ export class AbstractViewPredefinedRulePage {
             .should('have.value', val);
         return this;
     }
-    // todo: needs changing fieldsContainerIndex needs to go, val turns into array, index of array is fieldContainerIndex
     fillInWhenClauseStringAttribute(whenClauseIndex: number, attributeName: string, op: OperatorType, val: string[]): AbstractViewPredefinedRulePage {
         this.selectWhenClauseAttribute(whenClauseIndex, attributeName)
         this.selectWhenClauseOperator(whenClauseIndex, op)

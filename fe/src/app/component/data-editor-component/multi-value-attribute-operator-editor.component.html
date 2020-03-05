@@ -29,28 +29,28 @@
                     </mat-form-field>
                     <mat-form-field *ngIf="formGroup.controls.formControl && attribute && attribute.type !== 'date'">
                         <mat-label>Value</mat-label>
-                        <input matInput [formControl]="formGroup.controls.formControl" [attr.test-field-value1]="''" (focusout)="onValueChange()">
+                        <input matInput type="text" [formControl]="formGroup.controls.formControl" [attr.test-field-value1]="''" (focusout)="onValueChange()">
                         <mat-hint>Enter value</mat-hint>
                     </mat-form-field>
 
                     <!-- formControl2 -->
                     <mat-form-field *ngIf="formGroup.controls.formControl2">
                         <mat-label>Value</mat-label>
-                        <input matInput [formControl]="formGroup.controls.formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
+                        <input matInput type="text" [formControl]="formGroup.controls.formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
                         <mat-hint>Enter value</mat-hint>
                     </mat-form-field>
 
                     <!-- formControl3 -->
                     <mat-form-field *ngIf="formGroup.controls.formControl3">
                         <mat-label>Value</mat-label>
-                        <input matInput [formControl]="formGroup.controls.formControl3" [attr.test-field-value3]="''" (focusout)="onValueChange()">
+                        <input matInput type="text" [formControl]="formGroup.controls.formControl3" [attr.test-field-value3]="''" (focusout)="onValueChange()">
                         <mat-hint>Enter value</mat-hint>
                     </mat-form-field>
 
                     <!-- formControl4 -->
                     <mat-form-field *ngIf="formGroup.controls.formControl4">
                         <mat-label>Value</mat-label>
-                        <input matInput [formControl]="formGroup.controls.formControl4" [attr.test-field-value4]="''" (focusout)="onValueChange()">
+                        <input matInput type="text" [formControl]="formGroup.controls.formControl4" [attr.test-field-value4]="''" (focusout)="onValueChange()">
                         <mat-hint>Enter value</mat-hint>
                     </mat-form-field>
                 </div>

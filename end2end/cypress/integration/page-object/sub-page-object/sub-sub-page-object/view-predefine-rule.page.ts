@@ -42,7 +42,7 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
 
 
     verifyPanelExpanded(ruleName: string, b: boolean): ViewPredefinedRulePage {
-        cy.get(`[test-panel-content-rule='${ruleName}']`).should(b ? 'be.visible' : 'not.be.visible');
+        cy.wait(100).get(`[test-panel-content-rule='${ruleName}']`).should(b ? 'be.visible' : 'not.be.visible');
         return this;
     }
 

@@ -32,13 +32,13 @@ describe('view-rule-predefined', () => {
         cy.saveLocalStorage();
     });
 
-    it ('should load', () => {
+    it('should load', () => {
         viewRulePage
             .visit()
             .validateTitle();
     });
 
-    it ('should toggle side nav', () => {
+    it('should toggle side nav', () => {
         util.toggleSideNav(() => {
             util.validateSideNavStateOpen(false);
         });
@@ -47,7 +47,7 @@ describe('view-rule-predefined', () => {
         })
     });
 
-    it ('should toggle help nav', () => {
+    it('should toggle help nav', () => {
         util.toggleHelpSideNav(() => {
             util.validateHelpNavStateOpen(true);
         });
@@ -56,7 +56,7 @@ describe('view-rule-predefined', () => {
         });
     });
 
-    it ('should toggle sub side nav', () => {
+    it('should toggle sub side nav', () => {
         util.toggleSubSideNav(() => {
             util.validateSubSideNavStateOpen(false);
         });
@@ -65,7 +65,7 @@ describe('view-rule-predefined', () => {
         });
     });
 
-    it ('should switch tabs', () => {
+    it('should switch tabs', () => {
         viewRulePage
             .selectCustomTab()
             .verifyCustomTabSelected();
@@ -75,7 +75,7 @@ describe('view-rule-predefined', () => {
             .verifyPredefinedTabSelected();
     });
 
-    it ('should toggle rule expansion panel', () => {
+    it('should toggle rule expansion panel', () => {
         viewRulePage
             .selectPredefinedTab()
             .togglePanel('Rule #1')
@@ -105,7 +105,7 @@ describe('view-rule-predefined', () => {
         ;
     });
 
-    it ('should be able to enable and disable rules', () => {
+    it('should be able to enable and disable rules', () => {
         viewRulePage
             .selectPredefinedTab()
             .disableRule('Rule #1')
@@ -195,7 +195,7 @@ describe('view-rule-predefined', () => {
         ;
     });
 
-    it ('should be able to add / remove when clauses', () => {
+    it('should be able to add / remove when clauses', () => {
         viewRulePage
             .selectPredefinedTab()
             .clickAddRule()
@@ -208,8 +208,8 @@ describe('view-rule-predefined', () => {
             .verifyWhenClauseCount(2)
             .removeWhenClause(1)
             .verifyWhenClauseCount(1)
-            .selectValidateClauseAttribute(0, 'string attribute')
-            .selectValidateClauseOperator(0, 'eq')
+            .selectWhenClauseAttribute(0, 'string attribute')
+            .selectWhenClauseOperator(0, 'eq')
             .clickAddWhenClauseCondition(0)
             .verifyWhenClauseConditionCount(0, 2)
             .clickAddWhenClauseCondition(0)
@@ -1940,12 +1940,12 @@ describe('view-rule-predefined', () => {
             .verifySubmittable(false)
             [opts.fillInWhenClauseFnName](0, opts.attributeName, opts.whenClause_opForAdd, opts.whenClause_valForAdd) // (1)
             [opts.verifyWhenClauseFnName](0, opts.attributeName, opts.whenClause_opForAdd, opts.whenClause_valForAdd) // (2)
-            .fillInWhenClauseNumberAttribute(1, 'number attribute', 'eq', [1, 2])
-            .verifyWhenClauseNumberAttribute(1, 'number attribute', 'eq', [1, 2])
+            .fillInWhenClauseNumberAttribute(1, 'number attribute', 'eq', [1.1, 2.1])
+            .verifyWhenClauseNumberAttribute(1, 'number attribute', 'eq', [1.1, 2.1])
             [opts.fillInValidateClauseFnName](0, opts.attributeName, opts.validateClause_opForAdd, opts.validateClause_valForAdd) // (3)
             [opts.verifyValidateClauseFnName](0, opts.attributeName, opts.validateClause_opForAdd, opts.validateClause_valForAdd) // (4)
-            .fillInValidateClauseNumberAttribute(1, 'number attribute', 'eq', [3,4])
-            .verifyValidateClauseNumberAttribute(1, 'number attribute', 'eq', [3,4])
+            .fillInValidateClauseNumberAttribute(1, 'number attribute', 'eq', [3.1, 4.1])
+            .verifyValidateClauseNumberAttribute(1, 'number attribute', 'eq', [3.1, 4.1])
             .verifySubmittable(true)
             .submit()
             .verifySuccessMessageExists()
@@ -1958,9 +1958,9 @@ describe('view-rule-predefined', () => {
             .togglePanel(ruleName)
             .verifyPanelExpanded(ruleName, true)
             .verifyPanelWhenClauseContains(ruleName, opts.attributeName, opts.whenClause_opForAdd, opts.whenClause_valForAdd)  // (5)
-            .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'eq', ['1', '2'])
+            .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'eq', ['1.1', '2.1'])
             .verifyPanelValidateClauseContains(ruleName, opts.attributeName, opts.validateClause_opForAdd, opts.validateClause_valForAdd) // (6)
-            .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'eq', ['3', '4'])
+            .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'eq', ['3.1', '4.1'])
         ;
 
         // edit added rule
@@ -1968,12 +1968,12 @@ describe('view-rule-predefined', () => {
             .visit()
             .selectPredefinedTab()
             .clickEditRule(ruleName)
-            .fillInWhenClauseNumberAttribute(0, 'number attribute', 'not eq', [10, 20])
-            .verifyWhenClauseNumberAttribute(0, 'number attribute', 'not eq', [10, 20])
+            .fillInWhenClauseNumberAttribute(0, 'number attribute', 'not eq', [10.1, 20.1])
+            .verifyWhenClauseNumberAttribute(0, 'number attribute', 'not eq', [10.1, 20.1])
             [opts.fillInWhenClauseFnName](1, opts.attributeName, opts.whenClause_opForEdit, opts.whenClause_valForEdit) // (7)
             [opts.verifyWhenClauseFnName](1, opts.attributeName, opts.whenClause_opForEdit, opts.whenClause_valForEdit) // (8)
-            .fillInValidateClauseNumberAttribute(0, 'number attribute', 'not eq', [30, 40])
-            .verifyValidateClauseNumberAttribute(0, 'number attribute', 'not eq', [30, 40])
+            .fillInValidateClauseNumberAttribute(0, 'number attribute', 'not eq', [30.1, 40.1])
+            .verifyValidateClauseNumberAttribute(0, 'number attribute', 'not eq', [30.1, 40.1])
             [opts.fillInValidateClauseFnName](1, opts.attributeName, opts.validateClause_opForEdit, opts.validateClause_valForEdit) // (9)
             [opts.verifyValidateClauseFnName](1, opts.attributeName, opts.validateClause_opForEdit, opts.validateClause_valForEdit) // (10)
             .verifySubmittable(true)
@@ -1987,9 +1987,9 @@ describe('view-rule-predefined', () => {
             .selectPredefinedTab()
             .togglePanel(ruleName)
             .verifyPanelExpanded(ruleName, true)
-            .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'not eq', ['10', '20'])
+            .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'not eq', ['10.1', '20.1'])
             .verifyPanelWhenClauseContains(ruleName, opts.attributeName, opts.whenClause_opForEdit, opts.whenClause_valForEdit)  // (11)
-            .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'not eq', ['30', '40'])
+            .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'not eq', ['30.1', '40.1'])
             .verifyPanelValidateClauseContains(ruleName, opts.attributeName, opts.validateClause_opForEdit, opts.validateClause_valForEdit) // (12)
         ;
 
@@ -2002,7 +2002,7 @@ describe('view-rule-predefined', () => {
         ;
     };
 
-    it (`(string, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
+    it(`(string, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
         w({
             fillInWhenClauseFnName: `fillInWhenClauseStringAttribute`,
             verifyWhenClauseFnName: `verifyWhenClauseStringAttribute`,
