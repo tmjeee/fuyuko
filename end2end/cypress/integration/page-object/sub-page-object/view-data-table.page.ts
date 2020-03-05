@@ -141,7 +141,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
              cy.get(`[test-data-table-row-index='${i}']`)
                  .find(`[test-item-editor-value='name']`).click({force: true});
              cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
-             cy.get(`[test-button-popup-ok]`).click({force: true});
+             cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
              cy.wait(1000);
           }
         });
@@ -155,7 +155,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
                 cy.get(`[test-data-table-row-index='${i}']`)
                     .find(`[test-item-editor-value='name']`).click({force: true});
                 cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
-                cy.get(`[test-button-popup-ok]`).click({force: true});
+                cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
                 cy.wait(1000);
             }
         });
@@ -167,12 +167,10 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-checkbox-data-table-item='${itemNames[i]}'].mat-checkbox-checked`).length;
                 if (!l) { // not already checked
-                    console.log('******** check deleted item')
                     cy.get(`[test-checkbox-data-table-item='${itemNames[i]}'] label`).click({force: true});
                 }
             })
         }).then((_) => {
-            console.log('****** delete delete item');
             cy.get(`[test-button-delete-items]`).click({force: true});
         });
         return this;
