@@ -17,7 +17,7 @@ export const clearAllMessageToasts = () => {
 }
 
 
-export const clickOnSuccessMessageToasts = (callbackFn: Function) => {
+export const clickOnSuccessMessageToasts = (callbackFn?: Function) => {
     cy.wait(100).get('simple-notifications')
         .find('.simple-notification.success').each((n, index, list) => {
         cy.wrap(n).click({force: true});
@@ -27,7 +27,7 @@ export const clickOnSuccessMessageToasts = (callbackFn: Function) => {
     }).wait(100);
 }
 
-export const clickOnErrorMessageToasts = (callbackFn: Function) => {
+export const clickOnErrorMessageToasts = (callbackFn?: Function) => {
     cy.wait(100).get('simple-notifications')
         .find('.simple-notification.error').each((n, index, list) => {
         cy.wrap(n).click({force: true});

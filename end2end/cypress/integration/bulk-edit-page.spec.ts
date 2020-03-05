@@ -52,6 +52,9 @@ describe(`bulk edit spec`, () => {
     });
 
     it (`should perform add and delete change and where clauses`, () => {
+        const viewName = `Test View 1`;
+        bulkEditPage
+            .selectView(viewName)
 
     });
 

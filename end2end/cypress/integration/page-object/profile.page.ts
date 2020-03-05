@@ -19,7 +19,7 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
     changePredefinedAvatar(predefinedAvatarName: string): ProfilePage {
         cy.get(`[test-edit-avatar-icon]`).click();
         cy.get(`[test-predefined-avatar-name='${predefinedAvatarName}']`).click();
-        cy.get(`[test-change-avatar-button]`).click();
+        cy.get(`[test-change-avatar-button]`).click().wait(100);
         return this;
     }
 

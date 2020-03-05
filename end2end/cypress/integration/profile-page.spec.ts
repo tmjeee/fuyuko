@@ -42,7 +42,6 @@ describe('profile', () => {
             .changePredefinedAvatar('avatar-01.png')
             .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-01.png');
-        util.clearAllMessageToasts();
     });
 
     it ('should change avatar 02', () => {
@@ -50,7 +49,6 @@ describe('profile', () => {
             .changePredefinedAvatar('avatar-02.png')
             .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-02.png');
-        util.clearAllMessageToasts();
     });
 
     it ('should chnage avatar 03', () => {
@@ -58,7 +56,6 @@ describe('profile', () => {
             .changePredefinedAvatar('avatar-03.png')
             .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-03.png');
-        util.clearAllMessageToasts();
     });
 
     it ('should chnage avatar 04', () => {
@@ -66,7 +63,6 @@ describe('profile', () => {
             .changePredefinedAvatar('avatar-04.png')
             .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-04.png');
-        util.clearAllMessageToasts();
     });
 
     it ('should chnage avatar 05', () => {
@@ -74,7 +70,6 @@ describe('profile', () => {
             .changePredefinedAvatar('avatar-05.png')
             .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-05.png');
-        util.clearAllMessageToasts();
     });
 
     it ('should chnage avatar 06', () => {
@@ -82,7 +77,6 @@ describe('profile', () => {
             .changePredefinedAvatar('avatar-06.png')
             .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-06.png');
-        util.clearAllMessageToasts();
     });
 
     it ('should chnage avatar 07', () => {
@@ -90,7 +84,6 @@ describe('profile', () => {
             .changePredefinedAvatar('avatar-07.png')
             .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-07.png');
-        util.clearAllMessageToasts();
     });
 
     it ('should chnage avatar 08', () => {
@@ -98,7 +91,6 @@ describe('profile', () => {
             .changePredefinedAvatar('avatar-08.png')
             .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-08.png');
-        util.clearAllMessageToasts();
     });
 
     it ('should chnage avatar 09', () => {
@@ -106,7 +98,6 @@ describe('profile', () => {
             .changePredefinedAvatar('avatar-09.png')
             .verifySuccessMessageExists()
             .validateAvatarChanged('avatar-09.png');
-        util.clearAllMessageToasts();
     });
 
     it ('should toggle side nav', () => {
