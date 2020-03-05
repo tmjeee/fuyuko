@@ -14,7 +14,7 @@
   "scripts": {
     "tsc": "npx tsc",
     "cypress-open": "npm run copy && npx cypress open",
-    "cypress-run": "npm run copy && npx cypress run",
+    "cypress-run": "npm run copy && npm run tsc && npx cypress run --browser chrome",
     "copy": "npm run copy-model",
     "copy-model": "cp -fr ../fe/src/app/model ./cypress/integration/ ; rm -fr ./cypress/integration/model/dashboard.model.ts ; ",
     "check-cyclic-dependencies": "madge --cyclic ./integration"

@@ -30,7 +30,7 @@ export const clickOnSuccessMessageToasts = (callbackFn: Function) => {
               callbackFn && callbackFn();
           }
       });
-    });
+    }).wait(100);
     /*
     cy.get('simple-notifications')
         .find('.simple-notification.success').each((n, index, list) => {
@@ -55,7 +55,7 @@ export const clickOnErrorMessageToasts = (callbackFn: Function) => {
                 callbackFn && callbackFn();
             }
         });
-    });
+    }).wait(100);
     /*
     cy.get('simple-notifications').find('.simple-notification.error').then((n) => {
         cy.wrap(n).click({force: true});
