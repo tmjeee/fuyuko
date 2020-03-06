@@ -61,7 +61,7 @@ export class BulkEditPageStep1 {
         return this;
     }
 
-    selectAttribute(index: number, attributeName: string): BulkEditPageStep1 {
+    selectChangeAttribute(index: number, attributeName: string): BulkEditPageStep1 {
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-mat-select-attribute] div`)
             .click({force: true, multiple: true});
@@ -72,7 +72,7 @@ export class BulkEditPageStep1 {
     }
 
     editChangeString(index: number, attributeName: string, value: string): BulkEditPageStep1 {
-        this.selectAttribute(index, attributeName);
+        this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-field-string]`);
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-string]`)
@@ -81,7 +81,34 @@ export class BulkEditPageStep1 {
         return this;
     }
 
+
+    selectWhereAttribute(index: number, attributeName: string): BulkEditPageStep1 {
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-mat-select-attribute] div`)
+            .click({force: true, multiple: true});
+        cy.get(`[test-mat-select-option-attribute='${attributeName}']`)
+            .click({force: true});
+        cy.wait(100);
+        return this;
+    }
+
+    selectWhereOperator(index: number, operator: OperatorType): BulkEditPageStep1 {
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-mat-select-attribute-operator] div`)
+            .click({force: true, multiple: true});
+        cy.get(`[test-mat-select-option-attribute-operator='${operator}']`)
+            .click({force: true});
+        cy.wait(100);
+        return this;
+    }
+
     editWhenString(index: number, attributeName: string, operator: OperatorType, value: string): BulkEditPageStep1 {
+        this.selectWhereAttribute(index, attributeName);
+        this.selectWhereOperator(index, operator);
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-field-value]`)
+            .clear({force: true})
+            .type(value, {force: true});
         return this;
     }
 }
