@@ -51,7 +51,7 @@ describe(`bulk edit spec`, () => {
             .verifySelectedView(testView1)
     });
 
-    it(`should perform add and delete change and where clauses`, () => {
+    it.only(`should perform add and delete change and where clauses`, () => {
         const i = 0;
         const viewName = `Test View 1`;
         const whenAttributeName: string = `string attribute`;
@@ -63,8 +63,13 @@ describe(`bulk edit spec`, () => {
         bulkEditPage
             .startWizard()
             .verifyStep()
-            .editWhenString(i, whenAttributeName, whenOp, whenValue)
+            .editWhereString(i, whenAttributeName, whenOp, whenValue)
             .editChangeString(i, changeAttributeName, changeAttributeValue)
+            .verifyWhereClauseString(i, whenAttributeName, whenOp, whenValue)
+            .verifyChangeClauseString(i, changeAttributeName, changeAttributeValue)
+
+
+        ;
     });
 
 

@@ -35,6 +35,7 @@ import {
     setItemVolumeValue,
     setItemWidthValue
 } from '../../shared-utils/ui-item-value-setter.util';
+import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
 
 @Component({
     selector: 'app-data-editor-no-popup',
@@ -84,7 +85,7 @@ export class DataEditorNoPopupComponent implements OnInit {
         const attribute: Attribute = $event.value;
         if (attribute) {
             this.attribute = attribute;
-            this.itemValue = null;
+            this.itemValue = createNewItemValue(attribute);
             this.reload();
         }
     }
@@ -214,6 +215,7 @@ export class DataEditorNoPopupComponent implements OnInit {
                         setItemStringValue(this.attribute, this.itemValue, this.formControl.value);
                         break;
                     case 'text':
+                        console.log('*** emitEvent text', this.attribute, this.itemValue, this.formControl.value);
                         setItemTextValue(this.attribute, this.itemValue, this.formControl.value);
                         break;
                     case 'number':
