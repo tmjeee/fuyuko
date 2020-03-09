@@ -1,6 +1,14 @@
 import {ActualPage} from "./actual.page";
 import * as util from '../util/util';
-import {OperatorType} from "../model/operator.model";
+import {
+    AreaOperatorType,
+    CurrencyOperatorType,
+    DateOperatorType, DimensionOperatorType, DoubleselectOperatorType, HeightOperatorType, LengthOperatorType,
+    NumberOperatorType,
+    OperatorType, SelectOperatorType,
+    StringOperatorType,
+    TextOperatorType, VolumeOperatorType, WidthOperatorType
+} from "../model/operator.model";
 import {
     AreaUnits,
     CountryCurrencyUnits,
@@ -171,7 +179,7 @@ export class BulkEditPageStep1 {
     editChangeCurrency(index: number, attributeName: string, value: number, unit: CountryCurrencyUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-currency-unit] div`).click({force: true})
+            .find(`[test-mat-select-currency-unit] div`).click({force: true, multiple: true})
         cy.get(`[test-mat-select-option-currency-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-currency]`)
@@ -195,7 +203,7 @@ export class BulkEditPageStep1 {
     editChangeVolume(index: number, attributeName: string, value: number, unit: VolumeUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-volume-unit] div`).click({force: true})
+            .find(`[test-mat-select-volume-unit] div`).click({force: true, multiple: true})
         cy.get(`[test-mat-select-option-volume-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-volume]`)
@@ -219,7 +227,7 @@ export class BulkEditPageStep1 {
     editChangeDimension(index: number, attributeName: string, length: number, width: number, height: number, unit: DimensionUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-dimension-unit] div`).click({force: true})
+            .find(`[test-mat-select-dimension-unit] div`).click({force: true, multiple: true})
         cy.get(`[test-mat-select-option-dimension-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-dimension-length]`)
@@ -235,7 +243,7 @@ export class BulkEditPageStep1 {
             .type(String(height), {force: true});
         return this;
     }
-    verifyChangeClauseDimension(index: number, attributeName: string, value: number, unit: DimensionUnits): BulkEditPageStep1 {
+    verifyChangeClauseDimension(index: number, attributeName: string, length: number, width: number, height: number, unit: DimensionUnits): BulkEditPageStep1 {
         this._verifyChangeClauseAttributeName(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-mat-select-dimension-unit]`)
@@ -243,13 +251,13 @@ export class BulkEditPageStep1 {
             .should('contain.text', unit);
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-dimension-length]`)
-            .should('contain.value', value);
+            .should('contain.value', length);
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-dimension-width]`)
-            .should('contain.value', value);
+            .should('contain.value', width);
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-dimension-height]`)
-            .should('contain.value', value);
+            .should('contain.value', height);
         return this;
     }
 
@@ -257,7 +265,7 @@ export class BulkEditPageStep1 {
     editChangeArea(index: number, attributeName: string, area: number, unit: AreaUnits):BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-area-unit] div`).click({force: true})
+            .find(`[test-mat-select-area-unit] div`).click({force: true, multiple: true})
         cy.get(`[test-mat-select-option-area-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-area]`)
@@ -281,7 +289,7 @@ export class BulkEditPageStep1 {
     editChangeLength(index: number, attributeName: string, length: number, unit: LengthUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-length-unit] div`).click({force: true})
+            .find(`[test-mat-select-length-unit] div`).click({force: true, multiple: true})
         cy.get(`[test-mat-select-option-length-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-length]`)
@@ -305,7 +313,7 @@ export class BulkEditPageStep1 {
     editChangeWidth(index: number, attributeName: string, width: number, unit: WidthUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-width-unit] div`).click({force: true})
+            .find(`[test-mat-select-width-unit] div`).click({force: true, multiple: true})
         cy.get(`[test-mat-select-option-width-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-width]`)
@@ -329,7 +337,7 @@ export class BulkEditPageStep1 {
     editChangeHeight(index: number, attributeName: string, height: number, unit: HeightUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-height-unit] div`).click({force: true})
+            .find(`[test-mat-select-height-unit] div`).click({force: true, multiple: true})
         cy.get(`[test-mat-select-option-height-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-height]`)
@@ -337,7 +345,7 @@ export class BulkEditPageStep1 {
             .type(String(height), {force: true});
         return this;
     }
-    verifyChangeClauseHeight(index: number, attributeName: string, value: number, unit: AreaUnits): BulkEditPageStep1 {
+    verifyChangeClauseHeight(index: number, attributeName: string, value: number, unit: HeightUnits): BulkEditPageStep1 {
         this._verifyChangeClauseAttributeName(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-mat-select-height-unit]`)
@@ -353,7 +361,7 @@ export class BulkEditPageStep1 {
     editChangeSelect(index: number, attributeName: string, key: string): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-select] div`).click({force: true});
+            .find(`[test-mat-select-select] div`).click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-select='${key}']`).click({force: true});
         return this;
     }
@@ -367,17 +375,17 @@ export class BulkEditPageStep1 {
     }
 
     // doubleselect
-    editChangeDoubleSelect(index: number, attributeName: string, key1: string, key2: string): BulkEditPageStep1 {
+    editChangeDoubleselect(index: number, attributeName: string, key1: string, key2: string): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-doubleselect-1] div`).click({force: true});
+            .find(`[test-mat-select-doubleselect-1] div`).click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-doubleselect-1='${key1}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-doubleselect-2] div`).click({force: true});
+            .find(`[test-mat-select-doubleselect-2] div`).click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-doubleselect-2='${key2}']`).click({force: true});
         return this;
     }
-    verifyChangeClauseDoubleSelect(index: number, attributeName: string, key1: string, key2: string): BulkEditPageStep1 {
+    verifyChangeClauseDoubleselect(index: number, attributeName: string, key1: string, key2: string): BulkEditPageStep1 {
         this._verifyChangeClauseAttributeName(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-mat-select-doubleselect-1]`)
@@ -415,7 +423,9 @@ export class BulkEditPageStep1 {
     editWhereFieldValue(index: number, value: string): BulkEditPageStep1 {
         cy.get(`[test-where-clause-editor='${index}']`)
             .find(`[test-field-value]`)
-            .clear({force: true})
+            .clear({force: true});
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-field-value]`)
             .type(value, {force: true});
         return this;
     }
@@ -424,7 +434,9 @@ export class BulkEditPageStep1 {
     editWhereFieldValue2(index: number, value: string): BulkEditPageStep1 {
         cy.get(`[test-where-clause-editor='${index}']`)
             .find(`[test-field-value2]`)
-            .clear({force: true})
+            .clear({force: true});
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-field-value2]`)
             .type(value, {force: true});
         return this;
     }
@@ -433,7 +445,9 @@ export class BulkEditPageStep1 {
     editWhereFieldValue3(index: number, value: string): BulkEditPageStep1 {
         cy.get(`[test-where-clause-editor='${index}']`)
             .find(`[test-field-value3]`)
-            .clear({force: true})
+            .clear({force: true});
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-field-value3]`)
             .type(value, {force: true});
         return this;
     }
@@ -441,13 +455,15 @@ export class BulkEditPageStep1 {
     editWhereFieldValue4(index: number, value: string): BulkEditPageStep1 {
         cy.get(`[test-where-clause-editor='${index}']`)
             .find(`[test-field-value3]`)
-            .clear({force: true})
+            .clear({force: true});
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-field-value3]`)
             .type(value, {force: true});
         return this;
     }
 
     // string
-    editWhereString(index: number, attributeName: string, operator: OperatorType, value: string): BulkEditPageStep1 {
+    editWhereString(index: number, attributeName: string, operator: StringOperatorType, value: string): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, value);
@@ -498,7 +514,7 @@ export class BulkEditPageStep1 {
         return this;
     }
 
-    verifyWhereClauseString(index: number, attributeName: string, operator: OperatorType, value: string): BulkEditPageStep1 {
+    verifyWhereClauseString(index: number, attributeName: string, operator: StringOperatorType, value: string): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, value);
@@ -507,14 +523,14 @@ export class BulkEditPageStep1 {
 
 
     // text
-    editWhereText(index: number, attributeName: string, operator: OperatorType, value: string): BulkEditPageStep1 {
+    editWhereText(index: number, attributeName: string, operator: TextOperatorType, value: string): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, value);
         return this;
     }
 
-    verifyWhereClauseText(index: number, attributeName: string, operator: OperatorType, value: string): BulkEditPageStep1 {
+    verifyWhereClauseText(index: number, attributeName: string, operator: TextOperatorType, value: string): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, value);
@@ -522,13 +538,13 @@ export class BulkEditPageStep1 {
     }
 
     // number
-    editWhereNumber(index: number, attributeName: string, operator: OperatorType, value: number): BulkEditPageStep1 {
+    editWhereNumber(index: number, attributeName: string, operator: NumberOperatorType, value: number): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         return this;
     }
-    verifyWhereClauseNumber(index: number, attributeName: string, operator: OperatorType, value: number): BulkEditPageStep1 {
+    verifyWhereClauseNumber(index: number, attributeName: string, operator: NumberOperatorType, value: number): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, String(value));
@@ -536,13 +552,13 @@ export class BulkEditPageStep1 {
     }
 
     // date
-    editWhereDate(index: number, attributeName: string, operator: OperatorType, value: string): BulkEditPageStep1 {
+    editWhereDate(index: number, attributeName: string, operator: DateOperatorType, value: string): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         return this;
     }
-    verifyWhereClauseDate(index: number, attributeName: string, operator: OperatorType, value: string): BulkEditPageStep1 {
+    verifyWhereClauseDate(index: number, attributeName: string, operator: DateOperatorType, value: string): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, value);
@@ -550,14 +566,14 @@ export class BulkEditPageStep1 {
     }
 
     // currency
-    editWhereCurrency(index: number, attributeName: string, operator: OperatorType, value: number, unit: CountryCurrencyUnits): BulkEditPageStep1 {
+    editWhereCurrency(index: number, attributeName: string, operator: CurrencyOperatorType, value: number, unit: CountryCurrencyUnits): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         this.editWhereFieldValue2(index, unit);
         return this;
     }
-    verifyWhereClauseCurrency(index: number, attributeName: string, operator: OperatorType, value: number, unit: CountryCurrencyUnits): BulkEditPageStep1 {
+    verifyWhereClauseCurrency(index: number, attributeName: string, operator: CurrencyOperatorType, value: number, unit: CountryCurrencyUnits): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, String(value));
@@ -566,14 +582,14 @@ export class BulkEditPageStep1 {
     }
 
     // volume
-    editWhereVolume(index: number, attributeName: string, operator: OperatorType, value: number, unit: VolumeUnits): BulkEditPageStep1 {
+    editWhereVolume(index: number, attributeName: string, operator: VolumeOperatorType, value: number, unit: VolumeUnits): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         this.editWhereFieldValue2(index, unit);
         return this;
     }
-    verifyWhereClauseVolume(index: number, attributeName: string, operator: OperatorType, value: number, unit: VolumeUnits): BulkEditPageStep1 {
+    verifyWhereClauseVolume(index: number, attributeName: string, operator: VolumeOperatorType, value: number, unit: VolumeUnits): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, String(value));
@@ -582,7 +598,7 @@ export class BulkEditPageStep1 {
     }
 
     // dimension
-    editWhereDimension(index: number, attributeName: string, operator: OperatorType, length: number, width: number, height: number, unit: DimensionUnits): BulkEditPageStep1 {
+    editWhereDimension(index: number, attributeName: string, operator: DimensionOperatorType, length: number, width: number, height: number, unit: DimensionUnits): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(length));
@@ -591,7 +607,7 @@ export class BulkEditPageStep1 {
         this.editWhereFieldValue4(index, unit);
         return this;
     }
-    verifyWhereClauseDimension(index: number, attributeName: string, operator: OperatorType, length: number, width: number, height: number, unit: DimensionUnits): BulkEditPageStep1 {
+    verifyWhereClauseDimension(index: number, attributeName: string, operator: DimensionOperatorType, length: number, width: number, height: number, unit: DimensionUnits): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, String(length));
@@ -602,14 +618,14 @@ export class BulkEditPageStep1 {
     }
 
     // area
-    editWhereArea(index: number, attributeName: string, operator: OperatorType, value: number, unit: AreaUnits): BulkEditPageStep1 {
+    editWhereArea(index: number, attributeName: string, operator: AreaOperatorType, value: number, unit: AreaUnits): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         this.editWhereFieldValue2(index, unit);
         return this;
     }
-    verifyWhereClauseArea(index: number, attributeName: string, operator: OperatorType, value: number, unit: AreaUnits): BulkEditPageStep1 {
+    verifyWhereClauseArea(index: number, attributeName: string, operator: AreaOperatorType, value: number, unit: AreaUnits): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, String(value));
@@ -618,14 +634,14 @@ export class BulkEditPageStep1 {
     }
 
     // length
-    editWhereLength(index: number, attributeName: string, operator: OperatorType, value: number, unit: LengthUnits): BulkEditPageStep1 {
+    editWhereLength(index: number, attributeName: string, operator: LengthOperatorType, value: number, unit: LengthUnits): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         this.editWhereFieldValue2(index, unit);
         return this;
     }
-    verifyWhereClauseLength(index: number, attributeName: string, operator: OperatorType, value: number, unit: LengthUnits): BulkEditPageStep1 {
+    verifyWhereClauseLength(index: number, attributeName: string, operator: LengthOperatorType, value: number, unit: LengthUnits): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, String(value));
@@ -634,14 +650,14 @@ export class BulkEditPageStep1 {
     }
 
     // width
-    editWhereWidth(index: number, attributeName: string, operator: OperatorType, value: number, unit: WidthUnits): BulkEditPageStep1 {
+    editWhereWidth(index: number, attributeName: string, operator: WidthOperatorType, value: number, unit: WidthUnits): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         this.editWhereFieldValue2(index, unit);
         return this;
     }
-    verifyWhereClauseWidth(index: number, attributeName: string, operator: OperatorType, value: number, unit: WidthUnits): BulkEditPageStep1 {
+    verifyWhereClauseWidth(index: number, attributeName: string, operator: WidthOperatorType, value: number, unit: WidthUnits): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, String(value));
@@ -650,14 +666,14 @@ export class BulkEditPageStep1 {
     }
 
     // height
-    editWhereHeight(index: number, attributeName: string, operator: OperatorType, value: number, unit: HeightUnits): BulkEditPageStep1 {
+    editWhereHeight(index: number, attributeName: string, operator: HeightOperatorType, value: number, unit: HeightUnits): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         this.editWhereFieldValue2(index, unit);
         return this;
     }
-    verifyWhereClauseHeight(index: number, attributeName: string, operator: OperatorType, value: number, unit: HeightUnits): BulkEditPageStep1 {
+    verifyWhereClauseHeight(index: number, attributeName: string, operator: HeightOperatorType, value: number, unit: HeightUnits): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, String(value));
@@ -666,13 +682,13 @@ export class BulkEditPageStep1 {
     }
 
     // select
-    editWhereSelect(index: number, attributeName: string, operator: OperatorType, key: string): BulkEditPageStep1 {
+    editWhereSelect(index: number, attributeName: string, operator: SelectOperatorType, key: string): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, key);
         return this;
     }
-    verifyWhereClauseSelect(index: number, attributeName: string, operator: OperatorType, key: string): BulkEditPageStep1 {
+    verifyWhereClauseSelect(index: number, attributeName: string, operator: SelectOperatorType, key: string): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, key);
@@ -680,14 +696,14 @@ export class BulkEditPageStep1 {
     }
 
     // doubleselect
-    editWhereDoubleselect(index: number, attributeName: string, operator: OperatorType, key1: string, key2: string): BulkEditPageStep1 {
+    editWhereDoubleselect(index: number, attributeName: string, operator: DoubleselectOperatorType, key1: string, key2: string): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, key1);
         this.editWhereFieldValue2(index, key2);
         return this;
     }
-    verifyWhereClauseDoubleselect(index: number, attributeName: string, operator: OperatorType, key1: string, key2: string): BulkEditPageStep1 {
+    verifyWhereClauseDoubleselect(index: number, attributeName: string, operator: DoubleselectOperatorType, key1: string, key2: string): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
         this._verifyWhereFieldValue(index, key1);

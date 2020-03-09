@@ -1,6 +1,7 @@
 <div class="data-editor-no-popup-component">
     <form [formGroup]="formGroup">
         <ng-container *ngIf="attribute">
+            xxxxxxxxxxxxxxxxxxxxxxx {{attribute?.type}}
             <mat-form-field>
                 <mat-label>Attribute</mat-label>
                 <mat-select (selectionChange)="attributeSelectionChanged($event)" [formControl]="formControlAttribute" [attr.test-mat-select-attribute]="''">
@@ -70,12 +71,17 @@
             <mat-form-field>
                 <mat-label>Value</mat-label>
                 <input matInput type="text" [attr.test-field-currency]="''" [formControl]="formControl" (focusout)="valueChanged()" placeholder="Enter a value">
+                <mat-hint>Enter a currency value</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Unit</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
                 <mat-select [formControl]="formControl2" (selectionChange)="onUnitSelectionChanged($event);" [attr.test-mat-select-currency-unit]="''">
                     <mat-option *ngFor="let currencyUnit of currencyUnits" [value]="currencyUnit" [attr.test-mat-select-option-currency-unit]="currencyUnit">
                         {{currencyUnit}}
                     </mat-option>
                 </mat-select>
-                <mat-hint>Enter a currency value</mat-hint>
+                <mat-hint>Enter a currency unit</mat-hint>
             </mat-form-field>
         </ng-container>
 
@@ -84,12 +90,17 @@
             <mat-form-field>
                 <mat-label>Value</mat-label>
                 <input matInput type="text" [attr.test-field-area]="''" [formControl]="formControl" (focusout)="valueChanged()" placeholder="Enter an area">
+                <mat-hint>Enter an Area Value</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Unit</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
                 <mat-select [formControl]="formControl2" [attr.test-mat-select-area-unit]="''" (selectionChange)="onUnitSelectionChanged($event)">
                     <mat-option *ngFor="let areaUnit of areaUnits" [attr.test-mat-select-option-area-unit]="areaUnit" [value]="areaUnit">
                         {{areaUnit}}
                     </mat-option>
                 </mat-select>
-                <mat-hint>Enter an Area</mat-hint>
+                <mat-hint>Enter an Area Unit</mat-hint>
             </mat-form-field>
         </ng-container>
 
@@ -98,12 +109,17 @@
             <mat-form-field>
                 <mat-label>Value</mat-label>
                 <input type="text" matInput [attr.test-field-volume]="''" [formControl]="formControl" (focusout)="valueChanged()" placeholder="Enter a volume">
+                <mat-hint>Enter a volume value</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Unit</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
                 <mat-select [formControl]="formControl2" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-volume-unit]="''">
                     <mat-option *ngFor="let volumeUnit of volumeUnits" [value]="volumeUnit" [attr.test-mat-select-option-volume-unit]="volumeUnit">
                         {{volumeUnit}}
                     </mat-option>
                 </mat-select>
-                <mat-hint>Enter a volume</mat-hint>
+                <mat-hint>Enter a volume unit</mat-hint>
             </mat-form-field>
         </ng-container>
 
@@ -126,6 +142,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Unit</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
                 <mat-select [formControl]="formControl4" placeholder="Enter a unit" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-dimension-unit]="''">
                     <mat-option *ngFor="let dimensionUnit of dimensionUnits" [value]="dimensionUnit" [attr.test-mat-select-option-dimension-unit]="dimensionUnit">
                         {{dimensionUnit}}
@@ -139,12 +156,17 @@
             <mat-form-field>
                 <mat-label>Value</mat-label>
                 <input type="text" matInput [formControl]="formControl" (focusout)="valueChanged()" placeholder="Enter a width" [attr.test-field-width]="''">
+                <mat-hint>Enter a width value</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Unit</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
                 <mat-select [formControl]="formControl2" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-width-unit]="''">
                     <mat-option *ngFor="let widthUnit of widthUnits" [value]="widthUnit" [attr.test-mat-select-option-width-unit]="widthUnit">
                         {{widthUnit}}
                     </mat-option>
                 </mat-select>
-                <mat-hint>Enter a width</mat-hint>
+                <mat-hint>Enter a width unit</mat-hint>
             </mat-form-field>
         </ng-container>
 
@@ -153,12 +175,17 @@
             <mat-form-field>
                 <mat-label>Value</mat-label>
                 <input type="text" type="text" matInput (focusout)="valueChanged()" placeholder="Enter a length" [attr.test-mat-field-length]="''">
+                <mat-hint>Enter a Length value</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Unit</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
                 <mat-select [formControl]="formControl" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-length-unit]="''">
                     <mat-option *ngFor="let lengthUnit of lengthUnits" [value]="lengthUnit" [attr.test-mat-select-option-length-unit]="lengthUnit">
                         {{lengthUnit}}
                     </mat-option>
                 </mat-select>
-                <mat-hint>Enter a Length</mat-hint>
+                <mat-hint>Enter a Length unit</mat-hint>
             </mat-form-field>
         </ng-container>
 
@@ -167,30 +194,39 @@
             <mat-form-field>
                 <mat-label>Value</mat-label>
                 <input type="text" matInput (focusout)="valueChanged()" placeholder="Enter a height" [attr.test-mat-field-height]="''">
+                <mat-hint>Enter a height value</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Unit</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
                 <mat-select [formControl]="formControl" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-height-unit]="''">
                     <mat-option *ngFor="let heightUnit of heightUnits" [value]="heightUnit" [attr.test-mat-select-option-height-unit]="heightUnit">
                         {{heightUnit}}
                     </mat-option>
                 </mat-select>
-                <mat-hint>Enter a height</mat-hint>
+                <mat-hint>Enter a height unit</mat-hint>
             </mat-form-field>
         </ng-container>
 
         <!-- select attribute type -->
         <ng-container *ngIf="attribute.type === 'select'">
-            <mat-form-field>Selection</mat-form-field>
-            <mat-select [formControl]="formControl" (selectionChange)="onSingleSelectChange($event)" [attr.test-mat-select-select]="''">
-                <mat-option *ngFor="let pair of attribute.pair1" [value]="pair.key" [attr.test-mat-select-option-select]="pair.key">
-                    {{pair.value}}
-                </mat-option>
-            </mat-select>
-            <mat-hint>Select a choice</mat-hint>
+            <mat-form-field>
+                <mat-label>Selection</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                <mat-select [formControl]="formControl" (selectionChange)="onSingleSelectChange($event)" [attr.test-mat-select-select]="''">
+                    <mat-option *ngFor="let pair of attribute.pair1" [value]="pair.key" [attr.test-mat-select-option-select]="pair.key">
+                        {{pair.value}}
+                    </mat-option>
+                </mat-select>
+                <mat-hint>Select a choice</mat-hint>
+            </mat-form-field>
         </ng-container>
 
         <!-- double select attribute type -->
         <ng-container *ngIf="attribute.type === 'doubleselect'">
             <mat-form-field>
                 <mat-label>Selection #1</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
                 <mat-select [formControl]="formControl" (selectionChange)="onDoubleSelectChange($event)" [attr.test-mat-select-doubleselect-1]="''">
                     <mat-option *ngFor="let pair1 of attribute.pair1" [value]="pair1.key" [attr.test-mat-select-option-doubleselect-1]="pair1.key">
                         {{pair1.value}}
@@ -200,6 +236,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Selection #2</mat-label>
+                <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
                 <mat-select [formControl]="formControl2" (selectionChange)="onDoubleSelectChange($event)" [attr.test-mat-select-doubleselect-2]="''">
                     <mat-option *ngFor="let pair2 of attribute.pair2" [value]="pair2.key2" [attr.test-mat-select-option-doubleselect-2]="pair2.key2">
                         {{pair2.value}}

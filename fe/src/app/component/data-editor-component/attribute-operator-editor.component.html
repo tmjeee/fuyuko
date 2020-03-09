@@ -21,7 +21,7 @@
             <ng-container [ngSwitch]="attribute.type">
                 <mat-form-field *ngSwitchCase="'date'">
                     <mat-label>Value</mat-label>
-                    <input matInput [matDatepicker]="picker" [attr.test-datepicker-field]="''" [formControl]="formControl" (dateChance)="onDateChange($event)">
+                    <input matInput [matDatepicker]="picker" [attr.test-field-value]="''" [formControl]="formControl" (dateChance)="onDateChange($event)">
                     <mat-datepicker-toggle matSuffix [for]="picker" [attr.test-datepicker-toggle]="''"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     <mat-hint>Enter value ({{DATE_FORMAT}} format)</mat-hint>

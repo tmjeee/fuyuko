@@ -4,7 +4,7 @@ import {Attribute} from '../../model/attribute.model';
 import {
     AreaValue,
     CURRENCY_FORMAT,
-    CurrencyValue, DimensionValue, DoubleSelectValue, HeightValue,
+    CurrencyValue, DimensionValue, DoubleSelectValue, HEIGHT_FORMAT, HeightValue,
     LengthValue, SelectValue,
     Value,
     VolumeValue,
@@ -14,11 +14,12 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatSelectChange } from '@angular/material/select';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {
-    AreaUnits,
-    CountryCurrencyUnits,
-    DimensionUnits,
-    HeightUnits, LengthUnits,
-    VolumeUnits,
+    AREA_UNITS,
+    AreaUnits, COUNTRY_CURRENCY_UNITS,
+    CountryCurrencyUnits, DIMENSION_UNITS,
+    DimensionUnits, HEIGHT_UNITS,
+    HeightUnits, LENGTH_UNITS, LengthUnits, VOLUME_UNITS,
+    VolumeUnits, WIDTH_UNITS,
     WidthUnits
 } from '../../model/unit.model';
 import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
@@ -36,6 +37,7 @@ import {
     setItemWidthValue
 } from '../../shared-utils/ui-item-value-setter.util';
 import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
+import * as numeral from 'numeral';
 
 @Component({
     selector: 'app-data-editor-no-popup',
@@ -69,6 +71,13 @@ export class DataEditorNoPopupComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder) {
         this.events = new EventEmitter();
+        this.currencyUnits = [...COUNTRY_CURRENCY_UNITS];
+        this.areaUnits = [...AREA_UNITS];
+        this.volumeUnits = [...VOLUME_UNITS];
+        this.dimensionUnits = [...DIMENSION_UNITS];
+        this.widthUnits = [...WIDTH_UNITS];
+        this.heightUnits = [...HEIGHT_UNITS];
+        this.lengthUnits = [...LENGTH_UNITS];
     }
 
     ngOnInit() {
