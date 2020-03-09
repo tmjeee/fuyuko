@@ -17,39 +17,80 @@
         </mat-form-field>
 
         <!-- formControl -->
-        <mat-form-field *ngIf="formControl && attribute && attribute.type === 'date'">
-            <mat-label>Value</mat-label>
-            <input matInput [matDatepicker]="picker" [attr.test-datepicker-field]="''" [formControl]="formControl" (dateChance)="onDateChange($event)">
-            <mat-datepicker-toggle matSuffix [for]="picker" [attr.test-datepicker-toggle]="''"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-hint>Enter value ({{DATE_FORMAT}} format)</mat-hint>
-        </mat-form-field>
-        <mat-form-field *ngIf="formControl && attribute && attribute.type !== 'date'">
-            <mat-label>Value</mat-label>
-            <input matInput [formControl]="formControl" [attr.test-field-value]="''" (focusout)="onValueChange()">
-            <mat-hint>Enter value</mat-hint>
-        </mat-form-field>
+        <ng-container *ngIf="formControl && attribute">
+            <ng-container [ngSwitch]="attribute.type">
+                <mat-form-field *ngSwitchCase="'date'">
+                    <mat-label>Value</mat-label>
+                    <input matInput [matDatepicker]="picker" [attr.test-datepicker-field]="''" [formControl]="formControl" (dateChance)="onDateChange($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker" [attr.test-datepicker-toggle]="''"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-hint>Enter value ({{DATE_FORMAT}} format)</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'dimension'">
+                    <mat-label>Length Value</mat-label>
+                    <input matInput [formControl]="formControl" [attr.test-field-value]="''" (focusout)="onValueChange()">
+                    <mat-hint>Enter Length value</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'doubleselect'">
+                    <mat-label>Key1 Value</mat-label>
+                    <input matInput [formControl]="formControl" [attr.test-field-value]="''" (focusout)="onValueChange()">
+                    <mat-hint>Enter Key1 value</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'select'">
+                    <mat-label>Key1 Value</mat-label>
+                    <input matInput [formControl]="formControl" [attr.test-field-value]="''" (focusout)="onValueChange()">
+                    <mat-hint>Enter Key value</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchDefault>
+                    <mat-label>Value</mat-label>
+                    <input matInput [formControl]="formControl" [attr.test-field-value]="''" (focusout)="onValueChange()">
+                    <mat-hint>Enter value</mat-hint>
+                </mat-form-field>
+            </ng-container>
+        </ng-container>
 
         <!-- formControl2 -->
-        <mat-form-field *ngIf="formControl2">
-            <mat-label>Value</mat-label>
-            <input matInput [formControl]="formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
-            <mat-hint>Enter value</mat-hint>
-        </mat-form-field>
+        <ng-container *ngIf="formControl2 && attribute">
+            <ng-container [ngSwitch]="attribute.type">
+                <mat-form-field *ngSwitchCase="'dimension'">
+                    <mat-label>Width Value</mat-label>
+                    <input matInput [formControl]="formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
+                    <mat-hint>Enter Width Value</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'doubleselect'">
+                    <mat-label>key2 Value</mat-label>
+                    <input matInput [formControl]="formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
+                    <mat-hint>Enter key2 Value</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchDefault>
+                    <mat-label>Unit</mat-label>
+                    <input matInput [formControl]="formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
+                    <mat-hint>Enter Unit</mat-hint>
+                </mat-form-field>
+            </ng-container>
+        </ng-container>
 
         <!-- formControl3 -->
-        <mat-form-field *ngIf="formControl3">
-            <mat-label>Value</mat-label>
-            <input matInput [formControl]="formControl3" [attr.test-field-value3]="''" (focusout)="onValueChange()">
-            <mat-hint>Enter value</mat-hint>
-        </mat-form-field>
+        <ng-container *ngIf="formControl3 && attribute">
+            <ng-container [ngSwitch]="attribute.type">
+                <mat-form-field *ngSwitchCase="'dimension'">
+                    <mat-label>Height Value</mat-label>
+                    <input matInput [formControl]="formControl3" [attr.test-field-value3]="''" (focusout)="onValueChange()">
+                    <mat-hint>Enter Height value</mat-hint>
+                </mat-form-field>
+            </ng-container>
+        </ng-container>
 
         <!-- formControl4 -->
-        <mat-form-field *ngIf="formControl4">
-            <mat-label>Value</mat-label>
-            <input matInput [formControl]="formControl4" [attr.test-field-value4]="''" (focusout)="onValueChange()">
-            <mat-hint>Enter value</mat-hint>
-        </mat-form-field>
+        <ng-container *ngIf="formControl3 && attribute">
+            <ng-container [ngSwitch]="attribute.type">
+                <mat-form-field *ngSwitchCase="'dimension'">
+                    <mat-label>Unit</mat-label>
+                    <input matInput [formControl]="formControl4" [attr.test-field-value4]="''" (focusout)="onValueChange()">
+                    <mat-hint>Enter Unit</mat-hint>
+                </mat-form-field>
+            </ng-container>
+        </ng-container>
     </form>
 
 </div>

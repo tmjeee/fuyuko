@@ -1,12 +1,12 @@
 <div class="job-details-component">
     <div>
         <div class="info">
-            <div><span class="title">Id:</span> {{job.id}}</div>
-            <div><span class="title">Name:</span> {{job.name}}</div>
-            <div><span class="title">Status:</span> {{job.status}}</div>
-            <div><span class="title">Progress:</span> {{job.progress}}</div>
-            <div><span class="title">Creation Date:</span> {{job.creationDate | date}}</div>
-            <div><span class="title">Last update:</span> {{job.lastUpdate | date}}</div>
+            <div [attr.test-info-job-id]="job.id"><span class="title" >Id:</span> {{job.id}}</div>
+            <div [attr.test-info-job-name]="job.name"><span class="title" >Name:</span> {{job.name}}</div>
+            <div [attr.test-info-job-status]="job.status"><span class="title" >Status:</span> {{job.status}}</div>
+            <div [attr.test-info-job-progress]="job.progress"><span class="title" >Progress:</span> {{job.progress}}</div>
+            <div [attr.test-info-job-creation-date]="job.creationDate | date"><span class="title" >Creation Date:</span> {{job.creationDate | date}}</div>
+            <div [attr.test-info-job-last-update]="job.lastUpdate | date"><span class="title" >Last update:</span> {{job.lastUpdate | date}}</div>
         </div>
         <div class="logs">
             <div *ngFor="let log of logs">

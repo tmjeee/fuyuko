@@ -20,8 +20,8 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
         return this;
     }
 
-    verifySuccessMessageExists(): ViewViewPage {
-        util.clickOnSuccessMessageToasts(() => {});
+    verifySuccessMessageExists(callbackFn?: () => void): ViewViewPage {
+        util.clickOnSuccessMessageToasts(callbackFn);
         return this;
     }
 

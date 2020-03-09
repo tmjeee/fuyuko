@@ -70,8 +70,8 @@
             <mat-form-field>
                 <mat-label>Value</mat-label>
                 <input matInput type="text" [attr.test-field-currency]="''" [formControl]="formControl" (focusout)="valueChanged()" placeholder="Enter a value">
-                <mat-select [formControl]="formControl2" (selectionChange)="onUnitSelectionChanged($event);">
-                    <mat-option *ngFor="let currencyUnit of currencyUnits" [value]="currencyUnit">
+                <mat-select [formControl]="formControl2" (selectionChange)="onUnitSelectionChanged($event);" [attr.test-mat-select-currency-unit]="''">
+                    <mat-option *ngFor="let currencyUnit of currencyUnits" [value]="currencyUnit" [attr.test-mat-select-option-currency-unit]="currencyUnit">
                         {{currencyUnit}}
                     </mat-option>
                 </mat-select>
