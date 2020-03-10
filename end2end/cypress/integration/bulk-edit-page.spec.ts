@@ -1,6 +1,7 @@
 import {LoginPage} from "./page-object/login.page";
 import {BulkEditPage} from "./page-object/bulk-edit.page";
 import {ViewPage} from "./page-object/view.page";
+import {ViewViewPage} from "./page-object/sub-page-object/view-view.page";
 
 describe(`bulk edit spec`, () => {
 
@@ -45,7 +46,7 @@ describe(`bulk edit spec`, () => {
         const r = Math.random();
         const viewName = `New-View-${r}`;
         const viewDescription = `New-View-Description-${r}`;
-            new ViewPage()
+        const viewViewPage: ViewViewPage = new ViewPage()
                 .visitViews()
                 .validateTitle()
                 .clickAdd()
@@ -53,9 +54,13 @@ describe(`bulk edit spec`, () => {
                 .editDescription(viewDescription)
                 .clickOk()
                 .clickSave()
-                .verifySuccessMessageExists()
             ;
-            return viewName;
+
+        cy.wait(100).then((_) => {
+            viewViewPage.verifySuccessMessageExists();
+        });
+
+        return viewName;
     }
 
     const deleteView = (viewName: string) => {
@@ -182,17 +187,23 @@ describe(`bulk edit spec`, () => {
         const select_whenAttributeName: string = `select attribute`;
         const select_whenOp = `not eq`;
         const select_whenValue = `key1`;
+        const select_whenValue_forVerification = `value1`;
         const select_changeAttributeName: string = `select attribute`;
         const select_changeAttributeValue = `key3`;
+        const select_changeAttributeValue_forVerification = `value3`;
 
         // doubleselect
         const doubleselect_whenAttributeName: string = `doubleselect attribute`;
         const doubleselect_whenOp = `not eq`;
         const doubleselect_whenValue1 = `key1`;
         const doubleselect_whenValue2 = `xkey11`;
+        const doubleselect_whenValue1_forVerification = `value1`;
+        const doubleselect_whenValue2_forVerification = `xvalue11`;
         const doubleselect_changeAttributeName: string = `doubleselect attribute`;
         const doubleselect_changeAttributeValue1 = `key2`
         const doubleselect_changeAttributeValue2 = `xkey22`
+        const doubleselect_changeAttributeValue1_forVerification = `value2`
+        const doubleselect_changeAttributeValue2_forVerification = `xvalue22`
 
         bulkEditPage
             .visit()
@@ -237,9 +248,9 @@ describe(`bulk edit spec`, () => {
 
             // dimension
             .editWhereDimension(i, dimension_whenAttributeName, dimension_whenOp, dimension_whenLengthValue, dimension_whenWidthValue, dimension_whenHeightValue, dimension_whenUnit)
-            .editChangeDimension(i, dimension_changeAttributeName, Number(dimension_changeAttributeLengthValue), Number(dimension_changeAttributeWidthValue), Number(dimension_changeAttributeLengthValue), dimension_changeAttributeUnit)
+            .editChangeDimension(i, dimension_changeAttributeName, Number(dimension_changeAttributeLengthValue), Number(dimension_changeAttributeWidthValue), Number(dimension_changeAttributeHeightValue), dimension_changeAttributeUnit)
             .verifyWhereClauseDimension(i, dimension_whenAttributeName, dimension_whenOp, dimension_whenLengthValue, dimension_whenWidthValue, dimension_whenHeightValue, dimension_whenUnit)
-            .verifyChangeClauseDimension(i, dimension_changeAttributeName, Number(dimension_changeAttributeLengthValue), Number(dimension_changeAttributeWidthValue), Number(dimension_changeAttributeLengthValue), dimension_changeAttributeUnit)
+            .verifyChangeClauseDimension(i, dimension_changeAttributeName, Number(dimension_changeAttributeLengthValue), Number(dimension_changeAttributeWidthValue), Number(dimension_changeAttributeHeightValue), dimension_changeAttributeUnit)
 
             // area
             .editWhereArea(i, area_whenAttributeName, area_whenOp, area_whenValue, area_whenUnit)
@@ -268,14 +279,14 @@ describe(`bulk edit spec`, () => {
             // select
             .editWhereSelect(i, select_whenAttributeName, select_whenOp, select_whenValue)
             .editChangeSelect(i, select_changeAttributeName, select_changeAttributeValue)
-            .verifyWhereClauseSelect(i, select_whenAttributeName, select_whenOp, select_whenValue)
-            .verifyChangeClauseSelect(i, select_changeAttributeName, select_changeAttributeValue)
+            .verifyWhereClauseSelect(i, select_whenAttributeName, select_whenOp, select_whenValue_forVerification)
+            .verifyChangeClauseSelect(i, select_changeAttributeName, select_changeAttributeValue_forVerification)
 
-            // doubleselect:w
+            // doubleselect
             .editWhereDoubleselect(i, doubleselect_whenAttributeName, doubleselect_whenOp, doubleselect_whenValue1, doubleselect_whenValue2)
             .editChangeDoubleselect(i, doubleselect_changeAttributeName, doubleselect_changeAttributeValue1, doubleselect_changeAttributeValue2)
-            .verifyWhereClauseDoubleselect(i, doubleselect_whenAttributeName, doubleselect_whenOp, doubleselect_whenValue1, doubleselect_whenValue2)
-            .verifyChangeClauseDoubleselect(i, doubleselect_changeAttributeName, doubleselect_changeAttributeValue1, doubleselect_changeAttributeValue2)
+            .verifyWhereClauseDoubleselect(i, doubleselect_whenAttributeName, doubleselect_whenOp, doubleselect_whenValue1_forVerification, doubleselect_whenValue2_forVerification)
+            .verifyChangeClauseDoubleselect(i, doubleselect_changeAttributeName, doubleselect_changeAttributeValue1_forVerification, doubleselect_changeAttributeValue2_forVerification)
         ;
     });
 

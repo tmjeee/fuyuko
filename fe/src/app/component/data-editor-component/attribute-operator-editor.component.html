@@ -62,10 +62,65 @@
                     <input matInput [formControl]="formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
                     <mat-hint>Enter key2 Value</mat-hint>
                 </mat-form-field>
-                <mat-form-field *ngSwitchDefault>
-                    <mat-label>Unit</mat-label>
-                    <input matInput [formControl]="formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
-                    <mat-hint>Enter Unit</mat-hint>
+                <mat-form-field *ngSwitchCase="'currency'">
+                    <mat-label>Currency Unit</mat-label>
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select [attr.test-mat-select-field-currency-unit]="''" [formControl]="formControl2" (selectionChange)="onValueChange()">
+                        <mat-option *ngFor="let currencyUnit of currencyUnits" [value]="currencyUnit" [attr.test-mat-select-option-field-currency-unit]="currencyUnit">
+                            {{currencyUnit}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-hint>Enter Currency Unit</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'volume'">
+                    <mat-label>Volume Unit</mat-label>
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select [attr.test-mat-select-field-volume-unit]="''" [formControl]="formControl2" (selectionChange)="onValueChange()">
+                        <mat-option *ngFor="let volumeUnit of volumeUnits" [value]="volumeUnit" [attr.test-mat-select-option-field-volume-unit]="volumeUnit">
+                            {{volumeUnit}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-hint>Enter Volume Unit</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'area'">
+                    <mat-label>Area Unit</mat-label>
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select [attr.test-mat-select-field-area-unit]="''" [formControl]="formControl2" (selectionChange)="onValueChange()">
+                        <mat-option *ngFor="let areaUnit of areaUnits" [value]="areaUnit" [attr.test-mat-select-option-field-area-unit]="areaUnit">
+                            {{areaUnit}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-hint>Enter Area Unit</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'width'">
+                    <mat-label>Width Unit</mat-label>
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select [attr.test-mat-select-field-width-unit]="''" [formControl]="formControl2" (selectionChange)="onValueChange()">
+                        <mat-option *ngFor="let widthUnit of widthUnits" [value]="widthUnit" [attr.test-mat-select-option-field-width-unit]="widthUnit">
+                            {{widthUnit}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-hint>Enter Width Unit</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'length'">
+                    <mat-label>Length Unit</mat-label>
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select [attr.test-mat-select-field-length-unit]="''" [formControl]="formControl2" (selectionChange)="onValueChange()">
+                        <mat-option *ngFor="let lengthUnit of lengthUnits" [value]="lengthUnit" [attr.test-mat-select-option-field-length-unit]="lengthUnit">
+                            {{lengthUnit}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-hint>Enter Length Unit</mat-hint>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'height'">
+                    <mat-label>Height Unit</mat-label>
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select [attr.test-mat-select-field-height-unit]="''" [formControl]="formControl2" (selectionChange)="onValueChange()">
+                        <mat-option *ngFor="let heightUnit of heightUnits" [value]="heightUnit" [attr.test-mat-select-option-field-height-unit]="heightUnit">
+                            {{heightUnit}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-hint>Enter Height Unit</mat-hint>
                 </mat-form-field>
             </ng-container>
         </ng-container>
@@ -86,7 +141,12 @@
             <ng-container [ngSwitch]="attribute.type">
                 <mat-form-field *ngSwitchCase="'dimension'">
                     <mat-label>Unit</mat-label>
-                    <input matInput [formControl]="formControl4" [attr.test-field-value4]="''" (focusout)="onValueChange()">
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select [attr.test-mat-select-field-dimension-unit]="''" [formControl]="formControl4" (selectionChange)="onValueChange()">
+                        <mat-option *ngFor="let dimensionUnit of dimensionUnits" [value]="dimensionUnit" [attr.test-mat-select-option-field-dimension-unit]="dimensionUnit">
+                            {{dimensionUnit}}
+                        </mat-option>
+                    </mat-select>
                     <mat-hint>Enter Unit</mat-hint>
                 </mat-form-field>
             </ng-container>

@@ -1,7 +1,6 @@
 <div class="data-editor-no-popup-component">
     <form [formGroup]="formGroup">
         <ng-container *ngIf="attribute">
-            xxxxxxxxxxxxxxxxxxxxxxx {{attribute?.type}}
             <mat-form-field>
                 <mat-label>Attribute</mat-label>
                 <mat-select (selectionChange)="attributeSelectionChanged($event)" [formControl]="formControlAttribute" [attr.test-mat-select-attribute]="''">
@@ -126,19 +125,19 @@
         <!-- dimension attribute type -->
         <ng-container *ngIf="attribute.type === 'dimension'">
             <mat-form-field>
+                <mat-label>Length Value</mat-label>
+                <input type="text" matInput [formControl]="formControl" (focusout)="valueChanged()" placeholder="Enter a length" [attr.test-field-dimension-width]="''">
+                <mat-hint>Enter a length</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
                 <mat-label>Width Value</mat-label>
-                <input type="text" matInput [formControl]="formControl" (focusout)="valueChanged()" placeholder="Enter a width" [attr.test-field-dimension-width]="''">
+                <input type="text" matInput [formControl]="formControl2" (focusout)="valueChanged()" placeholder="Enter a width" [attr.test-field-dimension-height]="''">
                 <mat-hint>Enter a width</mat-hint>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Height Value</mat-label>
-                <input type="text" matInput [formControl]="formControl2" (focusout)="valueChanged()" placeholder="Enter a height" [attr.test-field-dimension-height]="''">
-                <mat-hint>Entera height</mat-hint>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Length Value</mat-label>
-                <input type="text" matInput [formControl]="formControl3" (focusout)="valueChanged()" placeholder="Enter a length" [attr.test-field-dimension-length]="''">
-                <mat-hint>Enter a length</mat-hint>
+                <input type="text" matInput [formControl]="formControl3" (focusout)="valueChanged()" placeholder="Enter a height" [attr.test-field-dimension-length]="''">
+                <mat-hint>Enter a height</mat-hint>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Unit</mat-label>
@@ -174,7 +173,7 @@
         <ng-container *ngIf="attribute.type === 'length'">
             <mat-form-field>
                 <mat-label>Value</mat-label>
-                <input type="text" type="text" matInput (focusout)="valueChanged()" placeholder="Enter a length" [attr.test-mat-field-length]="''">
+                <input type="text" type="text" matInput (focusout)="valueChanged()" placeholder="Enter a length" [attr.test-field-length]="''">
                 <mat-hint>Enter a Length value</mat-hint>
             </mat-form-field>
             <mat-form-field>
@@ -193,7 +192,7 @@
         <ng-container *ngIf="attribute.type === 'height'">
             <mat-form-field>
                 <mat-label>Value</mat-label>
-                <input type="text" matInput (focusout)="valueChanged()" placeholder="Enter a height" [attr.test-mat-field-height]="''">
+                <input type="text" matInput (focusout)="valueChanged()" placeholder="Enter a height" [attr.test-field-height]="''">
                 <mat-hint>Enter a height value</mat-hint>
             </mat-form-field>
             <mat-form-field>

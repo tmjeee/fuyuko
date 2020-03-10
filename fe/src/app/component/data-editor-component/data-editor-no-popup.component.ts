@@ -224,7 +224,6 @@ export class DataEditorNoPopupComponent implements OnInit {
                         setItemStringValue(this.attribute, this.itemValue, this.formControl.value);
                         break;
                     case 'text':
-                        console.log('*** emitEvent text', this.attribute, this.itemValue, this.formControl.value);
                         setItemTextValue(this.attribute, this.itemValue, this.formControl.value);
                         break;
                     case 'number':

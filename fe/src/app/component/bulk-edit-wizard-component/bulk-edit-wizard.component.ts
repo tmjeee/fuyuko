@@ -77,7 +77,6 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     onChangeClauseEvent(index: number, $event: ItemValueAndAttribute) {
         this.changeClauses[index] = { ...$event };
-        console.log('**** onChangeClauseEvent', index, this.changeClauses);
         this.formGroupFirstStep.updateValueAndValidity();
     }
 

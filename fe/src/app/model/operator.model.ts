@@ -10,7 +10,7 @@ export type StringOperatorType =  'eq' | 'not eq'| 'empty'| 'not empty'| 'contai
 export const STRING_OPERATOR_TYPES: OperatorType[] = [ 'eq', 'not eq', 'empty', 'not empty', 'contain', 'not contain', 'regexp'];
 
 // text
-export type TextOperatorTYpe = 'eq'| 'not eq'| 'empty'| 'not empty'| 'contain'| 'not contain'| 'regexp';
+export type TextOperatorType = 'eq'| 'not eq'| 'empty'| 'not empty'| 'contain'| 'not contain'| 'regexp';
 export const TEXT_OPERATOR_TYPES: OperatorType[] = ['eq', 'not eq', 'empty', 'not empty', 'contain', 'not contain', 'regexp'];
 
 // select
@@ -27,7 +27,7 @@ export const NUMBER_OPERATOR_TYPES: OperatorType[] = ['eq', 'not eq', 'empty', '
     'not lte', 'gte', 'not gte'];
 
 // date
-export type DateOpearatorType = 'eq'| 'not eq'| 'empty'| 'not empty'| 'lt'| 'not lt'| 'gt'| 'not gt'| 'lte'| 'not lte'| 'gte'| 'not gte';
+export type DateOperatorType = 'eq'| 'not eq'| 'empty'| 'not empty'| 'lt'| 'not lt'| 'gt'| 'not gt'| 'lte'| 'not lte'| 'gte'| 'not gte';
 export const DATE_OPERATOR_TYPES: OperatorType[] = ['eq', 'not eq', 'empty', 'not empty', 'lt', 'not lt', 'gt', 'not gt', 'lte',
     'not lte', 'gte', 'not gte'];
 

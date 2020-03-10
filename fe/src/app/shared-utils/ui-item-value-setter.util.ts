@@ -11,6 +11,7 @@ import {
   Value, VolumeValue, WidthValue, Item
 } from '../model/item.model';
 import {AreaUnits, CountryCurrencyUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from '../model/unit.model';
+import * as numeral from 'numeral';
 
 export function setItemValue(a: Attribute, val: Value) {
   switch (a.type) {
@@ -95,7 +96,7 @@ export function setItemDateValue(attribute: Attribute, value: Value, val: string
 export function setItemCurrencyValue(attribute: Attribute, value: Value, val: number, country?: CountryCurrencyUnits) {
   _setItemValue(attribute, value, {
     type: 'currency',
-    value: val,
+    value: numeral(val).value(),
     country
   } as CurrencyValue);
 }
@@ -116,7 +117,7 @@ export function setItemVolumeValue(attribute: Attribute, value: Value, val: numb
   } as VolumeValue);
 }
 
-export function setItemDimensionValue(attribute: Attribute, value: Value, width: number, length: number, height: number,
+export function setItemDimensionValue(attribute: Attribute, value: Value, length: number, width: number, height: number,
                                       unit: DimensionUnits) {
   _setItemValue(attribute, value, {
     type: 'dimension',

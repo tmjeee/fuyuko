@@ -27,6 +27,15 @@ import {
 import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
 import {operatorNeedsItemValue, operatorsForAttribute} from '../../utils/attribute-operators.util';
 import * as numeral from 'numeral';
+import {
+    AREA_UNITS,
+    AreaUnits, COUNTRY_CURRENCY_UNITS,
+    CountryCurrencyUnits, DIMENSION_UNITS,
+    DimensionUnits, HEIGHT_UNITS, HeightUnits, LENGTH_UNITS,
+    LengthUnits, VOLUME_UNITS,
+    VolumeUnits, WIDTH_UNITS,
+    WidthUnits
+} from "../../model/unit.model";
 
 @Component({
     selector: 'app-attribute-operator-editor',
@@ -47,6 +56,14 @@ export class AttributeOperatorEditorComponent implements OnInit {
     operator: OperatorType;
     itemValue: Value;
 
+    currencyUnits: CountryCurrencyUnits[];
+    volumeUnits: VolumeUnits[];
+    dimensionUnits: DimensionUnits[];
+    areaUnits: AreaUnits[];
+    widthUnits: WidthUnits[];
+    lengthUnits: LengthUnits[];
+    heightUnits: HeightUnits[];
+
     formGroup: FormGroup;
     formControlAttribute: FormControl;
     formControlOperator: FormControl;
@@ -59,6 +76,14 @@ export class AttributeOperatorEditorComponent implements OnInit {
     constructor(private formBuilder: FormBuilder) {
         this.events = new EventEmitter();
         this.operators = [];
+
+        this.currencyUnits = [...COUNTRY_CURRENCY_UNITS];
+        this.volumeUnits = [...VOLUME_UNITS];
+        this.dimensionUnits = [...DIMENSION_UNITS];
+        this.areaUnits = [...AREA_UNITS];
+        this.widthUnits = [...WIDTH_UNITS];
+        this.lengthUnits = [...LENGTH_UNITS];
+        this.heightUnits = [...HEIGHT_UNITS];
     }
 
     ngOnInit(): void {
@@ -325,6 +350,5 @@ export class AttributeOperatorEditorComponent implements OnInit {
         const event = { attribute, itemValue, operator} as ItemValueOperatorAndAttribute;
         this.events.emit(event);
     }
-
 }
 
