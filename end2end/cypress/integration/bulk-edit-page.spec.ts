@@ -84,7 +84,7 @@ describe(`bulk edit spec`, () => {
             .verifySelectedView(testView1)
     });
 
-    it.only(`should perform add and delete change and where clauses`, () => {
+    it(`should perform add and delete change and where clauses`, () => {
         const i = 0;
         const viewName = createNewView();
 
@@ -187,7 +187,7 @@ describe(`bulk edit spec`, () => {
         const select_whenAttributeName: string = `select attribute`;
         const select_whenOp = `not eq`;
         const select_whenValue = `key1`;
-        const select_whenValue_forVerification = `value1`;
+        const select_whenValue_forVerification = `key1`;
         const select_changeAttributeName: string = `select attribute`;
         const select_changeAttributeValue = `key3`;
         const select_changeAttributeValue_forVerification = `value3`;
@@ -197,8 +197,8 @@ describe(`bulk edit spec`, () => {
         const doubleselect_whenOp = `not eq`;
         const doubleselect_whenValue1 = `key1`;
         const doubleselect_whenValue2 = `xkey11`;
-        const doubleselect_whenValue1_forVerification = `value1`;
-        const doubleselect_whenValue2_forVerification = `xvalue11`;
+        const doubleselect_whenValue1_forVerification = `key1`;
+        const doubleselect_whenValue2_forVerification = `xkey11`;
         const doubleselect_changeAttributeName: string = `doubleselect attribute`;
         const doubleselect_changeAttributeValue1 = `key2`
         const doubleselect_changeAttributeValue2 = `xkey22`

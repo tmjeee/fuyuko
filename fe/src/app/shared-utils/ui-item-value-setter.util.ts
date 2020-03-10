@@ -11,7 +11,7 @@ import {
   Value, VolumeValue, WidthValue, Item
 } from '../model/item.model';
 import {AreaUnits, CountryCurrencyUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from '../model/unit.model';
-import * as numeral from 'numeral';
+import numeral from 'numeral';
 
 export function setItemValue(a: Attribute, val: Value) {
   switch (a.type) {
