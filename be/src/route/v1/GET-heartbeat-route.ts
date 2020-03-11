@@ -5,6 +5,9 @@ import {catchErrorMiddlewareFn, validateJwtMiddlewareFn, validateMiddlewareFn} f
 import {ApiResponse} from "../../model/response.model";
 import moment from 'moment';
 
+/**
+ * Tells if application is alive and responsive
+ */
 const httpAction: any[] = [
     [],
     validateMiddlewareFn,

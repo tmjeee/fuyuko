@@ -2,10 +2,144 @@ import {LoginPage} from "./page-object/login.page";
 import {BulkEditPage} from "./page-object/bulk-edit.page";
 import {ViewPage} from "./page-object/view.page";
 import {ViewViewPage} from "./page-object/sub-page-object/view-view.page";
+import {
+    AreaOperatorType,
+    CurrencyOperatorType,
+    DateOperatorType, DimensionOperatorType, DoubleselectOperatorType, HeightOperatorType, LengthOperatorType,
+    NumberOperatorType, SelectOperatorType,
+    StringOperatorType,
+    TextOperatorType, VolumeOperatorType, WidthOperatorType
+} from "./model/operator.model";
+import {
+    AreaUnits,
+    CountryCurrencyUnits,
+    DimensionUnits, HeightUnits,
+    LengthUnits,
+    VolumeUnits,
+    WidthUnits
+} from "./model/unit.model";
 
 describe(`bulk edit spec`, () => {
 
     let bulkEditPage: BulkEditPage;
+
+    // ==== variables ====
+    // string
+    let string_whenAttributeName: string;
+    let string_whenOp: StringOperatorType;
+    let string_whenValue: string;
+    let string_changeAttributeName: string;
+    let string_changeAttributeValue: string;
+
+    // text
+    let text_whenAttributeName: string;
+    let text_whenOp: TextOperatorType;
+    let text_whenValue: string;
+    let text_changeAttributeName: string;
+    let text_changeAttributeValue: string;
+
+    // number
+    let number_whenAttributeName: string;
+    let number_whenOp: NumberOperatorType
+    let number_whenValue: number = 9999;
+    let number_changeAttributeName: string;
+    let number_changeAttributeValue: string;
+
+    // date
+    let date_whenAttributeName: string;
+    let date_whenOp: DateOperatorType;
+    let date_whenValue: string;
+    let date_changeAttributeName: string;
+    let date_changeAttributeValue: string;
+
+    // currency
+    let currency_whenAttributeName: string;
+    let currency_whenOp: CurrencyOperatorType;
+    let currency_whenValue: number;
+    let currency_whenUnit: CountryCurrencyUnits;
+    let currency_changeAttributeName: string;
+    let currency_changeAttributeValue: string;
+    let currency_changeAttributeUnit: CountryCurrencyUnits;
+
+    // volume
+    let volume_whenAttributeName: string;
+    let volume_whenOp: VolumeOperatorType;
+    let volume_whenValue: number;
+    let volume_whenUnit: VolumeUnits;
+    let volume_changeAttributeName: string;
+    let volume_changeAttributeValue: string;
+    let volume_changeAttributeUnit: VolumeUnits;
+
+    // dimension
+    let dimension_whenAttributeName: string;
+    let dimension_whenOp: DimensionOperatorType;
+    let dimension_whenLengthValue: number;
+    let dimension_whenWidthValue: number;
+    let dimension_whenHeightValue: number;
+    let dimension_whenUnit: DimensionUnits;
+    let dimension_changeAttributeName: string;
+    let dimension_changeAttributeLengthValue: string;
+    let dimension_changeAttributeWidthValue: string;
+    let dimension_changeAttributeHeightValue: string;
+    let dimension_changeAttributeUnit: DimensionUnits;
+
+    // area
+    let area_whenAttributeName: string;
+    let area_whenOp: AreaOperatorType;
+    let area_whenValue: number;
+    let area_whenUnit: AreaUnits;
+    let area_changeAttributeName: string;
+    let area_changeAttributeValue: string;
+    let area_changeAttributeUnit: AreaUnits;
+
+    // length
+    let length_whenAttributeName: string = `length attribute`;
+    let length_whenOp: LengthOperatorType;
+    let length_whenValue: number;
+    let length_whenUnit: LengthUnits;
+    let length_changeAttributeName: string;
+    let length_changeAttributeValue: string;
+    let length_changeAttributeUnit: LengthUnits;
+
+    // width
+    let width_whenAttributeName: string;
+    let width_whenOp: WidthOperatorType;
+    let width_whenValue: number;
+    let width_whenUnit: WidthUnits;
+    let width_changeAttributeName: string;
+    let width_changeAttributeValue: string;
+    let width_changeAttributeUnit: WidthUnits;
+
+    // height
+    let height_whenAttributeName: string;
+    let height_whenOp: HeightOperatorType;
+    let height_whenValue: number;
+    let height_whenUnit: HeightUnits;
+    let height_changeAttributeName: string;
+    let height_changeAttributeValue: string;
+    let height_changeAttributeUnit: HeightUnits;
+
+    // select
+    let select_whenAttributeName: string;
+    let select_whenOp: SelectOperatorType;
+    let select_whenValue: string;
+    let select_whenValue_forVerification: string;
+    let select_changeAttributeName: string;
+    let select_changeAttributeValue: string;
+    let select_changeAttributeValue_forVerification: string;
+
+    // doubleselect
+    let doubleselect_whenAttributeName: string;
+    let doubleselect_whenOp: DoubleselectOperatorType;
+    let doubleselect_whenValue1: string;
+    let doubleselect_whenValue2: string;
+    let doubleselect_whenValue1_forVerification: string;
+    let doubleselect_whenValue2_forVerification: string;
+    let doubleselect_changeAttributeName: string;
+    let doubleselect_changeAttributeValue1: string;
+    let doubleselect_changeAttributeValue2: string;
+    let doubleselect_changeAttributeValue1_forVerification: string;
+    let doubleselect_changeAttributeValue2_forVerification: string;
 
     before(() => {
         const username = Cypress.env('username');
@@ -41,6 +175,127 @@ describe(`bulk edit spec`, () => {
     });
 
     //////////////////
+
+    const refreshVariables = () => {
+
+        // string
+        string_whenAttributeName= `string attribute`;
+        string_whenOp = `not contain`;
+        string_whenValue = `xxx`;
+        string_changeAttributeName= `string attribute`;
+        string_changeAttributeValue = `string-value-${Math.random()}`;
+
+        // text
+        text_whenAttributeName= `text attribute`;
+        text_whenOp = `not contain`;
+        text_whenValue = `xxx`;
+        text_changeAttributeName= `text attribute`;
+        text_changeAttributeValue = `text value-${Math.random()}`;
+
+        // number
+        number_whenAttributeName= `number attribute`;
+        number_whenOp = `not eq`;
+        number_whenValue = 9999;
+        number_changeAttributeName= `number attribute`;
+        number_changeAttributeValue = ((Math.random() + 1).toFixed(1));
+
+        // date
+        date_whenAttributeName= `date attribute`;
+        date_whenOp = `not eq`;
+        date_whenValue = `10-10-1999`;
+        date_changeAttributeName= `date attribute`;
+        date_changeAttributeValue = `0${(Math.random() * 8 + 1).toFixed(0)}-0${(Math.random() * 8 + 1).toFixed(0)}-${2000 + Number((Math.random() * 10).toFixed(0))}`;
+
+        // currency
+        currency_whenAttributeName= `currency attribute`;
+        currency_whenOp = `not eq`;
+        currency_whenValue = 1.10;
+        currency_whenUnit = `AUD`;
+        currency_changeAttributeName= `currency attribute`;
+        currency_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(2));
+        currency_changeAttributeUnit = 'AUD'
+
+        // volume
+        volume_whenAttributeName= `volume attribute`;
+        volume_whenOp = `not eq`;
+        volume_whenValue = 1.10;
+        volume_whenUnit = `ml`;
+        volume_changeAttributeName= `volume attribute`;
+        volume_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
+        volume_changeAttributeUnit = 'ml';
+
+        // dimension
+        dimension_whenAttributeName= `dimension attribute`;
+        dimension_whenOp = `not eq`;
+        dimension_whenLengthValue = 1.10;
+        dimension_whenWidthValue = 1.10;
+        dimension_whenHeightValue = 1.10;
+        dimension_whenUnit = `cm`;
+        dimension_changeAttributeName= `dimension attribute`;
+        dimension_changeAttributeLengthValue = ((Math.random() * 10 + 2).toFixed(1));
+        dimension_changeAttributeWidthValue = ((Math.random() * 10 + 2).toFixed(1));
+        dimension_changeAttributeHeightValue = ((Math.random() * 10 + 2).toFixed(1));
+        dimension_changeAttributeUnit = 'cm';
+
+        // area
+        area_whenAttributeName= `area attribute`;
+        area_whenOp = `not eq`;
+        area_whenValue = 1.10;
+        area_whenUnit = `m2`;
+        area_changeAttributeName= `area attribute`;
+        area_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
+        area_changeAttributeUnit = 'm2';
+
+        // length
+        length_whenAttributeName= `length attribute`;
+        length_whenOp = `not eq`;
+        length_whenValue = 1.10;
+        length_whenUnit = 'cm';
+        length_changeAttributeName= `length attribute`;
+        length_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
+        length_changeAttributeUnit = 'cm';
+
+        // width
+        width_whenAttributeName= `width attribute`;
+        width_whenOp = `not eq`;
+        width_whenValue = 1.10;
+        width_whenUnit = 'cm';
+        width_changeAttributeName= `width attribute`;
+        width_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
+        width_changeAttributeUnit = 'cm';
+
+        // height
+        height_whenAttributeName= `height attribute`;
+        height_whenOp = `not eq`;
+        height_whenValue = 1.10;
+        height_whenUnit = 'cm';
+        height_changeAttributeName= `height attribute`;
+        height_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
+        height_changeAttributeUnit = 'cm';
+
+        // select
+        select_whenAttributeName= `select attribute`;
+        select_whenOp = `not eq`;
+        select_whenValue = `key1`;
+        select_whenValue_forVerification = `value1`;
+        select_changeAttributeName = `select attribute`;
+        select_changeAttributeValue = `key3`;
+        select_changeAttributeValue_forVerification = `value3`;
+
+        // doubleselect
+        doubleselect_whenAttributeName= `doubleselect attribute`;
+        doubleselect_whenOp = `not eq`;
+        doubleselect_whenValue1 = `key1`;
+        doubleselect_whenValue2 = `xkey11`;
+        doubleselect_whenValue1_forVerification = `value1`;
+        doubleselect_whenValue2_forVerification = `xvalue11`;
+        doubleselect_changeAttributeName= `doubleselect attribute`;
+        doubleselect_changeAttributeValue1 = `key2`
+        doubleselect_changeAttributeValue2 = `xkey22`
+        doubleselect_changeAttributeValue1_forVerification = `value2`
+        doubleselect_changeAttributeValue2_forVerification = `xvalue22`
+
+    }
 
     const createNewView = (): string => {
         const r = Math.random();
@@ -84,126 +339,10 @@ describe(`bulk edit spec`, () => {
             .verifySelectedView(testView1)
     });
 
-    it(`should perform add and delete change and where clauses`, () => {
+    it(`should allow switching in where and change clause`, () => {
         const i = 0;
-        const viewName = createNewView();
-
-        // string
-        const string_whenAttributeName: string = `string attribute`;
-        const string_whenOp = `not contain`;
-        const string_whenValue = `xxx`;
-        const string_changeAttributeName: string = `string attribute`;
-        const string_changeAttributeValue = `string-value-${Math.random()}`;
-
-        // text
-        const text_whenAttributeName: string = `text attribute`;
-        const text_whenOp = `not contain`;
-        const text_whenValue = `xxx`;
-        const text_changeAttributeName: string = `text attribute`;
-        const text_changeAttributeValue = `text value-${Math.random()}`;
-
-        // number
-        const number_whenAttributeName: string = `number attribute`;
-        const number_whenOp = `not eq`;
-        const number_whenValue = 9999;
-        const number_changeAttributeName: string = `number attribute`;
-        const number_changeAttributeValue = ((Math.random() + 1).toFixed(1));
-
-        // date
-        const date_whenAttributeName: string = `date attribute`;
-        const date_whenOp = `not eq`;
-        const date_whenValue = `10-10-1999`;
-        const date_changeAttributeName: string = `date attribute`;
-        const date_changeAttributeValue = `0${(Math.random() * 8 + 1).toFixed(0)}-0${(Math.random() * 8 + 1).toFixed(0)}-${2000 + Number((Math.random() * 10).toFixed(0))}`;
-
-        // currency
-        const currency_whenAttributeName: string = `currency attribute`;
-        const currency_whenOp = `not eq`;
-        const currency_whenValue = 1.10;
-        const currency_whenUnit = `AUD`;
-        const currency_changeAttributeName: string = `currency attribute`;
-        const currency_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(2));
-        const currency_changeAttributeUnit = 'AUD'
-
-        // volume
-        const volume_whenAttributeName: string = `volume attribute`;
-        const volume_whenOp = `not eq`;
-        const volume_whenValue = 1.10;
-        const volume_whenUnit = `ml`;
-        const volume_changeAttributeName: string = `volume attribute`;
-        const volume_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
-        const volume_changeAttributeUnit = 'ml';
-
-        // dimension
-        const dimension_whenAttributeName: string = `dimension attribute`;
-        const dimension_whenOp = `not eq`;
-        const dimension_whenLengthValue = 1.10;
-        const dimension_whenWidthValue = 1.10;
-        const dimension_whenHeightValue = 1.10;
-        const dimension_whenUnit = `cm`;
-        const dimension_changeAttributeName: string = `dimension attribute`;
-        const dimension_changeAttributeLengthValue = ((Math.random() * 10 + 2).toFixed(1));
-        const dimension_changeAttributeWidthValue = ((Math.random() * 10 + 2).toFixed(1));
-        const dimension_changeAttributeHeightValue = ((Math.random() * 10 + 2).toFixed(1));
-        const dimension_changeAttributeUnit = 'cm';
-
-        // area
-        const area_whenAttributeName: string = `area attribute`;
-        const area_whenOp = `not eq`;
-        const area_whenValue = 1.10;
-        const area_whenUnit = `m2`;
-        const area_changeAttributeName: string = `area attribute`;
-        const area_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
-        const area_changeAttributeUnit = 'm2';
-
-        // length
-        const length_whenAttributeName: string = `length attribute`;
-        const length_whenOp = `not eq`;
-        const length_whenValue = 1.10;
-        const length_whenUnit = 'cm';
-        const length_changeAttributeName: string = `length attribute`;
-        const length_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
-        const length_changeAttributeUnit = 'cm';
-
-        // width
-        const width_whenAttributeName: string = `width attribute`;
-        const width_whenOp = `not eq`;
-        const width_whenValue = 1.10;
-        const width_whenUnit = 'cm';
-        const width_changeAttributeName: string = `width attribute`;
-        const width_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
-        const width_changeAttributeUnit = 'cm';
-
-        // height
-        const height_whenAttributeName: string = `height attribute`;
-        const height_whenOp = `not eq`;
-        const height_whenValue = 1.10;
-        const height_whenUnit = 'cm';
-        const height_changeAttributeName: string = `height attribute`;
-        const height_changeAttributeValue = ((Math.random() * 10 + 2).toFixed(1));
-        const height_changeAttributeUnit = 'cm';
-
-        // select
-        const select_whenAttributeName: string = `select attribute`;
-        const select_whenOp = `not eq`;
-        const select_whenValue = `key1`;
-        const select_whenValue_forVerification = `key1`;
-        const select_changeAttributeName: string = `select attribute`;
-        const select_changeAttributeValue = `key3`;
-        const select_changeAttributeValue_forVerification = `value3`;
-
-        // doubleselect
-        const doubleselect_whenAttributeName: string = `doubleselect attribute`;
-        const doubleselect_whenOp = `not eq`;
-        const doubleselect_whenValue1 = `key1`;
-        const doubleselect_whenValue2 = `xkey11`;
-        const doubleselect_whenValue1_forVerification = `key1`;
-        const doubleselect_whenValue2_forVerification = `xkey11`;
-        const doubleselect_changeAttributeName: string = `doubleselect attribute`;
-        const doubleselect_changeAttributeValue1 = `key2`
-        const doubleselect_changeAttributeValue2 = `xkey22`
-        const doubleselect_changeAttributeValue1_forVerification = `value2`
-        const doubleselect_changeAttributeValue2_forVerification = `xvalue22`
+        const viewName = `Test View 1`;  // createNewView();
+        refreshVariables();
 
         bulkEditPage
             .visit()
@@ -290,5 +429,184 @@ describe(`bulk edit spec`, () => {
         ;
     });
 
+    it.only (`should allow bulk edit process`, () => {
 
+        let i = 0;
+        const viewName = `Test View 1`;  // createNewView();
+        refreshVariables();
+        const increment = () => {
+            i += 1;
+        };
+
+        const bulkEditPageStep1 = bulkEditPage
+            .visit()
+            .startWizard()
+            .verifyStep()
+        ;
+
+        // string
+        bulkEditPageStep1
+            .editWhereString(i, string_whenAttributeName, string_whenOp, string_whenValue)
+            .editChangeString(i, string_changeAttributeName, string_changeAttributeValue)
+            .verifyWhereClauseString(i, string_whenAttributeName, string_whenOp, string_whenValue)
+            .verifyChangeClauseString(i, string_changeAttributeName, string_changeAttributeValue)
+        ;
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // text
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereText(i, text_whenAttributeName, text_whenOp, text_whenValue)
+                .editChangeText(i, text_changeAttributeName, text_changeAttributeValue)
+                .verifyWhereClauseText(i, text_whenAttributeName, text_whenOp, text_whenValue)
+                .verifyChangeClauseText(i, text_changeAttributeName, text_changeAttributeValue)
+            ;
+        });
+
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // number
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereNumber(i, number_whenAttributeName, number_whenOp, number_whenValue)
+                .editChangeNumber(i, number_changeAttributeName, Number(number_changeAttributeValue))
+                .verifyWhereClauseNumber(i, number_whenAttributeName, number_whenOp, number_whenValue)
+                .verifyChangeClauseNumber(i, number_changeAttributeName, Number(number_changeAttributeValue))
+            ;
+        });
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // date
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereDate(i, date_whenAttributeName, date_whenOp, date_whenValue)
+                .editChangeDate(i, date_changeAttributeName, date_changeAttributeValue)
+                .verifyWhereClauseDate(i, date_whenAttributeName, date_whenOp, date_whenValue)
+                .verifyChangeClauseDate(i, date_changeAttributeName, date_changeAttributeValue)
+            ;
+        });
+
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // currency
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereCurrency(i, currency_whenAttributeName, currency_whenOp, currency_whenValue, currency_whenUnit)
+                .editChangeCurrency(i, currency_changeAttributeName, Number(currency_changeAttributeValue), currency_changeAttributeUnit)
+                .verifyWhereClauseCurrency(i, currency_whenAttributeName, currency_whenOp, currency_whenValue, currency_whenUnit)
+                .verifyChangeClauseCurrency(i, currency_changeAttributeName, Number(currency_changeAttributeValue), currency_changeAttributeUnit)
+            ;
+        });
+
+
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // volume
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereVolume(i, volume_whenAttributeName, volume_whenOp, volume_whenValue, volume_whenUnit)
+                .editChangeVolume(i, volume_changeAttributeName, Number(volume_changeAttributeValue), volume_changeAttributeUnit)
+                .verifyWhereClauseVolume(i, volume_whenAttributeName, volume_whenOp, volume_whenValue, volume_whenUnit)
+                .verifyChangeClauseVolume(i, volume_changeAttributeName, Number(volume_changeAttributeValue), volume_changeAttributeUnit)
+            ;
+        });
+
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // dimension
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereDimension(i, dimension_whenAttributeName, dimension_whenOp, dimension_whenLengthValue, dimension_whenWidthValue, dimension_whenHeightValue, dimension_whenUnit)
+                .editChangeDimension(i, dimension_changeAttributeName, Number(dimension_changeAttributeLengthValue), Number(dimension_changeAttributeWidthValue), Number(dimension_changeAttributeHeightValue), dimension_changeAttributeUnit)
+                .verifyWhereClauseDimension(i, dimension_whenAttributeName, dimension_whenOp, dimension_whenLengthValue, dimension_whenWidthValue, dimension_whenHeightValue, dimension_whenUnit)
+                .verifyChangeClauseDimension(i, dimension_changeAttributeName, Number(dimension_changeAttributeLengthValue), Number(dimension_changeAttributeWidthValue), Number(dimension_changeAttributeHeightValue), dimension_changeAttributeUnit)
+            ;
+        });
+
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // area
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereArea(i, area_whenAttributeName, area_whenOp, area_whenValue, area_whenUnit)
+                .editChangeArea(i, area_changeAttributeName, Number(area_changeAttributeValue), area_changeAttributeUnit)
+                .verifyWhereClauseArea(i, area_whenAttributeName, area_whenOp, area_whenValue, area_whenUnit)
+                .verifyChangeClauseArea(i, area_changeAttributeName, Number(area_changeAttributeValue), area_changeAttributeUnit)
+            ;
+        });
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // length
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereLength(i, length_whenAttributeName, length_whenOp, length_whenValue, length_whenUnit)
+                .editChangeLength(i, length_changeAttributeName, Number(length_changeAttributeValue), length_changeAttributeUnit)
+                .verifyWhereClauseLength(i, length_whenAttributeName, length_whenOp, length_whenValue, length_whenUnit)
+                .verifyChangeClauseLength(i, length_changeAttributeName, Number(length_changeAttributeValue), length_changeAttributeUnit)
+            ;
+        });
+
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // width
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereWidth(i, width_whenAttributeName, width_whenOp, length_whenValue, width_whenUnit)
+                .editChangeWidth(i, width_changeAttributeName, Number(width_changeAttributeValue), width_changeAttributeUnit)
+                .verifyWhereClauseWidth(i, width_whenAttributeName, width_whenOp, length_whenValue, width_whenUnit)
+                .verifyChangeClauseWidth(i, width_changeAttributeName, Number(width_changeAttributeValue), width_changeAttributeUnit)
+            ;
+        });
+
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // height
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereHeight(i, height_whenAttributeName, height_whenOp, length_whenValue, height_whenUnit)
+                .editChangeHeight(i, height_changeAttributeName, Number(height_changeAttributeValue), height_changeAttributeUnit)
+                .verifyWhereClauseHeight(i, height_whenAttributeName, height_whenOp, length_whenValue, height_whenUnit)
+                .verifyChangeClauseHeight(i, height_changeAttributeName, Number(height_changeAttributeValue), height_changeAttributeUnit)
+            ;
+        });
+
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // select
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereSelect(i, select_whenAttributeName, select_whenOp, select_whenValue)
+                .editChangeSelect(i, select_changeAttributeName, select_changeAttributeValue)
+                .verifyWhereClauseSelect(i, select_whenAttributeName, select_whenOp, select_whenValue_forVerification)
+                .verifyChangeClauseSelect(i, select_changeAttributeName, select_changeAttributeValue_forVerification)
+            ;
+        });
+
+
+        cy.wrap({i: increment}).invoke('i').then((_) => {
+            // doubleselect
+            bulkEditPageStep1
+                .clickAddChangeClause()
+                .clickAddWhenClause()
+                .editWhereDoubleselect(i, doubleselect_whenAttributeName, doubleselect_whenOp, doubleselect_whenValue1, doubleselect_whenValue2)
+                .editChangeDoubleselect(i, doubleselect_changeAttributeName, doubleselect_changeAttributeValue1, doubleselect_changeAttributeValue2)
+                .verifyWhereClauseDoubleselect(i, doubleselect_whenAttributeName, doubleselect_whenOp, doubleselect_whenValue1_forVerification, doubleselect_whenValue2_forVerification)
+                .verifyChangeClauseDoubleselect(i, doubleselect_changeAttributeName, doubleselect_changeAttributeValue1_forVerification, doubleselect_changeAttributeValue2_forVerification)
+            ;
+        });
+
+        //const bulkEditPageStep2 = bulkEditPageStep1.clickNext();
+
+    });
 });

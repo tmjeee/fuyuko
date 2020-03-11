@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute, Pair2} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import { OperatorType } from '../../model/operator.model';
 import {
@@ -349,6 +349,21 @@ export class AttributeOperatorEditorComponent implements OnInit {
         }
         const event = { attribute, itemValue, operator} as ItemValueOperatorAndAttribute;
         this.events.emit(event);
+    }
+
+    getDoubleselectPair2(): Pair2[] {
+        if (this.attribute &&
+            this.attribute.type === 'doubleselect' &&
+            this.attribute.pair2 &&
+            this.itemValue &&
+            this.itemValue.val &&
+            this.itemValue.val.type === 'doubleselect' &&
+            this.itemValue.val.key1) {
+
+            const key1 = this.itemValue.val.key1;
+            return this.attribute.pair2.filter((pair2: Pair2) => pair2.key1 === key1);
+        }
+        return [];
     }
 }
 

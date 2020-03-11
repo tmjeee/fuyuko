@@ -1,5 +1,5 @@
 import {NextFunction, Router, Request, Response} from "express";
-import {check} from 'express-validator';
+import {check, param, body} from 'express-validator';
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
@@ -14,12 +14,12 @@ import {Registry} from "../../registry";
  */
 const httpAction = [
     [
-        check('code').isLength({ min: 1 }),
-        check('username').exists({checkFalsy: true, checkNull: true}),
-        check('email').exists().isEmail(),
-        check('firstName').exists(),
-        check('lastName').exists(),
-        check('password').exists()
+        param('code').isLength({ min: 1 }),
+        body('username').exists({checkFalsy: true, checkNull: true}),
+        body('email').exists().isEmail(),
+        body('firstName').exists(),
+        body('lastName').exists(),
+        body('password').exists()
     ],
     validateMiddlewareFn,
     async (req: Request, res: Response , next: NextFunction ) => {

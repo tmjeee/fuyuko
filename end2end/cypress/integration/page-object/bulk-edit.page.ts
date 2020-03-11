@@ -71,6 +71,16 @@ export class BulkEditPage implements ActualPage<BulkEditPage> {
 
 export class BulkEditPageStep1 {
 
+    clickOnPredefinedTab(): BulkEditPageStep1 {
+        cy.get(`[test-mat-tab-predefined]`).click({force: true});
+        return this;
+    }
+
+    clickOnCustomTab(): BulkEditPageStep1 {
+        cy.get(`[test-mat-tab-custom]`).click({force: true});
+        return this;
+    }
+
     verifyStep(): BulkEditPageStep1 {
         cy.get(`mat-step-header[ng-reflect-index='0']`)
             .should('have.attr', 'ng-reflect-selected', 'true');
@@ -767,13 +777,18 @@ export class BulkEditPageStep1 {
     editWhereSelect(index: number, attributeName: string, operator: SelectOperatorType, key: string): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
-        this.editWhereFieldValue(index, key);
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-mat-select-field-select] div:first-child`).click({force: true, multiple: true});
+        cy.get(`[test-mat-select-option-field-select='${key}']`).click({force: true});
         return this;
     }
     verifyWhereClauseSelect(index: number, attributeName: string, operator: SelectOperatorType, key: string): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
-        this._verifyWhereFieldValue(index, key);
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-mat-select-field-select]`)
+            .find(`.mat-select-value-text`)
+            .should('contain.text', key);
         return this;
     }
 
@@ -781,15 +796,25 @@ export class BulkEditPageStep1 {
     editWhereDoubleselect(index: number, attributeName: string, operator: DoubleselectOperatorType, key1: string, key2: string): BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
-        this.editWhereFieldValue(index, key1);
-        this.editWhereFieldValue2(index, key2);
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-mat-select-field-doubleselect-1] div:first-child`).click({force: true, multiple: true});
+        cy.get(`[test-mat-select-option-field-doubleselect-1='${key1}']`).click({force: true});
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-mat-select-field-doubleselect-2] div:first-child`).click({force: true, multiple: true});
+        cy.get(`[test-mat-select-option-field-doubleselect-2='${key2}']`).click({force: true});
         return this;
     }
     verifyWhereClauseDoubleselect(index: number, attributeName: string, operator: DoubleselectOperatorType, key1: string, key2: string): BulkEditPageStep1 {
         this._verifyWhereClauseAttribute(index, attributeName);
         this._verifyWhereClauseOperator(index, operator);
-        this._verifyWhereFieldValue(index, key1);
-        this._verifyWhereFieldValue2(index, key2)
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-mat-select-field-doubleselect-1]`)
+            .find(`.mat-select-value-text`)
+            .should('contain.text', key1);
+        cy.get(`[test-where-clause-editor='${index}']`)
+            .find(`[test-mat-select-field-doubleselect-2]`)
+            .find(`.mat-select-value-text`)
+            .should('contain.text', key2);
         return this;
     }
 
