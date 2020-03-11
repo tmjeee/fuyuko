@@ -67,8 +67,6 @@ export const addItem = async (viewId: number, item2: Item2): Promise<number> => 
 }
 const _addItem = async (conn: Connection, viewId: number, item2: Item2): Promise<number> => {
 
-    console.log(`*************** additem for ${item2.name} with id ${item2.id} and parentId ${item2.parentId} children ${item2.children} `);
-
     const name: string = item2.name;
     const description: string = item2.description;
     const parentId: number = item2.parentId ? item2.parentId : null;

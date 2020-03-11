@@ -1,6 +1,7 @@
+import moment from 'moment';
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges, OnInit} from '@angular/core';
 import {ItemValueAndAttribute} from '../../model/item-attribute.model';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute, DEFAULT_DATE_FORMAT} from '../../model/attribute.model';
 import {
     AreaValue,
     CURRENCY_FORMAT,
@@ -107,9 +108,19 @@ export class DataEditorNoPopupComponent implements OnInit {
            switch (this.attribute.type) {
                case 'string':
                case 'text':
-               case 'number':
-               case 'date': {
+               case 'number': {
                    this.formControl = this.formBuilder.control(convertToString(this.attribute, this.itemValue), [Validators.required]);
+                   this.formGroup.addControl('formControl', this.formControl);
+                   break;
+                   break;
+               }
+               case 'date': {
+                   const dateInString: string = convertToString(this.attribute, this.itemValue);
+                   let m: moment.Moment = null;
+                   if (dateInString) {
+                       m = moment(dateInString, this.attribute.format ? this.attribute.format : DEFAULT_DATE_FORMAT);
+                   }
+                   this.formControl = this.formBuilder.control(m, [Validators.required]);
                    this.formGroup.addControl('formControl', this.formControl);
                    break;
                }
@@ -230,6 +241,7 @@ export class DataEditorNoPopupComponent implements OnInit {
                         setItemNumberValue(this.attribute, this.itemValue, this.formControl.value);
                         break;
                     case 'date':
+                        console.log(this.formControl.value);
                         setItemDateValue(this.attribute, this.itemValue, this.formControl.value);
                         break;
                     case 'currency':

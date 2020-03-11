@@ -606,7 +606,7 @@ describe(`bulk edit spec`, () => {
             ;
         });
 
-        //const bulkEditPageStep2 = bulkEditPageStep1.clickNext();
+        const bulkEditPageStep2 = bulkEditPageStep1.clickNext();
 
     });
 });

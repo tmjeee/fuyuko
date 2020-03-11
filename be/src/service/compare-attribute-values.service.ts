@@ -63,33 +63,33 @@ export const compareDate = (condition: moment.Moment,  /* from REST Api */
         case "empty":
             return (!!!actual); // when a is falsy
         case "eq":
-            return actual.isSame(condition);
+            return actual && actual.isSame(condition);
         case "gt":
-            return actual.isAfter(condition);
+            return actual && actual.isAfter(condition);
         case "gte":
-            return actual.isSameOrAfter(condition);
+            return actual && actual.isSameOrAfter(condition);
         case "lt":
-            return actual.isBefore(condition);
+            return actual && actual.isBefore(condition);
         case "lte":
-            return actual.isSameOrBefore(condition);
+            return actual && actual.isSameOrBefore(condition);
         case "not empty":
             return (!!actual);
         case "not eq":
-            return (!actual.isSame(condition));
+            return (actual && (!actual.isSame(condition)));
         case "not gt":
-            return (!actual.isAfter(condition));
+            return (actual && (!actual.isAfter(condition)));
         case "not gte":
-            return (!actual.isSameOrAfter(condition));;
+            return (actual && (!actual.isSameOrAfter(condition)));;
         case "not lt":
-            return (!actual.isBefore(condition));
+            return (actual && (!actual.isBefore(condition)));
         case "not lte":
-            return (!actual.isSameOrBefore(condition));
+            return (actual && (!actual.isSameOrBefore(condition)));
         case 'contain':
-            return (String(actual).indexOf(String(condition)) >= 0);
+            return (actual && String(actual).indexOf(String(condition)) >= 0);
         case 'not contain':
-            return (String(actual).indexOf(String(condition)) < 0);
+            return (actual && String(actual).indexOf(String(condition)) < 0);
         case 'regexp':
-            return (!!String(actual).match(String(condition)));
+            return (actual && (!!String(actual).match(String(condition))));
         default:
             throw new Error(`unrecognised operator ${operator} for date ${actual} and condition ${condition} comparison`);
     }
@@ -124,11 +124,11 @@ export const compareNumber = (condition: number, /* from REST api */
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (String(actual).indexOf(String(condition)) >= 0);
+            return (actual && String(actual).indexOf(String(condition)) >= 0);
         case 'not contain':
-            return (String(actual).indexOf(String(condition)) < 0);
+            return (actual && String(actual).indexOf(String(condition)) < 0);
         case 'regexp':
-            return (!!String(actual).match(String(condition)));
+            return (actual && (!!String(actual).match(String(condition))));
         default:
             throw new Error(`unrecognised operator ${operator} for number ${actual} and condition ${condition} comparison`);
     }
@@ -163,11 +163,11 @@ export const compareString = (condition: string /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (actual.indexOf(condition) >= 0);
+            return (actual && actual.indexOf(condition) >= 0);
         case 'not contain':
-            return (actual.indexOf(condition) < 0);
+            return (actual && actual.indexOf(condition) < 0);
         case 'regexp':
-            return (!!actual.match(condition));
+            return (actual && (!!actual.match(condition)));
         default:
             throw new Error(`unrecognised operator ${operator} for string ${actual} and condition ${condition} comparison`);
     }
@@ -208,11 +208,11 @@ export const compareCurrency = (condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (String(actual).indexOf(String(condition)) >= 0);
+            return (actual && String(actual).indexOf(String(condition)) >= 0);
         case 'not contain':
-            return (String(actual).indexOf(String(condition)) < 0);
+            return (actual && String(actual).indexOf(String(condition)) < 0);
         case 'regexp':
-            return (!!String(actual).match(String(condition)));
+            return (actual &&  (!!String(actual).match(String(condition))));
         default:
             throw new Error(`unrecognised operator ${operator} for currency ${actual} ${actualUnit} and condition ${condition} ${conditionUnit} comparison`);
     }
@@ -252,11 +252,11 @@ export const compareVolume = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (String(actual).indexOf(String(condition)) >= 0);
+            return (actual && String(actual).indexOf(String(condition)) >= 0);
         case 'not contain':
-            return (String(actual).indexOf(String(condition)) < 0);
+            return (actual && String(actual).indexOf(String(condition)) < 0);
         case 'regexp':
-            return (!!String(actual).match(String(condition)));
+            return (actual && (!!String(actual).match(String(condition))));
         default:
             throw new Error(`unrecognised operator ${operator} for volume ${_actual} ${_actualUnit} and condition ${_condition} ${_conditionUnit} comparison`);
     }
@@ -305,11 +305,11 @@ export const compareDimension = (_conditionLength: number /* from REST Api */,
         case 'not empty':
             return (!!actualLength) && (!!actualWidth) && (!!actualHeight);
         case 'contain':
-            return (String(actualLength).indexOf(String(conditionLength)) >= 0) && (String(actualWidth).indexOf(String(conditionWidth)) >= 0) && (String(actualHeight).indexOf(String(conditionHeight)) >= 0);
+            return (actualLength && String(actualLength).indexOf(String(conditionLength)) >= 0) && actualWidth && (String(actualWidth).indexOf(String(conditionWidth)) >= 0) && actualHeight && (String(actualHeight).indexOf(String(conditionHeight)) >= 0);
         case 'not contain':
-            return (String(actualLength).indexOf(String(conditionLength)) < 0) && (String(actualWidth).indexOf(String(conditionWidth)) < 0) && (String(actualHeight).indexOf(String(conditionHeight)) < 0);
+            return (actualLength && String(actualLength).indexOf(String(conditionLength)) < 0) && actualWidth && (String(actualWidth).indexOf(String(conditionWidth)) < 0) && actualHeight && (String(actualHeight).indexOf(String(conditionHeight)) < 0);
         case 'regexp':
-            return (!!String(actualLength).match(String(conditionLength))) && (!!String(actualWidth).match(String(conditionWidth))) && (!!String(actualHeight).match(String(conditionHeight)));
+            return (actualLength  && (!!String(actualLength).match(String(conditionLength)))) && actualWidth && (!!String(actualWidth).match(String(conditionWidth))) && actualHeight && (!!String(actualHeight).match(String(conditionHeight)));
         default:
             throw new Error(`unrecognised operator ${operator} for dimension length ${actualLength} width ${actualWidth} height ${actualHeight} unit ${_actualUnit} and condition length ${conditionLength} width ${conditionWidth} height ${conditionHeight} unit ${_conditionUnit} comparison`);
     }
@@ -349,11 +349,11 @@ export const compareArea = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (String(actual).indexOf(String(condition)) >= 0);
+            return actual && (String(actual).indexOf(String(condition)) >= 0);
         case 'not contain':
-            return (String(actual).indexOf(String(condition)) < 0);
+            return actual && (String(actual).indexOf(String(condition)) < 0);
         case 'regexp':
-            return (!!String(actual).match(String(condition)));
+            return actual && (!!String(actual).match(String(condition)));
         default:
             throw new Error(`unrecognised operator ${operator} for area ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
@@ -394,11 +394,11 @@ export const compareWidth = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (String(actual).indexOf(String(condition)) >= 0);
+            return actual && (String(actual).indexOf(String(condition)) >= 0);
         case 'not contain':
-            return (String(actual).indexOf(String(condition)) < 0);
+            return actual && (String(actual).indexOf(String(condition)) < 0);
         case 'regexp':
-            return (!!String(actual).match(String(condition)));
+            return actual && (!!String(actual).match(String(condition)));
         default:
             throw new Error(`unrecognised operator ${operator} for width ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
@@ -438,11 +438,11 @@ export const compareHeight = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (String(actual).indexOf(String(condition)) >= 0);
+            return actual && (String(actual).indexOf(String(condition)) >= 0);
         case 'not contain':
-            return (String(actual).indexOf(String(condition)) < 0);
+            return actual && (String(actual).indexOf(String(condition)) < 0);
         case 'regexp':
-            return (!!String(actual).match(String(condition)));
+            return actual && (!!String(actual).match(String(condition)));
         default:
             throw new Error(`unrecognised operator ${operator} for height ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
@@ -482,11 +482,11 @@ export const compareLength = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (String(actual).indexOf(String(condition)) >= 0);
+            return actual && (String(actual).indexOf(String(condition)) >= 0);
         case 'not contain':
-            return (String(actual).indexOf(String(condition)) < 0);
+            return actual && (String(actual).indexOf(String(condition)) < 0);
         case 'regexp':
-            return (!!String(actual).match(String(condition)));
+            return actual && (!!String(actual).match(String(condition)));
         default:
             throw new Error(`unrecognised operator ${operator} for length ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
@@ -521,11 +521,11 @@ export const compareSelect = (condition: string /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (actual.indexOf(condition) >= 0);
+            return actual && (actual.indexOf(condition) >= 0);
         case 'not contain':
-            return (actual.indexOf(condition) < 0);
+            return actual && (actual.indexOf(condition) < 0);
         case 'regexp':
-            return (!!actual.match(condition));
+            return actual && (!!actual.match(condition));
         default:
             throw new Error(`unrecognised operator ${operator} for select ${actual} and condition ${condition} comparison`);
     }
@@ -562,11 +562,11 @@ export const compareDoubleselect = (_conditionkey1: string /* from REST Api */,
         case 'not empty':
             return (!!_actualkey1 && !!_actualkey2);
         case 'contain':
-            return (_actualkey1.indexOf(_conditionkey1) >= 0) && (_actualkey2.indexOf(_conditionkey2) >= 0);
+            return _actualkey1 && (_actualkey1.indexOf(_conditionkey1) >= 0) && (_actualkey2.indexOf(_conditionkey2) >= 0);
         case 'not contain':
-            return (_actualkey1.indexOf(_conditionkey1) < 0) && (_actualkey2.indexOf(_conditionkey2) < 0);
+            return _actualkey1 && (_actualkey1.indexOf(_conditionkey1) < 0) && (_actualkey2.indexOf(_conditionkey2) < 0);
         case 'regexp':
-            return (!!_actualkey1.match(_conditionkey1)) && (!!_actualkey2.match(_conditionkey2));
+            return _actualkey1 && (!!_actualkey1.match(_conditionkey1)) && (!!_actualkey2.match(_conditionkey2));
         default:
             throw new Error(`unrecognised operator ${operator} for doubleselect key1 ${_actualkey1} key2 ${_actualkey2} and condition key1 ${_conditionkey1} key2 ${_conditionkey2} comparison`);
     }
