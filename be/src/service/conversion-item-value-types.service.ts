@@ -31,7 +31,7 @@ export const convert = (metadatas: ItemMetadata2[]): ItemValTypes => {
     return o;
 }
 
-// todo: tmjeee
+// todo: tmjeee: make sure undefined doesn't get printed out as string
 export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMetadata2[] => {
     switch (itemValTypes.type) {
         case 'string': {

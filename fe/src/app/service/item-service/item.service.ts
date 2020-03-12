@@ -41,7 +41,6 @@ export class ItemService {
   }
 
   deleteItems(viewId: number, items: Item[]): Observable<ApiResponse> {
-      console.log('************* item.service delete items', items);
       return this.httpClient.post<ApiResponse>(
           URL_UPDATE_ITEM_STATUS()
               .replace(':viewId', String(viewId))
@@ -53,7 +52,6 @@ export class ItemService {
   }
 
   saveTableItems(viewId: number, tableItems: TableItem[]): Observable<ApiResponse> {
-    // const items: Item[] = toItemIgnoreParent(tableItems);
     const items: Item[] = toItem(tableItems);
     return this.httpClient.post<ApiResponse>(URL_UPDATE_ITEMS().replace(':viewId', String(viewId)), {
       items
@@ -62,8 +60,6 @@ export class ItemService {
 
 
   deleteTableItems(viewId: number, tableItems: TableItem[]): Observable<ApiResponse> {
-    console.log('************* item.service delete items', tableItems);
-    // const items: Item[] = toItem(tableItems);
     return this.httpClient.post<ApiResponse>(
         URL_UPDATE_ITEM_STATUS()
             .replace(':viewId', String(viewId))

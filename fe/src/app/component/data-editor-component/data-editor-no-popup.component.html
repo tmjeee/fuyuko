@@ -180,7 +180,7 @@
             <mat-form-field>
                 <mat-label>Unit</mat-label>
                 <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
-                <mat-select [formControl]="formControl" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-length-unit]="''">
+                <mat-select [formControl]="formControl2" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-length-unit]="''">
                     <mat-option *ngFor="let lengthUnit of lengthUnits" [value]="lengthUnit" [attr.test-mat-select-option-length-unit]="lengthUnit">
                         {{lengthUnit}}
                     </mat-option>
@@ -199,7 +199,7 @@
             <mat-form-field>
                 <mat-label>Unit</mat-label>
                 <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
-                <mat-select [formControl]="formControl" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-height-unit]="''">
+                <mat-select [formControl]="formControl2" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-height-unit]="''">
                     <mat-option *ngFor="let heightUnit of heightUnits" [value]="heightUnit" [attr.test-mat-select-option-height-unit]="heightUnit">
                         {{heightUnit}}
                     </mat-option>

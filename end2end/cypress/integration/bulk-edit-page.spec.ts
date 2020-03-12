@@ -606,7 +606,47 @@ describe(`bulk edit spec`, () => {
             ;
         });
 
-        const bulkEditPageStep2 = bulkEditPageStep1.clickNext();
+        let itemName = `Item-1`;
+        const bulkEditPageStep2 = bulkEditPageStep1.clickNext()
+            .verifyStep()
+            .verifyItemNewValue(itemName, string_changeAttributeName, [string_changeAttributeValue])
+            .verifyItemWhereCause(itemName, string_whenAttributeName, [string_whenOp, string_whenValue])
 
+            .verifyItemNewValue(itemName, text_changeAttributeName, [text_changeAttributeValue])
+            .verifyItemWhereCause(itemName, text_whenAttributeName, [text_whenOp, text_whenValue])
+
+            .verifyItemNewValue(itemName, number_changeAttributeName, [number_changeAttributeValue])
+            .verifyItemWhereCause(itemName, number_whenAttributeName, [number_whenOp, String(number_whenValue)])
+
+            .verifyItemNewValue(itemName, date_changeAttributeName, [date_changeAttributeValue])
+            .verifyItemWhereCause(itemName, date_whenAttributeName, [date_whenOp, String(date_whenValue)])
+
+            .verifyItemNewValue(itemName, currency_changeAttributeName, [currency_changeAttributeValue])
+            .verifyItemWhereCause(itemName, currency_whenAttributeName, [currency_whenOp, String(currency_whenValue)])
+
+            .verifyItemNewValue(itemName, volume_changeAttributeName, [volume_changeAttributeValue])
+            .verifyItemWhereCause(itemName, volume_whenAttributeName, [volume_whenOp, String(volume_whenValue)])
+
+            .verifyItemNewValue(itemName, dimension_changeAttributeName, [dimension_changeAttributeLengthValue, dimension_changeAttributeWidthValue, dimension_changeAttributeHeightValue])
+            .verifyItemWhereCause(itemName, dimension_whenAttributeName, [dimension_whenOp, String(dimension_whenLengthValue), String(dimension_whenWidthValue), String(dimension_whenHeightValue)])
+
+            .verifyItemNewValue(itemName, area_changeAttributeName, [area_changeAttributeValue])
+            .verifyItemWhereCause(itemName, area_whenAttributeName, [area_whenOp, String(area_whenValue)])
+
+            .verifyItemNewValue(itemName, length_changeAttributeName, [length_changeAttributeValue])
+            .verifyItemWhereCause(itemName, length_whenAttributeName, [length_whenOp, String(length_whenValue)])
+
+            .verifyItemNewValue(itemName, width_changeAttributeName, [width_changeAttributeValue])
+            .verifyItemWhereCause(itemName, width_whenAttributeName, [width_whenOp, String(width_whenValue)])
+
+            .verifyItemNewValue(itemName, height_changeAttributeName, [height_changeAttributeValue])
+            .verifyItemWhereCause(itemName, height_whenAttributeName, [height_whenOp, String(height_whenValue)])
+
+            .verifyItemNewValue(itemName, select_changeAttributeName, [select_changeAttributeValue])
+            .verifyItemWhereCause(itemName, select_whenAttributeName, [select_whenOp, String(select_whenValue)])
+
+            .verifyItemNewValue(itemName, doubleselect_changeAttributeName, [doubleselect_changeAttributeValue1, doubleselect_changeAttributeValue2])
+            .verifyItemWhereCause(itemName, doubleselect_whenAttributeName, [doubleselect_whenOp, String(doubleselect_whenValue1), String(doubleselect_whenValue2)])
+        ;
     });
 });

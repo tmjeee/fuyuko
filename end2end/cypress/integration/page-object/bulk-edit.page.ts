@@ -842,26 +842,33 @@ export class BulkEditPageStep2 {
         return new BulkEditPageStep3();
     }
 
-    verifyItemOldValue(itemName: string, attributeName: string, value: string): BulkEditPageStep2 {
-        cy.get(`[test-bulk-edit-review-table]`)
-            .find(`[test-table-row-item='${itemName}']`)
-            .find(`[test-table-column-old-value='${attributeName}']`)
-            .should('contain.text', value);
+    verifyItemOldValue(itemName: string, attributeName: string, value: string[]): BulkEditPageStep2 {
+        cy.wrap(value).each((e, i, a) => {
+            cy.get(`[test-bulk-edit-review-table]`)
+                .find(`[test-table-row-item='${itemName}']`)
+                .find(`[test-table-column-old-value='${attributeName}']`)
+                .should('contain.text', value[i]);
+        });
         return this;
     }
 
-    verifyItemNewValue(itemName: string, attributeName: string, value: string): BulkEditPageStep2 {
-        cy.get(`[test-bulk-edit-review-table]`)
-            .find(`[test-table-row-item='${itemName}']`)
-            .find(`[test-table-column-new-value='${attributeName}']`)
-            .should('contain.text', value);
+    verifyItemNewValue(itemName: string, attributeName: string, value: string[]): BulkEditPageStep2 {
+        cy.wrap(value).each((e, i, a) => {
+            cy.get(`[test-bulk-edit-review-table]`)
+                .find(`[test-table-row-item='${itemName}']`)
+                .find(`[test-table-column-new-value='${attributeName}']`)
+                .should('contain.text', value[i]);
+        });
         return this;
     }
 
-    verifyItemWhenCause(itemName: string, value: string): BulkEditPageStep2 {
-        cy.get(`[test-bulk-edit-review-table]`)
-            .find(`[test-table-column-when]`)
-            .should('contain.text', value);
+    verifyItemWhereCause(itemName: string, attributeName: string, value: string[]): BulkEditPageStep2 {
+        cy.wrap(value).each((e, i, a) => {
+            cy.get(`[test-bulk-edit-review-table]`)
+                .find(`[test-table-row-item='${itemName}']`)
+                .find(`[test-table-column-when='${attributeName}']`)
+                .should('contain.text', value[i]);
+        });
         return this;
     }
 }
