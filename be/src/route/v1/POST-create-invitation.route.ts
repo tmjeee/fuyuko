@@ -1,5 +1,5 @@
 import {NextFunction, Router, Request, Response } from "express";
-import {check} from "express-validator";
+import {check, body} from "express-validator";
 import {
     aFnAnyTrue,
     v,
@@ -71,7 +71,9 @@ export const createInvitation = async (email: string, groupIds: number[] = []): 
 
 const httpAction = [
     [
-        check('email').isLength({min:1}).isEmail(),
+        body('email').isLength({min:1}).isEmail(),
+        body('groupIds').isArray(),
+        body('groupIds.*').isNumeric()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,

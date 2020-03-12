@@ -82,7 +82,7 @@ const httpAction: any[] = [
                         [name, null, ft.mime, buffer.length, buffer, userId]);
                     userAvatarId = qCount[0].ID;
                 } else {
-                    q = await conn.query(`INSERT INTO TBL_USER_AVATAR (NAME, USER_ID, GLOBAL_AVATAR_ID, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?) `,
+                    q = await conn.query(`INSERT INTO TBL_USER_AVATAR (NAME, USER_ID, GLOBAL_AVATAR_ID, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?,?) `,
                         [name, userId, null, ft.mime, buffer.length, buffer]);
                     userAvatarId = q.insertId;
                 }

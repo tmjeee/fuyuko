@@ -10,6 +10,7 @@ import config from './config';
 import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from "./route/v1/common-middleware";
 import {Registry} from "./registry";
 import {runCustomRuleSync} from "./custom-rule";
+import {validationResult} from 'express-validator';
 
 runBanner();
 

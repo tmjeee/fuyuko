@@ -35,9 +35,8 @@ const httpAction: any[] = [
                     R.DESCRIPTION AS R_DESCRIPTION
                 FROM TBL_GROUP AS G
                 LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
-                LEFT JOIN TBL_GROUP AS G ON G.ID = LGR.GROUP_ID
                 LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
-                WHERE G.STATUS = 'ENABLED' AND G.ID=?
+                WHERE G.STATUS = 'ENABLED' AND G.ID=? 
             `, [groupId]);
 
             const group: Group = q.reduce((group: Group, c: QueryI, index: number) => {

@@ -1,6 +1,6 @@
 
 import {Request, Response, NextFunction, Router} from 'express';
-import {check} from 'express-validator';
+import {check, body} from 'express-validator';
 
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {RegistrationResponse} from "../../model/registration.model";
@@ -43,9 +43,11 @@ const selfRegister = async (username: string, email: string, firstName: string, 
 
 const httpAction = [
     [
-        check('username').isLength({min:1}),
-        check('email').isLength({min:1}).isEmail(),
-        check('password').isLength({min:1})
+        body('username').exists().isLength({min:1}),
+        body('email').exists().isLength({min:1}).isEmail(),
+        body('password').exists().isLength({min:1}),
+        body('firstName').exists().isLength({min:1}),
+        body('lastName').exists().isLength({min:1})
     ],
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {

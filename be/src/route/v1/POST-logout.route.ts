@@ -6,7 +6,10 @@ const httpAction: any[] = [
     [],
     validateMiddlewareFn,
     (req: Request, res: Response, next: NextFunction) => {
-        res.status(200).json({});
+        res.status(200).json({
+            ok: true,
+            message: 'Logged out, have a nice day'
+        });
     }
 ]
 

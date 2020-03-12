@@ -6,6 +6,7 @@ import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
 import {hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
 import {sprintf} from "sprintf";
+import {ApiError} from "../../model/error.model";
 
 
 
@@ -102,50 +103,15 @@ export const v = (vFns: ValidateFn[], aFn: AggregationFn) => {
                 makeApiErrorObj(
                     makeApiError(
                         msg.join(', '),
-                        '', 'Security')
+                        '', 'Security insufficient priviledge(s)')
                 )
             );
-        }
+         }
     }
 }
 
 //////////////////////////////////////////////////////////////////////////////// --- end role validation functions
 
-
-/*
-const validateRoleMiddlewareFn = (roleNames: string[],
-                                  fn: (userId: number, roleNames: string[]) => Promise<boolean>,
-                                  errFn: (req: Request) => string) => {
-    return (async (req: Request, res: Response, next: NextFunction) => {
-        const jwtPayload: JwtPayload = getJwtPayload(res);
-        const userId: number = jwtPayload.user.id;
-        const hasRole: boolean = await fn(userId, roleNames);
-        if (!hasRole) {
-            res.status(403).json(
-                makeApiErrorObj(
-                    makeApiError(
-                        errFn(req),
-                        'roleNames', roleNames.join(','), 'Security')
-                )
-            );
-            return;
-        }
-        next();
-    });
-}
-
-export const validateUserInAnyRoleMiddlewareFn = (roleNames: string[]) => {
-    return validateRoleMiddlewareFn(roleNames,
-        async (userId: number, roleNames: string[]): Promise<boolean> => await hasAnyUserRoles(userId, roleNames),
-        (req: Request) => `Unauthorized: Require role ${roleNames.join(',')} to perform ${req.method} ${req.url}`);
-}
-
-export const validateUserInNoneOfRolesMiddlewareF = (roleNames: string[]) => {
-    return validateRoleMiddlewareFn(roleNames,
-        async (userId: number, roleNames: string[]): Promise<boolean> => await hasNoneUserRoles(userId, roleNames),
-        (req: Request) => `Unauthorized: Require roles to not present ${roleNames.join(',')} to perform ${req.method} ${req.url}`);
-}
-*/
 
 export const getJwtPayload = (res: Response): JwtPayload => {
    return res.locals.jwtPayload;
@@ -177,9 +143,7 @@ export const httpLogMiddlewareFn = (req: Request, res: Response, next: NextFunct
 export const validateMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
     const errors  = validationResult(req);
     if(!errors.isEmpty()) {
-        res.status(422).json({
-            errors: errors.array()
-        });
+        res.status(400).json(makeApiErrorObj(...errors.array()))
     } else {
         next();
     }

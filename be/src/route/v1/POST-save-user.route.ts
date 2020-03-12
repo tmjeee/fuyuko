@@ -1,6 +1,6 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
-import {check} from 'express-validator';
+import {check, body} from 'express-validator';
 import {
     aFnAnyTrue,
     getJwtPayload, v,
@@ -18,12 +18,12 @@ import {QueryA} from "../../db/db";
 
 const httpAction: any[] = [
     [
-        check('userId').exists(),
-        check('firstName'),
-        check('lastName'),
-        check('email'),
-        check('theme'),
-        check('password'),
+        body('userId').exists(),
+        body('firstName'),
+        body('lastName'),
+        body('email'),
+        body('theme'),
+        body('password'),
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,

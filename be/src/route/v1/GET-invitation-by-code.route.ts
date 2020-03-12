@@ -8,6 +8,9 @@ import {makeApiError, makeApiErrorObj} from "../../util";
 import {Registry} from "../../registry";
 import {ROLE_VIEW} from "../../model/role.model";
 
+/**
+ * Get invitation by code
+ */
 const httpAction = [
     [
         check('code').exists()
