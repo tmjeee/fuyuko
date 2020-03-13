@@ -30,7 +30,7 @@ const httpAction: any[] = [
         await doInDbConnection(async (conn: Connection) => {
            const q1: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_USER_GROUP WHERE GROUP_ID = ? AND USER_ID = ?`, [groupId, userId]);
            if (q1.length > 0 && q1[0].COUNT > 0) {
-               res.status(200).json(makeApiErrorObj(
+               res.status(400).json(makeApiErrorObj(
                    makeApiError(`User ${userId} already in group ${groupId}`, 'userId', String(userId), 'System')
                ));
                return;

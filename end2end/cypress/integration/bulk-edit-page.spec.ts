@@ -642,11 +642,11 @@ describe(`bulk edit spec`, () => {
             .verifyItemNewValue(itemName, height_changeAttributeName, [height_changeAttributeValue])
             .verifyItemWhereCause(itemName, height_whenAttributeName, [height_whenOp, String(height_whenValue)])
 
-            .verifyItemNewValue(itemName, select_changeAttributeName, [select_changeAttributeValue])
-            .verifyItemWhereCause(itemName, select_whenAttributeName, [select_whenOp, String(select_whenValue)])
+            .verifyItemNewValue(itemName, select_changeAttributeName, [select_changeAttributeValue_forVerification])
+            .verifyItemWhereCause(itemName, select_whenAttributeName, [select_whenOp, String(select_whenValue_forVerification)])
 
-            .verifyItemNewValue(itemName, doubleselect_changeAttributeName, [doubleselect_changeAttributeValue1, doubleselect_changeAttributeValue2])
-            .verifyItemWhereCause(itemName, doubleselect_whenAttributeName, [doubleselect_whenOp, String(doubleselect_whenValue1), String(doubleselect_whenValue2)])
+            .verifyItemNewValue(itemName, doubleselect_changeAttributeName, [doubleselect_changeAttributeValue1, doubleselect_changeAttributeValue2_forVerification])
+            .verifyItemWhereCause(itemName, doubleselect_whenAttributeName, [doubleselect_whenOp, String(doubleselect_whenValue1), String(doubleselect_whenValue2_forVerification)])
         ;
     });
 });

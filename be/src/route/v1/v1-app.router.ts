@@ -40,7 +40,7 @@ import registerDeleteViewsRoute from './DELETE-views.route';
 import registerGetAllAttributesByViewRoute from './GET-all-attributes-by-view.route';
 import registerGetSearchAllAttributesByViewRoute from './GET-search-attributes-by-view.route';
 import registerPostUpdateAttributesRoute from './POST-update-attributes.route';
-import registerPostUpdateAttributeStatusRoute from './POST-update-attributes.route';
+import registerPostChangeAttributeStatusRoute from './POST-change-attribute-status.route';
 import registerGetAllItemsByViewRoute from './GET-all-items-by-view.route';
 import registerGetItemImageByIdRoute from './GET-item-image-by-id.route';
 import registerGetItemPrimaryImageByItemIdRoute from './GET-item-primary-image.route';
@@ -98,7 +98,6 @@ import registerPostRemoveCustomRuleFromViewRoute from './DELETE-remove-custom-ru
 import registerGetUserNotificationsRoute from './GET-user-notification.route';
 import registerPostUserNotificationRoute from './POST-user-notification.route';
 import registerPostAddAttributeRoute from './POST-add-attributes.route';
-import registerPostChangeAttributeStatusRoute from './POST-change-attribute-status.route';
 import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
 
@@ -147,11 +146,12 @@ const reg = (router: Router, regi: Registry) => {
     registerGetAllAttributesByViewRoute(v1AppRouter, registry);
     registerGetSearchAllAttributesByViewRoute(v1AppRouter, registry);
     registerPostUpdateAttributesRoute(v1AppRouter, registry);
-    registerPostUpdateAttributeStatusRoute(v1AppRouter, registry);
+    registerPostChangeAttributeStatusRoute(v1AppRouter, registry);
     registerGetAllItemsByViewRoute(v1AppRouter, registry);
     registerGetItemImageByIdRoute(v1AppRouter, registry);
     registerGetItemPrimaryImageByItemIdRoute(v1AppRouter, registry);
     registerPostUpdateItemRoute(v1AppRouter, registry);
+
     registerPostUpdateItemStatusRoute(v1AppRouter, registry);
     registerGetAllRulesByViewRoute(v1AppRouter, registry);
     registerPostUpdateRuleStatusRoute(v1AppRouter, registry);
@@ -205,7 +205,6 @@ const reg = (router: Router, regi: Registry) => {
     registerGetUserNotificationsRoute(v1AppRouter, registry);
     registerPostUserNotificationRoute(v1AppRouter, registry);
     registerPostAddAttributeRoute(v1AppRouter, registry);
-    registerPostChangeAttributeStatusRoute(v1AppRouter, registry);
     registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
 };

@@ -7,7 +7,7 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check} from 'express-validator';
+import {check, param} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
@@ -16,8 +16,8 @@ import {User} from "../../model/user.model";
 
 const httpAction: any[] = [
     [
-        check('groupId').exists().isNumeric(),
-        check('username')
+        param('groupId').exists().isNumeric(),
+        param('username')
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -62,7 +62,7 @@ const httpAction: any[] = [
                     LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
                     WHERE G.ID = ? 
                 ) AND U.USERNAME LIKE ?
-            `, [groupId, `%${username}%`]);
+            `, [groupId, `%${username ? username : ''}%`]);
 
 
             const u: Map<number/*user id*/, User> = new Map();

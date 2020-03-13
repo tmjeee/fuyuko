@@ -29,7 +29,7 @@ const httpAction: any[] = [
 
             const qCount: QueryA = await conn.query(`SELECT COUNT(*) FROM TBL_LOOKUP_USER_GROUP WHERE USER_ID = ? AND GROUP_ID = ? `, [userId, groupId]);
             if (!qCount.length && !Number(qCount[0].COUNT)) { // aleady exists
-                res.status(200).json({
+                res.status(400).json({
                     status: 'ERROR',
                     message: `User ${userId} not in group ${groupId}`
                 } as ApiResponse);

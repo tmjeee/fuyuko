@@ -7,7 +7,7 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check} from 'express-validator';
+import {check, param} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
@@ -16,8 +16,8 @@ import {Paginable} from "../../model/pagnination.model";
 
 const httpAction: any[] = [
     [
-        check('roleName').exists(),
-        check('groupName')
+        param('roleName').exists(),
+        param('groupName')
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -25,6 +25,7 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const roleName: string = req.params.roleName;
         const groupName: string = req.params.groupName;
+        console.log('************** roleName', roleName, groupName);
 
         await doInDbConnection(async (conn: Connection) => {
 
@@ -41,7 +42,7 @@ const httpAction: any[] = [
                      LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
                      WHERE R.NAME = ? 
                 ) AND G.NAME LIKE ?
-            `,[roleName, `%${groupName}%`]);
+            `,[roleName, `%${groupName ? groupName : ''}%`]);
             const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -63,7 +64,7 @@ const httpAction: any[] = [
                      LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
                      WHERE R.NAME = ? 
                 ) AND G.NAME LIKE ?
-            `, [roleName, `%${groupName}%`]);
+            `, [roleName, `%${groupName ? groupName : ''}%`]);
             const m: Map<number/*groupId*/, Group> = new Map();
             const groups: Group[] = q.reduce((groups: Group[], c: QueryI) => {
                 const groupId: number = c.G_ID;
@@ -94,6 +95,7 @@ const httpAction: any[] = [
             }, []);
 
             const totalGroups: number = qTotal[0].COUNT;
+            console.log('********************** ', totalGroups, qTotal[0].COUNT, groups);
             res.status(200).json({
                 total: totalGroups,
                 limit: totalGroups,

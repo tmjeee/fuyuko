@@ -7,7 +7,7 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check} from 'express-validator';
+import {check, param} from 'express-validator';
 import { Item } from "../../model/item.model";
 import {Item2} from "../model/server-side.model";
 import {convert} from "../../service/conversion-item.service";
@@ -16,7 +16,7 @@ import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction: any[] = [
    [
-       check('viewId').exists().isNumeric()
+       param('viewId').exists().isNumeric()
    ],
    validateMiddlewareFn,
    validateJwtMiddlewareFn,
