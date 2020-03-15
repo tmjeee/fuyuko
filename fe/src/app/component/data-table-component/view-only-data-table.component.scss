@@ -12,7 +12,9 @@
       }
       td {
         &.expansion {
-
+          .mat-icon {
+            cursor: pointer;
+          }
         }
         &.attribute {
 

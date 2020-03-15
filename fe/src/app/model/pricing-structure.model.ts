@@ -49,6 +49,8 @@ export interface TablePricingStructureItemWithPrice {
 export interface PriceDataItem {
     pricingStructureId: number;
     pricingStructureName: string;
+    viewId: number;
+    viewName: string;
     item: PricingStructureItemWithPrice;
 }
 

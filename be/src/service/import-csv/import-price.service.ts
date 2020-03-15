@@ -7,6 +7,8 @@ import {addItemToPricingStructure, getPricingStructureItem} from "../pricing-str
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import * as util from 'util';
+import {getViewById} from "../view.service";
+import {View} from "../../model/view.model";
 
 export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<PriceDataImport> => {
 
@@ -154,9 +156,13 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
             }
         }
 
+        const view: View = await getViewById(ps.viewId);
+
         return {
             pricingStructureId,
             pricingStructureName,
+            viewId: view.id,
+            viewName: view.name,
             item: p
         } as PriceDataItem;
     }))).filter((i) => !!i);

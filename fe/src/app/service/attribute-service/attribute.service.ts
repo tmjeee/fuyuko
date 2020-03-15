@@ -19,7 +19,8 @@ export class AttributeService {
   constructor(private httpClient: HttpClient) {}
 
   getAllAttributesByView(viewId: number): Observable<Attribute[]> {
-    return this.httpClient.get<Attribute[]>(URL_ALL_ATTRIBUTES_BY_VIEW().replace(':viewId', String(viewId)));
+    return this.httpClient.get<Attribute[]>(
+        URL_ALL_ATTRIBUTES_BY_VIEW().replace(':viewId', String(viewId)));
   }
 
   getAttributeByView(viewId: number, attributeId: number): Observable<Attribute> {

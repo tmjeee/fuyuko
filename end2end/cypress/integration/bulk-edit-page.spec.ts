@@ -432,7 +432,8 @@ describe(`bulk edit spec`, () => {
     it.only (`should allow bulk edit process`, () => {
 
         let i = 0;
-        const viewName = `Test View 1`;  // createNewView();
+        // const viewName = `Test View 1`;  // createNewView();
+        const viewName = createNewView();
         refreshVariables();
         const increment = () => {
             i += 1;
@@ -645,8 +646,26 @@ describe(`bulk edit spec`, () => {
             .verifyItemNewValue(itemName, select_changeAttributeName, [select_changeAttributeValue_forVerification])
             .verifyItemWhereCause(itemName, select_whenAttributeName, [select_whenOp, String(select_whenValue_forVerification)])
 
-            .verifyItemNewValue(itemName, doubleselect_changeAttributeName, [doubleselect_changeAttributeValue1, doubleselect_changeAttributeValue2_forVerification])
-            .verifyItemWhereCause(itemName, doubleselect_whenAttributeName, [doubleselect_whenOp, String(doubleselect_whenValue1), String(doubleselect_whenValue2_forVerification)])
+            .verifyItemNewValue(itemName, doubleselect_changeAttributeName, [doubleselect_changeAttributeValue1_forVerification, doubleselect_changeAttributeValue2_forVerification])
+            .verifyItemWhereCause(itemName, doubleselect_whenAttributeName, [doubleselect_whenOp, String(doubleselect_whenValue1_forVerification), String(doubleselect_whenValue2_forVerification)])
         ;
+
+        const bulkEditPageStep3 = bulkEditPageStep2
+            .clickPrevious()    // back to step 1
+            .verifyStep()
+            .clickNext()        // back to step 2
+            .verifyStep()
+            .clickNext()        // go to step 3
+            .verifyStep()
+        ;
+
+        cy.wait(1000)
+
+        bulkEditPageStep3
+            .verifyJobDone()
+            .clickDone()
+        ;
+
+        deleteView(viewName);
     });
 });

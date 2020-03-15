@@ -11,15 +11,22 @@ import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from
 import {Registry} from "./registry";
 import {runCustomRuleSync} from "./custom-rule";
 import {validationResult} from 'express-validator';
+import {Options} from "body-parser";
 
 runBanner();
 
 const port: number = Number(config.port);
 const app: Express = express();
 
+const options: Options = {
+   limit: config['request-payload-limit']
+};
+
 app.use(timingLogMiddlewareFn);
-app.use(express.urlencoded());
-app.use(express.json());
+app.use(express.urlencoded(options));
+app.use(express.json(options));
+app.use(express.text(options))
+app.use(express.raw(options))
 app.use(cookieParser());
 app.use(httpLogMiddlewareFn);
 

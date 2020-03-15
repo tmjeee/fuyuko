@@ -56,16 +56,26 @@ export class ImportDataService {
                      dataImport: AttributeDataImport | ItemDataImport | PriceDataImport): Observable<Job> {
         switch (uploadType) {
             case 'ATTRIBUTE': {
-                const formData: FormData = new FormData();
-                return this.httpClient.post<Job>(URL_SCHEDULE_ATTRIBUTES().replace(':viewId', String(viewId)), formData);
+                const attributeDataImport: AttributeDataImport = dataImport as AttributeDataImport;
+                return this.httpClient.post<Job>(URL_SCHEDULE_ATTRIBUTES().replace(':viewId', String(viewId)), {
+                    dataImportId: attributeDataImport.dataImportId,
+                    attributes: attributeDataImport.attributes
+                });
             }
             case 'ITEM': {
-                const formData: FormData = new FormData();
-                return this.httpClient.post<Job>(URL_SCHEDULE_ITEMS().replace(':viewId', String(viewId)), formData);
+                const itemDataImport: ItemDataImport = dataImport as ItemDataImport;
+                return this.httpClient.post<Job>(URL_SCHEDULE_ITEMS().replace(':viewId', String(viewId)), {
+                    dataImportId: itemDataImport.dataImportId,
+                    items: itemDataImport.items
+                });
             }
             case 'PRICE': {
-                const formData: FormData = new FormData();
-                return this.httpClient.post<Job>(URL_SCHEDULE_PRICES().replace(':viewId', String(viewId)), formData);
+                const priceDataImport: PriceDataImport = dataImport as PriceDataImport;
+                console.log('************* priceDataImport', priceDataImport);
+                return this.httpClient.post<Job>(URL_SCHEDULE_PRICES().replace(':viewId', String(viewId)), {
+                    dataImportId: priceDataImport.dataImportId,
+                    priceDataItems: priceDataImport.items
+                });
             }
         }
     }

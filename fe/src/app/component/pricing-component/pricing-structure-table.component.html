@@ -9,7 +9,7 @@
         <mat-select [attr.test-mat-select-pricing-structure]="''" (selectionChange)="onPricingStructureSelectionChanged($event)" [(value)]="pricingStructure">
             <mat-option [value]="undefined">--- Select one ---</mat-option>
             <mat-option [attr.test-mat-select-option-pricing-structure]="ps.name" *ngFor="let ps of pricingStructureInput.pricingStructures" [value]="ps">
-                {{ps.id}} - {{ps.name}}
+                {{ps.id}} - {{ps.name}} in view {{viewForPricingStructure(ps)?.name}}
             </mat-option>
         </mat-select>
         <mat-hint>Select a pricing structure</mat-hint>
@@ -26,6 +26,7 @@
                 <div>ID: {{pricingStructure.id}}</div>
                 <div>Name: {{pricingStructure.name}}</div>
                 <div>Description: {{pricingStructure.description}}</div>
+                <div>View: {{viewForPricingStructure(pricingStructure)?.name}}</div>
             </div>
         </div>
     </ng-container>

@@ -1,0 +1,27 @@
+
+<div class="view-only-pricing-data-items-component">
+    <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="pricingStructureName">
+            <th mat-header-cell *matHeaderCellDef>Pricing Structure Name</th>
+            <td mat-cell *matCellDef="let priceDataItem"> {{priceDataItem.pricingStructureName}} {{priceDataItem.pricingStructureId}} </td>
+        </ng-container>
+        <ng-container matColumnDef="viewName">
+            <th mat-header-cell *matHeaderCellDef>View Name</th>
+            <td mat-cell *matCellDef="let priceDataItem">{{priceDataItem.viewName}}</td>
+        </ng-container>
+        <ng-container matColumnDef="itemName">
+            <th mat-header-cell *matHeaderCellDef>Item Name</th>
+            <td mat-cell *matCellDef="let priceDataItem">{{priceDataItem.item.itemName}}</td>
+        </ng-container>
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Price</th>
+            <td mat-cell *matCellDef="let priceDataItem">{{priceDataItem.item.price}}</td>
+        </ng-container>
+        <ng-container matColumnDef="country">
+            <th mat-header-cell *matHeaderCellDef>Country</th>
+            <td mat-cell *matCellDef="let priceDataImportItem">{{priceDataImportItem.item.country}}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let attribute; columns: displayedColumns"></tr>
+    </table>
+</div>

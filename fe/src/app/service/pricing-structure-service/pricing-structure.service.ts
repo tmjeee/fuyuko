@@ -19,6 +19,8 @@ const URL_ALL_ADDABLE_PRICING_STRUCTURE_ITEMS = () => `${config().api_host_url}/
 const URL_PRICING_STRUCTURE_BY_ID = () => `${config().api_host_url}/pricingStructure/:pricingStructureId`;
 const URL_ADD_PRICING_STRUCURE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/add-items`;
 
+const URL_ALL_PRICING_STRUCTURE_BY_VIEW = () => `${config().api_host_url}/pricingStructures/view/:viewId`;
+
 
 @Injectable()
 export class PricingStructureService {
@@ -81,5 +83,10 @@ export class PricingStructureService {
         return this.httpClient.post(
             URL_ADD_PRICING_STRUCURE_ITEMS().replace(':pricingStructureId', String(pricingStructureId)),
             pricingStructureItems);
+    }
+
+    getAllPricingStructuresByView(viewId: number): Observable<PricingStructure[]> {
+        return this.httpClient.get<PricingStructure[]>(
+            URL_ALL_PRICING_STRUCTURES().replace(':viewId', String(viewId)));
     }
 }

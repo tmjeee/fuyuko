@@ -110,7 +110,6 @@ class DateItemValueConverter extends AbstractItemValueConverter {
     return `{type: ${i.type} value ${i.value}}`;
   }
   protected _convertToString(a: Attribute, i: DateValue): string {
-    console.log('******************* conver to string (date)', i.value);
     if (i.value) {
       let m: moment.Moment;
       if (typeof i.value === 'string') {

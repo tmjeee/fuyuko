@@ -28,9 +28,9 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const dataImportId: number = Number(req.body.dataImportId);
         const priceDataItems: PriceDataItem[] =  req.body.priceDataItems;
-        const pricingItems: PricingStructureItemWithPrice[] = priceDataItems.map((p: PriceDataItem) => p.item).filter((i) => !!i);
+        // const pricingItems: PricingStructureItemWithPrice[] = priceDataItems.map((p: PriceDataItem) => p.item).filter((i) => !!i);
 
-        const job: Job = await runJob(viewId, dataImportId, pricingItems);
+        const job: Job = await runJob(viewId, dataImportId, priceDataItems);
 
         res.status(200).json(job);
     }

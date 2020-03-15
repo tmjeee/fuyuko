@@ -84,7 +84,7 @@ const _addItem = async (conn: Connection, viewId: number, item2: Item2): Promise
 
             for (const entry of metadata.entries) {
                 const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
-                    [newMetadataId, entry.key, entry.value, entry.dataType]);
+                    [newMetadataId, entry.key, entry.value ? entry.value : '', entry.dataType]);
             }
         }
     }

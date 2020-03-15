@@ -8,9 +8,9 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {param, body} from 'express-validator';
-import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
+import {PriceDataItem, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 import {ApiResponse} from "../../model/response.model";
-import {setPrices} from "../../service/pricing-structure-item.service";
+import {setPrices, setPrices2} from "../../service/pricing-structure-item.service";
 import {ROLE_EDIT} from "../../model/role.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 
@@ -31,9 +31,9 @@ const httpAction: any[] = [
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const pricingStructureItems: PricingStructureItemWithPrice[] =  req.body.pricingStructureItems;
 
-        const totalUpdates = await setPrices(pricingStructureId, pricingStructureItems);
+        const totalUpdates = await setPrices2(pricingStructureId, pricingStructureItems);
 
-        if (totalUpdates == pricingStructureItems.length) {
+        if (totalUpdates === pricingStructureItems.length) {
             res.status(200).json({
                 status: "SUCCESS",
                 message: `Pricing updated`

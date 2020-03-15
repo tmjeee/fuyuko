@@ -131,7 +131,8 @@ export class ExportDataComponent implements OnInit {
 
     onFirstFormSubmit() {
         this.secondFormReady = false;
-        const viewId: number = this.viewFormControl.value;
+        const view: View = this.viewFormControl.value;
+        const viewId: number = view.id;
         forkJoin({
             a: this.viewAttributesFn(viewId),
             p: this.viewPricingStructuresFn(viewId)

@@ -1,39 +1,75 @@
 import {Connection} from "mariadb";
-import {PricingStructureItemWithPrice} from "../model/pricing-structure.model";
+import {PriceDataItem, PricingStructureItemWithPrice} from "../model/pricing-structure.model";
 import {doInDbConnection, QueryA, QueryResponse} from "../db";
 import {LoggingCallback, newLoggingCallback} from "./job-log.service";
 import {i} from "../logger";
 
-export const setPrices = async (pricingStructureId: number, pricingStructureItems: PricingStructureItemWithPrice[], loggingCallback: LoggingCallback = newLoggingCallback()) => {
+export const setPrices = async (priceDataItems: PriceDataItem[], loggingCallback: LoggingCallback = newLoggingCallback()) => {
     let totalUpdates = 0;
-    for (const pricingStructureItem of pricingStructureItems) {
-        const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
-            const qc: QueryA = await conn.query(`
-                    SELECT COUNT(*) AS COUNT 
-                    FROM TBL_PRICING_STRUCTURE_ITEM AS I 
-                    INNER JOIN TBL_PRICING_STRUCTURE AS P ON P.ID = I.PRICING_STRUCTURE_ID
-                    WHERE I.ITEM_ID=? AND I.PRICING_STRUCTURE_ID=?;
-                `, [pricingStructureItem.itemId, pricingStructureId]);
+    for (const priceDataItem of priceDataItems) {
+        const pricingStructureId: number = priceDataItem.pricingStructureId;
+        const itemId: number = priceDataItem.item.itemId;
+        const price: number = priceDataItem.item.price;
+        const country: string = priceDataItem.item.country;
 
-            if (qc.length <= 0 || qc[0].COUNT <= 0) { // insert
-                const q: QueryResponse = await conn.query(`
-                        INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, PRICE, COUNTRY) VALUES (?,?,?,?)
-                    `, [pricingStructureItem.itemId, pricingStructureId, pricingStructureItem.price, pricingStructureItem.country]);
-                loggingCallback(`INFO`, `inserting price ${pricingStructureItem.price} ${pricingStructureItem.country} for item ${pricingStructureItem.itemId}`);
-                return q;
-            } else { // update
-                const q: QueryResponse = await conn.query(`
-                        UPDATE TBL_PRICING_STRUCTURE_ITEM SET PRICE=?, COUNTRY=? WHERE ITEM_ID=? AND PRICING_STRUCTURE_ID=?
-                    `, [pricingStructureItem.price, pricingStructureItem.country, pricingStructureItem.itemId, pricingStructureId]);
-                loggingCallback(`INFO`, `updating price ${pricingStructureItem.price} ${pricingStructureItem.country} for item ${pricingStructureItem.itemId}`);
-                return q;
-            }
-        });
-        if (q.affectedRows > 0) {
+        const q: QueryResponse =  await _setPrice(pricingStructureId, itemId, price, country);
+        if (q && q.affectedRows > 0) {
             totalUpdates++;
         }
     }
     return totalUpdates;
+}
+
+
+export const setPrices2 = async (pricingStructureId: number, pricingStructureItems: PricingStructureItemWithPrice[], loggingCallback: LoggingCallback = newLoggingCallback()): Promise<number> => {
+    let totalUpdates = 0;
+    for (const pricingStructureItem of pricingStructureItems) {
+
+        const itemId: number = pricingStructureItem.itemId;
+        const price: number = pricingStructureItem.price;
+        const country: string = pricingStructureItem.country;
+
+        const q: QueryResponse = await _setPrice(pricingStructureId, itemId, price, country);
+        if (q && q.affectedRows > 0) {
+            totalUpdates++;
+        }
+    }
+    return totalUpdates;
+}
+
+
+const _setPrice = async (pricingStructureId: number, itemId: number, price: number, country: string, loggingCallback: LoggingCallback = newLoggingCallback()): Promise<QueryResponse> => {
+    const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
+
+        const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_PRICING_STRUCTURE WHERE ID = ? `, [pricingStructureId]);
+        if (qq[0].COUNT < 0) {  // pricing structure doesn't exists
+            loggingCallback(`WARN`, `pricing structure with id ${pricingStructureId} does not exists`);
+            return null;
+        }
+
+
+        const qc: QueryA = await conn.query(`
+                    SELECT COUNT(*) AS COUNT 
+                    FROM TBL_PRICING_STRUCTURE_ITEM AS I 
+                    INNER JOIN TBL_PRICING_STRUCTURE AS P ON P.ID = I.PRICING_STRUCTURE_ID
+                    WHERE I.ITEM_ID=? AND I.PRICING_STRUCTURE_ID=?;
+                `, [itemId, pricingStructureId]);
+
+        if (qc.length <= 0 || qc[0].COUNT <= 0) { // insert
+            const q: QueryResponse = await conn.query(`
+                        INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, PRICE, COUNTRY) VALUES (?,?,?,?)
+                    `, [itemId, pricingStructureId, price, country]);
+            loggingCallback(`INFO`, `inserting price ${price} ${country} for item ${itemId} in pricing structure ${pricingStructureId}`);
+            return q;
+        } else { // update
+            const q: QueryResponse = await conn.query(`
+                        UPDATE TBL_PRICING_STRUCTURE_ITEM SET PRICE=?, COUNTRY=? WHERE ITEM_ID=? AND PRICING_STRUCTURE_ID=?
+                    `, [price, country, itemId, pricingStructureId]);
+            loggingCallback(`INFO`, `updating price ${price} ${country} for item ${itemId} in pricing structure ${pricingStructureId}`);
+            return q;
+        }
+    });
+    return q;
 }
 
 export const addItemToPricingStructure = async (viewId: number, pricingStructureId: number, itemId: number): Promise<boolean> => {

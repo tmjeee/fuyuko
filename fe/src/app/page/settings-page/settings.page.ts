@@ -45,7 +45,7 @@ export class SettingsPageComponent implements OnInit {
         .pipe(
             tap((s: Settings) => {
                 this.settings = s;
-                this.notificationService.info('Saved', 'Settings changes save');
+                this.notificationService.success('Saved', 'Settings changes save');
             })
         ).subscribe();
   }
