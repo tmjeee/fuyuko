@@ -51,8 +51,11 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
                 await conn.query(`
                 INSERT INTO TBL_DATA_EXPORT_FILE (DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)
             `, [dataExportId, name, 'text/csv', Buffer.byteLength(csv), csv]);
+
+                await jobLogger.updateProgress('COMPLETED');
             });
         } catch(e) {
+            console.error(e);
             await jobLogger.logError(`${e.toString()}`);
             await jobLogger.updateProgress("FAILED");
         } finally {
@@ -65,11 +68,11 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
 
 
 const pair1ToCsv = (pair1s: Pair1[]): string => {
-    const r: string =  pair1s.map((p: Pair1) => `${p.key}=${p.value}`).join('|');
+    const r: string =  (pair1s || []).map((p: Pair1) => `${p.key}=${p.value}`).join('|');
     return (r ? r : '');
 }
 
 const pair2ToCsv = (pair2s: Pair2[]): string => {
-    const r: string =  pair2s.map((p: Pair2) => `${p.key1}=${p.key2}=${p.value}`).join('|');
+    const r: string =  (pair2s || []).map((p: Pair2) => `${p.key1}=${p.key2}=${p.value}`).join('|');
     return (r ? r : '');
 }

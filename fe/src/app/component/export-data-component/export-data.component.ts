@@ -205,7 +205,8 @@ export class ExportDataComponent implements OnInit {
         const exportType: DataExportType = this.exportTypeFormControl.value;
 
         // figure out view id (from step 1)
-        const viewId: number = this.viewFormControl.value;
+        const view: View = this.viewFormControl.value;
+        const viewId: number = view.id;
 
         // figure out attributes (from step 2)
         let att: Attribute[] = null;

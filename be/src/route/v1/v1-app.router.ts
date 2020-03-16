@@ -101,6 +101,7 @@ import registerPostAddAttributeRoute from './POST-add-attributes.route';
 import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
 import registerGetAllPricingStructureByViewRoute from './GET-all-pricing-structures-by-view.route';
+import registerGetDataExportByIdRoute from './GET-data-export-by-id.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -209,6 +210,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
     registerGetAllPricingStructureByViewRoute(v1AppRouter, registry);
+    registerGetDataExportByIdRoute(v1AppRouter, registry);
 };
 
 
