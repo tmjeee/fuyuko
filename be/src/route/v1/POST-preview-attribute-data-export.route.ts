@@ -12,11 +12,13 @@ import {Attribute} from "../../model/attribute.model";
 import {AttributeDataExport} from "../../model/data-export.model";
 import {preview} from "../../service/export-csv/export-attribute.service";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
-        // body('attributes').exists().isArray(),
+        body('attributes').optional({nullable: true}).isArray(),
+        body('filter').optional({nullable: true}).isArray()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -24,8 +26,10 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const atts: Attribute[] = req.body.attributes;
+        const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
         const attributes: Attribute[] = await preview(viewId, atts);
         res.status(200).json({
+            type: 'ATTRIBUTE',
             attributes
         } as AttributeDataExport);
     }

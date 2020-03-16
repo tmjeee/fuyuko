@@ -12,7 +12,7 @@
     "copy-shared-utils": "cp -fr ../fe/src/app/shared-utils ./src/ ;",
     "preexec": "npm run copy",
     "exec": "npm run tsc",
-    "postexec": "npm run start",
+    "postexec": "npm run start-mem",
     "runUpdater": "node -- src/runUpdater.js",
     "test": "npx jasmine --reporter=jasmine-ts-console-reporter",
     "prebuild": "npm run copy",

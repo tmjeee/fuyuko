@@ -14,6 +14,7 @@ export const preview = async (viewId: number, pricingStructureId: number, filter
         return await getPricedItem2WithFiltering(conn, viewId, pricingStructureId, null, filter);
     });
 
+    console.log('********************** item2s', item2s);
     const items: PricedItem[] = convert(item2s) as PricedItem[];
 
     return {

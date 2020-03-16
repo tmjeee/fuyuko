@@ -7,7 +7,7 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check} from 'express-validator';
+import {check, param} from 'express-validator';
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/response.model";
@@ -15,9 +15,9 @@ import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [
     [
-        check('viewId').exists().isNumeric(),
-        check('ruleId').exists().isNumeric(),
-        check('status').exists()
+        param('viewId').exists().isNumeric(),
+        param('ruleId').exists().isNumeric(),
+        param('status').exists()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,

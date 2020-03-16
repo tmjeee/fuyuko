@@ -23,6 +23,7 @@ export interface ItemDataExport {
 
 export interface PriceDataExport {
     type: 'PRICE';
+    pricingStructureId: number;
     attributes: Attribute[];
     pricedItems: PricedItem[];
 }

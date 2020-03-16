@@ -106,11 +106,13 @@
         <mat-step [stepControl]="fourthFormGroup">
             <form [formGroup]="fourthFormGroup" (ngSubmit)="onFourthFormSubmit()">
                 <ng-template matStepLabel>Review Data Export</ng-template>
+                Fourth form ready{{fourthFormReady}}
                 <ng-container *ngIf="!fourthFormReady">
                     Loading ...
                 </ng-container>
                 <ng-container *ngIf="fourthFormReady">
-                    <div class="content step=4">
+                    <div class="content step-4">
+                        {{dataExport.type}}
                         <ng-container *ngIf="dataExport.type === 'ITEM'">
                             <app-view-only-data-table [attributes]="dataExport.attributes"
                                                       [items]="dataExport.items">

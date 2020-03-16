@@ -19,36 +19,45 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
     const jobLogger: JobLogger = await newJobLogger(name, description);
     (async ()=>{
 
+        await jobLogger.logInfo(`starting job ${name}`);
+
         const headers: string[]  = [`name`,`description`,`type`,`format`,`showCurrencyCountry`,`pair1`,`pair2`];
         const data: any[] = [];
 
-        for (const attribute of attributes) {
-            data.push({
-                name: attribute.name,
-                description: attribute.description,
-                type: attribute.type,
-                format: attribute.format,
-                showCurrencyCountry: attribute.showCurrencyCountry,
-                pair1: pair1ToCsv(attribute.pair1),
-                pair2: pair2ToCsv(attribute.pair2)
+        try {
+            for (const attribute of attributes) {
+                data.push({
+                    name: attribute.name,
+                    description: attribute.description,
+                    type: attribute.type,
+                    format: attribute.format,
+                    showCurrencyCountry: attribute.showCurrencyCountry,
+                    pair1: pair1ToCsv(attribute.pair1),
+                    pair2: pair2ToCsv(attribute.pair2)
+                });
+            }
+
+            const parser: JSON2CSVParser<any> = new Parser({
+                fields: headers
             });
-        }
+            const csv: string = parser.parse(data);
 
-        const parser: JSON2CSVParser<any> = new Parser({
-            fields: headers
-        });
-        const csv: string = parser.parse(data);
-
-        await doInDbConnection(async (conn: Connection) => {
-            const q: QueryResponse = await conn.query(`
+            await doInDbConnection(async (conn: Connection) => {
+                const q: QueryResponse = await conn.query(`
                 INSERT INTO TBL_DATA_EXPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'ATTRIBUTE')
             `, [viewId, name]);
-            const dataExportId: number = q.insertId;
+                const dataExportId: number = q.insertId;
 
-            await conn.query(`
+                await conn.query(`
                 INSERT INTO TBL_DATA_EXPORT_FILE (DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)
             `, [dataExportId, name, 'text/csv', Buffer.byteLength(csv), csv]);
-        });
+            });
+        } catch(e) {
+            await jobLogger.logError(`${e.toString()}`);
+            await jobLogger.updateProgress("FAILED");
+        } finally {
+            await jobLogger.logInfo(`Done with ${name}`);
+        }
     })();
 
     return await getJobyById(jobLogger.jobId);

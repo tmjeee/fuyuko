@@ -84,8 +84,8 @@ const SQL: string = `
            LEFT JOIN TBL_ITEM_VALUE_METADATA AS IM ON IM.ITEM_VALUE_ID = V.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
            LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
-           LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = ?
-           WHERE I.STATUS = 'ENABLED' AND I.VIEW_ID=? 
+           LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
+           WHERE I.STATUS = 'ENABLED' AND PSI.PRICING_STRUCTURE_ID=? AND I.VIEW_ID=? 
 `
 
 const SQL_WITH_NULL_PARENT = `${SQL} AND I.PARENT_ID IS NULL`;
@@ -157,7 +157,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
             item.children = b;
         }
 
-        if (priceMap.has(priceMapKey)) {
+        if (!priceMap.has(priceMapKey)) {
             const p = {
                 price: i.PSI_PRICE,
                 country: i.PSI_COUNTRY

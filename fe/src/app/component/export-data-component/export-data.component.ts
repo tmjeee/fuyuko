@@ -161,7 +161,9 @@ export class ExportDataComponent implements OnInit {
     }
 
     onSecondFormSubmit() {
-
+        if (this.selectedExportType === 'ATTRIBUTE') { // attribute selection do not have a third step, go ahead to step 4
+            this.onThirdFormSubmit();
+        }
     }
 
     onThirdFormSubmit() {
@@ -171,7 +173,8 @@ export class ExportDataComponent implements OnInit {
         const exportType: DataExportType = this.exportTypeFormControl.value;
 
         // figure out view id (from step 1)
-        const viewId: number = this.viewFormControl.value;
+        const view: View = this.viewFormControl.value;
+        const viewId: number = view.id;
 
         // figure out attributes (from step 2)
         let att: Attribute[] = null;
@@ -190,6 +193,7 @@ export class ExportDataComponent implements OnInit {
         this.previewExportFn(exportType, viewId, att, f, ps).pipe(
             tap((dataExport: AttributeDataExport | ItemDataExport | PriceDataExport) => {
                 this.dataExport = dataExport;
+                console.log('******* dataExport', dataExport);
                 this.fourthFormReady = true;
             })
         ).subscribe();
@@ -219,6 +223,7 @@ export class ExportDataComponent implements OnInit {
 
 
         this.jobSubmitted = false;
+        const ps: PricingStructure = this.selectedExportType === 'PRICE' ? this.selectedPricingStructure : null;
         this.submitExportJobFn(exportType, viewId, att, this.dataExport, f).pipe(
             tap((j: Job) => {
                 this.job = j;
@@ -271,11 +276,16 @@ export class ExportDataComponent implements OnInit {
     onExportTypeSelectionChanged($event: MatSelectChange) {
         this.selectedExportType = $event.value;
         if ($event.value === 'PRICE') {
-            this.secondFormGroup.controls.pricingStructure.setValidators([Validators.required]);
+            setTimeout(() => {
+                this.secondFormGroup.controls.pricingStructure.setValidators([Validators.required]);
+                this.secondFormGroup.updateValueAndValidity();
+            });
         } else {
-            this.secondFormGroup.controls.pricingStructure.clearValidators();
+            setTimeout(() => {
+                this.secondFormGroup.controls.pricingStructure.clearValidators();
+                this.secondFormGroup.updateValueAndValidity();
+            });
         }
-        this.secondFormGroup.updateValueAndValidity()
     }
 
     onPricingStructureSelectionChanged($event: MatSelectChange) {

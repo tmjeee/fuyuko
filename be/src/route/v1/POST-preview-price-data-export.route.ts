@@ -19,8 +19,8 @@ const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
         param('pricingStructureId').exists().isNumeric(),
-        body('attributes').exists().isArray(),
-        body('filter').exists().isArray()
+        body('attributes').optional({nullable: true}).isArray(),
+        body('filter').optional({nullable: true}).isArray()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -31,7 +31,6 @@ const httpAction: any[] = [
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const attributes: Attribute[] = req.body.attributes;
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
-
 
         const p: PreviewResult = await preview(viewId, pricingStructureId, filter);
 

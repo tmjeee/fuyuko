@@ -17,8 +17,8 @@ import {ROLE_EDIT} from "../../model/role.model";
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
-        body('attributes').exists().isArray(),
-        body('filter').exists().isArray()
+        body('attributes').optional({nullable: true}).isArray(),
+        body('filter').optional({nullable: true}).isArray()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
