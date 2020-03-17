@@ -9,6 +9,7 @@ import {DataTableModule} from '../data-table-component/data-table.module';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {AttributeTableModule} from '../attribute-table-component/attribute-table.module';
 import {PricingModule} from '../pricing-component/pricing.module';
+import {ExportArtifactsComponent} from "./export-artifacts.component";
 
 @NgModule({
     imports: [
@@ -24,10 +25,12 @@ import {PricingModule} from '../pricing-component/pricing.module';
         PricingModule,
     ],
     declarations: [
-        ExportDataComponent
+        ExportDataComponent,
+        ExportArtifactsComponent,
     ],
     exports: [
-        ExportDataComponent
+        ExportDataComponent,
+        ExportArtifactsComponent,
     ]
 })
 export class ExportDataModule {

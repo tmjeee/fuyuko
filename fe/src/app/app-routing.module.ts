@@ -52,6 +52,7 @@ import {EditAttributePageComponent} from './page/view-attributes-page/edit-attri
 import {ViewValidationDetailsPageComponent} from './page/view-validation-details-page/view-validation-details.page';
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
 import {AddAttributePageComponent} from './page/view-attributes-page/add-attribute.page';
+import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
 
 const routes: Routes = [
 
@@ -260,6 +261,14 @@ const routes: Routes = [
         component: ExportPageComponent,
         data: {
           subSideNav: 'export'
+        }
+      } as Route,
+      {
+        path: 'export-artifacts',
+        canActivate: [AuthGuard],
+        component: ExportArtifactsPageComponent,
+        data: {
+          subSideNav: 'export-artifacts'
         }
       } as Route,
       {

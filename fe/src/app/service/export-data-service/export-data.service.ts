@@ -3,7 +3,7 @@ import {Observable, of} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {
-    AttributeDataExport,
+    AttributeDataExport, DataExportArtifact,
     DataExportType,
     ItemDataExport,
     PriceDataExport
@@ -21,10 +21,16 @@ const URL_SCHEDULE_ATTRIBUTES_EXPORT = () => `${config().api_host_url}/view/:vie
 const URL_SCHEDULE_ITEMS_EXPORT = () => `${config().api_host_url}/view/:viewId/export/items`;
 const URL_SCHEDULE_PRICES_EXPORT = () => `${config().api_host_url}/view/:viewId/export/pricingStructure/:pricingStructureId/prices`;
 
+const URL_EXPORT_ARTIRACTS = () => `${config().api_host_url}/data-export-artifacts`;
+
 @Injectable()
 export class ExportDataService {
 
     constructor(private httpClient: HttpClient) {
+    }
+
+    allDataExportArtifacts(): Observable<DataExportArtifact[]> {
+        return this.httpClient.get<DataExportArtifact[]>(URL_EXPORT_ARTIRACTS());
     }
 
 

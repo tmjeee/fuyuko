@@ -45,6 +45,10 @@
                 <mat-icon>trending_up</mat-icon>
                 <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary:['export'], help:['export-help']}}]">Export</a>
               </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'export-artifacts'">
+                <mat-icon>attachment</mat-icon>
+                <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary:['export-artifacts'], help:['export-help']}}]">Artifacts</a>
+              </mat-list-item>
             </mat-list>
           </mat-sidenav>
           <mat-sidenav-content>

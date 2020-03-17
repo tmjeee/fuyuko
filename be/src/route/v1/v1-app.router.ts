@@ -103,6 +103,7 @@ import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-
 import registerGetAllPricingStructureByViewRoute from './GET-all-pricing-structures-by-view.route';
 import registerGetDataExportContentByIdRoute from './GET-data-export-content-by-id.route';
 import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
+import registerGetAllDataExportArtifactsRoute from './GET-all-data-export-artifacts.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -154,7 +155,6 @@ const reg = (router: Router, regi: Registry) => {
     registerGetItemImageByIdRoute(v1AppRouter, registry);
     registerGetItemPrimaryImageByItemIdRoute(v1AppRouter, registry);
     registerPostUpdateItemRoute(v1AppRouter, registry);
-
     registerPostUpdateItemStatusRoute(v1AppRouter, registry);
     registerGetAllRulesByViewRoute(v1AppRouter, registry);
     registerPostUpdateRuleStatusRoute(v1AppRouter, registry);
@@ -213,6 +213,8 @@ const reg = (router: Router, regi: Registry) => {
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
     registerGetAllPricingStructureByViewRoute(v1AppRouter, registry);
     registerGetDataExportContentByIdRoute(v1AppRouter, registry);
+    registerGetPricingStructureByIdRoute(v1AppRouter, registry);
+    registerGetAllDataExportArtifactsRoute(v1AppRouter, registry);
 };
 
 
