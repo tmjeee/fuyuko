@@ -6,6 +6,7 @@ import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {Parser} from "json2csv";
 import JSON2CSVParser from "json2csv/JSON2CSVParser";
+import {e} from '../../logger';
 
 const uuid = require('uuid');
 
@@ -51,11 +52,11 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
                 await conn.query(`
                 INSERT INTO TBL_DATA_EXPORT_FILE (DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)
             `, [dataExportId, name, 'text/csv', Buffer.byteLength(csv), csv]);
-
-                await jobLogger.updateProgress('COMPLETED');
             });
-        } catch(e) {
-            console.error(e);
+
+            await jobLogger.updateProgress('COMPLETED');
+        } catch(err) {
+            e(err.toString(), err);
             await jobLogger.logError(`${e.toString()}`);
             await jobLogger.updateProgress("FAILED");
         } finally {

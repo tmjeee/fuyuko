@@ -88,7 +88,7 @@ export class ExportDataService {
             }
             case 'PRICE': {
                 const priceDataExport: PriceDataExport = dataExport as PriceDataExport;
-                const pricingStructureId: number = priceDataExport.pricingStructureId;
+                const pricingStructureId: number = priceDataExport.pricingStructure.id;
                 return this.httpClient.post<Job>(URL_SCHEDULE_PRICES_EXPORT()
                     .replace(':viewId', String(viewId))
                     .replace(':pricingStructureId', String(pricingStructureId)), {

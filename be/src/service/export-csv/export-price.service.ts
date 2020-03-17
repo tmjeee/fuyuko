@@ -6,6 +6,8 @@ import {getPricedItem2WithFiltering} from "../priced-item-filtering.service";
 import {PricedItem} from "../../model/item.model";
 import {convert} from "../conversion-item.service";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
+import {PricingStructure} from "../../model/pricing-structure.model";
+import {getPricingStructureById} from "../pricing-struture.service";
 
 export type PreviewResult = { i: PricedItem[], m: Map<string /* attributeId */, Attribute>};
 
@@ -14,7 +16,6 @@ export const preview = async (viewId: number, pricingStructureId: number, filter
         return await getPricedItem2WithFiltering(conn, viewId, pricingStructureId, null, filter);
     });
 
-    console.log('********************** item2s', item2s);
     const items: PricedItem[] = convert(item2s) as PricedItem[];
 
     return {

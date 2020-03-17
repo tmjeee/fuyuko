@@ -4,6 +4,7 @@ import { CollectionViewer } from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {PricedItem} from '../../model/item.model';
+import {PricingStructure} from '../../model/pricing-structure.model';
 
 
 export class InternalDataSource extends DataSource<PricedItem> {
@@ -41,12 +42,13 @@ export class ViewOnlyPriceTableComponent implements OnInit {
 
    @Input() attributes: Attribute[];
    @Input() pricedItems: PricedItem[];
+   @Input() pricingStructure: PricingStructure;
 
    dataSource: InternalDataSource;
    displayedColumns: string[];
 
    constructor() {
-      this.displayedColumns = ['pricingStructureName', 'itemName', 'price', 'country']
+      this.displayedColumns = ['pricingStructureName', 'itemName', 'price', 'country'];
       this.dataSource = new InternalDataSource();
    }
 

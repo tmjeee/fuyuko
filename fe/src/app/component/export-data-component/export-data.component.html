@@ -88,11 +88,12 @@
                                                        (events)="onAttributeOperatorEvent($event, itemValueOperatorAndAttribute)">
                         </app-attribute-operator-editor>
                         <div class="delete-item-filtering">
-                            <button type="button" mat-flat-button color="primary" (click)="onDeleteItemFilter($event, itemValueOperatorAndAttribute)">Delete</button>
+                            <button type="button" mat-flat-button color="primary" (click)="onDeleteItemFilter($event, itemValueOperatorAndAttribute)">Delete Filtering</button>
                         </div>
+                        <mat-divider class="divider" [inset]="true" [vertical]="false"></mat-divider>
                     </div>
                     <div class="add-item-filtering">
-                        <button type="button" mat-flat-button color="primary" (click)="onAddItemFilter($event)">Add</button>
+                        <button type="button" mat-flat-button color="primary" (click)="onAddItemFilter($event)">Add Filtering</button>
                     </div>
                 </div>
                 <div class="controls">
@@ -106,7 +107,6 @@
         <mat-step [stepControl]="fourthFormGroup">
             <form [formGroup]="fourthFormGroup" (ngSubmit)="onFourthFormSubmit()">
                 <ng-template matStepLabel>Review Data Export</ng-template>
-                Fourth form ready{{fourthFormReady}}
                 <ng-container *ngIf="!fourthFormReady">
                     Loading ...
                 </ng-container>
@@ -124,6 +124,7 @@
                         </ng-container>
                         <ng-container *ngIf="dataExport.type === 'PRICE'">
                             <app-view-only-price-table [attributes]="dataExport.attributes"
+                                                       [pricingStructure]="selectedPricingStructure"
                                                        [pricedItems]="dataExport.pricedItems">
                             </app-view-only-price-table>
                         </ng-container>

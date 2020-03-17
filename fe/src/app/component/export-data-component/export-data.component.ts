@@ -88,9 +88,11 @@ export class ExportDataComponent implements OnInit {
         this.currentAttributeSelectionOption = 'all';
         this.exportTypeFormControl = formBuilder.control('', [Validators.required]);
         this.attributeSelectionOptionFormControl = formBuilder.control('all', [Validators.required]);
+        this.pricingStructureFormControl = formBuilder.control(null);
         this.secondFormGroup = formBuilder.group({
             exportType: this.exportTypeFormControl,
-            attributeSelectionOption: this.attributeSelectionOptionFormControl
+            attributeSelectionOption: this.attributeSelectionOptionFormControl,
+            pricingStructure: this.pricingStructureFormControl
         });
         this.secondFormGroup.setValidators((c: AbstractControl) => {
             const attributesFormGroup: FormGroup = c.get('attributes') as FormGroup;
@@ -151,10 +153,11 @@ export class ExportDataComponent implements OnInit {
 
                // pricing structures
                this.allPricingStructures = r.p;
+               /*
                this.pricingStructureFormControl = this.formBuilder.control(null);
                this.secondFormGroup.removeControl('pricingStructure');
                this.secondFormGroup.setControl('pricingStructure', this.pricingStructureFormControl);
-
+                */
                this.secondFormReady = true;
             })
         ).subscribe();
@@ -278,13 +281,13 @@ export class ExportDataComponent implements OnInit {
         this.selectedExportType = $event.value;
         if ($event.value === 'PRICE') {
             setTimeout(() => {
-                this.secondFormGroup.controls.pricingStructure.setValidators([Validators.required]);
-                this.secondFormGroup.updateValueAndValidity();
+                this.pricingStructureFormControl.setValidators(Validators.required);
+                this.pricingStructureFormControl.updateValueAndValidity();
             });
         } else {
             setTimeout(() => {
-                this.secondFormGroup.controls.pricingStructure.clearValidators();
-                this.secondFormGroup.updateValueAndValidity();
+                this.pricingStructureFormControl.clearValidators();
+                this.pricingStructureFormControl.updateValueAndValidity();
             });
         }
     }

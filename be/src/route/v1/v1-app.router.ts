@@ -101,7 +101,8 @@ import registerPostAddAttributeRoute from './POST-add-attributes.route';
 import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
 import registerGetAllPricingStructureByViewRoute from './GET-all-pricing-structures-by-view.route';
-import registerGetDataExportByIdRoute from './GET-data-export-by-id.route';
+import registerGetDataExportContentByIdRoute from './GET-data-export-content-by-id.route';
+import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -177,6 +178,7 @@ const reg = (router: Router, regi: Registry) => {
     registerPostPreviewAttributeDataExportRoute(v1AppRouter, registry);
     registerPostPreviewItemDataExportRoute(v1AppRouter, registry);
     registerPostPreviewPriceDataExportRoute(v1AppRouter, registry);
+
     registerPostScheduleAttributeDataExportRoute(v1AppRouter, registry);
     registerPostScheduleItemDataExportRoute(v1AppRouter, registry);
     registerPostSchedulePriceDataExportRoute(v1AppRouter, registry);
@@ -210,7 +212,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
     registerGetAllPricingStructureByViewRoute(v1AppRouter, registry);
-    registerGetDataExportByIdRoute(v1AppRouter, registry);
+    registerGetDataExportContentByIdRoute(v1AppRouter, registry);
 };
 
 

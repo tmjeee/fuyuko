@@ -13,6 +13,8 @@ import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 import {PriceDataExport} from "../../model/data-export.model";
 import {preview, PreviewResult} from "../../service/export-csv/export-price.service";
 import {ROLE_EDIT} from "../../model/role.model";
+import {PricingStructure} from "../../model/pricing-structure.model";
+import {getPricingStructureById} from "../../service/pricing-struture.service";
 const detectCsv = require('detect-csv');
 
 const httpAction: any[] = [
@@ -33,9 +35,11 @@ const httpAction: any[] = [
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
 
         const p: PreviewResult = await preview(viewId, pricingStructureId, filter);
+        const ps: PricingStructure = await getPricingStructureById(pricingStructureId);
 
         res.status(200).json({
             type: "PRICE",
+            pricingStructure: ps,
             attributes: [...p.m.values()],
             pricedItems: p.i,
         } as PriceDataExport);

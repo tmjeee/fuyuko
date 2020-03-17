@@ -1,6 +1,6 @@
 import {Attribute} from './attribute.model';
 import {Item, PricedItem} from './item.model';
-import {PriceDataItem, PricingStructureItemWithPrice} from './pricing-structure.model';
+import {PriceDataItem, PricingStructure, PricingStructureItemWithPrice} from './pricing-structure.model';
 
 
 export type DataExportType = 'ATTRIBUTE' | 'ITEM' | 'PRICE';
@@ -23,7 +23,7 @@ export interface ItemDataExport {
 
 export interface PriceDataExport {
     type: 'PRICE';
-    pricingStructureId: number;
+    pricingStructure: PricingStructure;
     attributes: Attribute[];
     pricedItems: PricedItem[];
 }
