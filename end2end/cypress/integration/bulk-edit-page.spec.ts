@@ -18,6 +18,7 @@ import {
     VolumeUnits,
     WidthUnits
 } from "./model/unit.model";
+import {createNewView, deleteView} from "./util/util";
 
 describe(`bulk edit spec`, () => {
 
@@ -297,34 +298,6 @@ describe(`bulk edit spec`, () => {
 
     }
 
-    const createNewView = (): string => {
-        const r = Math.random();
-        const viewName = `New-View-${r}`;
-        const viewDescription = `New-View-Description-${r}`;
-        const viewViewPage: ViewViewPage = new ViewPage()
-                .visitViews()
-                .validateTitle()
-                .clickAdd()
-                .editName(viewName)
-                .editDescription(viewDescription)
-                .clickOk()
-                .clickSave()
-            ;
-
-        cy.wait(100).then((_) => {
-            viewViewPage.verifySuccessMessageExists();
-        });
-
-        return viewName;
-    }
-
-    const deleteView = (viewName: string) => {
-        new ViewPage()
-            .visitViews()
-            .clickDelete([viewName])
-            .clickSave()
-            .verifySuccessMessageExists();
-    }
 
     it (`should be able switch views`, () => {
         const testView1 = `Test View 1`;

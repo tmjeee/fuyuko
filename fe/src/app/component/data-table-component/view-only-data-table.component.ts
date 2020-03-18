@@ -50,6 +50,7 @@ export class ViewOnlyDataTableComponent implements OnInit, OnChanges {
     tableItems: TableItem[];
     datasource: ViewOnlyDataTableDatasource;
     displayColumns: string[];
+    childrenDisplayColumns: string[];
     rowInfoMap: Map<number, RowInfo>;   // item id as key
 
 
@@ -68,6 +69,7 @@ export class ViewOnlyDataTableComponent implements OnInit, OnChanges {
         this.rowInfoMap = new Map();
         this.datasource = new ViewOnlyDataTableDatasource();
         this.displayColumns = ['expansion', 'name', 'description'].concat(...this.attributes.map((a: Attribute) => ('' + a.id)));
+        this.childrenDisplayColumns = ['children-expansion', 'name', 'description'].concat(...this.attributes.map((a: Attribute) => ('' + a.id)));
         this.tableItems = toTableItem(this.items);
         this.tableItems.forEach((t: TableItem) => {
             this.rowInfoMap.set(t.id, {
@@ -75,6 +77,7 @@ export class ViewOnlyDataTableComponent implements OnInit, OnChanges {
                 expanded: false,
             } as RowInfo);
         });
+        console.log('***************table items', this.tableItems);
         this.datasource.update(this.tableItems);
     }
 

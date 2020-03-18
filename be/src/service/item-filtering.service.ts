@@ -147,7 +147,7 @@ export const getItem2WithFiltering = async (conn: Connection,
                 id: i.I_ID,
                 name: i.I_NAME,
                 description: i.I_DESCRIPTION,
-                parentId: i.I_PARENTID,
+                parentId: i.I_PARENT_ID,
                 values: [],
                 images: [],
                 children: []

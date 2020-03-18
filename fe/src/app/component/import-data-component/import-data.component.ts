@@ -159,7 +159,6 @@ export class ImportDataComponent {
                 break;
             }
         }
-        console.log('******* ', this.selectedUploadType, body);
         this.submitDataImport(view.id, this.selectedUploadType, body)
             .pipe(
                 tap((j: Job) => {
