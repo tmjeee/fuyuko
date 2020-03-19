@@ -143,7 +143,33 @@ export class ImportPageStep3 {
             return cy.get(`[test-table-step3-item]`)
                 .find(`[test-table-row='${itemName}']`)
                 .find(`[test-table-column-attribute='${attributeName}']`)
-                .should('have.text', values[i]);
+                .should('contain.text', values[i]);
+        });
+        return this;
+    }
+
+    verifyItemImport_itemVisible(itemName: string, b: boolean): ImportPageStep3 {
+        cy.get(`[test-table-step3-item]`)
+            .find(`[test-table-row='${itemName}']`).should(b ? 'be.visible' : 'not.be.visible');
+        return this;
+    }
+
+    verifyPriceImport_price(itemName: string, values: string[]): ImportPageStep3 {
+        cy.wrap(values).each((e, i, a) => {
+            return cy.get(`[test-table-step3-price]`)
+                .find(`[test-table-row='${itemName}']`)
+                .find(`[test-table-column-price]`)
+                .should('contain.text', values[i]);
+        });
+        return this;
+    }
+
+    verifyPriceImport_priceUnit(itemName: string, values: string[]): ImportPageStep3 {
+        cy.wrap(values).each((e, i, a) => {
+            return cy.get(`[test-table-step3-price]`)
+                .find(`[test-table-row='${itemName}']`)
+                .find(`[test-table-column-price-unit]`)
+                .should('contain.text', values[i]);
         });
         return this;
     }

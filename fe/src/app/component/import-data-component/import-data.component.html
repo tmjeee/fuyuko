@@ -71,7 +71,8 @@
                     </ng-container>
                     <ng-container *ngIf="priceDataImport">
                         <app-notification-message-listing [attr.test-notifications-step3-price]="''" [messages]="priceDataImport.messages"></app-notification-message-listing>
-                        <app-view-only-price-data-items-table [attr.test-table-step3-price]="''" [priceDataItems]="priceDataImport.items"></app-view-only-price-data-items-table>
+                        <app-view-only-price-data-items-table [attr.test-table-step3-price]="''"
+                                                              [priceDataItems]="priceDataImport.items"></app-view-only-price-data-items-table>
                     </ng-container>
                 </div>
                 <div class="controls">

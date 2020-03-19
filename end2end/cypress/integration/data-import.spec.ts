@@ -1,6 +1,7 @@
 import {LoginPage} from "./page-object/login.page";
 import {ImportPage, ImportPageStep4} from "./page-object/sub-page-object/import.page";
 import {createNewView, deleteView} from "./util/util";
+import {PricingPage} from "./page-object/pricing.page";
 
 describe(`data import spec`, () => {
 
@@ -40,7 +41,7 @@ describe(`data import spec`, () => {
 
     //////////////////
 
-    it.only(`should be able to import attribute`, () => {
+    it.only(`should be able to import attribute, items and prices`, () => {
 
         // const viewName =  `Test View 1`; // createNewView();
         const viewName =  createNewView();
@@ -124,17 +125,74 @@ describe(`data import spec`, () => {
             .verifyInStep()
             .verifyItemImport_itemExists(`item 1`)
             .verifyItemImport_itemAttributeValue(`item 1`, `att01`, [`some string`])
-
+            .verifyItemImport_itemAttributeValue(`item 1`, `att02`, ['some text'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att03`, ['10.0'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att04`, ['10/09/2018'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att05`, ['$23.50'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att06`, ['11.1 l'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att07`, ['w:13.0 m', 'h:14.0 m', 'l:12.0 m'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att08`, ['11.0 m2'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att09`, ['33.0 m'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att10`, ['44.0 m'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att11`, ['55.0 m'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att12`, ['value2'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att13`, ['value3 - xvalue31'])
+            .verifyItemImport_itemVisible(`item 1_1`, false)
+            .verifyItemImport_itemVisible(`item 1_1_1`, false)
+            .verifyItemImport_itemVisible(`item 1_1_1_1`, false)
+            .expandItem(`item 1`)
+            .verifyItemImport_itemVisible(`item 1_1`, true)
+            .verifyItemImport_itemVisible(`item 1_1_1`, true)
+            .verifyItemImport_itemVisible(`item 1_1_1_1`, true)
         ;
+
+
+
+        // ============================= PRICE
+
+        const r = Math.random();
+        const pricingStructureName = `PricingStructure-${r}`;
+        const pricingStructureDescription = `PricingStructure description ${r}`;
+
+        // create pricing structure for view
+        new PricingPage()
+            .visit()
+            .clickAddNewPricingStructure()
+            .editName(pricingStructureName)
+            .editDescription(pricingStructureDescription)
+            .selectView(viewName)
+            .clickOk()
+            .verifySuccessMessageExists()
+        ;
+
+
+        // import price into view's pricing structure
+        importPage
+            .visit()
+            .clickStep1()
+            .verifyInStep()
+            .verifyCanClickNext(false)
+            .selectImportView(viewName)
+            .verifyCanClickNext(true)
+            .clickNext()
+
+
+            // step 2
+            .verifyInStep()
+            .clickBack()
+            .verifyInStep()
+            .clickNext()
+            .selectImportType('PRICE')
+            .uploadFile('./sample-import-prices.csv')
+            .clickNext()
+
+
+            // step 3
+            .verifyInStep()
+            // .verifyPriceImport_price(`item 1`, ['']);
 
 
         // deleteView(viewName);
     });
 
-
-
-    it(`should be able to import items`, () => {
-
-
-    });
 });
