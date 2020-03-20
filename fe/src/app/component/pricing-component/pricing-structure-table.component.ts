@@ -108,7 +108,7 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
 
     viewForPricingStructure(pricingStructure: PricingStructure): View {
         if (pricingStructure && pricingStructure.viewId) {
-            return this.views.find((v: View) => pricingStructure.viewId);
+            return this.views.find((v: View) => v.id === pricingStructure.viewId);
         }
         return null;
     }

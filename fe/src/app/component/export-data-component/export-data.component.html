@@ -9,9 +9,9 @@
                 <div class="content step-1">
                     <mat-form-field>
                         <mat-label>Export View</mat-label>
-                        <mat-select [formControl]="viewFormControl">
-                            <mat-option [value]="undefined">-- select a view --</mat-option>
-                            <mat-option *ngFor="let view of views" [value]="view">
+                        <mat-select [formControl]="viewFormControl" [attr.test-mat-select-step1-export-view]="''">
+                            <mat-option [value]="undefined" [attr.test-mat-select-option-step1-export-view]="''">-- select a view --</mat-option>
+                            <mat-option *ngFor="let view of views" [value]="view" [attr.test-mat-select-option-step1-export-view]="view.name">
                                 {{view.name}} - {{view.description}}
                             </mat-option>
                         </mat-select>
@@ -20,7 +20,7 @@
                     </mat-form-field>
                 </div>
                 <div class="controls">
-                    <button mat-flat-button matStepperNext color="primary" type="submit" [disabled]="firstFormGroup.invalid">Next</button>
+                    <button mat-flat-button matStepperNext color="primary" [attr.test-button-step1-next]="''" type="submit" [disabled]="firstFormGroup.invalid">Next</button>
                 </div>
             </form>
         </mat-step>
@@ -37,29 +37,30 @@
                     <ng-container *ngIf="secondFormReady">
                         <mat-form-field>
                             <mat-label>Export type</mat-label>
-                            <mat-select [formControl]="exportTypeFormControl" (selectionChange)="onExportTypeSelectionChanged($event)">
-                                <mat-option value="">--- select an export type ---</mat-option>
-                                <mat-option value="ATTRIBUTE">Attributes</mat-option>
-                                <mat-option value="ITEM">Items</mat-option>
-                                <mat-option value="PRICE">Prices</mat-option>
+                            <mat-select [formControl]="exportTypeFormControl" (selectionChange)="onExportTypeSelectionChanged($event)" [attr.test-mat-select-step2-export-type]="''">
+                                <mat-option value="" [attr.test-mat-select-option-step2-export-type]="''">--- select an export type ---</mat-option>
+                                <mat-option value="ATTRIBUTE" [attr.test-mat-select-option-step2-export-type]="'ATTRIBUTE'">Attributes</mat-option>
+                                <mat-option value="ITEM" [attr.test-mat-select-option-step2-export-type]="'ITEM'">Items</mat-option>
+                                <mat-option value="PRICE" [attr.test-mat-select-option-step2-export-type]="'PRICE'">Prices</mat-option>
                             </mat-select>
                             <mat-error *ngIf="exportTypeFormControl?.errors?.required">An export type is required</mat-error>
                         </mat-form-field>
                         <mat-form-field *ngIf="exportTypeFormControl.value === 'PRICE'">
                             <mat-label>Pricing Structure</mat-label>
-                            <mat-select [formControl]="pricingStructureFormControl" (selectionChange)="onPricingStructureSelectionChanged($event)">
-                                <mat-option *ngFor="let pricingStructure of allPricingStructures" [value]="pricingStructure">{{pricingStructure.name}}</mat-option>
+                            <mat-select [formControl]="pricingStructureFormControl" (selectionChange)="onPricingStructureSelectionChanged($event)" [attr.test-mat-select-step2-pricing-structure]="''">
+                                <mat-option *ngFor="let pricingStructure of allPricingStructures" [value]="pricingStructure" [attr.test-mat-select-option-step2-pricing-structure]="pricingStructure.name">{{pricingStructure.name}}</mat-option>
                             </mat-select>
                             <mat-error *ngIf="pricingStructureFormControl?.errors?.required">A pricing structure is required</mat-error>
                         </mat-form-field>
                         <mat-radio-group [formControl]="attributeSelectionOptionFormControl" (change)="onAttributeSelectionOptionChange($event)">
-                            <mat-radio-button [value]="'all'">All attributes</mat-radio-button>
-                            <mat-radio-button [value]="'selection'">Selected attributes</mat-radio-button>
+                            <mat-radio-button [value]="'all'" [attr.test-radio-step2-export-all-attributes]="''">All attributes</mat-radio-button>
+                            <mat-radio-button [value]="'selection'" [attr.test-radio-step2-export-selected-attributes]="''">Selected attributes</mat-radio-button>
                         </mat-radio-group>
                         <ng-container *ngIf="currentAttributeSelectionOption === 'selection'"> <!-- 'selection' option selected -->
                             <div class="attributes-selection" fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="start center">
                                 <div *ngFor="let attribute of allAttributes">
                                     <mat-checkbox (change)="onAttributeCheckboxChange($event)"
+                                                  [attr.test-checkbox-step2-export-attribute-select]="attribute.name"
                                                   [formControl]="secondFormGroup.get('attributes').get('' + attribute.id)">{{attribute.name}}</mat-checkbox>
                                 </div>
                             </div>
@@ -67,14 +68,14 @@
                     </ng-container>
                 </div>
                 <div class="controls">
-                    <button type="button" mat-flat-button matStepperPrevious color="primary">Back</button>
-                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="secondFormGroup.invalid">Next</button>
+                    <button type="button" mat-flat-button matStepperPrevious color="primary" [attr.test-button-step2-back]="''">Back</button>
+                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="secondFormGroup.invalid" [attr.test-button-step2-next]="''">Next</button>
                 </div>
             </form>
         </mat-step>
 
 
-        <!-- third step: select items of view -->
+        <!-- third step: select items of view (items filtering) -->
         <mat-step [stepControl]="thirdFormGroup" *ngIf="selectedExportType !== 'ATTRIBUTE'">
             <form [formGroup]="secondFormGroup" (ngSubmit)="onThirdFormSubmit()">
                 <ng-template matStepLabel>Select Items</ng-template>
@@ -82,23 +83,24 @@
                     <ng-container *ngIf="!itemValueOperatorAndAttributeList || !itemValueOperatorAndAttributeList.length">
                         No item filtering, click 'add' to create one and 'remove' to delete
                     </ng-container>
-                    <div class="item-filtering" *ngFor="let itemValueOperatorAndAttribute of itemValueOperatorAndAttributeList">
+                    <div class="item-filtering" *ngFor="let itemValueOperatorAndAttribute of itemValueOperatorAndAttributeList; let i = index">
                         <app-attribute-operator-editor [attributes]="allAttributes"
+                                                       [attr.test-attribute-operator-editor-step3]="i"
                                                        [itemValueOperatorAndAttribute]="itemValueOperatorAndAttribute"
                                                        (events)="onAttributeOperatorEvent($event, itemValueOperatorAndAttribute)">
                         </app-attribute-operator-editor>
                         <div class="delete-item-filtering">
-                            <button type="button" mat-flat-button color="primary" (click)="onDeleteItemFilter($event, itemValueOperatorAndAttribute)">Delete Filtering</button>
+                            <button type="button" mat-flat-button color="primary" [attr.test-button-step3-delete-filter]="i" (click)="onDeleteItemFilter($event, itemValueOperatorAndAttribute)">Delete Filtering</button>
                         </div>
                         <mat-divider class="divider" [inset]="true" [vertical]="false"></mat-divider>
                     </div>
                     <div class="add-item-filtering">
-                        <button type="button" mat-flat-button color="primary" (click)="onAddItemFilter($event)">Add Filtering</button>
+                        <button type="button" mat-flat-button color="primary" [attr.test-button-step3-add-filtering]="''" (click)="onAddItemFilter($event)">Add Filtering</button>
                     </div>
                 </div>
                 <div class="controls">
-                    <button type="button" mat-flat-button matStepperPrevious color="primary">Back</button>
-                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="thirdFormGroup.invalid">Next</button>
+                    <button type="button" mat-flat-button matStepperPrevious color="primary" [attr.test-button-step3-back]="''">Back</button>
+                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="thirdFormGroup.invalid" [attr.test-button-step3-next]="''">Next</button>
                 </div>
             </form>
         </mat-step>
@@ -115,15 +117,18 @@
                         {{dataExport.type}}
                         <ng-container *ngIf="dataExport.type === 'ITEM'">
                             <app-view-only-data-table [attributes]="dataExport.attributes"
+                                                      [attr.test-table-step4-item]="''"
                                                       [items]="dataExport.items">
                             </app-view-only-data-table>
                         </ng-container>
                         <ng-container *ngIf="dataExport.type === 'ATTRIBUTE'">
-                            <app-view-only-attribute-table [attributes]="dataExport.attributes">
+                            <app-view-only-attribute-table [attributes]="dataExport.attributes"
+                                                           [attr.test-table-step4-attribute]="''">
                             </app-view-only-attribute-table>
                         </ng-container>
                         <ng-container *ngIf="dataExport.type === 'PRICE'">
                             <app-view-only-price-table [attributes]="dataExport.attributes"
+                                                       [attr.test-table-step4-price]="''"
                                                        [pricingStructure]="selectedPricingStructure"
                                                        [pricedItems]="dataExport.pricedItems">
                             </app-view-only-price-table>
@@ -131,8 +136,8 @@
                     </div>
                 </ng-container>
                 <div class="controls">
-                    <button type="button" mat-flat-button matStepperPrevious color="primary">Back</button>
-                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="!fourthFormReady">Next</button>
+                    <button type="button" [attr.test-button-step4-back]="''" mat-flat-button matStepperPrevious color="primary">Back</button>
+                    <button type="submit" [attr.test-button-step4-next]="''" mat-flat-button matStepperNext color="primary" [disabled]="!fourthFormReady">Next</button>
                 </div>
             </form>
         </mat-step>
@@ -151,7 +156,7 @@
                     </ng-container>
                 </div>
                 <div class="controls">
-                    <button type="submit" mat-flat-button matStepperNext color="primary" [disabled]="!jobSubmitted">Done</button>
+                    <button type="submit" mat-flat-button matStepperNext color="primary" [attr.test-button-step4-done]="''" [disabled]="!jobSubmitted">Done</button>
                 </div>
             </form>
         </mat-step>

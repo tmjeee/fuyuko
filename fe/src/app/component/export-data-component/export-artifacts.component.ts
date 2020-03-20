@@ -50,10 +50,10 @@ export class ExportArtifactsComponent implements OnChanges {
     download(dataExportArtifact: DataExportArtifact) {
         this.httpClient.get(URL_DOWNLOAD().replace(':dataExportId', String(dataExportArtifact.id)), {
             responseType: 'blob',
-            observe: "response"
+            observe: 'response'
         }).pipe(
-            tap((r : HttpResponse<Blob>) =>  {
-                const url= window.URL.createObjectURL(r.body);
+            tap((r: HttpResponse<Blob>) =>  {
+                const url = window.URL.createObjectURL(r.body);
                 // window.open(url);
                 window.location.href = url;
             })
@@ -61,9 +61,8 @@ export class ExportArtifactsComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        const change: SimpleChange = changes['dataExportArtifacts'];
+        const change: SimpleChange = changes.dataExportArtifacts;
         if (change && change.currentValue) {
-            console.log('****** change', change.currentValue);
             this.dataSource.update(change.currentValue);
         }
     }

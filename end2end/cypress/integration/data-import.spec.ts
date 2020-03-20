@@ -144,15 +144,18 @@ describe(`data import spec`, () => {
             .verifyItemImport_itemVisible(`item 1_1`, true)
             .verifyItemImport_itemVisible(`item 1_1_1`, true)
             .verifyItemImport_itemVisible(`item 1_1_1_1`, true)
+
+            // step 4
+            .clickNext()
+            .verifyInStep()
         ;
 
 
 
         // ============================= PRICE
 
-        const r = Math.random();
-        const pricingStructureName = `PricingStructure-${r}`;
-        const pricingStructureDescription = `PricingStructure description ${r}`;
+        const pricingStructureName = `PricingStructure1`;
+        const pricingStructureDescription = `PricingStructure1 description `;
 
         // create pricing structure for view
         new PricingPage()
@@ -189,10 +192,16 @@ describe(`data import spec`, () => {
 
             // step 3
             .verifyInStep()
-            // .verifyPriceImport_price(`item 1`, ['']);
+            .verifyPriceImport_price(`item 1`, ['20.50'])
+            .verifyPriceImport_priceUnit(`item 1`, ['AUD'])
+            .verifyPriceImport_price(`item 1_1`, ['10.10'])
+            .verifyPriceImport_priceUnit(`item 1_1`, ['AUD'])
 
+            // step 4
+            .clickNext()
+            .verifyInStep()
+        ;
 
-        // deleteView(viewName);
+        deleteView(viewName);
     });
-
 });

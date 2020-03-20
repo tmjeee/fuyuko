@@ -22,6 +22,6 @@
             <td mat-cell [attr.test-table-column-price-unit]="priceDataItem.item.country" *matCellDef="let priceDataItem">{{priceDataItem.item.country}}</td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row [attr.test-table-row]="priceDataItem.name" *matRowDef="let priceDataItem; columns: displayedColumns"></tr>
+        <tr mat-row [attr.test-table-row]="priceDataItem.item.itemName" *matRowDef="let priceDataItem; columns: displayedColumns"></tr>
     </table>
 </div>

@@ -38,4 +38,10 @@ describe(`data export spec`, () => {
     });
 
     //////////////////
+
+    it(`should export attributes`, () => {
+        exportPage
+            .visit()
+
+    });
 });

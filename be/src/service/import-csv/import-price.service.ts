@@ -47,7 +47,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                         break;
                     case 'name': // pricing structure name
                         await doInDbConnection(async (conn: Connection) => {
-                            const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND STATUS = 'ENABLED'`, [(val)]);
+                            const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND VIEW_ID=?  AND STATUS = 'ENABLED'`, [val, viewId]);
                             if (q.length) {
                                 psViewId = q[0].VIEW_ID;
                                 ps = {
