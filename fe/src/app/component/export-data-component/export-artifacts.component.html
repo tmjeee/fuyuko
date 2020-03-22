@@ -3,15 +3,15 @@
     <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td mat-cell *matCellDef="let dataExportArtifact">{{dataExportArtifact.name}}</td>
+            <td mat-cell [attr.test-table-column-name]="dataExportArtifact.name" *matCellDef="let dataExportArtifact">{{dataExportArtifact.name}}</td>
         </ng-container>
         <ng-container matColumnDef="view">
             <th mat-header-cell *matHeaderCellDef>View</th>
-            <td mat-cell *matCellDef="let dataExportArtifact">{{dataExportArtifact.view.name}}</td>
+            <td mat-cell [attr.test-table-column-view]="dataExportArtifact.view.name" *matCellDef="let dataExportArtifact">{{dataExportArtifact.view.name}}</td>
         </ng-container>
         <ng-container matColumnDef="type">
             <th mat-header-cell class="type-header" *matHeaderCellDef>Type</th>
-            <td mat-cell class="type" *matCellDef="let dataExportArtifact">{{dataExportArtifact.type}}</td>
+            <td mat-cell [attr.test-table-column-type]="dataExportArtifact.type" class="type" *matCellDef="let dataExportArtifact">{{dataExportArtifact.type}}</td>
         </ng-container>
         <ng-container matColumnDef="date">
             <th mat-header-cell class="date-header" *matHeaderCellDef>Date</th>
@@ -23,7 +23,7 @@
         </ng-container>
         <ng-container matColumnDef="mimetype">
             <th mat-header-cell class="fileName-header" *matHeaderCellDef>Mime Type</th>
-            <td mat-cell class="fileName" *matCellDef="let dataExportArtifact">{{dataExportArtifact.mimeType}}</td>
+            <td mat-cell [attr.test-table-column-mimetype]="dataExportArtifact.mimeType" class="fileName" *matCellDef="let dataExportArtifact">{{dataExportArtifact.mimeType}}</td>
         </ng-container>
         <ng-container matColumnDef="size">
             <th mat-header-cell class="fileName-header" *matHeaderCellDef>Size</th>
@@ -32,14 +32,14 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell class="action-header" *matHeaderCellDef></th>
             <td mat-cell class="action" *matCellDef="let dataExportArtifact">
-                <a target="_self" (click)="download(dataExportArtifact)" [attr.download]="dataExportArtifact.fileName">
+                <a target="_self" [attr.test-link-download]="''" (click)="download(dataExportArtifact)" [attr.download]="dataExportArtifact.fileName">
                     <mat-icon>cloud_download</mat-icon>
                 </a>
             </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
-        <tr mat-row *matRowDef="let dataExportArtifact; columns: displayColumns;"></tr>
+        <tr mat-row  [attr.test-table-row-index]="i" *matRowDef="let dataExportArtifact; columns: displayColumns; let i = index;"></tr>
     </table>
 
 </div>

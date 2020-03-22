@@ -113,15 +113,12 @@ class DateItemValueConverter extends AbstractItemValueConverter {
     if (i.value) {
       let m: moment.Moment;
       if (typeof i.value === 'string') {
-        m = moment(i.value, DATE_FORMAT);
+        m = moment(i.value, a.format ? a.format : DATE_FORMAT);
       } else if (moment.isMoment(i.value)) {
         m = i.value;
       }
       if (m && m.isValid()) {
-        if (a.format) {
-          return m.format(a.format);
-        }
-        return m.format(DATE_FORMAT);
+        return m.format(a.format ? a.format : DATE_FORMAT);
       }
       return 'Invalid Date';
     }

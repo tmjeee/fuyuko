@@ -23,4 +23,32 @@ export class ExportArtifactsPage {
         return this;
     }
 
+    ////////////////////
+
+    verifyViewName(index: number, viewName: string): ExportArtifactsPage {
+        cy.get(`[test-table-row-index='${index}']`)
+            .find(`[test-table-column-view='${viewName}']`)
+            .should('exist');
+        return this;
+    }
+
+    verifyViewMimeType(index: number, mimeType: string): ExportArtifactsPage {
+        cy.get(`[test-table-row-index='${index}']`)
+            .find(`[test-table-column-mimetype='${mimeType}']`)
+            .should('exist');
+        return this;
+    }
+
+    clickDownload(index: number): ExportArtifactsPage {
+        cy.get(`[test-table-row-index='${index}']`)
+            .find(`[test-link-download]`).click({force: true});
+        return this;
+    }
+
+    verifyName(index: number, value: string): ExportArtifactsPage {
+        cy.get(`[test-table-row-index='${index}']`)
+            .find(`[test-table-column-name]`)
+            .should('contain.value', value)
+        return this;
+    }
 }

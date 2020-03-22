@@ -33,7 +33,9 @@
 
         <ng-container [matColumnDef]="''+attribute.id" *ngFor="let attribute of attributes">
             <th mat-header-cell class="attribute-header" *matHeaderCellDef>{{attribute.name}}</th>
-            <td mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-table-column-attribute]="attribute.name">{{tableItem[attribute.id] | itemAttributeValueAsString:attribute }}</td>
+            <td mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-table-column-attribute]="attribute.name">
+                {{tableItem[attribute.id] | itemAttributeValueAsString:attribute }}
+            </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
