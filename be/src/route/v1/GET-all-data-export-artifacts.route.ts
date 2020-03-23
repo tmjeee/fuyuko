@@ -40,6 +40,7 @@ const httpAction: any[] = [
                 FROM TBL_DATA_EXPORT AS E
                 LEFT JOIN TBL_VIEW AS V ON V.ID = E.VIEW_ID
                 LEFT JOIN TBL_DATA_EXPORT_FILE AS F ON F.DATA_EXPORT_ID = E.ID
+                ORDER BY E.LAST_UPDATE DESC
             `);
 
             return q.reduce((acc: DataExportArtifact[], i: QueryI) => {

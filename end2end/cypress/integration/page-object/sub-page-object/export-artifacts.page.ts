@@ -48,7 +48,15 @@ export class ExportArtifactsPage {
     verifyName(index: number, value: string): ExportArtifactsPage {
         cy.get(`[test-table-row-index='${index}']`)
             .find(`[test-table-column-name]`)
-            .should('contain.value', value)
+            .should('contain.text', value)
+        return this;
+    }
+
+    clickDelete(index: number): ExportArtifactsPage {
+        cy.get(`[test-table-row-index='${index}']`)
+            .find(`[test-table-column-action]`)
+            .find(`[test-icon-delete]`)
+            .click({force: true});
         return this;
     }
 }

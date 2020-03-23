@@ -115,6 +115,12 @@ export class ExportPageStep2 {
         });
         return this;
     }
+
+    selectPricingStructure(pricingStructureName: string): ExportPageStep2 {
+        cy.get(`[test-mat-select-step2-pricing-structure] div:first-child`).click({force: true, multiple: true});
+        cy.get(`[test-mat-select-option-step2-pricing-structure='${pricingStructureName}']`).click({force: true});
+        return this;
+    }
 }
 
 export class ExportPageStep3 {
@@ -391,7 +397,7 @@ export class ExportPageStep4 {
                     .find(`[test-row-isExpanded]`)
                     .click({force: true});
             }
-        });
+        }).wait(100);
         return this;
     }
 

@@ -31,10 +31,11 @@
         </ng-container>
         <ng-container matColumnDef="action">
             <th mat-header-cell class="action-header" *matHeaderCellDef></th>
-            <td mat-cell class="action" *matCellDef="let dataExportArtifact">
+            <td mat-cell class="action" [attr.test-table-column-action]="''" *matCellDef="let dataExportArtifact">
                 <a target="_self" [attr.test-link-download]="''" (click)="download(dataExportArtifact)" [attr.download]="dataExportArtifact.fileName">
                     <mat-icon>cloud_download</mat-icon>
                 </a>
+                <mat-icon [attr.test-icon-delete]="''" (click)="onDelete(dataExportArtifact)">delete_outline</mat-icon>
             </td>
         </ng-container>
 

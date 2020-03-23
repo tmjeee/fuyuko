@@ -22,6 +22,7 @@ const URL_SCHEDULE_ITEMS_EXPORT = () => `${config().api_host_url}/view/:viewId/e
 const URL_SCHEDULE_PRICES_EXPORT = () => `${config().api_host_url}/view/:viewId/export/pricingStructure/:pricingStructureId/prices`;
 
 const URL_EXPORT_ARTIRACTS = () => `${config().api_host_url}/data-export-artifacts`;
+const URL_DELETE_EXPORT_ARTIFACT = () => `${config().api_host_url}/data-export-artifact/:dataExportArtifactId`;
 
 @Injectable()
 export class ExportDataService {
@@ -105,5 +106,9 @@ export class ExportDataService {
             }
         }
         return null;
+    }
+
+    deleteExportArtifact(dataExportArtifactId: number): Observable<boolean> {
+        return this.httpClient.delete<boolean>(URL_DELETE_EXPORT_ARTIFACT().replace(':dataExportArtifactId', String(dataExportArtifactId)));
     }
 }

@@ -67,7 +67,7 @@
 
                     <ng-container matColumnDef="pricing">
                         <th mat-header-cell *matHeaderCellDef>Price</th>
-                        <td mat-cell [attr.test-table-column-price]="pricingStructureItem.itemName" *matCellDef="let pricingStructureItem">{{pricingStructureItem.price}}</td>
+                        <td mat-cell [attr.test-table-column-price]="pricingStructureItem.itemName" *matCellDef="let pricingStructureItem">{{pricingStructureItem.price | currency}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="country">

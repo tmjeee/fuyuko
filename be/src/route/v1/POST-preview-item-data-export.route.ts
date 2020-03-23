@@ -33,7 +33,7 @@ const httpAction: any[] = [
 
         res.status(200).json({
             type: 'ITEM',
-            attributes: [...previewResult.m.values()],
+            attributes: (attributes && attributes.length) ? attributes : [...previewResult.m.values()],
             items: previewResult.i
         } as ItemDataExport);
     }

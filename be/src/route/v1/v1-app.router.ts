@@ -104,6 +104,7 @@ import registerGetAllPricingStructureByViewRoute from './GET-all-pricing-structu
 import registerGetDataExportContentByIdRoute from './GET-data-export-content-by-id.route';
 import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
 import registerGetAllDataExportArtifactsRoute from './GET-all-data-export-artifacts.route';
+import registerDeleteDataExportArtifactByIdRoute from './DELETE-data-export-artifact-by-id.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -215,6 +216,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetDataExportContentByIdRoute(v1AppRouter, registry);
     registerGetPricingStructureByIdRoute(v1AppRouter, registry);
     registerGetAllDataExportArtifactsRoute(v1AppRouter, registry);
+    registerDeleteDataExportArtifactByIdRoute(v1AppRouter, registry);
 };
 
 

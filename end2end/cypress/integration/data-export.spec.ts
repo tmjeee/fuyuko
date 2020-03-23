@@ -46,11 +46,76 @@ describe(`data export spec`, () => {
 
     //////////////////
     it('should export prices', () => {
+        const viewName = `Test View 1`;
+        const itemName = `Item-1`;
 
+        // step 1
+        const exportPageStep1: ExportPageStep1 = exportPage
+            .clickStep1()
+            .verifyInStep()
+            .verifyCanClickNext(false)
+            .selectExportView(viewName)
+            .verifyCanClickNext(true)
+        ;
+
+        // step 2
+        const exportPageStep2: ExportPageStep2 = exportPageStep1
+            .clickNext()
+            .verifyInStep()
+            .clickBack()        // step1
+            .verifyInStep()
+            .clickNext()        // step2
+            .verifyInStep()
+            .selectExportType('PRICE')
+            .selectExportAllAttributes()
+            .selectPricingStructure(`Pricing Structure #1`)
+        ;
+
+        // step 3 (item filtering)
+        const exportPageStep3: ExportPageStep3 = exportPageStep2
+            .clickNext() as ExportPageStep3;
+        exportPageStep3
+            .verifyInStep()
+            .clickBack()       // step 2
+            .verifyInStep()
+            .clickNext()       // step 3
+            .verifyInStep()
+        ;
+
+
+        // step 4 (review)
+        const exportPageStep4: ExportPageStep4 = exportPageStep3
+            .clickNext()
+            .verifyInStep();
+        const _exportPageStep3: ExportPageStep3 = exportPageStep4
+            .clickBack() as ExportPageStep3;
+        exportPageStep3
+            .verifyInStep()
+            .clickNext()
+        // exportPageStep4
+            // .verifyPriceExport_price(``)
+
+        cy.wait(5000);
+
+        // step 5
+        const exportPageStep5: ExportPageStep5 = exportPageStep4
+            .clickNext()
+            .verifyInStep()
+        ;
+        exportPageStep5.clickDone();
+
+
+        const exportArtifactsPage = new ExportArtifactsPage()
+            .visit()
+            .validateTitle()
+            .verifyName(0, 'price-data-export')
+            .verifyViewMimeType(0, 'text/csv')
+            .verifyViewName(0, viewName)
+        ;
     }) ;
 
 
-    it.only(`should export items`, () => {
+    it(`should export items`, () => {
 
         const viewName = `Test View 1`;
         const itemName = `Item-1`;
@@ -91,6 +156,8 @@ describe(`data export spec`, () => {
             .verifyInStep()
             .clickNext()       // step 3
             .verifyInStep()
+        ;
+
 
 
         // step 4 (review)
@@ -105,8 +172,8 @@ describe(`data export spec`, () => {
         exportPageStep4
             .expandItem(itemName)
             .verifyItemExport_itemExists(itemName)
-            .verifyItemExport_itemExists(`Item1-1`)
-            .verifyItemExport_itemExists(`Item1-2`)
+            .verifyItemExport_itemExists(`Item-1-1`)
+            .verifyItemExport_itemExists(`Item-1-2`)
             .verifyItemExport_itemExists(`Item-2`)
             .verifyItemExport_itemExists(`Item-3`)
             .verifyItemExport_itemExists(`Item-4`)
@@ -129,7 +196,7 @@ describe(`data export spec`, () => {
         const exportArtifactsPage = new ExportArtifactsPage()
             .visit()
             .validateTitle()
-            .verifyName(0, 'attribute-item-export')
+            .verifyName(0, 'item-data-export')
             .verifyViewMimeType(0, 'text/csv')
             .verifyViewName(0, viewName)
         ;

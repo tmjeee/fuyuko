@@ -250,6 +250,7 @@ export const getItem2WithFiltering = async (conn: Connection,
         let r: boolean = true;
         for (const itemValueOperatorAndAttribute of whenClauses) {
             r = false;
+            console.log('*********************** itemValueOperatorAndAttribute', itemValueOperatorAndAttribute);
             const value: Value = itemValueOperatorAndAttribute.itemValue;
             const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;

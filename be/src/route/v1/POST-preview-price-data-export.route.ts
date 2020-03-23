@@ -40,7 +40,7 @@ const httpAction: any[] = [
         res.status(200).json({
             type: "PRICE",
             pricingStructure: ps,
-            attributes: [...p.m.values()],
+            attributes: (attributes && attributes.length) ? attributes : [...p.m.values()],
             pricedItems: p.i,
         } as PriceDataExport);
     }

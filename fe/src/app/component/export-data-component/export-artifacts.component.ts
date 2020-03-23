@@ -1,10 +1,16 @@
-import {Component, Input, OnChanges, SimpleChange, SimpleChanges} from "@angular/core";
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges} from "@angular/core";
 import {DataExportArtifact} from "../../model/data-export.model";
 import {CollectionViewer, DataSource} from "@angular/cdk/collections";
 import {BehaviorSubject, Observable} from "rxjs";
 import config from "../../utils/config.util";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {tap} from "rxjs/operators";
+
+
+export interface ExportArtifactsComponentEvent {
+    type: 'DELETE';
+    dataExportArtifact: DataExportArtifact;
+}
 
 export class InternalDataSource extends DataSource<DataExportArtifact> {
 
@@ -38,6 +44,7 @@ const URL_DOWNLOAD = () => `${config().api_host_url}/data-export/:dataExportId`;
 export class ExportArtifactsComponent implements OnChanges {
 
     @Input() dataExportArtifacts: DataExportArtifact[];
+    @Output() events: EventEmitter<ExportArtifactsComponentEvent>;
 
     dataSource: InternalDataSource;
     displayColumns: string[];
@@ -45,6 +52,7 @@ export class ExportArtifactsComponent implements OnChanges {
     constructor(private httpClient: HttpClient) {
         this.dataSource = new InternalDataSource();
         this.displayColumns = ['name', 'view', 'type', 'date', 'fileName', 'mimetype', 'size', 'action'];
+        this.events = new EventEmitter<ExportArtifactsComponentEvent>();
     }
 
     download(dataExportArtifact: DataExportArtifact) {
@@ -65,6 +73,13 @@ export class ExportArtifactsComponent implements OnChanges {
         if (change && change.currentValue) {
             this.dataSource.update(change.currentValue);
         }
+    }
+
+    onDelete(dataExportArtifact: any) {
+        this.events.emit({
+            type: 'DELETE',
+            dataExportArtifact
+        });
     }
 }
 

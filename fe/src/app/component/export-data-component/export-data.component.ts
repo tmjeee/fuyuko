@@ -99,7 +99,6 @@ export class ExportDataComponent implements OnInit {
             if (attributesFormGroup) {
                 if (this.attributeSelectionOptionFormControl.value === 'selection') {
                     const valid = Object.values(attributesFormGroup.controls).reduce((r: boolean, ctl: AbstractControl) => {
-                        console.log('ctl', ctl.value);
                         return (r || ctl.value);
                     }, false);
                     if (!valid) {
@@ -186,7 +185,9 @@ export class ExportDataComponent implements OnInit {
             const fg: FormGroup = this.secondFormGroup.get('attributes') as FormGroup;
             for (const [, c] of Object.entries(fg.controls)) {
                 const a: Attribute = (c as any).internalData;
-                att.push(a);
+                if (c.value) { // only if it is checked
+                    att.push(a);
+                }
             }
         }
 
@@ -196,7 +197,6 @@ export class ExportDataComponent implements OnInit {
         this.previewExportFn(exportType, viewId, att, f, ps).pipe(
             tap((dataExport: AttributeDataExport | ItemDataExport | PriceDataExport) => {
                 this.dataExport = dataExport;
-                console.log('******* dataExport', dataExport);
                 this.fourthFormReady = true;
             })
         ).subscribe();
@@ -247,6 +247,12 @@ export class ExportDataComponent implements OnInit {
         (g.get('operator') as FormControl).setValue($event.operator);
         (g.get('itemValue') as FormControl).setValue($event.attribute ? convertToString($event.attribute, $event.itemValue) : undefined);
         this.thirdFormGroup.updateValueAndValidity();
+        const _i: ItemValueOperatorAndAttribute = this.itemValueOperatorAndAttributeList.find((i: ItemValueOperatorAndAttribute) => (i as any).id === id)
+        if (_i) {
+            _i.attribute = $event.attribute;
+            _i.operator = $event.operator;
+            _i.itemValue = $event.itemValue;
+        }
     }
 
     onAddItemFilter($event: MouseEvent) {

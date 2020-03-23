@@ -15,7 +15,7 @@
         </ng-container>
         <ng-container matColumnDef="price">
             <th mat-header-cell *matHeaderCellDef>Price</th>
-            <td mat-cell [attr.test-table-column-price]="priceDataItem.item.price" *matCellDef="let priceDataItem">{{priceDataItem.item.price}}</td>
+            <td mat-cell [attr.test-table-column-price]="priceDataItem.item.price" *matCellDef="let priceDataItem">{{priceDataItem.item.price | currency}}</td>
         </ng-container>
         <ng-container matColumnDef="country">
             <th mat-header-cell *matHeaderCellDef>Country</th>
