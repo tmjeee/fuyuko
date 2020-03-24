@@ -1,0 +1,18 @@
+<div class="upload-item-image-dialog-component">
+
+    <form (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <mat-label>Item Image Upload</mat-label>
+            <div class="input">
+                <input type="text" matInput [ngStyle]="{visbility: 'hidden', display: 'none'}">
+                <input type="file" (change)="onFileChange($event)">
+            </div>
+            <mat-hint>Upload an item image</mat-hint>
+        </mat-form-field>
+        <div class="control">
+            <button type="submit" mat-flat-button color="primary">Upload</button>
+            <button type="button" mat-flat-button color="secondary" (click)="onCancel($event)">Cancel</button>
+        </div>
+    </form>
+
+</div>

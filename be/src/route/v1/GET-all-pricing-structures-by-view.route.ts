@@ -37,7 +37,9 @@ const httpAction: any[] = [
                    id: i.ID,
                    viewId: i.VIEW_ID,
                    name: i.NAME,
-                   description: i.DESCRIPTION
+                   description: i.DESCRIPTION,
+                   creationDate: i.CREATION_DATE,
+                   lastUpdate: i.LAST_UPDATE,
                 } as PricingStructure;
                 acc.push(p);
                 return acc;

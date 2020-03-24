@@ -121,6 +121,8 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
            description: csvItem.description,
            images: [],
            parentId: parentItem ? parentItem.id : null,
+           creationDate: new Date(),
+           lastUpdate: new Date(),
            children
         } as Item;
         if (!!!csvItem.parentName) {

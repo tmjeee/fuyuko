@@ -57,6 +57,16 @@
         </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="creationDate">
+        <mat-header-cell class="attribute-header" *matHeaderCellDef>Creation Date</mat-header-cell>
+        <mat-cell class="attribute" *matCellDef="let tableItem">{{tableItem.creationDate | date}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="lastUpdate">
+        <mat-header-cell class="attribute-header" *matHeaderCellDef>Last Update</mat-header-cell>
+        <mat-cell class="attribute" *matCellDef="let tableItem">{{tableItem.lastUpdate | date}}</mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="actions" sticky>
         <mat-header-cell class="actions-header" *matHeaderCellDef>Actions</mat-header-cell>
         <mat-cell class="actions" *matCellDef="let tableItem">

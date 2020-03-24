@@ -1,45 +1,55 @@
 
-export interface PricingStructure {
+export interface PricingStructure {     // pricing structure
     id: number; // pricing structure id
     viewId: number;
     name: string;
     description: string;
+    creationDate: Date;
+    lastUpdate: Date;
 }
 
-export interface PricingStructureWithItems {
+export interface PricingStructureWithItems { // pricing structure
     id: number; // pricing structure id
     viewId: number;
     name: string;
     description: string;
     items: PricingStructureItemWithPrice[];
+    creationDate: Date;
+    lastUpdate: Date;
 }
 
-export interface PricingStructureItem {
+/*
+export interface PricingStructureItem {  // pricing structure item
     id: number;     // pricing structure item id
     itemId: number;
     itemName: string;
     itemDescription: string;
 }
+ */
 
-export interface PricingStructureItemWithPrice {
+export interface PricingStructureItemWithPrice {  // pricing structure item
     id: number;     // pricing structure item id
     itemId: number;
     itemName: string;
     itemDescription: string;
     price: number;
     country: string;
+    creationDate: Date;
+    lastUpdate: Date;
 
     parentId: number;
     children: PricingStructureItemWithPrice[];
 }
 
-export interface TablePricingStructureItemWithPrice {
+export interface TablePricingStructureItemWithPrice {  // pricing structure item
     id: number;         // pricing structure item id
     itemId: number;
     itemName: string;
     itemDescription: string;
     price: number;
     country: string;
+    creationDate: Date;
+    lastUpdate: Date;
 
     depth: number;
     parentId: number;

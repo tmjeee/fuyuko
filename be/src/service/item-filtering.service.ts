@@ -48,6 +48,8 @@ const SQL: string = `
             I.NAME AS I_NAME,
             I.DESCRIPTION AS I_DESCRIPTION,
             I.STATUS AS I_STATUS,
+            I.CREATION_DATE AS I_CREATION_DATE,
+            I.LAST_UPDATE AS I_LAST_UPDATE,
             
             V.ID AS V_ID,
             V.ITEM_ID AS V_ITEM_ID,
@@ -150,6 +152,8 @@ export const getItem2WithFiltering = async (conn: Connection,
                 name: i.I_NAME,
                 description: i.I_DESCRIPTION,
                 parentId: i.I_PARENT_ID,
+                creationDate: i.I_CREATION_DATE,
+                lastUpdate: i.I_LAST_UPDATE,
                 values: [],
                 images: [],
                 children: []

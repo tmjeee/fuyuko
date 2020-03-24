@@ -6,10 +6,19 @@
     <mat-icon>chevron_right</mat-icon>
   </button>
   <div class="container">
+    <div class="primary-image">
+      <mat-icon>bookmark</mat-icon>
+    </div>
     <div class="image"
+         #image
          [style.width]="imageWidth"
          [style.height]="imageHeight"
-         [style.background-image]="'url('+imageUrl+')'">
+         [style.background-image]="'url('+currentImage.imageUrl+')'">
     </div>
+  </div>
+  <div class="control" *ngIf="allowEdit">
+    <mat-icon (click)="onMarkAsPrimary($event)" matTooltip="Mark this item image as primary image">class</mat-icon>
+    <mat-icon (click)="onDelete($event)" matTooltip="Delete this item image">delete_outline</mat-icon>
+    <mat-icon (click)="onUpload($event)" matTooltip="Upload an item image">cloud_upload</mat-icon>
   </div>
 </div>

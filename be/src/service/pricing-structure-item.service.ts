@@ -106,12 +106,16 @@ export const getPricingStructureItem = async (viewId: number, pricingStructureId
                     PS.VIEW_ID AS PS_VIEW_ID,
                     PS.NAME AS PS_NAME,
                     PS.DESCRIPTION AS PS_DESCRIPTION,
+                    PS.CREATION_DATE AS PS_CREATION_DATE,
+                    PS.LAST_UPDATE AS PS_LAST_UPDATE,
                     
                     PSI.ID AS PSI_ID,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.COUNTRY AS PSI_COUNTRY,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
-                    PSI.PRICE AS PSI_PRICE
+                    PSI.PRICE AS PSI_PRICE,
+                    PSI.CREATION_DATE AS PSI_CREATION_DATE,
+                    PSI.LAST_UPDATE AS PSI_LAST_UPDATE
                 
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = I.VIEW_ID
@@ -127,6 +131,8 @@ export const getPricingStructureItem = async (viewId: number, pricingStructureId
             country: q[0].PSI_COUNTRY,
             parentId: q[0].I_PARENT_ID,
             price: q[0].PSI_PRICE,
+            creationDate: q[0].PSI_CREATION_DATE,
+            lastUpdate: q[0].PSI_LAST_UPDATE,
             children: await getChildrenWithConn(conn, pricingStructureId, itemId)
         } as PricingStructureItemWithPrice : null;
     });
@@ -150,12 +156,16 @@ export const _getChildrenWithConn = async (conn: Connection, pricingStructureId:
                     PS.VIEW_ID AS PS_VIEW_ID,
                     PS.NAME AS PS_NAME,
                     PS.DESCRIPTION AS PS_DESCRIPTION,
+                    PS.CREATION_DATE AS PS_CREATION_DATE,
+                    PS.LAST_UPDATE AS PS_LAST_UPDATE,
                     
                     PSI.ID AS PSI_ID,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
                     PSI.PRICE AS PSI_PRICE,
-                    PSI.COUNTRY AS PSI_COUNTRY
+                    PSI.COUNTRY AS PSI_COUNTRY,
+                    PSI.CREATION_DATE AS PSI_CREATION_DATE,
+                    PSI.LAST_UPDATE AS PSI_LAST_UPDATE
                 
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = I.VIEW_ID
@@ -176,6 +186,8 @@ export const _getChildrenWithConn = async (conn: Connection, pricingStructureId:
                 price: i.PSI_PRICE,
                 country: i.PSI_COUNTRY,
                 parentId: i.I_PARENT_ID,
+                creationDate: i.PSI_CREATION_DATE,
+                lastUpdate: i.PSI_LAST_UPDATE,
                 children: await getChildrenWithConn(conn, pricingStructureId, itemId),
             } as PricingStructureItemWithPrice;
             acc.push(a);

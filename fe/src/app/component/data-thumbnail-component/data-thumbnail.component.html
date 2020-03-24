@@ -21,7 +21,7 @@
         <mat-icon [attr.test-icon-thumbnail-edit-item]="item.name" color="primary" (click)="editItem(item)">edit</mat-icon>
       </div>
       <div class="carousel">
-        <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
+        <app-carousel [itemId]="item.id" [images]="getCarouselImages(item)" (events)="onCarouselEvent($event)"></app-carousel>
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Name</mat-label>
@@ -32,6 +32,16 @@
         <mat-label class="mat-small mat-hint">Description</mat-label>
         <app-item-editor [attr.test-item-editor]="'description'" [item]="item" [type]="'description'" (events)="onItemEditorEvent($event)"></app-item-editor>
         <mat-hint class="mat-small mat-hint">Item description</mat-hint>
+      </div>
+      <div>
+        <mat-label class="mat-small mat-hint">Creation Date</mat-label>
+        <div>{{item.creationDate | date}}</div>
+        <mat-hint class="mat-small mat-hint">Item creation date</mat-hint>
+      </div>
+      <div>
+        <mat-label class="mat-small mat-hint">Last update</mat-label>
+        <div>{{item.lastUpdate | date}}</div>
+        <mat-hint class="mat-small mat-hint">Item last update</mat-hint>
       </div>
       <div class="attribute" *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index">
         <ng-container *ngIf="i < 2">

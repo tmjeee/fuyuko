@@ -30,7 +30,6 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
-        const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = Number(req.params.userId);
 
         const r: {fields: Fields, files: Files} = await multipartParse(req);

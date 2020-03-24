@@ -128,8 +128,8 @@ export class DataTableComponent implements OnInit, OnChanges {
       .map((a: Attribute) => {
         return '' + a.id;
       });
-    this.displayedColumns = ['selection', 'actions', 'expansion', 'name', 'description'].concat(columns);
-    this.childrenDisplayedColumns = ['children-selection', 'children-actions', 'children-expansion', 'name', 'description'].concat(columns);
+    this.displayedColumns = ['selection', 'actions', 'expansion', 'name', 'description', 'creationDate', 'lastUpdate'].concat(columns);
+    this.childrenDisplayedColumns = ['children-selection', 'children-actions', 'children-expansion', 'name', 'description', 'creationDate', 'lastUpdate'].concat(columns);
   }
 
 

@@ -19,7 +19,7 @@
                         <mat-panel-description>{{item.description}}</mat-panel-description>
                     </mat-expansion-panel-header>
                     <div>
-                        <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
+                        <app-carousel [itemId]="item.id" [images]="getCarouselImages(item)" [allowEdit]="false"></app-carousel>
                     </div>
                     <div> <a (click)="onItemClicked($event, item)">{{item.name}}</a> </div>
                     <div> {{item.description}} </div>

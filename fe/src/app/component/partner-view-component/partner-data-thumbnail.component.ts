@@ -3,6 +3,7 @@ import {Attribute} from '../../model/attribute.model';
 import {Item, ItemImage, PricedItem} from '../../model/item.model';
 import config from '../../utils/config.util';
 import {MatSidenav} from '@angular/material/sidenav';
+import {CarouselItemImage} from "../carousel-component/carousel.component";
 
 
 const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
@@ -27,10 +28,14 @@ export class PartnerDataThumbnailComponent {
     }
 
 
-    getItemImagesUrl(item: Item): string[] {
+    getCarouselImages(item: Item): CarouselItemImage[] {
         if (item && item.images) {
             // const p = `/item/image/:itemImageId`;
-            return item.images.map((i: ItemImage) => URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`));
+            return item.images.map((i: ItemImage) => ({
+                ...i,
+                itemId: item.id,
+                imageUrl: URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`)
+            } as CarouselItemImage));
         }
         return [];
     }

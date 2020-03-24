@@ -64,6 +64,8 @@ export interface Item2 {
     id: number;
     name: string;
     description: string;
+    creationDate: Date;
+    lastUpdate: Date;
     images: ItemImage[];
     parentId: number;
     values: ItemValue2[];
@@ -74,6 +76,8 @@ export interface PricedItem2 {
     id: number;
     name: string;
     description: string;
+    creationDate: Date;
+    lastUpdate: Date;
     images: ItemImage[];
     parentId: number;
     values: ItemValue2[];

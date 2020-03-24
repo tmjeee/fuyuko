@@ -25,7 +25,7 @@ const httpAction: any[] = [
         const q: QueryA = await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(`
                 SELECT  
-                    ID, VIEW_ID, NAME, DESCRIPTION, STATUS 
+                    ID, VIEW_ID, NAME, DESCRIPTION, STATUS, CREATION_DATE, LAST_UPDATE 
                 FROM TBL_PRICING_STRUCTURE 
                 WHERE ID IN (
                     SELECT PS.ID
@@ -46,7 +46,9 @@ const httpAction: any[] = [
                 id: curr.ID,
                 name: curr.NAME,
                 viewId: curr.VIEW_ID,
-                description: curr.DESCRIPTION
+                description: curr.DESCRIPTION,
+                creationDate: curr.CREATION_DATE,
+                lastUpdate: curr.LAST_UPDATE
             };
             acc.push(v);
             return acc;

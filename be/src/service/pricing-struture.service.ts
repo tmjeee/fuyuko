@@ -16,6 +16,8 @@ export const getPricingStructureById = async (pricingStructureId: number): Promi
             acc.viewId = i.VIEW_ID;
             acc.name = i.NAME;
             acc.description = i.DESCRIPTION;
+            acc.creationDate = i.CREATION_DATE;
+            acc.lastUpdate = i.LAST_UPDATE;
             return acc;
         }, {} as PricingStructure);
     });

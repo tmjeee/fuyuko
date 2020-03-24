@@ -105,6 +105,9 @@ import registerGetDataExportContentByIdRoute from './GET-data-export-content-by-
 import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
 import registerGetAllDataExportArtifactsRoute from './GET-all-data-export-artifacts.route';
 import registerDeleteDataExportArtifactByIdRoute from './DELETE-data-export-artifact-by-id.route';
+import registerPostAddItemImageRoute from './POST-add-item-image.route';
+import registerDeleteItemImageRoute from './DELETE-delete-item-image-by-id.route';
+import registerPostMarkItemImageAsPrimaryRoute from './POST-mark-item-image-as-primary.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -217,6 +220,9 @@ const reg = (router: Router, regi: Registry) => {
     registerGetPricingStructureByIdRoute(v1AppRouter, registry);
     registerGetAllDataExportArtifactsRoute(v1AppRouter, registry);
     registerDeleteDataExportArtifactByIdRoute(v1AppRouter, registry);
+    registerPostAddItemImageRoute(v1AppRouter, registry);
+    registerDeleteItemImageRoute(v1AppRouter, registry);
+    registerPostMarkItemImageAsPrimaryRoute(v1AppRouter, registry);
 };
 
 

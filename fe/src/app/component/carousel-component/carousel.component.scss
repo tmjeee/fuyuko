@@ -17,6 +17,11 @@
    display: flex;
    justify-content: center;
    align-items: center;
+   .primary-image {
+     top: 0;
+     right:0;
+     position: absolute;
+   }
    .image {
      background-size: contain;
      background-position: center;

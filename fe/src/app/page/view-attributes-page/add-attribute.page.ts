@@ -70,6 +70,8 @@ export class AddAttributePageComponent implements OnInit {
             type: 'string',
             name: '',
             description: '',
+            creationDate: new Date(),
+            lastUpdate: new Date()
         };
     }
 

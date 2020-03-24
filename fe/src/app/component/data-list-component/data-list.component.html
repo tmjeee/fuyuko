@@ -31,10 +31,11 @@
                    </mat-panel-title>
                    <mat-panel-description>
                        <span [attr.test-item-description]="item.name">{{item.description}}</span>
+                       &nbsp; <span>(last updated at {{item.lastUpdate | date}})</span>
                    </mat-panel-description>
                </mat-expansion-panel-header>
                 <div>
-                    <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
+                    <app-carousel [itemId]="item.id" [images]="getCarouselImages(item)" (events)="onCarouselEvent($event)"></app-carousel>
                 </div>
                 <div>
                     <mat-label>Name</mat-label>
@@ -45,6 +46,16 @@
                     <mat-label>Description</mat-label>
                     <app-item-editor [item]="item" [attr.test-item-editor]="'description'" [type]="'description'" (events)="onItemDataChange($event)"></app-item-editor>
                     <mat-hint>Item description</mat-hint>
+                </div>
+                <div>
+                    <mat-label>Creation Date</mat-label>
+                    <div>{{item.creationDate | date}}</div>
+                    <mat-hint>Item creation date</mat-hint>
+                </div>
+                <div>
+                    <mat-label>Last Update</mat-label>
+                    <div>{{item.lastUpdate | date}}</div>
+                    <mat-hint>Item last update</mat-hint>
                 </div>
                 <div *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index;">
                    <mat-label>{{attribute.name}}</mat-label>

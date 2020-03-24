@@ -6,7 +6,7 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {NotificationsService} from 'angular2-notifications';
 import {ViewService} from '../../service/view-service/view.service';
 import {Attribute} from '../../model/attribute.model';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {Item, ItemSearchType, TableItem} from '../../model/item.model';
 import {ItemService} from '../../service/item-service/item.service';
 import {
@@ -15,6 +15,7 @@ import {
 } from '../../component/data-thumbnail-component/data-thumbnail.component';
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';
+import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
 
 
 @Component({
@@ -102,5 +103,34 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
     this.search = $event.search;
     this.searchType = $event.type;
     this.reload();
+  }
+
+  onCarouselEvent($event: CarouselComponentEvent) {
+    switch($event.type) {
+      case "delete": {
+        this.itemService.deleteItemImage($event.image.itemId, $event.image.id).pipe(
+            tap((r) => {
+              this.reload();
+            })
+        ).subscribe();
+        break;
+      }
+      case "markAsPrimary": {
+        this.itemService.markItemImageAsPrimary($event.image.itemId, $event.image.id).pipe(
+           tap((r) => {
+             this.reload();
+           })
+        ).subscribe()
+        break;
+      }
+      case "upload": {
+          this.itemService.uploadItemImage($event.image.itemId, $event.file).pipe(
+              tap((r) => {
+                this.reload();
+              })
+          ).subscribe();
+        break;
+      }
+    }
   }
 }

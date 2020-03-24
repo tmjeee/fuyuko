@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {
-    PricingStructure, PricingStructureItem,
+    PricingStructure,
     PricingStructureWithItems,
     TablePricingStructureItemWithPrice
 } from '../../model/pricing-structure.model';
@@ -15,9 +15,9 @@ const URL_UPDATE_PRICING_STRUCTURE_STATUS = () => `${config().api_host_url}/pric
 const URL_UPDATE_PRICING_STRUCTURE = () => `${config().api_host_url}/pricingStructures`;
 const URL_UPDATE_PRICING_STRUCTURE_ITEM = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/item`;
 
-const URL_ALL_ADDABLE_PRICING_STRUCTURE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/addable-items`;
+// const URL_ALL_ADDABLE_PRICING_STRUCTURE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/addable-items`;
 const URL_PRICING_STRUCTURE_BY_ID = () => `${config().api_host_url}/pricingStructure/:pricingStructureId`;
-const URL_ADD_PRICING_STRUCURE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/add-items`;
+// const URL_ADD_PRICING_STRUCURE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/add-items`;
 
 const URL_ALL_PRICING_STRUCTURE_BY_VIEW = () => `${config().api_host_url}/pricingStructures/view/:viewId`;
 
@@ -69,21 +69,25 @@ export class PricingStructureService {
 
     ///////////////////
 
+    /*
     allAddablePricingStructureItems(pricingStructureId: number): Observable<PricingStructureItem[]> {
         return this.httpClient.get<PricingStructureItem[]>(
             URL_ALL_ADDABLE_PRICING_STRUCTURE_ITEMS().replace(':pricingStructureId', String(pricingStructureId)));
     }
+     */
 
     getPricingStructureById(pricingStructureId: number): Observable<PricingStructure> {
         return this.httpClient.get<PricingStructure>(
             URL_PRICING_STRUCTURE_BY_ID().replace(':pricingStructureId', String(pricingStructureId)));
     }
 
+    /*
     addPricingStructureItems(pricingStructureId: number, pricingStructureItems: PricingStructureItem[]) {
         return this.httpClient.post(
             URL_ADD_PRICING_STRUCURE_ITEMS().replace(':pricingStructureId', String(pricingStructureId)),
             pricingStructureItems);
     }
+     */
 
     getAllPricingStructuresByView(viewId: number): Observable<PricingStructure[]> {
         return this.httpClient.get<PricingStructure[]>(

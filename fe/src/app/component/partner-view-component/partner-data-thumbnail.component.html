@@ -16,7 +16,7 @@
                         <mat-icon color="primary" (click)="onViewDetailsClicked($event, item)">more</mat-icon>
                     </div>
                     <div class="carousel">
-                        <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
+                        <app-carousel [itemId]="item.id" [images]="getCarouselImages(item)" [allowEdit]="false"></app-carousel>
                     </div>
                     <div> {{item.name}} </div>
                     <div> {{item.description}} </div>

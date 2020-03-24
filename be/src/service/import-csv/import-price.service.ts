@@ -33,28 +33,32 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                 switch(identifier) {
                     case 'id': // pricing structure id
                         await doInDbConnection(async (conn: Connection) => {
-                            const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS FROM TBL_PRICING_STRUCTURE WHERE ID=? AND STATUS = 'ENABLED'`, [Number(val)]);
+                            const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS, CREATION_DATE, LAST_UPDATE FROM TBL_PRICING_STRUCTURE WHERE ID=? AND STATUS = 'ENABLED'`, [Number(val)]);
                             if (q.length) {
                                psViewId = q[0].VIEW_ID;
                                ps = {
                                   id: q[0].ID,
                                   name: q[0].NAME,
                                   viewId: q[0].VIEW_ID,
-                                  description: q[0].DESCRIPTION
+                                  description: q[0].DESCRIPTION,
+                                  creationDate: q[0].CREATION_DATE,
+                                  lastUpdate: q[0].LAST_UPDATE
                                } as PricingStructure;
                             }
                         });
                         break;
                     case 'name': // pricing structure name
                         await doInDbConnection(async (conn: Connection) => {
-                            const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND VIEW_ID=?  AND STATUS = 'ENABLED'`, [val, viewId]);
+                            const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS, CREATION_DATE, LAST_UPDATE FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND VIEW_ID=?  AND STATUS = 'ENABLED'`, [val, viewId]);
                             if (q.length) {
                                 psViewId = q[0].VIEW_ID;
                                 ps = {
                                     id: q[0].ID,
                                     name: q[0].NAME,
                                     viewId: q[0].VIEW_ID,
-                                    description: q[0].DESCRIPTION
+                                    description: q[0].DESCRIPTION,
+                                    creationDate: q[0].CREATION_DATE,
+                                    lastUpdate: q[0].LAST_UPDATE
                                 } as PricingStructure;
                             }
                         });
