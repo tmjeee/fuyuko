@@ -31,6 +31,8 @@ export interface Attribute {
   type: AttributeType;
   name: string;
   description: string;
+  creationDate: Date;
+  lastUpdate: Date;
   format?: string; // applicable to: number, date, time, datetime, currency, volume, dimension, area,width, length, height
   showCurrencyCountry?: boolean; // applicable to: currency
   pair1?: Pair1[]; // for single select & double select

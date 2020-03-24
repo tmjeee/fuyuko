@@ -4,7 +4,7 @@ import {Connection} from "mariadb";
 
 const SQL_1 = `
    SELECT 
-        ID, NAME, DESCRIPTION
+        ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE
    FROM TBL_VIEW WHERE STATUS = 'ENABLED'
 `;
 
@@ -34,7 +34,9 @@ const p = (q: QueryA) => {
         return {
             id: i.ID,
             name: i.NAME,
-            description: i.DESCRIPTION
+            description: i.DESCRIPTION,
+            creationDate: i.CREATION_DATE,
+            lastUpdate: i.LAST_UPDATE
         } as View
     });
     return views;

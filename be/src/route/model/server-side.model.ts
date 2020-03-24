@@ -40,6 +40,8 @@ export interface Attribute2 {
     type: string;
     name: string;
     description: string;
+    creationDate: Date;
+    lastUpdate: Date;
     metadatas: AttributeMetadata2[];
 }
 

@@ -59,6 +59,8 @@ const SQL: string = `
             A.NAME AS A_NAME,
             A.STATUS AS A_STATUS,
             A.DESCRIPTION AS A_DESCRIPTION,
+            A.CREATION_DATE AS A_CREATION_DATE,
+            A.LAST_UPDATE AS A_LAST_UPDATE,
             
             AM.ID AS AM_ID,
             AM.VIEW_ATTRIBUTE_ID AS AM_VIEW_ATTRIBUTE_ID,
@@ -212,6 +214,8 @@ export const getItem2WithFiltering = async (conn: Connection,
                 name: i.A_NAME,
                 description: i.A_DESCRIPTION,
                 type: i.A_TYPE,
+                creationDate: i.A_CREATION_DATE,
+                lastUpdate: i.A_LAST_UPDATE,
                 metadatas: []
             } as Attribute2;
             attributeMap.set(attributeMapKey, a);
@@ -250,7 +254,6 @@ export const getItem2WithFiltering = async (conn: Connection,
         let r: boolean = true;
         for (const itemValueOperatorAndAttribute of whenClauses) {
             r = false;
-            console.log('*********************** itemValueOperatorAndAttribute', itemValueOperatorAndAttribute);
             const value: Value = itemValueOperatorAndAttribute.itemValue;
             const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;

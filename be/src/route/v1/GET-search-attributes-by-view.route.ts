@@ -37,6 +37,8 @@ const httpAction: any[] = [
                     A.TYPE AS A_TYPE,
                     A.NAME AS A_NAME,
                     A.DESCRIPTION AS A_DESCRIPTION,
+                    A.CREATION_DATE AS A_CREATION_DATE,
+                    A.LAST_UPDATE AS A_LAST_UPDATE,
                     M.ID as M_ID,
                     M.NAME AS M_NAME,
                     E.ID as E_ID,
@@ -65,6 +67,8 @@ const httpAction: any[] = [
                         name: i.A_NAME,
                         description: i.A_DESCRIPTION,
                         type: i.A_TYPE,
+                        creationDate: i.A_CREATION_DATE,
+                        lastUpdate: i.A_LAST_UPDATE,
                         metadatas: []
                     } as Attribute2;
                     a.set(aK, att);

@@ -32,6 +32,8 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
                     description: attribute.description,
                     type: attribute.type,
                     format: attribute.format,
+                    creationDate: attribute.creationDate,
+                    lastUpdate: attribute.lastUpdate,
                     showCurrencyCountry: attribute.showCurrencyCountry,
                     pair1: pair1ToCsv(attribute.pair1),
                     pair2: pair2ToCsv(attribute.pair2)

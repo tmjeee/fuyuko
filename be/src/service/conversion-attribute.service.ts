@@ -18,6 +18,8 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
         name: attribute.name,
         description: attribute.description,
         type: attribute.type,
+        creationDate: attribute.creationDate,
+        lastUpdate: attribute.lastUpdate,
         metadatas: []
     } as Attribute2;
 
@@ -125,6 +127,8 @@ export const _convert = (attribute2: Attribute2): Attribute => {
         name: attribute2.name,
         description: attribute2.description,
         type: attribute2.type,
+        creationDate: attribute2.creationDate,
+        lastUpdate: attribute2.lastUpdate,
     } as Attribute;
 
     switch(att.type) {

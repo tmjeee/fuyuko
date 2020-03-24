@@ -63,7 +63,7 @@ export class ViewTableComponent implements OnInit {
         this.pendingSavings = [];
         this.pendingDeletion = [];
         this.selectionModel = new SelectionModel(true);
-        this.displayedColumns = ['selection', 'name', 'description', 'actions'];
+        this.displayedColumns = ['selection', 'name', 'description', 'creationDate', 'lastUpdate', 'actions'];
     }
 
     ngOnInit(): void {

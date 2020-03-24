@@ -31,6 +31,8 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                 format: c.format,
                 showCurrencyCountry: !!c.showCurrencyCountry,
                 type: c.type,
+                creationDate: new Date(),
+                lastUpdate: new Date(),
                 pair1: await toPair1(c.pair1),
                 pair2: await toPair2(c.pair2)
             } as Attribute)));

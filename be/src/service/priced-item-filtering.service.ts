@@ -23,6 +23,14 @@ import {_convert as _attributeConvert} from "./conversion-attribute.service";
 import {OperatorType} from "../model/operator.model";
 import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../model/unit.model";
 import moment from "moment";
+import {
+    compareDate,
+    compareNumber,
+    compareString,
+    convertToCm,
+    convertToCm2,
+    convertToMl
+} from "./compare-attribute-values.service";
 
 const SQL: string = `
            SELECT 
@@ -43,6 +51,8 @@ const SQL: string = `
             A.NAME AS A_NAME,
             A.STATUS AS A_STATUS,
             A.DESCRIPTION AS A_DESCRIPTION,
+            A.CREATION_DATE AS A_CREATION_DATE,
+            A.LAST_UPDATE AS A_LAST_UPDATE,
             
             AM.ID AS AM_ID,
             AM.VIEW_ATTRIBUTE_ID AS AM_VIEW_ATTRIBUTE_ID,
@@ -220,6 +230,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                 name: i.A_NAME,
                 description: i.A_DESCRIPTION,
                 type: i.A_TYPE,
+                creationDate: i.A_CREATION_DATE,
+                lastUpdate: i.A_LAST_UPDATE,
                 metadatas: []
             } as Attribute2;
             attributeMap.set(attributeMapKey, a);
@@ -445,6 +457,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
     return { b: matchedBulkEditItem2s, m: attMap};
 }
 
+/*
 const convertToCm = (v: number, u: DimensionUnits | WidthUnits | LengthUnits | HeightUnits): number => {
     switch (u) {
         case "cm":
@@ -476,8 +489,8 @@ const convertToMl = (v: number, u: VolumeUnits): number => {
     }
 }
 
-const compareDate = (a: moment.Moment,  /* from REST Api */
-                     b: moment.Moment,  /* from actual item attribute value */
+const compareDate = (a: moment.Moment,  // from REST Api
+                     b: moment.Moment,  // from actual item attribute value
                      operator: OperatorType): boolean => {
     switch (operator) {
         case "empty":
@@ -507,8 +520,8 @@ const compareDate = (a: moment.Moment,  /* from REST Api */
     }
 }
 
-const compareNumber = (a: number, /* from REST api */
-                       b: number, /* from actual item attribute value */
+const compareNumber = (a: number, // from REST api
+                       b: number, // from actual item attribute value
                        operator: OperatorType): boolean => {
     switch (operator) {
         case "empty":
@@ -538,8 +551,8 @@ const compareNumber = (a: number, /* from REST api */
     }
 }
 
-const compareString = (a: string /* from REST Api */,
-                       b: string /* from actual item attribute value */,
+const compareString = (a: string // from REST Api ,
+                       b: string // from actual item attribute value ,
                        operator: OperatorType): boolean => {
     switch (operator) {
         case "empty":
@@ -568,6 +581,7 @@ const compareString = (a: string /* from REST Api */,
             return (!(b <= a));
     }
 }
+ */
 
 const findEntry = (entries: ItemMetadataEntry2[], key: string): ItemMetadataEntry2 => {
     return entries.find((e: ItemMetadataEntry2) => e.key === key);
