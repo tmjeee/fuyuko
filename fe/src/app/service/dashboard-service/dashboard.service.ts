@@ -12,8 +12,6 @@ import {map} from 'rxjs/operators';
 import {DASHBOARD_STRATEGIES} from '../../component/dashboard-component/strategies';
 import {DASHBOARD_WIDGET_INFOS} from '../../component/dashboard-component/widgets';
 
-
-
 const URL_GET_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard`;
 const URL_SAVE_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard/save`;
 

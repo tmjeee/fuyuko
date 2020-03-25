@@ -31,7 +31,7 @@ const httpAction: any[] = [
             }
             const dashboardId: number = q1[0].ID;
 
-            const q2: QueryA = await conn.query(`SELECT ID, USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA, CREATION_DATE, LAST_UPDATE)  
+            const q2: QueryA = await conn.query(`SELECT ID, USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA, CREATION_DATE, LAST_UPDATE  
                 FROM TBL_USER_DASHBOARD_WIDGET WHERE USER_DASHBOARD_ID=? AND WIDGET_INSTANCE_ID=?`, [dashboardId, widgetInstanceId]);
             if (q2.length <= 0) { // no such dashboard widget data saved for user
                 return null;
@@ -49,8 +49,8 @@ const httpAction: any[] = [
 
 const reg = (router: Router, registry: Registry) => {
     const p = `/user/:userId/dashboard-widget-instance/:dashboardWidgetInstanceId`;
-    registry.addItem('POST', p);
-    router.post(p, ...httpAction);
+    registry.addItem('GET', p);
+    router.get(p, ...httpAction);
 }
 
 export default reg;

@@ -190,6 +190,7 @@ const reg = (router: Router, regi: Registry) => {
     registerPostSaveUserDashboardRoute(v1AppRouter, registry);
     registerGetUserDashboardRoute(v1AppRouter, registry);
     registerPostUserDashboardWidgetDataRoute(v1AppRouter, registry);
+
     registerGetUserDashboardWidgetDataRoute(v1AppRouter, registry);
     registerGetPartnerPricingStructuresRoute(v1AppRouter, registry);
     registerGetPartnerPricedItemsRoute(v1AppRouter, registry);
@@ -201,6 +202,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetItemsByViewRotue(v1AppRouter, registry);
     registerGetAllViewValidationsRoute(v1AppRouter, registry);
     registerGetViewValidationResultRoute(v1AppRouter, registry);
+
     registerPostScheduleValidationRoute(v1AppRouter, registry);
     registerGetViewById(v1AppRouter, registry);
     registerGetUserSettings(v1AppRouter, registry);
