@@ -75,7 +75,7 @@ const SQL: string = `
             
             IMG.ID AS IMG_ID,
             IMG.ITEM_ID AS IMG_ITEM_ID,
-            IMG.PRIMARY AS IMG_PRIMARY,
+            IMG.\`PRIMARY\` AS IMG_PRIMARY,
             IMG.MIME_TYPE AS IMG_MIME_TYPE,
             IMG.NAME AS IMG_NAME,
             IMG.SIZE AS IMG_SIZE,

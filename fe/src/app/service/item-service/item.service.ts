@@ -15,6 +15,9 @@ const URL_GET_SEARCH_FOR_ITEMS = () => `${config().api_host_url}/view/:viewId/se
 const URL_UPDATE_ITEMS = () => `${config().api_host_url}/view/:viewId/items/update`;
 const URL_UPDATE_ITEM_STATUS = () => `${config().api_host_url}/view/:viewId/items/status/:status`;
 
+const URL_DELETE_ITEM_IMAGE = () => `${config().api_host_url}/item/:itemId/image/:itemImageId`;
+const URL_MARK_ITEM_IMAGE_AS_PRIMARY = () => `${config().api_host_url}/item/:itemId/image/:itemImageId/mark-primary`;
+const URL_UPLOAD_ITEM_IMAGE = () => `${config().api_host_url}/item/:itemId/image`;
 
 @Injectable()
 export class ItemService {
@@ -81,5 +84,26 @@ export class ItemService {
                     .filter((i: number, index: number, self: number[]) => self.indexOf(i) === index) // unique ones only
                     .join(',')
             ));
+  }
+
+  deleteItemImage(itemId: any, itemImageId: number): Observable<boolean> {
+      return this.httpClient.delete<boolean>(URL_DELETE_ITEM_IMAGE()
+          .replace(`:itemId`, String(itemId))
+          .replace(`:itemImageId`, String(itemImageId)));
+  }
+
+  markItemImageAsPrimary(itemId: number, itemImageId: number): Observable<boolean> {
+      return this.httpClient.post<boolean>(URL_MARK_ITEM_IMAGE_AS_PRIMARY()
+          .replace(`:itemId`, String(itemId))
+          .replace(`:itemImageId`, String(itemImageId)), {});
+  }
+
+  uploadItemImage(itemId: number, file: File): Observable<boolean> {
+      console.log('****** item service ', file);
+      const formData: FormData = new FormData();
+      formData.set(`upload1`, file);
+      return this.httpClient.post<boolean>(URL_UPLOAD_ITEM_IMAGE()
+          .replace(`:itemId`, String(itemId)), formData);
+
   }
 }

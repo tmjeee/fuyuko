@@ -57,6 +57,7 @@ export const getPricedItems = async (pricingStructureId: number): Promise<Priced
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
                     IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
                     PSI.COUNTRY AS PSI_COUNTRY,
@@ -114,6 +115,7 @@ export const getChildrenPricedItems = async (pricingStructureId: number, parentI
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
                     IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY,
                     PSI.ID AS PSI_ID,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
@@ -193,7 +195,8 @@ const _doQ = (q: QueryA): PricedItem2[] => {
                 id: imageId,
                 name: c.IMG_NAME,
                 mimeType: c.IMG_MIMETYPE,
-                size: c.IMG_SIZE
+                size: c.IMG_SIZE,
+                primary: c.IMG_PRIMARY,
             } as ItemImage;
             imgMap.set(imgMapKey, img);
             const item: Item2 = itemMap.get(itemMapKey);

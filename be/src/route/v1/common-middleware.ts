@@ -156,6 +156,13 @@ type JwtErrorType = {
 }
 
 
+export class ClientError extends Error {
+    constructor(msg: string) {
+        super(msg);
+    }
+}
+
+
 export const validateJwtMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
     const jwtToken: string = req.headers['x-auth-jwt'] as string;
     if (!jwtToken) {
@@ -177,13 +184,23 @@ export const validateJwtMiddlewareFn = (req: Request, res: Response, next: NextF
 };
 
 export const catchErrorMiddlewareFn = async (err: any, req: Request, res: Response, next: NextFunction) => {
-       e('Unexpected Error', err);
-       if (res.headersSent) {
-           return next(err);
-       }
-       res.status(500).json(
-           makeApiErrorObj(
-               makeApiError(`Unexpected Error: ${err.toString()}`, '', '', 'error')
-           )
-       );
+    let errorStatus = 500;
+    let errorLocation = `Server Error`;
+    let errorMessage = `Unexpected Error: ${err.toString()}`;
+    if (err instanceof ClientError) {
+        e('Client Error', err);
+        errorStatus = 400;
+        errorLocation = `Client Error`;
+        errorMessage = `Client Error: ${err.toString()}`;
+    } else {
+        e('Unexpected Error', err);
+    }
+    if (res.headersSent) {
+        return next(err);
+    }
+    res.status(errorStatus).json(
+        makeApiErrorObj(
+            makeApiError(errorMessage, '', '', errorLocation)
+        )
+    );
 };

@@ -136,7 +136,8 @@ const SQL_1_A = `
                     IMG.ID AS IMG_ID,
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
-                    IMG.SIZE AS IMG_SIZE
+                    IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
@@ -240,7 +241,8 @@ export const getItemById = async (viewId: number, itemId: number): Promise<Item2
                     IMG.ID AS IMG_ID,
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
-                    IMG.SIZE AS IMG_SIZE
+                    IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
@@ -295,7 +297,8 @@ export const findChildrenItems = async (viewId: number, parentItemId: number): P
                     IMG.ID AS IMG_ID,
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
-                    IMG.SIZE AS IMG_SIZE
+                    IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
@@ -368,7 +371,8 @@ const _doQ = (q: QueryA): Item2[] => {
                 id: imageId,
                 name: c.IMG_NAME,
                 mimeType: c.IMG_MIMETYPE,
-                size: c.IMG_SIZE
+                size: c.IMG_SIZE,
+                primary: c.IMG_PRIMARY,
             } as ItemImage;
             imgMap.set(imgMapKey, img);
             const item: Item2 = itemMap.get(itemMapKey);

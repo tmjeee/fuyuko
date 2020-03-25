@@ -1,7 +1,9 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import { param } from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {ClientError, validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {doInDbConnection, QueryA} from "../../db";
+import {Connection} from "mariadb";
 
 const httpAction: any[] = [
     [
@@ -12,6 +14,22 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
 
+        const itemId: number = Number(req.params.itemId);
+        const itemImageId: number = Number(req.params.itemImageId);
+
+        await doInDbConnection(async (conn: Connection) => {
+
+            const q: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_ITEM_IMAGE WHERE ID=? AND ITEM_ID=?
+            `, [itemImageId, itemId]);
+            if (q[0].COUNT > 0) { // make sure such image actually exists
+                await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\`=false WHERE ITEM_ID=? `, [itemId]);
+                await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\`=true WHERE ITEM_ID=? AND ID=?`, [itemId, itemImageId]);
+                res.status(200).json(true);
+            } else {
+                throw new ClientError(`Item Image with id ${itemImageId} and itemId ${itemId} do not exists`);
+            }
+        });
     }
 ];
 

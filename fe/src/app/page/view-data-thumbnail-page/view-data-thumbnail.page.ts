@@ -108,25 +108,28 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
   onCarouselEvent($event: CarouselComponentEvent) {
     switch($event.type) {
       case "delete": {
-        this.itemService.deleteItemImage($event.image.itemId, $event.image.id).pipe(
+        this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
             tap((r) => {
               this.reload();
+              this.notificationService.success(`Success`, `Item image deleted`);
             })
         ).subscribe();
         break;
       }
       case "markAsPrimary": {
-        this.itemService.markItemImageAsPrimary($event.image.itemId, $event.image.id).pipe(
+        this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
            tap((r) => {
              this.reload();
+             this.notificationService.success(`Success`, `Item image marked as primary`);
            })
         ).subscribe()
         break;
       }
       case "upload": {
-          this.itemService.uploadItemImage($event.image.itemId, $event.file).pipe(
+          this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
               tap((r) => {
                 this.reload();
+                this.notificationService.success(`Success`, `Item image uploaded`);
               })
           ).subscribe();
         break;

@@ -16,9 +16,9 @@ const httpAction: any[] = [
     [
         param('itemId').exists().isNumeric()
     ],
-    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
         const itemId: number = Number(req.params.itemId);
@@ -30,7 +30,7 @@ const httpAction: any[] = [
 
         const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
             return await conn.query(`
-                INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, PRIMARY, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)
+                INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)
             `, [itemId, false, ft.mime, file1.name,  buffer.length, buffer]);
         });
 
