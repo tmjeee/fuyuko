@@ -106,7 +106,7 @@ import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.
 import registerGetAllDataExportArtifactsRoute from './GET-all-data-export-artifacts.route';
 import registerDeleteDataExportArtifactByIdRoute from './DELETE-data-export-artifact-by-id.route';
 import registerPostAddItemImageRoute from './POST-add-item-image.route';
-import registerDeleteItemImageRoute from './DELETE-delete-item-image-by-id.route';
+import registerDeleteItemImageRoute from './DELETE-item-image-by-id.route';
 import registerPostMarkItemImageAsPrimaryRoute from './POST-mark-item-image-as-primary.route';
 
 const v1AppRouter:Router  = express.Router();

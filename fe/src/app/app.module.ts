@@ -26,7 +26,7 @@ import {ImportHelpPageComponent} from './page/import-help-page/import-help.page'
 import {ExportPageComponent} from './page/export-page/export.page';
 import {ExportHelpPageComponent} from './page/export-help-page/export-help.page';
 import {AvatarService} from './service/avatar-service/avatar.service';
-import {NotificationAnimationType, Options, Position, SimpleNotificationsModule} from 'angular2-notifications';
+import {NotificationAnimationType, Options, SimpleNotificationsModule} from 'angular2-notifications';
 import {UserRolePageComponent} from './page/user-role-page/user-role.page';
 import {UserGroupPageComponent} from './page/user-group-page/user-group.page';
 import {UserPeoplePageComponent} from './page/user-people-page/user-people.page';
@@ -137,10 +137,10 @@ const appInitializer = (settingsService: SettingsService,
     authService.asObservable()
       .pipe(
         tap((u: User) => {
-        if (u == null) { // logout
+        if (u == null) {  // logout
           viewService.destroy();
           settingsService.destroy();
-        } else { // login
+        } else {          // login
           themeService.setTheme(u.theme);
           settingsService.init(u);
           viewService.init();

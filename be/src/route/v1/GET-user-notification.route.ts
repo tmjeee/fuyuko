@@ -17,7 +17,7 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
         const n: AppNotification[] = await doInDbConnection(async (conn: Connection) => {
-            (await conn.query(`
+            return (await conn.query(`
                 SELECT 
                   ID,
                   USER_ID,

@@ -21,17 +21,20 @@ export class SettingsService {
         return of(URL_POST_USER_SETTINGS().replace(':userId', String(user.id)))
             .pipe(
                concatMap((url: string) => {
-                    return this.httpClient.post(url, s);
+                   return this.httpClient.post(url, s);
                }),
                concatMap((_) => {
-                   return this.httpClient.get<Settings>(URL_GET_USER_SETTINGS().replace(':userId', String(user.id)))
-                       .pipe(tap((settings: Settings) => (this.cachedSettings = settings)));
+                   return this.getSettings(user);
                })
             );
     }
 
     getSettings(u: User): Observable<Settings> {
-        return this.httpClient.get<Settings>(URL_GET_USER_SETTINGS().replace(':userId', String(u.id)));
+        return this.httpClient
+            .get<Settings>(URL_GET_USER_SETTINGS().replace(':userId', String(u.id)))
+            .pipe(
+                tap((settings: Settings) => (this.cachedSettings = settings))
+            );
     }
 
 

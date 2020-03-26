@@ -19,7 +19,7 @@ const httpAction: any[] = [
         const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
             return await conn.query(`
                DELETE FROM TBL_ITEM_IMAGE WHERE ITEM_ID=? AND ID=?
-            `, [itemImageId, itemId]);
+            `, [itemId, itemImageId]);
         });
 
         if (q.affectedRows > 0) {
