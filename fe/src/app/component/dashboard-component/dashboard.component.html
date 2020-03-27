@@ -26,11 +26,12 @@
         </div>
     </div>
 
-    <div fxLayout="row" class="dashboard-panel" cdkDropListGroup [attr.test-dashboard-strategy]="getCurrentStrategy()?.id">
+    <div fxLayout="row" fxLayoutGap="10px" class="dashboard-panel" cdkDropListGroup [attr.test-dashboard-strategy]="getCurrentStrategy()?.id">
         <div *ngFor="let columnIndex of columnIndexes" fxFlex>
             <div fxLayout="column"
                  class="widgets-droplist"
                  fxFlex
+                 fxLayoutGap="10px"
                  cdkDropList
                  [cdkDropListData]="getDragAndDropData(columnIndex)"
                  (cdkDropListDropped)="onDrop($event)">

@@ -40,13 +40,15 @@ export class DashboardPageComponent implements OnInit {
             .getUserDashboardLayoutData(myself)
             .pipe(
                 tap((d: string) => {
-                    const s: SerializedDashboardFormat = JSON.parse(d);
-                    const strategyId: string = s.strategyId;
-                    const strategy: DashboardStrategy = this.strategies.find((s: DashboardStrategy) => s.id === strategyId);
-                    if (strategy) {
-                        this.selectedStrategy = strategy;
+                    if (d) {
+                        const s: SerializedDashboardFormat = JSON.parse(d);
+                        const strategyId: string = s.strategyId;
+                        const strategy: DashboardStrategy = this.strategies.find((s: DashboardStrategy) => s.id === strategyId);
+                        if (strategy) {
+                            this.selectedStrategy = strategy;
+                        }
+                        this.data = d;
                     }
-                    this.data = d;
                     this.loading = false;
                 })
             ).subscribe();

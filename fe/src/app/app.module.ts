@@ -128,6 +128,7 @@ import { ViewValidationDetailsPageComponent } from './page/view-validation-detai
 import {CustomRuleService} from './service/custom-rule-service/custom-rule.service';
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
 import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
+import {SafePipe} from "./utils/safe.pipe";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -309,7 +310,7 @@ const appInitializer = (settingsService: SettingsService,
   ],
   exports: [
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   bootstrap: [AppComponent]
 })

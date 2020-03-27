@@ -47,36 +47,6 @@ export class AppNotificationService implements OnDestroy {
       return this.httpClient
           .get<AppNotification[]>(URL_GET_USER_NOTIFICATIONS()
               .replace(':userId', String(user.id)));
-      /*
-    return of ([
-    {
-      isNew: true,
-        status: 'ERROR',
-      title: `An error ${new Date()}`,
-      message: `Some error message ${Math.random()}`
-    } as AppNotification,
-    {
-      isNew: true,
-      status: 'WARN',
-      title: `A warning ${new Date()}`,
-      message: `Some warning message ${Math.random()}`
-    } as AppNotification,
-
-    {
-      isNew: true,
-      status: 'INFO',
-      title: `An info ${new Date()}`,
-      message: `Some info message ${Math.random()}`
-    } as AppNotification,
-
-    {
-      isNew: true,
-      status: 'SUCCESS',
-      title: `A success ${new Date()}`,
-      message: `Some success message ${Math.random()}`
-    } as AppNotification
-    ]);
-       */
   }
 
   ngOnDestroy(): void {

@@ -41,6 +41,7 @@
             top: 0;
             right: 0;
             background-color: var(--my-app-background-background);
+            z-index: 999999999999;
             svg {
               color: var(--my-app-foreground-text);
             }

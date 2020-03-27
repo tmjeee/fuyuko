@@ -4,7 +4,7 @@ import {
     SerializedDashboardWidgetInstanceFormat
 } from '../../../model/dashboard-serialzable.model';
 import {DASHBOARD_WIDGET_INFOS} from '../widgets';
-import {stickInTypes} from './dashboard-strategy-util';
+import {stickInTypes, StickInTypesArgs} from './dashboard-strategy-util';
 
 export class DashboardStrategy1x implements DashboardStrategy {
     id = '1x';
@@ -53,8 +53,8 @@ export class DashboardStrategy1x implements DashboardStrategy {
         const x: SerializedDashboardFormat = JSON.parse(data);
         const r: SerializedDashboardWidgetInstanceFormat[] = x.instances;
         if (r) {
-            stickInTypes(r);
-            this.addDashboardWidgetInstances(r);
+            const _r: StickInTypesArgs = stickInTypes(r);
+            this.addDashboardWidgetInstances(_r as SerializedDashboardWidgetInstanceFormat[]);
         }
     }
 }

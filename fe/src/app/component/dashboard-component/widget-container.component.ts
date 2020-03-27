@@ -16,7 +16,6 @@ import {DashboardWidget, DashboardWidgetInstance} from '../../model/dashboard.mo
     selector: 'app-widget-container',
     templateUrl: './widget-container.component.html',
     styleUrls: ['./widget-container.component.scss']
-
 })
 export class WidgetContainerComponent  implements OnInit, AfterViewInit {
 
