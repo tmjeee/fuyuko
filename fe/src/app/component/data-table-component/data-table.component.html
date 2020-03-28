@@ -72,6 +72,7 @@
         <mat-cell class="actions" *matCellDef="let tableItem">
           <mat-icon [attr.test-button-data-table-add-children]="tableItem.name" (click)="onAddChildrenItem(tableItem)">add_circle_outline</mat-icon>
           <mat-icon [attr.test-button-data-table-delete-item]="tableItem.name" (click)="onDeleteItem2([tableItem])">delete_outline</mat-icon>
+          <mat-icon (click)="onEditItemImage(tableItem)">image</mat-icon>
         </mat-cell>
       </ng-container>
 
@@ -80,6 +81,7 @@
         <mat-cell class="actions" *matCellDef="let tableItem">
           <mat-icon [attr.test-button-data-table-add-children]="tableItem.name" (click)="onAddChildrenItem(tableItem)">add_circle_outline</mat-icon>
           <mat-icon [attr.test-button-data-table-delete-item]="tableItem.name" (click)="onDeleteItem2([tableItem])">delete_outline</mat-icon>
+          <mat-icon (click)="onEditItemImage(tableItem)">image</mat-icon>
         </mat-cell>
       </ng-container>
 

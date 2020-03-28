@@ -50,7 +50,7 @@ export class WeatherWidgetComponent extends DashboardWidget implements OnInit, O
     id = WeatherWidgetComponent.info().id;
     name = WeatherWidgetComponent.info().name;
 
-    uid = `weatherwidget-io-js`;
+    uid = `${uuid()}-weatherwidget-io-js`;
 
     static info(): DashboardWidgetInfo {
         return { id: 'weather-widget', name: 'weather-widget', type: WeatherWidgetComponent };
@@ -74,24 +74,11 @@ export class WeatherWidgetComponent extends DashboardWidget implements OnInit, O
 
 
     f(d, s, id) {
-        /*
-        const elem = d.getElementById(id);
-        if (elem) {
-            console.log('**** elem', elem);
-            elem.parentElement.removeChild(elem);
-        }
-         */
         let js, fjs = d.getElementsByTagName(s)[0];
-        //if (!d.getElementById(id)) {
-            js = d.createElement(s);
-            js.id = id;
-            js.src = 'https://weatherwidget.io/js/widget.min.js';
-            fjs.parentNode.insertBefore(js, fjs);
-        //}
-        /*else {
-            console.error(`Element for weather widget already exists !!!`);
-        }
-             */
+        js = d.createElement(s);
+        js.id = id;
+        js.src = 'https://weatherwidget.io/js/widget.min.js';
+        fjs.parentNode.insertBefore(js, fjs);
     }
 
     ngAfterViewInit(): void {

@@ -14,6 +14,7 @@ import {ItemSearchComponentEvent} from '../../component/item-search-component/it
 import {ApiResponse} from '../../model/response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
+import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
 
 
 @Component({
@@ -103,5 +104,34 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
     this.search = $event.search;
     this.searchType = $event.type;
     this.reload();
+  }
+
+  onCarouselEvent($event: CarouselComponentEvent) {
+    switch ($event.type) {
+      case "upload":
+          this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
+              tap((r) => {
+                this.notificationService.success(`Success`, `Item image uploaded successfully`);
+                this.reload();
+              })
+          ).subscribe();
+        break;
+      case "markAsPrimary":
+        this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
+            tap((r) => {
+              this.notificationService.success(`Success`, `Item image marked successfully as primary`);
+              this.reload();
+            })
+        ).subscribe();
+        break;
+      case "delete":
+        this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
+            tap((r) => {
+              this.notificationService.success(`Success`, `Item image deleted successfully`);
+              this.reload();
+            })
+        ).subscribe();
+        break;
+    }
   }
 }

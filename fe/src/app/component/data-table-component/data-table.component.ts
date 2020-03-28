@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {Attribute} from '../../model/attribute.model';
-import {TableItem, ItemValTypes, StringValue, Value} from '../../model/item.model';
+import {TableItem, ItemValTypes, StringValue, Value, Item, ItemImage} from '../../model/item.model';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer, SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -10,6 +10,11 @@ import {createNewItemValue, createNewTableItem} from '../../shared-utils/ui-item
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
+import {MatDialog} from "@angular/material/dialog";
+import {ItemImageDialogComponent} from "./item-image-dialog.component";
+import {tap} from "rxjs/operators";
+import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
+import config from "../../utils/config.util";
 
 export class DataTableDataSource extends DataSource<TableItem> {
 
@@ -47,6 +52,9 @@ export interface AttributeInfo {
 }
 
 
+
+const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
+
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
@@ -67,6 +75,7 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   @Output() events: EventEmitter<DataTableComponentEvent>;
   @Output() searchEvents: EventEmitter<ItemSearchComponentEvent>;
+  @Output() carouselEvent: EventEmitter<CarouselComponentEvent>;
   @Input() itemAndAttributeSet: TableItemAndAttributeSet;
 
   pendingSavingItems: Map<number, TableItem>;
@@ -84,10 +93,11 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   filterOptionsVisible: boolean;
 
-  constructor() {
+  constructor(private matDialog: MatDialog) {
     this.filterOptionsVisible = false;
     this.events = new EventEmitter();
     this.searchEvents = new EventEmitter();
+    this.carouselEvent = new EventEmitter();
     this.selectionModel = new SelectionModel(true, []);
     this.datasource = new DataTableDataSource();
     this.pendingSavingItems = new Map();
@@ -366,6 +376,37 @@ export class DataTableComponent implements OnInit, OnChanges {
           tableItem[attribute.id] = value;
       }
       return value;
+  }
+
+  getCarouselImages(tableItem: TableItem): CarouselItemImage[] {
+    if (tableItem && tableItem.images) {
+      // const p = `/item/image/:itemImageId`;
+      return tableItem.images.map((i: ItemImage) => ({
+        ...i,
+        itemId: tableItem.id,
+        imageUrl: URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`)
+      } as CarouselItemImage));
+    }
+    return [];
+  }
+
+  onEditItemImage(tableItem: TableItem) {
+    this.matDialog.open(ItemImageDialogComponent, {
+      width: '90vw',
+      height: '90vh',
+      data: {
+        itemId: tableItem.id,
+        images: this.getCarouselImages(tableItem)
+      }
+    })
+        .afterClosed()
+        .pipe(
+            tap((r: CarouselComponentEvent) => {
+              if (r) {
+                this.carouselEvent.emit(r);
+              }
+            })
+        ).subscribe()
   }
 }
 
