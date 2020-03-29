@@ -1,4 +1,10 @@
 import {Status} from './status.model';
+import {CustomValidationContext} from "./validation.model";
+
+export interface RuleScript {
+    description: () => string;
+    run: (context: CustomValidationContext) => void;
+}
 
 export interface CustomRule {
     id: number;

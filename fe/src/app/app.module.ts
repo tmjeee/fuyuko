@@ -87,7 +87,6 @@ import {SettingsService} from './service/settings-service/settings.service';
 import {tap} from 'rxjs/operators';
 import {User} from './model/user.model';
 import {SettingsModule} from './component/settings-component/settings.module';
-import {HelpCenterService} from './service/help-center-service/help-center.service';
 import {ForumService} from './service/forum-service/forum.service';
 import {ForumModule} from './component/forum-component/forum.module';
 import {DashboardModule} from './component/dashboard-component/dashboard.module';
@@ -128,7 +127,8 @@ import { ViewValidationDetailsPageComponent } from './page/view-validation-detai
 import {CustomRuleService} from './service/custom-rule-service/custom-rule.service';
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
 import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
-import {SafePipe} from "./utils/safe.pipe";
+import {HelpService} from "./service/help.service/help.service";
+import {HelpModule} from "./component/help-component/help.module";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -148,7 +148,7 @@ const appInitializer = (settingsService: SettingsService,
         }
       })
       ).subscribe();
-    console.log('********************* app initialize', viewService);
+    console.log(`** Fuyuko App initialize **`);
   };
 };
 
@@ -265,6 +265,7 @@ const appInitializer = (settingsService: SettingsService,
     UserTableModule,
     PartnerViewModule,
     ValidationResultModule,
+    HelpModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -285,7 +286,6 @@ const appInitializer = (settingsService: SettingsService,
     {provide: ImportDataService, useClass: ImportDataService} as Provider,
     {provide: ExportDataService, useClass: ExportDataService} as Provider,
     {provide: SettingsService, useClass: SettingsService} as Provider,
-    {provide: HelpCenterService, useClass: HelpCenterService} as Provider,
     {provide: ForumService, useClass: ForumService} as Provider,
     {provide: DashboardService, useClass: DashboardService} as Provider,
     {provide: DashboardWidgetService, useClass: DashboardWidgetService} as Provider,
@@ -297,6 +297,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: BrowserLocationHistoryService, useClass: BrowserLocationHistoryService} as Provider,
     {provide: ValidationService, useClass: ValidationService} as Provider,
     {provide: CustomRuleService, useClass: CustomRuleService} as Provider,
+    {provide: HelpService, useClass: HelpService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
         deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,

@@ -12,6 +12,7 @@ import {Registry} from "./registry";
 import {runCustomRuleSync} from "./custom-rule";
 import {validationResult} from 'express-validator';
 import {Options} from "body-parser";
+import {runCustomImportSync} from "./custom-import";
 
 runBanner();
 
@@ -51,12 +52,21 @@ const fns: PromiseFn[] = [
             });
     },
 
-    // rule sync
+    // custom rule sync
     () => {
-        i(`running rule sync`)
+        i(`running custom rule sync`)
         return runCustomRuleSync()
             .then((_: any) => {
-                i(`done with rule sync`);
+                i(`done with custom rule sync`);
+            });
+    },
+
+    // custom import sync
+    () => {
+        i(`running custom import sync`);
+        return runCustomImportSync()
+            .then((_: any) => {
+                i(`done with custom import sync`);
             });
     },
 

@@ -94,7 +94,7 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
     const warnings: Message[] = [];
 
     const items: Item[] = [];
-    const itemsMap: Map<string /* itemName */, Item> = new Map();
+    const itemsMap: Map<string /* itemName */, Item /* children of this item id by itemName in the key */> = new Map();
 
 
 

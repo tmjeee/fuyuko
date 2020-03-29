@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import {Routes, RouterModule, Route} from '@angular/router';
 import {LoginPageComponent} from './page/login-page/login.page';
 import {LoginLayoutComponent} from './layout/login-layout/login.layout';
@@ -53,6 +52,7 @@ import {ViewValidationDetailsPageComponent} from './page/view-validation-details
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
 import {AddAttributePageComponent} from './page/view-attributes-page/add-attribute.page';
 import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
+import {NgModule} from "@angular/core";
 
 const routes: Routes = [
 

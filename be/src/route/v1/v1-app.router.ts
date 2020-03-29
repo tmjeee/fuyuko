@@ -108,6 +108,7 @@ import registerDeleteDataExportArtifactByIdRoute from './DELETE-data-export-arti
 import registerPostAddItemImageRoute from './POST-add-item-image.route';
 import registerDeleteItemImageRoute from './DELETE-item-image-by-id.route';
 import registerPostMarkItemImageAsPrimaryRoute from './POST-mark-item-image-as-primary.route';
+import registerGetHelpRoute from './GET-help.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -225,6 +226,7 @@ const reg = (router: Router, regi: Registry) => {
     registerPostAddItemImageRoute(v1AppRouter, registry);
     registerDeleteItemImageRoute(v1AppRouter, registry);
     registerPostMarkItemImageAsPrimaryRoute(v1AppRouter, registry);
+    registerGetHelpRoute(v1AppRouter, registry);
 };
 
 
