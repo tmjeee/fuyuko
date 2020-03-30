@@ -109,6 +109,11 @@ import registerPostAddItemImageRoute from './POST-add-item-image.route';
 import registerDeleteItemImageRoute from './DELETE-item-image-by-id.route';
 import registerPostMarkItemImageAsPrimaryRoute from './POST-mark-item-image-as-primary.route';
 import registerGetHelpRoute from './GET-help.route';
+import registerGetAllCustomImportRoute from './GET-all-custom-import.route';
+import registerPostCustomImportValidateInputRoute from './POST-custom-import-validate-input.route';
+import registerPostCustomImportPreviewRoute from './POST-custom-import-preview.route';
+import registerPostCustomImportSubmitJobRoute from './POST-custom-import-submit-job.route';
+import v1 = require("uuid/v1");
 
 const v1AppRouter:Router  = express.Router();
 
@@ -183,7 +188,6 @@ const reg = (router: Router, regi: Registry) => {
     registerPostPreviewAttributeDataExportRoute(v1AppRouter, registry);
     registerPostPreviewItemDataExportRoute(v1AppRouter, registry);
     registerPostPreviewPriceDataExportRoute(v1AppRouter, registry);
-
     registerPostScheduleAttributeDataExportRoute(v1AppRouter, registry);
     registerPostScheduleItemDataExportRoute(v1AppRouter, registry);
     registerPostSchedulePriceDataExportRoute(v1AppRouter, registry);
@@ -191,7 +195,6 @@ const reg = (router: Router, regi: Registry) => {
     registerPostSaveUserDashboardRoute(v1AppRouter, registry);
     registerGetUserDashboardRoute(v1AppRouter, registry);
     registerPostUserDashboardWidgetDataRoute(v1AppRouter, registry);
-
     registerGetUserDashboardWidgetDataRoute(v1AppRouter, registry);
     registerGetPartnerPricingStructuresRoute(v1AppRouter, registry);
     registerGetPartnerPricedItemsRoute(v1AppRouter, registry);
@@ -203,7 +206,6 @@ const reg = (router: Router, regi: Registry) => {
     registerGetItemsByViewRotue(v1AppRouter, registry);
     registerGetAllViewValidationsRoute(v1AppRouter, registry);
     registerGetViewValidationResultRoute(v1AppRouter, registry);
-
     registerPostScheduleValidationRoute(v1AppRouter, registry);
     registerGetViewById(v1AppRouter, registry);
     registerGetUserSettings(v1AppRouter, registry);
@@ -227,6 +229,11 @@ const reg = (router: Router, regi: Registry) => {
     registerDeleteItemImageRoute(v1AppRouter, registry);
     registerPostMarkItemImageAsPrimaryRoute(v1AppRouter, registry);
     registerGetHelpRoute(v1AppRouter, registry);
+
+    registerGetAllCustomImportRoute(v1AppRouter, registry);
+    registerPostCustomImportValidateInputRoute(v1AppRouter, registry);
+    registerPostCustomImportPreviewRoute(v1AppRouter, registry);
+    registerPostCustomImportSubmitJobRoute(v1AppRouter, registry);
 };
 
 

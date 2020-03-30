@@ -1,5 +1,5 @@
 
 
-import {preview, runCustomImport, runCustomImportSync } from './custom-import-executor';
+import {preview, runCustomImportJob, runCustomImportSync } from './custom-import-executor';
 
-export {preview, runCustomImportSync, runCustomImport};
+export {preview, runCustomImportSync, runCustomImportJob};

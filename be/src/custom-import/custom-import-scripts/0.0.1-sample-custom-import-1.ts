@@ -11,47 +11,40 @@ export const description = (): string => {
     return `0.0.1-sample-custom-import-1 description`;
 }
 
+// validate?: (values: ImportScriptInputValue[])=> {valid: boolean, messages: {level: Level, title: string, message: string}[]};
+export const validate  = (values: ImportScriptInputValue[]): {valid: boolean, messages: {level: Level, title: string, message: string}[]} => {
+    return {
+        valid: true,
+        messages: []
+    };
+}
+
 export const inputs = (): ImportScriptInput[] => {
     return [
         {
             type: 'string',
             name: 'string input',
             description: 'string input description',
-            validators: [(val: string) => {
-                return !!val;
-            }]
         },
         {
             type: 'number',
             name: 'number input',
             description: 'number input description',
-            validators: [(val: number) => {
-                return !!val;
-            }]
         },
         {
             type: 'date',
             name: 'date input',
             description: 'date input description',
-            validators: [(val: moment.Moment) => {
-                return (val && val.isValid());
-            }]
         },
         {
             type: 'checkbox',
             name: 'checkbox input',
             description: 'checkbox input description',
-            validators: [(val: boolean) => {
-                return val
-            }]
         },
         {
             type: 'select',
             name: 'select input',
             description: 'select input description',
-            validators: [(val: string) => {
-                return !!val;
-            }]
         }
     ];
 };

@@ -129,6 +129,10 @@ import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
 import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
 import {HelpService} from "./service/help.service/help.service";
 import {HelpModule} from "./component/help-component/help.module";
+import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
+import {CustomImportPageComponent} from "./page/custom-import-page/custom-import.page";
+import {CustomImportService} from "./service/custom-import-service/custom-import.service";
+import {CustomExportService} from "./service/custom-export-service/custom-export.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -211,6 +215,8 @@ const appInitializer = (settingsService: SettingsService,
     PartnerDataTablePageComponent,
     PartnerHelpPageComponent,
     ExportArtifactsPageComponent,
+    CustomExportPageComponent,
+    CustomImportPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -298,6 +304,8 @@ const appInitializer = (settingsService: SettingsService,
     {provide: ValidationService, useClass: ValidationService} as Provider,
     {provide: CustomRuleService, useClass: CustomRuleService} as Provider,
     {provide: HelpService, useClass: HelpService} as Provider,
+    {provide: CustomImportService, useClass: CustomImportService} as Provider,
+    {provide: CustomExportService, useClass: CustomExportService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
         deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,

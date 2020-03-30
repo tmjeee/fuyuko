@@ -8,6 +8,8 @@ import {DataTableModule} from '../data-table-component/data-table.module';
 import {NotificationMessageListingModule} from '../notification-message-listing-component/notification-message-listing.module';
 import {AttributeTableModule} from '../attribute-table-component/attribute-table.module';
 import {PricingModule} from '../pricing-component/pricing.module';
+import {CustomImportWizardComponent} from "./custom-import-wizard.component";
+import {CustomImportListComponent} from "./custom-import-list.component";
 
 @NgModule({
     imports: [
@@ -22,10 +24,14 @@ import {PricingModule} from '../pricing-component/pricing.module';
         PricingModule,
     ],
     declarations: [
-        ImportDataComponent
+        ImportDataComponent,
+        CustomImportWizardComponent,
+        CustomImportListComponent,
     ],
     exports: [
-        ImportDataComponent
+        ImportDataComponent,
+        CustomImportWizardComponent,
+        CustomImportListComponent,
     ]
 })
 export class ImportDataModule {

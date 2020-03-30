@@ -8,6 +8,7 @@ export interface CustomDataImport {
     description: string,
     creationDate: Date,
     lastUpdate: Date,
+    inputs: ImportScriptInput[],
 }
 
 
@@ -22,7 +23,19 @@ export interface ImportScript {
     inputs(): ImportScriptInput[];
     preview(inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview;
     action(inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (level: Level, msg: string) => void): CustomImportJob;
+    /**
+     * value would be
+     * - type 'string' = 'string'
+     * - type 'number' = 'number'
+     * - type 'date' = moment
+     * - type 'checkbox' = boolean
+     * - type 'select' = 'string' (key of option)
+     */
+    validate(values: ImportScriptInputValue[]): ImportScriptValidateResult;
 };
+
+export type ImportScriptValidateResult = {valid: boolean, messages: {level: Level, title: string, message: string}[]};
+export type ImportScriptJobSubmissionResult = {valid: boolean, messages: {level: Level, title: string, message: string}[]};
 
 export interface ImportScriptPreview {
     proceed: boolean;
@@ -35,15 +48,6 @@ export interface ImportScriptInput {
     type: 'string' | 'number' | 'date' | 'checkbox' | 'select';
     name: string;
     description: string;
-    /**
-     * value would be
-     * - type 'string' = 'string'
-     * - type 'number' = 'number'
-     * - type 'date' = moment
-     * - type 'checkbox' = boolean
-     * - type 'select' = 'string' (key of option)
-     */
-    validators?: ((value: any)=>boolean)[];
     options?: {key: string, value: string}[];   // only valid when type is select
 };
 

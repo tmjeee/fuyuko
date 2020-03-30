@@ -10,42 +10,103 @@ import {
     CustomImportContext,
     CustomImportJob,
     ImportScript,
-    ImportScriptInputValue, ImportScriptPreview
+    ImportScriptInputValue, ImportScriptJobSubmissionResult, ImportScriptPreview, ImportScriptValidateResult
 } from "../model/custom-import.model";
 import {JobLogger, LoggingCallback, newJobLogger, newLoggingCallback} from "../service/job-log.service";
 import uuid = require("uuid");
-import {Level} from "../model/level.model";
+import {getCustomerImportById} from "../service/custom-import.service";
 
 const createCustomImportContext = () => {
     return {data: {}} as CustomImportContext;
 }
 
-export const preview = async (customDataImport: CustomDataImport, ctx: CustomImportContext, inputValues: ImportScriptInputValue[]) => {
-    const customDataImportFilePath = path.join(__dirname, 'custom-import', customDataImport.name);
-
+export const getImportScriptByName = async (customImportScriptName: string): Promise<ImportScript> => {
+    const customDataImportFilePath = path.join(__dirname, 'custom-import', customImportScriptName);
     const s: ImportScript = await import(customDataImportFilePath);
-
-    const preview: ImportScriptPreview = s.preview(inputValues, ctx);
-
-    return preview;
+    return s;
 }
 
-export const runCustomImport = async (customDataImport: CustomDataImport, ctx: CustomImportContext, inputValues: ImportScriptInputValue[], preview: ImportScriptPreview) => {
+export const validate = async (customDataImportId: number, inputValues: ImportScriptInputValue[]): Promise<ImportScriptValidateResult> => {
+    const customDataImport: CustomDataImport = await getCustomerImportById(customDataImportId);
+    if (customDataImport == null) {
+        return {
+            valid: false,
+            messages: [{level: 'ERROR', title: 'Error', message: `Unable to find custom data import with id ${customDataImportId}`}]
+        };
+    }
+    const customImportName = customDataImport.name;
+    const s: ImportScript = await getImportScriptByName(customImportName);
+    if (s.validate) {
+        const r: ImportScriptValidateResult = s.validate(inputValues);
+        return r;
+    } else {
+        return {
+            valid: true,
+            messages: []
+        }  as ImportScriptValidateResult
+    }
+}
 
-    const customDataImportFilePath = path.join(__dirname, 'custom-import', customDataImport.name);
+export const preview = async (customDataImportId: number, inputValues: ImportScriptInputValue[]): Promise<ImportScriptPreview> => {
+    const customDataImport: CustomDataImport = await getCustomerImportById(customDataImportId);
+    if (customDataImport == null) {
+        return {
+            proceed: false,
+            messages: [{level: 'ERROR', title: 'Error', message: `Unable to find custom data import with id ${customDataImportId}`}],
+            columns: [],
+            rows: []
+        };
+    }
+    const customDataImportName: string = customDataImport.name;
+    const s: ImportScript = await getImportScriptByName(customDataImport.name);
 
-    const s: ImportScript = await import(customDataImportFilePath);
+    if (s.preview) {
+        const ctx: CustomImportContext = createCustomImportContext();
+        const preview: ImportScriptPreview = s.preview(inputValues, ctx);
+        return preview;
+    } else {
+        const p: ImportScriptPreview = {
+            proceed: false,
+            messages: [
+                { level: 'ERROR', title: 'Error', message: `Missing preview implementation in import script ${customDataImportName}`}
+            ],
+            columns: [],
+            rows: []
+        }
+        return p;
+    }
+}
 
-    const loggerName = `${customDataImport.name}-${uuid()}`;
+export const runCustomImportJob = async (customDataImportId: number, inputValues: ImportScriptInputValue[], preview: ImportScriptPreview): Promise<ImportScriptJobSubmissionResult> => {
+    const customDataImport: CustomDataImport = await getCustomerImportById(customDataImportId);
+    if (!customDataImport) {
+        return {
+            valid: false,
+            messages: [{level: 'ERROR', title: `Error`, message: `Custom data import with id ${customDataImportId} is not found`}]
+        } as ImportScriptJobSubmissionResult;
+    }
+    const s: ImportScript = await getImportScriptByName(customDataImport.name);
 
-    const logging: LoggingCallback = newLoggingCallback(await newJobLogger(loggerName, `${loggerName} description`));
+    const jobName = `${customDataImport.name}-${uuid()}`;
+    const logging: LoggingCallback = newLoggingCallback(await newJobLogger(jobName, `${jobName} description`));
 
+    const ctx: CustomImportContext = createCustomImportContext();
     const job: CustomImportJob  = s.action(inputValues, preview, ctx, logging);
 
+
     new Promise((res, rej) => {
-        job.run();
-        res();
+        try {
+            job.run();
+            res();
+        } catch(e) {
+            rej(e);
+        }
     });
+
+    return {
+        valid: true,
+        messages: [{level: 'INFO', title: `Success`, message: `Custom import job ${jobName} submitted`}]
+    } as ImportScriptJobSubmissionResult;
 };
 
 

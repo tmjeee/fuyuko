@@ -1,0 +1,28 @@
+<div class="custom-import-wizard">
+    <mat-horizontal-stepper #stepper>
+        <!-- step 1: fill in inputs -->
+        <mat-step [stepControl]="firstStepFormGroup">
+            <ng-template matStepLabel>Fill in parameters</ng-template>
+            <form [formGroup]="firstStepFormGroup">
+
+            </form>
+        </mat-step>
+
+        <!-- step 2: Preview -->
+        <mat-step [stepControl]="secondStepFormGroup">
+            <ng-template matStepLabel>Preview</ng-template>
+            <form [formGroup]="secondStepFormGroup">
+
+            </form>
+        </mat-step>
+
+        <!-- step 3: Submit job -->
+        <mat-step [stepControl]="thirdStepFormGroup">
+            <ng-template matStepLabel>Submit Job</ng-template>
+            <form [formGroup]="thirdStepFormGroup">
+
+            </form>
+        </mat-step>
+
+    </mat-horizontal-stepper>
+</div>

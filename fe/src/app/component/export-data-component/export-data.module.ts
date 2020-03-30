@@ -10,6 +10,8 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {AttributeTableModule} from '../attribute-table-component/attribute-table.module';
 import {PricingModule} from '../pricing-component/pricing.module';
 import {ExportArtifactsComponent} from "./export-artifacts.component";
+import {CustomExportWizardComponent} from "./custom-export-wizard.component";
+import {CustomExportListComponent} from "./custom-export-list.component";
 
 @NgModule({
     imports: [
@@ -27,10 +29,14 @@ import {ExportArtifactsComponent} from "./export-artifacts.component";
     declarations: [
         ExportDataComponent,
         ExportArtifactsComponent,
+        CustomExportWizardComponent,
+        CustomExportListComponent,
     ],
     exports: [
         ExportDataComponent,
         ExportArtifactsComponent,
+        CustomExportWizardComponent,
+        CustomExportListComponent,
     ]
 })
 export class ExportDataModule {

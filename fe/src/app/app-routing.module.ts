@@ -53,6 +53,8 @@ import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
 import {AddAttributePageComponent} from './page/view-attributes-page/add-attribute.page';
 import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
 import {NgModule} from "@angular/core";
+import {CustomImportPageComponent} from "./page/custom-import-page/custom-import.page";
+import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
 
 const routes: Routes = [
 
@@ -250,6 +252,14 @@ const routes: Routes = [
         }
       } as Route,
       {
+        path: 'custom-import',
+        canActivate: [AuthGuard],
+        component: CustomImportPageComponent,
+        data: {
+          subSideNav: 'custom-import'
+        }
+      },
+      {
         path: 'import-help',
         canActivate: [AuthGuard],
         component: ImportHelpPageComponent,
@@ -263,6 +273,14 @@ const routes: Routes = [
           subSideNav: 'export'
         }
       } as Route,
+      {
+        path: 'custom-export',
+        canActivate: [AuthGuard],
+        component: CustomExportPageComponent,
+        data: {
+          subSideNav: 'custom-export'
+        }
+      },
       {
         path: 'export-artifacts',
         canActivate: [AuthGuard],
