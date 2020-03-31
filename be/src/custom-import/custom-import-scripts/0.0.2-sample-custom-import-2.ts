@@ -24,27 +24,27 @@ export const inputs = (): ImportScriptInput[] => {
         {
             type: 'string',
             name: 'string input',
-            description: 'string input description',
+            description: 'string xxx input description',
         },
         {
             type: 'number',
             name: 'number input',
-            description: 'number input description',
+            description: 'number xxx input description',
         },
         {
             type: 'date',
             name: 'date input',
-            description: 'date input description',
+            description: 'date xxx input description',
         },
         {
             type: 'checkbox',
             name: 'checkbox input',
-            description: 'checkbox input description',
+            description: 'checkbox xxx input description',
         },
         {
             type: 'select',
             name: 'select input',
-            description: 'select input description',
+            description: 'select xxx input description',
             options: [
                 {key: 'key1', value: 'value1'},
                 {key: 'key2', value: 'value2'},
@@ -55,7 +55,7 @@ export const inputs = (): ImportScriptInput[] => {
         {
             type: 'file',
             name: 'file input',
-            description: 'file input description'
+            description: 'file xxx input description'
         }
     ];
 };
@@ -66,26 +66,26 @@ export const preview = (inputValues: ImportScriptInputValue[], ctx: CustomImport
     return {
         proceed: true,
         messages: [
-            { level: 'INFO', title: 'test', message: 'test message'}
+            { level: 'INFO', title: 'test', message: 'test xxx message'}
         ],
         columns: [
             'column1', 'column2', 'column3'
         ],
         rows: [
             {
-                'column1': 'row1 column1',
-                'column2': 'row1 column2',
-                'column3': 'row1 column3',
+                'column1': 'row1 xxx column1',
+                'column2': 'row1 xxx column2',
+                'column3': 'row1 xxx column3',
             },
             {
-                'column1': 'row2 column1',
-                'column2': 'row2 column2',
-                'column3': 'row2 column3',
+                'column1': 'row2 xxx column1',
+                'column2': 'row2 xxx column2',
+                'column3': 'row2 xxx column3',
             },
             {
-                'column1': 'row3 column1',
-                'column2': 'row3 column2',
-                'column3': 'row3 column3',
+                'column1': 'row3 xxx column1',
+                'column2': 'row3 xxx column2',
+                'column3': 'row3 xxx column3',
             },
         ]
     };

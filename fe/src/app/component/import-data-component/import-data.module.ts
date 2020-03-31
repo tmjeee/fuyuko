@@ -10,6 +10,8 @@ import {AttributeTableModule} from '../attribute-table-component/attribute-table
 import {PricingModule} from '../pricing-component/pricing.module';
 import {CustomImportWizardComponent} from "./custom-import-wizard.component";
 import {CustomImportListComponent} from "./custom-import-list.component";
+import {ViewModule} from "../view-component/view.module";
+import {CustomImportInputFormComponent} from "./custom-import-input-form.component";
 
 @NgModule({
     imports: [
@@ -22,16 +24,19 @@ import {CustomImportListComponent} from "./custom-import-list.component";
         NotificationMessageListingModule,
         AttributeTableModule,
         PricingModule,
+        ViewModule,
     ],
     declarations: [
         ImportDataComponent,
         CustomImportWizardComponent,
         CustomImportListComponent,
+        CustomImportInputFormComponent,
     ],
     exports: [
         ImportDataComponent,
         CustomImportWizardComponent,
         CustomImportListComponent,
+        CustomImportInputFormComponent,
     ]
 })
 export class ImportDataModule {

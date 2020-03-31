@@ -43,7 +43,6 @@ export class AvatarDialogComponent {
 
   onFileInputChange($event: Event) {
     const fileList: FileList = ($event.target as HTMLInputElement).files;
-    console.log(fileList);
     this.selectedFile = fileList[0];
     this.selectedAvatar = null;
   }

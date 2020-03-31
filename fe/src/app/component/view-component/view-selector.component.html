@@ -3,7 +3,7 @@
     <form>
         <mat-form-field>
             <mat-label>View</mat-label>
-            <mat-select [formControl]="formControlView">
+            <mat-select [formControl]="formControlView" (selectionChange)="onViewSelectionChanged($event)">
                 <mat-option *ngFor="let view of allViews" [value]="view">
                     {{view.name}}
                 </mat-option>

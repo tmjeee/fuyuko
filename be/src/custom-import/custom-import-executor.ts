@@ -21,7 +21,7 @@ const createCustomImportContext = () => {
 }
 
 export const getImportScriptByName = async (customImportScriptName: string): Promise<ImportScript> => {
-    const customDataImportFilePath = path.join(__dirname, 'custom-import', customImportScriptName);
+    const customDataImportFilePath = path.join(__dirname, 'custom-import-scripts', customImportScriptName);
     const s: ImportScript = await import(customDataImportFilePath);
     return s;
 }

@@ -1,19 +1,29 @@
 <div class="custom-import-list">
    <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="select">
-
+         <th mat-header-cell class="select" *matHeaderCellDef></th>
+         <td mat-cell class="select" *matCellDef="let customDataImport">
+            <mat-radio-button [value]="customDataImport" (change)="onRadioChange($event)" name="dataImportRadioGroup"></mat-radio-button>
+         </td>
+      </ng-container>
+      <ng-container matColumnDef="action">
+         <th mat-header-cell class="action" *matHeaderCellDef></th>
+         <td mat-cell class="action" *matCellDef="let customDataImport">
+            <mat-icon *ngIf="!isRowExpanded(customDataImport)" (click)="masterRowClicked(customDataImport)">chevron_right</mat-icon>
+            <mat-icon *ngIf="isRowExpanded(customDataImport)" (click)="masterRowClicked(customDataImport)">expand_more</mat-icon>
+         </td>
       </ng-container>
       <ng-container matColumnDef="name">
-         <th mat-header-cell *matHeaderCellDef>Name</th>
-         <td mat-cell *matCellDef="let customDataImport">{{customDataImport.name}}</td>
+         <th mat-header-cell class="name" *matHeaderCellDef>Name</th>
+         <td mat-cell class="name" *matCellDef="let customDataImport">{{customDataImport.name}}</td>
       </ng-container>
       <ng-container matColumnDef="description">
-         <th mat-header-cell *matHeaderCellDef>Name</th>
-         <td mat-cell *matCellDef="let customDataImport">{{customDataImport.name}}</td>
+         <th mat-header-cell class="description" *matHeaderCellDef>Description</th>
+         <td mat-cell class="description" *matCellDef="let customDataImport">{{customDataImport.description}}</td>
       </ng-container>
       <ng-container matColumnDef="expanded">
-         <td mat-cell *matCellDef="let customDataImport" [attr.colspan]="columnsToDisplay.length">
-            <div [@detailExpand]="isRowExpanded(customDataImport) ? 'expanded' : 'collapsed'">
+         <td mat-cell class="expanded" *matCellDef="let customDataImport" [attr.colspan]="columnsToDisplay.length">
+            <div>
                {{customDataImport.lastUpdate | date}}
                <div fxLayoutGap="column" *ngFor="let input of customDataImport.inputs">
                   <div fxFlex="1 1 auto">{{input.name}} - {{input.type}}</div>
@@ -30,7 +40,9 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let customDataImport; columns: columnsToDisplay" (click)="masterRowClicked(customDataImport)"></tr>
-      <tr mat-row *matRowDef="let customDataImport; columns: expandedColumnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let customDataImport; columns: columnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let customDataImport; columns: expandedColumnsToDisplay; when: isChildRow"
+          [@detailExpand]="isRowExpanded(customDataImport) ? 'expanded' : 'collapsed'"
+      ></tr>
    </table>
 </div>
