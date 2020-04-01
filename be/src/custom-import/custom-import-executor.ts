@@ -31,7 +31,7 @@ export const validate = async (customDataImportId: number, inputValues: ImportSc
     if (customDataImport == null) {
         return {
             valid: false,
-            messages: [{level: 'ERROR', title: 'Error', message: `Unable to find custom data import with id ${customDataImportId}`}]
+            messages: [{status: 'ERROR', title: 'Error', message: `Unable to find custom data import with id ${customDataImportId}`}]
         };
     }
     const customImportName = customDataImport.name;
@@ -52,7 +52,7 @@ export const preview = async (customDataImportId: number, inputValues: ImportScr
     if (customDataImport == null) {
         return {
             proceed: false,
-            messages: [{level: 'ERROR', title: 'Error', message: `Unable to find custom data import with id ${customDataImportId}`}],
+            messages: [{status: 'ERROR', title: 'Error', message: `Unable to find custom data import with id ${customDataImportId}`}],
             columns: [],
             rows: []
         };
@@ -68,7 +68,7 @@ export const preview = async (customDataImportId: number, inputValues: ImportScr
         const p: ImportScriptPreview = {
             proceed: false,
             messages: [
-                { level: 'ERROR', title: 'Error', message: `Missing preview implementation in import script ${customDataImportName}`}
+                { status: 'ERROR', title: 'Error', message: `Missing preview implementation in import script ${customDataImportName}`}
             ],
             columns: [],
             rows: []
@@ -82,7 +82,7 @@ export const runCustomImportJob = async (customDataImportId: number, inputValues
     if (!customDataImport) {
         return {
             valid: false,
-            messages: [{level: 'ERROR', title: `Error`, message: `Custom data import with id ${customDataImportId} is not found`}]
+            messages: [{status: 'ERROR', title: `Error`, message: `Custom data import with id ${customDataImportId} is not found`}]
         } as ImportScriptJobSubmissionResult;
     }
     const s: ImportScript = await getImportScriptByName(customDataImport.name);
@@ -105,7 +105,7 @@ export const runCustomImportJob = async (customDataImportId: number, inputValues
 
     return {
         valid: true,
-        messages: [{level: 'INFO', title: `Success`, message: `Custom import job ${jobName} submitted`}]
+        messages: [{status: 'INFO', title: `Success`, message: `Custom import job ${jobName} submitted`}]
     } as ImportScriptJobSubmissionResult;
 };
 

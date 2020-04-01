@@ -1,0 +1,8 @@
+<div class="custom-import-submit-job">
+    <div *ngIf="!ready">Loading ...</div>
+    <div *ngIf="ready">
+        <div *ngIf="result.valid">Job submitted successfully</div>
+        <app-notification-messages [messages]="result?.messages">
+        </app-notification-messages>
+    </div>
+</div>

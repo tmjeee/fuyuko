@@ -1,11 +1,21 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnInit, ViewChild} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {CustomDataImport, ImportScriptInputValue, ImportScriptValidateResult} from "../../model/custom-import.model";
-import {CustomImportService} from "../../service/custom-import-service/custom-import.service";
-import {tap} from "rxjs/operators";
+import {
+    CustomDataImport,
+    ImportScriptInputValue, ImportScriptJobSubmissionResult,
+    ImportScriptPreview,
+    ImportScriptValidateResult
+} from "../../model/custom-import.model";
 import {CustomImportListComponentEvent} from "./custom-import-list.component";
 import {View} from "../../model/view.model";
 import {CustomImportInputFormComponentEvent} from "./custom-import-input-form.component";
+import {Observable} from "rxjs";
+import {CustomImportPreviewComponentEvent} from "./custom-import-preview.component";
+import {MatStepper} from "@angular/material/stepper";
+
+export type CustomImportValidateFn = (c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptValidateResult>;
+export type CustomImportPreviewFn =  (c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptPreview>;
+export type CustomImportSubmitFn =  (c: CustomDataImport, p: ImportScriptPreview, i: ImportScriptInputValue[]) => Observable<ImportScriptJobSubmissionResult>;
 
 @Component({
     selector: 'app-custom-import-wizard',
@@ -15,49 +25,64 @@ import {CustomImportInputFormComponentEvent} from "./custom-import-input-form.co
 export class CustomImportWizardComponent implements OnInit {
 
     @Input() customDataImports: CustomDataImport[];
+    @Input() customInputFormValidateFn: CustomImportValidateFn;
+    @Input() customImportPreviewFn: CustomImportPreviewFn
+    @Input() customImportSubmitFn: CustomImportSubmitFn;
 
+    step1Ready: boolean;
     firstStepFormGroup: FormGroup;
     formControlCustomDataImport: FormControl;
 
+    step2Ready: boolean;
     secondStepFormGroup: FormGroup;
     formControlView: FormControl;
 
+    step3Ready: boolean;
     thirdStepFormGroup: FormGroup;
     formControlCustomImportInputValues: FormControl;
 
+    step4Ready: boolean;
     fourthStepFormGroup: FormGroup;
+    formControlCustomImportPreview: FormControl;
+
+    step5Ready: boolean;
     fifthStepFormGroup: FormGroup;
-    customInputFormValidateFn: (i: ImportScriptInputValue) => ImportScriptValidateResult;
+
+    @ViewChild('stepper') stepper: MatStepper;
 
     constructor(private formBuilder: FormBuilder) {
 
         // first step
+        this.step1Ready = true;
         this.formControlCustomDataImport = formBuilder.control('', [Validators.required]);
         this.firstStepFormGroup = formBuilder.group({
             'customDataImport': this.formControlCustomDataImport
         });
 
         // second step
+        this.step2Ready = false;
         this.formControlView = formBuilder.control('', [Validators.required]);
         this.secondStepFormGroup = formBuilder.group({
             'view': this.formControlView
         });
 
         // third step
+        this.step3Ready = false;
         this.formControlCustomImportInputValues = formBuilder.control('', [Validators.required]);
         this.thirdStepFormGroup = formBuilder.group({
             'customImportInputValues':  this.formControlCustomImportInputValues
         });
 
         // fourth step
+        this.step4Ready = false;
+        this.formControlCustomImportPreview = formBuilder.control('', [Validators.required]);
         this.fourthStepFormGroup = formBuilder.group({
-
+            'preview': this.formControlCustomImportPreview
         });
 
         // fifth step
-        this.fifthStepFormGroup = formBuilder.group({
-
-        });
+        this.step5Ready = false;
+        this.fifthStepFormGroup = formBuilder.group({});
     }
 
     ngOnInit(): void {
@@ -75,5 +100,43 @@ export class CustomImportWizardComponent implements OnInit {
         if ($event.validationResult.valid) {
             this.formControlCustomImportInputValues.setValue($event.inputValues);
         }
+    }
+
+    onStep1Submit() {
+        this.step2Ready = true;
+    }
+
+    onStep2Submit() {
+        this.step3Ready = true;
+    }
+
+    onStep3Submit() {
+        this.step4Ready = true;
+    }
+
+    onStep4Submit() {
+        this.step5Ready = true;
+    }
+
+    onStep5Submit() {
+        console.log('***** on step 5 submit', this.stepper);
+        this.step1Ready = true;
+        this.formControlCustomDataImport.reset();
+
+        this.step2Ready = false;
+        this.formControlView.reset()
+
+        this.step3Ready = false;
+        this.formControlCustomImportInputValues.reset();
+
+        this.step4Ready = false;
+        this.formControlCustomImportPreview.reset();
+
+        this.step5Ready = false;
+        this.stepper.reset();
+    }
+
+    onCustomImportPreviewEvent($event: CustomImportPreviewComponentEvent) {
+        this.formControlCustomImportPreview.setValue($event.preview);
     }
 }

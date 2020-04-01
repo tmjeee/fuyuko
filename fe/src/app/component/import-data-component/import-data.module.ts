@@ -12,6 +12,9 @@ import {CustomImportWizardComponent} from "./custom-import-wizard.component";
 import {CustomImportListComponent} from "./custom-import-list.component";
 import {ViewModule} from "../view-component/view.module";
 import {CustomImportInputFormComponent} from "./custom-import-input-form.component";
+import {CustomImportPreviewComponent} from "./custom-import-preview.component";
+import {CustomImportSubmitJobComponent} from "./custom-import-submit-job.component";
+import {NotificationModule} from "../notification-component/notification.module";
 
 @NgModule({
     imports: [
@@ -25,18 +28,23 @@ import {CustomImportInputFormComponent} from "./custom-import-input-form.compone
         AttributeTableModule,
         PricingModule,
         ViewModule,
+        NotificationModule,
     ],
     declarations: [
         ImportDataComponent,
         CustomImportWizardComponent,
         CustomImportListComponent,
         CustomImportInputFormComponent,
+        CustomImportPreviewComponent,
+        CustomImportSubmitJobComponent,
     ],
     exports: [
         ImportDataComponent,
         CustomImportWizardComponent,
         CustomImportListComponent,
         CustomImportInputFormComponent,
+        CustomImportPreviewComponent,
+        CustomImportSubmitJobComponent,
     ]
 })
 export class ImportDataModule {

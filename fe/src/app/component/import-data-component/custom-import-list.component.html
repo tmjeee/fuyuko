@@ -3,7 +3,7 @@
       <ng-container matColumnDef="select">
          <th mat-header-cell class="select" *matHeaderCellDef></th>
          <td mat-cell class="select" *matCellDef="let customDataImport">
-            <mat-radio-button [value]="customDataImport" (change)="onRadioChange($event)" name="dataImportRadioGroup"></mat-radio-button>
+            <mat-radio-button [value]="customDataImport" (change)="onRadioChange($event)" [formControl]="formControl" name="dataImportRadioGroup"></mat-radio-button>
          </td>
       </ng-container>
       <ng-container matColumnDef="action">

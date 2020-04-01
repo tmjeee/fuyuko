@@ -4,13 +4,13 @@
         <!-- step 1: select custom import -->
         <mat-step [stepControl]="firstStepFormGroup">
             <ng-template matStepLabel>Select custom import</ng-template>
-            <form [formGroup]="firstStepFormGroup">
+            <form *ngIf="step1Ready" [formGroup]="firstStepFormGroup" (ngSubmit)="onStep1Submit()">
                 <app-custom-import-list
                         (events)="onCustomImportListEvent($event)"
                         [customDataImports]="customDataImports">
                 </app-custom-import-list>
                 <div class="control">
-                    <button mat-flat-button color="primary" matStepperNext [disabled]="firstStepFormGroup.invalid">Next</button>
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="firstStepFormGroup.invalid">Next</button>
                 </div>
             </form>
         </mat-step>
@@ -18,13 +18,13 @@
         <!-- step 2: select view -->
         <mat-step [stepControl]="secondStepFormGroup">
             <ng-template matStepLabel>Select view to apply</ng-template>
-            <form [formGroup]="secondStepFormGroup">
+            <form *ngIf="step2Ready" [formGroup]="secondStepFormGroup" (ngSubmit)="onStep2Submit()">
                 <app-view-selector [setCurrentActiveView]="false"
                                    (events)="onViewSelectorEvent($event)">
                 </app-view-selector>
                 <div class="control">
                     <button mat-flat-button color="primary" matStepperPrevious>Previous</button>
-                    <button mat-flat-button color="primary" matStepperNext [disabled]="secondStepFormGroup.invalid">Next</button>
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="secondStepFormGroup.invalid">Next</button>
                 </div>
             </form>
         </mat-step>
@@ -32,14 +32,14 @@
         <!-- step 3: inputs -->
         <mat-step [stepControl]="thirdStepFormGroup">
             <ng-template matStepLabel>Fill in Inputs</ng-template>
-            <form [formGroup]="thirdStepFormGroup">
+            <form *ngIf="step3Ready" [formGroup]="thirdStepFormGroup" (ngSubmit)="onStep3Submit()">
                 <app-custom-import-input-form [customDataImport]="formControlCustomDataImport.value"
                                               (events)="onCustomImpotFormEvent($event)"
                                               [validateFn]="customInputFormValidateFn">
                 </app-custom-import-input-form>
                 <div class="control">
                     <button mat-flat-button color="primary" matStepperPrevious>Previous</button>
-                    <button mat-flat-button color="primary" matStepperNext [disabled]="thirdStepFormGroup.invalid">Next</button>
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="thirdStepFormGroup.invalid">Next</button>
                 </div>
             </form>
         </mat-step>
@@ -47,16 +47,31 @@
         <!-- step 4: preview -->
         <mat-step [stepControl]="fourthStepFormGroup">
             <ng-template matStepLabel>Preview</ng-template>
-            <form [formGroup]="fourthStepFormGroup">
-
+            <form *ngIf="step4Ready" [formGroup]="fourthStepFormGroup" (ngSubmit)="onStep4Submit()">
+                <app-custom-import-preview [customDataImport]="formControlCustomDataImport.value"
+                                           [inputValues]="formControlCustomImportInputValues.value"
+                                           (events)="onCustomImportPreviewEvent($event)"
+                                           [previewFn]="customImportPreviewFn">
+                </app-custom-import-preview>
+                <div class="control">
+                    <button mat-flat-button color="primary" matStepperPrevious>Previous</button>
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="fourthStepFormGroup.invalid">Next</button>
+                </div>
             </form>
         </mat-step>
 
         <!-- step 5: submit job -->
         <mat-step [stepControl]="fifthStepFormGroup">
             <ng-template matStepLabel>Submit Job</ng-template>
-            <form [formGroup]="fifthStepFormGroup">
-
+            <form *ngIf="step5Ready" [formGroup]="fifthStepFormGroup" (ngSubmit)="onStep5Submit()">
+                <app-custom-import-submit-job [customDataImport]="formControlCustomDataImport.value"
+                                              [inputValues]="formControlCustomImportInputValues.value"
+                                              [preview]="formControlCustomImportPreview.value"
+                                              [submitFn]="customImportSubmitFn">
+                </app-custom-import-submit-job>
+                <div class="control">
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="fifthStepFormGroup.invalid">Done</button>
+                </div>
             </form>
         </mat-step>
 

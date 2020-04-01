@@ -14,7 +14,7 @@ const httpAction: any[] = [
     [
         param('customImportId').exists().isNumeric(),
         body('values').isArray(),
-        body('preview').isArray(),
+        body('preview'),
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,

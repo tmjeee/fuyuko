@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {NotificationDialogComponent} from './notification-dialog.component';
 import { NotificationComponent } from './notification.component';
+import {NotificationMessagesComponent} from "./notification-messages.component";
 
 @NgModule({
     imports: [
@@ -17,10 +18,12 @@ import { NotificationComponent } from './notification.component';
     declarations: [
         NotificationComponent,
         NotificationDialogComponent,
+        NotificationMessagesComponent,
     ],
     exports: [
         NotificationComponent,
         NotificationDialogComponent,
+        NotificationMessagesComponent,
     ],
     entryComponents: [
         NotificationDialogComponent,

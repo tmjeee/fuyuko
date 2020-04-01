@@ -1,6 +1,7 @@
-import {Level} from "./level.model";
+import {Level, LogMessage} from "./level.model";
 import moment from 'moment';
 import {NewNotification} from "./notification.model";
+import {fromFileToString} from "../shared-utils/buffer.util";
 
 
 export interface CustomDataImport {
@@ -23,7 +24,7 @@ export interface ImportScript {
     description(): string;
     inputs(): ImportScriptInput[];
     preview(inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview;
-    action(inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (level: Level, msg: string) => void): CustomImportJob;
+    action(inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (leve: Level, msg: string) => void): CustomImportJob;
     /**
      * value would be
      * - type 'string' = 'string'
@@ -37,6 +38,24 @@ export interface ImportScript {
 
 export type ImportScriptValidateResult = {valid: boolean, messages: NewNotification[]};
 export type ImportScriptJobSubmissionResult = {valid: boolean, messages: NewNotification[]};
+export class FileDataObject {
+    constructor(fileDataObject?: FileDataObject) {
+        if (fileDataObject) {
+            this.name = fileDataObject.name;
+            this.size = fileDataObject.size;
+            this.type = fileDataObject.type;
+            this.data = fileDataObject.data;
+        }
+    }
+    name: string;
+    size: number;
+    type: string;
+    data: string; // string of array of number eg. `[1,2,3,4]`
+    getDataAsBuffer(): Buffer {
+        const b: Buffer = Buffer.from(new Uint8Array(JSON.parse(this.data)).buffer);
+        return b;
+    }
+};
 
 export interface ImportScriptPreview {
     proceed: boolean;
@@ -55,7 +74,7 @@ export interface ImportScriptInput {
 export interface ImportScriptInputValue {
     type: 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
     name: string;
-    value: string | number | moment.Moment | boolean
+    value: string | number | moment.Moment | boolean | FileDataObject
 }
 
 export interface CustomImportJob {

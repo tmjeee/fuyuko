@@ -27,7 +27,7 @@ export const newConsoleLogger: LoggingCallback = (level: Level, msg: string) => 
     };
 
 export const newLoggingCallback = (jobLogger?: JobLogger) => {
-    return (level: Level, msg: string) => {
+    return (level: Level, msg: string): void => {
         if (jobLogger) {
             jobLogger.log(level, msg);
         }

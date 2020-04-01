@@ -5,6 +5,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {TableItem} from "../../model/item.model";
 import {MatRadioChange} from "@angular/material/radio";
+import {FormBuilder, FormControl} from "@angular/forms";
 
 export class InternalDataSource implements DataSource<CustomDataImport> {
 
@@ -56,11 +57,14 @@ export class CustomImportListComponent implements OnInit {
 
     expandedCustomDataImport: CustomDataImport;
 
-    constructor() {
+    formControl: FormControl;
+
+    constructor(private formBuilder: FormBuilder) {
         this.columnsToDisplay = ['select', 'action', 'name', 'description'];
         this.expandedColumnsToDisplay = ['expanded'];
         this.dataSource = new InternalDataSource();
         this.events = new EventEmitter<CustomImportListComponentEvent>();
+        this.formControl = this.formBuilder.control('');
     }
 
     isRowExpanded(customDataImport: CustomDataImport): boolean {

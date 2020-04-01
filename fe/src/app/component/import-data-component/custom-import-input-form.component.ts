@@ -1,11 +1,16 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from "@angular/core";
 import {
-   CustomDataImport,
-   ImportScriptInput,
-   ImportScriptInputValue,
-   ImportScriptValidateResult
+    CustomDataImport, FileDataObject,
+    ImportScriptInput,
+    ImportScriptInputValue,
+    ImportScriptValidateResult
 } from "../../model/custom-import.model";
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {Observable} from "rxjs";
+import {CustomImportValidateFn} from "./custom-import-wizard.component";
+import {tap} from "rxjs/operators";
+import {fromFileToFileDataObject} from "../../shared-utils/buffer.util";
+const binary = require('bops');
 
 
 export interface CustomImportInputFormComponentEvent {
@@ -21,7 +26,7 @@ export interface CustomImportInputFormComponentEvent {
 export class CustomImportInputFormComponent implements OnInit, OnChanges{
 
    @Input() customDataImport: CustomDataImport;
-   @Input() validateFn: (values: ImportScriptInputValue[]) => ImportScriptValidateResult;
+   @Input() validateFn: CustomImportValidateFn;
 
    @Output() events: EventEmitter<CustomImportInputFormComponentEvent>;
 
@@ -56,11 +61,16 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
        console.log('*** form submit', this.formGroup);
        const iv: ImportScriptInputValue[] = this.toImportScriptInputValue();
        if (this.validateFn) {
-           this.validationResult = this.validateFn(iv);
-           this.events.emit({
-               inputValues: iv,
-               validationResult: this.validationResult
-           });
+           this.validateFn(this.customDataImport, iv).pipe(
+               tap((r: ImportScriptValidateResult) => {
+                   console.log('**************** validation result', r);
+                   this.validationResult = r;
+                   this.events.emit({
+                       inputValues: iv,
+                       validationResult: this.validationResult
+                   });
+               })
+           ).subscribe();
        } else {
            this.validationResult = {
                valid: true,
@@ -84,9 +94,26 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
        return r;
    }
 
-   onFileUpload($event: Event, input: ImportScriptInput) {
+   async onFileUpload($event: Event, input: ImportScriptInput) {
       const fileList: FileList = ($event.target as HTMLInputElement).files;
       const file: File = fileList[0];
-      this.formGroup.controls[input.name].setValue(file);
+
+      const fileDataObject: FileDataObject = await fromFileToFileDataObject(file);
+      this.formGroup.controls[input.name].setValue(fileDataObject);
+      console.log('****************** bops', fileDataObject);
+
+       /*
+        (file as any).arrayBuffer().then((a) => {
+            const dataString = JSON.stringify(Array.from(new Uint8Array(a)));
+            const fileDataObject: FileDataObject = {
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                data: dataString
+            };
+            this.formGroup.controls[input.name].setValue(fileDataObject);
+            console.log('****************** bops', fileDataObject);
+        });
+        */
    }
 }

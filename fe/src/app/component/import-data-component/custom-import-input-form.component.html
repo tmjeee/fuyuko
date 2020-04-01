@@ -1,14 +1,7 @@
 <div class="custom-import-input-form">
 
-    <ul *ngIf="validationResult?.messages">
-        <li *ngFor="let message of validationResult.messages">
-            <mat-icon *ngIf="message.status === 'SUCCESS'">stars</mat-icon>
-            <mat-icon *ngIf="message.status === 'INFO'">info</mat-icon>
-            <mat-icon *ngIf="message.status === 'WARN'">warning</mat-icon>
-            <mat-icon *ngIf="message.status === 'ERROR'">error</mat-icon>
-            {{message.message}}
-        </li>
-    </ul>
+    <app-notification-messages [messages]="validationResult?.messages">
+    </app-notification-messages>
 
 
     <ng-container *ngIf="customDataImport?.inputs">
