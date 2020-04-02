@@ -6,7 +6,7 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {ConnectionConfig, Connection} from "mariadb";
 import {
     CustomDataImport,
-    ImportScript,
+    ExportScript,
     ImportScriptInput,
     ImportScriptInputValue
 } from "../../model/custom-import.model";

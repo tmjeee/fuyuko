@@ -1,13 +1,14 @@
-import {
-    CustomImportContext,
-    CustomImportJob,
-    ImportScriptInput, ImportScriptInputValue,
-    ImportScriptPreview
-} from "../../model/custom-import.model";
 import moment from 'moment';
 import {Level, LogMessage} from "../../model/level.model";
 import {NewNotification} from "../../model/notification.model";
 import {View} from "../../model/view.model";
+import {
+    CustomExportContext, CustomExportJob,
+    ExportScriptInput,
+    ExportScriptInputValue,
+    ExportScriptPreview
+} from "../../model/custom-export.model";
+import {ImportScriptPreview} from "../../model/custom-import.model";
 
 const scriptName: string = `0.0.1-sample-custom-import-1`;
 
@@ -15,8 +16,8 @@ export const description = (): string => {
     return `${scriptName} description`;
 }
 
-// validate?: (values: ImportScriptInputValue[])=> {valid: boolean, messages: NewNotification[]};
-export const validate  = (values: ImportScriptInputValue[]): {valid: boolean, messages: NewNotification[]} => {
+// validate?: (values: ExportScriptInputValue[])=> {valid: boolean, messages: NewNotification[]};
+export const validate  = (values: ExportScriptInputValue[]): {valid: boolean, messages: NewNotification[]} => {
     console.log(`${scriptName} validate function`, values);
     return {
         valid: true,
@@ -28,7 +29,7 @@ export const validate  = (values: ImportScriptInputValue[]): {valid: boolean, me
     };
 };
 
-export const inputs = (): ImportScriptInput[] => {
+export const inputs = (): ExportScriptInput[] => {
     console.log(`${scriptName} input function`);
     return [
         {
@@ -71,8 +72,8 @@ export const inputs = (): ImportScriptInput[] => {
 };
 
 
-// preview(inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview;
-export const preview = (view: View, inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview => {
+// preview(inputValues: ExportScriptInputValue[], ctx: CustomExportContext): ExportScriptPreview;
+export const preview = (view: View, inputValues: ExportScriptInputValue[], ctx: CustomExportContext): ExportScriptPreview => {
     console.log(`${scriptName} preview function`, view, inputValues);
     return {
         proceed: true,
@@ -102,12 +103,12 @@ export const preview = (view: View, inputValues: ImportScriptInputValue[], ctx: 
     };
 };
 
-// action(inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (logMessage: LogMessage) => void): CustomImportJob;
-export const action = (view: View, inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (logMessage: LogMessage) => void) : CustomImportJob => {
+// action(inputValues: ExportScriptInputValue[], preview: ExportScriptPreview, ctx: CustomExportContext, log: (logMessage: LogMessage) => void): CustomExportJob;
+export const action = (view: View, inputValues: ExportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomExportContext, log: (logMessage: LogMessage) => void) : CustomExportJob => {
     console.log(`${scriptName} action function`, view, inputValues, preview);
     return {
         run: () => {
-            console.log('run custom import done');
+            console.log('run custom export done');
         }
     }
 };

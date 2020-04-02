@@ -3,7 +3,7 @@
       <ng-container matColumnDef="select">
          <th mat-header-cell class="select" *matHeaderCellDef></th>
          <td mat-cell class="select" *matCellDef="let customDataImport">
-            <mat-radio-button [value]="customDataImport" (change)="onRadioChange($event)" [formControl]="formControl" name="dataImportRadioGroup"></mat-radio-button>
+            <mat-radio-button [value]="customDataImport" (change)="onRadioChange($event)" name="dataImportRadioGroup" [checked]="false"></mat-radio-button>
          </td>
       </ng-container>
       <ng-container matColumnDef="action">
@@ -24,7 +24,7 @@
       <ng-container matColumnDef="expanded">
          <td mat-cell class="expanded" *matCellDef="let customDataImport" [attr.colspan]="columnsToDisplay.length">
             <div>
-               {{customDataImport.lastUpdate | date}}
+               Last Update: {{customDataImport.lastUpdate | date}}
                <div fxLayoutGap="column" *ngFor="let input of customDataImport.inputs">
                   <div fxFlex="1 1 auto">{{input.name}} - {{input.type}}</div>
                   <div fxFlex="1 1 auto">
@@ -42,7 +42,6 @@
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
       <tr mat-row *matRowDef="let customDataImport; columns: columnsToDisplay"></tr>
       <tr mat-row *matRowDef="let customDataImport; columns: expandedColumnsToDisplay; when: isChildRow"
-          [@detailExpand]="isRowExpanded(customDataImport) ? 'expanded' : 'collapsed'"
-      ></tr>
+          [@detailExpand]="isRowExpanded(customDataImport) ? 'expanded' : 'collapsed'"></tr>
    </table>
 </div>

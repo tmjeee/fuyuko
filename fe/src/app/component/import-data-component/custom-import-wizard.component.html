@@ -50,6 +50,7 @@
             <form *ngIf="step4Ready" [formGroup]="fourthStepFormGroup" (ngSubmit)="onStep4Submit()">
                 <app-custom-import-preview [customDataImport]="formControlCustomDataImport.value"
                                            [inputValues]="formControlCustomImportInputValues.value"
+                                           [view]="formControlView.value"
                                            (events)="onCustomImportPreviewEvent($event)"
                                            [previewFn]="customImportPreviewFn">
                 </app-custom-import-preview>
@@ -66,6 +67,7 @@
             <form *ngIf="step5Ready" [formGroup]="fifthStepFormGroup" (ngSubmit)="onStep5Submit()">
                 <app-custom-import-submit-job [customDataImport]="formControlCustomDataImport.value"
                                               [inputValues]="formControlCustomImportInputValues.value"
+                                              [view]="formControlView.value"
                                               [preview]="formControlCustomImportPreview.value"
                                               [submitFn]="customImportSubmitFn">
                 </app-custom-import-submit-job>

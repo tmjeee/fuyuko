@@ -14,8 +14,8 @@ import {CustomImportPreviewComponentEvent} from "./custom-import-preview.compone
 import {MatStepper} from "@angular/material/stepper";
 
 export type CustomImportValidateFn = (c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptValidateResult>;
-export type CustomImportPreviewFn =  (c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptPreview>;
-export type CustomImportSubmitFn =  (c: CustomDataImport, p: ImportScriptPreview, i: ImportScriptInputValue[]) => Observable<ImportScriptJobSubmissionResult>;
+export type CustomImportPreviewFn =  (v: View, c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptPreview>;
+export type CustomImportSubmitFn =  (v: View, c: CustomDataImport, p: ImportScriptPreview, i: ImportScriptInputValue[]) => Observable<ImportScriptJobSubmissionResult>;
 
 @Component({
     selector: 'app-custom-import-wizard',
@@ -120,20 +120,16 @@ export class CustomImportWizardComponent implements OnInit {
 
     onStep5Submit() {
         console.log('***** on step 5 submit', this.stepper);
+        const d: CustomDataImport = this.formControlCustomDataImport.value;
+
         this.step1Ready = true;
-        this.formControlCustomDataImport.reset();
-
         this.step2Ready = false;
-        this.formControlView.reset()
-
         this.step3Ready = false;
-        this.formControlCustomImportInputValues.reset();
-
         this.step4Ready = false;
-        this.formControlCustomImportPreview.reset();
-
         this.step5Ready = false;
         this.stepper.reset();
+
+        this.formControlCustomDataImport.setValue(d); // restore to whatever it is before we go back to step 1
     }
 
     onCustomImportPreviewEvent($event: CustomImportPreviewComponentEvent) {

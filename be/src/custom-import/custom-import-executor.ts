@@ -9,25 +9,27 @@ import {
     CustomDataImport,
     CustomImportContext,
     CustomImportJob,
-    ImportScript,
-    ImportScriptInputValue, ImportScriptJobSubmissionResult, ImportScriptPreview, ImportScriptValidateResult
+    ExportScript,
+    ImportScriptInputValue, ImportScriptJobSubmissionResult, ImportScriptPreview, ExportScriptValidateResult
 } from "../model/custom-import.model";
-import {JobLogger, LoggingCallback, newJobLogger, newLoggingCallback} from "../service/job-log.service";
+import {LoggingCallback, newJobLogger, newLoggingCallback} from "../service/job-log.service";
 import uuid = require("uuid");
-import {getCustomerImportById} from "../service/custom-import.service";
+import {getCustomImportById} from "../service/custom-import.service";
+import {getViewById} from "../service/view.service";
+import {View} from "../model/view.model";
 
 const createCustomImportContext = () => {
     return {data: {}} as CustomImportContext;
 }
 
-export const getImportScriptByName = async (customImportScriptName: string): Promise<ImportScript> => {
+export const getImportScriptByName = async (customImportScriptName: string): Promise<ExportScript> => {
     const customDataImportFilePath = path.join(__dirname, 'custom-import-scripts', customImportScriptName);
-    const s: ImportScript = await import(customDataImportFilePath);
+    const s: ExportScript = await import(customDataImportFilePath);
     return s;
 }
 
-export const validate = async (customDataImportId: number, inputValues: ImportScriptInputValue[]): Promise<ImportScriptValidateResult> => {
-    const customDataImport: CustomDataImport = await getCustomerImportById(customDataImportId);
+export const validate = async (customDataImportId: number, inputValues: ImportScriptInputValue[]): Promise<ExportScriptValidateResult> => {
+    const customDataImport: CustomDataImport = await getCustomImportById(customDataImportId);
     if (customDataImport == null) {
         return {
             valid: false,
@@ -35,20 +37,20 @@ export const validate = async (customDataImportId: number, inputValues: ImportSc
         };
     }
     const customImportName = customDataImport.name;
-    const s: ImportScript = await getImportScriptByName(customImportName);
+    const s: ExportScript = await getImportScriptByName(customImportName);
     if (s.validate) {
-        const r: ImportScriptValidateResult = s.validate(inputValues);
+        const r: ExportScriptValidateResult = s.validate(inputValues);
         return r;
     } else {
         return {
             valid: true,
             messages: []
-        }  as ImportScriptValidateResult
+        }  as ExportScriptValidateResult
     }
 }
 
-export const preview = async (customDataImportId: number, inputValues: ImportScriptInputValue[]): Promise<ImportScriptPreview> => {
-    const customDataImport: CustomDataImport = await getCustomerImportById(customDataImportId);
+export const preview = async (viewId: number, customDataImportId: number, inputValues: ImportScriptInputValue[]): Promise<ImportScriptPreview> => {
+    const customDataImport: CustomDataImport = await getCustomImportById(customDataImportId);
     if (customDataImport == null) {
         return {
             proceed: false,
@@ -57,12 +59,22 @@ export const preview = async (customDataImportId: number, inputValues: ImportScr
             rows: []
         };
     }
+    const view: View = await getViewById(viewId);
+    if (view == null) {
+        return {
+            proceed: false,
+            messages: [{status: 'ERROR', title: 'Error', message: `Unable to find view with id ${viewId}`}],
+            columns: [],
+            rows: []
+        };
+    }
+
     const customDataImportName: string = customDataImport.name;
-    const s: ImportScript = await getImportScriptByName(customDataImport.name);
+    const s: ExportScript = await getImportScriptByName(customDataImport.name);
 
     if (s.preview) {
         const ctx: CustomImportContext = createCustomImportContext();
-        const preview: ImportScriptPreview = s.preview(inputValues, ctx);
+        const preview: ImportScriptPreview = s.preview(view, inputValues, ctx);
         return preview;
     } else {
         const p: ImportScriptPreview = {
@@ -77,21 +89,28 @@ export const preview = async (customDataImportId: number, inputValues: ImportScr
     }
 }
 
-export const runCustomImportJob = async (customDataImportId: number, inputValues: ImportScriptInputValue[], preview: ImportScriptPreview): Promise<ImportScriptJobSubmissionResult> => {
-    const customDataImport: CustomDataImport = await getCustomerImportById(customDataImportId);
+export const runCustomImportJob = async (viewId: number, customDataImportId: number, inputValues: ImportScriptInputValue[], preview: ImportScriptPreview): Promise<ImportScriptJobSubmissionResult> => {
+    const customDataImport: CustomDataImport = await getCustomImportById(customDataImportId);
     if (!customDataImport) {
         return {
             valid: false,
             messages: [{status: 'ERROR', title: `Error`, message: `Custom data import with id ${customDataImportId} is not found`}]
         } as ImportScriptJobSubmissionResult;
     }
-    const s: ImportScript = await getImportScriptByName(customDataImport.name);
+    const view: View = await getViewById(viewId);
+    if (view == null) {
+        return {
+            valid: false,
+            messages: [{status: 'ERROR', title: 'Error', message: `Unable to find view with id ${viewId}`}],
+        };
+    }
+    const s: ExportScript = await getImportScriptByName(customDataImport.name);
 
     const jobName = `${customDataImport.name}-${uuid()}`;
     const logging: LoggingCallback = newLoggingCallback(await newJobLogger(jobName, `${jobName} description`));
 
     const ctx: CustomImportContext = createCustomImportContext();
-    const job: CustomImportJob  = s.action(inputValues, preview, ctx, logging);
+    const job: CustomImportJob  = s.action(view, inputValues, preview, ctx, logging);
 
 
     new Promise((res, rej) => {
@@ -123,7 +142,7 @@ export const runCustomImportSync = async () => {
     i(`Custom import scripts forward sync, files to db`);
     for (const customImportScriptFile of sortedCustomImportScriptFilesInDir) {
         const fullCustomImportScriptFilePath = path.join(__dirname, 'custom-import-scripts', customImportScriptFile);
-        const s: ImportScript = await import(fullCustomImportScriptFilePath);
+        const s: ExportScript = await import(fullCustomImportScriptFilePath);
         if (!s) {
             continue;
         }
@@ -160,4 +179,4 @@ export const runCustomImportSync = async () => {
 
         i(`Done custom import script sync`);
     }
-}
+};

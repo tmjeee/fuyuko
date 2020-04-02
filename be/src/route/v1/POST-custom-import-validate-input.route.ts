@@ -4,7 +4,7 @@ import { param, body } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
 import {validate} from "../../custom-import/custom-import-executor";
-import {FileDataObject, ImportScriptInputValue, ImportScriptValidateResult} from "../../model/custom-import.model";
+import {FileDataObject, ImportScriptInputValue, ExportScriptValidateResult} from "../../model/custom-import.model";
 import {Fields, Files} from "formidable";
 import {multipartParse} from "../../service";
 import * as util from 'util';
@@ -27,6 +27,7 @@ const httpAction: any[] = [
         const customImportId: number = Number(req.params.customImportId);
         const values: ImportScriptInputValue[] = req.body.values;
 
+        /*
         console.log('****** values', util.inspect(values, {depth: 5}));
         const x: ImportScriptInputValue = values.find((i: ImportScriptInputValue) => i.name === 'file input');
         if (x && x.value && (x.value as FileDataObject).data) {
@@ -34,8 +35,9 @@ const httpAction: any[] = [
             const b: Buffer = a.getDataAsBuffer();
             await (util.promisify(fs.writeFile))(`/home/tmjee/cockpit/xxx.jpeg`, b);
         }
+        */
 
-        const v: ImportScriptValidateResult = await validate(customImportId, values);
+        const v: ExportScriptValidateResult = await validate(customImportId, values);
 
         res.status(200).json(v);
     }

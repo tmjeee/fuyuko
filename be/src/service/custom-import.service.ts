@@ -1,10 +1,10 @@
-import {CustomDataImport, ImportScript, ImportScriptInput} from "../model/custom-import.model";
+import {CustomDataImport, ExportScript, ImportScriptInput} from "../model/custom-import.model";
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
 import {getImportScriptByName} from "../custom-import/custom-import-executor";
 
 
-export const getCustomerImportById = async (customImportId: number): Promise<CustomDataImport> => {
+export const getCustomImportById = async (customImportId: number): Promise<CustomDataImport> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE FROM TBL_CUSTOM_DATA_IMPORT`, [customImportId]);
         if (q.length > 0) {
@@ -31,7 +31,7 @@ export const getAllCustomImports = async (): Promise<CustomDataImport[]> => {
 }
 
 const p = async (i: QueryI): Promise<CustomDataImport> => {
-    const s: ImportScript = await getImportScriptByName(i.NAME);
+    const s: ExportScript = await getImportScriptByName(i.NAME);
     const inputs: ImportScriptInput[] = s.inputs();
     const a: CustomDataImport = {
         id: i.ID,

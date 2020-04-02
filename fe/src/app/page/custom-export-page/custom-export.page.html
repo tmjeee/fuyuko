@@ -7,7 +7,13 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-custom-export-wizard></app-custom-export-wizard>
+            <app-custom-export-wizard
+                    *ngIf="ready"
+                    [customExportPreviewFn]="customExportPreviewFn"
+                    [customExportSubmitFn]="customExportSubmitFn"
+                    [customInputFormValidateFn]="customExportValidateFn"
+                    [customDataImports]="customDataExports">
+            </app-custom-export-wizard>
         </mat-card-content>
     </mat-card>
 </div>

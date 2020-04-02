@@ -3,6 +3,7 @@ import {CustomDataImport, ImportScriptInputValue, ImportScriptPreview} from "../
 import {Observable} from "rxjs";
 import {CustomImportPreviewFn} from "./custom-import-wizard.component";
 import {tap} from "rxjs/operators";
+import {View} from "../../model/view.model";
 
 
 export interface CustomImportPreviewComponentEvent {
@@ -18,6 +19,7 @@ export interface CustomImportPreviewComponentEvent {
 })
 export class CustomImportPreviewComponent implements OnInit {
 
+   @Input() view: View;
    @Input() customDataImport: CustomDataImport;
    @Input() inputValues: ImportScriptInputValue[];
    @Input() previewFn: CustomImportPreviewFn;
@@ -40,7 +42,7 @@ export class CustomImportPreviewComponent implements OnInit {
    reload() {
        this.ready = false;
        this.datasource = [];
-       this.previewFn(this.customDataImport, this.inputValues).pipe(
+       this.previewFn(this.view, this.customDataImport, this.inputValues).pipe(
            tap((r: ImportScriptPreview) => {
               this.preview = r;
                for (const row of this.preview.rows) {

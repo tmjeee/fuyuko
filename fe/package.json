@@ -26,7 +26,6 @@
     "@angular/platform-browser-dynamic": "~9.0.0",
     "@angular/router": "~9.0.0",
     "angular2-notifications": "^3.0.0",
-    "bops": "^1.0.1",
     "bson": "^4.0.2",
     "buffer": "^5.4.3",
     "core-js": "^2.5.4",

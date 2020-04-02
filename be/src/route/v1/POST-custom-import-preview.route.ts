@@ -10,6 +10,7 @@ import {ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
 const httpAction: any[] = [
     [
         param('customImportId').exists().isNumeric(),
+        param('viewId').exists().isNumeric(),
         body('values').isArray(),
         body('values.*.type').exists().isString(),
         body('values.*.name').exists().isString(),
@@ -21,15 +22,16 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const customImportId: number = Number(req.params.customImportId);
+        const viewId: number = Number(req.params.viewId);
         const values: ImportScriptInputValue[] = req.body.values;
 
-        const p: ImportScriptPreview = await preview(customImportId, values);
+        const p: ImportScriptPreview = await preview(viewId, customImportId, values);
         res.status(200).json(p);
     }
 ];
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/custom-import/:customImportId/preview`;
+    const p = `/view/:viewId/custom-import/:customImportId/preview`;
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
 

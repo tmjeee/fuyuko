@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {TableItem} from "../../model/item.model";
 import {MatRadioChange} from "@angular/material/radio";
-import {FormBuilder, FormControl} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 
 export class InternalDataSource implements DataSource<CustomDataImport> {
 
@@ -55,16 +55,20 @@ export class CustomImportListComponent implements OnInit {
     columnsToDisplay: string[];
     expandedColumnsToDisplay: string[];
 
-    expandedCustomDataImport: CustomDataImport;
-
+    formGroup: FormGroup;
     formControl: FormControl;
 
+    expandedCustomDataImport: CustomDataImport // customDataImport that is row expanded
+
     constructor(private formBuilder: FormBuilder) {
+        this.formControl = this.formBuilder.control('');
+        this.formGroup = this.formBuilder.group({
+            "radio": this.formControl
+        });
         this.columnsToDisplay = ['select', 'action', 'name', 'description'];
         this.expandedColumnsToDisplay = ['expanded'];
         this.dataSource = new InternalDataSource();
         this.events = new EventEmitter<CustomImportListComponentEvent>();
-        this.formControl = this.formBuilder.control('');
     }
 
     isRowExpanded(customDataImport: CustomDataImport): boolean {
@@ -73,7 +77,6 @@ export class CustomImportListComponent implements OnInit {
     }
 
     masterRowClicked(customDataImport: CustomDataImport) {
-        console.log('**** master row clicked');
         if (this.expandedCustomDataImport && this.expandedCustomDataImport.id === customDataImport.id) { // already expanded, click on same item toggle expansion
             this.expandedCustomDataImport = null;
         } else {

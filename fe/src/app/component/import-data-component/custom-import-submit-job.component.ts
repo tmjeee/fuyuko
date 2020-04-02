@@ -8,6 +8,7 @@ import {
 import {Observable} from "rxjs";
 import {CustomImportSubmitFn} from "./custom-import-wizard.component";
 import {tap} from "rxjs/operators";
+import {View} from "../../model/view.model";
 
 
 @Component({
@@ -18,6 +19,7 @@ import {tap} from "rxjs/operators";
 export class CustomImportSubmitJobComponent implements OnInit {
 
 
+    @Input() view: View;
     @Input() customDataImport: CustomDataImport;
     @Input() inputValues: ImportScriptInputValue[];
     @Input() preview: ImportScriptPreview;
@@ -35,7 +37,7 @@ export class CustomImportSubmitJobComponent implements OnInit {
 
     reload() {
         this.ready = false;
-        this.submitFn(this.customDataImport, this.preview, this.inputValues).pipe(
+        this.submitFn(this.view, this.customDataImport, this.preview, this.inputValues).pipe(
             tap((r: ImportScriptJobSubmissionResult) => {
                 this.result = r;
                 this.ready = true;

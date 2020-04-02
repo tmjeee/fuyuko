@@ -13,6 +13,7 @@ import {runCustomRuleSync} from "./custom-rule";
 import {validationResult} from 'express-validator';
 import {Options} from "body-parser";
 import {runCustomImportSync} from "./custom-import";
+import {runCustomExportSync} from "./custom-export/custom-export-executor";
 
 runBanner();
 
@@ -67,6 +68,15 @@ const fns: PromiseFn[] = [
         return runCustomImportSync()
             .then((_: any) => {
                 i(`done with custom import sync`);
+            });
+    },
+
+    // custom export sync
+    () => {
+        i(`running custom export sync`);
+        return runCustomExportSync()
+            .then((_: any) => {
+                i(`done with custom export sync`);
             });
     },
 

@@ -4,20 +4,15 @@ import {
     ImportScriptInput, ImportScriptInputValue,
     ImportScriptPreview
 } from "../../model/custom-import.model";
-import moment from 'moment';
 import {Level, LogMessage} from "../../model/level.model";
 import {NewNotification} from "../../model/notification.model";
-import {View} from "../../model/view.model";
-
-const scriptName: string = `0.0.1-sample-custom-import-1`;
 
 export const description = (): string => {
-    return `${scriptName} description`;
+    return `0.0.1-sample-custom-import-1 description`;
 }
 
 // validate?: (values: ImportScriptInputValue[])=> {valid: boolean, messages: NewNotification[]};
 export const validate  = (values: ImportScriptInputValue[]): {valid: boolean, messages: NewNotification[]} => {
-    console.log(`${scriptName} validate function`, values);
     return {
         valid: true,
         messages: [{
@@ -26,35 +21,34 @@ export const validate  = (values: ImportScriptInputValue[]): {valid: boolean, me
             message: 'sample info message'
         }]
     };
-};
+}
 
 export const inputs = (): ImportScriptInput[] => {
-    console.log(`${scriptName} input function`);
     return [
         {
             type: 'string',
             name: 'string input',
-            description: 'string input description',
+            description: 'string xxx input description',
         },
         {
             type: 'number',
             name: 'number input',
-            description: 'number input description',
+            description: 'number xxx input description',
         },
         {
             type: 'date',
             name: 'date input',
-            description: 'date input description',
+            description: 'date xxx input description',
         },
         {
             type: 'checkbox',
             name: 'checkbox input',
-            description: 'checkbox input description',
+            description: 'checkbox xxx input description',
         },
         {
             type: 'select',
             name: 'select input',
-            description: 'select input description',
+            description: 'select xxx input description',
             options: [
                 {key: 'key1', value: 'value1'},
                 {key: 'key2', value: 'value2'},
@@ -65,46 +59,44 @@ export const inputs = (): ImportScriptInput[] => {
         {
             type: 'file',
             name: 'file input',
-            description: 'file input description'
+            description: 'file xxx input description'
         }
     ];
 };
 
 
 // preview(inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview;
-export const preview = (view: View, inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview => {
-    console.log(`${scriptName} preview function`, view, inputValues);
+export const preview = (inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview => {
     return {
         proceed: true,
         messages: [
-            { status: 'INFO', title: 'test', message: 'test message'}
+            { status: 'INFO', title: 'test', message: 'test xxx message'}
         ],
         columns: [
             'column1', 'column2', 'column3'
         ],
         rows: [
             {
-                'column1': 'row1 column1',
-                'column2': 'row1 column2',
-                'column3': 'row1 column3',
+                'column1': 'row1 xxx column1',
+                'column2': 'row1 xxx column2',
+                'column3': 'row1 xxx column3',
             },
             {
-                'column1': 'row2 column1',
-                'column2': 'row2 column2',
-                'column3': 'row2 column3',
+                'column1': 'row2 xxx column1',
+                'column2': 'row2 xxx column2',
+                'column3': 'row2 xxx column3',
             },
             {
-                'column1': 'row3 column1',
-                'column2': 'row3 column2',
-                'column3': 'row3 column3',
+                'column1': 'row3 xxx column1',
+                'column2': 'row3 xxx column2',
+                'column3': 'row3 xxx column3',
             },
         ]
     };
 };
 
 // action(inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (logMessage: LogMessage) => void): CustomImportJob;
-export const action = (view: View, inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (logMessage: LogMessage) => void) : CustomImportJob => {
-    console.log(`${scriptName} action function`, view, inputValues, preview);
+export const action = (inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (logMessage: LogMessage) => void) : CustomImportJob => {
     return {
         run: () => {
             console.log('run custom import done');

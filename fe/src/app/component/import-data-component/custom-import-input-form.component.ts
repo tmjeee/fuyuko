@@ -1,16 +1,15 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from "@angular/core";
 import {
-    CustomDataImport, FileDataObject,
+    CustomDataImport,
     ImportScriptInput,
     ImportScriptInputValue,
     ImportScriptValidateResult
 } from "../../model/custom-import.model";
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {Observable} from "rxjs";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {CustomImportValidateFn} from "./custom-import-wizard.component";
 import {tap} from "rxjs/operators";
 import {fromFileToFileDataObject} from "../../shared-utils/buffer.util";
-const binary = require('bops');
+import {FileDataObject} from "../../model/file.model";
 
 
 export interface CustomImportInputFormComponentEvent {
@@ -49,7 +48,6 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
           const inputs: ImportScriptInput[] = customDataImport.inputs;
           if (inputs) {
              inputs.forEach((i: ImportScriptInput) => {
-                console.log('***8 add control to group');
                 this.formGroup.addControl(i.name, this.formBuilder.control(''));
              });
           }
@@ -58,12 +56,10 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
 
 
    onSubmit() {
-       console.log('*** form submit', this.formGroup);
        const iv: ImportScriptInputValue[] = this.toImportScriptInputValue();
        if (this.validateFn) {
            this.validateFn(this.customDataImport, iv).pipe(
                tap((r: ImportScriptValidateResult) => {
-                   console.log('**************** validation result', r);
                    this.validationResult = r;
                    this.events.emit({
                        inputValues: iv,
@@ -100,20 +96,5 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
 
       const fileDataObject: FileDataObject = await fromFileToFileDataObject(file);
       this.formGroup.controls[input.name].setValue(fileDataObject);
-      console.log('****************** bops', fileDataObject);
-
-       /*
-        (file as any).arrayBuffer().then((a) => {
-            const dataString = JSON.stringify(Array.from(new Uint8Array(a)));
-            const fileDataObject: FileDataObject = {
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                data: dataString
-            };
-            this.formGroup.controls[input.name].setValue(fileDataObject);
-            console.log('****************** bops', fileDataObject);
-        });
-        */
    }
 }

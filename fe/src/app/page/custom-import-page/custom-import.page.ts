@@ -10,6 +10,7 @@ import {
    CustomImportPreviewFn, CustomImportSubmitFn,
    CustomImportValidateFn
 } from "../../component/import-data-component/custom-import-wizard.component";
+import {View} from "../../model/view.model";
 
 @Component({
    templateUrl: './custom-import.page.html',
@@ -25,14 +26,13 @@ export class CustomImportPageComponent implements OnInit, OnDestroy{
 
    constructor(private customImportService: CustomImportService) {
       this.customImportValidateFn = (c: CustomDataImport, i: ImportScriptInputValue[]) => {
-         console.log(';***** validate fn');
          return this.customImportService.validate(c, i);
       };
-      this.customImportPreviewFn = (c: CustomDataImport, i: ImportScriptInputValue[]) => {
-         return this.customImportService.preview(c, i);
+      this.customImportPreviewFn = (v: View, c: CustomDataImport, i: ImportScriptInputValue[]) => {
+         return this.customImportService.preview(v, c, i);
       };
-      this.customImportSubmitFn = (c: CustomDataImport, p: ImportScriptPreview,  i: ImportScriptInputValue[]) => {
-         return this.customImportService.submit(c, p, i);
+      this.customImportSubmitFn = (v: View, c: CustomDataImport, p: ImportScriptPreview,  i: ImportScriptInputValue[]) => {
+         return this.customImportService.submit(v, c, p, i);
       }
    }
 
