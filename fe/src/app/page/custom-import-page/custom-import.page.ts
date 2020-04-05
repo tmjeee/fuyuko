@@ -25,8 +25,8 @@ export class CustomImportPageComponent implements OnInit, OnDestroy{
    customImportSubmitFn: CustomImportSubmitFn;
 
    constructor(private customImportService: CustomImportService) {
-      this.customImportValidateFn = (c: CustomDataImport, i: ImportScriptInputValue[]) => {
-         return this.customImportService.validate(c, i);
+      this.customImportValidateFn = (v: View, c: CustomDataImport, i: ImportScriptInputValue[]) => {
+         return this.customImportService.validate(v, c, i);
       };
       this.customImportPreviewFn = (v: View, c: CustomDataImport, i: ImportScriptInputValue[]) => {
          return this.customImportService.preview(v, c, i);

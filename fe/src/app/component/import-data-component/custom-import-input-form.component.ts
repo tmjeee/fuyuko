@@ -10,6 +10,7 @@ import {CustomImportValidateFn} from "./custom-import-wizard.component";
 import {tap} from "rxjs/operators";
 import {fromFileToFileDataObject} from "../../shared-utils/buffer.util";
 import {FileDataObject} from "../../model/file.model";
+import {View} from "../../model/view.model";
 
 
 export interface CustomImportInputFormComponentEvent {
@@ -26,6 +27,7 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
 
    @Input() customDataImport: CustomDataImport;
    @Input() validateFn: CustomImportValidateFn;
+   @Input() view: View;
 
    @Output() events: EventEmitter<CustomImportInputFormComponentEvent>;
 
@@ -58,7 +60,7 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
    onSubmit() {
        const iv: ImportScriptInputValue[] = this.toImportScriptInputValue();
        if (this.validateFn) {
-           this.validateFn(this.customDataImport, iv).pipe(
+           this.validateFn(this.view, this.customDataImport, iv).pipe(
                tap((r: ImportScriptValidateResult) => {
                    this.validationResult = r;
                    this.events.emit({

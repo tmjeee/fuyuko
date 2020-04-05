@@ -1,3 +1,9 @@
 .custom-export-wizard {
 
+  .control {
+    margin-top: 20px;
+    button:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
 }

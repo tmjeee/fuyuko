@@ -59,10 +59,45 @@ export const update = async () => {
    await TBL_CUSTOM_DATA_IMPORT();
    await TBL_CUSTOM_DATA_IMPORT_FILE();
 
+   await TBL_CUSTOM_DATA_EXPORT();
+   await TBL_CUSTOM_DATA_EXPORT_FILE();
+
    await ADD_FK_CONSTRAINT();
    await ADD_INDEXES();
 
    i(`done running update on ${__filename}`);
+};
+
+const TBL_CUSTOM_DATA_EXPORT = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_CUSTOM_DATA_EXPORT (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(200) NOT NULL,
+            DESCRIPTION VARCHAR(500),
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+         );
+      `);
+   });
+};
+
+const TBL_CUSTOM_DATA_EXPORT_FILE = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_CUSTOM_DATA_EXPORT_FILE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            CUSTOM_DATA_EXPORT_ID INT,
+            BATCH VARCHAR(200),
+            NAME VARCHAR(200),
+            MIME_TYPE VARCHAR(200),
+            SIZE INT,
+            CONTENT LONGBLOB,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
 };
 
 const TBL_CUSTOM_DATA_IMPORT = async () => {
@@ -85,6 +120,7 @@ const TBL_CUSTOM_DATA_IMPORT_FILE = async () => {
          CREATE TABLE IF NOT EXISTS TBL_CUSTOM_DATA_IMPORT_FILE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             CUSTOM_DATA_IMPORT_ID INT,
+            BATCH VARCHAR(200),
             NAME VARCHAR(200),
             MIME_TYPE VARCHAR(200),
             SIZE INT,
@@ -945,6 +981,7 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_CUSTOM_RULE_VIEW ADD CONSTRAINT \`fk_tbl_custom_rule-2\` FOREIGN KEY IF NOT EXISTS (CUSTOM_RULE_ID) REFERENCES TBL_CUSTOM_RULE(ID) ON DELETE CASCADE`);
 
       await conn.query(`ALTER TABLE TBL_CUSTOM_DATA_IMPORT_FILE ADD CONSTRAINT \`fk_tbl_custom_data_import_file-1\` FOREIGN KEY IF NOT EXISTS (CUSTOM_DATA_IMPORT_ID) REFERENCES TBL_CUSTOM_DATA_IMPORT(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_CUSTOM_DATA_EXPORT_FILE ADD CONSTRAINT \`fk_tbl_custom_data_export_file-1\` FOREIGN KEY IF NOT EXISTS (CUSTOM_DATA_EXPORT_ID) REFERENCES TBL_CUSTOM_DATA_EXPORT(ID) ON DELETE CASCADE`);
    });
 }
 

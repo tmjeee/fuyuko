@@ -6,21 +6,10 @@ import {
 } from "../../model/custom-import.model";
 import {Level, LogMessage} from "../../model/level.model";
 import {NewNotification} from "../../model/notification.model";
+import {View} from "../../model/view.model";
 
 export const description = (): string => {
     return `0.0.1-sample-custom-import-1 description`;
-}
-
-// validate?: (values: ImportScriptInputValue[])=> {valid: boolean, messages: NewNotification[]};
-export const validate  = (values: ImportScriptInputValue[]): {valid: boolean, messages: NewNotification[]} => {
-    return {
-        valid: true,
-        messages: [{
-            status: 'INFO',
-            title: "sample info title",
-            message: 'sample info message'
-        }]
-    };
 }
 
 export const inputs = (): ImportScriptInput[] => {
@@ -65,8 +54,20 @@ export const inputs = (): ImportScriptInput[] => {
 };
 
 
-// preview(inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview;
-export const preview = (inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview => {
+// validate?: (values: ImportScriptInputValue[])=> {valid: boolean, messages: NewNotification[]};
+export const validate  = (v:View, values: ImportScriptInputValue[]): {valid: boolean, messages: NewNotification[]} => {
+    return {
+        valid: true,
+        messages: [{
+            status: 'INFO',
+            title: "sample info title",
+            message: 'sample info message'
+        }]
+    };
+}
+
+// preview(v: View, inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview;
+export const preview = (v: View, inputValues: ImportScriptInputValue[], ctx: CustomImportContext): ImportScriptPreview => {
     return {
         proceed: true,
         messages: [
@@ -95,8 +96,8 @@ export const preview = (inputValues: ImportScriptInputValue[], ctx: CustomImport
     };
 };
 
-// action(inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (logMessage: LogMessage) => void): CustomImportJob;
-export const action = (inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (logMessage: LogMessage) => void) : CustomImportJob => {
+// action(v: View, inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (logMessage: LogMessage) => void): CustomImportJob;
+export const action = (v: View, inputValues: ImportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomImportContext, log: (logMessage: LogMessage) => void) : CustomImportJob => {
     return {
         run: () => {
             console.log('run custom import done');

@@ -16,18 +16,6 @@ export const description = (): string => {
     return `${scriptName} description`;
 }
 
-// validate?: (values: ExportScriptInputValue[])=> {valid: boolean, messages: NewNotification[]};
-export const validate  = (values: ExportScriptInputValue[]): {valid: boolean, messages: NewNotification[]} => {
-    console.log(`${scriptName} validate function`, values);
-    return {
-        valid: true,
-        messages: [{
-            status: 'INFO',
-            title: "sample info title",
-            message: 'sample info message'
-        }]
-    };
-};
 
 export const inputs = (): ExportScriptInput[] => {
     console.log(`${scriptName} input function`);
@@ -71,8 +59,20 @@ export const inputs = (): ExportScriptInput[] => {
     ];
 };
 
+// validate(v: View, values: ExportScriptInputValue[]): {valid: boolean, messages: NewNotification[]};
+export const validate  = (v: View, values: ExportScriptInputValue[]): {valid: boolean, messages: NewNotification[]} => {
+    console.log(`${scriptName} validate function`, values);
+    return {
+        valid: true,
+        messages: [{
+            status: 'INFO',
+            title: "sample info title",
+            message: 'sample info message'
+        }]
+    };
+};
 
-// preview(inputValues: ExportScriptInputValue[], ctx: CustomExportContext): ExportScriptPreview;
+// preview(v: View, inputValues: ExportScriptInputValue[], ctx: CustomExportContext): ExportScriptPreview;
 export const preview = (view: View, inputValues: ExportScriptInputValue[], ctx: CustomExportContext): ExportScriptPreview => {
     console.log(`${scriptName} preview function`, view, inputValues);
     return {
@@ -103,7 +103,7 @@ export const preview = (view: View, inputValues: ExportScriptInputValue[], ctx: 
     };
 };
 
-// action(inputValues: ExportScriptInputValue[], preview: ExportScriptPreview, ctx: CustomExportContext, log: (logMessage: LogMessage) => void): CustomExportJob;
+// action(v: View, inputValues: ExportScriptInputValue[], preview: ExportScriptPreview, ctx: CustomExportContext, log: (logMessage: LogMessage) => void): CustomExportJob;
 export const action = (view: View, inputValues: ExportScriptInputValue[], preview: ImportScriptPreview, ctx: CustomExportContext, log: (logMessage: LogMessage) => void) : CustomExportJob => {
     console.log(`${scriptName} action function`, view, inputValues, preview);
     return {

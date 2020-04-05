@@ -4,15 +4,15 @@
         <!-- step 1: select custom export -->
         <mat-step [stepControl]="firstStepFormGroup">
             <ng-template matStepLabel>Select custom export</ng-template>
-            <form *ngIf="step1Ready" [formGroup]="firstStepFormGroup">
+            <form *ngIf="step1Ready" [formGroup]="firstStepFormGroup" (ngSubmit)="onStep1Submit()">
                 <app-custom-export-list
                         (events)="onCustomExportListEvent($event)"
                         [customDataExports]="customDataExports">
                 </app-custom-export-list>
+                <div class="control">
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="firstStepFormGroup.invalid">Next</button>
+                </div>
             </form>
-            <div class="control">
-                <button type="submit" mat-flat-button color="primary" [disabled]="firstStepFormGroup.invalid">Next</button>
-            </div>
         </mat-step>
 
 
@@ -37,6 +37,7 @@
             <ng-template matStepLabel>Fill in Inputs</ng-template>
             <form *ngIf="step3Ready" [formGroup]="thirdStepFormGroup" (ngSubmit)="onStep3Submit()">
                 <app-custom-export-input-form [customDataExport]="formControlCustomDataExport.value"
+                                              [view]="formControlView.value"
                                               (events)="onCustomExportFormEvent($event)"
                                               [validateFn]="customExportFormValidateFn">
                 </app-custom-export-input-form>
@@ -52,7 +53,7 @@
         <mat-step [stepControl]="fourthStepFormGroup">
             <ng-template matStepLabel>Preview</ng-template>
             <form *ngIf="step4Ready" [formGroup]="fourthStepFormGroup" (ngSubmit)="onStep4Submit()">
-                <app-custom-export-preview [customDataImport]="formControlCustomDataExport.value"
+                <app-custom-export-preview [customDataExport]="formControlCustomDataExport.value"
                                            [inputValues]="formControlCustomExportInputValues.value"
                                            [view]="formControlView.value"
                                            (events)="onCustomImportPreviewEvent($event)"

@@ -36,7 +36,7 @@ export interface ImportScript {
      * - type 'checkbox' = boolean
      * - type 'select' = 'string' (key of option)
      */
-    validate(values: ImportScriptInputValue[]): ImportScriptValidateResult;
+    validate(view: View, values: ImportScriptInputValue[]): ImportScriptValidateResult;
 };
 
 export type ImportScriptValidateResult = {valid: boolean, messages: NewNotification[]};

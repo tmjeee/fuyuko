@@ -1,13 +1,9 @@
+import {NextFunction, Request, Response, Router} from "express";
 import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {ConnectionConfig, Connection} from "mariadb";
-import {
-    CustomDataImport,
-} from "../../model/custom-import.model";
-import {getAllCustomImports} from "../../service/custom-import.service";
+import {getAllCustomExports} from "../../service/custom-export.service";
+import {CustomDataExport} from "../../model/custom-export.model";
 
 const httpAction: any[] = [
     [
@@ -17,14 +13,15 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
-        const r: CustomDataImport[] = await getAllCustomImports();
+        const r: CustomDataExport[] = await getAllCustomExports();
 
         res.status(200).json(r);
+
     }
-];
+]
 
 const reg = (router: Router, registry: Registry) => {
-    const p = `/custom-imports`;
+    const p = `/custom-exports`;
     registry.addItem('GET', p);
     router.get(p, ...httpAction);
 };

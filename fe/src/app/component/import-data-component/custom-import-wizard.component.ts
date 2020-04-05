@@ -13,7 +13,7 @@ import {Observable} from "rxjs";
 import {CustomImportPreviewComponentEvent} from "./custom-import-preview.component";
 import {MatStepper} from "@angular/material/stepper";
 
-export type CustomImportValidateFn = (c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptValidateResult>;
+export type CustomImportValidateFn = (v: View, c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptValidateResult>;
 export type CustomImportPreviewFn =  (v: View, c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptPreview>;
 export type CustomImportSubmitFn =  (v: View, c: CustomDataImport, p: ImportScriptPreview, i: ImportScriptInputValue[]) => Observable<ImportScriptJobSubmissionResult>;
 

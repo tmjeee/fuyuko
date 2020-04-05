@@ -113,7 +113,11 @@ import registerGetAllCustomImportRoute from './GET-all-custom-import.route';
 import registerPostCustomImportValidateInputRoute from './POST-custom-import-validate-input.route';
 import registerPostCustomImportPreviewRoute from './POST-custom-import-preview.route';
 import registerPostCustomImportSubmitJobRoute from './POST-custom-import-submit-job.route';
-import v1 = require("uuid/v1");
+import registerGetAllCustomExportRoute from './GET-all-custom-export.route';
+import registerPostCustomExportValidateInputRoute from './POST-custom-export-validate-input.route';
+import registerPostCustomExportPreviewRoute from './POST-custom-export-preview.route';
+import registerPostCustomExportSubmitJobRoute from './POST-custom-export-submit-job.route';
+
 
 const v1AppRouter:Router  = express.Router();
 
@@ -234,6 +238,10 @@ const reg = (router: Router, regi: Registry) => {
     registerPostCustomImportValidateInputRoute(v1AppRouter, registry);
     registerPostCustomImportPreviewRoute(v1AppRouter, registry);
     registerPostCustomImportSubmitJobRoute(v1AppRouter, registry);
+    registerGetAllCustomExportRoute(v1AppRouter, registry);
+    registerPostCustomExportValidateInputRoute(v1AppRouter, registry);
+    registerPostCustomExportPreviewRoute(v1AppRouter, registry);
+    registerPostCustomExportSubmitJobRoute(v1AppRouter, registry);
 };
 
 

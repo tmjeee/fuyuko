@@ -22,8 +22,8 @@ export class CustomExportPageComponent implements OnInit, OnDestroy {
     customExportSubmitFn: CustomExportSubmitFn;
 
     constructor(private customExportService: CustomExportService) {
-        this.customExportValidateFn = (c: CustomDataExport, i: ExportScriptInputValue[]) => {
-            return this.customExportService.validate(c, i);
+        this.customExportValidateFn = (v: View, c: CustomDataExport, i: ExportScriptInputValue[]) => {
+            return this.customExportService.validate(v, c, i);
         };
         this.customExportPreviewFn = (v: View, c: CustomDataExport, i: ExportScriptInputValue[]) => {
             return this.customExportService.preview(v, c, i);

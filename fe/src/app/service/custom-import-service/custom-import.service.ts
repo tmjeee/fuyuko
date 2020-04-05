@@ -11,11 +11,9 @@ import {
 import {View} from "../../model/view.model";
 
 const URL_GET_ALL_CUSTOM_IMPORTS = () => `${config().api_host_url}/custom-imports`;
-const URL_POST_CUSTOM_IMPORT_VALIDATE_INPUTS = () => `${config().api_host_url}/custom-import/:customImportId/validate-input`;
+const URL_POST_CUSTOM_IMPORT_VALIDATE_INPUTS = () => `${config().api_host_url}/view/:viewId/custom-import/:customImportId/validate-input`;
 const URL_POST_CUSTOM_IMPORT_PREVIEW = () => `${config().api_host_url}/view/:viewId/custom-import/:customImportId/preview`;
 const URL_POST_CUSTOM_IMPORT_SUBMIT = () => `${config().api_host_url}/view/:viewId/custom-import/:customImportId/submit-job`;
-
-const p = `/custom-import/:customImportId/submit-job`;
 
 @Injectable()
 export class CustomImportService {
@@ -26,10 +24,11 @@ export class CustomImportService {
         return this.httpClient.get<CustomDataImport[]>(URL_GET_ALL_CUSTOM_IMPORTS());
     }
 
-    validate(c: CustomDataImport, i: ImportScriptInputValue[]): Observable<ImportScriptValidateResult> {
-        console.log('*** call validate ');
+    validate(v: View, c: CustomDataImport, i: ImportScriptInputValue[]): Observable<ImportScriptValidateResult> {
         return this.httpClient.post<ImportScriptValidateResult>(
-            URL_POST_CUSTOM_IMPORT_VALIDATE_INPUTS().replace(':customImportId', String(c.id)), {
+            URL_POST_CUSTOM_IMPORT_VALIDATE_INPUTS()
+                .replace(':viewId', String(v.id))
+                .replace(':customImportId', String(c.id)), {
                 values: i
             });
     }

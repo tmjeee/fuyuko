@@ -14,7 +14,7 @@ import {Observable} from "rxjs";
 import {CustomExportListComponentEvent} from "./custom-export-list.component";
 import {CustomExportInputFormComponentEvent} from "./custom-export-input-form.component";
 
-export type CustomExportValidateFn = (c: CustomDataExport, i: ExportScriptInputValue[]) => Observable<ExportScriptValidateResult>;
+export type CustomExportValidateFn = (v: View, c: CustomDataExport, i: ExportScriptInputValue[]) => Observable<ExportScriptValidateResult>;
 export type CustomExportPreviewFn  = (v: View, c: CustomDataExport, i: ExportScriptInputValue[]) => Observable<ExportScriptPreview>;
 export type CustomExportSubmitFn  =  (v: View, c: CustomDataExport, p: ExportScriptPreview, i: ExportScriptInputValue[]) => Observable<ExportScriptJobSubmissionResult>;
 
@@ -101,6 +101,7 @@ export class CustomExportWizardComponent {
    }
 
    onStep1Submit() {
+      console.log("**** on step1 submit");
       this.step2Ready = true;
    }
 

@@ -9,8 +9,8 @@ import {
     CustomDataImport,
     CustomImportContext,
     CustomImportJob,
-    ExportScript,
-    ImportScriptInputValue, ImportScriptJobSubmissionResult, ImportScriptPreview, ExportScriptValidateResult
+    ImportScript,
+    ImportScriptInputValue, ImportScriptJobSubmissionResult, ImportScriptPreview, ImportScriptValidateResult
 } from "../model/custom-import.model";
 import {LoggingCallback, newJobLogger, newLoggingCallback} from "../service/job-log.service";
 import uuid = require("uuid");
@@ -22,13 +22,13 @@ const createCustomImportContext = () => {
     return {data: {}} as CustomImportContext;
 }
 
-export const getImportScriptByName = async (customImportScriptName: string): Promise<ExportScript> => {
+export const getImportScriptByName = async (customImportScriptName: string): Promise<ImportScript> => {
     const customDataImportFilePath = path.join(__dirname, 'custom-import-scripts', customImportScriptName);
-    const s: ExportScript = await import(customDataImportFilePath);
+    const s: ImportScript = await import(customDataImportFilePath);
     return s;
 }
 
-export const validate = async (customDataImportId: number, inputValues: ImportScriptInputValue[]): Promise<ExportScriptValidateResult> => {
+export const validate = async (viewId: number, customDataImportId: number, inputValues: ImportScriptInputValue[]): Promise<ImportScriptValidateResult> => {
     const customDataImport: CustomDataImport = await getCustomImportById(customDataImportId);
     if (customDataImport == null) {
         return {
@@ -36,16 +36,23 @@ export const validate = async (customDataImportId: number, inputValues: ImportSc
             messages: [{status: 'ERROR', title: 'Error', message: `Unable to find custom data import with id ${customDataImportId}`}]
         };
     }
+    const view: View = await getViewById(viewId);
+    if (view == null) {
+        return {
+            valid: false,
+            messages: [{status: 'ERROR', title: 'Error', message: `Unable to find view with id ${viewId}`}]
+        };
+    }
     const customImportName = customDataImport.name;
-    const s: ExportScript = await getImportScriptByName(customImportName);
+    const s: ImportScript = await getImportScriptByName(customImportName);
     if (s.validate) {
-        const r: ExportScriptValidateResult = s.validate(inputValues);
+        const r: ImportScriptValidateResult = s.validate(view, inputValues);
         return r;
     } else {
         return {
             valid: true,
             messages: []
-        }  as ExportScriptValidateResult
+        }  as ImportScriptValidateResult
     }
 }
 
@@ -70,7 +77,7 @@ export const preview = async (viewId: number, customDataImportId: number, inputV
     }
 
     const customDataImportName: string = customDataImport.name;
-    const s: ExportScript = await getImportScriptByName(customDataImport.name);
+    const s: ImportScript = await getImportScriptByName(customDataImport.name);
 
     if (s.preview) {
         const ctx: CustomImportContext = createCustomImportContext();
@@ -104,7 +111,7 @@ export const runCustomImportJob = async (viewId: number, customDataImportId: num
             messages: [{status: 'ERROR', title: 'Error', message: `Unable to find view with id ${viewId}`}],
         };
     }
-    const s: ExportScript = await getImportScriptByName(customDataImport.name);
+    const s: ImportScript = await getImportScriptByName(customDataImport.name);
 
     const jobName = `${customDataImport.name}-${uuid()}`;
     const logging: LoggingCallback = newLoggingCallback(await newJobLogger(jobName, `${jobName} description`));
@@ -142,7 +149,7 @@ export const runCustomImportSync = async () => {
     i(`Custom import scripts forward sync, files to db`);
     for (const customImportScriptFile of sortedCustomImportScriptFilesInDir) {
         const fullCustomImportScriptFilePath = path.join(__dirname, 'custom-import-scripts', customImportScriptFile);
-        const s: ExportScript = await import(fullCustomImportScriptFilePath);
+        const s: ImportScript = await import(fullCustomImportScriptFilePath);
         if (!s) {
             continue;
         }

@@ -11,7 +11,7 @@ import {CustomExportSubmitFn} from "./custom-export-wizard.component";
 
 
 @Component({
-    selector: 'app-custom-export-job-submit',
+    selector: 'app-custom-export-submit-job',
     templateUrl: './custom-export-submit-job.component.html',
     styleUrls: ['./custom-export-submit-job.component.scss']
 })

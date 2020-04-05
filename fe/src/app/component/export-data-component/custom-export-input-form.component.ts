@@ -11,6 +11,7 @@ import {
     ExportScriptValidateResult
 } from "../../model/custom-export.model";
 import {CustomExportValidateFn} from "./custom-export-wizard.component";
+import {View} from "../../model/view.model";
 
 export interface CustomExportInputFormComponentEvent {
     inputValues: ExportScriptInputValue[];
@@ -26,6 +27,7 @@ export class CustomExportInputFormComponent {
 
     @Input() customDataExport: CustomDataExport;
     @Input() validateFn: CustomExportValidateFn;
+    @Input() view: View;
 
     @Output() events: EventEmitter<CustomExportInputFormComponentEvent>;
 
@@ -42,7 +44,7 @@ export class CustomExportInputFormComponent {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        const simpleChange: SimpleChange = changes.customDataImport;
+        const simpleChange: SimpleChange = changes.customDataExport;
         if (simpleChange && simpleChange.currentValue) {
             const customDataImport: CustomDataExport  = simpleChange.currentValue;
             const inputs: ExportScriptInput[] = customDataImport.inputs;
@@ -58,7 +60,7 @@ export class CustomExportInputFormComponent {
     onSubmit() {
         const iv: ExportScriptInputValue[] = this.toImportScriptInputValue();
         if (this.validateFn) {
-            this.validateFn(this.customDataExport, iv).pipe(
+            this.validateFn(this.view, this.customDataExport, iv).pipe(
                 tap((r: ExportScriptValidateResult) => {
                     this.validationResult = r;
                     this.events.emit({

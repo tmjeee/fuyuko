@@ -1,6 +1,4 @@
-
-
-import {FileDataObject} from "../model/custom-import.model";
+import {FileDataObject} from "../model/file.model";
 
 export const fromFileToFileDataObject = async (file: File): Promise<FileDataObject> => {
    const dataString: string = await fromFileToString(file);

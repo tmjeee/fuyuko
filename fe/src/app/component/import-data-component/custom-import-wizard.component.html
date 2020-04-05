@@ -34,6 +34,7 @@
             <ng-template matStepLabel>Fill in Inputs</ng-template>
             <form *ngIf="step3Ready" [formGroup]="thirdStepFormGroup" (ngSubmit)="onStep3Submit()">
                 <app-custom-import-input-form [customDataImport]="formControlCustomDataImport.value"
+                                              [view]="formControlView.value"
                                               (events)="onCustomImpotFormEvent($event)"
                                               [validateFn]="customInputFormValidateFn">
                 </app-custom-import-input-form>

@@ -1,15 +1,16 @@
 import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
-import { param, body } from "express-validator";
+import {NextFunction, Request, Response, Router} from "express";
+import {body, param} from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
+import {ROLE_EDIT} from "../../model/role.model";
 import {validate} from "../../custom-import/custom-import-executor";
-import {ImportScriptInputValue, ImportScriptValidateResult} from "../../model/custom-import.model";
+import {ExportScriptInputValue, ExportScriptValidateResult} from "../../model/custom-export.model";
+
 
 const httpAction: any[] = [
     [
-        param('customImportId').exists().isNumeric(),
         param('viewId').exists().isNumeric(),
+        param('customExportId').exists().isNumeric(),
         body('values').exists().isArray(),
         body('values.*.type').exists().isString(),
         body('values.*.name').exists().isString(),
@@ -22,8 +23,8 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
-        const customImportId: number = Number(req.params.customImportId);
-        const values: ImportScriptInputValue[] = req.body.values;
+        const customExportId: number = Number(req.params.customExportId);
+        const values: ExportScriptInputValue[] = req.body.values;
 
         /*
         console.log('****** values', util.inspect(values, {depth: 5}));
@@ -35,17 +36,18 @@ const httpAction: any[] = [
         }
         */
 
-        const v: ImportScriptValidateResult = await validate(viewId, customImportId, values);
+        const r: ExportScriptValidateResult = await validate(viewId, customExportId, values);
 
-        res.status(200).json(v);
+        res.status(200).json(r);
     }
 ];
 
+
 const reg = (router: Router, registry: Registry) => {
-    const p = `/view/:viewId/custom-import/:customImportId/validate-input`;
+    const p = `/view/:viewId/custom-export/:customExportId/validate-input`;
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
-
 };
+
 
 export default reg;

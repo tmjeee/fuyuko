@@ -30,7 +30,7 @@ export const getExportScriptByName = async (customExportScriptName: string): Pro
 };
 
 
-export const validate = async (customDataExportId: number, inputValues: ExportScriptInputValue[]): Promise<ExportScriptValidateResult> => {
+export const validate = async (viewId: number, customDataExportId: number, inputValues: ExportScriptInputValue[]): Promise<ExportScriptValidateResult> => {
     const customDataExport: CustomDataExport = await getCustomExportById(customDataExportId);
     if (customDataExport == null) {
         return {
@@ -38,10 +38,17 @@ export const validate = async (customDataExportId: number, inputValues: ExportSc
             messages: [{status: 'ERROR', title: 'Error', message: `Unable to find custom data export with id ${customDataExportId}`}]
         };
     }
+    const view: View = await getViewById(viewId);
+    if (view == null) {
+        return {
+            valid: false,
+            messages: [{status: 'ERROR', title: 'Error', message: `Unable to find view with id ${viewId}`}]
+        };
+    }
     const customExportName = customDataExport.name;
     const s: ExportScript = await getExportScriptByName(customExportName);
     if (s.validate) {
-        const r: ExportScriptValidateResult = s.validate(inputValues);
+        const r: ExportScriptValidateResult = s.validate(view, inputValues);
         return r;
     } else {
         return {
