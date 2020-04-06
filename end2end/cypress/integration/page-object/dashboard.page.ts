@@ -84,7 +84,7 @@ export class DashboardPage implements ActualPage<DashboardPage> {
     }
 
     visitPartnerPage() {
-        cy.get(`[test-sidenav]='partner']`).click({force: true});
+        cy.get(`[test-sidenav='partner']`).click({force: true});
         return new PartnerPage();
     }
 

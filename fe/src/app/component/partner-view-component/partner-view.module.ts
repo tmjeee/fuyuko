@@ -9,6 +9,8 @@ import {PartnerDataThumbnailComponent} from './partner-data-thumbnail.component'
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {CarouselModule} from '../carousel-component/carousel.module';
 import {PartnerAttributeTableComponent} from './partner-attribute-table.component';
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {PartnerItemInfoTableComponent} from "./partner-item-info-table.component";
 
 
 @NgModule({
@@ -20,18 +22,21 @@ import {PartnerAttributeTableComponent} from './partner-attribute-table.componen
         AppMaterialsModule,
         DataEditorModule,
         CarouselModule,
+        FlexLayoutModule,
     ],
     declarations: [
         PartnerDataTableComponent,
         PartnerDataListComponent,
         PartnerDataThumbnailComponent,
         PartnerAttributeTableComponent,
+        PartnerItemInfoTableComponent,
     ],
     exports: [
         PartnerDataTableComponent,
         PartnerDataListComponent,
         PartnerDataThumbnailComponent,
         PartnerAttributeTableComponent,
+        PartnerItemInfoTableComponent,
     ]
 })
 export class PartnerViewModule {

@@ -1,10 +1,10 @@
 <div class="jobs-listings-component">
     <mat-accordion>
-        <mat-expansion-panel *ngFor="let job of jobs"
+        <mat-expansion-panel *ngFor="let job of jobs; let i = index;"
                              (clonsed)="onExpansionPanelClosed(job)"
                              (opened)="onExpansionPanelOpened(job)">
-            <mat-expansion-panel-header>
-                <mat-panel-title>{{job.name}} (#{{job.id}})</mat-panel-title>
+            <mat-expansion-panel-header [attr.test-job-header-index]="i">
+                <mat-panel-title [attr.test-job-title-index]="i">{{job.name}} (#{{job.id}})</mat-panel-title>
                 <mat-panel-description>
                     <div>
                        <div>Status: {{job.status}}</div>

@@ -1,7 +1,6 @@
-import {Level, LogMessage} from "./level.model";
+import {Level} from "./level.model";
 import moment from 'moment';
 import {NewNotification} from "./notification.model";
-import {fromFileToString} from "../shared-utils/buffer.util";
 import {View} from "./view.model";
 import {FileDataObject} from "./file.model";
 

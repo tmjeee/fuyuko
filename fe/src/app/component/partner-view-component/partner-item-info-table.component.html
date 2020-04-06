@@ -1,0 +1,18 @@
+<div class="partner-item-info-table">
+    <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="key">
+            <mat-header-cell class="key" *matHeaderCellDef="let data">Item Info</mat-header-cell>
+            <mat-cell class="value" *matCellDef="let data"> {{data?.key}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="value">
+            <mat-header-cell class="value" *matHeaderCellDef="let data">Value</mat-header-cell>
+            <mat-cell class="value" *matCellDef="let data">
+                <ng-container *ngIf="data.type === 'string'" [attr.test-info-name]="data?.key">{{data?.value}} </ng-container>
+                <ng-container *ngIf="data.type === 'number'" [attr.test-info-name]="data?.key">{{data?.value}} </ng-container>
+                <ng-container *ngIf="data.type === 'price'"  [attr.test-info-name]="data?.key">{{data?.value | currency}} </ng-container>
+            </mat-cell>
+        </ng-container>
+        <mat-header-row class="item-header" *matHeaderRowDef="['key', 'value']"></mat-header-row>
+        <mat-row class="item" *matRowDef="let data; columns: ['key', 'value'];"></mat-row>
+    </mat-table>
+</div>

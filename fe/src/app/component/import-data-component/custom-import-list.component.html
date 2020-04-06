@@ -3,14 +3,14 @@
       <ng-container matColumnDef="select">
          <th mat-header-cell class="select" *matHeaderCellDef></th>
          <td mat-cell class="select" *matCellDef="let customDataImport">
-            <mat-radio-button [value]="customDataImport" (change)="onRadioChange($event)" name="dataImportRadioGroup" [checked]="false"></mat-radio-button>
+            <mat-radio-button [value]="customDataImport" [attr.test-radio-custom-data-import]="customDataImport.name" (change)="onRadioChange($event)" name="dataImportRadioGroup" [checked]="false"></mat-radio-button>
          </td>
       </ng-container>
       <ng-container matColumnDef="action">
          <th mat-header-cell class="action" *matHeaderCellDef></th>
          <td mat-cell class="action" *matCellDef="let customDataImport">
-            <mat-icon *ngIf="!isRowExpanded(customDataImport)" (click)="masterRowClicked(customDataImport)">chevron_right</mat-icon>
-            <mat-icon *ngIf="isRowExpanded(customDataImport)" (click)="masterRowClicked(customDataImport)">expand_more</mat-icon>
+            <mat-icon *ngIf="!isRowExpanded(customDataImport)" (click)="masterRowClicked(customDataImport)" [attr.test-expand-row]="customDataImport.name">chevron_right</mat-icon>
+            <mat-icon *ngIf="isRowExpanded(customDataImport)" (click)="masterRowClicked(customDataImport)" [attr.test-collapse-row]="customDataImport.name">expand_more</mat-icon>
          </td>
       </ng-container>
       <ng-container matColumnDef="name">
@@ -26,8 +26,8 @@
             <div>
                Last Update: {{customDataImport.lastUpdate | date}}
                <div fxLayoutGap="column" *ngFor="let input of customDataImport.inputs">
-                  <div fxFlex="1 1 auto">{{input.name}} - {{input.type}}</div>
-                  <div fxFlex="1 1 auto">
+                  <div fxFlex="1 1 auto" [attr.test-input]="''">{{input.name}} - {{input.type}}</div>
+                  <div fxFlex="1 1 auto" [attr.test-input-option]="''">
                      {{input.description}}
                      <ul *ngIf="input.options && input.options.length">
                          <li *ngFor="let option of input.options">{{option.key}} - {{option.value}}</li>
@@ -40,8 +40,9 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let customDataImport; columns: columnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let customDataImport; columns: columnsToDisplay" [attr.test-row]="customDataImport.name"></tr>
       <tr mat-row *matRowDef="let customDataImport; columns: expandedColumnsToDisplay; when: isChildRow"
+          [attr.test-row-details]="customDataImport.name"
           [@detailExpand]="isRowExpanded(customDataImport) ? 'expanded' : 'collapsed'"></tr>
    </table>
 </div>

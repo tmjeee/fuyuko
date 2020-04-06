@@ -45,7 +45,7 @@ export class PartnerAttributeTableComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         console.log('***** ngOnChanges', changes);
-        if (changes.item.currentValue && changes.attributes.currentValue) {
+        if (changes.item && changes.item.currentValue) {
            console.log('***** doUpdate');
            this.update();
         }

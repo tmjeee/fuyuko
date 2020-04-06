@@ -26,4 +26,24 @@ export class JobsPage implements ActualPage<JobsPage> {
         return this;
     }
 
+    verifyJobName(index: number, jobName: string): JobsPage {
+        cy.get(`[test-job-header-index='${index}']`)
+            .find(`[test-job-title-index='${index}']`)
+            .should('contain.text', jobName);
+        return this;
+    }
+
+    expandPanel(index: number): JobsPage {
+        cy.get(`[test-page-title]`).then((_) => {
+            const length = _.find(`[test-job-header-index='${index}].mat-expanded`).length;
+            if (length < 0) { // not already expanded
+                const length = cy.get(`[test-page-title]`)
+                    .find(`[test-job-header-index='${index}]`)
+                    .find(`[test-job-title-index='${index}']`)
+                    .click({force: true});
+            }
+        });
+        return this;
+    }
+
 }

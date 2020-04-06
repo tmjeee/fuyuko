@@ -35,6 +35,19 @@
             &.attribute-header {
               min-width: 150px;
             }
+            &.acts-header {
+              min-width: 50px;
+            }
+            &.children-acts-header {
+              min-width: 50px;
+            }
+            &.price-header {
+              min-width: 150px;
+            }
+            &.price-country-header {
+              min-width: 150px;
+
+            }
           }
         }
       }
@@ -49,6 +62,24 @@
               justify-content: flex-start;
               align-items: center;
               line-height: 50px;
+            }
+            &.acts {
+              .mat-icon {
+                cursor: pointer;
+              }
+              min-width: 50px;
+            }
+            &.children-acts {
+              .mat-icon {
+                cursor: pointer;
+              }
+              min-width: 50px;
+            }
+            &.price {
+              min-width: 150px;
+            }
+            &.price-country {
+              min-width: 150px;
             }
             &.expansion {
               min-width: 50px;

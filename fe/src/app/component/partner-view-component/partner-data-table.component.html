@@ -3,7 +3,13 @@
         <mat-sidenav #sideNav position="end" mode="side" [disableClose]="true" [fixedInViewport]="true" fixedTopGap="65">
             <mat-icon (click)="onCloseSideNav($event)" class="close-icon">close</mat-icon>
             <div class="side-nav">
+                <app-partner-item-info-table *ngIf="selectedTablePricedItem"
+                                             [attr.test-table-partner-item-info]="''"
+                                             [tablePricedItem]="selectedTablePricedItem">
+                </app-partner-item-info-table>
+                <mat-divider></mat-divider>
                 <app-partner-attribute-table *ngIf="selectedTablePricedItem"
+                                             [attr.test-table-partner-attributes]="''"
                                              [item]="selectedTablePricedItem"
                                              [attributes]="attributes">
                 </app-partner-attribute-table>
@@ -11,20 +17,7 @@
         </mat-sidenav>
         <mat-sidenav-content>
             <div class="table-container">
-            <mat-table [dataSource]="datasource">
-                <ng-container matColumnDef="selection" sticky>
-                    <mat-header-cell class="selection-header" *matHeaderCellDef>
-                        <mat-checkbox (change)="masterToggle($event)"
-                                      [checked]="isMasterToggleChecked()"
-                                      [indeterminate]="isMasterToggleIndetermine()">
-                        </mat-checkbox>
-                    </mat-header-cell>
-                    <mat-cell class="selection" *matCellDef="let tableItem">
-                        <mat-checkbox (change)="nonMasterToggle($event, tableItem)"
-                                      [checked]="isNonMasterToggleChecked(tableItem)">
-                        </mat-checkbox>
-                    </mat-cell>
-                </ng-container>
+            <mat-table [dataSource]="datasource" [attr.test-table-partner-item]="''">
 
                 <ng-container matColumnDef="name">
                     <mat-header-cell class="attribute-header" *matHeaderCellDef>Name</mat-header-cell>
@@ -37,6 +30,20 @@
                     <mat-header-cell class="attribute-header" *matHeaderCellDef>Description</mat-header-cell>
                     <mat-cell class="attribute" *matCellDef="let tableItem">
                         {{tableItem.description}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="price">
+                    <mat-header-cell class="price-header" *matHeaderCellDef>Price</mat-header-cell>
+                    <mat-cell class="price" *matCellDef="let tableItem">
+                        {{tableItem?.price | currency}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="priceCountry">
+                    <mat-header-cell class="price-country-header" *matHeaderCellDef>Price Country</mat-header-cell>
+                    <mat-cell class="price-country" *matCellDef="let tableItem">
+                        {{tableItem?.country}}
                     </mat-cell>
                 </ng-container>
 
@@ -58,27 +65,22 @@
                             'align-items': 'center',
                             'line-height': '50px'
                         }" *matCellDef="let tableItem">
-                        <mat-icon (click)="onViewDetailsClicked(tableItem)">more</mat-icon>
+                        <mat-icon (click)="onViewDetailsClicked(tableItem)" [attr.test-icon-more-attributes]="tableItem.name">more</mat-icon>
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="children-actions" sticky>
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let tableItem">
-                        <mat-icon (click)="onViewDetailsClicked(tableItem)">queue</mat-icon>
+                    <mat-header-cell class="children-acts-header" *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let tableItem" class="children-acts">
+                        <mat-icon (click)="onViewDetailsClicked(tableItem)" [attr.test-icon-more-attributes]="tableItem.name">queue</mat-icon>
                     </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="children-selection" sticky>
-                    <mat-header-cell class="selection-header" *matHeaderCellDef></mat-header-cell>
-                    <mat-cell class="selection" *matCellDef="let tableItem"></mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="expansion" sticky>
                     <mat-header-cell class="expansion-header" *matHeaderCellDef></mat-header-cell>
                     <mat-cell class="expansion" *matCellDef="let tableItem">
-                        <mat-icon class="selectable" *ngIf="!isRowExpanded(tableItem)" (click)="rowClicked(tableItem)">chevron_right</mat-icon>
-                        <mat-icon class="selectable" *ngIf="isRowExpanded(tableItem)" (click)="rowClicked(tableItem)">expand_more</mat-icon>
+                        <mat-icon class="selectable" *ngIf="!isRowExpanded(tableItem)" (click)="rowClicked(tableItem)" [attr.test-icon-expand-item]="tableItem.name">chevron_right</mat-icon>
+                        <mat-icon class="selectable" *ngIf="isRowExpanded(tableItem)" (click)="rowClicked(tableItem)" [attr.test-icon-collapse-item]="tableItem.name">expand_more</mat-icon>
                     </mat-cell>
                 </ng-container>
 
@@ -95,15 +97,16 @@
                 <ng-container *ngFor="let attribute of attributes">
                     <ng-container [matColumnDef]="''+attribute.id">
                         <mat-header-cell class="attribute-header" *matHeaderCellDef>{{attribute.name}}</mat-header-cell>
-                        <mat-cell class="attribute" *matCellDef="let tableItem">
+                        <mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-column-attribute-value]="attribute.name">
                             {{getItemValue(tableItem, attribute) | itemAttributeValueAsString:attribute}}
                         </mat-cell>
                     </ng-container>
                 </ng-container>
 
                 <mat-header-row class="item-header" *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row class="item" *matRowDef="let tableItem; columns: displayedColumns;"></mat-row>
+                <mat-row class="item" *matRowDef="let tableItem; columns: displayedColumns;" [attr.test-row-item]="tableItem.name"></mat-row>
                 <mat-row class="item" *matRowDef="let tableItem; columns: childrenDisplayedColumns; when: isChildRow"
+                         [attr.test-row-item]="tableItem.name"
                          [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></mat-row>
             </mat-table>
             </div>
