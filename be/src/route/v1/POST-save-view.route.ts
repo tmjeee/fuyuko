@@ -41,7 +41,7 @@ const httpAction: any[] = [
                        badInserts.push(view);
                     }
                 } else { // update
-                    const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW SET NAME=?, DESCRIPTION=? WHERE ID=? AND STATUS='ENABLED'`, [id, name, descrption]);
+                    const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW SET NAME=?, DESCRIPTION=? WHERE ID=? AND STATUS='ENABLED'`, [name, descrption, id]);
                     if (q.affectedRows == 0) {
                         badUpdates.push(view);
                     }

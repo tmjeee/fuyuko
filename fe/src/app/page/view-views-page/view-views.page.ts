@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ViewEditorComponentEvent} from '../../component/view-component/view-editor.component';
 import {ViewService} from '../../service/view-service/view.service';
 import {tap} from 'rxjs/operators';
 import {View} from '../../model/view.model';
@@ -41,7 +40,6 @@ export class ViewViewsPageComponent implements OnInit {
     }
 
     onViewTableEvent($event: ViewTableComponentEvent) {
-        console.log('****************** update', $event);
         switch ($event.type) {
             case 'UPDATE':
                 combineLatest([
@@ -49,8 +47,12 @@ export class ViewViewsPageComponent implements OnInit {
                     this.viewService.deleteViews($event.deletedViews)
                 ]).pipe(
                    tap((r: [ApiResponse, ApiResponse]) => {
-                       toNotifications(this.notificationService, r[0]);
-                       toNotifications(this.notificationService, r[1]);
+                       if ($event.updatedViews.length) {
+                           toNotifications(this.notificationService, r[0]);
+                       }
+                       if ($event.deletedViews.length) {
+                           toNotifications(this.notificationService, r[1]);
+                       }
                        this.reload();
                    }),
                 ).subscribe();

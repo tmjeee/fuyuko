@@ -7,6 +7,7 @@
   "db-runUpdater": true,
   "version": "1.0.0-beta",
   "port": 8888,
+
   "salt": "some-salt",
 
   "jwt-secret": "some-secret",

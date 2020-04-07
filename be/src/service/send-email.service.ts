@@ -3,11 +3,8 @@ import config from '../config';
 import {createTransport, SentMessageInfo, Transporter, SendMailOptions} from "nodemailer";
 import {i} from '../logger';
 
-const xoauth2 = require('xoauth2');
-
 export const sendEmail = async (toEmail: string, subject: string, text: string): Promise<SendMailOptions> => {
 
-    // kdyvfchvtpkospng
     const transporter: Transporter = createTransport({
         host: config["smtp-host"],
         port: config["smtp-port"],
