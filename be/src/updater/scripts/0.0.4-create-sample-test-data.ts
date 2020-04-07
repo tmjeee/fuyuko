@@ -361,13 +361,13 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
                 metadatas: [{
                     entries: [
                         { key: 'type', value: 'string', dataType: 'string'},
-                        { key: 'value', value: `some string ${random()}`, dataType: 'string'}
+                        { key: 'value', value: `some string ${itemName}`, dataType: 'string'}
                     ]}]},
             {attributeId: att2Id, // text
                 metadatas: [{
                     entries: [
                         { key: 'type', value: 'text', dataType: 'string'},
-                        { key: 'value', value: `some text ${random()}`, dataType: 'string'}
+                        { key: 'value', value: `some text ${itemName}`, dataType: 'string'}
                     ]}]},
             {attributeId: att3Id, // number
                 metadatas: [{

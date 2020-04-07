@@ -1,13 +1,13 @@
 <div class="carousel-component">
-  <button type="button" color="primary" class="prev-button" (click)="prevImage($event)" mat-mini-fab>
+  <button type="button" color="primary" class="prev-button" (click)="prevImage($event)" [attr.test-button-previous-image]="''" mat-mini-fab>
     <mat-icon>chevron_left</mat-icon>
   </button>
-  <button type="button" color="primary" class="next-button" (click)="nextImage($event)" mat-mini-fab>
+  <button type="button" color="primary" class="next-button" (click)="nextImage($event)" [attr.test-button-next-image]="''" mat-mini-fab>
     <mat-icon>chevron_right</mat-icon>
   </button>
   <div class="container">
     <div class="primary-image" *ngIf="currentImage.primary">
-      <mat-icon>bookmark</mat-icon>
+      <mat-icon matTooltip="This image is marked as a primary image">bookmark</mat-icon>
     </div>
     <div class="image"
          #image

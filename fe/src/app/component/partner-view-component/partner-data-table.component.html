@@ -2,7 +2,7 @@
     <mat-sidenav-container [hasBackdrop]="false">
         <mat-sidenav #sideNav position="end" mode="side" [disableClose]="true" [fixedInViewport]="true" fixedTopGap="65">
             <mat-icon (click)="onCloseSideNav($event)" class="close-icon">close</mat-icon>
-            <div class="side-nav">
+            <div class="side-nav" [attr.test-side-nav]="''">
                 <app-partner-item-info-table *ngIf="selectedTablePricedItem"
                                              [attr.test-table-partner-item-info]="''"
                                              [tablePricedItem]="selectedTablePricedItem">
@@ -21,7 +21,7 @@
 
                 <ng-container matColumnDef="name">
                     <mat-header-cell class="attribute-header" *matHeaderCellDef>Name</mat-header-cell>
-                    <mat-cell class="attribute" *matCellDef="let tableItem">
+                    <mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-table-cell]="'name'">
                         {{tableItem.name}}
                     </mat-cell>
                 </ng-container>
@@ -35,7 +35,7 @@
 
                 <ng-container matColumnDef="price">
                     <mat-header-cell class="price-header" *matHeaderCellDef>Price</mat-header-cell>
-                    <mat-cell class="price" *matCellDef="let tableItem">
+                    <mat-cell class="price" *matCellDef="let tableItem" [attr.test-table-cell]="'price'">
                         {{tableItem?.price | currency}}
                     </mat-cell>
                 </ng-container>
@@ -97,7 +97,7 @@
                 <ng-container *ngFor="let attribute of attributes">
                     <ng-container [matColumnDef]="''+attribute.id">
                         <mat-header-cell class="attribute-header" *matHeaderCellDef>{{attribute.name}}</mat-header-cell>
-                        <mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-column-attribute-value]="attribute.name">
+                        <mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-column-attribute-value]="attribute.name" [attr.test-table-cell]="attribute.name">
                             {{getItemValue(tableItem, attribute) | itemAttributeValueAsString:attribute}}
                         </mat-cell>
                     </ng-container>

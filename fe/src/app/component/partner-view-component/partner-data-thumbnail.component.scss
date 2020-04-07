@@ -9,9 +9,43 @@
   }
   .thumbnail-content {
     margin: 10px;
-    .controls {
-      mat-icon {
-        cursor: pointer;
+
+    .no-items {
+      padding: 30px 0;
+    }
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: flex-start;
+
+    .grid {
+      flex-basis: 0;
+      width: 300px;
+      padding: 5px;
+      .controls {
+        .mat-icon {
+          cursor: pointer;
+        }
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        *:not(:last-child) {
+          margin-right: 5px;
+        }
+      }
+      .carousel {
+        margin: 10px 0 10px 0;
+      }
+      .attribute {
+
+      }
+      .show-more-link {
+        margin-top: 5px;
+        text-decoration: none;
+        color: var(--my-app-foreground-text);
       }
     }
   }

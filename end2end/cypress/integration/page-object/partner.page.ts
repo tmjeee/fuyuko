@@ -1,6 +1,6 @@
 import {PartnerTablePage} from "./sub-page-object/partner-table.page";
 import {PartnerListPage} from "./sub-page-object/partner-list.page";
-import {PartnerThubnailPage} from "./sub-page-object/partner-thumbnail.page";
+import {PartnerThumbnailPage} from "./sub-page-object/partner-thumbnail.page";
 
 
 export class PartnerPage {
@@ -15,9 +15,9 @@ export class PartnerPage {
         return new PartnerListPage;
     }
 
-    visitPartnerThumbnailPage(): PartnerThubnailPage {
+    visitPartnerThumbnailPage(): PartnerThumbnailPage {
         cy.visit('/partner-layout/(thumbnail//help:partner-help)');
-        return new PartnerThubnailPage();
+        return new PartnerThumbnailPage();
     }
 
 

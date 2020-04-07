@@ -7,9 +7,9 @@
         <ng-container matColumnDef="value">
             <mat-header-cell class="value" *matHeaderCellDef="let data">Value</mat-header-cell>
             <mat-cell class="value" *matCellDef="let data">
-                <ng-container *ngIf="data.type === 'string'" [attr.test-info-name]="data?.key">{{data?.value}} </ng-container>
-                <ng-container *ngIf="data.type === 'number'" [attr.test-info-name]="data?.key">{{data?.value}} </ng-container>
-                <ng-container *ngIf="data.type === 'price'"  [attr.test-info-name]="data?.key">{{data?.value | currency}} </ng-container>
+                <ng-container *ngIf="data.type === 'string'"><span [attr.test-info-name]="data?.key">{{data?.value}}</span></ng-container>
+                <ng-container *ngIf="data.type === 'number'"><span [attr.test-info-name]="data?.key">{{data?.value}}</span></ng-container>
+                <ng-container *ngIf="data.type === 'price'"><span [attr.test-info-name]="data?.key">{{data?.value | currency}}</span></ng-container>
             </mat-cell>
         </ng-container>
         <mat-header-row class="item-header" *matHeaderRowDef="['key', 'value']"></mat-header-row>
