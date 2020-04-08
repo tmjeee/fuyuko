@@ -1,14 +1,14 @@
 
 import {Request, Response, NextFunction, Router} from 'express';
-import {check, body} from 'express-validator';
+import {body} from 'express-validator';
 
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {RegistrationResponse} from "../../model/registration.model";
-import {catchErrorMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateMiddlewareFn} from "./common-middleware";
 
 import {Connection} from "mariadb";
 import {hashedPassword} from "../../service";
 import {Registry} from "../../registry";
+import {RegistrationResponse} from "../../model/api-response.model";
 
 
 const selfRegister = async (username: string, email: string, firstName: string, lastName: string,  password: string): Promise<RegistrationResponse> => {

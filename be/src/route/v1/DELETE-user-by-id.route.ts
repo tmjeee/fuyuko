@@ -9,7 +9,7 @@ import {
 } from "./common-middleware";
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {check} from 'express-validator';
 import {ROLE_ADMIN} from "../../model/role.model";
 

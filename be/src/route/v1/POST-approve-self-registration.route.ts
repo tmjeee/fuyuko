@@ -12,9 +12,9 @@ import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {hashedPassword, sendEmail} from "../../service";
 import config from '../../config';
-import {RegistrationResponse} from "../../model/registration.model";
 import {Registry} from "../../registry";
 import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
+import {RegistrationResponse} from "../../model/api-response.model";
 
 /**
  * Approve other users' self registration entries

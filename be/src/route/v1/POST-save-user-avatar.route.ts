@@ -1,25 +1,23 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {
     aFnAnyTrue,
-    getJwtPayload, v,
+    v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {JwtPayload} from "../../model/jwt.model";
-import * as formidable from 'formidable';
-import {Fields, Files, IncomingForm, File} from 'formidable';
+import {Fields, Files, File} from 'formidable';
 import {multipartParse} from "../../service";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import fileType from 'file-type';
-import {UserAvatarResponse} from "../../model/avatar.model";
 import util from 'util';
 import fs from 'fs';
 import {Registry} from "../../registry";
 import {param} from 'express-validator';
 import {ROLE_EDIT} from "../../model/role.model";
+import {UserAvatarResponse} from "../../model/api-response.model";
 
 const httpAction: any[] = [
     [

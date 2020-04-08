@@ -10,7 +10,7 @@ import {
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {check} from 'express-validator';
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_ADMIN} from "../../model/role.model";
 
 const httpAction: any[] = [

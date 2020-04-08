@@ -1,6 +1,6 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
-import {check, body} from 'express-validator';
+import {body} from 'express-validator';
 import {
     aFnAnyTrue,
     v,
@@ -12,7 +12,7 @@ import {View} from "../../model/view.model";
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {e} from '../../logger';
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [

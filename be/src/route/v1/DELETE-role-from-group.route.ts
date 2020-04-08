@@ -5,7 +5,7 @@ import {check} from "express-validator";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_ADMIN} from "../../model/role.model";
 
 const httpAction: any[] = [

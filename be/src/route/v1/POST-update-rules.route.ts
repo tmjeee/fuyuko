@@ -12,7 +12,7 @@ import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {Rule} from "../../model/rule.model";
 import {Rule2} from "../model/server-side.model";
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {revert} from "../../service/conversion-rule.service";
 import {ROLE_EDIT} from "../../model/role.model";
 

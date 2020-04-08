@@ -10,7 +10,7 @@ import {
 import {check} from 'express-validator';
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
 

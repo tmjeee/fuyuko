@@ -18,15 +18,6 @@ export interface PricingStructureWithItems { // pricing structure
     lastUpdate: Date;
 }
 
-/*
-export interface PricingStructureItem {  // pricing structure item
-    id: number;     // pricing structure item id
-    itemId: number;
-    itemName: string;
-    itemDescription: string;
-}
- */
-
 export interface PricingStructureItemWithPrice {  // pricing structure item
     id: number;     // pricing structure item id
     itemId: number;

@@ -13,7 +13,7 @@ import {Connection} from "mariadb";
 import {Attribute} from "../../model/attribute.model";
 import {revert} from "../../service/conversion-attribute.service";
 import {Attribute2} from "../model/server-side.model";
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
 
 const httpAction: any[] = [

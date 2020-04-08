@@ -5,8 +5,6 @@ import {makeApiError, makeApiErrorObj} from "../../util";
 import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
 import {hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
-import {sprintf} from "sprintf";
-import {ApiError} from "../../model/error.model";
 
 
 

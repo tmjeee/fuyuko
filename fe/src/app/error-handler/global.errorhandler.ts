@@ -3,6 +3,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
+import {ApiErrorContext} from "../model/api-error.model";
 
 @Injectable()
 export class GlobalErrorhandler extends ErrorHandler {
@@ -37,7 +38,7 @@ export class GlobalErrorhandler extends ErrorHandler {
                     });
                 } else if (httpErrorResponse.status === 403) {
                     // forbidden - 403
-                    this.notificationService.error('Unauthorized',
+                    this.notificationService.error('Forbidden',
                         `Not allowed access to ${httpErrorResponse.url}`);
 
                 } else if (httpErrorResponse.status === 404) { // api service not found??
@@ -68,8 +69,9 @@ export class GlobalErrorhandler extends ErrorHandler {
     }
 
     private getErrorMessages(r: HttpErrorResponse): string {
-        if (r.error && r.error.errors && r.error.errors.length > 0) {
-            return r.error.errors.reduce((acc: string[], err: {message?: string, msg?: string}) => {
+        const apiErrorContext: ApiErrorContext = r.error;
+        if (apiErrorContext && apiErrorContext.errors && apiErrorContext.errors.length > 0) {
+            return apiErrorContext.errors.reduce((acc: string[], err: {message?: string, msg?: string}) => {
                 if (err.message) {
                     acc.push(err.message);
                 }

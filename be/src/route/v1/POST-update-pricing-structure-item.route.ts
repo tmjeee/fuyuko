@@ -8,9 +8,9 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {param, body} from 'express-validator';
-import {PriceDataItem, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
-import {ApiResponse} from "../../model/response.model";
-import {setPrices, setPrices2} from "../../service/pricing-structure-item.service";
+import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
+import {ApiResponse} from "../../model/api-response.model";
+import {setPrices2} from "../../service/pricing-structure-item.service";
 import {ROLE_EDIT} from "../../model/role.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 

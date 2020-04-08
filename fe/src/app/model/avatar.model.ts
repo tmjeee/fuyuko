@@ -1,4 +1,5 @@
-import {ResponseStatus} from './response-status.model';
+import {ResponseStatus} from './api-response-status.model';
+import {ApiResponse} from "./api-response.model";
 
 
 export interface GlobalAvatar {
@@ -8,11 +9,6 @@ export interface GlobalAvatar {
   size: number;
 }
 
-export interface UserAvatarResponse {
-  userAvatarId: number;
-  message: string;
-  status: ResponseStatus;
-}
 
 export interface UserAvatar {
     global: boolean;
