@@ -2,8 +2,6 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {ConnectionConfig, Connection} from "mariadb";
 import {
     CustomDataImport,
 } from "../../model/custom-import.model";
