@@ -5,7 +5,7 @@ import {View} from '../../model/view.model';
 import {ViewTableComponentEvent} from '../../component/view-component/view-table.component';
 import {combineLatest, forkJoin} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 
 

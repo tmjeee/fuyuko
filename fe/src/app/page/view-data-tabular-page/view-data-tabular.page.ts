@@ -11,7 +11,7 @@ import {View} from '../../model/view.model';
 import {DataTableComponentEvent} from '../../component/data-table-component/data-table.component';
 import {toTableItem} from '../../utils/item-to-table-items.util';
 import {ItemSearchComponentEvent} from '../../component/item-search-component/item-search.component';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";

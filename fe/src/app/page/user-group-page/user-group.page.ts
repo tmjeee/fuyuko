@@ -6,7 +6,7 @@ import {User} from '../../model/user.model';
 import {Action, UserSearchFn, UserTableComponentEvent} from '../../component/user-table-component/user-table.component';
 import {Observable} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 
 

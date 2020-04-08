@@ -38,7 +38,7 @@ import {PricingPageComponent} from './page/pricing-page/pricing.page';
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
 import {DashboardPageComponent} from './page/dashboard-page/dashboard.page';
 import {UserManagementService} from './service/user-management-service/user-management.service';
-import {ViewAttributesPageComponent} from './page/view-attributes-page/view-attributes.page';
+import {Prov, ViewAttributesPageComponent} from './page/view-attributes-page/view-attributes.page';
 import {ViewDataTabularPageComponent} from './page/view-data-tabular-page/view-data-tabular.page';
 import {ViewDataThumbnailPageComponent} from './page/view-data-thumbnail-page/view-data-thumbnail.page';
 import {ViewDataListPageComponent} from './page/view-data-list-page/view-data-list.page';
@@ -87,8 +87,6 @@ import {SettingsService} from './service/settings-service/settings.service';
 import {tap} from 'rxjs/operators';
 import {User} from './model/user.model';
 import {SettingsModule} from './component/settings-component/settings.module';
-import {ForumService} from './service/forum-service/forum.service';
-import {ForumModule} from './component/forum-component/forum.module';
 import {DashboardModule} from './component/dashboard-component/dashboard.module';
 import {DashboardService} from './service/dashboard-service/dashboard.service';
 import {DashboardWidgetService} from './service/dashboard-service/dashboard-widget.service';
@@ -133,6 +131,7 @@ import {CustomExportPageComponent} from "./page/custom-export-page/custom-export
 import {CustomImportPageComponent} from "./page/custom-import-page/custom-import.page";
 import {CustomImportService} from "./service/custom-import-service/custom-import.service";
 import {CustomExportService} from "./service/custom-export-service/custom-export.service";
+import {ExportArtifactService} from "./service/export-artifact-service/export-artifact.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -258,7 +257,6 @@ const appInitializer = (settingsService: SettingsService,
     ImportDataModule,
     ExportDataModule,
     SettingsModule,
-    ForumModule,
     DashboardModule,
     AvatarModule,
     GroupTableModule,
@@ -292,7 +290,6 @@ const appInitializer = (settingsService: SettingsService,
     {provide: ImportDataService, useClass: ImportDataService} as Provider,
     {provide: ExportDataService, useClass: ExportDataService} as Provider,
     {provide: SettingsService, useClass: SettingsService} as Provider,
-    {provide: ForumService, useClass: ForumService} as Provider,
     {provide: DashboardService, useClass: DashboardService} as Provider,
     {provide: DashboardWidgetService, useClass: DashboardWidgetService} as Provider,
     {provide: ActivationService, useClass: ActivationService} as Provider,
@@ -306,6 +303,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: HelpService, useClass: HelpService} as Provider,
     {provide: CustomImportService, useClass: CustomImportService} as Provider,
     {provide: CustomExportService, useClass: CustomExportService} as Provider,
+    {provide: ExportArtifactService, useClass: ExportArtifactService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,

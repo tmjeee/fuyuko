@@ -1,5 +1,5 @@
 import {NotificationsService} from 'angular2-notifications';
-import {ResponseStatus} from '../model/response-status.model';
+import {ResponseStatus} from "../model/api-response-status.model";
 
 
 export const toNotifications = (

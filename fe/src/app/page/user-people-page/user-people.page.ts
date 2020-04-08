@@ -1,17 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {GroupSearchFn, SendInviteComponentEvent} from '../../component/send-invite-component/send-invite.component';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {Observable} from 'rxjs';
-import {Group} from '../../model/group.model';
 import {NotificationsService} from 'angular2-notifications';
-import {UserSearchFn, UserTableComponentEvent} from '../../component/user-table-component/user-table.component';
+import {UserSearchFn} from '../../component/user-table-component/user-table.component';
 import {User} from '../../model/user.model';
 import {
   ActionType,
   UserSearchTableComponentEvent
 } from '../../component/user-search-table-component/user-search-table.component';
 import {map, tap} from 'rxjs/operators';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 
 

@@ -13,7 +13,7 @@ import {
   DataThumbnailComponentEvent,
   DataThumbnailSearchComponentEvent
 } from '../../component/data-thumbnail-component/data-thumbnail.component';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
 

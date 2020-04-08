@@ -6,7 +6,7 @@ import {
 import {toItem, toItemIgnoreParent} from '../../utils/item-to-table-items.util';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 
 
 const URL_GET_ITEMS = () => `${config().api_host_url}/view/:viewId/items/:itemIds`;

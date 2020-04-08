@@ -6,7 +6,7 @@ import {User} from '../../model/user.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {Paginable} from '../../model/pagnination.model';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {map, tap} from 'rxjs/operators';
 import {SelfRegistration} from '../../model/self-registration.model';
 

@@ -3,7 +3,7 @@ import {Observable, of} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {
-    AttributeDataExport, DataExportArtifact,
+    AttributeDataExport,
     DataExportType,
     ItemDataExport,
     PriceDataExport
@@ -21,8 +21,6 @@ const URL_SCHEDULE_ATTRIBUTES_EXPORT = () => `${config().api_host_url}/view/:vie
 const URL_SCHEDULE_ITEMS_EXPORT = () => `${config().api_host_url}/view/:viewId/export/items`;
 const URL_SCHEDULE_PRICES_EXPORT = () => `${config().api_host_url}/view/:viewId/export/pricingStructure/:pricingStructureId/prices`;
 
-const URL_EXPORT_ARTIRACTS = () => `${config().api_host_url}/data-export-artifacts`;
-const URL_DELETE_EXPORT_ARTIFACT = () => `${config().api_host_url}/data-export-artifact/:dataExportArtifactId`;
 
 @Injectable()
 export class ExportDataService {
@@ -30,9 +28,6 @@ export class ExportDataService {
     constructor(private httpClient: HttpClient) {
     }
 
-    allDataExportArtifacts(): Observable<DataExportArtifact[]> {
-        return this.httpClient.get<DataExportArtifact[]>(URL_EXPORT_ARTIRACTS());
-    }
 
 
     previewExportFn(exportType: DataExportType, viewId: number, attributes: Attribute[],
@@ -108,7 +103,4 @@ export class ExportDataService {
         return null;
     }
 
-    deleteExportArtifact(dataExportArtifactId: number): Observable<boolean> {
-        return this.httpClient.delete<boolean>(URL_DELETE_EXPORT_ARTIFACT().replace(':dataExportArtifactId', String(dataExportArtifactId)));
-    }
 }

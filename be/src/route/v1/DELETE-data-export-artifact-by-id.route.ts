@@ -5,6 +5,7 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_EDIT} from "../../model/role.model";
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
+import {ApiResponse} from "../../model/api-response.model";
 
 const httpAction: any[] = [
     [
@@ -22,7 +23,10 @@ const httpAction: any[] = [
             `, [dataExportArtifactId]);
         });
 
-        res.status(200).json(true);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Data Export artfact deleted`
+        } as ApiResponse);
     }
 ];
 

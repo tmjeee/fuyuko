@@ -10,7 +10,7 @@ import {UserManagementService} from '../../service/user-management-service/user-
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {SelfRegistration} from '../../model/self-registration.model';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 
 

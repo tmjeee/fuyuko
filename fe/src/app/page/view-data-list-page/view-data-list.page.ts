@@ -9,7 +9,7 @@ import {ItemService} from '../../service/item-service/item.service';
 import {Item, ItemSearchType} from '../../model/item.model';
 import {map} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 

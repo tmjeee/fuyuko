@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {Rule, ValidateClause, WhenClause} from 'src/app/model/rule.model';
-import {Item, StringValue} from '../../model/item.model';
+import {Rule} from 'src/app/model/rule.model';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import config from '../../utils/config.util';
 
 

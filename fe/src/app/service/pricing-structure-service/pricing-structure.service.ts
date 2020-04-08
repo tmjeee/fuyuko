@@ -7,7 +7,7 @@ import {
 } from '../../model/pricing-structure.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 
 const URL_ALL_PRICING_STRUCTURES = () => `${config().api_host_url}/pricingStructures`;
 const URL_ALL_ITEMS_WITH_PRICE = () => `${config().api_host_url}/pricingStructuresWithItems/:pricingStructureId`;

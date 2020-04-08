@@ -3,11 +3,11 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
 import {ThemeService} from '../theme-service/theme.service';
 import {HttpClient} from '@angular/common/http';
-import {LoginResponse} from '../../model/login.model';
 
 import config from '../../utils/config.util';
 import {tap} from 'rxjs/operators';
 import {BrowserLocationHistoryService} from "../browser-location-history-service/browser-location-history.service";
+import {LoginResponse} from "../../model/api-response.model";
 
 
 const URL_LOGIN = () => `${config().api_host_url}/login`;

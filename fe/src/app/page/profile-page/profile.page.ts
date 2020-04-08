@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {GlobalAvatar, UserAvatarResponse} from '../../model/avatar.model';
+import {GlobalAvatar} from '../../model/avatar.model';
 import {AvatarService} from '../../service/avatar-service/avatar.service';
 import {AvatarComponentEvent} from '../../component/avatar-component/avatar.component';
 import {NotificationsService} from 'angular2-notifications';
@@ -13,6 +13,7 @@ import {AuthService} from '../../service/auth-service/auth.service';
 import {User} from '../../model/user.model';
 import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
 import {FormBuilder, FormControl} from '@angular/forms';
+import {UserAvatarResponse} from "../../model/api-response.model";
 
 
 @Component({
