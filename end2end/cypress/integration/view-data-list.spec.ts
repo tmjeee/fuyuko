@@ -38,7 +38,7 @@ describe(`view-data-list spec`, () => {
         ;
     });
 
-    it.only ('should expand and collapse panel', () => {
+    it('should expand and collapse panel', () => {
         const itemName  = `Item-2`;
         viewDataListPage
             .clickOnPanel(itemName)

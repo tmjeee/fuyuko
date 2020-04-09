@@ -48,9 +48,11 @@ import {
     compareDate, compareDimension, compareDoubleselect, compareHeight, compareLength,
     compareNumber, compareSelect,
     compareString, compareVolume, compareWidth,
-    convertToCm,
-    convertToCm2, convertToMl
 } from "../../service/compare-attribute-values.service";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 
 const SQL: string = `
@@ -165,7 +167,11 @@ const httpAction: any[] = [
         return r;
       });
 
-      res.status(200).json(bulkEditPackage);
+      res.status(200).json({
+          status: 'SUCCESS',
+          message: `Bulk edit package ready`,
+          payload: bulkEditPackage
+      } as ApiResponse<BulkEditPackage>);
    }
 ]
 

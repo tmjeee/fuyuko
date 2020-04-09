@@ -9,6 +9,8 @@ import {View} from "../../model/view.model";
 import {Observable} from "rxjs";
 import config from "../../utils/config.util";
 import {HttpClient} from "@angular/common/http";
+import {map} from "rxjs/operators";
+import {ApiResponse} from "../../model/api-response.model";
 
 const URL_GET_ALL_CUSTOM_EXPORTS = () => `${config().api_host_url}/custom-exports`;
 const URL_POST_CUSTOM_EXPORT_VALIDATE_INPUTS = () => `${config().api_host_url}/view/:viewId/custom-export/:customExportId/validate-input`;
@@ -21,34 +23,42 @@ export class CustomExportService {
     constructor(private httpClient: HttpClient) {}
 
     validate(v: View, c: CustomDataExport, i: ExportScriptInputValue[]): Observable<ExportScriptValidateResult> {
-        return this.httpClient.post<ExportScriptValidateResult>(
+        return this.httpClient.post<ApiResponse<ExportScriptValidateResult>>(
             URL_POST_CUSTOM_EXPORT_VALIDATE_INPUTS()
                 .replace(':viewId', String(v.id))
                 .replace(':customExportId', String(c.id)), {
                 values: i
-            });
+            }).pipe(map((r: ApiResponse<ExportScriptValidateResult>) => r.payload));
     }
 
     preview(v: View, c: CustomDataExport, i: ExportScriptInputValue[]): Observable<ExportScriptPreview> {
-        return this.httpClient.post<ExportScriptPreview>(
+        return this.httpClient.post<ApiResponse<ExportScriptPreview>>(
             URL_POST_CUSTOM_EXPORT_PREVIEW()
                 .replace(':viewId', String(v.id))
                 .replace(':customExportId', String(c.id)), {
                 values: i
-            });
+            }).pipe(
+                map((r: ApiResponse<ExportScriptPreview>) => r.payload)
+            );
     }
 
     submit(v: View, c: CustomDataExport, p: ExportScriptPreview, i: ExportScriptInputValue[]): Observable<ExportScriptJobSubmissionResult> {
-        return this.httpClient.post<ExportScriptJobSubmissionResult>(
+        return this.httpClient.post<ApiResponse<ExportScriptJobSubmissionResult>>(
             URL_POST_CUSTOM_EXPORT_SUBMIT()
                 .replace(':viewId', String(v.id))
                 .replace(':customExportId', String(c.id)), {
                 values: i,
                 preview: p
-            });
+            }).pipe(
+                map((r: ApiResponse<ExportScriptJobSubmissionResult>) => r.payload)
+            );
     }
 
     getAllCustomExports(): Observable<CustomDataExport[]> {
-        return this.httpClient.get<CustomDataExport[]>(URL_GET_ALL_CUSTOM_EXPORTS());
+        return this.httpClient
+            .get<ApiResponse<CustomDataExport[]>>(URL_GET_ALL_CUSTOM_EXPORTS())
+            .pipe(
+                map((r: ApiResponse<CustomDataExport[]>) => r.payload)
+            );
     }
 }

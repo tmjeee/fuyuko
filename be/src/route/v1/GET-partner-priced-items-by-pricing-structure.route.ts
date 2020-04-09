@@ -13,6 +13,10 @@ import {getPricedItems, toPricedItems} from "../../service/priced-item.service";
 import {PricedItem2} from "../model/server-side.model";
 import {PricedItem} from "../../model/item.model";
 import {ROLE_PARTNER} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 
 const httpAction: any[] = [
@@ -25,7 +29,11 @@ const httpAction: any[] = [
         const pricedItem2s: PricedItem2[] = await getPricedItems(pricingStructureId);
         const pricedItems: PricedItem[] = toPricedItems(pricedItem2s);
 
-        res.status(200).json(pricedItems);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Priced Items retrieved`,
+            payload: pricedItems
+        } as ApiResponse<PricedItem[]>);
     }
 ]
 

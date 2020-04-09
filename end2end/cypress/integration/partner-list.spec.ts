@@ -60,7 +60,7 @@ describe('partner list spec', () => {
             .clickPreviousImage(`Item-1`)
     });
 
-    it.only('should show / hide side attributes panel', () => {
+    it('should show / hide side attributes panel', () => {
         partnerListPage
             .selectPricingStructure(`Pricing Structure #1`)
             .selectItemInList(`Item-1`)
@@ -70,8 +70,8 @@ describe('partner list spec', () => {
             .verifyItemSideMenuOpened(true)
             .verifyItemSideMenuItemName(`Item-1`)
             .verifyItemSideMenuItemPrice(`$1.10`)
-            .verifyItemSideMenuAttributeValue(`string attribute`, `some string Item-1`)
-            .verifyItemSideMenuAttributeValue(`text attribute`, `some text Item-1`)
+            .verifyItemSideMenuAttributeValue(`string attribute`, [`some`, `string`, `Item-1`])
+            .verifyItemSideMenuAttributeValue(`text attribute`, [`some`, `text`, `Item-1`])
 
             .selectItemInList(`Item-2`)
             .verifyItemExpanded(`Item-2`, true)
@@ -81,8 +81,8 @@ describe('partner list spec', () => {
             .verifyItemSideMenuOpened(true)
             .verifyItemSideMenuItemName(`Item-2`)
             .verifyItemSideMenuItemPrice(`$2.20`)
-            .verifyItemSideMenuAttributeValue(`string attribute`, `some string Item-2`)
-            .verifyItemSideMenuAttributeValue(`text attribute`, `some text Item-2`)
+            .verifyItemSideMenuAttributeValue(`string attribute`, [`some`, `string`, `Item-2`])
+            .verifyItemSideMenuAttributeValue(`text attribute`, [`some`, `text`, `Item-2`])
         ;
     });
 

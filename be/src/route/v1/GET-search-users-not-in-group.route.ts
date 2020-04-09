@@ -13,6 +13,9 @@ import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role, ROLE_VIEW} from "../../model/role.model";
 import {User} from "../../model/user.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -118,7 +121,11 @@ const httpAction: any[] = [
             );
         });
 
-        res.status(200).json(u);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Users retrieved`,
+            payload: u
+        } as ApiResponse<User[]>);
     }
 ]
 

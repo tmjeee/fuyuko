@@ -27,8 +27,8 @@ const httpAction: any[] = [
         const views: View[] =  req.body;
 
         for (const view of views) {
-            await doInDbConnection((conn: Connection) => {
-                conn.query(`UPDATE TBL_VIEW SET STATUS='DELETED' WHERE ID=?`,[view.id]);
+            await doInDbConnection(async (conn: Connection) => {
+                await conn.query(`UPDATE TBL_VIEW SET STATUS='DELETED' WHERE ID=?`,[view.id]);
             });
         }
 

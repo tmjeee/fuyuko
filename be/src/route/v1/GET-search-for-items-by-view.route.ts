@@ -7,6 +7,10 @@ import {getAllItemsInView, searchForItemsInView} from "../../service/item.servic
 import {Item, ItemSearchType} from "../../model/item.model";
 import {convert} from "../../service/conversion-item.service";
 import {Registry} from "../../registry";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -28,7 +32,11 @@ const httpAction: any[] = [
             allItem2s = await getAllItemsInView(viewId);
         }
         const allItems: Item[] = convert(allItem2s);
-        res.status(200).json(allItems);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Items retrieved`,
+            payload: allItems
+        } as ApiResponse<Item[]>);
     }
 ]
 

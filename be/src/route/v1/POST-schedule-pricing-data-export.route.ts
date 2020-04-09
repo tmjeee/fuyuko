@@ -13,6 +13,9 @@ import {runJob} from "../../service/export-csv/job-do-price-data-export.service"
 import {Job} from "../../model/job.model";
 import {Attribute} from "../../model/attribute.model";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -33,7 +36,11 @@ const httpAction: any[] = [
 
         const job: Job = await runJob(viewId, pricingStructureId, attributes, pricedItems);
 
-        res.status(200).json(job);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Pricing data export scheduled`,
+            payload: job
+        } as ApiResponse<Job>);
     }
 ];
 

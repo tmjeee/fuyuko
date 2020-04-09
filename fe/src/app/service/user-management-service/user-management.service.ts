@@ -5,9 +5,8 @@ import {Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {Paginable} from '../../model/pagnination.model';
-import {ApiResponse} from '../../model/api-response.model';
-import {map, tap} from 'rxjs/operators';
+import {ApiResponse, PaginableApiResponse, RegistrationResponse} from '../../model/api-response.model';
+import {map} from 'rxjs/operators';
 import {SelfRegistration} from '../../model/self-registration.model';
 
 const URL_ALL_ROLES = () => `${config().api_host_url}/roles`;
@@ -39,17 +38,28 @@ export class UserManagementService {
   // === Roles =============
 
   allRoles(): Observable<Role[]> {
-    return this.httpClient.get<Role[]>(URL_ALL_ROLES());
+    return this.httpClient
+        .get<ApiResponse<Role[]>>(URL_ALL_ROLES())
+        .pipe(
+            map((r: ApiResponse<Role[]>) => r.payload)
+        );
   }
 
-  findGroupWithoutRole(groupName: string, roleName: RoleName): Observable<Paginable<Group>> {
-    return this.httpClient.get<Paginable<Group>>(`${URL_ALL_GROUPS_WITHOUT_ROLE()}`
+  findGroupWithoutRole(groupName: string, roleName: RoleName): Observable<Group[]> {
+    return this.httpClient.get<PaginableApiResponse<Group[]>>(`${URL_ALL_GROUPS_WITHOUT_ROLE()}`
         .replace(':roleName', roleName)
-        .replace(':groupName', groupName), {});
+        .replace(':groupName', groupName), {})
+        .pipe(
+            map((r: ApiResponse<Group[]>) => r.payload)
+        );
   }
 
-  findGroupWithRole(roleName: RoleName) {
-    return this.httpClient.get<Paginable<Group>>(`${URL_ALL_GROUPS_WITH_ROLE()}`.replace(':roleName', roleName), {});
+  findGroupWithRole(roleName: RoleName): Observable<Group[]> {
+    return this.httpClient
+        .get<PaginableApiResponse<Group[]>>(`${URL_ALL_GROUPS_WITH_ROLE()}`.replace(':roleName', roleName), {})
+        .pipe(
+            map((r: PaginableApiResponse<Group[]>) => r.payload)
+        );
   }
 
   removeRoleFromGroup(role: Role, group: Group): Observable<ApiResponse> {
@@ -66,23 +76,35 @@ export class UserManagementService {
 
   // ===== Groups ===============================
   findInGroup(groupName: string): Observable<Group[]> {
-    return this.httpClient.get<Group[]>(URL_GET_SEARCH_GROUP_BY_NAME().replace(':groupName', groupName));
+    return this.httpClient
+        .get<ApiResponse<Group[]>>(URL_GET_SEARCH_GROUP_BY_NAME().replace(':groupName', groupName))
+        .pipe(
+            map((r: ApiResponse<Group[]>) => r.payload)
+        );
   }
 
   getAllGroups(): Observable<Group[]> {
-    return this.httpClient.get<Paginable<Group>>(URL_ALL_GROUPS()).pipe(
-        map((p: Paginable<Group>) => p.payload),
+    return this.httpClient.get<PaginableApiResponse<Group[]>>(URL_ALL_GROUPS()).pipe(
+        map((p: PaginableApiResponse<Group[]>) => p.payload),
     );
   }
 
   findUsersInGroup(grp: Group): Observable<User[]> {
-    return this.httpClient.get<User[]>(URL_ALL_USERS_IN_GROUP().replace(':groupId', String(grp.id)));
+    return this.httpClient
+        .get<ApiResponse<User[]>>(URL_ALL_USERS_IN_GROUP().replace(':groupId', String(grp.id)))
+        .pipe(
+            map((r: ApiResponse<User[]>) => r.payload)
+        );
   }
 
   findUsersNotInGroup(username: string, group: Group): Observable<User[]> {
-      return this.httpClient.get<User[]>(URL_ALL_USERS_NOT_IN_GROUP()
-          .replace(':groupId', String(group.id))
-          .replace(':username', username));
+      return this.httpClient
+          .get<ApiResponse<User[]>>(URL_ALL_USERS_NOT_IN_GROUP()
+            .replace(':groupId', String(group.id))
+            .replace(':username', username))
+          .pipe(
+              map((r: ApiResponse<User[]>) => r.payload)
+          );
   }
 
   addUserToGroup(user: User, group: Group): Observable<ApiResponse> {
@@ -99,23 +121,34 @@ export class UserManagementService {
   // ========= Users
 
   findSelfRegistrations(userName: string): Observable<SelfRegistration[]> { // DISABLED
-    return this.httpClient.get<SelfRegistration[]>(URL_GET_SEARCH_SELF_REGISTRATION_BY_USERNAME().replace(':username', userName));
+    return this.httpClient
+        .get<ApiResponse<SelfRegistration[]>>(
+            URL_GET_SEARCH_SELF_REGISTRATION_BY_USERNAME().replace(':username', userName))
+        .pipe(
+            map((r: ApiResponse<SelfRegistration[]>) => r.payload)
+        );
   }
 
   findActiveUsers(userName: string): Observable<User[]> {
-    return this.httpClient.get<User[]>(
-        URL_GET_SEARCH_USERS_BY_USERNAME_AND_STATUS()
+    return this.httpClient
+        .get<ApiResponse<User[]>>(
+          URL_GET_SEARCH_USERS_BY_USERNAME_AND_STATUS()
             .replace(':status', 'ENABLED')
             .replace(':username', userName)
-    );
+        ).pipe(
+            map((r: ApiResponse<User[]>) => r.payload)
+        );
   }
 
   findInactiveUsers(userName: string): Observable<User[]> {
-    return this.httpClient.get<User[]>(
-        URL_GET_SEARCH_USERS_BY_USERNAME_AND_STATUS()
+    return this.httpClient
+        .get<ApiResponse<User[]>>(
+          URL_GET_SEARCH_USERS_BY_USERNAME_AND_STATUS()
             .replace(':status', 'DISABLED')
             .replace(':username', userName)
-    );
+        ).pipe(
+            map((r: ApiResponse<User[]>) => r.payload)
+        );
   }
 
   // const p = '/user/:userId/status/:status';
@@ -124,11 +157,18 @@ export class UserManagementService {
   }
 
   getAllActiveUsers(): Observable<User[]> {
-    return this.httpClient.get<User[]>(URL_GET_USERS_BY_STATUS().replace(':status', 'ENABLED'));
+    return this.httpClient
+        .get<ApiResponse<User[]>>(
+            URL_GET_USERS_BY_STATUS().replace(':status', 'ENABLED'))
+        .pipe(
+            map((r: ApiResponse<User[]>) => r.payload)
+        );
   }
 
   getAllInactiveUsers(): Observable<User[]> {
-    return this.httpClient.get<User[]>(URL_GET_USERS_BY_STATUS().replace(':status', 'DISABLED'));
+    return this.httpClient
+        .get<ApiResponse<User[]>>(URL_GET_USERS_BY_STATUS().replace(':status', 'DISABLED'))
+        .pipe(map((r: ApiResponse<User[]>) => r.payload));
   }
 
   // ========= self registration
@@ -139,12 +179,17 @@ export class UserManagementService {
   }
 
   getAllPendingUsers(): Observable<SelfRegistration[]> {
-      return this.httpClient.get<SelfRegistration[]>(URL_GET_SELF_REGISTRATION());
+      return this.httpClient
+          .get<ApiResponse<SelfRegistration[]>>(URL_GET_SELF_REGISTRATION())
+          .pipe(
+              map((r: ApiResponse<SelfRegistration[]>) => r.payload)
+          );
   }
 
-  approvePendingUser(selfRegistration: SelfRegistration): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(
-        URL_POST_APPROVE_SELF_REGISTRATION().replace(':selfRegistrationId', String(selfRegistration.id)), {});
+  approvePendingUser(selfRegistration: SelfRegistration): Observable<RegistrationResponse> {
+    return this.httpClient.post<RegistrationResponse>(
+        URL_POST_APPROVE_SELF_REGISTRATION()
+            .replace(':selfRegistrationId', String(selfRegistration.id)), {});
   }
 }
 

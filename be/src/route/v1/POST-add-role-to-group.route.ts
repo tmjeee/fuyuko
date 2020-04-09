@@ -14,6 +14,8 @@ import {ApiResponse} from "../../model/api-response.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
 
+// CHECKED
+
 const httpAction: any[] = [
     [
         check('groupId').exists().isNumeric(),

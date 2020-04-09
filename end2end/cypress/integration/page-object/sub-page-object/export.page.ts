@@ -59,11 +59,13 @@ export class ExportPageStep1 {
 
     verifyCanClickNext(b: boolean): ExportPageStep1 {
         cy.get(`[test-button-step1-next]`).should(b ? 'be.enabled' : 'not.be.enabled');
+        cy.wait(100);
         return this;
     }
 
     clickNext(): ExportPageStep2 {
         cy.get(`[test-button-step1-next]`).click({force: true});
+        cy.wait(100);
         return new ExportPageStep2();
     }
 }
@@ -85,11 +87,13 @@ export class ExportPageStep2 {
 
     clickBack(): ExportPageStep1 {
         cy.get(`[test-button-step2-back]`).click({force: true});
+        cy.wait(100);
         return new ExportPageStep1();
     }
 
     clickNext(): ExportPageStep3 | ExportPageStep4 {
         cy.get(`[test-button-step2-next]`).click({force: true});
+        cy.wait(100);
         if (this.exportType === 'ATTRIBUTE') {
             return new ExportPageStep4(this.exportType);
         }
@@ -322,11 +326,13 @@ export class ExportPageStep3 {
 
     clickNext(): ExportPageStep4 {
         cy.get(`[test-button-step3-next]`).click({force:true});
+        cy.wait(100);
         return new ExportPageStep4();
     }
 
     clickBack(): ExportPageStep2 {
         cy.get(`[test-button-step3-back]`).click({force: true});
+        cy.wait(100)
         return new ExportPageStep2();
     }
 
@@ -360,11 +366,13 @@ export class ExportPageStep4 {
 
     clickNext(): ExportPageStep5 {
         cy.get(`[test-button-step4-next]`).click({force: true});
+        cy.wait(100);
         return new ExportPageStep5(this.exportType);
     }
 
     clickBack(): ExportPageStep3 | ExportPageStep2 {
         cy.get(`[test-button-step4-back]`).click({force: true});
+        cy.wait(100);
         if (this.exportType === 'ATTRIBUTE') {
             return new ExportPageStep2(this.exportType);
         }

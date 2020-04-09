@@ -41,7 +41,7 @@ describe(`view validation spec`, () => {
 
     //////////////////
 
-    it.only (`should run validation and show details and delete validation`, () => {
+    it(`should run validation and show details and delete validation`, () => {
 
         const validationName = `test-validation-${Math.random()}`;
         const validationDescription = `test-validation-description-${Math.random()}`;

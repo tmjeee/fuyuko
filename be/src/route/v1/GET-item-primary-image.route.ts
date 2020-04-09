@@ -1,5 +1,4 @@
 import {NextFunction, Router, Request, Response} from "express";
-require('express-async-errors');
 import {Registry} from "../../registry";
 import {check} from 'express-validator';
 import {validateMiddlewareFn} from "./common-middleware";
@@ -7,6 +6,7 @@ import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 
+// CHECKED
 const httpAction: any[] = [
     [
         check(`itemId`).exists().isNumeric()

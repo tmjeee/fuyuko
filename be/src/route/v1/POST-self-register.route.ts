@@ -23,7 +23,15 @@ const selfRegister = async (username: string, email: string, firstName: string, 
             [username, email, 'DELETED'])
 
         if (!!q1[0].COUNT || !!q2[0].COUNT) {
-            return { registrationId: null, email, username, status: 'ERROR', message: `Username ${username} or ${email} is already taken`} as RegistrationResponse;
+            return {
+                status: 'ERROR',
+                message: `Username ${username} or ${email} is already taken`,
+                payload: {
+                    registrationId: null,
+                    email,
+                    username,
+                }
+            } as RegistrationResponse;
         }
 
         const r: QueryResponse = await conn.query(
@@ -34,9 +42,25 @@ const selfRegister = async (username: string, email: string, firstName: string, 
             [username, email, firstName, lastName, hashedPassword(password), new Date(), false]
         );
         if (r.affectedRows > 0) {
-            return { registrationId: r.insertId, email, username, status: 'SUCCESS', message: `User ${username} (${email}) registered`} as RegistrationResponse;
+            return {
+                status: 'SUCCESS',
+                message: `User ${username} (${email}) registered`,
+                payload: {
+                    registrationId: r.insertId,
+                    email,
+                    username,
+                }
+            } as RegistrationResponse;
         }
-        return { registrationId: null, email, username, status: 'ERROR', message: `Unable to insert into DB ( Username ${username} or ${email} )`} as RegistrationResponse;
+        return {
+            status: 'ERROR',
+            message: `Unable to insert into DB ( Username ${username} or ${email} )`,
+            payload: {
+                registrationId: null,
+                email,
+                username,
+            }
+        } as RegistrationResponse;
     });
     return reg;
 };

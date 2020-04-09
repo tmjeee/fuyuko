@@ -15,7 +15,10 @@ import {preview, PreviewResult} from "../../service/export-csv/export-price.serv
 import {ROLE_EDIT} from "../../model/role.model";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {getPricingStructureById} from "../../service/pricing-struture.service";
+import {ApiResponse} from "../../model/api-response.model";
 const detectCsv = require('detect-csv');
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -37,12 +40,18 @@ const httpAction: any[] = [
         const p: PreviewResult = await preview(viewId, pricingStructureId, filter);
         const ps: PricingStructure = await getPricingStructureById(pricingStructureId);
 
-        res.status(200).json({
+        const priceDataExport: PriceDataExport = ({
             type: "PRICE",
             pricingStructure: ps,
             attributes: (attributes && attributes.length) ? attributes : [...p.m.values()],
             pricedItems: p.i,
-        } as PriceDataExport);
+        });
+
+        res.status(200).json({
+           status: 'SUCCESS',
+           message: `Price data export preview ready`,
+           payload: priceDataExport
+        } as ApiResponse<PriceDataExport>);
     }
 ];
 

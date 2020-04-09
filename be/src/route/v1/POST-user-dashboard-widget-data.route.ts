@@ -12,6 +12,10 @@ import {SerializedDashboardWidgetInstanceDataFormat} from "../../model/dashboard
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import { Connection } from "mariadb";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
@@ -37,7 +41,10 @@ const httpAction: any[] = [
             await conn.query(`INSERT INTO TBL_USER_DASHBOARD_WIDGET (USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA) VALUES(?,?,?,?)`,
                 [dashboardId, d.instanceId, d.typeId, serializedData]);
         });
-        res.status(200).json(true);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Dashboard widget data updated`
+        } as ApiResponse);
     }
 ];
 

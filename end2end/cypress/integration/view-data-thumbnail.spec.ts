@@ -444,7 +444,7 @@ describe('view-data-thumbnail spec', () => {
 
 
     //////////// set 2
-    it.only(`[string attribute] should allow editing of attributes through edit icon`, () => {
+    it(`[string attribute] should allow editing of attributes through edit icon`, () => {
 
         const itemName = `Test-Item-${Math.random()}`;
 

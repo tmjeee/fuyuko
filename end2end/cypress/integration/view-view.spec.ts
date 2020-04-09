@@ -61,7 +61,7 @@ describe(`view view spec`, () => {
         ;
     });
 
-    it.only(`should reload`, () => {
+    it(`should reload`, () => {
         const viewName = `New-View-${Math.random()}`;
         const viewDescription = `New-View-Description-${Math.random()}`;
 

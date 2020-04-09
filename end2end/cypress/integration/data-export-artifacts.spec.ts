@@ -48,7 +48,7 @@ describe(`data export artifacts spec`, () => {
     //////////////////
 
 
-    it.only (`should be able to delete artifact`, () => {
+    it(`should be able to delete artifact`, () => {
 
         const viewName = `Test View 1`;
 

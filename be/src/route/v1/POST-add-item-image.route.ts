@@ -11,6 +11,9 @@ import fileType from "file-type";
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -35,7 +38,10 @@ const httpAction: any[] = [
         });
 
         if (q.affectedRows > 0) {
-            res.status(200).json(true);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Item image uploaded`
+            } as ApiResponse);
         } else {
             res.status(400).json(
                 makeApiErrorObj(

@@ -15,6 +15,9 @@ import {getUserById, hashedPassword} from "../../service";
 import {User} from "../../model/user.model";
 import {ROLE_EDIT} from "../../model/role.model";
 import {QueryA} from "../../db/db";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -66,7 +69,11 @@ const httpAction: any[] = [
         });
 
 
-        res.status(200).json(user);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `User saved`,
+            payload: user
+        } as ApiResponse<User>);
     }
 ];
 

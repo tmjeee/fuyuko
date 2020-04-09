@@ -13,14 +13,16 @@ import {Connection} from "mariadb";
 import {SendMailOptions} from "nodemailer";
 import config from "../../config";
 import uuid = require("uuid");
-import {CreateInvitationResponse} from "../../model/invitation.model";
 import {Registry} from "../../registry";
 import {ROLE_ADMIN} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 /**
  * Send out invitation to register / activate account (through email)
  */
-export const createInvitation = async (email: string, groupIds: number[] = []): Promise<CreateInvitationResponse> => {
+export const createInvitation = async (email: string, groupIds: number[] = []): Promise<ApiResponse> => {
 
     return await doInDbConnection(async (conn: Connection) => {
 
@@ -29,7 +31,7 @@ export const createInvitation = async (email: string, groupIds: number[] = []): 
             return {
                status: 'ERROR',
                message: `Email ${email} has already been registered`
-            } as CreateInvitationResponse;
+            } as ApiResponse;
         }
 
 
@@ -64,7 +66,7 @@ export const createInvitation = async (email: string, groupIds: number[] = []): 
         return {
             status: 'SUCCESS',
             message: 'Invitation Created'
-        } as CreateInvitationResponse;
+        } as ApiResponse;
 
     });
 };
@@ -82,7 +84,7 @@ const httpAction = [
         const email: string = req.body.email;
         const groupIds: number[] = req.body.groupIds;
 
-        const createInvitationResponse: CreateInvitationResponse = await createInvitation(email, groupIds);
+        const createInvitationResponse: ApiResponse = await createInvitation(email, groupIds);
 
         res.status(createInvitationResponse.status == 'SUCCESS' ? 200 : 400).json(createInvitationResponse);
     }

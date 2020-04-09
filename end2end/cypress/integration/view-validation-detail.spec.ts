@@ -141,11 +141,11 @@ describe(`view validation details spec`, () => {
         const itemName = `Item-3`;
 
         const string_attributeName = `string attribute`;
-        const string_attributeValue = `string-value-${Math.random()}`;
+        const string_attributeValue = `some string Item-3 ${Math.random()}`;
         const string_v = string_attributeValue;
 
         const text_attributeName = `text attribute`;
-        const text_attributeValue = `text value-${Math.random()}`;
+        const text_attributeValue = `some text Item-3 ${Math.random()}`;
         const text_v = `${text_attributeValue}`;
 
         const number_attributeName = `number attribute`;

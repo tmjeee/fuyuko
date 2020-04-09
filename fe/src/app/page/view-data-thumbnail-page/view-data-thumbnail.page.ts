@@ -88,9 +88,13 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
           this.itemService.saveItems(this.currentView.id, $event.modifiedItems),
           this.itemService.deleteItems(this.currentView.id, $event.deletedItems)
         ]).subscribe((r: [ApiResponse, ApiResponse]) => {
+          if ($event.modifiedItems.length) {
             toNotifications(this.notificationService, r[0]);
+          }
+          if ($event.deletedItems.length) {
             toNotifications(this.notificationService, r[1]);
-            this.reload();
+          }
+          this.reload();
         });
         break;
       case 'reload':
@@ -109,27 +113,27 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
     switch($event.type) {
       case "delete": {
         this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
-            tap((r) => {
+            tap((r: ApiResponse) => {
+              toNotifications(this.notificationService, r);
               this.reload();
-              this.notificationService.success(`Success`, `Item image deleted`);
             })
         ).subscribe();
         break;
       }
       case "markAsPrimary": {
         this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
-           tap((r) => {
+           tap((r: ApiResponse) => {
+             toNotifications(this.notificationService, r);
              this.reload();
-             this.notificationService.success(`Success`, `Item image marked as primary`);
            })
         ).subscribe()
         break;
       }
       case "upload": {
           this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
-              tap((r) => {
+              tap((r: ApiResponse) => {
+                toNotifications(this.notificationService, r);
                 this.reload();
-                this.notificationService.success(`Success`, `Item image uploaded`);
               })
           ).subscribe();
         break;

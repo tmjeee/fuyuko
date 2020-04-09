@@ -11,7 +11,9 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
     ],
@@ -46,7 +48,11 @@ const httpAction: any[] = [
                 return acc;
             }, []);
 
-            res.status(200).json(pricingStructures);
+            res.status(200).json( {
+                status: 'SUCCESS',
+                message: `Pricing structures received successfully`,
+                payload: pricingStructures
+            } as ApiResponse<PricingStructure[]>);
         });
     }
 ];

@@ -106,14 +106,16 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
 
     }
 
-    verifyAttributeSideMenuAttributeValue(attributeName: string, value: string): PartnerTablePage {
-        cy.get(`[test-partner-data-table]`) //
-            .find(`[test-side-nav]`)
-            .find(`[test-table-partner-attributes]`)
-            .find(`[test-cell-attribute='${attributeName}']`)
-            .then((_) => {
-                cy.wrap(_).should('contain.text', value);
-            })
+    verifyAttributeSideMenuAttributeValue(attributeName: string, values: string[]): PartnerTablePage {
+        cy.wrap(values).each((e, i, a) => {
+            cy.get(`[test-partner-data-table]`) //
+                .find(`[test-side-nav]`)
+                .find(`[test-table-partner-attributes]`)
+                .find(`[test-cell-attribute='${attributeName}']`)
+                .then((_) => {
+                    cy.wrap(_).should('contain.text', values[i]);
+                })
+        })
         return this;
     }
 
@@ -133,11 +135,13 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
         return this;
     }
 
-    verifyItemAttributeValue(itemName: string, attributeName: string, value: string): PartnerTablePage {
-        cy.get(`[test-partner-data-table]`) //
-            .find(`[test-row-item='${itemName}']`)
-            .find(`[test-table-cell='${attributeName}']`)
-            .should('contain.text', value);
+    verifyItemAttributeValue(itemName: string, attributeName: string, values: string[]): PartnerTablePage {
+        cy.wrap(values).each((e, i, a) => {
+            cy.get(`[test-partner-data-table]`) //
+                .find(`[test-row-item='${itemName}']`)
+                .find(`[test-table-cell='${attributeName}']`)
+                .should('contain.text', values[i]);
+        });
         return this;
     }
 }

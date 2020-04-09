@@ -6,7 +6,9 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {DataExportArtifact} from "../../model/data-export.model";
 import {View} from "../../model/view.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
     ],
@@ -65,7 +67,11 @@ const httpAction: any[] = [
             }, []);
         });
 
-        res.status(200).json(dataExportArtifact);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Data export artifact retrieved successfully`,
+            payload: dataExportArtifact
+        } as ApiResponse<DataExportArtifact>);
     }
 ];
 

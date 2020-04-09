@@ -12,6 +12,10 @@ import {Attribute} from "../../model/attribute.model";
 import {Job} from "../../model/job.model";
 import {runJob} from "../../service/export-csv/job-do-attribute-data-export.service";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
    [
@@ -26,7 +30,11 @@ const httpAction: any[] = [
         const attributes: Attribute[] = req.body.attributes;
 
         const job: Job = await runJob(viewId, attributes);
-        res.status(200).json(job);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Attribute data export job scheduled`,
+            payload: job
+        } as ApiResponse<Job>);
     }
 ];
 

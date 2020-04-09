@@ -16,6 +16,7 @@ import {Router} from '@angular/router';
 import {CustomRuleService} from '../../service/custom-rule-service/custom-rule.service';
 import {CustomRule, CustomRuleForView} from '../../model/custom-rule.model';
 import {CustomRuleTableComponentEvent} from '../../component/rules-component/custom-rule-table.component';
+import {not} from "rxjs/internal-compatibility";
 
 
 @Component({
@@ -144,30 +145,34 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
         switch ($event.type) {
             case 'add': {
                 const rules: CustomRule[] = $event.customRules;
+                let apiResponse: ApiResponse = null;
                 this.customRuleService.addCustomRuleToView(this.currentView.id, rules)
                     .pipe(
-                        map((_) => {
+                        map((_: ApiResponse) => {
+                            apiResponse = _;
                             return this.customRuleService.getCustomRulesByView(this.currentView.id);
                         }),
                         combineAll(),
                         tap((r: [CustomRuleForView[]]) => {
                             this.customRulesForView = r[0];
-                            this.notificationService.success('Added', `Custom rule(s) added`);
+                            toNotifications(this.notificationService, apiResponse);
                         })
                     ).subscribe();
                 break;
             }
             case 'delete': {
                 const rules: CustomRuleForView[] = $event.customRulesForView;
+                let apiResponse: ApiResponse;
                 this.customRuleService.removeCustomRuleFromView(this.currentView.id, rules)
                     .pipe(
-                        map((_) => {
+                        map((_: ApiResponse) => {
+                            apiResponse = _;
                             return this.customRuleService.getCustomRulesByView(this.currentView.id);
                         }),
                         combineAll(),
                         tap((r: [CustomRuleForView[]]) => {
                             this.customRulesForView = r[0];
-                            this.notificationService.success('Deleted', `Custom rule(s) deleted`);
+                            toNotifications(this.notificationService, apiResponse);
                         })
                     ).subscribe();
                 break;
@@ -176,7 +181,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                 const rules: CustomRuleForView[] = $event.customRulesForView;
                 this.customRuleService.enableCustomRuleInView(this.currentView.id, rules)
                     .pipe(
-                        map((_) => {
+                        map((_: ApiResponse[]) => {
                             return this.customRuleService.getCustomRulesByView(this.currentView.id);
                         }),
                         combineAll(),

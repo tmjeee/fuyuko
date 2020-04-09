@@ -4,6 +4,8 @@ import {tap} from "rxjs/operators";
 import {ExportArtifactsComponentEvent} from "../../component/export-data-component/export-artifacts.component";
 import {NotificationsService} from "angular2-notifications";
 import {ExportArtifactService} from "../../service/export-artifact-service/export-artifact.service";
+import {toNotifications} from "../../service/common.service";
+import {ApiResponse} from "../../model/api-response.model";
 
 
 @Component({
@@ -34,9 +36,9 @@ export class ExportArtifactsPageComponent implements OnInit {
             case 'DELETE':
                 const dataExportArtifact: DataExportArtifact = $event.dataExportArtifact;
                 this.exportArtifactService.deleteExportArtifact(dataExportArtifact.id).pipe(
-                    tap((_) => {
+                    tap((_: ApiResponse) => {
                         this.reload();
-                        this.notificationsService.success(`Deleted`, `Export artifact ${dataExportArtifact.id} deleted`);
+                        toNotifications(this.notificationsService, _);
                     })
                 ).subscribe();
                 break;

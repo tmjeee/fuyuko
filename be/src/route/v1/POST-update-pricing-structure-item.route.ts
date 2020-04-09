@@ -14,6 +14,9 @@ import {setPrices2} from "../../service/pricing-structure-item.service";
 import {ROLE_EDIT} from "../../model/role.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 
+
+// CHECKED
+
 const httpAction: any[] = [
     [
         param('pricingStructureId').exists().isNumeric(),

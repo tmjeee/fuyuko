@@ -7,7 +7,9 @@ import {Connection} from "mariadb";
 import {User} from "../../model/user.model";
 import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 export const httpAction: any[] = [
     [
         param('status').exists(),
@@ -109,7 +111,11 @@ export const httpAction: any[] = [
                 );
             });
 
-            res.status(200).json(u);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Users retrieved`,
+                payload: u
+            } as ApiResponse<User[]>);
 
         });
     }

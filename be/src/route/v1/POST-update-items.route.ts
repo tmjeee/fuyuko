@@ -15,13 +15,15 @@ import {ApiResponse} from "../../model/api-response.model";
 import {addItem, addOrUpdateItem, updateItem} from "../../service/item.service";
 import {ROLE_EDIT} from "../../model/role.model";
 
+// CHECKED
+
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
-        //body('items').isArray(),
-        //body('items.*.name').exists(),
-        //body('items.*.description').exists(),
-        //body('items.*.parentId').exists()
+        body('items').isArray(),
+        body('items.*.name').exists(),
+        body('items.*.description').exists(),
+        // body('items.*.parentId').exists()
         // todo: need to check [0].attributeId etc.
     ],
     validateMiddlewareFn,

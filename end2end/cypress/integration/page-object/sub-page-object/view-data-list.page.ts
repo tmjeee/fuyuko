@@ -150,7 +150,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     }
 
     clickOnItemName(itemName: string): ViewDataListItemPopupPage {
-        cy.get(`[test-panel-item='itemName']`)
+        cy.get(`[test-panel-item='${itemName}']`)
             .find(`[test-item-editor='name']`)
             .find(`[test-item-editor-value='name']`)
             .click({force: true});
@@ -158,7 +158,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     }
 
     clickOnItemDescription(itemName: string): ViewDataListItemPopupPage {
-        cy.get(`[test-panel-item='itemName']`)
+        cy.get(`[test-panel-item='${itemName}']`)
             .find(`[test-item-editor='description']`)
             .find(`[test-item-editor-value='description']`)
             .click({force: true});
@@ -166,7 +166,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     }
 
     clickOnAttribute(itemName: string, attributeName: string): ViewDataListAttributePopupPage {
-        cy.get(`[test-panel-item='itemName']`)
+        cy.get(`[test-panel-item='${itemName}']`)
             .find(`[test-data-editor='${attributeName}']`)
             .find(`[test-data-editor-value='${attributeName}']`)
             .click({force: true});

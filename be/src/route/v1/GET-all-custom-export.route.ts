@@ -4,7 +4,10 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_VIEW} from "../../model/role.model";
 import {getAllCustomExports} from "../../service/custom-export.service";
 import {CustomDataExport} from "../../model/custom-export.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+
+// CHECKED
 const httpAction: any[] = [
     [
     ],
@@ -15,8 +18,11 @@ const httpAction: any[] = [
 
         const r: CustomDataExport[] = await getAllCustomExports();
 
-        res.status(200).json(r);
-
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: 'Custom Data Export retrieval success',
+            payload: r
+        } as ApiResponse<CustomDataExport[]>);
     }
 ]
 

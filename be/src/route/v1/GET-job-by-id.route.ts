@@ -11,7 +11,9 @@ import {param} from 'express-validator';
 import {Job} from "../../model/job.model";
 import {getJobyById} from "../../service/job.service";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
         param('jobId').exists().isNumeric()
@@ -25,7 +27,11 @@ const httpAction: any[] = [
 
         const job: Job = await getJobyById(jobId);
 
-        res.status(200).json(job);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Job successfully retrieved`,
+            payload: job
+        } as ApiResponse<Job>);
     }
 ];
 

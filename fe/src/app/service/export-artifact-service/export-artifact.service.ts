@@ -3,6 +3,8 @@ import config from "../../utils/config.util";
 import {Observable} from "rxjs";
 import {DataExportArtifact} from "../../model/data-export.model";
 import {HttpClient} from "@angular/common/http";
+import {ApiResponse} from "../../model/api-response.model";
+import {map} from "rxjs/operators";
 
 
 const URL_EXPORT_ARTIRACTS = () => `${config().api_host_url}/data-export-artifacts`;
@@ -16,10 +18,15 @@ export class ExportArtifactService {
 
 
     allDataExportArtifacts(): Observable<DataExportArtifact[]> {
-        return this.httpClient.get<DataExportArtifact[]>(URL_EXPORT_ARTIRACTS());
+        return this.httpClient
+            .get<ApiResponse<DataExportArtifact[]>>(URL_EXPORT_ARTIRACTS())
+            .pipe(
+                map((r: ApiResponse<DataExportArtifact[]>) => r.payload)
+            );
     }
 
-    deleteExportArtifact(dataExportArtifactId: number): Observable<boolean> {
-        return this.httpClient.delete<boolean>(URL_DELETE_EXPORT_ARTIFACT().replace(':dataExportArtifactId', String(dataExportArtifactId)));
+    deleteExportArtifact(dataExportArtifactId: number): Observable<ApiResponse> {
+        return this.httpClient.delete<ApiResponse>(
+            URL_DELETE_EXPORT_ARTIFACT().replace(':dataExportArtifactId', String(dataExportArtifactId)));
     }
 }

@@ -114,24 +114,24 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
     switch ($event.type) {
       case "upload":
           this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
-              tap((r) => {
-                this.notificationService.success(`Success`, `Item image uploaded successfully`);
+              tap((r: ApiResponse) => {
+                toNotifications(this.notificationService, r);
                 this.reload();
               })
           ).subscribe();
         break;
       case "markAsPrimary":
         this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
-            tap((r) => {
-              this.notificationService.success(`Success`, `Item image marked successfully as primary`);
+            tap((r: ApiResponse) => {
+              toNotifications(this.notificationService, r);
               this.reload();
             })
         ).subscribe();
         break;
       case "delete":
         this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
-            tap((r) => {
-              this.notificationService.success(`Success`, `Item image deleted successfully`);
+            tap((r: ApiResponse) => {
+              toNotifications(this.notificationService, r);
               this.reload();
             })
         ).subscribe();

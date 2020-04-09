@@ -13,6 +13,9 @@ import {AttributeDataExport} from "../../model/data-export.model";
 import {preview} from "../../service/export-csv/export-attribute.service";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -29,9 +32,11 @@ const httpAction: any[] = [
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
         const attributes: Attribute[] = await preview(viewId, atts);
         res.status(200).json({
-            type: 'ATTRIBUTE',
-            attributes
-        } as AttributeDataExport);
+            payload: {
+                type: 'ATTRIBUTE',
+                attributes
+            } as AttributeDataExport
+        } as ApiResponse<AttributeDataExport>);
     }
 ];
 

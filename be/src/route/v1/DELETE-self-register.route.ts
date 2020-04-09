@@ -12,6 +12,7 @@ import {Connection} from "mariadb";
 import {ROLE_ADMIN} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
        check('selfRegistrationId').exists().isNumeric()

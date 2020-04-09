@@ -4,7 +4,9 @@ import {ClientError, validateJwtMiddlewareFn, validateMiddlewareFn} from "./comm
 import { param } from "express-validator";
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECK:
 const httpAction: any[] = [
     [
         param('itemId').exists().isNumeric(),
@@ -23,7 +25,10 @@ const httpAction: any[] = [
         });
 
         if (q.affectedRows > 0) {
-            res.status(200).json(true);
+            res.status(200).json({
+               status: 'SUCCESS',
+               message: `Item image deleted`
+            } as ApiResponse);
         } else {
             throw new ClientError(`Failed to delete itemId=${itemId} with itemImageId=${itemImageId}`);
         }

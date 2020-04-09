@@ -6,6 +6,9 @@ import {Role, ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     param('groupName').exists(),
@@ -60,7 +63,11 @@ const httpAction: any[] = [
                 return groups;
             }, []);
 
-            res.status(200).json(groups);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Groups retrieved`,
+                payload: groups
+            } as ApiResponse<Group[]>);
         });
     }
 ];

@@ -8,6 +8,7 @@ import {makeApiError, makeApiErrorObj} from "../../util";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_ADMIN} from "../../model/role.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
         check('groupId').exists().isNumeric(),

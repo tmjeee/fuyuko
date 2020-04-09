@@ -12,6 +12,10 @@ import {BulkEditPackage} from "../../model/bulk-edit.model";
 import {runJob} from "../../service/job-do-bulk-edit.service";
 import {Job} from "../../model/job.model";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction = [
     [
@@ -28,7 +32,11 @@ const httpAction = [
 
         const job: Job = await runJob(viewId, bulkEditPackage);
 
-        res.status(200).json(job);
+        res.status(200).json( {
+            status: 'SUCCESS',
+            message: `Bulk edit job scheduled`,
+            payload: job
+        } as ApiResponse<Job>);
     }
 ];
 

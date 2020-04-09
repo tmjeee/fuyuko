@@ -41,7 +41,7 @@ describe(`data import spec`, () => {
 
     //////////////////
 
-    it.only(`should be able to import attribute, items and prices`, () => {
+    it(`should be able to import attribute, items and prices`, () => {
 
         // const viewName =  `Test View 1`; // createNewView();
         const viewName =  createNewView();

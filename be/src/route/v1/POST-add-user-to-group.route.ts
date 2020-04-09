@@ -12,7 +12,9 @@ import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
+import {ROLE_ADMIN} from "../../model/role.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [

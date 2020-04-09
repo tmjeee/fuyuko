@@ -15,6 +15,8 @@ import {saveAttribute2s} from "../../service/attribute.service";
 import {ROLE_EDIT} from "../../model/role.model";
 import {newConsoleLogger} from "../../service/job-log.service";
 
+// CHECKED
+
 const httpAction: any[] = [
     [
        param('viewId').exists().isNumeric(),

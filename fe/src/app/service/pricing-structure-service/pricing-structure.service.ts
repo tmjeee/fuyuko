@@ -8,6 +8,7 @@ import {
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '../../model/api-response.model';
+import {map} from "rxjs/operators";
 
 const URL_ALL_PRICING_STRUCTURES = () => `${config().api_host_url}/pricingStructures`;
 const URL_ALL_ITEMS_WITH_PRICE = () => `${config().api_host_url}/pricingStructuresWithItems/:pricingStructureId`;
@@ -15,11 +16,7 @@ const URL_UPDATE_PRICING_STRUCTURE_STATUS = () => `${config().api_host_url}/pric
 const URL_UPDATE_PRICING_STRUCTURE = () => `${config().api_host_url}/pricingStructures`;
 const URL_UPDATE_PRICING_STRUCTURE_ITEM = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/item`;
 
-// const URL_ALL_ADDABLE_PRICING_STRUCTURE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/addable-items`;
 const URL_PRICING_STRUCTURE_BY_ID = () => `${config().api_host_url}/pricingStructure/:pricingStructureId`;
-// const URL_ADD_PRICING_STRUCURE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/add-items`;
-
-const URL_ALL_PRICING_STRUCTURE_BY_VIEW = () => `${config().api_host_url}/pricingStructures/view/:viewId`;
 
 
 @Injectable()
@@ -29,12 +26,19 @@ export class PricingStructureService {
 
 
     allPricingStructures(): Observable<PricingStructure[]> {
-        return this.httpClient.get<PricingStructure[]>(URL_ALL_PRICING_STRUCTURES());
+        return this.httpClient
+            .get<ApiResponse<PricingStructure[]>>(URL_ALL_PRICING_STRUCTURES())
+            .pipe(
+                map((r: ApiResponse<PricingStructure[]>) => r.payload)
+            );
     }
 
     pricingStructureWithItems(pricingStructureId: number): Observable<PricingStructureWithItems> {
-        return this.httpClient.get<PricingStructureWithItems>(
-            URL_ALL_ITEMS_WITH_PRICE().replace(':pricingStructureId', `${pricingStructureId}`));
+        return this.httpClient
+            .get<ApiResponse<PricingStructureWithItems>>(URL_ALL_ITEMS_WITH_PRICE().replace(':pricingStructureId', `${pricingStructureId}`))
+            .pipe(
+                map((r: ApiResponse<PricingStructureWithItems>) => r.payload)
+            );
     }
     ////////
 
@@ -69,28 +73,17 @@ export class PricingStructureService {
 
     ///////////////////
 
-    /*
-    allAddablePricingStructureItems(pricingStructureId: number): Observable<PricingStructureItem[]> {
-        return this.httpClient.get<PricingStructureItem[]>(
-            URL_ALL_ADDABLE_PRICING_STRUCTURE_ITEMS().replace(':pricingStructureId', String(pricingStructureId)));
-    }
-     */
-
     getPricingStructureById(pricingStructureId: number): Observable<PricingStructure> {
-        return this.httpClient.get<PricingStructure>(
-            URL_PRICING_STRUCTURE_BY_ID().replace(':pricingStructureId', String(pricingStructureId)));
+        return this.httpClient.get<ApiResponse<PricingStructure>>(
+            URL_PRICING_STRUCTURE_BY_ID().replace(':pricingStructureId', String(pricingStructureId)))
+            .pipe(
+                map((r: ApiResponse<PricingStructure>) => r.payload)
+            );
     }
-
-    /*
-    addPricingStructureItems(pricingStructureId: number, pricingStructureItems: PricingStructureItem[]) {
-        return this.httpClient.post(
-            URL_ADD_PRICING_STRUCURE_ITEMS().replace(':pricingStructureId', String(pricingStructureId)),
-            pricingStructureItems);
-    }
-     */
 
     getAllPricingStructuresByView(viewId: number): Observable<PricingStructure[]> {
-        return this.httpClient.get<PricingStructure[]>(
-            URL_ALL_PRICING_STRUCTURES().replace(':viewId', String(viewId)));
+        return this.httpClient.get<ApiResponse<PricingStructure[]>>(
+            URL_ALL_PRICING_STRUCTURES().replace(':viewId', String(viewId)))
+            .pipe(map((r: ApiResponse<PricingStructure[]>) => r.payload));
     }
 }

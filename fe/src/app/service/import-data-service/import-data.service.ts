@@ -9,6 +9,8 @@ import {Observable, of} from 'rxjs';
 import {Job} from '../../model/job.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
+import {ApiResponse} from "../../model/api-response.model";
+import {map} from "rxjs/operators";
 
 const URL_PREVIEW_ATTRIBUTES = () => `${config().api_host_url}/view/:viewId/import/attributes/preview`;
 const URL_PREVIEW_PRICES = () => `${config().api_host_url}/view/:viewId/import/prices/preview`;
@@ -32,21 +34,24 @@ export class ImportDataService {
             case 'ATTRIBUTE': {
                 const formData: FormData = new FormData();
                 formData.set('attributeDataCsvFile', file);
-                return this.httpClient.post<AttributeDataImport>(
-                    URL_PREVIEW_ATTRIBUTES().replace(':viewId', String(viewId)), formData);
+                return this.httpClient.post<ApiResponse<AttributeDataImport>>(
+                    URL_PREVIEW_ATTRIBUTES().replace(':viewId', String(viewId)), formData)
+                    .pipe(map((r: ApiResponse<AttributeDataImport>) => r.payload));
             }
             case 'ITEM': {
                 const formData: FormData = new FormData();
                 formData.set('itemDataCsvFile', file);
-                return this.httpClient.post<ItemDataImport>(
-                    URL_PREVIEW_ITEMS().replace(':viewId', String(viewId)), formData);
+                return this.httpClient.post<ApiResponse<ItemDataImport>>(
+                    URL_PREVIEW_ITEMS().replace(':viewId', String(viewId)), formData)
+                    .pipe(map((r: ApiResponse<ItemDataImport>) => r.payload));
 
             }
             case 'PRICE': {
                 const formData: FormData = new FormData();
                 formData.set('priceDataCsvFile', file);
-                return this.httpClient.post<PriceDataImport>(
-                    URL_PREVIEW_PRICES().replace(':viewId', String(viewId)), formData);
+                return this.httpClient.post<ApiResponse<PriceDataImport>>(
+                    URL_PREVIEW_PRICES().replace(':viewId', String(viewId)), formData)
+                    .pipe(map((r:ApiResponse<PriceDataImport>) => r.payload));
             }
         }
     }
@@ -57,25 +62,24 @@ export class ImportDataService {
         switch (uploadType) {
             case 'ATTRIBUTE': {
                 const attributeDataImport: AttributeDataImport = dataImport as AttributeDataImport;
-                return this.httpClient.post<Job>(URL_SCHEDULE_ATTRIBUTES().replace(':viewId', String(viewId)), {
+                return this.httpClient.post<ApiResponse<Job>>(URL_SCHEDULE_ATTRIBUTES().replace(':viewId', String(viewId)), {
                     dataImportId: attributeDataImport.dataImportId,
                     attributes: attributeDataImport.attributes
-                });
+                }).pipe(map((r: ApiResponse<Job>) => r.payload));
             }
             case 'ITEM': {
                 const itemDataImport: ItemDataImport = dataImport as ItemDataImport;
-                return this.httpClient.post<Job>(URL_SCHEDULE_ITEMS().replace(':viewId', String(viewId)), {
+                return this.httpClient.post<ApiResponse<Job>>(URL_SCHEDULE_ITEMS().replace(':viewId', String(viewId)), {
                     dataImportId: itemDataImport.dataImportId,
                     items: itemDataImport.items
-                });
+                }).pipe(map((r: ApiResponse<Job>) => r.payload));
             }
             case 'PRICE': {
                 const priceDataImport: PriceDataImport = dataImport as PriceDataImport;
-                console.log('************* priceDataImport', priceDataImport);
-                return this.httpClient.post<Job>(URL_SCHEDULE_PRICES().replace(':viewId', String(viewId)), {
+                return this.httpClient.post<ApiResponse<Job>>(URL_SCHEDULE_PRICES().replace(':viewId', String(viewId)), {
                     dataImportId: priceDataImport.dataImportId,
                     priceDataItems: priceDataImport.items
-                });
+                }).pipe(map((r: ApiResponse<Job>) => r.payload));
             }
         }
     }

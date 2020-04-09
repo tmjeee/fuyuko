@@ -13,6 +13,8 @@ import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
 
+// CHECKED
+
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),

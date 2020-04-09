@@ -12,6 +12,9 @@ import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {DataMap} from "../../model/dashboard-serialzable.model";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
@@ -42,7 +45,11 @@ const httpAction: any[] = [
         });
 
         const d: DataMap = r ? JSON.parse(r) : '';
-        res.status(200).json(d);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Widget instance data retrieved`,
+            payload: d
+        } as ApiResponse<DataMap>);
     }
 ];
 

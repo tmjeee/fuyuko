@@ -7,6 +7,7 @@ import showdown from 'showdown';
 import config from '../../config';
 import filetype, {FileTypeResult} from 'file-type';
 
+// CHECKED
 const httpAction: any[] = [
     [
         param(`helpPostfix`).exists()

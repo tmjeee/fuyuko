@@ -5,6 +5,7 @@ import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {Registry} from "../../registry";
 
+// CHECKED
 const httpAction: any[] = [
     [
         check('avatarName').exists()

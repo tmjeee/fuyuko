@@ -5,6 +5,9 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_EDIT} from "../../model/role.model";
 import {validate} from "../../custom-import/custom-import-executor";
 import {ExportScriptInputValue, ExportScriptValidateResult} from "../../model/custom-export.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 
 const httpAction: any[] = [
@@ -26,19 +29,13 @@ const httpAction: any[] = [
         const customExportId: number = Number(req.params.customExportId);
         const values: ExportScriptInputValue[] = req.body.values;
 
-        /*
-        console.log('****** values', util.inspect(values, {depth: 5}));
-        const x: ImportScriptInputValue = values.find((i: ImportScriptInputValue) => i.name === 'file input');
-        if (x && x.value && (x.value as FileDataObject).data) {
-            const a: FileDataObject = new FileDataObject(x.value as FileDataObject);
-            const b: Buffer = a.getDataAsBuffer();
-            await (util.promisify(fs.writeFile))(`/home/tmjee/cockpit/xxx.jpeg`, b);
-        }
-        */
-
         const r: ExportScriptValidateResult = await validate(viewId, customExportId, values);
 
-        res.status(200).json(r);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Export script validation result ready`,
+            payload: r
+        } as ApiResponse<ExportScriptValidateResult>);
     }
 ];
 

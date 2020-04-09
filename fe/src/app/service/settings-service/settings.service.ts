@@ -5,6 +5,7 @@ import {Observable, of} from 'rxjs';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {concatMap, map, tap} from 'rxjs/operators';
+import {ApiResponse} from "../../model/api-response.model";
 
 
 const URL_GET_USER_SETTINGS = () => `${config().api_host_url}/user/:userId/settings`;
@@ -23,7 +24,7 @@ export class SettingsService {
                concatMap((url: string) => {
                    return this.httpClient.post(url, s);
                }),
-               concatMap((_) => {
+               concatMap((_: ApiResponse) => {
                    return this.getSettings(user);
                })
             );
@@ -31,8 +32,9 @@ export class SettingsService {
 
     getSettings(u: User): Observable<Settings> {
         return this.httpClient
-            .get<Settings>(URL_GET_USER_SETTINGS().replace(':userId', String(u.id)))
+            .get<ApiResponse<Settings>>(URL_GET_USER_SETTINGS().replace(':userId', String(u.id)))
             .pipe(
+                map((r: ApiResponse<Settings>) => r.payload),
                 tap((settings: Settings) => (this.cachedSettings = settings))
             );
     }

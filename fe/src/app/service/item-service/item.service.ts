@@ -7,6 +7,7 @@ import {toItem, toItemIgnoreParent} from '../../utils/item-to-table-items.util';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '../../model/api-response.model';
+import {map} from "rxjs/operators";
 
 
 const URL_GET_ITEMS = () => `${config().api_host_url}/view/:viewId/items/:itemIds`;
@@ -26,15 +27,22 @@ export class ItemService {
 
 
   getAllItems(viewId: number): Observable<Item[]> {
-      return this.httpClient.get<Item[]>(URL_GET_ALL_ITEMS().replace(':viewId', String(viewId)));
+      return this.httpClient
+          .get<ApiResponse<Item[]>>(URL_GET_ALL_ITEMS().replace(':viewId', String(viewId)))
+          .pipe(
+              map((r: ApiResponse<Item[]>) => r.payload)
+          );
   }
 
   searchForItems(viewId: number, searchType: ItemSearchType = 'basic', search: string = ''): Observable<Item[]> {
-    return this.httpClient.get<Item[]>(
+    return this.httpClient.get<ApiResponse<Item[]>>(
         URL_GET_SEARCH_FOR_ITEMS()
             .replace(':viewId', String(viewId))
             .replace(':searchType', searchType)
-            .replace(':search', search));
+            .replace(':search', search))
+        .pipe(
+            map((r: ApiResponse<Item[]>) => r.payload)
+        );
   }
 
   saveItems(viewId: number, items: Item[]): Observable<ApiResponse> {
@@ -75,7 +83,7 @@ export class ItemService {
 
 
   getItemsById(viewId: number, itemIds: number[]): Observable<Item[]> {
-    return this.httpClient.get<Item[]>(
+    return this.httpClient.get<ApiResponse<Item[]>>(
         URL_GET_ITEMS()
             .replace(':viewId', String(viewId))
             .replace(':itemIds',
@@ -83,27 +91,28 @@ export class ItemService {
                     .filter((i: number) => i) // no nulls, undefined or zeros
                     .filter((i: number, index: number, self: number[]) => self.indexOf(i) === index) // unique ones only
                     .join(',')
-            ));
+            ))
+        .pipe(
+            map((r: ApiResponse<Item[]>) => r.payload)
+        );
   }
 
-  deleteItemImage(itemId: any, itemImageId: number): Observable<boolean> {
-      return this.httpClient.delete<boolean>(URL_DELETE_ITEM_IMAGE()
+  deleteItemImage(itemId: any, itemImageId: number): Observable<ApiResponse> {
+      return this.httpClient.delete<ApiResponse>(URL_DELETE_ITEM_IMAGE()
           .replace(`:itemId`, String(itemId))
           .replace(`:itemImageId`, String(itemImageId)));
   }
 
-  markItemImageAsPrimary(itemId: number, itemImageId: number): Observable<boolean> {
-      return this.httpClient.post<boolean>(URL_MARK_ITEM_IMAGE_AS_PRIMARY()
+  markItemImageAsPrimary(itemId: number, itemImageId: number): Observable<ApiResponse> {
+      return this.httpClient.post<ApiResponse>(URL_MARK_ITEM_IMAGE_AS_PRIMARY()
           .replace(`:itemId`, String(itemId))
           .replace(`:itemImageId`, String(itemImageId)), {});
   }
 
-  uploadItemImage(itemId: number, file: File): Observable<boolean> {
-      console.log('****** item service ', file);
+  uploadItemImage(itemId: number, file: File): Observable<ApiResponse> {
       const formData: FormData = new FormData();
       formData.set(`upload1`, file);
-      return this.httpClient.post<boolean>(URL_UPLOAD_ITEM_IMAGE()
+      return this.httpClient.post<ApiResponse>(URL_UPLOAD_ITEM_IMAGE()
           .replace(`:itemId`, String(itemId)), formData);
-
   }
 }

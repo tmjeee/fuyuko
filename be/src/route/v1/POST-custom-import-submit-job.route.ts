@@ -9,6 +9,9 @@ import {
     ImportScriptPreview
 } from "../../model/custom-import.model";
 import {runCustomImportJob} from "../../custom-import/custom-import-executor";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -27,7 +30,11 @@ const httpAction: any[] = [
        const preview: ImportScriptPreview = req.body.preview;
 
        const r: ImportScriptJobSubmissionResult = await runCustomImportJob(viewId, customImportId, values, preview);
-       res.status(200).json(r);
+       res.status(200).json({
+           status: 'SUCCESS',
+           message: `Import script job submission result ready`,
+           payload: r
+       } as ApiResponse<ImportScriptJobSubmissionResult>);
     }
 ]
 

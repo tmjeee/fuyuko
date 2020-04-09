@@ -12,8 +12,10 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role, ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
 
+// CHECKED
 const httpAction: any[] = [
     [
         check('groupId').exists().isNumeric()
@@ -64,7 +66,11 @@ const httpAction: any[] = [
                 return group;
             }, null);
 
-            res.status(200).json(group);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Group retrieved successfully`,
+                payload: group
+            } as ApiResponse<Group>);
         });
     }
 ];

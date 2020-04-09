@@ -12,6 +12,10 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import { Connection } from "mariadb";
 import {ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
 import {PricingStructure} from "../../model/pricing-structure.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
@@ -54,7 +58,11 @@ const httpAction: any[] = [
             return acc;
         }, []);
 
-        res.status(200).json(pricingStructures);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: 'Pricing structure retrieved',
+            payload: pricingStructures
+        } as ApiResponse<PricingStructure[]>);
     }
 ];
 

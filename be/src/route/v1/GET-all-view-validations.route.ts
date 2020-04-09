@@ -6,7 +6,9 @@ import {ROLE_VIEW} from "../../model/role.model";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Validation} from "../../model/validation.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
        param('viewId').exists().isNumeric()
@@ -38,7 +40,11 @@ const httpAction: any[] = [
             }, []);
         });
 
-        res.status(200).json(v);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Validations retrieved successfully`,
+            payload: v
+        } as ApiResponse<Validation[]>);
     }
 ];
 

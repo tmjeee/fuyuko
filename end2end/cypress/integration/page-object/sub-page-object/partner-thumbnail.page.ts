@@ -89,11 +89,13 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
         return this;
     }
 
-    verifyItemAttributeValue(itemName: string, attributeName: string, value: string): PartnerThumbnailPage {
-        cy.get(`[test-partner-data-thumbnail]`)
-            .find(`[test-item='${itemName}']`)
-            .find(`[test-attribute-value='${attributeName}']`)
-            .should('contain.text', value);
+    verifyItemAttributeValue(itemName: string, attributeName: string, values: string[]): PartnerThumbnailPage {
+        cy.wrap(values).each((e, i , a) => {
+            cy.get(`[test-partner-data-thumbnail]`)
+                .find(`[test-item='${itemName}']`)
+                .find(`[test-attribute-value='${attributeName}']`)
+                .should('contain.text', values[i]);
+        });
         return this;
     }
 
@@ -158,11 +160,13 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
         return this;
     }
 
-    verifySideMenuAttributeValue(attributeName: string, value: string): PartnerThumbnailPage {
-        cy.get(`[test-partner-data-thumbnail]`)
-            .find(`[test-side-nav]`)
-            .find(`[test-cell-attribute='${attributeName}']`)
-            .should('contain.text', value);
+    verifySideMenuAttributeValue(attributeName: string, values: string[]): PartnerThumbnailPage {
+        cy.wrap(values).each((e, i, a) => {
+            cy.get(`[test-partner-data-thumbnail]`)
+                .find(`[test-side-nav]`)
+                .find(`[test-cell-attribute='${attributeName}']`)
+                .should('contain.text', values[i]);
+        });
         return this;
     }
 }

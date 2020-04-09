@@ -13,6 +13,10 @@ import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 import {ItemDataExport} from "../../model/data-export.model";
 import {preview, PreviewResult} from "../../service/export-csv/export-item.service";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -31,11 +35,17 @@ const httpAction: any[] = [
 
         const previewResult: PreviewResult = await preview(viewId, filter);
 
-        res.status(200).json({
+        const r: ItemDataExport = {
             type: 'ITEM',
             attributes: (attributes && attributes.length) ? attributes : [...previewResult.m.values()],
             items: previewResult.i
-        } as ItemDataExport);
+        };
+
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Item data export ready`,
+            payload: r
+        } as ApiResponse<ItemDataExport>)
     }
 ];
 

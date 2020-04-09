@@ -1,6 +1,6 @@
 import {NextFunction, Router, Request, Response} from "express";
-import {check, param, body} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {param, body} from 'express-validator';
+import {validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
@@ -8,6 +8,9 @@ import {hashedPassword} from "../../service";
 import config from '../../config';
 import {Activation} from "../../model/activation.model";
 import {Registry} from "../../registry";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 /**
  * Activate invitation received (eg. through email)
@@ -93,13 +96,17 @@ const httpAction = [
         });
 
         if (r) { // if no errors send before
-            res.status(200).json({
-                email,
-                registrationId,
-                message: `Successfully activated ${username} (${email})`,
+            res.status(200).json( {
                 status: 'SUCCESS',
-                username
-            } as Activation);
+                message: `Successfully activated ${username} (${email})`,
+                payload: {
+                    email,
+                    registrationId,
+                    message: `Successfully activated ${username} (${email})`,
+                    status: 'SUCCESS',
+                    username
+                }
+            } as ApiResponse<Activation>);
         }
     }
 ];

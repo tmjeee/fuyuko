@@ -6,6 +6,10 @@ import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import { param, body } from "express-validator";
 import {runValidation} from "../../service/run-validation.service";
+import {ScheduleValidationResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -35,9 +39,12 @@ const httpAction: any[] = [
         runValidation(viewId, id);
 
         res.status(200).json({
-            ok: true,
-            validationId: id
-        });
+            status: 'SUCCESS',
+            message: `Validation with id ${id} scheduled`,
+            payload: {
+                validationId: id
+            }
+        } as ScheduleValidationResponse);
     }
 ];
 

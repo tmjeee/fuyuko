@@ -9,7 +9,10 @@ import {
     ExportScriptPreview
 } from "../../model/custom-export.model";
 import {runCustomExportJob} from "../../custom-export/custom-export-executor";
+import {ApiResponse} from "../../model/api-response.model";
 
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -28,7 +31,11 @@ const httpAction: any[] = [
         const preview: ExportScriptPreview = req.body.preview;
 
         const r: ExportScriptJobSubmissionResult = await runCustomExportJob(viewId, customExportId, values, preview);
-        res.status(200).json(r);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Export script job submission done`,
+            payload: r
+        } as ApiResponse<ExportScriptJobSubmissionResult>);
     }
 ];
 

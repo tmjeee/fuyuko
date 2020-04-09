@@ -6,6 +6,7 @@ import {AuthService} from '../auth-service/auth.service';
 import {map, tap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
+import {ApiResponse} from "../../model/api-response.model";
 
 const URL_POST_CREATE_USER_NOTIFICATION = () => `${config().api_host_url}/user/:userId/notification`;
 const URL_GET_USER_NOTIFICATIONS = () => `${config().api_host_url}/user/:userId/notifications`;
@@ -25,11 +26,11 @@ export class AppNotificationService implements OnDestroy {
   }
 
   sendNotifications(userId: number, n: NewNotification) {
-    this.httpClient.post(
+    this.httpClient.post<ApiResponse>(
         URL_POST_CREATE_USER_NOTIFICATION(),
           {userId, n}
         ).pipe(
-          tap((r: any) => {
+          tap((r: ApiResponse) => {
         })
     ).subscribe();
   }
@@ -45,8 +46,11 @@ export class AppNotificationService implements OnDestroy {
 
   private getUserNotitications(user: User): Observable<AppNotification[]> {
       return this.httpClient
-          .get<AppNotification[]>(URL_GET_USER_NOTIFICATIONS()
-              .replace(':userId', String(user.id)));
+          .get<ApiResponse<AppNotification[]>>(URL_GET_USER_NOTIFICATIONS()
+              .replace(':userId', String(user.id)))
+          .pipe(
+              map((r: ApiResponse<AppNotification[]>) => r.payload)
+          );
   }
 
   ngOnDestroy(): void {

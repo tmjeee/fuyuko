@@ -4,6 +4,9 @@ import { param } from "express-validator";
 import {ClientError, validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -25,7 +28,10 @@ const httpAction: any[] = [
             if (q[0].COUNT > 0) { // make sure such image actually exists
                 await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\`=false WHERE ITEM_ID=? `, [itemId]);
                 await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\`=true WHERE ITEM_ID=? AND ID=?`, [itemId, itemImageId]);
-                res.status(200).json(true);
+                res.status(200).json({
+                   status: 'SUCCESS',
+                   message: `Image updated as primary`
+                } as ApiResponse);
             } else {
                 throw new ClientError(`Item Image with id ${itemImageId} and itemId ${itemId} do not exists`);
             }

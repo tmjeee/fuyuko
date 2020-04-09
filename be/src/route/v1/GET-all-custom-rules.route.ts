@@ -5,7 +5,9 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {CustomRule} from "../../model/custom-rule.model";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [],
     validateMiddlewareFn,
@@ -26,7 +28,11 @@ const httpAction: any[] = [
                 return customRules;
             }, []);
         });
-        res.status(200).json(r);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Custom Rule Retrieval Success`,
+            payload: r
+        } as ApiResponse<CustomRule[]>);
     }
 ];
 

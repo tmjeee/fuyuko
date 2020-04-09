@@ -119,12 +119,14 @@ export class PartnerListPage implements ActualPage<PartnerListPage> {
         return this;
     }
 
-    verifyItemSideMenuAttributeValue(attributeName: string, value: string): PartnerListPage {
-        cy.get(`[test-partner-data-list]`)
-            .find(`[test-partner-attribute-table]`)
-            .find(`[test-cell-attribute='${attributeName}']`)
-            .should('contain.text', value)
-        ;
+    verifyItemSideMenuAttributeValue(attributeName: string, values: string[]): PartnerListPage {
+        cy.wrap(values).each((e, i, a) => {
+            cy.get(`[test-partner-data-list]`)
+                .find(`[test-partner-attribute-table]`)
+                .find(`[test-cell-attribute='${attributeName}']`)
+                .should('contain.text', values[i])
+            ;
+        });
         return this;
     }
 

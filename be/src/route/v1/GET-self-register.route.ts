@@ -12,6 +12,10 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {SelfRegistration} from "../../model/self-registration.model";
 import {ROLE_ADMIN} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     [],
@@ -48,7 +52,11 @@ const httpAction: any[] = [
                 } as SelfRegistration
             });
 
-            res.status(200).json(selfRegistrations);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Self registrations retrieved`,
+                payload: selfRegistrations
+            } as ApiResponse<SelfRegistration[]>);
         });
     }
 ];

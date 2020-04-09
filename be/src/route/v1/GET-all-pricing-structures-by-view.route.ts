@@ -6,8 +6,9 @@ import { param } from "express-validator";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
+import {ApiResponse} from "../../model/api-response.model";
 
-
+// CHECKED: UNUSED
 const httpAction: any[] = [
     [
        param('viewId').exists().isNumeric()
@@ -46,7 +47,11 @@ const httpAction: any[] = [
             }, []);
         });
 
-        res.status(200).json(ps);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Pricing structures retrieved successfully`,
+            payload: ps
+        } as ApiResponse<PricingStructure[]>);
     }
 ];
 

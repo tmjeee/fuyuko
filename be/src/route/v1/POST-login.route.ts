@@ -13,6 +13,8 @@ import {Registry} from "../../registry";
 import {makeApiErrorObjWithContext} from "../../util/error.util";
 import {LoginResponse} from "../../model/api-response.model";
 
+// CHECKED
+
 const httpAction = [
     [
         body('username').isLength({min: 1}),
@@ -106,10 +108,13 @@ const httpAction = [
             const jwtToken: string  = createJwtToken(user);
 
             res.status(200).json({
-                jwtToken,
                 status: 'SUCCESS',
                 message: `Successfully logged in`,
-                user
+                payload: {
+                    jwtToken,
+                    user,
+                    theme
+                }
             } as LoginResponse)
         });
     }

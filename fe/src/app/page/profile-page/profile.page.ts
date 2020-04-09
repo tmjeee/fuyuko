@@ -14,6 +14,7 @@ import {User} from '../../model/user.model';
 import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {UserAvatarResponse} from "../../model/api-response.model";
+import {toNotifications} from "../../service/common.service";
 
 
 @Component({
@@ -85,7 +86,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     const avatar: GlobalAvatar | File = event.avatar;
     const f = (r: UserAvatarResponse) => {
       this.globalCommunicationService.reloadAvatar();
-      this.notificationsService.success('Success', `Avatar updated`);
+      toNotifications(this.notificationsService, r);
     };
     if (avatar instanceof File) {
       this.avatarService.saveUserCustomAvatar(this.myself.id, avatar)

@@ -16,9 +16,10 @@ import {
 } from "../../model/pricing-structure.model";
 import {getChildrenWithConn} from "../../service/pricing-structure-item.service";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
 
-
+// CHECKED
 const httpAction: any[] = [
     [
         check('pricingStructureId').exists().isNumeric()
@@ -101,7 +102,11 @@ const httpAction: any[] = [
                }
            }
 
-           res.status(200).json(pricingStructureWithItems);
+           res.status(200).json({
+               status: 'SUCCESS',
+               message: `Pricing structure with items successfully retrieved`,
+               payload: pricingStructureWithItems
+           } as ApiResponse<PricingStructureWithItems>);
         });
     }
 ];

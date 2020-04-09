@@ -14,6 +14,9 @@ import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/
 import {Attribute} from "../../model/attribute.model";
 import {check} from 'express-validator';
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -100,7 +103,11 @@ const httpAction: any[] = [
 
             const attr: Attribute[] = convert(ats);
 
-            res.status(200).json(attr);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Attributes retrieved`,
+                payload: attr
+            } as ApiResponse<Attribute[]>);
         });
     }
 ];

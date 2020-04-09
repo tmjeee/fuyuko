@@ -7,6 +7,7 @@ import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
         param('dataExportArtifactId').exists().isNumeric()
@@ -25,7 +26,7 @@ const httpAction: any[] = [
 
         res.status(200).json({
             status: 'SUCCESS',
-            message: `Data Export artfact deleted`
+            message: `Data Export artifact deleted`
         } as ApiResponse);
     }
 ];

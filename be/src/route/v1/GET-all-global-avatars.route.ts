@@ -4,7 +4,9 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {GlobalAvatar} from "../../model/avatar.model";
 import {Registry} from "../../registry";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [],
     validateMiddlewareFn,
@@ -24,7 +26,11 @@ const httpAction: any[] = [
                 return acc;
             },[]);
 
-            res.status(200).json(globalAvatar);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Global avatar retrieval success`,
+                payload: globalAvatar
+            } as ApiResponse<GlobalAvatar[]>);
         });
     }
 ]

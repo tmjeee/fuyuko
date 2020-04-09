@@ -13,7 +13,9 @@ import {convert} from "../../service/conversion-attribute.service";
 import {Attribute2} from "../model/server-side.model";
 import {getAttributesInView} from "../../service/attribute.service";
 import {ROLE_ADMIN, ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
         check('viewId').exists().isNumeric()
@@ -29,7 +31,11 @@ const httpAction: any[] = [
 
         const attr: Attribute[] = convert(ats);
 
-        res.status(200).json(attr);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Attributes retrival successful`,
+            payload: attr
+        } as ApiResponse<Attribute[]>);
     }
 ];
 

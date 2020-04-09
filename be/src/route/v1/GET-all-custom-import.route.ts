@@ -6,7 +6,9 @@ import {
     CustomDataImport,
 } from "../../model/custom-import.model";
 import {getAllCustomImports} from "../../service/custom-import.service";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
     ],
@@ -17,7 +19,11 @@ const httpAction: any[] = [
 
         const r: CustomDataImport[] = await getAllCustomImports();
 
-        res.status(200).json(r);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Custom Data Import retrieval success`,
+            payload: r
+        } as ApiResponse<CustomDataImport[]>);
     }
 ];
 

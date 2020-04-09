@@ -12,7 +12,9 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role, ROLE_VIEW} from "../../model/role.model";
-import {Paginable} from "../../model/pagnination.model";
+import {PaginableApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -25,7 +27,6 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const roleName: string = req.params.roleName;
         const groupName: string = req.params.groupName;
-        console.log('************** roleName', roleName, groupName);
 
         await doInDbConnection(async (conn: Connection) => {
 
@@ -95,13 +96,12 @@ const httpAction: any[] = [
             }, []);
 
             const totalGroups: number = qTotal[0].COUNT;
-            console.log('********************** ', totalGroups, qTotal[0].COUNT, groups);
             res.status(200).json({
                 total: totalGroups,
                 limit: totalGroups,
                 offset: 0,
                 payload: groups
-            } as Paginable<Group>);
+            } as PaginableApiResponse<Group[]>);
         });
     }
 ];

@@ -6,6 +6,9 @@ import {ROLE_VIEW} from "../../model/role.model";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {AppNotification} from "../../model/notification.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -41,7 +44,11 @@ const httpAction: any[] = [
             }, []);
         });
 
-        res.status(200).json(n);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `App notifications retrieved`,
+            payload: n
+        } as ApiResponse<AppNotification[]>);
     }
 ];
 

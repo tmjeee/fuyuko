@@ -12,6 +12,9 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Job, JobAndLogs, JobLog} from "../../model/job.model";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const SQL = `
                 SELECT 
@@ -82,7 +85,11 @@ const httpAction: any[] = [
 
             return jobAndLogs;
         });
-        res.status(200).json(jobAndLogs);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Job and logs retrieved`,
+            payload: jobAndLogs
+        } as ApiResponse<JobAndLogs>);
     }
 ];
 

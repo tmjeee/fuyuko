@@ -18,9 +18,12 @@ import {PriceDataImport} from "../../model/data-import.model";
 import {preview} from "../../service/import-csv/import-price.service";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -60,7 +63,11 @@ const httpAction: any[] = [
                 [dataImportId, priceDataCsvFile.name, mimeType, content.length, content]);
 
             const priceDataImport: PriceDataImport = await preview(viewId, dataImportId, content);
-            res.status(200).json(priceDataImport);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Price data import preview ready`,
+                payload: priceDataImport
+            } as ApiResponse<PriceDataImport>);
         });
     }
 ];

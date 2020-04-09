@@ -31,6 +31,7 @@ describe(`data export spec`, () => {
     beforeEach(() => {
         cy.restoreLocalStorage();
         exportPage.visit();
+        cy.wait(100);
     });
 
     afterEach(() => {
@@ -87,18 +88,20 @@ describe(`data export spec`, () => {
         const exportPageStep4: ExportPageStep4 = exportPageStep3
             .clickNext()
             .verifyInStep();
+
+        cy.wait(5000); // wait for data in preview to be ready
+
         const _exportPageStep3: ExportPageStep3 = exportPageStep4
             .clickBack() as ExportPageStep3;
         exportPageStep3
             .verifyInStep()
             .clickNext()
-        // exportPageStep4
-            // .verifyPriceExport_price(``)
 
-        cy.wait(5000);
+        cy.wait(5000); // wait for data in preview to be ready
 
         // step 5
         const exportPageStep5: ExportPageStep5 = exportPageStep4
+            .verifyInStep()
             .clickNext()
             .verifyInStep()
         ;

@@ -5,7 +5,9 @@ import {CustomRuleForView} from '../../model/custom-rule.model';
 import { param } from "express-validator";
 import {ROLE_VIEW} from "../../model/role.model";
 import {getAllCustomRulesForView} from "../../service/custom-rule.service";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric()
@@ -16,7 +18,11 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const r: CustomRuleForView[] = await getAllCustomRulesForView(viewId);
-        res.status(200).json(r);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Custom rules for view retrieved successfully`,
+            payload: r
+        } as ApiResponse<CustomRuleForView[]>);
     }
 ];
 

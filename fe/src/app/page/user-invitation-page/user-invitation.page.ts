@@ -6,8 +6,8 @@ import {Group} from '../../model/group.model';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {InvitationService} from '../../service/invitation-service/invitation.service';
 import {tap} from 'rxjs/operators';
-import {CreateInvitationResponse} from '../../model/invitation.model';
 import {toNotifications} from '../../service/common.service';
+import {ApiResponse} from "../../model/api-response.model";
 
 
 @Component({
@@ -31,7 +31,7 @@ export class UserInvitationPageComponent {
         this.invitationService
             .createInvitation($event.email, $event.groups)
             .pipe(
-                tap((r: CreateInvitationResponse) => {
+                tap((r: ApiResponse) => {
                     toNotifications(this.notificationService, r);
                 })
             ).subscribe();

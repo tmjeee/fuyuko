@@ -11,7 +11,9 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Job} from "../../model/job.model";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
     ],
@@ -39,7 +41,11 @@ const httpAction: any[] = [
                 return acc;
             }, []);
 
-            res.status(200).json(jobs);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Jobs retrieved successfully`,
+                payload: jobs
+            } as ApiResponse<Job[]>);
         });
     }
 ];

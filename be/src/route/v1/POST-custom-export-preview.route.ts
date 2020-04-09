@@ -5,6 +5,10 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_EDIT} from "../../model/role.model";
 import {ExportScriptInputValue, ExportScriptPreview} from "../../model/custom-export.model";
 import {preview} from '../../../src/custom-export/custom-export-executor';
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -24,7 +28,11 @@ const httpAction: any[] = [
         const values: ExportScriptInputValue[] = req.body.values;
 
         const p: ExportScriptPreview = await preview(viewId, customExportId, values);
-        res.status(200).json(p);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Export script preview done`,
+            payload: p
+        } as ApiResponse<ExportScriptPreview>);
     }
 ]
 

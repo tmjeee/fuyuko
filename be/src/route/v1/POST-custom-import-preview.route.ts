@@ -5,6 +5,9 @@ import { param, body } from "express-validator";
 import {ImportScriptInputValue, ImportScriptPreview} from "../../model/custom-import.model";
 import {preview} from "../../custom-import/custom-import-executor";
 import {ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 
 const httpAction: any[] = [
@@ -26,7 +29,11 @@ const httpAction: any[] = [
         const values: ImportScriptInputValue[] = req.body.values;
 
         const p: ImportScriptPreview = await preview(viewId, customImportId, values);
-        res.status(200).json(p);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Import script preview ready`,
+            payload: p
+        } as ApiResponse<ImportScriptPreview>);
     }
 ];
 

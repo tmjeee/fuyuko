@@ -10,7 +10,9 @@ import {
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Role, ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [],
     validateMiddlewareFn,
@@ -32,7 +34,11 @@ const httpAction: any[] = [
                 } as Role;
             });
 
-            res.status(200).json(roles);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Roles retrieved successfully`,
+                payload: roles
+            } as ApiResponse<Role[]>);
         });
     }
 ]

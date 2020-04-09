@@ -5,6 +5,10 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {SelfRegistration} from "../../model/self-registration.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
    [
@@ -46,7 +50,11 @@ const httpAction: any[] = [
           }, []);
        });
 
-       res.status(200).json(selfRegistrations);
+       res.status(200).json({
+           status: 'SUCCESS',
+           message: `Self registrations retrieved`,
+           payload: selfRegistrations
+       } as ApiResponse<SelfRegistration[]>);
    }
 ];
 

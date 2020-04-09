@@ -314,7 +314,7 @@ describe(`bulk edit spec`, () => {
 
     it(`should allow switching in where and change clause`, () => {
         const i = 0;
-        const viewName = `Test View 1`;  // createNewView();
+        const viewName = createNewView();
         refreshVariables();
 
         bulkEditPage
@@ -402,10 +402,9 @@ describe(`bulk edit spec`, () => {
         ;
     });
 
-    it.only (`should allow bulk edit process`, () => {
+    it(`should allow bulk edit process`, () => {
 
         let i = 0;
-        // const viewName = `Test View 1`;  // createNewView();
         const viewName = createNewView();
         refreshVariables();
         const increment = () => {

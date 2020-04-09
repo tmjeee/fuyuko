@@ -1,7 +1,7 @@
 import {NextFunction, Router, Request, Response } from "express";
 import {Registry } from "../../registry";
 import {
-    aFnAnyTrue,
+    aFnAnyTrue, ClientError,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
@@ -13,6 +13,7 @@ import {check} from 'express-validator';
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_ADMIN} from "../../model/role.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
         check('userId').exists().isNumeric(),
@@ -29,11 +30,7 @@ const httpAction: any[] = [
 
             const qCount: QueryA = await conn.query(`SELECT COUNT(*) FROM TBL_LOOKUP_USER_GROUP WHERE USER_ID = ? AND GROUP_ID = ? `, [userId, groupId]);
             if (!qCount.length && !Number(qCount[0].COUNT)) { // aleady exists
-                res.status(400).json({
-                    status: 'ERROR',
-                    message: `User ${userId} not in group ${groupId}`
-                } as ApiResponse);
-                return;
+                throw new ClientError(`User ${userId} not in group ${groupId}`);
             }
 
             const q: QueryA = await conn.query(`DELETE FROM TBL_LOOKUP_USER_GROUP WHERE USER_ID=? AND GROUP_ID=?`, [userId, groupId]);
