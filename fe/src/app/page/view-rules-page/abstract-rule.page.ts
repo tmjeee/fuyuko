@@ -10,6 +10,8 @@ import {Attribute} from '../../model/attribute.model';
 import {Rule} from '../../model/rule.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RuleEditorComponentEvent} from '../../component/rules-component/rule-editor.component';
+import {ApiResponse} from "../../model/api-response.model";
+import {toNotifications} from "../../service/common.service";
 
 export class AbstractRulePageComponent implements OnInit, OnDestroy {
 
@@ -109,16 +111,16 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                 if ($event.rule.id) { // existing
                     this.ruleService.updateRule(this.currentView.id, $event.rule)
                         .pipe(
-                            tap((_) => {
-                                this.notificationService.success(`Updated`, `Rule updated`);
+                            tap((_: ApiResponse) => {
+                                toNotifications(this.notificationService, _);
                                 setTimeout(() => this.reload());
                             })
                         ).subscribe();
                 } else { // new
                     this.ruleService.addRule(this.currentView.id, $event.rule)
                         .pipe(
-                            tap((_) => {
-                                this.notificationService.success(`Added`, `Rule added`);
+                            tap((_: ApiResponse) => {
+                                toNotifications(this.notificationService, _);
                                 setTimeout(() => this.reload());
                             })
                         ).subscribe();
