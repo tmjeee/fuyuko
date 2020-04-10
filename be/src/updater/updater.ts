@@ -8,14 +8,28 @@ import * as semver from 'semver';
 import {i, e} from '../logger';
 import config from '../config';
 
+
+export type UpdaterProfile = "CORE" | "TEST-DATA"
+export const UPDATER_PROFILE_CORE = "CORE";
+export const UPDATER_PROFILE_TEST_DATA = "TEST-DATA";
+
+
+export const isProfile = (profile: UpdaterProfile): boolean => {
+    const updaterProfiles: UpdaterProfile[] = config['updater-profiles'];
+    if (updaterProfiles.includes(profile)) {
+        return true;
+    }
+    return false;
+};
+
 export interface UpdateScript {
     update: () => void;
 }
 
 export const runUpdater = async () => {
-    const runUpdater: boolean = config['db-runUpdater'];
+    const runUpdater: boolean = config['updater-run'];
     if (runUpdater) {
-        i(`** Running updater`);
+        i(`** Running updater, profiles found [${(config['updater-profiles'] as UpdaterProfile[]).join(', ')}]`);
         await runUpdate();
     } else {
         i(`** Not running updater`);

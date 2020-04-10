@@ -1,11 +1,13 @@
 // this is the attribute form stored in db
 import {ItemImage, ItemValTypes, Value} from "../../model/item.model";
-import {ValidateClause, WhenClause} from "../../model/rule.model";
 import {AttributeType} from "../../model/attribute.model";
 import {OperatorType} from "../../model/operator.model";
 
 
 export type AuditCategory = "SYSTEM" | "APP" | "USER";
+
+
+
 
 // csv parsed models
 export interface CsvAttribute {

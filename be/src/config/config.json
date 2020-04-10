@@ -4,9 +4,11 @@
   "db-password": "root",
   "db-port": 3306,
   "db-database": "fuyuko",
-  "db-runUpdater": true,
   "version": "1.0.0-beta",
   "port": 8888,
+
+  "updater-run": true,
+  "updater-profiles": ["CORE", "TEST-DATA"],
 
   "salt": "some-salt",
 

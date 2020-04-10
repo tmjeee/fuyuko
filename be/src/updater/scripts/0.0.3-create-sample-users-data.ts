@@ -4,10 +4,17 @@ import {doInDbConnection, QueryA, QueryResponse} from '../../db';
 import {hashedPassword} from "../../service";
 import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
 import {Themes} from "../../model/theme.model";
+import {isProfile, UPDATER_PROFILE_CORE, UPDATER_PROFILE_TEST_DATA} from "../updater";
 
 
 export const update = async () => {
-    i(`running scripts in ${__filename}`);
+
+    if (!isProfile(UPDATER_PROFILE_TEST_DATA)) {
+        i(`Skipping script ${__filename}, profile ${UPDATER_PROFILE_TEST_DATA} not found`);
+        return;
+    }
+
+    i(`running scripts in ${__filename}, profile ${UPDATER_PROFILE_TEST_DATA} found`);
 
     await INSERT_DATA();
 
