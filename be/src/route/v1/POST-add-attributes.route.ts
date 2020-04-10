@@ -9,7 +9,7 @@ import {
 } from "./common-middleware";
 import {param, body} from 'express-validator';
 import {revert} from "../../service/conversion-attribute.service";
-import {Attribute2} from "../model/server-side.model";
+import {Attribute2} from "../../server-side-model/server-side.model";
 import {ApiResponse} from "../../model/api-response.model";
 import {saveAttribute2s} from "../../service/attribute.service";
 import {ROLE_EDIT} from "../../model/role.model";

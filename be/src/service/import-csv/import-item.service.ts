@@ -1,5 +1,5 @@
 import {ItemDataImport} from "../../model/data-import.model";
-import {Attribute2, CsvItem} from "../../route/model/server-side.model";
+import {Attribute2, CsvItem} from "../../server-side-model/server-side.model";
 import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
 import {Item, Value} from "../../model/item.model";

@@ -9,7 +9,7 @@ import {
     ItemMetadata2,
     ItemMetadataEntry2,
     ItemValue2
-} from "../route/model/server-side.model";
+} from "../server-side-model/server-side.model";
 import {
     AreaValue,
     CurrencyValue,

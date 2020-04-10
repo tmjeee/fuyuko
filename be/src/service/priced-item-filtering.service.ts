@@ -8,7 +8,7 @@ import {
     AttributeMetadataEntry2, Item2,
     ItemMetadata2,
     ItemMetadataEntry2, ItemValue2, PricedItem2
-} from "../route/model/server-side.model";
+} from "../server-side-model/server-side.model";
 import {
     AreaValue,
     CurrencyValue,

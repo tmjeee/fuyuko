@@ -4,7 +4,7 @@ import { param } from "express-validator";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {getItemsByIds} from "../../service/item.service";
 import {Item} from "../../model/item.model";
-import {Item2} from "../model/server-side.model";
+import {Item2} from "../../server-side-model/server-side.model";
 import {convert} from "../../service/conversion-item.service";
 import {ApiResponse} from "../../model/api-response.model";
 

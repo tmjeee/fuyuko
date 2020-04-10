@@ -1,4 +1,4 @@
-import {ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../route/model/server-side.model";
+import {ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../server-side-model/server-side.model";
 import {
     AreaValue, CurrencyValue, DateValue,
     DimensionValue, DoubleSelectValue, HeightValue,

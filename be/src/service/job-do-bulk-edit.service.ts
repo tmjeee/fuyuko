@@ -4,7 +4,7 @@ import {doInDbConnection, QueryA} from "../db";
 import {Connection} from "mariadb";
 import {JobLogger, newJobLogger} from "./job-log.service";
 import {Value} from "../model/item.model";
-import {ItemValue2} from "../route/model/server-side.model";
+import {ItemValue2} from "../server-side-model/server-side.model";
 import {revert} from "./conversion-item-value.service";
 import {updateItemValue} from "./item.service";
 const uuid = require('uuid');

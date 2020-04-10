@@ -30,7 +30,7 @@ import {
     AttributeMetadataEntry2,
     ItemMetadata2,
     ItemMetadataEntry2, ItemValue2
-} from "../model/server-side.model";
+} from "../../server-side-model/server-side.model";
 import {
     AreaUnits,
     CountryCurrencyUnits,

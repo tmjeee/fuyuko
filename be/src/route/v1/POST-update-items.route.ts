@@ -9,7 +9,7 @@ import {
 } from "./common-middleware";
 import {body, param} from 'express-validator';
 import {Item} from "../../model/item.model";
-import {Item2} from "../model/server-side.model";
+import {Item2} from "../../server-side-model/server-side.model";
 import {revert as itemRevert} from "../../service/conversion-item.service";
 import {ApiResponse} from "../../model/api-response.model";
 import {addItem, addOrUpdateItem, updateItem} from "../../service/item.service";

@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {check} from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
-import {Attribute2} from "../model/server-side.model";
+import {Attribute2} from "../../server-side-model/server-side.model";
 import {getAttributesInView} from "../../service/attribute.service";
 import {Attribute} from "../../model/attribute.model";
 import {convert} from "../../service/conversion-attribute.service";

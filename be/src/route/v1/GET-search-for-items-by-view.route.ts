@@ -2,7 +2,7 @@ import {param} from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
 import {NextFunction, Request, Response, Router} from "express";
-import {Item2} from "../model/server-side.model";
+import {Item2} from "../../server-side-model/server-side.model";
 import {getAllItemsInView, searchForItemsInView} from "../../service/item.service";
 import {Item, ItemSearchType} from "../../model/item.model";
 import {convert} from "../../service/conversion-item.service";

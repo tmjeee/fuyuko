@@ -4,7 +4,7 @@ import {getJobyById} from "../job.service";
 import {Item} from "../../model/item.model";
 import {addItem} from "../item.service";
 import {revert} from "../conversion-item.service";
-import {Item2} from "../../route/model/server-side.model";
+import {Item2} from "../../server-side-model/server-side.model";
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 

@@ -10,7 +10,7 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {getPricedItems, toPricedItems} from "../../service/priced-item.service";
-import {PricedItem2} from "../model/server-side.model";
+import {PricedItem2} from "../../server-side-model/server-side.model";
 import {PricedItem} from "../../model/item.model";
 import {ROLE_PARTNER} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";

@@ -1,4 +1,4 @@
-import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../route/model/server-side.model";
+import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../server-side-model/server-side.model";
 import {Attribute} from "../model/attribute.model";
 import {revert} from "./conversion-attribute.service";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";

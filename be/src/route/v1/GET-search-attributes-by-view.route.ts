@@ -10,7 +10,7 @@ import {
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {convert} from "../../service/conversion-attribute.service";
-import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/server-side.model";
+import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../../server-side-model/server-side.model";
 import {Attribute} from "../../model/attribute.model";
 import {check} from 'express-validator';
 import {ROLE_VIEW} from "../../model/role.model";

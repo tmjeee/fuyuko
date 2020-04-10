@@ -1,6 +1,6 @@
 import {AttributeDataImport} from "../../model/data-import.model";
 import {readCsv, readPair1Csv, readPair2Csv} from './import-csv.service';
-import {CsvAttribute} from "../../route/model/server-side.model";
+import {CsvAttribute} from "../../server-side-model/server-side.model";
 import {Messages, Message} from "../../model/notification-listing.model";
 import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
 import {doInDbConnection, QueryA} from "../../db";

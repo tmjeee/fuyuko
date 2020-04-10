@@ -1,5 +1,5 @@
 import {PriceDataImport} from "../../model/data-import.model";
-import {CsvPrice} from "../../route/model/server-side.model";
+import {CsvPrice} from "../../server-side-model/server-side.model";
 import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
 import {PriceDataItem, PricingStructure, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";

@@ -1,6 +1,6 @@
 import {Attribute} from "../../model/attribute.model";
 import {getAttributesInView} from "../attribute.service";
-import {Attribute2} from "../../route/model/server-side.model";
+import {Attribute2} from "../../server-side-model/server-side.model";
 import {convert} from "../conversion-attribute.service";
 
 

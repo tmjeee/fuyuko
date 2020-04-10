@@ -5,7 +5,7 @@ import {
     ValidateClause2,
     ValidateClauseMetadata2, ValidateClauseMetadataEntry2, WhenClause2,
     WhenClauseMetadata2, WhenClauseMetadataEntry2
-} from "../route/model/server-side.model";
+} from "../server-side-model/server-side.model";
 import {
     AreaValue, CurrencyValue, DateValue,
     DimensionValue, DoubleSelectValue, HeightValue,

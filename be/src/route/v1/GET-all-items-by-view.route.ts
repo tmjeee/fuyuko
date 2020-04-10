@@ -9,7 +9,7 @@ import {
 } from "./common-middleware";
 import {check, param} from 'express-validator';
 import { Item } from "../../model/item.model";
-import {Item2} from "../model/server-side.model";
+import {Item2} from "../../server-side-model/server-side.model";
 import {convert} from "../../service/conversion-item.service";
 import {getAllItemsInView} from "../../service/item.service";
 import {ROLE_VIEW} from "../../model/role.model";

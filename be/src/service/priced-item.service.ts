@@ -1,5 +1,5 @@
 import {ItemImage, PricedItem} from "../model/item.model";
-import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2, PricedItem2} from "../route/model/server-side.model";
+import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2, PricedItem2} from "../server-side-model/server-side.model";
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
 import {findChildrenItems} from "./item.service";

@@ -10,7 +10,7 @@ import {
 import {check} from 'express-validator';
 import {Attribute} from "../../model/attribute.model";
 import {convert} from "../../service/conversion-attribute.service";
-import {Attribute2} from "../model/server-side.model";
+import {Attribute2} from "../../server-side-model/server-side.model";
 import {getAttributesInView} from "../../service/attribute.service";
 import {ROLE_ADMIN, ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";

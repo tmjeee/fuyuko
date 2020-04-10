@@ -1,5 +1,5 @@
 import {Item, ItemValTypes, PricedItem, Value} from "../model/item.model";
-import {Item2, ItemValue2, PricedItem2} from "../route/model/server-side.model";
+import {Item2, ItemValue2, PricedItem2} from "../server-side-model/server-side.model";
 
 import {revert as itemValueRevert } from './conversion-item-value.service';
 import {convert as itemValueTypesConvert} from './conversion-item-value-types.service';

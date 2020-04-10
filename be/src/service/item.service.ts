@@ -1,6 +1,6 @@
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
-import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../route/model/server-side.model";
+import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../server-side-model/server-side.model";
 import {ItemImage, ItemSearchType, ItemValTypes, Value} from "../model/item.model";
 
 

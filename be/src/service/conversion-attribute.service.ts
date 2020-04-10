@@ -6,7 +6,7 @@ import {
     Pair1,
     Pair2
 } from "../model/attribute.model";
-import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../route/model/server-side.model';
+import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../server-side-model/server-side.model';
 
 export const revert = (attributes: Attribute[]) : Attribute2[]=> {
    return (attributes ? attributes.map(_revert) : []);

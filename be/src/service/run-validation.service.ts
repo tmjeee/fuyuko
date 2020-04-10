@@ -2,9 +2,9 @@ import {Level} from "../model/level.model";
 import {doInDbConnection, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {getAllItemsInView} from "./item.service";
-import {getValidationByViewIdAndValidationId, getValidationsByViewId} from "./validation.service";
+import {getValidationByViewIdAndValidationId} from "./validation.service";
 import {Validation} from "../model/validation.model";
-import {Attribute2, Item2, ItemMetadata2, Rule2} from "../route/model/server-side.model";
+import {Attribute2, Item2, ItemMetadata2, Rule2} from "../server-side-model/server-side.model";
 import {
     AreaValue,
     CurrencyValue,

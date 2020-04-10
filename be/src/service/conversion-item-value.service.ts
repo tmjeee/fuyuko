@@ -1,5 +1,5 @@
 import {Value} from "../model/item.model";
-import {ItemValue2} from "../route/model/server-side.model";
+import {ItemValue2} from "../server-side-model/server-side.model";
 import {convert as itemValueTypesConvert, revert as itemValueTypesRevert} from "./conversion-item-value-types.service";
 
 export const convert = (itemValue2: ItemValue2): Value => {

@@ -1,4 +1,3 @@
-import {Item2} from "../../route/model/server-side.model";
 import {Attribute} from "../../model/attribute.model";
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
