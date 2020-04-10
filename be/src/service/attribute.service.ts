@@ -105,9 +105,17 @@ export const getAttributesInView = async (viewId: number, attributeIds?: number[
     });
 }
 
-export const saveAttribute2s = async (viewId: number, attrs2: Attribute2[], loggingCallback?: LoggingCallback) => {
+export const saveAttribute2s = async (viewId: number, attrs2: Attribute2[], loggingCallback?: LoggingCallback): Promise<string[]> => {
+    const errors: string[] = [];
     await doInDbConnection(async (conn: Connection) => {
         for (const att2 of attrs2) {
+
+            const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_VIEW_ATTRIBUTE WHERE NAME = ? AND VIEW_ID=?`, [att2.name, viewId]);
+            if (qq[0].COUNT > 0) {
+                errors.push(`Attribute name ${att2.name} already exists for view id ${viewId}`);
+                loggingCallback && loggingCallback('WARN', `attribute ${att2.name} already exists in view id ${viewId}`);
+                continue;
+            }
 
             loggingCallback && loggingCallback('INFO', `adding attribute ${att2.name}`);
 
@@ -125,6 +133,7 @@ export const saveAttribute2s = async (viewId: number, attrs2: Attribute2[], logg
             }
         }
     });
+    return errors;
 }
 
 export const saveAttributes = async (viewId: number, att: Attribute[], loggingCallback?: LoggingCallback) => {

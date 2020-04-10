@@ -35,14 +35,23 @@ const httpAction: any[] = [
         const items: Item[] = req.body.items;
         const item2s: Item2[]  = itemRevert(items);
 
+        const errors: string[] = [];
         for (const item2 of item2s) {
-            await addOrUpdateItem(viewId, item2);
+            const err: string[] = await addOrUpdateItem(viewId, item2);
+            errors.push(...err);
         }
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `item(s) updated`
-        } as ApiResponse);
+        if (errors && errors.length) {
+            res.status(200).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `item(s) updated`
+            } as ApiResponse);
+        }
     }
 ];
 

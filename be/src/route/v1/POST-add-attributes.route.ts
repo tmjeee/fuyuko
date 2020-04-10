@@ -34,12 +34,19 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const attrs2: Attribute2[] = revert(req.body.attributes);
 
-        await saveAttribute2s(viewId, attrs2, newConsoleLogger);
+        const errors: string [] = await saveAttribute2s(viewId, attrs2, newConsoleLogger);
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Attributes added`
-        } as ApiResponse);
+        if (errors && errors.length) {
+            res.status(200).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Attributes added`
+            } as ApiResponse);
+        }
     }
 ];
 

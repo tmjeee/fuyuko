@@ -88,10 +88,10 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
           this.itemService.saveTableItems(this.currentView.id, $event.modifiedItems)
         ]).pipe(
           tap((r: [ApiResponse, ApiResponse]) => {
-            if ($event.deletedItems) {
+            if ($event.deletedItems && $event.deletedItems.length) {
                 toNotifications(this.notificationService, r[0]);
             }
-            if ($event.modifiedItems) {
+            if ($event.modifiedItems && $event.modifiedItems.length) {
                 toNotifications(this.notificationService, r[1]);
             }
             this.reload();

@@ -36,13 +36,17 @@ const httpAction: any[] = [
 
         await doInDbConnection(async (conn: Connection) => {
             const atts2: Attribute2[] = revert(atts);
-            const failed: Attribute2[] = [];
+            const failed: string[] = [];
 
             for (const att2 of atts2) {
 
                 const q: QueryA = await conn.query('SELECT STATUS FROM TBL_VIEW_ATTRIBUTE WHERE ID = ?', [att2.id]);
-                if (q.length && q[0].STATUS !== 'ENABLED') {
-                    failed.push(att2);
+                if (q.length <= 0) {  // no such attribute found
+                   failed.push(`Attribute with id ${att2.id} not found`);
+                   continue;
+                }
+                else if (q.length && q[0].STATUS !== 'ENABLED') {
+                    failed.push(`Attribute with id ${att2.id} is no enabled`);
                     continue;
                 }
 
@@ -59,13 +63,9 @@ const httpAction: any[] = [
             }
 
             if (failed.length) {
-                const allFailedAttributeIds = failed.reduce((acc: number[], i: Attribute2)=>{
-                    acc.push(i.id);
-                    return acc;
-                },[]);
                 res.status(200).json({
                     status: 'ERROR',
-                    message: `Attributes ${allFailedAttributeIds.join(',')} failed to be updated`
+                    message: failed.join(', ')
                 } as ApiResponse);
 
                 return;

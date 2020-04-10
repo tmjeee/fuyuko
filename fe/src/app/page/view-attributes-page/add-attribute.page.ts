@@ -9,6 +9,8 @@ import {View} from "../../model/view.model";
 import {Subscription} from "rxjs";
 import {Attribute} from "../../model/attribute.model";
 import {EditAttributeComponentEvent} from "../../component/attribute-table-component/edit-attribute.component";
+import {ApiResponse} from "../../model/api-response.model";
+import {toNotifications} from "../../service/common.service";
 
 
 @Component({
@@ -51,8 +53,9 @@ export class AddAttributePageComponent implements OnInit {
         switch ($event.type) {
             case 'update':
                 this.attributeService.addAttribute(this.currentView, $event.attribute).pipe(
-                    tap((_) => {
-                        this.notificationService.success(`Attribute Added`, `Attribute Added Successfully`);
+                    tap((_: ApiResponse) => {
+                        console.log('*********** add attribute response', _);
+                        toNotifications(this.notificationService, _);
                         this.reload();
                     })
                 ).subscribe();
