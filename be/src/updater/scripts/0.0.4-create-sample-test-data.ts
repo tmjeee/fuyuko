@@ -8,16 +8,14 @@ import {readFile} from "fs";
 import fileType from "file-type";
 import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
 import {hashedPassword} from "../../service";
-import {isProfile, UPDATER_PROFILE_TEST_DATA} from "../updater";
+import {UPDATER_PROFILE_TEST_DATA} from "../updater";
+
+
+export const profiles = [UPDATER_PROFILE_TEST_DATA];
 
 export const update = async () => {
 
-    if (!isProfile(UPDATER_PROFILE_TEST_DATA)) {
-        i(`Skipping script ${__filename}, profile ${UPDATER_PROFILE_TEST_DATA} not found`);
-        return;
-    }
-
-    i(`running scripts in ${__filename}, profile ${UPDATER_PROFILE_TEST_DATA} found`);
+    i(`running scripts in ${__filename}`);
 
     await INSERT_DATA();
 

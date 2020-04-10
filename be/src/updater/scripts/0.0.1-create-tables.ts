@@ -1,18 +1,13 @@
 import {Connection} from "mariadb";
 import {i} from '../../logger';
 import {doInDbConnection} from "../../db";
-import {isProfile, UPDATER_PROFILE_CORE} from "../updater";
+import {UPDATER_PROFILE_CORE} from "../updater";
 
-
+export const profiles = [UPDATER_PROFILE_CORE];
 
 export const update = async () => {
 
-   if (!isProfile(UPDATER_PROFILE_CORE)) {
-      i(`Skipping script ${__filename}, profile ${UPDATER_PROFILE_CORE} not found`);
-      return;
-   }
-
-   i(`running scripts in ${__filename}, profile ${UPDATER_PROFILE_CORE} found`);
+   i(`running scripts in ${__filename}`);
 
    await TBL_INVITATION_REGISTRATION();
    await TBL_INVITATION_REGISTRATION_GROUPS();
