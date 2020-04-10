@@ -59,7 +59,7 @@
               line-height: 50px;
             }
             &.actions-header {
-              min-width: 50px;
+              min-width: 100px;
               display: flex;
               justify-content: flex-start;
               align-content: center;
@@ -94,7 +94,7 @@
               line-height: 50px;
             }
             &.actions {
-              min-width: 50px !important;
+              min-width: 100px !important;
               display: flex;
               justify-content: flex-start;
               align-items: center;

@@ -2,12 +2,11 @@ import {Component} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {map, tap} from 'rxjs/operators';
-import {User} from '../../model/user.model';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {SettingsService} from '../../service/settings-service/settings.service';
-import {LoginResponse} from '../../model/login.model';
 import {BrowserLocationHistoryService} from '../../service/browser-location-history-service/browser-location-history.service';
+import {LoginResponse} from "../../model/api-response.model";
 
 
 @Component({

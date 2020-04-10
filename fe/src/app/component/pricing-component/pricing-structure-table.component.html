@@ -9,7 +9,7 @@
         <mat-select [attr.test-mat-select-pricing-structure]="''" (selectionChange)="onPricingStructureSelectionChanged($event)" [(value)]="pricingStructure">
             <mat-option [value]="undefined">--- Select one ---</mat-option>
             <mat-option [attr.test-mat-select-option-pricing-structure]="ps.name" *ngFor="let ps of pricingStructureInput.pricingStructures" [value]="ps">
-                {{ps.id}} - {{ps.name}}
+                {{ps.id}} - {{ps.name}} in view {{viewForPricingStructure(ps)?.name}}
             </mat-option>
         </mat-select>
         <mat-hint>Select a pricing structure</mat-hint>
@@ -26,6 +26,7 @@
                 <div>ID: {{pricingStructure.id}}</div>
                 <div>Name: {{pricingStructure.name}}</div>
                 <div>Description: {{pricingStructure.description}}</div>
+                <div>View: {{viewForPricingStructure(pricingStructure)?.name}}</div>
             </div>
         </div>
     </ng-container>
@@ -66,12 +67,22 @@
 
                     <ng-container matColumnDef="pricing">
                         <th mat-header-cell *matHeaderCellDef>Price</th>
-                        <td mat-cell [attr.test-table-column-price]="pricingStructureItem.itemName" *matCellDef="let pricingStructureItem">{{pricingStructureItem.price}}</td>
+                        <td mat-cell [attr.test-table-column-price]="pricingStructureItem.itemName" *matCellDef="let pricingStructureItem">{{pricingStructureItem.price | currency}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="country">
                         <th mat-header-cell *matHeaderCellDef>Currency Country</th>
                         <td mat-cell [attr.test-table-column-unit]="pricingStructureItem.itemName" *matCellDef="let pricingStructureItem">{{pricingStructureItem.country}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="creationDate">
+                        <th mat-header-cell *matHeaderCellDef>Creation Date</th>
+                        <td mat-cell *matCellDef="let pricingStructureItem">{{pricingStructureItem.creationDate | date}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="lastUpdate">
+                        <th mat-header-cell *matHeaderCellDef>Last Update</th>
+                        <td mat-cell *matCellDef="let pricingStructureItem">{{pricingStructureItem.lastUpdate | date}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
@@ -82,8 +93,8 @@
                     </ng-container>
 
                     <tr mat-header-row class="item-header" *matHeaderRowDef="['expansion', 'name', 'description', 'pricing', 'country', 'actions']"></tr>
-                    <tr mat-row class="item" [attr.test-table-row-item]="tableItem.itemName" *matRowDef="let tableItem; columns: ['expansion', 'name', 'description', 'pricing', 'country', 'actions'];"></tr>
-                    <tr mat-row class="item" [attr.test-table-row-item]="tableItem.itemName" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'pricing', 'country', 'actions']; when: isChildRow"
+                    <tr mat-row class="item" [attr.test-table-row-item]="tableItem.itemName" *matRowDef="let tableItem; columns: ['expansion', 'name', 'description', 'creationDate', 'lastUpdate', 'pricing', 'country', 'actions'];"></tr>
+                    <tr mat-row class="item" [attr.test-table-row-item]="tableItem.itemName" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'creationDate', 'lastUpdate', 'pricing', 'country', 'actions']; when: isChildRow"
                              [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></tr>
                 </table>
             </div>

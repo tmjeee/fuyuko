@@ -1,3 +1,5 @@
+import {ViewViewPage} from "../page-object/sub-page-object/view-view.page";
+import {ViewPage} from "../page-object/view.page";
 
 
 export const getMyself = (): any => {
@@ -70,4 +72,33 @@ export function validateSubSideNavStateOpen(b: boolean) {
         expect(n).to.have.attr('test-sub-side-nav-state-open', `${b}`);
     });
 }
+
+export const createNewView = (): string => {
+    const r = Math.random();
+    const viewName = `New-View-${r}`;
+    const viewDescription = `New-View-Description-${r}`;
+    const viewViewPage: ViewViewPage = new ViewPage()
+        .visitViews()
+        .validateTitle()
+        .clickAdd()
+        .editName(viewName)
+        .editDescription(viewDescription)
+        .clickOk()
+        .clickSave()
+    ;
+
+    cy.wait(100).then((_) => {
+        viewViewPage.verifySuccessMessageExists();
+    });
+
+    return viewName;
+};
+
+export const deleteView = (viewName: string) => {
+    new ViewPage()
+        .visitViews()
+        .clickDelete([viewName])
+        .clickSave()
+        .verifySuccessMessageExists();
+};
 

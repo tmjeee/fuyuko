@@ -1,5 +1,6 @@
 *.iml
 .idea/
 cypress/cypress/videos/
+*.zip
 
 

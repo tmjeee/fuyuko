@@ -1,14 +1,14 @@
 
 import {Request, Response, NextFunction, Router} from 'express';
-import {check} from 'express-validator';
+import {body} from 'express-validator';
 
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {RegistrationResponse} from "../../model/registration.model";
-import {catchErrorMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {validateMiddlewareFn} from "./common-middleware";
 
 import {Connection} from "mariadb";
 import {hashedPassword} from "../../service";
 import {Registry} from "../../registry";
+import {RegistrationResponse} from "../../model/api-response.model";
 
 
 const selfRegister = async (username: string, email: string, firstName: string, lastName: string,  password: string): Promise<RegistrationResponse> => {
@@ -23,7 +23,15 @@ const selfRegister = async (username: string, email: string, firstName: string, 
             [username, email, 'DELETED'])
 
         if (!!q1[0].COUNT || !!q2[0].COUNT) {
-            return { registrationId: null, email, username, status: 'ERROR', message: `Username ${username} or ${email} is already taken`} as RegistrationResponse;
+            return {
+                status: 'ERROR',
+                message: `Username ${username} or ${email} is already taken`,
+                payload: {
+                    registrationId: null,
+                    email,
+                    username,
+                }
+            } as RegistrationResponse;
         }
 
         const r: QueryResponse = await conn.query(
@@ -34,18 +42,36 @@ const selfRegister = async (username: string, email: string, firstName: string, 
             [username, email, firstName, lastName, hashedPassword(password), new Date(), false]
         );
         if (r.affectedRows > 0) {
-            return { registrationId: r.insertId, email, username, status: 'SUCCESS', message: `User ${username} (${email}) registered`} as RegistrationResponse;
+            return {
+                status: 'SUCCESS',
+                message: `User ${username} (${email}) registered`,
+                payload: {
+                    registrationId: r.insertId,
+                    email,
+                    username,
+                }
+            } as RegistrationResponse;
         }
-        return { registrationId: null, email, username, status: 'ERROR', message: `Unable to insert into DB ( Username ${username} or ${email} )`} as RegistrationResponse;
+        return {
+            status: 'ERROR',
+            message: `Unable to insert into DB ( Username ${username} or ${email} )`,
+            payload: {
+                registrationId: null,
+                email,
+                username,
+            }
+        } as RegistrationResponse;
     });
     return reg;
 };
 
 const httpAction = [
     [
-        check('username').isLength({min:1}),
-        check('email').isLength({min:1}).isEmail(),
-        check('password').isLength({min:1})
+        body('username').exists().isLength({min:1}),
+        body('email').exists().isLength({min:1}).isEmail(),
+        body('password').exists().isLength({min:1}),
+        body('firstName').exists().isLength({min:1}),
+        body('lastName').exists().isLength({min:1})
     ],
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {

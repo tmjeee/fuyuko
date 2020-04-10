@@ -5,6 +5,9 @@ import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {param} from "express-validator";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -27,7 +30,10 @@ const httpAction: any[] = [
             `, [status, customRuleId, viewId]);
         });
 
-        res.status(200).json(true);
+        res.status(200).json({
+           status: 'SUCCESS',
+           message: `Custom rule with id ${customRuleId} for view ${viewId} updated`
+        } as ApiResponse);
     }
 ];
 

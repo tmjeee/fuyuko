@@ -88,16 +88,17 @@ export class ExportDataComponent implements OnInit {
         this.currentAttributeSelectionOption = 'all';
         this.exportTypeFormControl = formBuilder.control('', [Validators.required]);
         this.attributeSelectionOptionFormControl = formBuilder.control('all', [Validators.required]);
+        this.pricingStructureFormControl = formBuilder.control(null);
         this.secondFormGroup = formBuilder.group({
             exportType: this.exportTypeFormControl,
-            attributeSelectionOption: this.attributeSelectionOptionFormControl
+            attributeSelectionOption: this.attributeSelectionOptionFormControl,
+            pricingStructure: this.pricingStructureFormControl
         });
         this.secondFormGroup.setValidators((c: AbstractControl) => {
             const attributesFormGroup: FormGroup = c.get('attributes') as FormGroup;
             if (attributesFormGroup) {
                 if (this.attributeSelectionOptionFormControl.value === 'selection') {
                     const valid = Object.values(attributesFormGroup.controls).reduce((r: boolean, ctl: AbstractControl) => {
-                        console.log('ctl', ctl.value);
                         return (r || ctl.value);
                     }, false);
                     if (!valid) {
@@ -131,7 +132,8 @@ export class ExportDataComponent implements OnInit {
 
     onFirstFormSubmit() {
         this.secondFormReady = false;
-        const viewId: number = this.viewFormControl.value;
+        const view: View = this.viewFormControl.value;
+        const viewId: number = view.id;
         forkJoin({
             a: this.viewAttributesFn(viewId),
             p: this.viewPricingStructuresFn(viewId)
@@ -150,17 +152,20 @@ export class ExportDataComponent implements OnInit {
 
                // pricing structures
                this.allPricingStructures = r.p;
+               /*
                this.pricingStructureFormControl = this.formBuilder.control(null);
                this.secondFormGroup.removeControl('pricingStructure');
                this.secondFormGroup.setControl('pricingStructure', this.pricingStructureFormControl);
-
+                */
                this.secondFormReady = true;
             })
         ).subscribe();
     }
 
     onSecondFormSubmit() {
-
+        if (this.selectedExportType === 'ATTRIBUTE') { // attribute selection do not have a third step, go ahead to step 4
+            this.onThirdFormSubmit();
+        }
     }
 
     onThirdFormSubmit() {
@@ -170,7 +175,8 @@ export class ExportDataComponent implements OnInit {
         const exportType: DataExportType = this.exportTypeFormControl.value;
 
         // figure out view id (from step 1)
-        const viewId: number = this.viewFormControl.value;
+        const view: View = this.viewFormControl.value;
+        const viewId: number = view.id;
 
         // figure out attributes (from step 2)
         let att: Attribute[] = null;
@@ -179,7 +185,9 @@ export class ExportDataComponent implements OnInit {
             const fg: FormGroup = this.secondFormGroup.get('attributes') as FormGroup;
             for (const [, c] of Object.entries(fg.controls)) {
                 const a: Attribute = (c as any).internalData;
-                att.push(a);
+                if (c.value) { // only if it is checked
+                    att.push(a);
+                }
             }
         }
 
@@ -200,7 +208,8 @@ export class ExportDataComponent implements OnInit {
         const exportType: DataExportType = this.exportTypeFormControl.value;
 
         // figure out view id (from step 1)
-        const viewId: number = this.viewFormControl.value;
+        const view: View = this.viewFormControl.value;
+        const viewId: number = view.id;
 
         // figure out attributes (from step 2)
         let att: Attribute[] = null;
@@ -218,6 +227,7 @@ export class ExportDataComponent implements OnInit {
 
 
         this.jobSubmitted = false;
+        const ps: PricingStructure = this.selectedExportType === 'PRICE' ? this.selectedPricingStructure : null;
         this.submitExportJobFn(exportType, viewId, att, this.dataExport, f).pipe(
             tap((j: Job) => {
                 this.job = j;
@@ -237,6 +247,12 @@ export class ExportDataComponent implements OnInit {
         (g.get('operator') as FormControl).setValue($event.operator);
         (g.get('itemValue') as FormControl).setValue($event.attribute ? convertToString($event.attribute, $event.itemValue) : undefined);
         this.thirdFormGroup.updateValueAndValidity();
+        const _i: ItemValueOperatorAndAttribute = this.itemValueOperatorAndAttributeList.find((i: ItemValueOperatorAndAttribute) => (i as any).id === id)
+        if (_i) {
+            _i.attribute = $event.attribute;
+            _i.operator = $event.operator;
+            _i.itemValue = $event.itemValue;
+        }
     }
 
     onAddItemFilter($event: MouseEvent) {
@@ -270,11 +286,16 @@ export class ExportDataComponent implements OnInit {
     onExportTypeSelectionChanged($event: MatSelectChange) {
         this.selectedExportType = $event.value;
         if ($event.value === 'PRICE') {
-            this.secondFormGroup.controls.pricingStructure.setValidators([Validators.required]);
+            setTimeout(() => {
+                this.pricingStructureFormControl.setValidators(Validators.required);
+                this.pricingStructureFormControl.updateValueAndValidity();
+            });
         } else {
-            this.secondFormGroup.controls.pricingStructure.clearValidators();
+            setTimeout(() => {
+                this.pricingStructureFormControl.clearValidators();
+                this.pricingStructureFormControl.updateValueAndValidity();
+            });
         }
-        this.secondFormGroup.updateValueAndValidity()
     }
 
     onPricingStructureSelectionChanged($event: MatSelectChange) {

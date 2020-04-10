@@ -7,16 +7,18 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check} from 'express-validator';
+import {check, param} from 'express-validator';
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
-import {ApiResponse} from "../../model/response.model";
-import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_EDIT} from "../../model/role.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
-        check('attributeId').exists().isNumeric(),
-        check('state').exists()
+        param('attributeId').exists().isNumeric(),
+        param('state').exists()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,

@@ -1,8 +1,11 @@
 import {Injectable} from '@angular/core';
-import {GlobalAvatar, UserAvatarResponse} from '../../model/avatar.model';
+import {GlobalAvatar} from '../../model/avatar.model';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
+import {ApiResponse, UserAvatarResponse} from "../../model/api-response.model";
+import Global = WebAssembly.Global;
+import {map} from "rxjs/operators";
 
 const URL_ALL_GLOBAL_AVATARS = () => `${config().api_host_url}/global/avatars`;
 const URL_SAVE_USER_AVATAR = () => `${config().api_host_url}/user/:userId/avatar`;
@@ -26,6 +29,10 @@ export class AvatarService {
   }
 
   allPredefinedAvatars(): Observable<GlobalAvatar[]> {
-      return this.httpClient.get<GlobalAvatar[]>(URL_ALL_GLOBAL_AVATARS());
+      return this.httpClient
+          .get<ApiResponse<GlobalAvatar[]>>(URL_ALL_GLOBAL_AVATARS())
+          .pipe(
+              map((r: ApiResponse<GlobalAvatar[]>) => r.payload)
+          );
   }
 }

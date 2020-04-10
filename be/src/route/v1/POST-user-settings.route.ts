@@ -5,6 +5,9 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {DEFAULT_SETTINGS} from "../../service/user-settings.service";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -29,6 +32,11 @@ const httpAction: any[] = [
                    [userId, k, v, tv]);
             });
         }
+
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Settings updated`
+        } as ApiResponse);
     }
 ];
 

@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {RegistrationResponse} from '../../model/registration.model';
 import {HttpClient} from '@angular/common/http';
 // @ts-ignore
 import config from '../../utils/config.util';
+import {RegistrationResponse} from "../../model/api-response.model";
 
 const URL_REGISTER = () => `${config().api_host_url}/self-register`;
 

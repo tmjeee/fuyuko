@@ -1,10 +1,15 @@
 import {Router, Request, Response, NextFunction} from "express";
 require('express-async-errors');
 import {Registry} from "../../registry";
-import {catchErrorMiddlewareFn, validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {ApiResponse} from "../../model/response.model";
+import {validateMiddlewareFn} from "./common-middleware";
+import {ApiResponse} from "../../model/api-response.model";
 import moment from 'moment';
 
+// CHECKED
+
+/**
+ * Tells if application is alive and responsive
+ */
 const httpAction: any[] = [
     [],
     validateMiddlewareFn,

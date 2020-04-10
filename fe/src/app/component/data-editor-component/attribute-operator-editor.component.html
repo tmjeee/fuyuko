@@ -21,7 +21,7 @@
             <ng-container [ngSwitch]="attribute.type">
                 <mat-form-field *ngSwitchCase="'date'">
                     <mat-label>Value</mat-label>
-                    <input matInput [matDatepicker]="picker" [attr.test-field-value]="''" [formControl]="formControl" (dateChance)="onDateChange($event)">
+                    <input matInput [matDatepicker]="picker" [attr.test-field-value]="''" [formControl]="formControl" (dateChange)="onDateChange($event)">
                     <mat-datepicker-toggle matSuffix [for]="picker" [attr.test-datepicker-toggle]="''"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     <mat-hint>Enter value ({{DATE_FORMAT}} format)</mat-hint>
@@ -32,13 +32,25 @@
                     <mat-hint>Enter Length value</mat-hint>
                 </mat-form-field>
                 <mat-form-field *ngSwitchCase="'doubleselect'">
+                    <!-- needs to be a double select key1 -->
                     <mat-label>Key1 Value</mat-label>
-                    <input matInput [formControl]="formControl" [attr.test-field-value]="''" (focusout)="onValueChange()">
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select (selectionChange)="onValueChange()" [attr.test-mat-select-field-doubleselect-1]="''" [formControl]="formControl">
+                        <mat-option *ngFor="let pair1 of attribute.pair1" [value]="pair1.key" [attr.test-mat-select-option-field-doubleselect-1]="pair1.key">
+                            {{pair1.value}}
+                        </mat-option>
+                    </mat-select>
                     <mat-hint>Enter Key1 value</mat-hint>
                 </mat-form-field>
                 <mat-form-field *ngSwitchCase="'select'">
+                    <!-- needs to be a select -->
                     <mat-label>Key1 Value</mat-label>
-                    <input matInput [formControl]="formControl" [attr.test-field-value]="''" (focusout)="onValueChange()">
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select (selectionChange)="onValueChange()" [attr.test-mat-select-field-select]="''" [formControl]="formControl">
+                        <mat-option *ngFor="let pair1 of attribute.pair1" [value]="pair1.key" [attr.test-mat-select-option-field-select]="pair1.key">
+                            {{pair1.value}}
+                        </mat-option>
+                    </mat-select>
                     <mat-hint>Enter Key value</mat-hint>
                 </mat-form-field>
                 <mat-form-field *ngSwitchDefault>
@@ -58,8 +70,14 @@
                     <mat-hint>Enter Width Value</mat-hint>
                 </mat-form-field>
                 <mat-form-field *ngSwitchCase="'doubleselect'">
+                    <!-- needs to be a doubleselect key 2 -->
                     <mat-label>key2 Value</mat-label>
-                    <input matInput [formControl]="formControl2" [attr.test-field-value2]="''" (focusout)="onValueChange()">
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select (selectionChange)="onValueChange()" [attr.test-mat-select-field-doubleselect-2]="''" [formControl]="formControl2">
+                        <mat-option *ngFor="let pair2 of getDoubleselectPair2()" [value]="pair2.key2" [attr.test-mat-select-option-field-doubleselect-2]="pair2.key2">
+                            {{pair2.value}}
+                        </mat-option>
+                    </mat-select>
                     <mat-hint>Enter key2 Value</mat-hint>
                 </mat-form-field>
                 <mat-form-field *ngSwitchCase="'currency'">

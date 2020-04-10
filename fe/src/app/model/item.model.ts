@@ -39,6 +39,8 @@ export interface Item {
   description: string;
   images: ItemImage[];
   parentId: number;
+  creationDate: Date;
+  lastUpdate: Date;
   [attributeId: number]: Value;
 
   children: Item[];
@@ -52,6 +54,8 @@ export interface TableItem {
   images: ItemImage[];
   parentId: number;
   depth: number;
+  creationDate: Date;
+  lastUpdate: Date;
   [attributeId: number]: Value;
 
   rootParentId: number;
@@ -63,6 +67,8 @@ export interface PricedItem {
   description: string;
   images: ItemImage[];
   parentId: number;
+  creationDate: Date;
+  lastUpdate: Date;
   [attributeId: number]: Value;
   price: number;
   country: string;
@@ -77,6 +83,8 @@ export interface TablePricedItem {
   images: ItemImage[];
   parentId: number;
   depth: number;
+  creationDate: Date;
+  lastUpdate: Date;
   [attributeId: number]: Value;
   price: number;
   country: string;

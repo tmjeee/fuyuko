@@ -106,6 +106,13 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
         }
     }
 
+    viewForPricingStructure(pricingStructure: PricingStructure): View {
+        if (pricingStructure && pricingStructure.viewId) {
+            return this.views.find((v: View) => v.id === pricingStructure.viewId);
+        }
+        return null;
+    }
+
     onPricingStructureSelectionChanged($event: MatSelectChange) {
         this.pricingStructure = $event.value as PricingStructure;
         this.reload(this.pricingStructure);

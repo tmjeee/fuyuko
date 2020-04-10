@@ -7,18 +7,19 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {param, body, check} from 'express-validator';
+import {param, body} from 'express-validator';
 import {revert} from "../../service/conversion-attribute.service";
 import {Attribute2} from "../model/server-side.model";
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {saveAttribute2s} from "../../service/attribute.service";
-import {ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
-import {LoggingCallback, newConsoleLogger} from "../../service/job-log.service";
-import {Level} from "../../model/level.model";
+import {ROLE_EDIT} from "../../model/role.model";
+import {newConsoleLogger} from "../../service/job-log.service";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
-       check('viewId').exists().isNumeric(),
+       param('viewId').exists().isNumeric(),
        body('attributes').isArray(),
        body('attributes.*.type').exists(),
        body('attributes.*.name').exists(),

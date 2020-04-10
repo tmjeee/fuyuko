@@ -1,26 +1,24 @@
 import {Router, Request, Response, NextFunction} from "express";
-import {check} from "express-validator";
+import {body} from "express-validator";
 import {validateMiddlewareFn} from "./common-middleware";
 
-import * as jwt from 'jsonwebtoken';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {createJwtToken, hashedPassword} from "../../service";
-import {LoginResponse} from "../../model/login.model";
-import {JwtPayload} from "../../model/jwt.model";
 import {User} from "../../model/user.model";
-import config from "../../config";
-import {Status} from "../../model/status.model";
 import {Group} from "../../model/group.model";
 import {Role} from "../../model/role.model";
-import {makeApiError, makeApiErrorObj} from "../../util";
+import {makeApiError} from "../../util";
 import {Registry} from "../../registry";
 import {makeApiErrorObjWithContext} from "../../util/error.util";
+import {LoginResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction = [
     [
-        check('username').isLength({min: 1}),
-        check('password').isLength({min: 1})
+        body('username').isLength({min: 1}),
+        body('password').isLength({min: 1})
     ],
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -110,10 +108,13 @@ const httpAction = [
             const jwtToken: string  = createJwtToken(user);
 
             res.status(200).json({
-                jwtToken,
                 status: 'SUCCESS',
                 message: `Successfully logged in`,
-                user
+                payload: {
+                    jwtToken,
+                    user,
+                    theme
+                }
             } as LoginResponse)
         });
     }

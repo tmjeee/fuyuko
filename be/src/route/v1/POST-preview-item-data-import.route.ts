@@ -14,21 +14,21 @@ import {multipartParse} from "../../service";
 import {File} from "formidable";
 import * as util from "util";
 import * as fs from "fs";
-import fileType from "file-type";
 import {ItemDataImport} from "../../model/data-import.model";
 import {preview} from "../../service/import-csv/import-item.service";
 import {makeApiError, makeApiErrorObj} from "../../util";
-import jsonStringifySafe from 'json-stringify-safe';
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
+
+// CHECKED
 
 
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
-        // body('itemDataCsvFile').exists()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -63,7 +63,11 @@ const httpAction: any[] = [
                 [dataImportId, itemDataCsvFile.name, mimeType, content.length, content]);
 
             const itemDataImport: ItemDataImport = await preview(viewId, dataImportId, content);
-            res.status(200).json(itemDataImport);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Item data import preview ready`,
+                payload: itemDataImport
+            } as ApiResponse<ItemDataImport>);
         });
 
     }

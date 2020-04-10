@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Attribute} from '../../model/attribute.model';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -18,10 +18,13 @@ export class InternalDataSource extends DataSource<Attribute> {
         if (this.subject) {
             this.subject.unsubscribe();
         }
-        this.subject = undefined;
+        this.subject = new BehaviorSubject<Attribute[]>([]);
     }
 
     update(attributes: Attribute[]) {
+        if (!this.subject) {
+            this.subject = new BehaviorSubject<Attribute[]>([]);
+        }
         this.subject.next(attributes);
     }
 
@@ -32,18 +35,29 @@ export class InternalDataSource extends DataSource<Attribute> {
     templateUrl: './view-only-attribute-table.component.html',
     styleUrls: ['./view-only-attribute-table.component.scss']
 })
-export class ViewOnlyAttributeTableComponent implements OnInit {
+export class ViewOnlyAttributeTableComponent implements OnInit, OnChanges {
 
     dataSource: InternalDataSource;
 
     @Input() attributes: Attribute[];
+    displayedColumns: string[];
 
     constructor() {
+        this.displayedColumns = ['name', 'description', 'type', 'metadata'];
         this.dataSource = new InternalDataSource();
     }
 
     ngOnInit(): void {
         this.dataSource.update(this.attributes);
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes && changes.attributes) {
+            const simpleChange: SimpleChange = changes.attributes;
+            if (simpleChange.currentValue) {
+                this.dataSource.update(simpleChange.currentValue);
+            }
+        }
     }
 
 

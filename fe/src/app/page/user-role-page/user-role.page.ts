@@ -6,13 +6,12 @@ import {
     GroupTableComponentEvent,
     SEARCH_ACTION_TYPE
 } from '../../component/group-table-component/group-table.component';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
-import {Role, ROLE_EDIT, ROLE_PARTNER, ROLE_VIEW} from '../../model/role.model';
+import {Role} from '../../model/role.model';
 import {map, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
-import {Paginable} from '../../model/pagnination.model';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 
 
@@ -55,8 +54,7 @@ export class UserRolePageComponent implements OnInit {
       this.groupSearchByRole = (role: Role) => {
           return (group: string): Observable<Group[]> => {
               return this.userManagementService
-                  .findGroupWithoutRole(group, role.name)
-                  .pipe(map((p: Paginable<Group>) => p.payload));
+                  .findGroupWithoutRole(group, role.name);
           };
       };
   }
@@ -72,7 +70,6 @@ export class UserRolePageComponent implements OnInit {
       this.userManagementService
           .findGroupWithRole(role.name)
           .pipe(
-              map((p: Paginable<Group>) => p.payload),
               map((groups: Group[]) => {
                   this.allRoleGroups.set(role, groups);
               })

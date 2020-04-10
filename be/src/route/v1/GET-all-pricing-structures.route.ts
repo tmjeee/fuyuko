@@ -11,7 +11,9 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
     ],
@@ -27,7 +29,7 @@ const httpAction: any[] = [
 
             const q: QueryA = await conn.query(`
                 SELECT 
-                    ID, VIEW_ID, NAME, DESCRIPTION 
+                    ID, VIEW_ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE 
                 FROM TBL_PRICING_STRUCTURE WHERE STATUS <> 'DELETED'
             `, []);
 
@@ -37,14 +39,20 @@ const httpAction: any[] = [
                     id: i.ID,
                     name: i.NAME,
                     viewId: i.VIEW_ID,
-                    description: i.DESCRIPTION
+                    description: i.DESCRIPTION,
+                    creationDate: i.CREATION_DATE,
+                    lastUpdate: i.LAST_UPDATE
                 } as PricingStructure;
                 acc.push(pricingStructure);
 
                 return acc;
             }, []);
 
-            res.status(200).json(pricingStructures);
+            res.status(200).json( {
+                status: 'SUCCESS',
+                message: `Pricing structures received successfully`,
+                payload: pricingStructures
+            } as ApiResponse<PricingStructure[]>);
         });
     }
 ];

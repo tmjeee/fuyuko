@@ -13,7 +13,7 @@ import {ViewService} from '../../service/view-service/view.service';
 import {catchError, finalize, tap} from 'rxjs/operators';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import {ValidationResultTableComponentEvent} from '../../component/validation-result-component/validation-result-table.component';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 

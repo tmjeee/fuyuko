@@ -40,6 +40,8 @@ export interface Attribute2 {
     type: string;
     name: string;
     description: string;
+    creationDate: Date;
+    lastUpdate: Date;
     metadatas: AttributeMetadata2[];
 }
 
@@ -62,6 +64,8 @@ export interface Item2 {
     id: number;
     name: string;
     description: string;
+    creationDate: Date;
+    lastUpdate: Date;
     images: ItemImage[];
     parentId: number;
     values: ItemValue2[];
@@ -72,6 +76,8 @@ export interface PricedItem2 {
     id: number;
     name: string;
     description: string;
+    creationDate: Date;
+    lastUpdate: Date;
     images: ItemImage[];
     parentId: number;
     values: ItemValue2[];

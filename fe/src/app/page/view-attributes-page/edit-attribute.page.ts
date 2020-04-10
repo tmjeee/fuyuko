@@ -9,6 +9,8 @@ import {Subscription} from 'rxjs';
 import {ViewService} from '../../service/view-service/view.service';
 import {NotificationsService} from 'angular2-notifications';
 import {EditAttributeComponentEvent} from '../../component/attribute-table-component/edit-attribute.component';
+import {ApiResponse} from "../../model/api-response.model";
+import {toNotifications} from "../../service/common.service";
 
 @Component({
     templateUrl: './edit-attribute.page.html',
@@ -59,8 +61,8 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
         switch ($event.type) {
             case 'update':
                 this.attributeService.updateAttribute(this.currentView, $event.attribute).pipe(
-                    tap((_) => {
-                        this.notificationService.success(`Attribute Updated`, `Attribute Updated Successfully`);
+                    tap((_: ApiResponse) => {
+                        toNotifications(this.notificationService, _);
                         this.reload();
                     })
                 ).subscribe();

@@ -356,9 +356,13 @@ export class DataEditorDialogComponent {
         setItemVolumeValue(attribute, value, this.formControlVolumeAttributeValue.value, this.formControlVolumeAttributeUnit.value);
         break;
       case 'dimension':
-        setItemDimensionValue(attribute, value, this.formControlDimensionAttributeWidthValue.value,
-          this.formControlDimensionAttributeLengthValue.value, this.formControlDimensionAttributeHeightValue.value,
-          this.formControlDimensionAttributeUnit.value);
+        setItemDimensionValue(
+            attribute,
+            value,
+            this.formControlDimensionAttributeLengthValue.value,
+            this.formControlDimensionAttributeWidthValue.value,
+            this.formControlDimensionAttributeHeightValue.value,
+            this.formControlDimensionAttributeUnit.value);
         break;
       case 'area':
         setItemAreaValue(attribute, value, this.formControlAreaAttributeValue.value, this.formControlAreaAttributeUnit.value);

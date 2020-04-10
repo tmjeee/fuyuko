@@ -6,7 +6,9 @@ import {getItemsByIds} from "../../service/item.service";
 import {Item} from "../../model/item.model";
 import {Item2} from "../model/server-side.model";
 import {convert} from "../../service/conversion-item.service";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
@@ -21,7 +23,11 @@ const httpAction: any[] = [
         const item2s: Item2[] = await getItemsByIds(viewId, itemIds);
         const items: Item[] = convert(item2s);
 
-        res.status(200).json(items);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Items received successfully`,
+            payload: items
+        } as ApiResponse<Item[]>);
     }
 ]
 

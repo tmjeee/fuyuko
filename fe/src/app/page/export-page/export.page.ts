@@ -5,13 +5,15 @@ import {ExportDataService} from '../../service/export-data-service/export-data.s
 import {tap} from 'rxjs/operators';
 import {
     PreviewExportFn, SubmitExportJobFn,
-    ViewAttributeFn,
+    ViewAttributeFn, ViewPricingStructureFn,
 } from '../../component/export-data-component/export-data.component';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import {AttributeDataExport, DataExportType, ItemDataExport, PriceDataExport} from '../../model/data-export.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {PricingStructure} from '../../model/pricing-structure.model';
+import {Observable} from "rxjs";
+import {PricingStructureService} from "../../service/pricing-structure-service/pricing-structure.service";
 
 @Component({
     templateUrl: './export.page.html',
@@ -23,8 +25,10 @@ export class ExportPageComponent implements OnInit {
     viewAttributeFn: ViewAttributeFn;
     previewExportFn: PreviewExportFn;
     submitExportJobFn: SubmitExportJobFn;
+    viewPricingStructuresFn: ViewPricingStructureFn;
 
     constructor(private viewService: ViewService,
+                private pricingStrutureService: PricingStructureService,
                 private attributeService: AttributeService,
                 private exportDataService: ExportDataService) { }
 
@@ -37,6 +41,10 @@ export class ExportPageComponent implements OnInit {
 
         this.viewAttributeFn = (viewId: number) => {
            return this.attributeService.getAllAttributesByView(viewId);
+        };
+
+        this.viewPricingStructuresFn = (viewId: number) => {
+            return this.pricingStrutureService.getAllPricingStructuresByView(viewId);
         };
 
         this.previewExportFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],

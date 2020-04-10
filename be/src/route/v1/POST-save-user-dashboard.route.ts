@@ -12,6 +12,10 @@ import {SerializedDashboardFormat} from "../../model/dashboard-serialzable.model
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 
 const httpAction: any[] = [
@@ -40,7 +44,10 @@ const httpAction: any[] = [
             }
         });
 
-        res.status(200).json(true);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Dashboard saved`
+        } as ApiResponse);
     }
 ]
 

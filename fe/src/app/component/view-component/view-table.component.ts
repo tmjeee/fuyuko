@@ -63,7 +63,7 @@ export class ViewTableComponent implements OnInit {
         this.pendingSavings = [];
         this.pendingDeletion = [];
         this.selectionModel = new SelectionModel(true);
-        this.displayedColumns = ['selection', 'name', 'description', 'actions'];
+        this.displayedColumns = ['selection', 'name', 'description', 'creationDate', 'lastUpdate', 'actions'];
     }
 
     ngOnInit(): void {
@@ -112,6 +112,7 @@ export class ViewTableComponent implements OnInit {
             deletedViews: this.pendingDeletion
         } as ViewTableComponentEvent);
         this.pendingSavings = [];
+        this.pendingDeletion = [];
         this.resetCheckboxes();
     }
 
@@ -131,6 +132,8 @@ export class ViewTableComponent implements OnInit {
 
     onReload($event: MouseEvent) {
         this.events.emit({ type: 'RELOAD'} as ViewTableComponentEvent);
+        this.pendingDeletion = [];
+        this.pendingSavings = [];
         this.resetCheckboxes();
     }
 

@@ -11,6 +11,7 @@ import {Job} from '../../model/job.model';
 import {tap} from 'rxjs/operators';
 import {MatStepper} from '@angular/material/stepper';
 import {MatSelectChange} from '@angular/material/select';
+import {PriceDataItem} from "../../model/pricing-structure.model";
 
 export type ShowPreviewFn =
     (viewId: number, uploadType: DataImportType, file: File) => Observable<AttributeDataImport | ItemDataImport | PriceDataImport>;
@@ -112,20 +113,51 @@ export class ImportDataComponent {
     onThirdFormSubmit() {
         this.jobSubmitted = false;
         const view: View = this.viewFormControl.value;
-        const body: any = {};
+        let body: any = {};
         switch (this.selectedUploadType) {
-            case 'ATTRIBUTE':
-                body.dataImportId = this.attributeDataImport.dataImportId;
-                body.attributes = this.attributeDataImport.attributes;
+            case 'ATTRIBUTE': {
+                const _body: AttributeDataImport = {
+                    type: 'ATTRIBUTE',
+                    messages: {
+                        infos: [],
+                        warnings: [],
+                        errors: []
+                    },
+                    dataImportId: this.attributeDataImport.dataImportId,
+                    attributes: this.attributeDataImport.attributes
+                };
+                body = _body;
                 break;
-            case 'PRICE':
-                body.dataImportId = this.priceDataImport.dataImportId;
-                body.pricingStructureItemsWithPrice = this.priceDataImport.items;
+            }
+            case 'PRICE': {
+                const _body: PriceDataImport = {
+                    type: 'PRICE',
+                    messages: {
+                        infos: [],
+                        warnings: [],
+                        errors: []
+                    },
+                    dataImportId: this.priceDataImport.dataImportId,
+                    items: this.priceDataImport.items
+                };
+                body = _body;
                 break;
-            case 'ITEM':
-                body.dataImportId = this.itemDataImport.dataImportId;
-                body.items = this.itemDataImport.items;
+            }
+            case 'ITEM': {
+                const _body: ItemDataImport = {
+                    type: 'ITEM',
+                    messages: {
+                        infos: [],
+                        warnings: [],
+                        errors: []
+                    },
+                    attributes: this.itemDataImport.attributes,
+                    dataImportId:  this.itemDataImport.dataImportId,
+                    items : this.itemDataImport.items
+                };
+                body = _body;
                 break;
+            }
         }
         this.submitDataImport(view.id, this.selectedUploadType, body)
             .pipe(

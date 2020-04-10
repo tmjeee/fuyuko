@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {Rule, ValidateClause, WhenClause} from 'src/app/model/rule.model';
-import {Item, StringValue} from '../../model/item.model';
+import {Rule} from 'src/app/model/rule.model';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import config from '../../utils/config.util';
+import {map} from "rxjs/operators";
 
 
 const URL_GET_ALL_RULES_BY_VIEW = () => `${config().api_host_url}/view/:viewId/rules`;
@@ -20,11 +20,21 @@ export class RuleService {
 
 
   getAllRulesByView(viewId: number): Observable<Rule[]> {
-    return this.httpClient.get<Rule[]>(URL_GET_ALL_RULES_BY_VIEW().replace(':viewId', `${viewId}`));
+    return this.httpClient
+        .get<ApiResponse<Rule[]>>(URL_GET_ALL_RULES_BY_VIEW().replace(':viewId', `${viewId}`))
+        .pipe(
+            map((r: ApiResponse<Rule[]>) => r.payload)
+        );
   }
 
   getRuleByView(viewId: number, ruleId: number): Observable<Rule> {
-    return this.httpClient.get<Rule>(URL_GET_RULE_BY_VIEW().replace(':viewId', String(viewId)).replace(':ruleId', String(ruleId)));
+    return this.httpClient
+        .get<ApiResponse<Rule>>(URL_GET_RULE_BY_VIEW()
+            .replace(':viewId', String(viewId))
+            .replace(':ruleId', String(ruleId)))
+        .pipe(
+            map((r: ApiResponse<Rule>) => r.payload)
+        );
   }
 
   addRule(viewId: number, rule: Rule): Observable<ApiResponse> {

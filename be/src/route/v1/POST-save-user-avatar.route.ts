@@ -1,25 +1,25 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {
     aFnAnyTrue,
-    getJwtPayload, v,
+    v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {JwtPayload} from "../../model/jwt.model";
-import * as formidable from 'formidable';
-import {Fields, Files, IncomingForm, File} from 'formidable';
+import {Fields, Files, File} from 'formidable';
 import {multipartParse} from "../../service";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import fileType from 'file-type';
-import {UserAvatarResponse} from "../../model/avatar.model";
 import util from 'util';
 import fs from 'fs';
 import {Registry} from "../../registry";
 import {param} from 'express-validator';
 import {ROLE_EDIT} from "../../model/role.model";
+import {UserAvatarResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -30,7 +30,6 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
-        const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = Number(req.params.userId);
 
         const r: {fields: Fields, files: Files} = await multipartParse(req);
@@ -61,7 +60,9 @@ const httpAction: any[] = [
                     res.status(200).json({
                         status: 'SUCCESS',
                         message: `UserId ${userId}, Avatar updated`,
-                        userAvatarId
+                        payload: {
+                            userAvatarId
+                        }
                     } as UserAvatarResponse);
                 } else {
                     res.status(400).json(makeApiErrorObj(
@@ -82,7 +83,7 @@ const httpAction: any[] = [
                         [name, null, ft.mime, buffer.length, buffer, userId]);
                     userAvatarId = qCount[0].ID;
                 } else {
-                    q = await conn.query(`INSERT INTO TBL_USER_AVATAR (NAME, USER_ID, GLOBAL_AVATAR_ID, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?) `,
+                    q = await conn.query(`INSERT INTO TBL_USER_AVATAR (NAME, USER_ID, GLOBAL_AVATAR_ID, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?,?) `,
                         [name, userId, null, ft.mime, buffer.length, buffer]);
                     userAvatarId = q.insertId;
                 }
@@ -90,7 +91,9 @@ const httpAction: any[] = [
                 res.status(200).json({
                     status: 'SUCCESS',
                     message: `UserId ${userId}, Avatar updated`,
-                    userAvatarId
+                    payload: {
+                        userAvatarId
+                    }
                 } as UserAvatarResponse);
             });
         } else { // insufficient parameters

@@ -9,7 +9,7 @@ import {ItemService} from '../../service/item-service/item.service';
 import {Item, ItemSearchType} from '../../model/item.model';
 import {map} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 
@@ -88,8 +88,12 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
           this.itemService.saveItems(this.currentView.id, $event.modifiedItems),
           this.itemService.deleteItems(this.currentView.id, $event.deletedItems)
         ]).subscribe((r: [ApiResponse, ApiResponse]) => {
-          toNotifications(this.notificationService, r[0]);
-          toNotifications(this.notificationService, r[1]);
+          if ($event.modifiedItems.length) {
+            toNotifications(this.notificationService, r[0]);
+          }
+          if ($event.deletedItems.length) {
+            toNotifications(this.notificationService, r[1]);
+          }
           this.reload();
         });
         break;

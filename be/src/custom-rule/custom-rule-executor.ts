@@ -9,12 +9,8 @@ import {CustomValidationContext} from "../model/validation.model";
 import {Attribute} from "../model/attribute.model";
 import {Item} from "../model/item.model";
 import {View} from "../model/view.model";
-import {CustomRule} from "../model/custom-rule.model";
+import {CustomRule, RuleScript} from "../model/custom-rule.model";
 
-export interface RuleScript {
-    description: () => string;
-    run: (context: CustomValidationContext) => void;
-}
 
 const createCustomValidationContext = async (validationId: number, customRuleId: number, view: View, item: Item, attributes: Attribute[]): Promise<CustomValidationContext> => {
     return {
@@ -98,7 +94,7 @@ export const runCustomRuleSync = async () => {
         .filter((f: string) => f.endsWith('js'))
         .sort((f1: string, f2: string) => semver.compare(f1, f2));
 
-    i(`Forward sync, files to db`);
+    i(`Custom rules script forward sync, files to db`);
     for (const ruleFile of sortedRuleFilesInDir) {
         const fullRuleFilePath = path.join(__dirname, 'rules', ruleFile);
         const s: RuleScript  = await import(fullRuleFilePath);
@@ -117,7 +113,7 @@ export const runCustomRuleSync = async () => {
         });
     }
 
-    i(`Reverse sync, db to files`);
+    i(`Custom rules script reverse sync, db to files`);
     await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION FROM TBL_CUSTOM_RULE`);
 

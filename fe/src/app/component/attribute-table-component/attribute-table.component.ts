@@ -49,7 +49,7 @@ export class AttributeTableComponent implements OnChanges {
 
   formControlAttributeSearch: FormControl;
   dataSource: AttributeTableDataSource;
-  displayedColumns: string[] = ['name', 'type', 'description', 'metadata', 'actions'];
+  displayedColumns: string[] = ['name', 'type', 'description', 'creationDate', 'lastUpdate', 'metadata', 'actions'];
 
   constructor(private formBuilder: FormBuilder) {
     this.formControlAttributeSearch = this.formBuilder.control('');

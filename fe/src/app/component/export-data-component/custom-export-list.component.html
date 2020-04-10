@@ -1,0 +1,48 @@
+<div class="custom-export-list">
+    <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="select">
+            <th mat-header-cell class="select" *matHeaderCellDef></th>
+            <td mat-cell class="select" *matCellDef="let customDataExport">
+                <mat-radio-button [value]="customDataExport" [attr.test-radio-custom-data-export]="customDataExport.name" (change)="onRadioChange($event)" name="dataExportRadioGroup" [checked]="false"></mat-radio-button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell class="action" *matHeaderCellDef></th>
+            <td mat-cell class="action" *matCellDef="let customDataExport">
+                <mat-icon *ngIf="!isRowExpanded(customDataExport)" (click)="masterRowClicked(customDataExport)" [attr.test-expand-row]="customDataExport.name">chevron_right</mat-icon>
+                <mat-icon *ngIf="isRowExpanded(customDataExport)" (click)="masterRowClicked(customDataExport)" [attr.test-collapse-row]="customDataExport.name">expand_more</mat-icon>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell class="name" *matHeaderCellDef>Name</th>
+            <td mat-cell class="name" *matCellDef="let customDataExport">{{customDataExport.name}}</td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell class="description" *matHeaderCellDef>Description</th>
+            <td mat-cell class="description" *matCellDef="let customDataExport">{{customDataExport.description}}</td>
+        </ng-container>
+        <ng-container matColumnDef="expanded">
+            <td mat-cell class="expanded" *matCellDef="let customDataExport" [attr.colspan]="columnsToDisplay.length">
+                <div>
+                    Last Update: {{customDataExport.lastUpdate | date}}
+                    <div fxLayoutGap="column" *ngFor="let input of customDataExport.inputs">
+                        <div fxFlex="1 1 auto" [attr.test-input]="''">{{input.name}} - {{input.type}}</div>
+                        <div fxFlex="1 1 auto" [attr.test-input-option]="''">
+                            {{input.description}}
+                            <ul *ngIf="input.options && input.options.length">
+                                <li *ngFor="let option of input.options">{{option.key}} - {{option.value}}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let customDataExport; columns: columnsToDisplay" [attr.test-row]="customDataExport.name"></tr>
+        <tr mat-row *matRowDef="let customDataExport; columns: expandedColumnsToDisplay; when: isChildRow"
+            [attr.test-row-details]="customDataExport.name"
+            [@detailExpand]="isRowExpanded(customDataExport) ? 'expanded' : 'collapsed'"></tr>
+    </table>
+</div>

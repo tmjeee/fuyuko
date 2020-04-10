@@ -9,6 +9,7 @@ import {map} from 'rxjs/operators';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 import {createNewItem} from '../../shared-utils/ui-item-value-creator.utils';
 import config from '../../utils/config.util';
+import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
 
 
 export interface DataThumbnailSearchComponentEvent {
@@ -37,6 +38,7 @@ export class DataThumbnailComponent implements OnInit {
 
   @Output() events: EventEmitter<DataThumbnailComponentEvent>;
   @Output() searchEvents: EventEmitter<DataThumbnailSearchComponentEvent>;
+  @Output() carouselEvents: EventEmitter<CarouselComponentEvent>;
 
   pendingSaving: Item[];
   pendingDeletion: Item[];
@@ -50,6 +52,7 @@ export class DataThumbnailComponent implements OnInit {
     this.pendingDeletion = [];
     this.events = new EventEmitter();
     this.searchEvents = new EventEmitter();
+    this.carouselEvents = new EventEmitter();
     this.counter = -1;
   }
 
@@ -57,10 +60,14 @@ export class DataThumbnailComponent implements OnInit {
   }
 
 
-  getItemImagesUrl(item: Item): string[] {
+  getCarouselImages(item: Item): CarouselItemImage[] {
     if (item && item.images) {
       // const p = `/item/image/:itemImageId`;
-      return item.images.map((i: ItemImage) => URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`));
+      return item.images.map((i: ItemImage) => ({
+        ...i,
+        itemId: item.id,
+        imageUrl: URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`)
+      } as CarouselItemImage));
     }
     return [];
   }
@@ -212,4 +219,8 @@ export class DataThumbnailComponent implements OnInit {
     }
   }
 
+  onCarouselEvent($event: CarouselComponentEvent) {
+      console.log('******* onCarouselEvent', $event);
+      this.carouselEvents.emit($event);
+  }
 }

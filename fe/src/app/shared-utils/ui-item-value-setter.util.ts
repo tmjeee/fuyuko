@@ -1,4 +1,4 @@
-import {Attribute} from '../model/attribute.model';
+import {Attribute, DEFAULT_DATE_FORMAT} from '../model/attribute.model';
 import {
   AreaValue,
   CurrencyValue,
@@ -12,6 +12,7 @@ import {
 } from '../model/item.model';
 import {AreaUnits, CountryCurrencyUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from '../model/unit.model';
 import numeral from 'numeral';
+import moment from "moment";
 
 export function setItemValue(a: Attribute, val: Value) {
   switch (a.type) {
@@ -85,11 +86,17 @@ export function setItemNumberValue(attribute: Attribute, value: Value, val: numb
   } as NumberValue);
 }
 
-export function setItemDateValue(attribute: Attribute, value: Value, val: string) {
+export function setItemDateValue(attribute: Attribute, value: Value, val: string | moment.Moment) {
+  let _value: string;
+  if (moment.isMoment(val)) {
+    _value = (val as moment.Moment).format(DEFAULT_DATE_FORMAT);
+  } else {
+    _value = val;
+  }
   _setItemValue(attribute, value, {
     type: 'date',
-    value: val,
-    format: 'DD-MM-YYYY'
+    value: _value,
+    format: DEFAULT_DATE_FORMAT
   } as DateValue);
 }
 

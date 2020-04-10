@@ -104,7 +104,7 @@ describe('view attribute spec', () => {
         ;
     });
 
-    it.only('should create string attribute type', () => {
+    it('should create string attribute type', () => {
         const r = Math.random();
         const name =  `attribute-${r}`;
         const description = `description-${r}`;

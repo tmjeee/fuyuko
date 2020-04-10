@@ -1,8 +1,14 @@
 <div class="partner-data-thumbnail-component">
     <mat-sidenav-container [hasBackdrop]="false">
         <mat-sidenav #sideNav position="end" mode="side" [disableClose]="true" [fixedInViewport]="true" fixedTopGap="65">
-            <mat-icon (click)="onCloseSideNav($event)" class="close-icon">close</mat-icon>
-            <div class="side-nav">
+            <mat-icon [attr.test-icon-close-item-details]="''" (click)="onCloseSideNav($event)" class="close-icon">close</mat-icon>
+            <div class="side-nav" [attr.test-side-nav]="''">
+                <app-partner-item-info-table *ngIf="selectedPricedItem"
+                                             [attr.test-partner-item-info-table]="''"
+                                             [attr.test-table-partner-item-info]="''"
+                                             [tablePricedItem]="selectedPricedItem">
+                </app-partner-item-info-table>
+                <mat-divider></mat-divider>
                 <app-partner-attribute-table *ngIf="selectedPricedItem"
                                              [item]="selectedPricedItem"
                                              [attributes]="attributes">
@@ -11,29 +17,29 @@
         </mat-sidenav>
         <mat-sidenav-content>
             <div class="thumbnail-content">
-                <div class="grid" *ngFor="let item of pricedItems">
+                <div class="grid" *ngFor="let item of pricedItems" [attr.test-item]="item.name">
                     <div class="controls">
-                        <mat-icon color="primary" (click)="onViewDetailsClicked($event, item)">more</mat-icon>
+                        <mat-icon color="primary" [attr.test-icon-item-details]="item.name" (click)="onViewDetailsClicked($event, item)">more</mat-icon>
                     </div>
                     <div class="carousel">
-                        <app-carousel [images]="getItemImagesUrl(item)"></app-carousel>
+                        <app-carousel [attr.test-carousel]="''" [itemId]="item.id" [images]="getCarouselImages(item)" [allowEdit]="false"></app-carousel>
                     </div>
-                    <div> {{item.name}} </div>
+                    <div [attr.test-item-name]="item.name"> {{item.name}} </div>
                     <div> {{item.description}} </div>
-                    <div> Price: {{item.price | currency:item.country}}</div>
+                    <div> Price: <span [attr.test-item-price]="item.name">{{item.price | currency:item.country}}</span></div>
                     <div class="attribute" *ngFor="let attribute of attributes; let i = index">
                         <ng-container *ngIf="i < 2">
-                            {{attribute.name}}: {{item[attribute.id] | itemAttributeValueAsString:attribute}}
+                            {{attribute.name}}: <span [attr.test-attribute-value]="attribute.name">{{item[attribute.id] | itemAttributeValueAsString:attribute}}</span>
                         </ng-container>
                         <ng-container *ngIf="i >= 2">
                             <div *ngIf="isShowMore(item)">
-                                {{attribute.name}}: {{item[attribute.id] | itemAttributeValueAsString:attribute}}
+                                {{attribute.name}}: <span [attr.test-attribute-value]="attribute.name">{{item[attribute.id] | itemAttributeValueAsString:attribute}}</span>
                             </div>
                         </ng-container>
                     </div>
                     <div><a href="#" class="show-more-link mat-hint mat-caption" (click)="showMore($event, item)">
-                        <ng-container *ngIf="isShowMore(item)">Show less ...</ng-container>
-                        <ng-container *ngIf="!isShowMore(item)">Show more ...</ng-container>
+                        <ng-container *ngIf="isShowMore(item)"><span [attr.test-show-less-link]="''">Show less ...</span></ng-container>
+                        <ng-container *ngIf="!isShowMore(item)"><span [attr.test-show-more-link]="''">Show more ...</span></ng-container>
                     </a></div>
                 </div>
             </div>

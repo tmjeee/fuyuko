@@ -5,7 +5,10 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
-import {AppNotification, NewNotification} from "../../model/notification.model";
+import {NewNotification} from "../../model/notification.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -30,7 +33,10 @@ const httpAction: any[] = [
 
         });
 
-        res.status(200).json(true);
+        res.status(200).json({
+           status: 'SUCCESS',
+           message: `User notification added`
+        } as ApiResponse);
     }
 ];
 

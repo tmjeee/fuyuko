@@ -40,7 +40,7 @@ import registerDeleteViewsRoute from './DELETE-views.route';
 import registerGetAllAttributesByViewRoute from './GET-all-attributes-by-view.route';
 import registerGetSearchAllAttributesByViewRoute from './GET-search-attributes-by-view.route';
 import registerPostUpdateAttributesRoute from './POST-update-attributes.route';
-import registerPostUpdateAttributeStatusRoute from './POST-update-attributes.route';
+import registerPostChangeAttributeStatusRoute from './POST-change-attribute-status.route';
 import registerGetAllItemsByViewRoute from './GET-all-items-by-view.route';
 import registerGetItemImageByIdRoute from './GET-item-image-by-id.route';
 import registerGetItemPrimaryImageByItemIdRoute from './GET-item-primary-image.route';
@@ -98,9 +98,26 @@ import registerPostRemoveCustomRuleFromViewRoute from './DELETE-remove-custom-ru
 import registerGetUserNotificationsRoute from './GET-user-notification.route';
 import registerPostUserNotificationRoute from './POST-user-notification.route';
 import registerPostAddAttributeRoute from './POST-add-attributes.route';
-import registerPostChangeAttributeStatusRoute from './POST-change-attribute-status.route';
 import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
+// import registerGetAllPricingStructureByViewRoute from './GET-all-pricing-structures-by-view.route';
+import registerGetDataExportContentByIdRoute from './GET-data-export-content-by-id.route';
+import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
+import registerGetAllDataExportArtifactsRoute from './GET-all-data-export-artifacts.route';
+import registerDeleteDataExportArtifactByIdRoute from './DELETE-data-export-artifact-by-id.route';
+import registerPostAddItemImageRoute from './POST-add-item-image.route';
+import registerDeleteItemImageRoute from './DELETE-item-image-by-id.route';
+import registerPostMarkItemImageAsPrimaryRoute from './POST-mark-item-image-as-primary.route';
+import registerGetHelpRoute from './GET-help.route';
+import registerGetAllCustomImportRoute from './GET-all-custom-import.route';
+import registerPostCustomImportValidateInputRoute from './POST-custom-import-validate-input.route';
+import registerPostCustomImportPreviewRoute from './POST-custom-import-preview.route';
+import registerPostCustomImportSubmitJobRoute from './POST-custom-import-submit-job.route';
+import registerGetAllCustomExportRoute from './GET-all-custom-export.route';
+import registerPostCustomExportValidateInputRoute from './POST-custom-export-validate-input.route';
+import registerPostCustomExportPreviewRoute from './POST-custom-export-preview.route';
+import registerPostCustomExportSubmitJobRoute from './POST-custom-export-submit-job.route';
+
 
 const v1AppRouter:Router  = express.Router();
 
@@ -147,7 +164,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetAllAttributesByViewRoute(v1AppRouter, registry);
     registerGetSearchAllAttributesByViewRoute(v1AppRouter, registry);
     registerPostUpdateAttributesRoute(v1AppRouter, registry);
-    registerPostUpdateAttributeStatusRoute(v1AppRouter, registry);
+    registerPostChangeAttributeStatusRoute(v1AppRouter, registry);
     registerGetAllItemsByViewRoute(v1AppRouter, registry);
     registerGetItemImageByIdRoute(v1AppRouter, registry);
     registerGetItemPrimaryImageByItemIdRoute(v1AppRouter, registry);
@@ -205,9 +222,26 @@ const reg = (router: Router, regi: Registry) => {
     registerGetUserNotificationsRoute(v1AppRouter, registry);
     registerPostUserNotificationRoute(v1AppRouter, registry);
     registerPostAddAttributeRoute(v1AppRouter, registry);
-    registerPostChangeAttributeStatusRoute(v1AppRouter, registry);
     registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
+    // registerGetAllPricingStructureByViewRoute(v1AppRouter, registry);
+    registerGetDataExportContentByIdRoute(v1AppRouter, registry);
+    registerGetPricingStructureByIdRoute(v1AppRouter, registry);
+    registerGetAllDataExportArtifactsRoute(v1AppRouter, registry);
+    registerDeleteDataExportArtifactByIdRoute(v1AppRouter, registry);
+    registerPostAddItemImageRoute(v1AppRouter, registry);
+    registerDeleteItemImageRoute(v1AppRouter, registry);
+    registerPostMarkItemImageAsPrimaryRoute(v1AppRouter, registry);
+    registerGetHelpRoute(v1AppRouter, registry);
+
+    registerGetAllCustomImportRoute(v1AppRouter, registry);
+    registerPostCustomImportValidateInputRoute(v1AppRouter, registry);
+    registerPostCustomImportPreviewRoute(v1AppRouter, registry);
+    registerPostCustomImportSubmitJobRoute(v1AppRouter, registry);
+    registerGetAllCustomExportRoute(v1AppRouter, registry);
+    registerPostCustomExportValidateInputRoute(v1AppRouter, registry);
+    registerPostCustomExportPreviewRoute(v1AppRouter, registry);
+    registerPostCustomExportSubmitJobRoute(v1AppRouter, registry);
 };
 
 

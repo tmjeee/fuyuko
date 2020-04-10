@@ -57,6 +57,7 @@
         <!-- date attribute value -->
         <ng-container *ngIf="attribute.type === 'date'">
             <mat-form-field>
+
                 <mat-label>Value</mat-label>
                 <input matInput type="text" [attr.test-field-date]="''" [matDatepicker]="datepicker" (dateChange)="onDateChanged($event)" [formControl]="formControl" placeholder="Enter a date">
                 <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
@@ -173,13 +174,13 @@
         <ng-container *ngIf="attribute.type === 'length'">
             <mat-form-field>
                 <mat-label>Value</mat-label>
-                <input type="text" type="text" matInput (focusout)="valueChanged()" placeholder="Enter a length" [attr.test-field-length]="''">
+                <input type="text" type="text" matInput (focusout)="valueChanged()" placeholder="Enter a length" [formControl]="formControl" [attr.test-field-length]="''">
                 <mat-hint>Enter a Length value</mat-hint>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Unit</mat-label>
                 <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
-                <mat-select [formControl]="formControl" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-length-unit]="''">
+                <mat-select [formControl]="formControl2" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-length-unit]="''">
                     <mat-option *ngFor="let lengthUnit of lengthUnits" [value]="lengthUnit" [attr.test-mat-select-option-length-unit]="lengthUnit">
                         {{lengthUnit}}
                     </mat-option>
@@ -192,13 +193,13 @@
         <ng-container *ngIf="attribute.type === 'height'">
             <mat-form-field>
                 <mat-label>Value</mat-label>
-                <input type="text" matInput (focusout)="valueChanged()" placeholder="Enter a height" [attr.test-field-height]="''">
+                <input type="text" matInput (focusout)="valueChanged()" placeholder="Enter a height" [formControl]="formControl" [attr.test-field-height]="''">
                 <mat-hint>Enter a height value</mat-hint>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Unit</mat-label>
                 <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
-                <mat-select [formControl]="formControl" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-height-unit]="''">
+                <mat-select [formControl]="formControl2" (selectionChange)="onUnitSelectionChanged($event)" [attr.test-mat-select-height-unit]="''">
                     <mat-option *ngFor="let heightUnit of heightUnits" [value]="heightUnit" [attr.test-mat-select-option-height-unit]="heightUnit">
                         {{heightUnit}}
                     </mat-option>

@@ -1,6 +1,6 @@
 import {NextFunction, Router, Request, Response} from "express";
-import {check} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {param, body} from 'express-validator';
+import {validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
@@ -8,18 +8,21 @@ import {hashedPassword} from "../../service";
 import config from '../../config';
 import {Activation} from "../../model/activation.model";
 import {Registry} from "../../registry";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 /**
  * Activate invitation received (eg. through email)
  */
 const httpAction = [
     [
-        check('code').isLength({ min: 1 }),
-        check('username').exists({checkFalsy: true, checkNull: true}),
-        check('email').exists().isEmail(),
-        check('firstName').exists(),
-        check('lastName').exists(),
-        check('password').exists()
+        param('code').isLength({ min: 1 }),
+        body('username').exists({checkFalsy: true, checkNull: true}),
+        body('email').exists().isEmail(),
+        body('firstName').exists(),
+        body('lastName').exists(),
+        body('password').exists()
     ],
     validateMiddlewareFn,
     async (req: Request, res: Response , next: NextFunction ) => {
@@ -31,7 +34,7 @@ const httpAction = [
         const password = req.body.password;
         let registrationId;
 
-        await doInDbConnection(async (conn: Connection) => {
+        const r: boolean = await doInDbConnection(async (conn: Connection) => {
             const q1: QueryA = await conn.query(`
                 SELECT ID, EMAIL, CREATION_DATE, CODE, ACTIVATED FROM TBL_INVITATION_REGISTRATION WHERE CODE=? AND ACTIVATED=?
             `, [code, false]);
@@ -40,29 +43,29 @@ const httpAction = [
                 res.status(400).json(makeApiErrorObj(
                     makeApiError(`Code no longer active`, 'code', code, 'api')
                 ));
-                return;
+                return false;
             }
 
             registrationId = q1[0].ID;
 
             const qU1: QueryA = await conn.query(`
-                SELECT COUNT(*) FROM TBL_USER WHERE (EMAIL = ? OR USERNAME = ?) AND STATUS <> ?
+                SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE (EMAIL = ? OR USERNAME = ?) AND STATUS <> ?
             `, [email, username, 'DELETED']);
-            if (qU1.length > 0) {
+            if (qU1.length > 0 && qU1[0].COUNT > 0) {
                 res.status(400).json(makeApiErrorObj(
                     makeApiError(`User with either username ${username} or email ${email} already exists`)
                 ));
-                return;
+                return false;
             }
 
             const qU2: QueryA = await conn.query(`
-                SELECT COUNT(*) FROM TBL_SELF_REGISTRATION WHERE (EMAIL = ? OR USERNAME = ?) AND ACTIVATED = ? 
+                SELECT COUNT(*) AS COUNT FROM TBL_SELF_REGISTRATION WHERE (EMAIL = ? OR USERNAME = ?) AND ACTIVATED = ? 
             `, [email, username, false]);
-            if (qU1.length > 0) {
+            if (qU1.length > 0 && qU1[0].COUNT > 0) {
                 res.status(400).json(makeApiErrorObj(
                     makeApiError(`User with either username ${username} or email ${email} already registered`)
                 ));
-                return;
+                return false;
             }
 
 
@@ -79,25 +82,32 @@ const httpAction = [
 
             const newUserId: number = qNewUser.insertId;
 
-            conn.query(`
+            await conn.query(`
                 INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)
             `, [newUserId, config["default-theme"]]);
 
             for (const g of qGroups) {
                 const gId: number = (g as QueryI).GROUP_ID;
-                conn.query(`
+                await conn.query(`
                     INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?,?)
                 `, [newUserId, gId]);
             }
+            return true;
         });
 
-        res.status(200).json({
-           email,
-           registrationId,
-           message: `Successfully activated ${username} (${email})`,
-           status: 'SUCCESS',
-           username
-        } as Activation);
+        if (r) { // if no errors send before
+            res.status(200).json( {
+                status: 'SUCCESS',
+                message: `Successfully activated ${username} (${email})`,
+                payload: {
+                    email,
+                    registrationId,
+                    message: `Successfully activated ${username} (${email})`,
+                    status: 'SUCCESS',
+                    username
+                }
+            } as ApiResponse<Activation>);
+        }
     }
 ];
 

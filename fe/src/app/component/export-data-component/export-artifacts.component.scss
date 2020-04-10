@@ -1,0 +1,17 @@
+.export-artifacts-component {
+
+  table {
+    tr {
+      th {
+
+      }
+      td {
+        &.action {
+          .mat-icon {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

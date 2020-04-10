@@ -9,9 +9,10 @@ import {
 import {check} from 'express-validator';
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
-import {SelfRegistrationResponse} from "../../model/self-registration.model";
 import {ROLE_ADMIN} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
        check('selfRegistrationId').exists().isNumeric()
@@ -30,7 +31,7 @@ const httpAction: any[] = [
             res.status(200).json({
                 status: 'SUCCESS',
                 message: `Self registration ${selfRegistrationId} deleted`
-            } as SelfRegistrationResponse);
+            } as ApiResponse);
         });
     }
 ];

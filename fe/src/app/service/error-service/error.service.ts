@@ -8,7 +8,7 @@ export class ErrorService {
     constructor(private router: Router) {
         this.router.events.pipe(
             tap((e: Event) => {
-                if (event instanceof NavigationError)  {
+                if (e instanceof NavigationError)  {
                     if (!navigator.onLine) {
                     }
                     this.router.navigate(['/error']);

@@ -1,4 +1,4 @@
-import {ResponseStatus} from './response-status.model';
+import {ResponseStatus} from './api-response-status.model';
 
 export interface NewNotification {
   status: ResponseStatus;

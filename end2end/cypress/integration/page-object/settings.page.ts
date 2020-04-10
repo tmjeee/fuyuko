@@ -25,4 +25,37 @@ export class SettingsPage implements ActualPage<SettingsPage> {
         util.clickOnSuccessMessageToasts(() => {});
         return this;
     }
+
+    clickEnable(b: boolean, name: string): SettingsPage {
+        cy.get(`[test-page-title]`).then((_) => {
+            const elem = _.find(`[test-slide-toggle='${name}']`);
+            const hasClass = elem.hasClass('mat-checked');
+            if(!hasClass && b) { // disabled and we want it enabled
+                console.log('**** 1');
+                cy.get(`[test-page-title]`)
+                    .find(`[test-slide-toggle='${name}'] label div.mat-slide-toggle-bar`)
+                    .click({force: true})
+                    .wait(100);
+            } else if (hasClass && !b) { // enabled and we want it disabled
+                console.log('***** 2');
+                cy.get(`[test-page-title]`)
+                    .find(`[test-slide-toggle='${name}'] label div.mat-slide-toggle-bar`)
+                    .click({force: true})
+                    .wait(100);
+            }
+        });
+        return this;
+    }
+
+    verifyEnable(b: boolean, name: string): SettingsPage {
+        cy.get(`[test-page-title]`)
+            .find(`[test-slide-toggle='${name}']`)
+            .should(b ? 'have.class' : 'not.have.class', 'mat-checked')
+        return this;
+    }
+
+    clickSubmit(): SettingsPage {
+        cy.get(`[test-button-save]`).click({force: true});
+        return this;
+    }
 }

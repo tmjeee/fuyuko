@@ -8,10 +8,12 @@ import {
    validateMiddlewareFn,
    vFnHasAnyUserRoles
 } from "./common-middleware";
-import {i} from "../../logger";
 import {getUserById} from "../../service";
 import {User} from "../../model/user.model";
 import {ROLE_ADMIN, ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
    [
@@ -23,7 +25,11 @@ const httpAction: any[] = [
    async (req: Request, res: Response, next: NextFunction) => {
       const userId: number = Number(req.params.userId);
       const user: User =  await getUserById(userId);
-      res.status(200).json(user);
+      res.status(200).json({
+         status: 'SUCCESS',
+         message: `User retrieved`,
+         payload: user
+      } as ApiResponse<User>);
    }
 ];
 

@@ -1,3 +1,4 @@
+<simple-notifications></simple-notifications>
 <div *ngIf="loading">Loading ...</div>
 <div class="import-export-layout"
      *ngIf="!loading"
@@ -41,9 +42,21 @@
                 <mat-icon>trending_down</mat-icon>
                 <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary:['import'], help:['import-help']}}]">Import</a>
               </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'custom-import'">
+                <mat-icon>text_rotation_angledown</mat-icon>
+                <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary: ['custom-import'], help:['import-help']}}]">Custom Import</a>
+              </mat-list-item>
               <mat-list-item [class.selected]="routeSubSideNavData === 'export'">
                 <mat-icon>trending_up</mat-icon>
                 <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary:['export'], help:['export-help']}}]">Export</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'custom-export'">
+                <mat-icon>text_rotation_angleup</mat-icon>
+                <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary: ['custom-export'], help: ['export-help']}}]">Custom Export</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'export-artifacts'">
+                <mat-icon>attachment</mat-icon>
+                <a href="#" [routerLink]="['/import-export-gen-layout', {outlets: {primary:['export-artifacts'], help:['export-help']}}]">Artifacts</a>
               </mat-list-item>
             </mat-list>
           </mat-sidenav>

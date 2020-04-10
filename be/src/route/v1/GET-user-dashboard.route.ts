@@ -10,8 +10,10 @@ import {
 } from "./common-middleware";
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
-import {SerializedDashboardFormat} from "../../model/dashboard-serialzable.model";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
@@ -20,7 +22,7 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
-        const f: SerializedDashboardFormat = await doInDbConnection(async (conn: Connection) => {
+        const f: string = await doInDbConnection(async (conn: Connection) => {
              const q: QueryA = await conn.query(`SELECT ID, USER_ID, SERIALIZED_DATA FROM TBL_USER_DASHBOARD WHERE USER_ID = ?`, [userId]);
 
              if (q.length > 0) {
@@ -31,8 +33,12 @@ const httpAction: any[] = [
              }
         });
         res.status(200).json({
-            data: f
-        });
+            status: 'SUCCESS',
+            message: `Dashboard retrieved`,
+            payload: {
+                data: f
+            }
+        } as ApiResponse<{data: string}>);
     }
 ];
 

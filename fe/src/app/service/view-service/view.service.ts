@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {View} from '../../model/view.model';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 
 const URL_ALL_VIEWS = () => `${config().api_host_url}/views`;
 const URL_UPDATE_VIEW = () => `${config().api_host_url}/views/update`;
@@ -47,7 +47,11 @@ export class ViewService {
 
 
   getAllViews(): Observable<View[]> {
-      return this.httpClient.get<View[]>(URL_ALL_VIEWS());
+      return this.httpClient
+          .get<ApiResponse<View[]>>(URL_ALL_VIEWS())
+          .pipe(
+              map((r: ApiResponse<View[]>) => r.payload)
+          );
   }
 
   saveViews(updatedViews: View[]): Observable<ApiResponse> {
@@ -59,6 +63,10 @@ export class ViewService {
   }
 
   getViewById(viewId: string) {
-    return this.httpClient.get<View>(URL_GET_VIEW_BY_ID().replace(':viewId', viewId));
+    return this.httpClient
+        .get<ApiResponse<View>>(URL_GET_VIEW_BY_ID().replace(':viewId', viewId))
+        .pipe(
+            map((r: ApiResponse<View>) => r.payload)
+        );
   }
 }

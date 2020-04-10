@@ -1,0 +1,16 @@
+
+<div class="item-image-dialog-component">
+    <mat-form-field>
+        <mat-label>Item Image</mat-label>
+        <input matInput [ngStyle]="{display: 'none', visibility: 'invisible'}">
+        <app-carousel [allowEdit]="true"
+                      [images]="images"
+                      [itemId]="itemId"
+                      (events)="onCarouselEvent($event)">
+        </app-carousel>
+        <mat-hint>Edit item image</mat-hint>
+    </mat-form-field>
+    <div class="control">
+        <button type="button" mat-flat-button color="primary" (click)="onCloseClicked($event)">Close</button>
+    </div>
+</div>

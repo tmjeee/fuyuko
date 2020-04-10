@@ -6,15 +6,16 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {NotificationsService} from 'angular2-notifications';
 import {ViewService} from '../../service/view-service/view.service';
 import {Attribute} from '../../model/attribute.model';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {Item, ItemSearchType, TableItem} from '../../model/item.model';
 import {ItemService} from '../../service/item-service/item.service';
 import {
   DataThumbnailComponentEvent,
   DataThumbnailSearchComponentEvent
 } from '../../component/data-thumbnail-component/data-thumbnail.component';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
+import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
 
 
 @Component({
@@ -87,9 +88,13 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
           this.itemService.saveItems(this.currentView.id, $event.modifiedItems),
           this.itemService.deleteItems(this.currentView.id, $event.deletedItems)
         ]).subscribe((r: [ApiResponse, ApiResponse]) => {
+          if ($event.modifiedItems.length) {
             toNotifications(this.notificationService, r[0]);
+          }
+          if ($event.deletedItems.length) {
             toNotifications(this.notificationService, r[1]);
-            this.reload();
+          }
+          this.reload();
         });
         break;
       case 'reload':
@@ -102,5 +107,37 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
     this.search = $event.search;
     this.searchType = $event.type;
     this.reload();
+  }
+
+  onCarouselEvent($event: CarouselComponentEvent) {
+    switch($event.type) {
+      case "delete": {
+        this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
+            tap((r: ApiResponse) => {
+              toNotifications(this.notificationService, r);
+              this.reload();
+            })
+        ).subscribe();
+        break;
+      }
+      case "markAsPrimary": {
+        this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
+           tap((r: ApiResponse) => {
+             toNotifications(this.notificationService, r);
+             this.reload();
+           })
+        ).subscribe()
+        break;
+      }
+      case "upload": {
+          this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
+              tap((r: ApiResponse) => {
+                toNotifications(this.notificationService, r);
+                this.reload();
+              })
+          ).subscribe();
+        break;
+      }
+    }
   }
 }

@@ -5,7 +5,9 @@ import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {param, body} from "express-validator";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED:
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
@@ -27,7 +29,10 @@ const httpAction: any[] = [
             }
         });
 
-        res.status(200).json(true);
+        res.status(200).json({
+           status: 'SUCCESS',
+            message: `Custom rule successfully deleted`
+        } as ApiResponse);
     }
 ];
 

@@ -3,7 +3,8 @@
      "strict": false,
      "module":"commonjs",
      "target": "es2016",
-     "types": ["cypress"]
+     "esModuleInterop": true,
+     "types": ["cypress", "node"]
   },
   "include": [
      "**/*.ts"

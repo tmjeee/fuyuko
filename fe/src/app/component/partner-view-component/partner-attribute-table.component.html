@@ -12,9 +12,9 @@
             <mat-header-cell class="value-header" *matHeaderCellDef>
                 Value
             </mat-header-cell>
-            <mat-header-cell class="value" *matCellDef="let itemAndAttribute">
+            <mat-cell class="value" *matCellDef="let itemAndAttribute" [attr.test-cell-attribute]="itemAndAttribute?.attribute?.name">
                 {{itemAndAttribute.item[itemAndAttribute.attribute.id] | itemAttributeValueAsString:itemAndAttribute.attribute}}
-            </mat-header-cell>
+            </mat-cell>
         </ng-container>
         <mat-header-row class="item-header" *matHeaderRowDef="['attribute', 'value']"></mat-header-row>
         <mat-row class="item" *matRowDef="let itemAndAttribute; columns: ['attribute', 'value'];"></mat-row>

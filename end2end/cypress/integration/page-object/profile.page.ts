@@ -29,8 +29,9 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
         cy.wait(100).request(`${apiBaseUrl}/user/${userId}/avatar-info`)
             .its("body")
             .then((body: any) => {
-                expect(body).to.have.property('name');
-                expect(body.name).to.eq(name);
+                expect(body).to.have.property('payload');
+                expect(body.payload).to.have.property('name');
+                expect(body.payload.name).to.eq(name);
             });
         return this;
     }

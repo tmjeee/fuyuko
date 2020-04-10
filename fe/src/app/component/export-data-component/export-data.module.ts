@@ -9,6 +9,14 @@ import {DataTableModule} from '../data-table-component/data-table.module';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {AttributeTableModule} from '../attribute-table-component/attribute-table.module';
 import {PricingModule} from '../pricing-component/pricing.module';
+import {ExportArtifactsComponent} from "./export-artifacts.component";
+import {CustomExportWizardComponent} from "./custom-export-wizard.component";
+import {CustomExportListComponent} from "./custom-export-list.component";
+import {ViewModule} from "../view-component/view.module";
+import {CustomExportInputFormComponent} from "./custom-export-input-form.component";
+import {CustomExportPreviewComponent} from "./custom-export-preview.component";
+import {CustomExportSubmitJobComponent} from "./custom-export-submit-job.component";
+import {NotificationModule} from "../notification-component/notification.module";
 
 @NgModule({
     imports: [
@@ -22,12 +30,26 @@ import {PricingModule} from '../pricing-component/pricing.module';
         FlexLayoutModule,
         AttributeTableModule,
         PricingModule,
+        ViewModule,
+        NotificationModule,
     ],
     declarations: [
-        ExportDataComponent
+        ExportDataComponent,
+        ExportArtifactsComponent,
+        CustomExportWizardComponent,
+        CustomExportListComponent,
+        CustomExportInputFormComponent,
+        CustomExportPreviewComponent,
+        CustomExportSubmitJobComponent,
     ],
     exports: [
-        ExportDataComponent
+        ExportDataComponent,
+        ExportArtifactsComponent,
+        CustomExportWizardComponent,
+        CustomExportListComponent,
+        CustomExportInputFormComponent,
+        CustomExportPreviewComponent,
+        CustomExportSubmitJobComponent,
     ]
 })
 export class ExportDataModule {

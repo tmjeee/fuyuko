@@ -1,5 +1,3 @@
-import {SimpleResponseStatus} from './response-status.model';
-
 export interface SelfRegistration {
     id: number;
     username: string;
@@ -10,7 +8,3 @@ export interface SelfRegistration {
     activated: boolean;
 }
 
-export interface SelfRegistrationResponse {
-    status: SimpleResponseStatus;
-    message: string;
-}

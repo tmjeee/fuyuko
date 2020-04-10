@@ -1,0 +1,15 @@
+<div class="export-artifacts-page-component" [attr.test-page-title]="'export-artifacts'">
+    <mat-card class="mat-elevation-z-20">
+        <mat-card-header>
+            <mat-card-title>Export data</mat-card-title>
+            <mat-card-subtitle>
+                Export artifacts
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-export-artifacts (events)="onExportArtifactEvents($event)"  [dataExportArtifacts]="dataExportArtifacts">
+            </app-export-artifacts>
+        </mat-card-content>
+    </mat-card>
+
+</div>

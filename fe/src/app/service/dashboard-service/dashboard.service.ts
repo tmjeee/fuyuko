@@ -5,14 +5,16 @@ import {
 } from '../../model/dashboard.model';
 import {User} from '../../model/user.model';
 import {Observable, of} from 'rxjs';
-import {SerializedDashboardWidgetInstanceFormat} from '../../model/dashboard-serialzable.model';
+import {
+    SerializedDashboardFormat,
+    SerializedDashboardWidgetInstanceFormat
+} from '../../model/dashboard-serialzable.model';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
 import {map} from 'rxjs/operators';
 import {DASHBOARD_STRATEGIES} from '../../component/dashboard-component/strategies';
 import {DASHBOARD_WIDGET_INFOS} from '../../component/dashboard-component/widgets';
-
-
+import {ApiResponse} from "../../model/api-response.model";
 
 const URL_GET_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard`;
 const URL_SAVE_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard/save`;
@@ -54,8 +56,9 @@ export class DashboardService {
 
     getUserDashboardLayoutData(myself: User): Observable<string> {
         return this.httpClient
-            .get<{data: string}>(URL_GET_DASHBOARD_FORMAT().replace(':userId', String(myself.id)))
+            .get<ApiResponse<{data: string}>>(URL_GET_DASHBOARD_FORMAT().replace(':userId', String(myself.id)))
             .pipe(
+                map((r: ApiResponse<{data: string}>) => r.payload),
                 map((r: {data: string}) => {
                     const d = (r.data ? r.data.trim() : r.data);
                     if (d) {
@@ -69,8 +72,8 @@ export class DashboardService {
             );
     }
 
-    saveDashboardLayout(myself: User, serializeData: string): Observable<boolean> {
-        return this.httpClient.post<boolean>(URL_SAVE_DASHBOARD_FORMAT().replace(':userId', String(myself.id)), {
+    saveDashboardLayout(myself: User, serializeData: string): Observable<ApiResponse> {
+        return this.httpClient.post<ApiResponse>(URL_SAVE_DASHBOARD_FORMAT().replace(':userId', String(myself.id)), {
             serializeFormat: serializeData
         });
     }

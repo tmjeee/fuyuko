@@ -6,6 +6,8 @@ import {getPricedItem2WithFiltering} from "../priced-item-filtering.service";
 import {PricedItem} from "../../model/item.model";
 import {convert} from "../conversion-item.service";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
+import {PricingStructure} from "../../model/pricing-structure.model";
+import {getPricingStructureById} from "../pricing-struture.service";
 
 export type PreviewResult = { i: PricedItem[], m: Map<string /* attributeId */, Attribute>};
 

@@ -4,7 +4,7 @@ import {PricingStructure, PricingStructureItemWithPrice, PricingStructureWithIte
 import {PricingStructureEvent, PricingStructureInput} from '../../component/pricing-component/pricing-structure-table.component';
 import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
 import {finalize, tap} from 'rxjs/operators';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';

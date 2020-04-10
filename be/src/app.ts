@@ -10,15 +10,25 @@ import config from './config';
 import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from "./route/v1/common-middleware";
 import {Registry} from "./registry";
 import {runCustomRuleSync} from "./custom-rule";
+import {validationResult} from 'express-validator';
+import {Options} from "body-parser";
+import {runCustomImportSync} from "./custom-import";
+import {runCustomExportSync} from "./custom-export/custom-export-executor";
 
 runBanner();
 
 const port: number = Number(config.port);
 const app: Express = express();
 
+const options: Options = {
+   limit: config['request-payload-limit']
+};
+
 app.use(timingLogMiddlewareFn);
-app.use(express.urlencoded());
-app.use(express.json());
+app.use(express.urlencoded(options));
+app.use(express.json(options));
+app.use(express.text(options))
+app.use(express.raw(options))
 app.use(cookieParser());
 app.use(httpLogMiddlewareFn);
 
@@ -43,12 +53,30 @@ const fns: PromiseFn[] = [
             });
     },
 
-    // rule sync
+    // custom rule sync
     () => {
-        i(`running rule sync`)
+        i(`running custom rule sync`)
         return runCustomRuleSync()
             .then((_: any) => {
-                i(`done with rule sync`);
+                i(`done with custom rule sync`);
+            });
+    },
+
+    // custom import sync
+    () => {
+        i(`running custom import sync`);
+        return runCustomImportSync()
+            .then((_: any) => {
+                i(`done with custom import sync`);
+            });
+    },
+
+    // custom export sync
+    () => {
+        i(`running custom export sync`);
+        return runCustomExportSync()
+            .then((_: any) => {
+                i(`done with custom export sync`);
             });
     },
 

@@ -18,6 +18,8 @@ export const toPricedItem = (p2: PricedItem2): PricedItem => {
         images: p2.images,
         country: p2.country,
         price: p2.price,
+        creationDate: p2.creationDate,
+        lastUpdate: p2.lastUpdate,
         children: toPricedItems(p2.children)
     };
     p2.values.reduce((p: PricedItem, i: ItemValue2) => {
@@ -37,6 +39,8 @@ export const getPricedItems = async (pricingStructureId: number): Promise<Priced
                     I.NAME AS I_NAME,
                     I.DESCRIPTION AS I_DESCRIPTION,
                     I.STATUS AS I_STATUS,
+                    I.CREATION_DATE AS I_CREATION_DATE,
+                    I.LAST_UPDATE AS I_LAST_UPDATE,
                     A.ID AS A_ID,
                     A.TYPE AS A_TYPE,
                     A.NAME AS A_NAME,
@@ -53,6 +57,7 @@ export const getPricedItems = async (pricingStructureId: number): Promise<Priced
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
                     IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
                     PSI.COUNTRY AS PSI_COUNTRY,
@@ -92,6 +97,8 @@ export const getChildrenPricedItems = async (pricingStructureId: number, parentI
                     I.NAME AS I_NAME,
                     I.DESCRIPTION AS I_DESCRIPTION,
                     I.STATUS AS I_STATUS,
+                    I.CREATION_DATE AS I_CREATION_DATE,
+                    I.LAST_UPDATE AS I_LAST_UPDATE,
                     A.ID AS A_ID,
                     A.TYPE AS A_TYPE,
                     A.NAME AS A_NAME,
@@ -108,6 +115,7 @@ export const getChildrenPricedItems = async (pricingStructureId: number, parentI
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
                     IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY,
                     PSI.ID AS PSI_ID,
                     PSI.ITEM_ID AS PSI_ITEM_ID,
                     PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
@@ -169,6 +177,8 @@ const _doQ = (q: QueryA): PricedItem2[] => {
                 parentId: c.I_PARENT_ID,
                 name: c.I_NAME,
                 description: c.I_DESCRIPTION,
+                creationDate: c.I_CREATION_DATE,
+                lastUpdate: c.I_LAST_UPDATE,
                 images: [],
                 values: [],
                 children: [],
@@ -185,7 +195,8 @@ const _doQ = (q: QueryA): PricedItem2[] => {
                 id: imageId,
                 name: c.IMG_NAME,
                 mimeType: c.IMG_MIMETYPE,
-                size: c.IMG_SIZE
+                size: c.IMG_SIZE,
+                primary: c.IMG_PRIMARY,
             } as ItemImage;
             imgMap.set(imgMapKey, img);
             const item: Item2 = itemMap.get(itemMapKey);

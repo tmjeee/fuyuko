@@ -12,8 +12,10 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role, ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
 
+// CHECKED
 const httpAction: any[] = [
     [
         check('groupId').exists().isNumeric()
@@ -35,9 +37,8 @@ const httpAction: any[] = [
                     R.DESCRIPTION AS R_DESCRIPTION
                 FROM TBL_GROUP AS G
                 LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
-                LEFT JOIN TBL_GROUP AS G ON G.ID = LGR.GROUP_ID
                 LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
-                WHERE G.STATUS = 'ENABLED' AND G.ID=?
+                WHERE G.STATUS = 'ENABLED' AND G.ID=? 
             `, [groupId]);
 
             const group: Group = q.reduce((group: Group, c: QueryI, index: number) => {
@@ -65,7 +66,11 @@ const httpAction: any[] = [
                 return group;
             }, null);
 
-            res.status(200).json(group);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Group retrieved successfully`,
+                payload: group
+            } as ApiResponse<Group>);
         });
     }
 ];

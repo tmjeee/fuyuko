@@ -7,8 +7,10 @@ import {Attribute2} from "../model/server-side.model";
 import {getAttributesInView} from "../../service/attribute.service";
 import {Attribute} from "../../model/attribute.model";
 import {convert} from "../../service/conversion-attribute.service";
+import {ApiResponse} from "../../model/api-response.model";
 
 
+// CHECKED
 const httpAction: any[] = [
     [
         check('viewId').exists().isNumeric(),
@@ -26,7 +28,11 @@ const httpAction: any[] = [
 
         const attr: Attribute[] = convert(ats);
 
-        res.status(200).json(attr && attr.length > 0 ? attr[0] : null);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Attribute retrieved successfully`,
+            payload: (attr && attr.length > 0 ? attr[0] : null)
+        } as ApiResponse<Attribute>);
     }
 ];
 

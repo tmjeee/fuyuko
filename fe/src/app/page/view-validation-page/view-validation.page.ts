@@ -8,6 +8,8 @@ import {Validation} from '../../model/validation.model';
 import {NotificationsService} from 'angular2-notifications';
 import {ValidationRunComponentEvent} from '../../component/validation-result-component/validation-run.component';
 import {ValidationResultListingComponentEvent} from '../../component/validation-result-component/validation-result-listing.component';
+import {ApiResponse, ScheduleValidationResponse} from "../../model/api-response.model";
+import {toNotifications} from "../../service/common.service";
 
 @Component({
     templateUrl: './view-validation.page.html',
@@ -56,8 +58,8 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
             this.validationService
                 .scheduleValidation(this.view.id, $event.name, $event.description)
                 .pipe(
-                    tap((r: {ok: boolean, validationId: number}) => {
-                        this.notificationsService.success(`Validation schduled`, `Validation with id ${r.validationId} is scheduled`);
+                    tap((r: ScheduleValidationResponse) => {
+                        toNotifications(this.notificationsService, r);
                     })
                 ).subscribe()
             ;
@@ -88,8 +90,8 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
                 this.validationService
                     .deleteValidation($event.validation.viewId, $event.validation.id)
                     .pipe(
-                        tap((_) => {
-                            this.notificationsService.success(`Success`, `Validation deleted`);
+                        tap((_: ApiResponse) => {
+                            toNotifications(this.notificationsService, _);
                             this._reload();
                         })
                     ).subscribe();

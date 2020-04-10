@@ -8,5 +8,6 @@
     "apiBaseUrl": "http://localhost:8888/api/v1",
     "username": "cypress",
     "password": "test"
-  }
+  },
+  "projectId": "ozp71m"
 }

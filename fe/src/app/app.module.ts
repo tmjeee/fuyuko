@@ -26,7 +26,7 @@ import {ImportHelpPageComponent} from './page/import-help-page/import-help.page'
 import {ExportPageComponent} from './page/export-page/export.page';
 import {ExportHelpPageComponent} from './page/export-help-page/export-help.page';
 import {AvatarService} from './service/avatar-service/avatar.service';
-import {NotificationAnimationType, Options, Position, SimpleNotificationsModule} from 'angular2-notifications';
+import {NotificationAnimationType, Options, SimpleNotificationsModule} from 'angular2-notifications';
 import {UserRolePageComponent} from './page/user-role-page/user-role.page';
 import {UserGroupPageComponent} from './page/user-group-page/user-group.page';
 import {UserPeoplePageComponent} from './page/user-people-page/user-people.page';
@@ -38,7 +38,7 @@ import {PricingPageComponent} from './page/pricing-page/pricing.page';
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
 import {DashboardPageComponent} from './page/dashboard-page/dashboard.page';
 import {UserManagementService} from './service/user-management-service/user-management.service';
-import {ViewAttributesPageComponent} from './page/view-attributes-page/view-attributes.page';
+import {Prov, ViewAttributesPageComponent} from './page/view-attributes-page/view-attributes.page';
 import {ViewDataTabularPageComponent} from './page/view-data-tabular-page/view-data-tabular.page';
 import {ViewDataThumbnailPageComponent} from './page/view-data-thumbnail-page/view-data-thumbnail.page';
 import {ViewDataListPageComponent} from './page/view-data-list-page/view-data-list.page';
@@ -87,9 +87,6 @@ import {SettingsService} from './service/settings-service/settings.service';
 import {tap} from 'rxjs/operators';
 import {User} from './model/user.model';
 import {SettingsModule} from './component/settings-component/settings.module';
-import {HelpCenterService} from './service/help-center-service/help-center.service';
-import {ForumService} from './service/forum-service/forum.service';
-import {ForumModule} from './component/forum-component/forum.module';
 import {DashboardModule} from './component/dashboard-component/dashboard.module';
 import {DashboardService} from './service/dashboard-service/dashboard.service';
 import {DashboardWidgetService} from './service/dashboard-service/dashboard-widget.service';
@@ -127,6 +124,14 @@ import {ValidationResultModule} from './component/validation-result-component/va
 import { ViewValidationDetailsPageComponent } from './page/view-validation-details-page/view-validation-details.page';
 import {CustomRuleService} from './service/custom-rule-service/custom-rule.service';
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
+import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
+import {HelpService} from "./service/help.service/help.service";
+import {HelpModule} from "./component/help-component/help.module";
+import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
+import {CustomImportPageComponent} from "./page/custom-import-page/custom-import.page";
+import {CustomImportService} from "./service/custom-import-service/custom-import.service";
+import {CustomExportService} from "./service/custom-export-service/custom-export.service";
+import {ExportArtifactService} from "./service/export-artifact-service/export-artifact.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -136,17 +141,18 @@ const appInitializer = (settingsService: SettingsService,
     authService.asObservable()
       .pipe(
         tap((u: User) => {
-        if (u == null) { // logout
+          console.log('**************************** app initializer authService callback', u);
+        if (u == null) {  // logout
           viewService.destroy();
           settingsService.destroy();
-        } else { // login
+        } else {          // login
           themeService.setTheme(u.theme);
           settingsService.init(u);
           viewService.init();
         }
       })
       ).subscribe();
-    console.log('********************* app initialize', viewService);
+    console.log(`** Fuyuko App initialize **`);
   };
 };
 
@@ -208,6 +214,9 @@ const appInitializer = (settingsService: SettingsService,
     PartnerDataListPageComponent,
     PartnerDataTablePageComponent,
     PartnerHelpPageComponent,
+    ExportArtifactsPageComponent,
+    CustomExportPageComponent,
+    CustomImportPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -249,7 +258,6 @@ const appInitializer = (settingsService: SettingsService,
     ImportDataModule,
     ExportDataModule,
     SettingsModule,
-    ForumModule,
     DashboardModule,
     AvatarModule,
     GroupTableModule,
@@ -262,6 +270,7 @@ const appInitializer = (settingsService: SettingsService,
     UserTableModule,
     PartnerViewModule,
     ValidationResultModule,
+    HelpModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -282,8 +291,6 @@ const appInitializer = (settingsService: SettingsService,
     {provide: ImportDataService, useClass: ImportDataService} as Provider,
     {provide: ExportDataService, useClass: ExportDataService} as Provider,
     {provide: SettingsService, useClass: SettingsService} as Provider,
-    {provide: HelpCenterService, useClass: HelpCenterService} as Provider,
-    {provide: ForumService, useClass: ForumService} as Provider,
     {provide: DashboardService, useClass: DashboardService} as Provider,
     {provide: DashboardWidgetService, useClass: DashboardWidgetService} as Provider,
     {provide: ActivationService, useClass: ActivationService} as Provider,
@@ -294,9 +301,12 @@ const appInitializer = (settingsService: SettingsService,
     {provide: BrowserLocationHistoryService, useClass: BrowserLocationHistoryService} as Provider,
     {provide: ValidationService, useClass: ValidationService} as Provider,
     {provide: CustomRuleService, useClass: CustomRuleService} as Provider,
+    {provide: HelpService, useClass: HelpService} as Provider,
+    {provide: CustomImportService, useClass: CustomImportService} as Provider,
+    {provide: CustomExportService, useClass: CustomExportService} as Provider,
+    {provide: ExportArtifactService, useClass: ExportArtifactService} as Provider,
 
-    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
-        deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
+    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
@@ -307,7 +317,7 @@ const appInitializer = (settingsService: SettingsService,
   ],
   exports: [
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   bootstrap: [AppComponent]
 })

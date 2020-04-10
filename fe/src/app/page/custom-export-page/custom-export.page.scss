@@ -1,0 +1,9 @@
+.custom-export-page {
+  margin: 10px;
+  ::ng-deep {
+    .select-view-form-field {
+      margin-right: 20px;
+      margin-left: 20px;
+    }
+  }
+}

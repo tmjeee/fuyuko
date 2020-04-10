@@ -11,9 +11,10 @@ import {View} from '../../model/view.model';
 import {DataTableComponentEvent} from '../../component/data-table-component/data-table.component';
 import {toTableItem} from '../../utils/item-to-table-items.util';
 import {ItemSearchComponentEvent} from '../../component/item-search-component/item-search.component';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
+import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
 
 
 @Component({
@@ -87,8 +88,12 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
           this.itemService.saveTableItems(this.currentView.id, $event.modifiedItems)
         ]).pipe(
           tap((r: [ApiResponse, ApiResponse]) => {
-            toNotifications(this.notificationService, r[0]);
-            toNotifications(this.notificationService, r[1]);
+            if ($event.deletedItems) {
+                toNotifications(this.notificationService, r[0]);
+            }
+            if ($event.modifiedItems) {
+                toNotifications(this.notificationService, r[1]);
+            }
             this.reload();
           })
         ).subscribe();
@@ -103,5 +108,34 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
     this.search = $event.search;
     this.searchType = $event.type;
     this.reload();
+  }
+
+  onCarouselEvent($event: CarouselComponentEvent) {
+    switch ($event.type) {
+      case "upload":
+          this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
+              tap((r: ApiResponse) => {
+                toNotifications(this.notificationService, r);
+                this.reload();
+              })
+          ).subscribe();
+        break;
+      case "markAsPrimary":
+        this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
+            tap((r: ApiResponse) => {
+              toNotifications(this.notificationService, r);
+              this.reload();
+            })
+        ).subscribe();
+        break;
+      case "delete":
+        this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
+            tap((r: ApiResponse) => {
+              toNotifications(this.notificationService, r);
+              this.reload();
+            })
+        ).subscribe();
+        break;
+    }
   }
 }

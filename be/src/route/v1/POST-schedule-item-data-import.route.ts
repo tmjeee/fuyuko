@@ -13,6 +13,9 @@ import {NextFunction, Request, Response, Router} from "express";
 import {Registry} from "../../registry";
 import {Item} from "../../model/item.model";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -30,7 +33,11 @@ const httpAction: any[] = [
 
         const job: Job = await runJob(viewId, dataImportId, items);
 
-        res.status(200).json(job);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Item data import job scheduled`,
+            payload: job
+        } as ApiResponse<Job>);
     }
 ];
 

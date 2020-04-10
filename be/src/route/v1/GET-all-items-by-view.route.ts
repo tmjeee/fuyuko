@@ -7,16 +7,18 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check} from 'express-validator';
+import {check, param} from 'express-validator';
 import { Item } from "../../model/item.model";
 import {Item2} from "../model/server-side.model";
 import {convert} from "../../service/conversion-item.service";
 import {getAllItemsInView} from "../../service/item.service";
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
    [
-       check('viewId').exists().isNumeric()
+       param('viewId').exists().isNumeric()
    ],
    validateMiddlewareFn,
    validateJwtMiddlewareFn,
@@ -26,7 +28,11 @@ const httpAction: any[] = [
 
         const allItem2s: Item2[] = await getAllItemsInView(viewId);
         const allItems: Item[] = convert(allItem2s);
-        res.status(200).json(allItems);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Items retrieved successfully`,
+            payload: allItems
+        } as ApiResponse<Item[]>);
    }
 ]
 

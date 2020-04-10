@@ -15,7 +15,9 @@ import {
 import {convert} from '../../service/conversion-rule.service';
 import {ROLE_VIEW} from "../../model/role.model";
 import {getRule2s} from "../../service/rule.service";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
 const httpAction: any[] = [
     [
         check('viewId').exists().isNumeric()
@@ -27,7 +29,11 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const rule2s: Rule2[] = await getRule2s(viewId);
         const rules: Rule[] = convert(rule2s);
-        res.status(200).json(rules);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Rules retrieved successfully`,
+            payload: rules
+        } as ApiResponse<Rule[]>);
     }
 ];
 

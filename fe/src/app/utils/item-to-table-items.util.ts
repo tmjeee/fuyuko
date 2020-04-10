@@ -31,6 +31,8 @@ function internalToTableItem(items: Item[], depth: number, rootParentId?: number
       images: item.images,
       rootParentId,
       parentId: item.parentId,
+      creationDate: item.creationDate,
+      lastUpdate: item.lastUpdate,
     } as TableItem;
     copyAttrProperties(item, tableItem);
     tableItems.push(tableItem);
@@ -60,6 +62,8 @@ export function toItemIgnoreParent(tableItems: TableItem[]): Item[] {
       description: tableItem.description,
       images: tableItem.images,
       parentId: itemParentId,
+      creationDate: tableItem.creationDate,
+      lastUpdate: tableItem.lastUpdate,
       children: []
     } as Item;
 
@@ -90,6 +94,8 @@ export function toItem(tableItems: TableItem[]): Item[] {
       name: tableItem.name,
       description: tableItem.description,
       images: tableItem.images,
+      creationDate: tableItem.creationDate,
+      lastUpdate: tableItem.lastUpdate,
       parentId: itemParentId,
       children: []
     } as Item;
@@ -103,6 +109,8 @@ export function toItem(tableItems: TableItem[]): Item[] {
       i.images = tableItem.images;
       i.name = tableItem.name;
       i.description = tableItem.description;
+      i.creationDate = tableItem.creationDate;
+      i.lastUpdate = tableItem.lastUpdate;
       copyAttrProperties(tableItem, i);
     }
 
@@ -224,6 +232,8 @@ function internalToTablePricedItem(items: PricedItem[], depth: number, rootParen
         parentId: item.parentId,
         depth,
         rootParentId,
+        creationDate: item.creationDate,
+        lastUpdate: item.lastUpdate,
         price: item.price,
         country: item.country,
       } as TablePricedItem;
@@ -256,6 +266,8 @@ export function toPricedItem(tableItems: TablePricedItem[]): PricedItem[] {
           parentId: tableItem.parentId,
           price: tableItem.price,
           country: tableItem.country,
+          creationDate: tableItem.creationDate,
+          lastUpdate: tableItem.lastUpdate,
           children: []
         } as PricedItem;
 
@@ -270,6 +282,8 @@ export function toPricedItem(tableItems: TablePricedItem[]): PricedItem[] {
           i.description = tableItem.description;
           i.images = tableItem.images;
           i.price = tableItem.price;
+          i.creationDate = tableItem.creationDate;
+          i.lastUpdate = tableItem.lastUpdate;
           i.country = tableItem.country;
           copyAttrProperties(tableItem, i);
         }
@@ -315,6 +329,8 @@ function internalToTablePricingStructureItemWithPrice(items: PricingStructureIte
       itemDescription: item.itemDescription,
       price: item.price,
       country: item.country,
+      creationDate: item.creationDate,
+      lastUpdate: item.lastUpdate,
       depth,
       rootParentId,
       parentId: item.parentId,
@@ -348,6 +364,8 @@ export function toPricingStructureItemWithPrice(tableItems: TablePricingStructur
       price: tableItem.price,
       country: tableItem.country,
       parentId: itemParentId,
+      creationDate: tableItem.creationDate,
+      lastUpdate: tableItem.lastUpdate,
       children: []
     } as PricingStructureItemWithPrice;
 

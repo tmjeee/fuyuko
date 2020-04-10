@@ -10,6 +10,7 @@ import {map} from 'rxjs/operators';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 import {createNewItem} from '../../shared-utils/ui-item-value-creator.utils';
 import config from '../../utils/config.util';
+import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
 
 export interface DataListComponentEvent {
     type: 'modification' | 'reload';
@@ -36,6 +37,7 @@ export class DataListComponent {
 
     @Output() events: EventEmitter<DataListComponentEvent>;
     @Output() searchEvents: EventEmitter<DataListSearchComponentEvent>;
+    @Output() carouselEvents: EventEmitter<CarouselComponentEvent>;
 
     pendingSaving: Item[];
     pendingDeletion: Item[];
@@ -48,12 +50,17 @@ export class DataListComponent {
         this.pendingDeletion = [];
         this.events = new EventEmitter();
         this.searchEvents = new EventEmitter();
+        this.carouselEvents = new EventEmitter();
     }
 
-    getItemImagesUrl(item: Item): string[] {
+    getCarouselImages(item: Item): CarouselItemImage[] {
         if (item && item.images) {
             // const p = `/item/image/:itemImageId`;
-            return item.images.map((i: ItemImage) => URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`));
+            return item.images.map((i: ItemImage) => ({
+                ...i,
+                itemId: item.id,
+                imageUrl: URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`)
+            } as CarouselItemImage));
         }
         return [];
     }
@@ -157,5 +164,9 @@ export class DataListComponent {
             this.selectionModel.deselect(item);
         }
         return false;
+    }
+
+    onCarouselEvent($event: CarouselComponentEvent) {
+        this.carouselEvents.emit($event);
     }
 }

@@ -6,7 +6,10 @@ import { param } from "express-validator";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {ValidationError, ValidationLog, ValidationResult} from "../../model/validation.model";
-import {ItemMetadata2, ItemValue2} from "../model/server-side.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -120,7 +123,12 @@ const httpAction: any[] = [
         });
 
         const r: ValidationResult[] = validationResults;
-        res.status(200).json(r && r.length ? r[0] : null);
+        const _r: ValidationResult = (r && r.length ? r[0] : null);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Validation result retrieved`,
+            payload: _r
+        } as ApiResponse<ValidationResult>);
     }
 ];
 

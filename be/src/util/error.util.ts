@@ -1,10 +1,10 @@
-import {ApiError} from '../model/error.model';
+import {ApiError, ApiErrorContext} from '../model/api-error.model';
 
-export const makeApiErrorObj = (...errors: ApiError[]): {context: string, errors: ApiError[]} => {
+export const makeApiErrorObj = (...errors: ApiError[]): ApiErrorContext => {
     return makeApiErrorObjWithContext('default', [...errors]);
 }
 
-export const makeApiErrorObjWithContext = (context: string, errors: ApiError[]): {context: string, errors: ApiError[]} => {
+export const makeApiErrorObjWithContext = (context: string, errors: ApiError[]): ApiErrorContext => {
     return {
         context,
         errors: [...errors]

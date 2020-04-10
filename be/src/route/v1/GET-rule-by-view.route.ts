@@ -7,7 +7,10 @@ import {getRule2} from "../../service/rule.service";
 import {Rule2} from "../model/server-side.model";
 import {Rule} from "../../model/rule.model";
 import {convert} from "../../service/conversion-rule.service";
+import {ApiResponse} from "../../model/api-response.model";
 
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -25,7 +28,11 @@ const httpAction: any[] = [
         const r2: Rule2 = await getRule2(viewId, ruleId);
         const [r]: Rule[] = convert([r2]);
 
-        res.status(200).json(r);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Rule retrieved`,
+            payload: r
+        } as ApiResponse<Rule>);
     }
 ];
 

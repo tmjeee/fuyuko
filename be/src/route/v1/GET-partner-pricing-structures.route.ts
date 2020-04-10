@@ -12,6 +12,10 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import { Connection } from "mariadb";
 import {ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
 import {PricingStructure} from "../../model/pricing-structure.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
@@ -25,7 +29,7 @@ const httpAction: any[] = [
         const q: QueryA = await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(`
                 SELECT  
-                    ID, VIEW_ID, NAME, DESCRIPTION, STATUS 
+                    ID, VIEW_ID, NAME, DESCRIPTION, STATUS, CREATION_DATE, LAST_UPDATE 
                 FROM TBL_PRICING_STRUCTURE 
                 WHERE ID IN (
                     SELECT PS.ID
@@ -46,13 +50,19 @@ const httpAction: any[] = [
                 id: curr.ID,
                 name: curr.NAME,
                 viewId: curr.VIEW_ID,
-                description: curr.DESCRIPTION
+                description: curr.DESCRIPTION,
+                creationDate: curr.CREATION_DATE,
+                lastUpdate: curr.LAST_UPDATE
             };
             acc.push(v);
             return acc;
         }, []);
 
-        res.status(200).json(pricingStructures);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: 'Pricing structure retrieved',
+            payload: pricingStructures
+        } as ApiResponse<PricingStructure[]>);
     }
 ];
 

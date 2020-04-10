@@ -1,9 +1,11 @@
-import {Sample1WidgetComponent} from './sample-1-widget/sample-1-widget.component';
-import {Sample2WidgetComponent} from './sample-2-widget/sample-2-widget.component';
+import {ClockWidgetComponent} from './clock-widget/clock-widget.component';
+import {WeatherWidgetComponent} from './weather-widget/weather-widget.component';
+import {StockTradingWidgetComponent} from "./stock-trading-widget/stock-trading-widget.component";
 
 export const DASHBOARD_WIDGET_INFOS = [
-    Sample1WidgetComponent.info(),
-    Sample2WidgetComponent.info(),
+    ClockWidgetComponent.info(),
+    WeatherWidgetComponent.info(),
+    StockTradingWidgetComponent.info(),
 ];
 
 /*

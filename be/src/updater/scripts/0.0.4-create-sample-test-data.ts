@@ -361,13 +361,13 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
                 metadatas: [{
                     entries: [
                         { key: 'type', value: 'string', dataType: 'string'},
-                        { key: 'value', value: `some string ${random()}`, dataType: 'string'}
+                        { key: 'value', value: `some string ${itemName}`, dataType: 'string'}
                     ]}]},
             {attributeId: att2Id, // text
                 metadatas: [{
                     entries: [
                         { key: 'type', value: 'text', dataType: 'string'},
-                        { key: 'value', value: `some text ${random()}`, dataType: 'string'}
+                        { key: 'value', value: `some text ${itemName}`, dataType: 'string'}
                     ]}]},
             {attributeId: att3Id, // number
                 metadatas: [{
@@ -484,21 +484,21 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
     const itemDef7: CreateItemType =
         createAnItemType(`Item-7`);
 
-    await _createItem(conn, pricingStructureId, itemDef1);
-    await _createItem(conn, pricingStructureId, itemDef2);
-    await _createItem(conn, pricingStructureId, itemDef3);
-    await _createItem(conn, pricingStructureId, itemDef4);
-    await _createItem(conn, pricingStructureId, itemDef5);
-    await _createItem(conn, pricingStructureId, itemDef6);
-    await _createItem(conn, pricingStructureId, itemDef7);
+    await _createItem(conn, pricingStructureId, itemDef1, null, 1.10);
+    await _createItem(conn, pricingStructureId, itemDef2, null, 2.20);
+    await _createItem(conn, pricingStructureId, itemDef3, null, 3.30);
+    await _createItem(conn, pricingStructureId, itemDef4, null, 4.40);
+    await _createItem(conn, pricingStructureId, itemDef5, null, 5.50);
+    await _createItem(conn, pricingStructureId, itemDef6, null, 6.60);
+    await _createItem(conn, pricingStructureId, itemDef7, null, 7.70);
 }
 
-const _createItem = async (conn: Connection, pricingStructureId: number, args: CreateItemType, parentItemId: number = null) => {
+const _createItem = async (conn: Connection, pricingStructureId: number, args: CreateItemType, parentItemId: number = null, price: number = Number((Math.random() * 10 + 1).toFixed(2))) => {
     // item
     const qItem: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`, [parentItemId, args.viewId, args.itemName, `${args.itemName} Description`]);
     const itemId: number = qItem.insertId;
 
-    await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, COUNTRY, PRICE) VALUES (?,?,?,?) `, [qItem.insertId, pricingStructureId, 'AUD', Number((Math.random() * 10 + 1).toFixed(2))]);
+    await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, COUNTRY, PRICE) VALUES (?,?,?,?) `, [qItem.insertId, pricingStructureId, 'AUD', price]);
 
     for (const attr of args.values) {
         const qItemValue: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, attr.attributeId]);
@@ -526,7 +526,7 @@ const _createItem = async (conn: Connection, pricingStructureId: number, args: C
 
 
     for (const child of args.children) {
-        await _createItem(conn, pricingStructureId, child, itemId);
+        await _createItem(conn, pricingStructureId, child, itemId, 10.10);
     }
 }
 

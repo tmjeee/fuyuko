@@ -11,18 +11,19 @@ import {body, param} from 'express-validator';
 import {Item} from "../../model/item.model";
 import {Item2} from "../model/server-side.model";
 import {revert as itemRevert} from "../../service/conversion-item.service";
-import {ApiResponse} from "../../model/response.model";
-import util from 'util';
+import {ApiResponse} from "../../model/api-response.model";
 import {addItem, addOrUpdateItem, updateItem} from "../../service/item.service";
 import {ROLE_EDIT} from "../../model/role.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
-        //body('items').isArray(),
-        //body('items.*.name').exists(),
-        //body('items.*.description').exists(),
-        //body('items.*.parentId').exists()
+        body('items').isArray(),
+        body('items.*.name').exists(),
+        body('items.*.description').exists(),
+        // body('items.*.parentId').exists()
         // todo: need to check [0].attributeId etc.
     ],
     validateMiddlewareFn,

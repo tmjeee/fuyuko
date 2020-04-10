@@ -12,9 +12,11 @@ import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {Rule} from "../../model/rule.model";
 import {Rule2} from "../model/server-side.model";
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {revert} from "../../service/conversion-rule.service";
 import {ROLE_EDIT} from "../../model/role.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -33,12 +35,12 @@ const httpAction: any[] = [
         
         for (const rule2 of rule2s) {
             if (rule2.id && rule2.id > 0)  { // update
-                doInDbConnection((conn: Connection) => {
-                    update(conn, viewId, rule2)
+                await doInDbConnection(async (conn: Connection) => {
+                    await update(conn, viewId, rule2)
                 });
             } else { // add
-                doInDbConnection((conn: Connection) => {
-                    add(conn, viewId, rule2)
+                await doInDbConnection(async (conn: Connection) => {
+                    await add(conn, viewId, rule2)
                 });
             }
         }

@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import * as numeral from 'numeral';
 
 export interface BackgroundImage {
   name: string;

@@ -7,17 +7,19 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check} from 'express-validator';
+import {check, param} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role, ROLE_VIEW} from "../../model/role.model";
-import {Paginable} from "../../model/pagnination.model";
+import {PaginableApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
-        check('roleName').exists(),
-        check('groupName')
+        param('roleName').exists(),
+        param('groupName')
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -41,7 +43,7 @@ const httpAction: any[] = [
                      LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
                      WHERE R.NAME = ? 
                 ) AND G.NAME LIKE ?
-            `,[roleName, `%${groupName}%`]);
+            `,[roleName, `%${groupName ? groupName : ''}%`]);
             const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -63,7 +65,7 @@ const httpAction: any[] = [
                      LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
                      WHERE R.NAME = ? 
                 ) AND G.NAME LIKE ?
-            `, [roleName, `%${groupName}%`]);
+            `, [roleName, `%${groupName ? groupName : ''}%`]);
             const m: Map<number/*groupId*/, Group> = new Map();
             const groups: Group[] = q.reduce((groups: Group[], c: QueryI) => {
                 const groupId: number = c.G_ID;
@@ -99,7 +101,7 @@ const httpAction: any[] = [
                 limit: totalGroups,
                 offset: 0,
                 payload: groups
-            } as Paginable<Group>);
+            } as PaginableApiResponse<Group[]>);
         });
     }
 ];

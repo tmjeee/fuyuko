@@ -35,6 +35,20 @@
                 </mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="creationDate">
+                <mat-header-cell *matHeaderCellDef>Creation Date</mat-header-cell>
+                <mat-cell *matCellDef="let view">
+                    {{view.creationDate | date}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="lastUpdate">
+               <mat-header-cell *matHeaderCellDef>Last Update</mat-header-cell>
+               <mat-cell *matCellDef="let view">
+                   {{view.lastUpdate | date}}
+               </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef></mat-header-cell>
                 <mat-cell *matCellDef="let view">

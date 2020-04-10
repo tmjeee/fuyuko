@@ -2,19 +2,21 @@
     <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="pricingStructureName">
             <th mat-header-cell *matHeaderCellDef>Pricing Structure Name</th>
-            <td mat-cell *matCellDef="let priceDataImportItem"> {{priceDataImportItem.pricingStructureName}} </td>
+            <td mat-cell *matCellDef="let pricedItem"> {{pricingStructure.name}} </td>
         </ng-container>
         <ng-container matColumnDef="itemName">
             <th mat-header-cell *matHeaderCellDef>Item Name</th>
-            <td mat-cell *matCellDef="let priceDataImportItem">{{priceDataImportItem.item.itemName}}</td>
+            <td mat-cell *matCellDef="let pricedItem">{{pricedItem.name}}</td>
         </ng-container>
         <ng-container matColumnDef="price">
             <th mat-header-cell *matHeaderCellDef>Price</th>
-            <td mat-cell *matCellDef="let priceDataImportItem">{{priceDataImportItem.item.price}}</td>
+            <td mat-cell *matCellDef="let pricedItem">{{pricedItem.price | currency}}</td>
         </ng-container>
         <ng-container matColumnDef="country">
             <th mat-header-cell *matHeaderCellDef>Country</th>
-            <td mat-cell *matCellDef="let priceDataImportItem">{{priceDataImportItem.item.country}}</td>
+            <td mat-cell *matCellDef="let pricedItem">{{pricedItem.country}}</td>
         </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row [attr.test-table-row]="''" *matRowDef="let attribute; columns: displayedColumns"></tr>
     </table>
 </div>

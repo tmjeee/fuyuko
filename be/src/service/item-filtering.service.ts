@@ -48,6 +48,8 @@ const SQL: string = `
             I.NAME AS I_NAME,
             I.DESCRIPTION AS I_DESCRIPTION,
             I.STATUS AS I_STATUS,
+            I.CREATION_DATE AS I_CREATION_DATE,
+            I.LAST_UPDATE AS I_LAST_UPDATE,
             
             V.ID AS V_ID,
             V.ITEM_ID AS V_ITEM_ID,
@@ -59,6 +61,8 @@ const SQL: string = `
             A.NAME AS A_NAME,
             A.STATUS AS A_STATUS,
             A.DESCRIPTION AS A_DESCRIPTION,
+            A.CREATION_DATE AS A_CREATION_DATE,
+            A.LAST_UPDATE AS A_LAST_UPDATE,
             
             AM.ID AS AM_ID,
             AM.VIEW_ATTRIBUTE_ID AS AM_VIEW_ATTRIBUTE_ID,
@@ -81,7 +85,7 @@ const SQL: string = `
             
             IMG.ID AS IMG_ID,
             IMG.ITEM_ID AS IMG_ITEM_ID,
-            IMG.PRIMARY AS IMG_PRIMARY,
+            IMG.\`PRIMARY\` AS IMG_PRIMARY,
             IMG.MIME_TYPE AS IMG_MIME_TYPE,
             IMG.NAME AS IMG_NAME,
             IMG.SIZE AS IMG_SIZE
@@ -89,7 +93,7 @@ const SQL: string = `
            FROM TBL_ITEM AS I
            LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
-           LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID + A.ID
+           LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS AME ON AME.VIEW_ATTRIBUTE_METADATA_ID = AM.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA AS IM ON IM.ITEM_VALUE_ID = V.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
@@ -147,7 +151,9 @@ export const getItem2WithFiltering = async (conn: Connection,
                 id: i.I_ID,
                 name: i.I_NAME,
                 description: i.I_DESCRIPTION,
-                parentId: i.I_PARENTID,
+                parentId: i.I_PARENT_ID,
+                creationDate: i.I_CREATION_DATE,
+                lastUpdate: i.I_LAST_UPDATE,
                 values: [],
                 images: [],
                 children: []
@@ -212,6 +218,8 @@ export const getItem2WithFiltering = async (conn: Connection,
                 name: i.A_NAME,
                 description: i.A_DESCRIPTION,
                 type: i.A_TYPE,
+                creationDate: i.A_CREATION_DATE,
+                lastUpdate: i.A_LAST_UPDATE,
                 metadatas: []
             } as Attribute2;
             attributeMap.set(attributeMapKey, a);

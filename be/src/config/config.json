@@ -7,12 +7,16 @@
   "db-runUpdater": true,
   "version": "1.0.0-beta",
   "port": 8888,
+
   "salt": "some-salt",
 
   "jwt-secret": "some-secret",
-  "jwt-expiration": "1h",
+  "jwt-expiration": "5h",
 
   "fe-url-base": "http://localhost:4200",
+  "help-url-base": "https://raw.githubusercontent.com/tmjeee/fuyuko-app-docs/v1.0.0",
+
+  "request-payload-limit": "900mb",
 
   "smtp-host": "smtp.gmail.com",
   "smtp-port": 587,

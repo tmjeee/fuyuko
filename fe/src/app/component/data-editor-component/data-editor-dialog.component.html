@@ -154,6 +154,11 @@
   <ng-container *ngIf="data.attribute.type === 'dimension'">
     <form [formGroup]="formGroupDimensionAttribute" (ngSubmit)="onEditDone()">
       <mat-form-field>
+        <mat-label>Length Value</mat-label>
+        <input type="text" matInput [attr.test-field-dimension-length]="''" [formControl]="formControlDimensionAttributeLengthValue" placeholder="Enter a length">
+        <mat-hint>Enter a length</mat-hint>
+      </mat-form-field>
+      <mat-form-field>
         <mat-label>Width Value</mat-label>
         <input type="text" matInput [attr.test-field-dimension-width]="''" [formControl]="formControlDimensionAttributeWidthValue" placeholder="Enter a width">
         <mat-hint>Enter a width</mat-hint>
@@ -162,11 +167,6 @@
         <mat-label>Height Value</mat-label>
         <input type="text" matInput [attr.test-field-dimension-height]="''" [formControl]="formControlDimensionAttributeHeightValue" placeholder="Enter a height">
         <mat-hint>Entera height</mat-hint>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Length Value</mat-label>
-        <input type="text" matInput [attr.test-field-dimension-length]="''" [formControl]="formControlDimensionAttributeLengthValue" placeholder="Enter a length">
-        <mat-hint>Enter a length</mat-hint>
       </mat-form-field>
       <mat-form-field>
         <input hidden matInput [formControl]="formControlDimensionAttributeUnit">

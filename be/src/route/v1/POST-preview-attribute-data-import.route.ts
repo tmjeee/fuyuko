@@ -21,9 +21,12 @@ import {preview} from "../../service/import-csv/import-attribute.service";
 import {AttributeDataImport} from "../../model/data-import.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
 const detectCsv = require('detect-csv');
 
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -65,7 +68,11 @@ const httpAction: any[] = [
 
             const attributeDataImport: AttributeDataImport = await preview(viewId, dataImportId, content);
 
-            res.status(200).json(attributeDataImport);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Attribute Data Import preview ready`,
+                payload: attributeDataImport
+            } as ApiResponse<AttributeDataImport>);
         });
 
     }

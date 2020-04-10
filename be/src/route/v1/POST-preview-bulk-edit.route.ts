@@ -48,9 +48,11 @@ import {
     compareDate, compareDimension, compareDoubleselect, compareHeight, compareLength,
     compareNumber, compareSelect,
     compareString, compareVolume, compareWidth,
-    convertToCm,
-    convertToCm2, convertToMl
 } from "../../service/compare-attribute-values.service";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 
 const SQL: string = `
@@ -72,6 +74,8 @@ const SQL: string = `
             A.NAME AS A_NAME,
             A.STATUS AS A_STATUS,
             A.DESCRIPTION AS A_DESCRIPTION,
+            A.CREATION_DATE AS A_CREATION_DATE,
+            A.LAST_UPDATE AS A_LAST_UPDATE,
             
             AM.ID AS AM_ID,
             AM.VIEW_ATTRIBUTE_ID AS AM_VIEW_ATTRIBUTE_ID,
@@ -102,7 +106,7 @@ const SQL: string = `
            FROM TBL_ITEM AS I
            LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
-           LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID + A.ID
+           LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS AME ON AME.VIEW_ATTRIBUTE_METADATA_ID = AM.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA AS IM ON IM.ITEM_VALUE_ID = V.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
@@ -163,7 +167,11 @@ const httpAction: any[] = [
         return r;
       });
 
-      res.status(200).json(bulkEditPackage);
+      res.status(200).json({
+          status: 'SUCCESS',
+          message: `Bulk edit package ready`,
+          payload: bulkEditPackage
+      } as ApiResponse<BulkEditPackage>);
    }
 ]
 
@@ -263,6 +271,8 @@ const getBulkEditItem2s = async (conn: Connection,
                     name: i.A_NAME,
                     description: i.A_DESCRIPTION,
                     type: i.A_TYPE,
+                    creationDate: i.A_CREATION_DATE,
+                    lastUpdate: i.A_LAST_UPDATE,
                     metadatas: []
                 } as Attribute2;
                 attributeMap.set(attributeMapKey, a);

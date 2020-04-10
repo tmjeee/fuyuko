@@ -4,9 +4,9 @@ import {ErrorStateMatcher} from '@angular/material/core';
 import {MyErrorStateMatcher} from '../../utils/my-error-state-matcher.util';
 import {RegistrationService} from '../../service/registration-service/registration.service';
 import {tap} from 'rxjs/operators';
-import {RegistrationResponse} from '../../model/registration.model';
 import {NotificationsService} from 'angular2-notifications';
 import {toNotifications} from '../../service/common.service';
+import {RegistrationResponse} from "../../model/api-response.model";
 
 @Component({
   templateUrl: './register.page.html',

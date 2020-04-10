@@ -6,10 +6,17 @@ import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {UserAvatar} from "../../model/avatar.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
+import {ApiResponse} from "../../model/api-response.model";
 
+
+// CHECKED
 
 const send = (res: Response, i: UserAvatar) => {
-    res.status(200).json(i);
+    res.status(200).json({
+        status: 'SUCCESS',
+        message: `User avatar retrieved`,
+        payload: i
+    } as ApiResponse<UserAvatar>);
 }
 
 const sendNoAvatar = async (res: Response, conn: Connection) => {

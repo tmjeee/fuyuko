@@ -12,8 +12,8 @@ const uuid = require('uuid');
 
 export const runJob = async (viewId: number, attributeDataImportId: number, items: Item[]): Promise<Job> => {
     const uid = uuid();
-    const name: string = `attribute-data-import-job-${uid}`;
-    const description: string = `attribute-data-import-job-${uid} description`;
+    const name: string = `item-data-import-job-${uid}`;
+    const description: string = `item-data-import-job-${uid} description`;
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
 

@@ -6,6 +6,9 @@ import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {Settings} from "../../model/settings.model";
 import {getSettings} from "../../service/user-settings.service";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -18,7 +21,11 @@ const httpAction: any[] = [
         const settings: Settings = await doInDbConnection(async (conn: Connection) => {
             return await getSettings(userId, conn)
         });
-        res.status(200).json(settings);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Settings retrieved`,
+            payload: settings
+        } as ApiResponse<Settings>);
     }
 ];
 

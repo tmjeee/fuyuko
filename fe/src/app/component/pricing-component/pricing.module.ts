@@ -8,6 +8,7 @@ import {ItemPricePopupComponent} from './item-price-popup.component';
 import {PricingStructureTableComponent} from './pricing-structure-table.component';
 import {ViewOnlyPriceTableComponent} from './view-only-price-table.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {ViewOnlyPriceDataItemsTableComponent} from "./view-only-price-data-items-table.component";
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
         PricingStructureTableComponent,
         ItemPricePopupComponent,
         ViewOnlyPriceTableComponent,
+        ViewOnlyPriceDataItemsTableComponent,
     ],
     exports: [
         PricingStructurePopupComponent,
@@ -31,6 +33,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
         ItemPricePopupComponent,
         BrowserAnimationsModule,
         ViewOnlyPriceTableComponent,
+        ViewOnlyPriceDataItemsTableComponent,
     ],
     entryComponents: [
         PricingStructurePopupComponent,

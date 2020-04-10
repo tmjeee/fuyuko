@@ -14,6 +14,9 @@ import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../model/
 import {Attribute} from "../../model/attribute.model";
 import {check} from 'express-validator';
 import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -37,6 +40,8 @@ const httpAction: any[] = [
                     A.TYPE AS A_TYPE,
                     A.NAME AS A_NAME,
                     A.DESCRIPTION AS A_DESCRIPTION,
+                    A.CREATION_DATE AS A_CREATION_DATE,
+                    A.LAST_UPDATE AS A_LAST_UPDATE,
                     M.ID as M_ID,
                     M.NAME AS M_NAME,
                     E.ID as E_ID,
@@ -65,6 +70,8 @@ const httpAction: any[] = [
                         name: i.A_NAME,
                         description: i.A_DESCRIPTION,
                         type: i.A_TYPE,
+                        creationDate: i.A_CREATION_DATE,
+                        lastUpdate: i.A_LAST_UPDATE,
                         metadatas: []
                     } as Attribute2;
                     a.set(aK, att);
@@ -96,7 +103,11 @@ const httpAction: any[] = [
 
             const attr: Attribute[] = convert(ats);
 
-            res.status(200).json(attr);
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Attributes retrieved`,
+                payload: attr
+            } as ApiResponse<Attribute[]>);
         });
     }
 ];

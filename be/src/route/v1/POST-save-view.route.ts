@@ -1,6 +1,6 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
-import {check, body} from 'express-validator';
+import {body} from 'express-validator';
 import {
     aFnAnyTrue,
     v,
@@ -12,8 +12,11 @@ import {View} from "../../model/view.model";
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {e} from '../../logger';
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -41,7 +44,7 @@ const httpAction: any[] = [
                        badInserts.push(view);
                     }
                 } else { // update
-                    const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW SET NAME=?, DESCRIPTION=? WHERE ID=? AND STATUS='ENABLED'`, [id, name, descrption]);
+                    const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW SET NAME=?, DESCRIPTION=? WHERE ID=? AND STATUS='ENABLED'`, [name, descrption, id]);
                     if (q.affectedRows == 0) {
                         badUpdates.push(view);
                     }

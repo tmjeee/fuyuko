@@ -12,9 +12,10 @@ import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {Group} from "../../model/group.model";
 import {Role, ROLE_VIEW} from "../../model/role.model";
-import {Paginable} from "../../model/pagnination.model";
+import {PaginableApiResponse} from "../../model/api-response.model";
 
 
+// CHECKED
 const httpAction: any[] = [
     [
         check('roleName').exists()
@@ -97,7 +98,7 @@ const httpAction: any[] = [
                 limit: totalGroups,
                 offset: 0,
                 payload: groups
-            } as Paginable<Group>);
+            } as PaginableApiResponse<Group[]>);
 
         });
     }

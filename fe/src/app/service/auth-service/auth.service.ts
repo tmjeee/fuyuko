@@ -3,11 +3,11 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {User} from '../../model/user.model';
 import {ThemeService} from '../theme-service/theme.service';
 import {HttpClient} from '@angular/common/http';
-import {LoginResponse} from '../../model/login.model';
 
 import config from '../../utils/config.util';
-import {tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {BrowserLocationHistoryService} from "../browser-location-history-service/browser-location-history.service";
+import {ApiResponse, LoginResponse} from "../../model/api-response.model";
 
 
 const URL_LOGIN = () => `${config().api_host_url}/login`;
@@ -43,18 +43,18 @@ export class AuthService {
         }).pipe(
             tap((r: LoginResponse) => {
                 this.storeToken({
-                    token: r.jwtToken,
-                    myself: r.user
+                    token: r.payload.jwtToken,
+                    myself: r.payload.user
                 } as StorageToken);
-                this.subject.next(r.user);
+                this.subject.next(r.payload.user);
             })
         );
   }
 
-  logout(): Observable<void> {
-     return this.httpClient.post<void>(`${URL_LOGOUT()}`, {
+  logout(): Observable<ApiResponse> {
+     return this.httpClient.post<ApiResponse>(`${URL_LOGOUT()}`, {
      }).pipe(
-         tap((x: void) => {
+         tap((x: ApiResponse) => {
              this.browserLocationHistoryService.clearStoredLastUrl();
              this.destroyToken();
              this.subject.next(null);
@@ -63,30 +63,33 @@ export class AuthService {
   }
 
   saveMyself(myself: User): Observable<User> {
-    return this.httpClient.post<User>(URL_SAVE_USER(), {
+    return this.httpClient.post<ApiResponse<User>>(URL_SAVE_USER(), {
         userId: myself.id,
         firstName: myself.firstName,
         lastName: myself.lastName,
         email: myself.email
     }).pipe(
+        map((r: ApiResponse<User>) => r.payload),
         tap((u: User) => this.afterSaveCallback(u))
     );
   }
 
   saveTheme(myself: User, theme: string): Observable<User> {
-    return this.httpClient.post<User>(URL_SAVE_USER(), {
+    return this.httpClient.post<ApiResponse<User>>(URL_SAVE_USER(), {
         userId: myself.id,
         theme
     }).pipe(
+        map((r: ApiResponse<User>) => r.payload),
         tap(this.afterSaveCallback.bind(this) as (u: User) => void)
     );
   }
 
   savePassword(myself: User, password: string) {
-      return this.httpClient.post<User>(URL_SAVE_USER(), {
+      return this.httpClient.post<ApiResponse<User>>(URL_SAVE_USER(), {
           userId: myself.id,
           password
       }).pipe(
+          map((r: ApiResponse<User>) => r.payload),
           tap(this.afterSaveCallback.bind(this) as (u: User) => void)
       );
   }

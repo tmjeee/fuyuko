@@ -10,7 +10,7 @@ import {UserManagementService} from '../../service/user-management-service/user-
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {SelfRegistration} from '../../model/self-registration.model';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse, RegistrationResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 
 
@@ -65,7 +65,7 @@ export class UserActivationPageComponent implements OnInit {
             case 'ACTIVATE': {
                 this.userManagementService.approvePendingUser($event.user as SelfRegistration)
                     .pipe(
-                        tap((r: ApiResponse) => {
+                        tap((r: RegistrationResponse) => {
                             toNotifications(this.notificationService, r);
                             this.reload();
                         })

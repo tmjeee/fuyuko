@@ -13,6 +13,10 @@ import {Job} from "../../model/job.model";
 import {Attribute} from "../../model/attribute.model";
 import {runJob} from "../../service/import-csv/job-do-attribute-data-import.service";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -30,7 +34,11 @@ const httpAction: any[] = [
 
         const job: Job = await runJob(viewId, dataImportId, attributes);
 
-        res.status(200).json(job);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Attribute data import scheduled`,
+            payload: job
+        } as ApiResponse<Job>);
     }
 ];
 

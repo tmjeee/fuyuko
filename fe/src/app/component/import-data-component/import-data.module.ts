@@ -8,6 +8,13 @@ import {DataTableModule} from '../data-table-component/data-table.module';
 import {NotificationMessageListingModule} from '../notification-message-listing-component/notification-message-listing.module';
 import {AttributeTableModule} from '../attribute-table-component/attribute-table.module';
 import {PricingModule} from '../pricing-component/pricing.module';
+import {CustomImportWizardComponent} from "./custom-import-wizard.component";
+import {CustomImportListComponent} from "./custom-import-list.component";
+import {ViewModule} from "../view-component/view.module";
+import {CustomImportInputFormComponent} from "./custom-import-input-form.component";
+import {CustomImportPreviewComponent} from "./custom-import-preview.component";
+import {CustomImportSubmitJobComponent} from "./custom-import-submit-job.component";
+import {NotificationModule} from "../notification-component/notification.module";
 
 @NgModule({
     imports: [
@@ -20,12 +27,24 @@ import {PricingModule} from '../pricing-component/pricing.module';
         NotificationMessageListingModule,
         AttributeTableModule,
         PricingModule,
+        ViewModule,
+        NotificationModule,
     ],
     declarations: [
-        ImportDataComponent
+        ImportDataComponent,
+        CustomImportWizardComponent,
+        CustomImportListComponent,
+        CustomImportInputFormComponent,
+        CustomImportPreviewComponent,
+        CustomImportSubmitJobComponent,
     ],
     exports: [
-        ImportDataComponent
+        ImportDataComponent,
+        CustomImportWizardComponent,
+        CustomImportListComponent,
+        CustomImportInputFormComponent,
+        CustomImportPreviewComponent,
+        CustomImportSubmitJobComponent,
     ]
 })
 export class ImportDataModule {

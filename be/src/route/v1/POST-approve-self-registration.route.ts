@@ -12,9 +12,11 @@ import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {hashedPassword, sendEmail} from "../../service";
 import config from '../../config';
-import {RegistrationResponse} from "../../model/registration.model";
 import {Registry} from "../../registry";
 import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
+import {RegistrationResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 /**
  * Approve other users' self registration entries
@@ -82,11 +84,13 @@ const httpAction = [
                 `);
 
             res.status(200).json({
-                email,
                 message: `Self registration approval for ${username} (${email}) success`,
-                registrationId: selfRegistrationId,
                 status: 'SUCCESS',
-                username
+                payload: {
+                    registrationId: selfRegistrationId,
+                    email,
+                    username
+                }
             } as RegistrationResponse);
         });
     }

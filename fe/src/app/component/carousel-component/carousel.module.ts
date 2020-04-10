@@ -4,6 +4,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {CarouselComponent} from './carousel.component';
+import {UploadItemImageDialogComponent} from "./upload-item-image-dialog.component";
 
 @NgModule({
     imports: [
@@ -14,10 +15,15 @@ import {CarouselComponent} from './carousel.component';
         AppMaterialsModule,
     ],
     declarations: [
-        CarouselComponent
+        CarouselComponent,
+        UploadItemImageDialogComponent,
     ],
     exports: [
-        CarouselComponent
+        CarouselComponent,
+        UploadItemImageDialogComponent,
+    ],
+    entryComponents: [
+        UploadItemImageDialogComponent
     ]
 })
 export class CarouselModule {

@@ -7,7 +7,7 @@ import {Subscription} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {AttributeTableComponentEvent} from '../../component/attribute-table-component/attribute-table.component';
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {Router} from "@angular/router";
 

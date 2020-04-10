@@ -10,6 +10,8 @@ import {DashboardComponentEvent} from '../../component/dashboard-component/dashb
 import {tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
 import {SerializedDashboardFormat} from '../../model/dashboard-serialzable.model';
+import {ApiResponse} from "../../model/api-response.model";
+import {toNotifications} from "../../service/common.service";
 
 @Component({
   templateUrl: './dashboard.page.html',
@@ -40,13 +42,15 @@ export class DashboardPageComponent implements OnInit {
             .getUserDashboardLayoutData(myself)
             .pipe(
                 tap((d: string) => {
-                    const s: SerializedDashboardFormat = JSON.parse(d);
-                    const strategyId: string = s.strategyId;
-                    const strategy: DashboardStrategy = this.strategies.find((s: DashboardStrategy) => s.id === strategyId);
-                    if (strategy) {
-                        this.selectedStrategy = strategy;
+                    if (d) {
+                        const s: SerializedDashboardFormat = JSON.parse(d);
+                        const strategyId: string = s.strategyId;
+                        const strategy: DashboardStrategy = this.strategies.find((s: DashboardStrategy) => s.id === strategyId);
+                        if (strategy) {
+                            this.selectedStrategy = strategy;
+                        }
+                        this.data = d;
                     }
-                    this.data = d;
                     this.loading = false;
                 })
             ).subscribe();
@@ -56,12 +60,8 @@ export class DashboardPageComponent implements OnInit {
         const myself: User = this.authService.myself();
         this.dashboardService.saveDashboardLayout(myself, $event.serializedData)
             .pipe(
-                tap((r: boolean) => {
-                    if (r) {
-                        this.notificationsService.success(`Success`, `Dashboard layout saved`);
-                    } else {
-                        this.notificationsService.error(`Error`, `Dashboard layout failed`);
-                    }
+                tap((r: ApiResponse) => {
+                    toNotifications(this.notificationsService, r);
                 })
             ).subscribe();
     }

@@ -4,7 +4,8 @@ import {Observable, of} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
-import {ApiResponse} from '../../model/response.model';
+import {ApiResponse} from '../../model/api-response.model';
+import {map} from "rxjs/operators";
 
 const URL_ALL_ATTRIBUTES_BY_VIEW = () => `${config().api_host_url}/attributes/view/:viewId`;
 const URL_ATTRIBUTE_BY_VIEW = () => `${config().api_host_url}/attribute/:attributeId/view/:viewId`;
@@ -19,12 +20,22 @@ export class AttributeService {
   constructor(private httpClient: HttpClient) {}
 
   getAllAttributesByView(viewId: number): Observable<Attribute[]> {
-    return this.httpClient.get<Attribute[]>(URL_ALL_ATTRIBUTES_BY_VIEW().replace(':viewId', String(viewId)));
+    return this.httpClient
+        .get<ApiResponse<Attribute[]>>(
+            URL_ALL_ATTRIBUTES_BY_VIEW().replace(':viewId', String(viewId)))
+        .pipe(
+            map((r: ApiResponse<Attribute[]>) => {
+                return r.payload;
+            })
+        );
   }
 
   getAttributeByView(viewId: number, attributeId: number): Observable<Attribute> {
-      return this.httpClient.get<Attribute>(URL_ATTRIBUTE_BY_VIEW()
-          .replace(':viewId', String(viewId)).replace(':attributeId', String(attributeId)));
+      return this.httpClient
+          .get<ApiResponse<Attribute>>(URL_ATTRIBUTE_BY_VIEW().replace(':viewId', String(viewId)).replace(':attributeId', String(attributeId)))
+          .pipe(
+              map((r: ApiResponse<Attribute>) => r.payload)
+          );
   }
 
   deleteAttribute(view: View, attribute: Attribute): Observable<ApiResponse> {
@@ -33,8 +44,13 @@ export class AttributeService {
   }
 
   searchAttribute(viewId: number, search: string): Observable<Attribute[]> {
-    return this.httpClient.get<Attribute[]>(
-        URL_SEARCH_ALL_ATTRIBUTES_BY_VIEW().replace(':viewId', String(viewId)).replace(':attribute', search));
+    return this.httpClient.get<ApiResponse<Attribute[]>>(
+        URL_SEARCH_ALL_ATTRIBUTES_BY_VIEW()
+            .replace(':viewId', String(viewId))
+            .replace(':attribute', search))
+        .pipe(
+            map((r: ApiResponse<Attribute[]>) => r.payload)
+        );
   }
 
   addAttribute(view: View, attribute: Attribute): Observable<ApiResponse> {

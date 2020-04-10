@@ -6,8 +6,13 @@ import {Connection} from "mariadb";
 import { Invitation } from "../../model/invitation.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {Registry} from "../../registry";
-import {ROLE_VIEW} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
 
+// CHECKED
+
+/**
+ * Get invitation by code
+ */
 const httpAction = [
     [
         check('code').exists()
@@ -43,13 +48,19 @@ const httpAction = [
                return acc;
             }, []);
 
-            res.status(200).json({
-               id,
+            const invitation: Invitation = {
+                id,
                 activated,
                 creationDate,
                 email,
                 groupIds
-            } as Invitation);
+            };
+
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `invitation retrieved successfully`,
+                payload: invitation
+            } as ApiResponse<Invitation>);
         });
     }
 ]

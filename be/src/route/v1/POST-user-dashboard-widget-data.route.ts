@@ -12,6 +12,10 @@ import {SerializedDashboardWidgetInstanceDataFormat} from "../../model/dashboard
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import { Connection } from "mariadb";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+
+// CHECKED
 
 const httpAction: any[] = [
     param('userId').exists().isNumeric(),
@@ -21,7 +25,7 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
-        const d: SerializedDashboardWidgetInstanceDataFormat = req.body.data;
+        const d: SerializedDashboardWidgetInstanceDataFormat = req.body;
 
         await doInDbConnection(async (conn: Connection) => {
 
@@ -34,10 +38,13 @@ const httpAction: any[] = [
                 dashboardId = q[0].ID;
             }
             const serializedData: string = JSON.stringify(d.data);
-            await conn.query(`INSERT INTO TBL_USER_DASHBOARD_WIDGET (USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA VALUES(?,?,?,?)`,
+            await conn.query(`INSERT INTO TBL_USER_DASHBOARD_WIDGET (USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA) VALUES(?,?,?,?)`,
                 [dashboardId, d.instanceId, d.typeId, serializedData]);
         });
-        res.status(200).json(true);
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Dashboard widget data updated`
+        } as ApiResponse);
     }
 ];
 

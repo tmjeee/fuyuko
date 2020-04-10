@@ -31,6 +31,7 @@ export const convert = (metadatas: ItemMetadata2[]): ItemValTypes => {
     return o;
 }
 
+// todo: tmjeee: make sure undefined doesn't get printed out as string
 export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMetadata2[] => {
     switch (itemValTypes.type) {
         case 'string': {
@@ -96,7 +97,7 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'value',
-                        value: `${v.value}`,
+                        value: `${v.value ? v.value : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                 ]
@@ -125,7 +126,7 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'value',
-                        value: `${v.value}`,
+                        value: `${v.value ? v.value : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                 ]
@@ -148,25 +149,25 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'width',
-                        value: `${v.width}`,
+                        value: `${v.width ? v.width : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
                         key: 'height',
-                        value: `${v.height}`,
+                        value: `${v.height ? v.height : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
                         key: 'length',
-                        value: `${v.length}`,
+                        value: `${v.length ? v.length : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
                         key: 'unit',
-                        value: `${v.unit}`,
+                        value: v.unit,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]
@@ -189,13 +190,13 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'value',
-                        value: `${v.value}`,
+                        value: `${v.value ? v.value : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
                         key: 'unit',
-                        value: `${v.unit}`,
+                        value: v.unit,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]
@@ -218,13 +219,13 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'value',
-                        value: `${v.value}`,
+                        value: `${v.value ? v.value : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
                         key: 'unit',
-                        value: `${v.unit}`,
+                        value: v.unit,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]
@@ -247,13 +248,13 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'value',
-                        value: `${v.value}`,
+                        value: `${v.value ? v.value : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
                         key: 'unit',
-                        value: `${v.unit}`,
+                        value: v.unit,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]
@@ -276,13 +277,13 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'value',
-                        value: `${v.value}`,
+                        value: `${v.value ? v.value : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
                         key: 'unit',
-                        value: `${v.unit}`,
+                        value: v.unit,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]
@@ -305,7 +306,7 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'value',
-                        value: `${v.value}`,
+                        value: `${v.value ? v.value : ''}`,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]
@@ -328,13 +329,13 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'value',
-                        value: `${v.value}`,
+                        value: `${v.value ? v.value : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
                         key: 'country',
-                        value: `${v.country}`,
+                        value: v.country,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]
@@ -357,7 +358,7 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'key',
-                        value: `${v.key}`,
+                        value: `${v.key ? v.key : ''}`,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]
@@ -380,13 +381,13 @@ export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMet
                     {
                         id: -1,
                         key: 'key1',
-                        value: `${v.key1}`,
+                        value: `${v.key1 ? v.key1 : ''}`,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
                         key: 'key2',
-                        value: `${v.key2}`,
+                        value: `${v.key2 ? v.key2 : ''}`,
                         dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]

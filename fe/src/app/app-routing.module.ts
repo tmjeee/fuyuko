@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import {Routes, RouterModule, Route} from '@angular/router';
 import {LoginPageComponent} from './page/login-page/login.page';
 import {LoginLayoutComponent} from './layout/login-layout/login.layout';
@@ -52,6 +51,10 @@ import {EditAttributePageComponent} from './page/view-attributes-page/edit-attri
 import {ViewValidationDetailsPageComponent} from './page/view-validation-details-page/view-validation-details.page';
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
 import {AddAttributePageComponent} from './page/view-attributes-page/add-attribute.page';
+import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
+import {NgModule} from "@angular/core";
+import {CustomImportPageComponent} from "./page/custom-import-page/custom-import.page";
+import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
 
 const routes: Routes = [
 
@@ -249,6 +252,14 @@ const routes: Routes = [
         }
       } as Route,
       {
+        path: 'custom-import',
+        canActivate: [AuthGuard],
+        component: CustomImportPageComponent,
+        data: {
+          subSideNav: 'custom-import'
+        }
+      },
+      {
         path: 'import-help',
         canActivate: [AuthGuard],
         component: ImportHelpPageComponent,
@@ -260,6 +271,22 @@ const routes: Routes = [
         component: ExportPageComponent,
         data: {
           subSideNav: 'export'
+        }
+      } as Route,
+      {
+        path: 'custom-export',
+        canActivate: [AuthGuard],
+        component: CustomExportPageComponent,
+        data: {
+          subSideNav: 'custom-export'
+        }
+      },
+      {
+        path: 'export-artifacts',
+        canActivate: [AuthGuard],
+        component: ExportArtifactsPageComponent,
+        data: {
+          subSideNav: 'export-artifacts'
         }
       } as Route,
       {

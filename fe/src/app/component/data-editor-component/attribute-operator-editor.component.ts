@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute, DEFAULT_DATE_FORMAT, Pair2} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import { OperatorType } from '../../model/operator.model';
 import {
@@ -36,6 +36,7 @@ import {
     VolumeUnits, WIDTH_UNITS,
     WidthUnits
 } from "../../model/unit.model";
+import moment from "moment";
 
 @Component({
     selector: 'app-attribute-operator-editor',
@@ -124,10 +125,19 @@ export class AttributeOperatorEditorComponent implements OnInit {
                 switch (this.attribute.type) {
                     case 'string':
                     case 'text':
-                    case 'number':
-                    case 'date': {
+                    case 'number': {
                         const v = this.itemValue ? convertToString(this.attribute, this.itemValue) : '';
                         this.formControl = this.formBuilder.control(v, [Validators.required]);
+                        this.formGroup.addControl('formControl', this.formControl);
+                        break;
+                    }
+                    case 'date': {
+                        const dateInString = this.itemValue ? convertToString(this.attribute, this.itemValue) : '';
+                        let m: moment.Moment = null;
+                        if (dateInString) {
+                            m = moment(dateInString, this.attribute.format ? this.attribute.format : DEFAULT_DATE_FORMAT);
+                        }
+                        this.formControl = this.formBuilder.control(m, [Validators.required]);
                         this.formGroup.addControl('formControl', this.formControl);
                         break;
                     }
@@ -349,6 +359,21 @@ export class AttributeOperatorEditorComponent implements OnInit {
         }
         const event = { attribute, itemValue, operator} as ItemValueOperatorAndAttribute;
         this.events.emit(event);
+    }
+
+    getDoubleselectPair2(): Pair2[] {
+        if (this.attribute &&
+            this.attribute.type === 'doubleselect' &&
+            this.attribute.pair2 &&
+            this.itemValue &&
+            this.itemValue.val &&
+            this.itemValue.val.type === 'doubleselect' &&
+            this.itemValue.val.key1) {
+
+            const key1 = this.itemValue.val.key1;
+            return this.attribute.pair2.filter((pair2: Pair2) => pair2.key1 === key1);
+        }
+        return [];
     }
 }
 

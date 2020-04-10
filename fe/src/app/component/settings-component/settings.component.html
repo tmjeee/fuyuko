@@ -4,24 +4,25 @@
             <form (ngSubmit)="onGeneralTabSubmit()">
                 <section>
                     <mat-label>Default Help Navigation Bar</mat-label>
-                    <mat-slide-toggle color="primary" [formControl]="formControlOpenHelpNav">Open by default</mat-slide-toggle>
+                    <mat-slide-toggle [attr.test-slide-toggle]="'open-help-nav'" color="primary" [formControl]="formControlOpenHelpNav">Open by default</mat-slide-toggle>
                     <mat-hint>Open help Navigation Bar by default on first logon? After that the state of your help navigation bar (open or closed) will be remembered and automatically applied on subsequent logons.</mat-hint>
                 </section>
 
                 <section>
                     <mat-label>Default Side Navigation Bar</mat-label>
-                    <mat-slide-toggle color="primary" [formControl]="formControlOpenSideNav">Open by default</mat-slide-toggle>
+                    <mat-slide-toggle [attr.test-slide-toggle]="'open-side-nav'" color="primary" [formControl]="formControlOpenSideNav">Open by default</mat-slide-toggle>
                     <mat-hint>Open Side navigation bar by default on first logon? After that the state of your side navigation bar (open or closed) will be remembered and automatically applied on subsequent logons.</mat-hint>
                 </section>
 
                 <section>
+
                     <mat-label>Default Sub-Side Navigation Bar</mat-label>
-                    <mat-slide-toggle color="primary" [formControl]="formControlOpenSubSideNav">Open by default</mat-slide-toggle>
+                    <mat-slide-toggle [attr.test-slide-toggle]="'open-sub-side-nav'" color="primary" [formControl]="formControlOpenSubSideNav">Open by default</mat-slide-toggle>
                     <mat-hint>Open Sub-Side navigation bar by default on first logon? After that the state of your side navigation bar (open or closed) will be remembered and automatically applied on subsequent logons.</mat-hint>
                 </section>
 
                 <div class="controls">
-                    <button type="submit" mat-flat-button color="primary">Save</button>
+                    <button type="submit" mat-flat-button color="primary" [attr.test-button-save]="''">Save</button>
                 </div>
             </form>
         </mat-tab>

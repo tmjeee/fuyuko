@@ -30,10 +30,13 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     @ViewChild('stepper') stepper: MatStepper;
 
-    // first step
+    // first step (predefined condition)
     formGroupFirstStep: FormGroup;
     changeClauses: ItemValueAndAttribute[];
     whereClauses: ItemValueOperatorAndAttribute[];
+
+    // first step (custom condition)
+    // todo:
 
     // second step
     formGroupSecondStep: FormGroup;
@@ -179,12 +182,12 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     onFirstStepSubmit() {
         this.secondStepReady = false;
+        console.log('***************', this.whereClauses);
         this.bulkEditService
             .previewBuilEdit(this.view.id, this.changeClauses, this.whereClauses)
             .pipe(
                 tap((b: BulkEditPackage) => {
                    this.bulkEditPackage = b;
-                   console.log('*********************** bulk edit packate', this.bulkEditPackage);
                    if (this.bulkEditPackage) {
                        const bulkEditItems: BulkEditItem[] = this.bulkEditPackage.bulkEditItems;
                        this.bulkEditTableItems  = toBulkEditTableItem(bulkEditItems);

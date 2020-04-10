@@ -10,10 +10,12 @@ import {
 import {param, body} from 'express-validator';
 
 import {Job} from "../../model/job.model";
-import {Attribute} from "../../model/attribute.model";
 import {runJob} from "../../service/import-csv/job-do-price-data-import.service";
-import {PriceDataItem, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
+import {PriceDataItem} from "../../model/pricing-structure.model";
 import {ROLE_EDIT} from "../../model/role.model";
+import {ApiResponse} from "../../model/api-response.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [
@@ -28,11 +30,14 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const dataImportId: number = Number(req.body.dataImportId);
         const priceDataItems: PriceDataItem[] =  req.body.priceDataItems;
-        const pricingItems: PricingStructureItemWithPrice[] = priceDataItems.map((p: PriceDataItem) => p.item).filter((i) => !!i);
 
-        const job: Job = await runJob(viewId, dataImportId, pricingItems);
+        const job: Job = await runJob(viewId, dataImportId, priceDataItems);
 
-        res.status(200).json(job);
+        res.status(200).json ( {
+            status: 'SUCCESS',
+            message: `Pricing data import job scheduled`,
+            payload: job
+        } as ApiResponse<Job>);
     }
 ];
 

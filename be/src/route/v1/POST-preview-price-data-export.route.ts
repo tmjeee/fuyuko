@@ -13,14 +13,19 @@ import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 import {PriceDataExport} from "../../model/data-export.model";
 import {preview, PreviewResult} from "../../service/export-csv/export-price.service";
 import {ROLE_EDIT} from "../../model/role.model";
+import {PricingStructure} from "../../model/pricing-structure.model";
+import {getPricingStructureById} from "../../service/pricing-struture.service";
+import {ApiResponse} from "../../model/api-response.model";
 const detectCsv = require('detect-csv');
+
+// CHECKED
 
 const httpAction: any[] = [
     [
         param('viewId').exists().isNumeric(),
         param('pricingStructureId').exists().isNumeric(),
-        body('attributes').exists().isArray(),
-        body('filter').exists().isArray()
+        body('attributes').optional({nullable: true}).isArray(),
+        body('filter').optional({nullable: true}).isArray()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
@@ -32,14 +37,21 @@ const httpAction: any[] = [
         const attributes: Attribute[] = req.body.attributes;
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
 
-
         const p: PreviewResult = await preview(viewId, pricingStructureId, filter);
+        const ps: PricingStructure = await getPricingStructureById(pricingStructureId);
+
+        const priceDataExport: PriceDataExport = ({
+            type: "PRICE",
+            pricingStructure: ps,
+            attributes: (attributes && attributes.length) ? attributes : [...p.m.values()],
+            pricedItems: p.i,
+        });
 
         res.status(200).json({
-            type: "PRICE",
-            attributes: [...p.m.values()],
-            pricedItems: p.i,
-        } as PriceDataExport);
+           status: 'SUCCESS',
+           message: `Price data export preview ready`,
+           payload: priceDataExport
+        } as ApiResponse<PriceDataExport>);
     }
 ];
 

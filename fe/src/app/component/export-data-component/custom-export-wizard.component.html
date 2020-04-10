@@ -1,0 +1,89 @@
+<div class="custom-export-wizard">
+    <mat-horizontal-stepper #stepper>
+
+        <!-- step 1: select custom export -->
+        <mat-step [stepControl]="firstStepFormGroup">
+            <ng-template matStepLabel>Select custom export</ng-template>
+            <form *ngIf="step1Ready" [formGroup]="firstStepFormGroup" (ngSubmit)="onStep1Submit()" [attr.test-step]="'step1'">
+                <app-custom-export-list
+                        (events)="onCustomExportListEvent($event)"
+                        [customDataExports]="customDataExports">
+                </app-custom-export-list>
+                <div class="control">
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="firstStepFormGroup.invalid" [attr.test-button-next]="''">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+
+
+        <!-- step 2: select view -->
+        <mat-step [stepControl]="secondStepFormGroup">
+            <ng-template matStepLabel>Select view to apply</ng-template>
+            <form *ngIf="step2Ready" [formGroup]="secondStepFormGroup" (ngSubmit)="onStep2Submit()" [attr.test-step]="'step2'">
+                <app-view-selector [setCurrentActiveView]="false"
+                                   (events)="onViewSelectorEvent($event)">
+                </app-view-selector>
+                <div class="control">
+                    <button mat-flat-button color="primary" matStepperPrevious [attr.test-button-previous]="''">Previous</button>
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="secondStepFormGroup.invalid" [attr.test-button-next]="''">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+
+        <!-- step 3: inputs -->
+        <mat-step [stepControl]="thirdStepFormGroup">
+            <ng-template matStepLabel>Fill in Inputs</ng-template>
+            <form *ngIf="step3Ready" [formGroup]="thirdStepFormGroup" (ngSubmit)="onStep3Submit()" [attr.test-step]="'step3'">
+                <app-custom-export-input-form [customDataExport]="formControlCustomDataExport.value"
+                                              [view]="formControlView.value"
+                                              (events)="onCustomExportFormEvent($event)"
+                                              [validateFn]="customExportFormValidateFn">
+                </app-custom-export-input-form>
+                <div class="control">
+                    <button mat-flat-button color="primary" matStepperPrevious [attr.test-button-previous]="''">Previous</button>
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="thirdStepFormGroup.invalid" [attr.test-button-next]="''">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+
+        <!-- step 4: preview -->
+        <mat-step [stepControl]="fourthStepFormGroup">
+            <ng-template matStepLabel>Preview</ng-template>
+            <form *ngIf="step4Ready" [formGroup]="fourthStepFormGroup" (ngSubmit)="onStep4Submit()" [attr.test-step]="'step4'">
+                <app-custom-export-preview [customDataExport]="formControlCustomDataExport.value"
+                                           [inputValues]="formControlCustomExportInputValues.value"
+                                           [view]="formControlView.value"
+                                           (events)="onCustomImportPreviewEvent($event)"
+                                           [previewFn]="customExportPreviewFn">
+                </app-custom-export-preview>
+                <div class="control">
+                    <button mat-flat-button color="primary" matStepperPrevious [attr.test-button-previous]="''">Previous</button>
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="fourthStepFormGroup.invalid" [attr.test-button-next]="''">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+
+        <!-- step 5: submit job -->
+        <mat-step [stepControl]="fifthStepFormGroup">
+            <ng-template matStepLabel>Submit Job</ng-template>
+            <form *ngIf="step5Ready" [formGroup]="fifthStepFormGroup" (ngSubmit)="onStep5Submit()" [attr.test-step]="'step5'">
+                <app-custom-export-submit-job [customDataExport]="formControlCustomDataExport.value"
+                                              [inputValues]="formControlCustomExportInputValues.value"
+                                              [view]="formControlView.value"
+                                              [preview]="formControlCustomExportPreview.value"
+                                              [submitFn]="customExportSubmitFn">
+                </app-custom-export-submit-job>
+                <div class="control">
+                    <button type="submit" mat-flat-button color="primary" matStepperNext [disabled]="fifthStepFormGroup.invalid" [attr.test-button-done]="''">Done</button>
+                </div>
+            </form>
+        </mat-step>
+
+
+
+    </mat-horizontal-stepper>
+</div>

@@ -4,6 +4,8 @@ import {Observable, of} from 'rxjs';
 import {BulkEditItem, BulkEditPackage} from '../../model/bulk-edit.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
+import {ApiResponse} from "../../model/api-response.model";
+import {map} from "rxjs/operators";
 
 const URL_BULK_EDIT = () => `${config().api_host_url}/view/:viewId/preview-bulk-edit`;
 
@@ -17,10 +19,10 @@ export class BulkEditService {
     previewBuilEdit(viewId: number, changeClauses: ItemValueAndAttribute[], whenClauses: ItemValueOperatorAndAttribute[]):
         Observable<BulkEditPackage> {
 
-        return this.httpClient.post<BulkEditPackage>(
+        return this.httpClient.post<ApiResponse<BulkEditPackage>>(
             URL_BULK_EDIT().replace(':viewId', String(viewId)), {
             changeClauses,
             whenClauses
-        });
+        }).pipe(map((r: ApiResponse<BulkEditPackage>) => r.payload));
     }
 }

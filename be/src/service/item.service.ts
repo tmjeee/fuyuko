@@ -67,8 +67,6 @@ export const addItem = async (viewId: number, item2: Item2): Promise<number> => 
 }
 const _addItem = async (conn: Connection, viewId: number, item2: Item2): Promise<number> => {
 
-    console.log(`*************** additem for ${item2.name} with id ${item2.id} and parentId ${item2.parentId} children ${item2.children} `);
-
     const name: string = item2.name;
     const description: string = item2.description;
     const parentId: number = item2.parentId ? item2.parentId : null;
@@ -86,7 +84,7 @@ const _addItem = async (conn: Connection, viewId: number, item2: Item2): Promise
 
             for (const entry of metadata.entries) {
                 const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
-                    [newMetadataId, entry.key, entry.value, entry.dataType]);
+                    [newMetadataId, entry.key, entry.value ? entry.value : '', entry.dataType]);
             }
         }
     }
@@ -121,6 +119,8 @@ const SQL_1_A = `
                     I.NAME AS I_NAME,
                     I.DESCRIPTION AS I_DESCRIPTION,
                     I.STATUS AS I_STATUS,
+                    I.CREATION_DATE AS I_CREATION_DATE,
+                    I.LAST_UPDATE AS I_LAST_UPDATE,
                     A.ID AS A_ID,
                     A.TYPE AS A_TYPE,
                     A.NAME AS A_NAME,
@@ -136,7 +136,8 @@ const SQL_1_A = `
                     IMG.ID AS IMG_ID,
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
-                    IMG.SIZE AS IMG_SIZE
+                    IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
@@ -240,7 +241,8 @@ export const getItemById = async (viewId: number, itemId: number): Promise<Item2
                     IMG.ID AS IMG_ID,
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
-                    IMG.SIZE AS IMG_SIZE
+                    IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
@@ -278,6 +280,8 @@ export const findChildrenItems = async (viewId: number, parentItemId: number): P
                     I.NAME AS I_NAME,
                     I.DESCRIPTION AS I_DESCRIPTION,
                     I.STATUS AS I_STATUS,
+                    I.CREATION_DATE AS I_CREATION_DATE,
+                    I.LAST_UPDATE AS I_LAST_UPDATE,
                     A.ID AS A_ID,
                     A.TYPE AS A_TYPE,
                     A.NAME AS A_NAME,
@@ -293,7 +297,8 @@ export const findChildrenItems = async (viewId: number, parentItemId: number): P
                     IMG.ID AS IMG_ID,
                     IMG.MIME_TYPE AS IMG_MIME_TYPE,
                     IMG.NAME AS IMG_NAME,
-                    IMG.SIZE AS IMG_SIZE
+                    IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
@@ -350,6 +355,8 @@ const _doQ = (q: QueryA): Item2[] => {
                 parentId: c.I_PARENT_ID,
                 name: c.I_NAME,
                 description: c.I_DESCRIPTION,
+                creationDate: c.I_CREATION_DATE,
+                lastUpdate: c.I_LAST_UPDATE,
                 images: [],
                 values: [],
                 children: []
@@ -364,7 +371,8 @@ const _doQ = (q: QueryA): Item2[] => {
                 id: imageId,
                 name: c.IMG_NAME,
                 mimeType: c.IMG_MIMETYPE,
-                size: c.IMG_SIZE
+                size: c.IMG_SIZE,
+                primary: c.IMG_PRIMARY,
             } as ItemImage;
             imgMap.set(imgMapKey, img);
             const item: Item2 = itemMap.get(itemMapKey);

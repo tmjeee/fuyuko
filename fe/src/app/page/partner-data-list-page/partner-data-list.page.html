@@ -9,15 +9,16 @@
         <mat-card-content>
             <mat-form-field>
                 <mat-label>Pricing Structure</mat-label>
-                <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)">
+                <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)" [attr.test-mat-select-pricing-structure]="''">
                     <mat-option [value]="null">--- Please select a Pricing Structure ---</mat-option>
-                    <mat-option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure">
+                    <mat-option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure" [attr.test-mat-select-option-pricing-structure]="pricingStructure.name">
                         {{pricingStructure.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <div *ngIf="loading">Loading ...</div>
             <app-partner-data-list
+                    [attr.test-partner-data-list]="''"
                     *ngIf="attributes && pricedItems"
                     [pricedItems]="pricedItems"
                     [attributes]="attributes">

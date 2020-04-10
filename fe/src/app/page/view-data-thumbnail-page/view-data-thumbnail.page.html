@@ -11,6 +11,7 @@
       <div *ngIf="done && !itemAndAttributeSet">No Items</div>
       <ng-container *ngIf="itemAndAttributeSet">
         <app-data-thumbnail [itemAndAttributeSet]="itemAndAttributeSet"
+                            (carouselEvents)="onCarouselEvent($event)"
                             (searchEvents)="onDataThumbnailSearchEvent($event)"
                             (events)="onDataThumbnailEvent($event)">
         </app-data-thumbnail>

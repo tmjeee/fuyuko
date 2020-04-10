@@ -11,8 +11,10 @@ import {body} from 'express-validator';
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
-import {ApiResponse} from "../../model/response.model";
+import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
+
+// CHECKED
 
 const httpAction: any[] = [
     [

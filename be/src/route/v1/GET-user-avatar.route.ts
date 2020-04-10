@@ -5,6 +5,8 @@ import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {Registry} from "../../registry";
 
+// CHECKED
+
 const sendNoAvatarAvatar = async (res: Response, conn: Connection) => {
     const q: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_IMAGE WHERE TAG = ?',
         ['no-avatar']);
