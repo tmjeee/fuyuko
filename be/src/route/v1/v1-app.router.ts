@@ -100,7 +100,6 @@ import registerPostUserNotificationRoute from './POST-user-notification.route';
 import registerPostAddAttributeRoute from './POST-add-attributes.route';
 import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
-// import registerGetAllPricingStructureByViewRoute from './GET-all-pricing-structures-by-view.route';
 import registerGetDataExportContentByIdRoute from './GET-data-export-content-by-id.route';
 import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
 import registerGetAllDataExportArtifactsRoute from './GET-all-data-export-artifacts.route';
@@ -224,7 +223,6 @@ const reg = (router: Router, regi: Registry) => {
     registerPostAddAttributeRoute(v1AppRouter, registry);
     registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
-    // registerGetAllPricingStructureByViewRoute(v1AppRouter, registry);
     registerGetDataExportContentByIdRoute(v1AppRouter, registry);
     registerGetPricingStructureByIdRoute(v1AppRouter, registry);
     registerGetAllDataExportArtifactsRoute(v1AppRouter, registry);

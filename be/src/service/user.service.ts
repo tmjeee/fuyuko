@@ -4,6 +4,30 @@ import {Connection} from "mariadb";
 import {Group} from "../model/group.model";
 import {Role} from "../model/role.model";
 
+export const hasAllUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        let r = true;
+        for (const roleName of roleNames) {
+            const q: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT 
+                FROM TBL_USER AS U 
+                LEFT JOIN TBL_LOOKUP_USER_GROUP AS LUG ON LUG.USER_ID = U.ID
+                LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
+                LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = LUG.GROUP_ID
+                LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
+                WHERE U.ID = ? AND R.NAME IN ? AND U.STATUS= ? AND G.STATUS = ?
+            `, [userId, roleName, 'ENABLED', 'ENABLED']);
+
+            if (q[0].COUNT === 0) { // role not found for this user
+                // if any role is not found it is a false, we return
+                r = false;
+                break;
+            }
+        }
+        return r;
+    })
+};
+
 export const hasAnyUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`

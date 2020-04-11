@@ -22,7 +22,7 @@ export interface QueryI {
 }
 
 // for SELECT statments
-export type QueryA = QueryI[] & QueryM;
+export type QueryA = (QueryI & QueryM)[];
 
 
 // for INSERT, UPDATE etc. statements

@@ -3,10 +3,10 @@
 cd $(dirname $0)
 
 
-docker stop tmjee-fuyuko-db
-docker rm -f tmjee-fuyuko-db
-docker run --name tmjee-fuyuko-db -d --network my-network tmjee/fuyuko-db
-# docker run --name tmjee-fuyuko-db --network my-network tmjee/fuyuko-db
+docker container stop tmjee-fuyuko-db
+docker container rm -f tmjee-fuyuko-db
+#docker container run --name tmjee-fuyuko-db -d --network my-network tmjee/fuyuko-db
+docker container run --name tmjee-fuyuko-db -d --network host tmjee/fuyuko-db
 
 
 

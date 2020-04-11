@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 
-npm run tsc
+npm run build
 
 docker stop tmjee-fuyuko-be
 docker rm tmjee-fuyuko-be
