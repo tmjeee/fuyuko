@@ -4,7 +4,7 @@ cd $(dirname $0)
 
 npx ng build
 
-docker stop tmjee-fuyuko-fe
-docker rm -f tmjee-fuyuko-fe
-docker rmi -f tmjee/fuyuko-fe
-docker build -t tmjee/fuyuko-fe -f ./docker/dockerfile .
+docker container stop tmjee-fuyuko-fe
+docker container rm -f tmjee-fuyuko-fe
+docker image rmi -f tmjee/fuyuko-fe
+docker image build -t tmjee/fuyuko-fe -f ./docker/dockerfile .
