@@ -2,8 +2,8 @@ import {ItemImage, PricedItem} from "../model/item.model";
 import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2, PricedItem2} from "../server-side-model/server-side.model";
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
-import {findChildrenItems} from "./item.service";
-import {convert} from "./conversion-item-value.service";
+import {findChildrenItem2s} from "./item.service";
+import {itemValueConvert} from "./conversion-item-value.service";
 
 export const toPricedItems = (p: PricedItem2[]): PricedItem[] => {
     return p.map(toPricedItem);
@@ -23,7 +23,7 @@ export const toPricedItem = (p2: PricedItem2): PricedItem => {
         children: toPricedItems(p2.children)
     };
     p2.values.reduce((p: PricedItem, i: ItemValue2) => {
-        p[i.attributeId] = convert(i);
+        p[i.attributeId] = itemValueConvert(i);
         return p;
     }, p);
     return p;

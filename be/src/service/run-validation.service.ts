@@ -1,7 +1,7 @@
 import {Level} from "../model/level.model";
 import {doInDbConnection, QueryResponse} from "../db";
 import {Connection} from "mariadb";
-import {getAllItemsInView} from "./item.service";
+import {getAllItem2sInView} from "./item.service";
 import {getValidationByViewIdAndValidationId} from "./validation.service";
 import {Validation} from "../model/validation.model";
 import {Attribute2, Item2, ItemMetadata2, Rule2} from "../server-side-model/server-side.model";
@@ -22,7 +22,7 @@ import * as attributeConverter from "./conversion-attribute.service";
 import {getRule2s} from "./rule.service";
 import {Rule, WhenClause} from "../model/rule.model";
 import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from "../model/operator.model";
-import {getAttributesInView} from "./attribute.service";
+import {getAttribute2sInView} from "./attribute.service";
 import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
 import moment from 'moment';
 import * as logger from '../logger';
@@ -263,19 +263,19 @@ const _runCustomRulesValidation = async (viewId: number, validationId: number) =
     const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
     await i(currentContext, `Successfully retrieved validation for validationId ${validationId}`);
 
-    const a2s: Attribute2[] = await getAttributesInView(viewId);
-    const as: Attribute[] = await attributeConverter.convert(a2s);
+    const a2s: Attribute2[] = await getAttribute2sInView(viewId);
+    const as: Attribute[] = await attributeConverter.attributesConvert(a2s);
     await i(currentContext,`Successfully retrieved attributes for viewId ${viewId}`);
 
-    const item2s: Item2[] = await getAllItemsInView(viewId);
-    const items: Item[] = itemConverter.convert(item2s);
+    const item2s: Item2[] = await getAllItem2sInView(viewId);
+    const items: Item[] = itemConverter.itemsConvert(item2s);
     await i(currentContext, `Successfully retrieved all items for viewId ${viewId}`);
 
     const customRules: CustomRuleForView[] = await getAllCustomRulesForView(viewId);
     await i(currentContext, `Successfully retrieved all custom rules for viewId ${viewId}`);
 
     const rule2s: Rule2[] = await getRule2s(viewId);
-    const rules: Rule[] = ruleConverter.convert(rule2s);
+    const rules: Rule[] = ruleConverter.rulesConvert(rule2s);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
 
     const l = async (msg: string) => {
@@ -314,16 +314,16 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
     const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
     await i(currentContext, `Successfully retrieved validation for validationId ${validationId}`);
 
-    const a2s: Attribute2[] = await getAttributesInView(viewId);
-    const as: Attribute[] = await attributeConverter.convert(a2s);
+    const a2s: Attribute2[] = await getAttribute2sInView(viewId);
+    const as: Attribute[] = await attributeConverter.attributesConvert(a2s);
     await i(currentContext,`Successfully retrieved attributes for viewId ${viewId}`);
 
-    const item2s: Item2[] = await getAllItemsInView(viewId);
-    const items: Item[] = itemConverter.convert(item2s);
+    const item2s: Item2[] = await getAllItem2sInView(viewId);
+    const items: Item[] = itemConverter.itemsConvert(item2s);
     await i(currentContext, `Successfully retrieved all items for viewId ${viewId}`);
 
     const rule2s: Rule2[] = await getRule2s(viewId);
-    const rules: Rule[] = ruleConverter.convert(rule2s);
+    const rules: Rule[] = ruleConverter.rulesConvert(rule2s);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
 
 

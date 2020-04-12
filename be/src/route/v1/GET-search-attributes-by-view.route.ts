@@ -9,7 +9,7 @@ import {
 } from "./common-middleware";
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
-import {convert} from "../../service/conversion-attribute.service";
+import {attributesConvert} from "../../service/conversion-attribute.service";
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../../server-side-model/server-side.model";
 import {Attribute} from "../../model/attribute.model";
 import {check} from 'express-validator';
@@ -101,7 +101,7 @@ const httpAction: any[] = [
                 return acc;
             }, []);
 
-            const attr: Attribute[] = convert(ats);
+            const attr: Attribute[] = attributesConvert(ats);
 
             res.status(200).json({
                 status: 'SUCCESS',

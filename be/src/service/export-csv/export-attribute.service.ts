@@ -1,7 +1,7 @@
 import {Attribute} from "../../model/attribute.model";
-import {getAttributesInView} from "../attribute.service";
+import {getAttribute2sInView} from "../attribute.service";
 import {Attribute2} from "../../server-side-model/server-side.model";
-import {convert} from "../conversion-attribute.service";
+import {attributesConvert} from "../conversion-attribute.service";
 
 
 export const preview = async (viewId: number, attributes: Attribute[]): Promise<Attribute[]> => {
@@ -9,7 +9,7 @@ export const preview = async (viewId: number, attributes: Attribute[]): Promise<
         // todo: lookup again from db?
         return attributes;
     }
-    const a: Attribute2[] =  await getAttributesInView(viewId);
-    const att: Attribute[] = convert(a);
+    const a: Attribute2[] =  await getAttribute2sInView(viewId);
+    const att: Attribute[] = attributesConvert(a);
     return att;
 }

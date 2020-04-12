@@ -40,8 +40,8 @@ import {
     VolumeUnits,
     WidthUnits
 } from "../../model/unit.model";
-import {_convert as _attributeConvert, convert as attributeConvert} from "../../service/conversion-attribute.service";
-import {convert as itemValueConvert} from '../../service/conversion-item-value.service';
+import {_convert as _attributeConvert, attributesConvert as attributeConvert} from "../../service/conversion-attribute.service";
+import {itemValueConvert as itemValueConvert} from '../../service/conversion-item-value.service';
 import {ROLE_EDIT} from "../../model/role.model";
 import {
     compareArea, compareCurrency,

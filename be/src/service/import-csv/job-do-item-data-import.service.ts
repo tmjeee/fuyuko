@@ -2,8 +2,8 @@ import {Job} from "../../model/job.model";
 import {JobLogger, newJobLogger} from "../job-log.service";
 import {getJobyById} from "../job.service";
 import {Item} from "../../model/item.model";
-import {addItem} from "../item.service";
-import {revert} from "../conversion-item.service";
+import {addItem2} from "../item.service";
+import {itemsRevert} from "../conversion-item.service";
 import {Item2} from "../../server-side-model/server-side.model";
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
@@ -19,7 +19,7 @@ export const runJob = async (viewId: number, attributeDataImportId: number, item
 
     (async ()=> {
        await jobLogger.logInfo(`starting job ${name}`);
-       const item2s: Item2[] = revert(items);
+       const item2s: Item2[] = itemsRevert(items);
        await jobLogger.logInfo(`converted to Items2s`);
        try {
             const effectiveItem2s: Item2[] = [];
@@ -36,7 +36,7 @@ export const runJob = async (viewId: number, attributeDataImportId: number, item
 
             for (const effectiveItem2 of effectiveItem2s) {
                 await jobLogger.logInfo(`add item ${effectiveItem2.name} to view with id ${viewId}`);
-                await addItem(viewId, effectiveItem2);
+                await addItem2(viewId, effectiveItem2);
             }
 
             await jobLogger.updateProgress("COMPLETED");

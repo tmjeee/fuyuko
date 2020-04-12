@@ -4,7 +4,7 @@ import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../server-si
 import {ItemImage, ItemSearchType, ItemValTypes, Value} from "../model/item.model";
 
 
-export const updateItemValue = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
+export const updateItemValue2 = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
     await doInDbConnection(async (conn: Connection) => {
         const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND VIEW_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
 
@@ -24,12 +24,12 @@ export const updateItemValue = async (viewId: number, itemId: number, itemValue:
     });
 }
 
-export const updateItem = async (viewId: number, item2: Item2) => {
+export const updateItem2 = async (viewId: number, item2: Item2) => {
     await doInDbConnection(async (conn: Connection) => {
-        return await _updateItem(conn, viewId, item2);
+        return await _updateItem2(conn, viewId, item2);
     });
 }
-const _updateItem = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
+const _updateItem2 = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
     const errors: string[] = [];
     const itemId: number = item2.id;
     const name: string = item2.name;
@@ -61,7 +61,7 @@ const _updateItem = async (conn: Connection, viewId: number, item2: Item2): Prom
         }
 
         for (const child of item2.children) {
-            const  errs: string[] = await _addOrUpdateItem(conn, viewId, child);
+            const  errs: string[] = await _addOrUpdateItem2(conn, viewId, child);
             errors.push(...errs);
         }
     }
@@ -69,12 +69,12 @@ const _updateItem = async (conn: Connection, viewId: number, item2: Item2): Prom
     return errors;
 }
 
-export const addItem = async (viewId: number, item2: Item2): Promise<string[]> => {
+export const addItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
-        return await _addItem(conn, viewId, item2);
+        return await _addItem2(conn, viewId, item2);
     });
 }
-const _addItem = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
+const _addItem2 = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
     const errors: string[] = [];
     const name: string = item2.name;
     const description: string = item2.description;
@@ -104,24 +104,24 @@ const _addItem = async (conn: Connection, viewId: number, item2: Item2): Promise
 
         for (const child of item2.children) {
             child.parentId = newItemId;
-            const errs: string[] = await _addOrUpdateItem(conn, viewId, child);
+            const errs: string[] = await _addOrUpdateItem2(conn, viewId, child);
             errors.push(...errs);
         }
     }
     return errors;
 }
 
-const _addOrUpdateItem = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
+const _addOrUpdateItem2 = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
     if (item2.id > 0) {
-        return await _updateItem(conn, viewId, item2);
+        return await _updateItem2(conn, viewId, item2);
     } else {
-        return await _addItem(conn, viewId, item2);
+        return await _addItem2(conn, viewId, item2);
     }
 }
 
-export const addOrUpdateItem = async (viewId: number, item2: Item2): Promise<string[]> => {
+export const addOrUpdateItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
-        return await _addOrUpdateItem(conn, viewId, item2);
+        return await _addOrUpdateItem2(conn, viewId, item2);
     }) ;
 }
 
@@ -185,7 +185,7 @@ const SQL_SEARCH = `
     ) 
 `
 
-export const searchForItemsInView = async (viewId: number, searchType: ItemSearchType, search: string) => {
+export const searchForItem2sInView = async (viewId: number, searchType: ItemSearchType, search: string): Promise<Item2[]> => {
     // todo: support advance search type
     const iSearch = `%${search}%`;
     const itemIds: number[] = await doInDbConnection(async (conn: Connection) => {
@@ -208,7 +208,7 @@ export const searchForItemsInView = async (viewId: number, searchType: ItemSearc
 };
 
 
-export const getAllItemsInView = async (viewId: number, parentOnly: boolean = true): Promise<Item2[]> => {
+export const getAllItem2sInView = async (viewId: number, parentOnly: boolean = true): Promise<Item2[]> => {
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(parentOnly ? SQL_1_B : SQL_1_A, [viewId]);
         return _doQ(q);
@@ -229,7 +229,7 @@ export const getItemsByIds = async (viewId: number, itemIds: number[], parentOnl
     return item2s;
 }
 
-export const getItemById = async (viewId: number, itemId: number): Promise<Item2> => {
+export const getItem2ById = async (viewId: number, itemId: number): Promise<Item2> => {
 
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
@@ -274,15 +274,60 @@ export const getItemById = async (viewId: number, itemId: number): Promise<Item2
     return (item2s && item2s.length > 0 ? item2s[0] : undefined);
 }
 
+
+export const getItem2ByName = async (viewId: number, itemName: string): Promise<Item2> => {
+
+    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+                SELECT
+                    I.ID AS I_ID,
+                    I.PARENT_ID AS I_PARENT_ID,
+                    I.VIEW_ID AS I_VIEW_ID,
+                    I.NAME AS I_NAME,
+                    I.DESCRIPTION AS I_DESCRIPTION,
+                    I.STATUS AS I_STATUS,
+                    A.ID AS A_ID,
+                    A.TYPE AS A_TYPE,
+                    A.NAME AS A_NAME,
+                    A.STATUS AS A_STATUS,
+                    A.DESCRIPTION AS A_DESCRIPTION,
+                    V.ID AS V_ID,
+                    M.ID AS M_ID,
+                    M.NAME AS M_NAME,
+                    E.ID AS E_ID,
+                    E.KEY AS E_KEY,
+                    E.VALUE AS E_VALUE,
+                    E.DATA_TYPE AS E_DATA_TYPE,
+                    IMG.ID AS IMG_ID,
+                    IMG.MIME_TYPE AS IMG_MIME_TYPE,
+                    IMG.NAME AS IMG_NAME,
+                    IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY
+                FROM TBL_ITEM AS I
+                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+                LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
+                LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
+                LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
+                WHERE I.NAME = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
+            `, [itemName]);
+
+        return _doQ(q);
+    });
+
+    await w(viewId, item2s);
+    return (item2s && item2s.length > 0 ? item2s[0] : undefined);
+}
+
 // work out the children in each item
 const w = async (viewId: number, item2s: Item2[]) => {
     for (const item2 of item2s) {
         const itemId: number = item2.id;
-        item2.children = await findChildrenItems(viewId, itemId);
+        item2.children = await findChildrenItem2s(viewId, itemId);
     }
 }
 
-export const findChildrenItems = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
+export const findChildrenItem2s = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
 
     const item2s: Item2[] =  await doInDbConnection(async (conn: Connection) => {
 
@@ -328,7 +373,7 @@ export const findChildrenItems = async (viewId: number, parentItemId: number): P
 
     for (const item2 of item2s) {
         const itemId: number = item2.id;
-        item2.children = await findChildrenItems(viewId, itemId);
+        item2.children = await findChildrenItem2s(viewId, itemId);
     }
 
     return item2s;

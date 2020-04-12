@@ -12,6 +12,7 @@ import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {ApiResponse} from "../../model/api-response.model";
+import {addItemImage} from "../../service/item-image.service";
 
 // CHECKED
 
@@ -29,15 +30,10 @@ const httpAction: any[] = [
 
         const file1: File = r.files.upload1;
         const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(file1.path));
-        const ft: fileType.FileTypeResult = fileType(buffer);
 
-        const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
-            return await conn.query(`
-                INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)
-            `, [itemId, false, ft.mime, file1.name,  buffer.length, buffer]);
-        });
+        const added = await addItemImage(itemId, file1.name, buffer);
 
-        if (q.affectedRows > 0) {
+        if (added) {
             res.status(200).json({
                 status: 'SUCCESS',
                 message: `Item image uploaded`

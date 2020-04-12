@@ -13,7 +13,7 @@ import {Connection} from "mariadb";
 import {Rule} from "../../model/rule.model";
 import {Rule2} from "../../server-side-model/server-side.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {revert} from "../../service/conversion-rule.service";
+import {rulesRevert} from "../../service/conversion-rule.service";
 import {ROLE_EDIT} from "../../model/role.model";
 
 // CHECKED
@@ -31,7 +31,7 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
         const rules: Rule[] = req.body.rules;
-        const rule2s: Rule2[] = revert(rules);
+        const rule2s: Rule2[] = rulesRevert(rules);
         const errors: string[] = [];
         
         for (const rule2 of rule2s) {

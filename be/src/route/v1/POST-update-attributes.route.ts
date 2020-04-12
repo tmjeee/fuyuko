@@ -11,7 +11,7 @@ import {check, body} from 'express-validator';
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {Attribute} from "../../model/attribute.model";
-import {revert} from "../../service/conversion-attribute.service";
+import {attributesRevert} from "../../service/conversion-attribute.service";
 import {Attribute2} from "../../server-side-model/server-side.model";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
@@ -35,7 +35,7 @@ const httpAction: any[] = [
         const atts: Attribute[] = req.body.attributes;
 
         await doInDbConnection(async (conn: Connection) => {
-            const atts2: Attribute2[] = revert(atts);
+            const atts2: Attribute2[] = attributesRevert(atts);
             const failed: string[] = [];
 
             for (const att2 of atts2) {

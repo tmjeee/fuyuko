@@ -10,9 +10,9 @@ import {
 import {body, param} from 'express-validator';
 import {Item} from "../../model/item.model";
 import {Item2} from "../../server-side-model/server-side.model";
-import {revert as itemRevert} from "../../service/conversion-item.service";
+import {itemsRevert as itemRevert} from "../../service/conversion-item.service";
 import {ApiResponse} from "../../model/api-response.model";
-import {addItem, addOrUpdateItem, updateItem} from "../../service/item.service";
+import {addItem2, addOrUpdateItem2, updateItem2} from "../../service/item.service";
 import {ROLE_EDIT} from "../../model/role.model";
 
 // CHECKED
@@ -37,7 +37,7 @@ const httpAction: any[] = [
 
         const errors: string[] = [];
         for (const item2 of item2s) {
-            const err: string[] = await addOrUpdateItem(viewId, item2);
+            const err: string[] = await addOrUpdateItem2(viewId, item2);
             errors.push(...err);
         }
 
