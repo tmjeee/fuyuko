@@ -4,6 +4,7 @@
     <app-dashboard
             *ngIf="!loading"
             [data]="data"
+            [currentUser]="currentUser"
             [dashboardWidgetInfos]="dashboardWidgetInfos"
             [strategies]="strategies"
             [initialStrategy]="selectedStrategy"

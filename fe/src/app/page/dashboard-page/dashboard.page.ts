@@ -26,6 +26,8 @@ export class DashboardPageComponent implements OnInit {
     dashboardWidgetInfos: DashboardWidgetInfo[];
     data: string;
 
+    currentUser: User;
+
     constructor(private dashboardService: DashboardService,
                 private authService: AuthService,
                 private notificationsService: NotificationsService) {}
@@ -37,9 +39,9 @@ export class DashboardPageComponent implements OnInit {
 
         this.dashboardWidgetInfos = this.dashboardService.getAllDashboardWidgetInfos();
 
-        const myself: User = this.authService.myself();
+        this.currentUser = this.authService.myself();
         this.dashboardService
-            .getUserDashboardLayoutData(myself)
+            .getUserDashboardLayoutData(this.currentUser)
             .pipe(
                 tap((d: string) => {
                     if (d) {

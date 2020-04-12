@@ -2,6 +2,8 @@ import {Type} from '@angular/core';
 import {DashboardWidgetService} from '../service/dashboard-service/dashboard-widget.service';
 import {DataMap, SerializedDashboardWidgetInstanceFormat} from './dashboard-serialzable.model';
 import {Observable} from 'rxjs';
+import {ApiResponse} from "./api-response.model";
+import {AuthService} from "../service/auth-service/auth.service";
 
 
 export interface DashboardStrategy {
@@ -18,18 +20,18 @@ export interface DashboardStrategy {
                                      previousIndex: number, currentIndex: number): void;
 }
 
-export class DashboardWidget {
+export abstract class DashboardWidget {
     id: string;
     name: string;
 
     constructor(protected dashboardWidgetService: DashboardWidgetService) { }
 
-    saveData(userId: number, widgetInstance: DashboardWidgetInstance, data: DataMap): Observable<boolean> {
-       return this.saveData(userId, widgetInstance, data);
+    saveData(data: DataMap): Observable<ApiResponse> {
+       return this.dashboardWidgetService.saveData(data);
     }
 
-    loadData(userId: number, widgetInstance: DashboardWidgetInstance): Observable<DataMap> {
-        return this.dashboardWidgetService.loadData(userId, widgetInstance);
+    loadData(): Observable<DataMap> {
+        return this.dashboardWidgetService.loadData();
     }
 }
 

@@ -2,8 +2,15 @@ import {AfterViewInit, Component, OnDestroy, OnInit} from "@angular/core";
 import {DashboardWidget, DashboardWidgetInfo} from "../../../../model/dashboard.model";
 import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
 import uuid from "uuid";
+import {AuthService} from "../../../../service/auth-service/auth.service";
 
 declare const TradingView: any;
+
+
+/**
+ * stock widget
+ *  https://www.tradingview.com/widget/advanced-chart/
+ */
 
 @Component({
     templateUrl: './stock-trading-widget.component.html',
@@ -22,9 +29,11 @@ export class StockTradingWidgetComponent extends DashboardWidget implements OnIn
     }
 
     ngOnInit(): void {
+        console.log('&&&&&& [stock-widget] init', this.dashboardWidgetService.widgetInstance, this.dashboardWidgetService.currentUser);
     }
 
     ngAfterViewInit(): void {
+        console.log('&&&&&& [stock-widget] after view init', this.dashboardWidgetService.widgetInstance, this.dashboardWidgetService.currentUser);
         this.f();
     }
 
