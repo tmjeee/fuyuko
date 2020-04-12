@@ -1,4 +1,3 @@
-import {doInDbConnection} from "../src/db";
 import Path from 'path';
 import fs from 'fs';
 import util from 'util';
