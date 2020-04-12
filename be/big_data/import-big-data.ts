@@ -2,7 +2,6 @@ import {doInDbConnection} from "../src/db";
 import Path from 'path';
 import fs from 'fs';
 import util from 'util';
-import {Connection} from "mariadb";
 import {getViewByName, saveOrUpdateViews} from "../src/service/view.service";
 import {View} from "../src/model/view.model";
 import {getAttribute2sInView, saveAttributes} from "../src/service/attribute.service";
@@ -12,74 +11,77 @@ import {addOrUpdateItem2, getItem2ById, getItem2ByName} from "../src/service/ite
 import {
     Attribute2,
     Item2,
-    ItemMetadata2,
-    ItemMetadataEntry2,
-    ItemValue2
 } from "../src/server-side-model/server-side.model";
-import {itemConvert, itemRevert} from "../src/service/conversion-item.service";
-import {attributeConvert, attributesConvert,} from "../src/service/conversion-attribute.service";
-import {Item, ItemImage, StringValue, Value} from "../src/model/item.model";
-import {createNewItem, createNewItemValue} from "../src/shared-utils/ui-item-value-creator.utils";
-import {setItemNumberValue, setItemStringValue, setItemValue} from "../src/shared-utils/ui-item-value-setter.util";
+import {itemRevert} from "../src/service/conversion-item.service";
+import {attributesConvert,} from "../src/service/conversion-attribute.service";
+import {Item} from "../src/model/item.model";
+import {createNewItem} from "../src/shared-utils/ui-item-value-creator.utils";
+import {setItemNumberValue, setItemStringValue} from "../src/shared-utils/ui-item-value-setter.util";
 import {addItemImage} from "../src/service/item-image.service";
 
 
-const runImport = async (conn: Connection) => {
+const runImport = async () => {
     // create view
-    await saveOrUpdateViews([
-        {
-            id: -1,
-            name: 'Cars',
-            description: 'Cars View'
-        } as View
-    ]);
-
-    const view: View = await getViewByName('Cars');
+    let view: View = await getViewByName('Cars');
     if (!view) {
-        throw new Error(`Unable to get view Cars`);
+        await saveOrUpdateViews([
+            {
+                id: -1,
+                name: 'Cars',
+                description: 'Cars View'
+            } as View
+        ]);
+        view = await getViewByName('Cars');
     }
 
 
     // create attributes
-    await saveAttributes(view.id, [
-        {
-           id: -1,
-           name: `Make`,
-           type: 'string'
-        }  as Attribute,
-        {
-            id: -1,
-            name: `Model`,
-            type: 'string'
-        } as Attribute,
-        {
-            id: -1,
-            name: 'Year',
-            type: 'number'
-        } as Attribute
-    ], (level, msg) => l(level, msg));
-    const attribute2s: Attribute2[] = await getAttribute2sInView(view.id);
+    let attribute2s: Attribute2[] = await getAttribute2sInView(view.id);
+    if (!attribute2s || !attribute2s.length) {
+        await saveAttributes(view.id, [
+            {
+                id: -1,
+                name: `Make`,
+                type: 'string',
+                description: 'Make description'
+            }  as Attribute,
+            {
+                id: -1,
+                name: `Model`,
+                type: 'string',
+                description: 'Model description'
+            } as Attribute,
+            {
+                id: -1,
+                name: 'Year',
+                type: 'number',
+                description: 'Year description'
+            } as Attribute
+        ], (level, msg) => l(level, msg));
+        attribute2s = await getAttribute2sInView(view.id);
+    }
     const attributes: Attribute[] = attributesConvert(attribute2s);
 
-    const pathToAssetsDir: string = Path.join(__dirname, 'assets2');
-    const filesInDir: string[] = await util.promisify(fs.readdir)(pathToAssetsDir);
 
+    // create items & images for all files
+    const pathToAssetsDir: string = Path.join(__dirname, 'asset2');
+    const filesInDir: string[] = await util.promisify(fs.readdir)(pathToAssetsDir);
     for (const fileInDir of filesInDir) {
         const fileSegments: string[] = fileInDir.split('_');
-        const name = fileInDir.substring(fileInDir.indexOf('.'));
+        const name = fileInDir.substring(0, fileInDir.indexOf('.'));
         const make = fileSegments[0];
         const model = fileSegments[1];
         const year = fileSegments[2];
 
        let item2: Item2 = await getItem2ByName(view.id, name);
        let primaryImage = false;
-       if (!item2) {  //  not already exists
-
+       if (!item2) {  //  item not already exists
            const item: Item = createNewItem(-1, attributes);
+           item.name = name;
            for (const attribute of attributes) {
-               if (attribute.name === 'Name') {
-                   setItemStringValue(attribute, item[attribute.id], name);
-               } else if (attribute.name === 'Make') {
+               if (attribute.name === 'Make') {
+                   setItemStringValue(attribute, item[attribute.id], make);
+               } else if (attribute.name === 'Model') {
                    setItemStringValue(attribute, item[attribute.id], model);
                } else if (attribute.name === 'Year') {
                    setItemNumberValue(attribute, item[attribute.id], Number(year));
@@ -99,7 +101,7 @@ const runImport = async (conn: Connection) => {
 
 
 (async function() {
-    await doInDbConnection((conn: Connection) => {
-
-    });
+    console.log('testing');
+    await runImport();
+    console.log('done testing');
 }());
