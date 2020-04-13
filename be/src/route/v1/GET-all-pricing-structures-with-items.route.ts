@@ -7,7 +7,7 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check} from 'express-validator';
+import {check, param} from 'express-validator';
 import {doInDbConnection, QueryA, QueryI} from "../../db";
 import {Connection} from "mariadb";
 import {
@@ -16,23 +16,34 @@ import {
 } from "../../model/pricing-structure.model";
 import {getChildrenWithConn} from "../../service/pricing-structure-item.service";
 import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
+import {LIMIT_OFFSET, toLimitOffset} from "../../util/utils";
+import {LimitOffset} from "../../model/limit-offset.model";
 
 
 // CHECKED
 const httpAction: any[] = [
     [
-        check('pricingStructureId').exists().isNumeric()
+        param('pricingStructureId').exists().isNumeric()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
-        const viewId: number = Number(req.params.viewId);
         const pricingStructureId: number = Number(req.params.pricingStructureId);
+        const limitOffset: LimitOffset = toLimitOffset(req.query.limit, req.query.offset);
 
         await doInDbConnection(async (conn: Connection) => {
+
+            const qq: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT 
+                FROM TBL_ITEM AS I 
+                WHERE I.STATUS = 'ENABLED' AND I.PARENT_ID IS NULL AND I.VIEW_ID = (
+                    SELECT VIEW_ID FROM TBL_PRICING_STRUCTURE WHERE ID = ?
+                )
+            `, [pricingStructureId]);
+            const total = qq[0].COUNT;
 
             const q: QueryA = await conn.query(`
                 SELECT
@@ -62,6 +73,7 @@ const httpAction: any[] = [
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = I.VIEW_ID
                 LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = PS.ID AND PSI.ITEM_ID = I.ID
                 WHERE PS.ID=? AND I.PARENT_ID IS NULL AND I.STATUS = 'ENABLED' AND PS.STATUS <> 'DELETED'
+                ${LIMIT_OFFSET(limitOffset)}
             `, [pricingStructureId]);
 
             let pricingStructureWithItems: PricingStructureWithItems = null;
@@ -76,7 +88,12 @@ const httpAction: any[] = [
                        description: i.PS_DESCRIPTION,
                        creationDate: i.PS_CREATION_DATE,
                        lastUpdate: i.PS_LAST_UPDATE,
-                       items: []
+                       items:  {
+                          limit: limitOffset ? limitOffset.limit : total,
+                          offset: limitOffset ? limitOffset.offset: 0,
+                          total,
+                          payload: []
+                       } as PaginableApiResponse<PricingStructureItemWithPrice[]>
                    } as PricingStructureWithItems;
                }
 
@@ -98,7 +115,7 @@ const httpAction: any[] = [
                        children: await getChildrenWithConn(conn, pricingStructureId, itemId)
                    } as PricingStructureItemWithPrice;
                    mItemMap.set(mItemMapKey, item);
-                   pricingStructureWithItems.items.push(item);
+                   pricingStructureWithItems.items.payload.push(item);
                }
            }
 

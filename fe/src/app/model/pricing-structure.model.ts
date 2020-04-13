@@ -1,3 +1,4 @@
+import {PaginableApiResponse} from "./api-response.model";
 
 export interface PricingStructure {     // pricing structure
     id: number; // pricing structure id
@@ -13,7 +14,7 @@ export interface PricingStructureWithItems { // pricing structure
     viewId: number;
     name: string;
     description: string;
-    items: PricingStructureItemWithPrice[];
+    items: PaginableApiResponse<PricingStructureItemWithPrice[]>;
     creationDate: Date;
     lastUpdate: Date;
 }

@@ -8,6 +8,7 @@ import {
 } from "../server-side-model/server-side.model";
 import {ItemImage, ItemSearchType, ItemValTypes, Value} from "../model/item.model";
 import {LimitOffset} from "../model/limit-offset.model";
+import {LIMIT_OFFSET} from "../util/utils";
 
 
 export const updateItemValue2 = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
@@ -183,7 +184,6 @@ const SQL_COUNT = (ext: string) => `
    WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' ${ext ? ext : ''}
 `;
 
-const LIMIT_OFFSET = (limitoffset?: LimitOffset) => (limitoffset ? `LIMIT ${limitoffset.limit} OFFSET ${limitoffset.offset}` : ``);
 
 const SQL_1_A = (limitoffset: LimitOffset) => SQL_INNER('', limitoffset);
 const SQL_1_A_COUNT = () => SQL_COUNT('');

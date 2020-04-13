@@ -42,4 +42,7 @@ export const toLimitOffset = (limit: string, offset: string): LimitOffset => {
 }
 
 
+export const LIMIT_OFFSET = (limitoffset?: LimitOffset) => (limitoffset ? `LIMIT ${limitoffset.limit} OFFSET ${limitoffset.offset}` : ``);
+
+
 

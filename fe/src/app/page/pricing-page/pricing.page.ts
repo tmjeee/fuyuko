@@ -10,6 +10,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
 import {View} from '../../model/view.model';
 import {ViewService} from '../../service/view-service/view.service';
+import {LimitOffset} from "../../model/limit-offset.model";
 
 
 @Component({
@@ -21,7 +22,7 @@ export class PricingPageComponent implements OnInit  {
     loading: boolean;
     views: View[];
     pricingStructureInput: PricingStructureInput;
-    fetchFn: (pricingStructureId: number) => Observable<PricingStructureWithItems>;
+    fetchFn: (pricingStructureId: number, limitOffset?: LimitOffset) => Observable<PricingStructureWithItems>;
 
     constructor(private pricingStructureService: PricingStructureService,
                 private router: Router,
@@ -35,8 +36,8 @@ export class PricingPageComponent implements OnInit  {
 
     ngOnInit(): void {
         this.reload(null);
-        this.fetchFn = (pricingStructureId: number) => {
-            return this.pricingStructureService.pricingStructureWithItems(pricingStructureId);
+        this.fetchFn = (pricingStructureId: number, limitOffset?: LimitOffset): Observable<PricingStructureWithItems> => {
+            return this.pricingStructureService.pricingStructureWithItems(pricingStructureId, limitOffset);
         };
     }
 

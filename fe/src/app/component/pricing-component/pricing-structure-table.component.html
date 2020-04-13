@@ -97,6 +97,8 @@
                     <tr mat-row class="item" [attr.test-table-row-item]="tableItem.itemName" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'creationDate', 'lastUpdate', 'pricing', 'country', 'actions']; when: isChildRow"
                              [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></tr>
                 </table>
+
+                <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
             </div>
         </div>
     </ng-container>

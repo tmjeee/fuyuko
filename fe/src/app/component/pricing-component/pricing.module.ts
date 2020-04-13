@@ -9,6 +9,7 @@ import {PricingStructureTableComponent} from './pricing-structure-table.componen
 import {ViewOnlyPriceTableComponent} from './view-only-price-table.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {ViewOnlyPriceDataItemsTableComponent} from "./view-only-price-data-items-table.component";
+import {PaginationModule} from "../pagination-component/pagination.module";
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {ViewOnlyPriceDataItemsTableComponent} from "./view-only-price-data-items
         AppMaterialsModule,
         BrowserAnimationsModule,
         FlexLayoutModule,
+        PaginationModule,
     ],
     declarations: [
         PricingStructurePopupComponent,
