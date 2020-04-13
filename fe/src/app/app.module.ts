@@ -132,6 +132,7 @@ import {CustomImportPageComponent} from "./page/custom-import-page/custom-import
 import {CustomImportService} from "./service/custom-import-service/custom-import.service";
 import {CustomExportService} from "./service/custom-export-service/custom-export.service";
 import {ExportArtifactService} from "./service/export-artifact-service/export-artifact.service";
+import {PaginationModule} from "./component/pagination-component/pagination.module";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -271,6 +272,7 @@ const appInitializer = (settingsService: SettingsService,
     PartnerViewModule,
     ValidationResultModule,
     HelpModule,
+    PaginationModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,

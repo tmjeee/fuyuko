@@ -10,10 +10,10 @@ import {ItemService} from '../../service/item-service/item.service';
 import {ValidationService} from '../../service/validation-service/validation.service';
 import {RuleService} from '../../service/rule-service/rule.service';
 import {ViewService} from '../../service/view-service/view.service';
-import {catchError, finalize, tap} from 'rxjs/operators';
+import {catchError, finalize, map, tap} from 'rxjs/operators';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import {ValidationResultTableComponentEvent} from '../../component/validation-result-component/validation-result-table.component';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 
@@ -72,6 +72,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
                         const itemIds: number[] = r.validationResult.errors.map((e: ValidationError) => e.itemId);
                         this.itemService.getItemsById(this.view.id, itemIds)
                             .pipe(
+                                map((r: PaginableApiResponse<Item[]>) => r.payload),
                                 tap((i: Item[]) => {
                                     this.items = i;
                                 }),

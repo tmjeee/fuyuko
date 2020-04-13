@@ -14,6 +14,7 @@
                                (searchEvents)="onDataListSearchEvent($event)"
                                (events)="onDataListEvent($event)">
                 </app-data-list>
+                <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
             </ng-container>
         </mat-card-content>
     </mat-card>

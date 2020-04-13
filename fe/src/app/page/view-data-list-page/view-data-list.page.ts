@@ -9,9 +9,11 @@ import {ItemService} from '../../service/item-service/item.service';
 import {Item, ItemSearchType} from '../../model/item.model';
 import {map} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
+import {Pagination} from "../../utils/pagination.utils";
+import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
 
 
 @Component({
@@ -28,10 +30,13 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   currentView: View;
   subscription: Subscription;
 
+  pagination: Pagination;
+
   constructor(private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private viewService: ViewService,
               private itemService: ItemService) {
+      this.pagination = new Pagination();
   }
 
 
@@ -57,15 +62,16 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   reload() {
     this.done = false;
     const viewId = this.currentView.id;
-    combineLatest(
+    combineLatest([
         this.attributeService.getAllAttributesByView(viewId),
         (this.search && this.searchType) ?
             this.itemService.searchForItems(viewId, this.searchType, this.search) :
-            this.itemService.getAllItems(viewId)
-    ).pipe(
-        map( (r: [Attribute[], Item[]]) => {
+            this.itemService.getAllItems(viewId, this.pagination.limitOffset())
+    ]).pipe(
+        map( (r: [Attribute[], PaginableApiResponse<Item[]>]) => {
           const attributes: Attribute[] = r[0];
-          const items: Item[] = r[1];
+          const items: Item[] = r[1].payload;
+          this.pagination.update(r[1]);
           this.itemAndAttributeSet = {
             attributes,
             items,
@@ -101,5 +107,10 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
         this.reload();
         break;
     }
+  }
+
+  onPaginationEvent($event: PaginationComponentEvent) {
+    this.pagination.updateFromPageEvent($event.pageEvent);
+    this.reload();
   }
 }
