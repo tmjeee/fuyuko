@@ -9,9 +9,9 @@ import {
 } from "./common-middleware";
 import {check} from 'express-validator';
 import {Attribute} from "../../model/attribute.model";
-import {convert} from "../../service/conversion-attribute.service";
+import {attributesConvert} from "../../service/conversion-attribute.service";
 import {Attribute2} from "../../server-side-model/server-side.model";
-import {getAttributesInView} from "../../service/attribute.service";
+import {getAttribute2sInView} from "../../service/attribute.service";
 import {ROLE_ADMIN, ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
 
@@ -27,9 +27,9 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
 
-        const ats: Attribute2[] = await getAttributesInView(viewId);
+        const ats: Attribute2[] = await getAttribute2sInView(viewId);
 
-        const attr: Attribute[] = convert(ats);
+        const attr: Attribute[] = attributesConvert(ats);
 
         res.status(200).json({
             status: 'SUCCESS',

@@ -10,8 +10,8 @@ import {
 import {check, param} from 'express-validator';
 import { Item } from "../../model/item.model";
 import {Item2} from "../../server-side-model/server-side.model";
-import {convert} from "../../service/conversion-item.service";
-import {getAllItemsInView} from "../../service/item.service";
+import {itemsConvert} from "../../service/conversion-item.service";
+import {getAllItem2sInView} from "../../service/item.service";
 import {ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
 
@@ -26,8 +26,8 @@ const httpAction: any[] = [
    async(req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
 
-        const allItem2s: Item2[] = await getAllItemsInView(viewId);
-        const allItems: Item[] = convert(allItem2s);
+        const allItem2s: Item2[] = await getAllItem2sInView(viewId);
+        const allItems: Item[] = itemsConvert(allItem2s);
         res.status(200).json({
             status: 'SUCCESS',
             message: `Items retrieved successfully`,

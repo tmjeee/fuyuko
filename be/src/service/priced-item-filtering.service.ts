@@ -19,7 +19,7 @@ import {
     TextValue,
     Value, VolumeValue, WidthValue
 } from "../model/item.model";
-import {_convert as _attributeConvert} from "./conversion-attribute.service";
+import {attributeConvert} from "./conversion-attribute.service";
 import {OperatorType} from "../model/operator.model";
 import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../model/unit.model";
 import moment from "moment";
@@ -260,7 +260,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
 
     const attMap: Map<string /* attributeId */, Attribute> =
         ([...attributeMap.values()]).reduce((m: Map<string /* attributeId */, Attribute>, i: Attribute2) => {
-                m.set(`${i.id}`, _attributeConvert(i));
+                m.set(`${i.id}`, attributeConvert(i));
                 return m;
             }, new Map()
         );

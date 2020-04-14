@@ -8,11 +8,11 @@ import {
 } from "../model/attribute.model";
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../server-side-model/server-side.model';
 
-export const revert = (attributes: Attribute[]) : Attribute2[]=> {
-   return (attributes ? attributes.map(_revert) : []);
+export const attributesRevert = (attributes: Attribute[]) : Attribute2[]=> {
+   return (attributes ? attributes.map(attributeRevert) : []);
 }
 
-export const _revert = (attribute: Attribute) : Attribute2 => {
+export const attributeRevert = (attribute: Attribute) : Attribute2 => {
     const att: Attribute2 = {
         id: attribute.id,
         name: attribute.name,
@@ -117,11 +117,11 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
 }
 
 
-export const convert = (attribute2s: Attribute2[]) : Attribute[] => {
-    return (attribute2s ? attribute2s.map(_convert) : []);
+export const attributesConvert = (attribute2s: Attribute2[]) : Attribute[] => {
+    return (attribute2s ? attribute2s.map(attributeConvert) : []);
 }
 
-export const _convert = (attribute2: Attribute2): Attribute => {
+export const attributeConvert = (attribute2: Attribute2): Attribute => {
     const att: Attribute = {
         id: attribute2.id,
         name: attribute2.name,

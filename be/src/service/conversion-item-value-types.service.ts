@@ -9,7 +9,7 @@ import {
     WidthValue
 } from "../model/item.model";
 
-export const convert = (metadatas: ItemMetadata2[]): ItemValTypes => {
+export const itemValTypesConvert = (metadatas: ItemMetadata2[]): ItemValTypes => {
     const o: any = {};
     for (const metadata of metadatas) {
         for (const entry of metadata.entries) {
@@ -32,7 +32,7 @@ export const convert = (metadatas: ItemMetadata2[]): ItemValTypes => {
 }
 
 // todo: tmjeee: make sure undefined doesn't get printed out as string
-export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMetadata2[] => {
+export const itemValTypesRevert = (itemValTypes: ItemValTypes, attributeId: number): ItemMetadata2[] => {
     switch (itemValTypes.type) {
         case 'string': {
             const v: StringValue = itemValTypes as StringValue;

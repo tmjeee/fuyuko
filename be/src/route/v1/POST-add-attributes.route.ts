@@ -8,7 +8,7 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {param, body} from 'express-validator';
-import {revert} from "../../service/conversion-attribute.service";
+import {attributesRevert} from "../../service/conversion-attribute.service";
 import {Attribute2} from "../../server-side-model/server-side.model";
 import {ApiResponse} from "../../model/api-response.model";
 import {saveAttribute2s} from "../../service/attribute.service";
@@ -32,7 +32,7 @@ const httpAction: any[] = [
 
 
         const viewId: number = Number(req.params.viewId);
-        const attrs2: Attribute2[] = revert(req.body.attributes);
+        const attrs2: Attribute2[] = attributesRevert(req.body.attributes);
 
         const errors: string [] = await saveAttribute2s(viewId, attrs2, newConsoleLogger);
 

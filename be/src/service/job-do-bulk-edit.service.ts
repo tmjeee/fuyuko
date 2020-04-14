@@ -5,8 +5,8 @@ import {Connection} from "mariadb";
 import {JobLogger, newJobLogger} from "./job-log.service";
 import {Value} from "../model/item.model";
 import {ItemValue2} from "../server-side-model/server-side.model";
-import {revert} from "./conversion-item-value.service";
-import {updateItemValue} from "./item.service";
+import {itemValueRevert} from "./conversion-item-value.service";
+import {updateItemValue2} from "./item.service";
 const uuid = require('uuid');
 
 
@@ -58,8 +58,8 @@ const u = async (conn: Connection, jobLogger: JobLogger, viewId: number, bulkEdi
         const vs: Value[] = Object.values(bulkEditItem.changes).map((_ => _.new));
 
         for (const v of vs) {
-            const itemValue: ItemValue2 = revert(v);
-            await updateItemValue(viewId, itemId, itemValue);
+            const itemValue: ItemValue2 = itemValueRevert(v);
+            await updateItemValue2(viewId, itemId, itemValue);
             jobLogger.logInfo(`Changed attribute ${v.attributeId} for item ${itemId} to ${v.val}`)
         }
 

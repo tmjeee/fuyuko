@@ -40,8 +40,7 @@ import {
     VolumeUnits,
     WidthUnits
 } from "../../model/unit.model";
-import {_convert as _attributeConvert, convert as attributeConvert} from "../../service/conversion-attribute.service";
-import {convert as itemValueConvert} from '../../service/conversion-item-value.service';
+import {itemValueConvert} from '../../service/conversion-item-value.service';
 import {ROLE_EDIT} from "../../model/role.model";
 import {
     compareArea, compareCurrency,
@@ -50,6 +49,7 @@ import {
     compareString, compareVolume, compareWidth,
 } from "../../service/compare-attribute-values.service";
 import {ApiResponse} from "../../model/api-response.model";
+import {attributeConvert} from "../../service/conversion-attribute.service";
 
 
 // CHECKED
@@ -301,7 +301,7 @@ const getBulkEditItem2s = async (conn: Connection,
 
         const attMap: Map<string /* attributeId */, Attribute> =
             ([...attributeMap.values()]).reduce((m: Map<string /* attributeId */, Attribute>, i: Attribute2) => {
-                m.set(`${i.id}`, _attributeConvert(i));
+                m.set(`${i.id}`, attributeConvert(i));
                 return m;
             }, new Map()
         );

@@ -4,7 +4,7 @@ import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {getPricedItem2WithFiltering} from "../priced-item-filtering.service";
 import {PricedItem} from "../../model/item.model";
-import {convert} from "../conversion-item.service";
+import {itemsConvert} from "../conversion-item.service";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
 
 export type PreviewResult = { i: PricedItem[], m: Map<string /* attributeId */, Attribute>};
@@ -14,7 +14,7 @@ export const preview = async (viewId: number, pricingStructureId: number, filter
         return await getPricedItem2WithFiltering(conn, viewId, pricingStructureId, null, filter);
     });
 
-    const items: PricedItem[] = convert(item2s) as PricedItem[];
+    const items: PricedItem[] = itemsConvert(item2s) as PricedItem[];
 
     return {
        i: items,

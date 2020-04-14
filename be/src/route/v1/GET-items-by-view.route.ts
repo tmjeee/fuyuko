@@ -5,7 +5,7 @@ import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware
 import {getItemsByIds} from "../../service/item.service";
 import {Item} from "../../model/item.model";
 import {Item2} from "../../server-side-model/server-side.model";
-import {convert} from "../../service/conversion-item.service";
+import {itemsConvert} from "../../service/conversion-item.service";
 import {ApiResponse} from "../../model/api-response.model";
 
 // CHECKED
@@ -21,7 +21,7 @@ const httpAction: any[] = [
         const itemIds: number[] = req.params.itemIds.split(',').map((i: string) => Number(i));
 
         const item2s: Item2[] = await getItemsByIds(viewId, itemIds);
-        const items: Item[] = convert(item2s);
+        const items: Item[] = itemsConvert(item2s);
 
         res.status(200).json({
             status: 'SUCCESS',

@@ -4,8 +4,8 @@ import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
 import {Item, Value} from "../../model/item.model";
 import {Attribute} from "../../model/attribute.model";
-import {getAttributesInView} from "../attribute.service";
-import { convert } from "../conversion-attribute.service";
+import {getAttribute2sInView} from "../attribute.service";
+import { attributesConvert } from "../conversion-attribute.service";
 import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
 import {
     setItemAreaValue,
@@ -98,8 +98,8 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
 
 
 
-    const att2s: Attribute2[] = await getAttributesInView(viewId);
-    const attributes: Attribute[] = convert(att2s);
+    const att2s: Attribute2[] = await getAttribute2sInView(viewId);
+    const attributes: Attribute[] = attributesConvert(att2s);
 
     const [attributeByIdMap, attributeByNameMap] = attributes.reduce((acc: [Map<number, Attribute>, Map<string, Attribute>], a: Attribute) => {
         acc[0].set(a.id, a);

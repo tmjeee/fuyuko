@@ -1,6 +1,6 @@
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../server-side-model/server-side.model";
 import {Attribute} from "../model/attribute.model";
-import {revert} from "./conversion-attribute.service";
+import {attributesRevert} from "./conversion-attribute.service";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {LoggingCallback} from "./job-log.service";
@@ -44,7 +44,7 @@ const q2: string = `
                 WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED' AND A.ID IN ?
 `;
 
-export const getAttributesInView = async (viewId: number, attributeIds?: number[]): Promise<Attribute2[]> => {
+export const getAttribute2sInView = async (viewId: number, attributeIds?: number[]): Promise<Attribute2[]> => {
 
     return await doInDbConnection(async (conn: Connection) => {
 
@@ -138,7 +138,7 @@ export const saveAttribute2s = async (viewId: number, attrs2: Attribute2[], logg
 
 export const saveAttributes = async (viewId: number, att: Attribute[], loggingCallback?: LoggingCallback) => {
     loggingCallback('INFO', `converting attribute to attribute2`);
-    const att2s: Attribute2[] = revert(att);
+    const att2s: Attribute2[] = attributesRevert(att);
     loggingCallback('INFO', `converted attribute to attribute2`)
     await saveAttribute2s(viewId, att2s, loggingCallback);
 }
