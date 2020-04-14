@@ -17,6 +17,9 @@ import {ItemPricePopupComponent} from './item-price-popup.component';
 import {toTablePricingStructureItemWithPrice} from '../../utils/item-to-table-items.util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {View} from '../../model/view.model';
+import {Pagination} from "../../utils/pagination.utils";
+import {PaginationComponentEvent} from "../pagination-component/pagination.component";
+import {LimitOffset} from "../../model/limit-offset.model";
 
 
 export interface RowInfo {
@@ -73,7 +76,7 @@ export interface PricingStructureInput {
 export class PricingStructureTableComponent implements OnInit, OnChanges {
 
     @Input() pricingStructureInput: PricingStructureInput;
-    @Input() fetchFn: (pricingStructureId: number) => Observable<PricingStructureWithItems>;
+    @Input() fetchFn: (pricingStructureId: number, limitOffset?: LimitOffset) => Observable<PricingStructureWithItems>;
     @Input() views: View[];
     @Output() events: EventEmitter<PricingStructureEvent>;
 
@@ -81,6 +84,8 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
     pricingStructure: PricingStructure;
     pricingStructureWithItems: PricingStructureWithItems;
     tablePricingStructureItemsWithPrice: TablePricingStructureItemWithPrice[];
+
+    pagination: Pagination;
 
     dataSource: PricingStructureItemsTableDataSource;
 
@@ -92,6 +97,7 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
         this.events = new EventEmitter();
         this.views = [];
         this.rowInfoMap = new Map();
+        this.pagination = new Pagination();
     }
 
     ngOnInit(): void {
@@ -123,16 +129,17 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
         this.tablePricingStructureItemsWithPrice = [];
         this.rowInfoMap = new Map();
         if (pricingStructure && pricingStructure.id) {
-            this.fetchFn(pricingStructure.id)
+            this.fetchFn(pricingStructure.id, this.pagination.limitOffset())
                 .pipe(
                     tap((p: PricingStructureWithItems) => {
                         if (p && p.items) {
                             this.pricingStructureWithItems = p;
-                            this.pricingStructureWithItems.items.forEach((item: PricingStructureItemWithPrice) => {
+                            this.pricingStructureWithItems.items.payload.forEach((item: PricingStructureItemWithPrice) => {
                                 this.rowInfoMap.set(item.id, { tableItem: item, expanded: false } as RowInfo);
                             });
                             this.tablePricingStructureItemsWithPrice =
-                                toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items);
+                                toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items.payload);
+                            this.pagination.update(p.items);
                             setTimeout(() => {
                                 this.dataSource.update([...this.tablePricingStructureItemsWithPrice]);
                             });
@@ -231,5 +238,11 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
         this.rowInfoMap.get(item.id).expanded = !this.rowInfoMap.get(item.id).expanded;
+    }
+
+    onPaginationEvent($event: PaginationComponentEvent) {
+        this.pagination.updateFromPageEvent($event.pageEvent);
+        this.reload(this.pricingStructure);
+
     }
 }

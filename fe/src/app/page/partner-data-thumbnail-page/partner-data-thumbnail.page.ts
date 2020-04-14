@@ -6,8 +6,9 @@ import {PartnerService} from '../../service/partner-service/partner.service';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {User} from '../../model/user.model';
-import {concatMap, finalize, tap} from 'rxjs/operators';
+import {concatMap, finalize, map, tap} from 'rxjs/operators';
 import {MatSelectChange} from '@angular/material/select';
+import {PaginableApiResponse} from "../../model/api-response.model";
 
 
 @Component({
@@ -48,7 +49,8 @@ export class PartnerDataThumbnailPageComponent implements OnInit {
              this.pricedItems = i;
           }),
           concatMap((_) => {
-             return this.attributeService.getAllAttributesByView(pricingStructure.viewId);
+             return this.attributeService.getAllAttributesByView(pricingStructure.viewId)
+                 .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
           }),
           tap((a: Attribute[]) => {
              this.attributes = a;

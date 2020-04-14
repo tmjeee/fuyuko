@@ -77,6 +77,7 @@ const runImport = async () => {
        if (!item2) {  //  item not already exists
            const item: Item = createNewItem(-1, attributes);
            item.name = name;
+           item.description = `${name} description`;
            for (const attribute of attributes) {
                if (attribute.name === 'Make') {
                    setItemStringValue(attribute, item[attribute.id], make);

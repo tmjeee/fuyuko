@@ -11,12 +11,13 @@
     <mat-card-content>
       <div *ngIf="!done"> Loading ... </div>
       <div *ngIf="done && !itemAndAttributeSet">No Items</div>
-      <app-data-table *ngIf="done && itemAndAttributeSet"
+      <app-data-table *ngIf="itemAndAttributeSet"
                       (searchEvents)="onDataTableSearchEvent($event)"
                       (events)="onDataTableEvent($event)"
                       (carouselEvent)="onCarouselEvent($event)"
                       [itemAndAttributeSet]="itemAndAttributeSet">
       </app-data-table>
+      <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
     </mat-card-content>
   </mat-card>
 </div>

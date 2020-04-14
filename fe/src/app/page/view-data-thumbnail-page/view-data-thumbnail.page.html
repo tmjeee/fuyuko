@@ -15,6 +15,7 @@
                             (searchEvents)="onDataThumbnailSearchEvent($event)"
                             (events)="onDataThumbnailEvent($event)">
         </app-data-thumbnail>
+        <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
       </ng-container>
     </mat-card-content>
   </mat-card>

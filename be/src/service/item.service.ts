@@ -1,7 +1,14 @@
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
-import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../server-side-model/server-side.model";
+import {
+    Item2,
+    ItemMetadata2,
+    ItemMetadataEntry2,
+    ItemValue2,
+} from "../server-side-model/server-side.model";
 import {ItemImage, ItemSearchType, ItemValTypes, Value} from "../model/item.model";
+import {LimitOffset} from "../model/limit-offset.model";
+import {LIMIT_OFFSET} from "../util/utils";
 
 
 export const updateItemValue2 = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
@@ -125,7 +132,7 @@ export const addOrUpdateItem2 = async (viewId: number, item2: Item2): Promise<st
     }) ;
 }
 
-const SQL_1_A = `
+const SQL = `
                 SELECT
                     I.ID AS I_ID,
                     I.PARENT_ID AS I_PARENT_ID,
@@ -158,17 +165,40 @@ const SQL_1_A = `
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
                 LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
-                WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
+                WHERE I.ID IN ?
 `;
 
-const SQL_1_B = `${SQL_1_A} AND I.PARENT_ID IS NULL`;
 
-const SQL_2_A = `${SQL_1_A} AND I.ID IN ?`;
+const SQL_INNER = (ext: string, limitoffset?: LimitOffset) => `
+     SELECT 
+         I.ID AS ID
+     FROM TBL_ITEM AS I 
+     WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' ${ext ? ext : ''}
+     ${LIMIT_OFFSET(limitoffset)}
+`;
 
-const SQL_2_B = `${SQL_2_A} AND I.PARENT_ID IS NULL`;
+const SQL_COUNT = (ext: string) => `
+   SELECT 
+       COUNT(I.ID) AS COUNT
+   FROM TBL_ITEM AS I 
+   WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' ${ext ? ext : ''}
+`;
 
 
-const SQL_SEARCH = ` 
+const SQL_1_A = (limitoffset: LimitOffset) => SQL_INNER('', limitoffset);
+const SQL_1_A_COUNT = () => SQL_COUNT('');
+
+const SQL_1_B = (limitoffset: LimitOffset) => SQL_INNER(`AND I.PARENT_ID IS NULL`, limitoffset);
+const SQL_1_B_COUNT = () => SQL_COUNT(`AND I.PARENT_ID IS NULL`);
+
+const SQL_2_A = (limitoffset: LimitOffset) => SQL_INNER(`AND I.ID IN ?`, limitoffset);
+const SQL_2_A_COUNT = () => SQL_COUNT(`AND I.ID IN ?`);
+
+const SQL_2_B = (limitoffset: LimitOffset) => SQL_INNER(`AND I.ID IN ? AND I.PARENT_ID IS NULL`, limitoffset);
+const SQL_2_B_COUNT = () => SQL_COUNT(`AND I.ID IN ? AND I.PARENT_ID IS NULL`);
+
+
+const SQL_SEARCH = (limitOffset?: LimitOffset) => ` 
     SELECT DISTINCT
        I.ID AS I_ID
     FROM TBL_ITEM AS I
@@ -183,13 +213,14 @@ const SQL_SEARCH = `
          I.DESCRIPTION LIKE ? OR
          (E.KEY = 'value' AND E.VALUE LIKE ?)
     ) 
+    ${LIMIT_OFFSET(limitOffset)}
 `
 
-export const searchForItem2sInView = async (viewId: number, searchType: ItemSearchType, search: string): Promise<Item2[]> => {
+export const searchForItem2sInView = async (viewId: number, searchType: ItemSearchType, search: string, limitOffset?: LimitOffset): Promise<Item2[]> => {
     // todo: support advance search type
     const iSearch = `%${search}%`;
     const itemIds: number[] = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryA = await conn.query(SQL_SEARCH, [viewId, iSearch, iSearch, iSearch]);
+        const q: QueryA = await conn.query(SQL_SEARCH(limitOffset), [viewId, iSearch, iSearch, iSearch]);
         return q.reduce((acc: number[], curr: QueryI) => {
             acc.push(curr.I_ID)
             return acc;
@@ -198,7 +229,7 @@ export const searchForItem2sInView = async (viewId: number, searchType: ItemSear
 
     if (itemIds.length) {
         const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
-            const q: QueryA = await conn.query(`${SQL_2_B}`, [viewId, itemIds]);
+            const q: QueryA = await conn.query(SQL, [itemIds]);
             return _doQ(q);
         });
         await w(viewId, item2s);
@@ -207,27 +238,47 @@ export const searchForItem2sInView = async (viewId: number, searchType: ItemSear
     return [];
 };
 
-
-export const getAllItem2sInView = async (viewId: number, parentOnly: boolean = true): Promise<Item2[]> => {
+export const getAllItemsInViewCount = async (viewId: number, parentOnly: boolean = true): Promise<number> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(parentOnly ? SQL_1_B_COUNT() : SQL_1_A_COUNT(), [viewId]);
+        return q[0].COUNT;
+    });
+};
+export const getAllItem2sInView = async (viewId: number, parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item2[]> => {
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryA = await conn.query(parentOnly ? SQL_1_B : SQL_1_A, [viewId]);
+        const qq: QueryA = await conn.query(parentOnly ? SQL_1_B(limitoffset) : SQL_1_A(limitoffset), [viewId]);
+        const itemIds: number[] = qq.reduce((acc: number[], i: QueryI) => {
+           acc.push(i.ID);
+           return acc;
+        }, []);
+        const q: QueryA = await conn.query(SQL, [itemIds]);
         return _doQ(q);
     });
 
     await w(viewId, item2s);
     return item2s;
-}
+};
 
-export const getItemsByIds = async (viewId: number, itemIds: number[], parentOnly: boolean = true): Promise<Item2[]> => {
+export const getItemsByIdsCount = async (viewId: number, itemIds: number[], parentOnly: boolean = true): Promise<number> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(parentOnly ? SQL_2_B_COUNT() : SQL_2_A_COUNT(), [viewId, itemIds]);
+        return q[0].COUNT;
+    });
+};
+export const getItem2sByIds = async (viewId: number, itemIds: number[], parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item2[]> => {
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryA = await conn.query(parentOnly ? SQL_2_B : SQL_2_A, [viewId, itemIds]);
-
+        const qq: QueryA = await conn.query(parentOnly ? SQL_2_B(limitoffset) : SQL_2_A(limitoffset), [viewId, itemIds]);
+        const _itemIds: number[] = qq.reduce((acc: number[], i: QueryI) => {
+           acc.push(i.ID);
+           return acc;
+        }, []);
+        const q: QueryA = await conn.query(SQL, [_itemIds]);
         return _doQ(q);
     });
 
     await w(viewId, item2s);
     return item2s;
-}
+};
 
 export const getItem2ById = async (viewId: number, itemId: number): Promise<Item2> => {
 

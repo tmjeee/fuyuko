@@ -2,13 +2,14 @@ import {Component, OnInit} from '@angular/core';
 import {PartnerService} from '../../service/partner-service/partner.service';
 import {Attribute} from '../../model/attribute.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
-import {concatMap, finalize, tap} from 'rxjs/operators';
+import {concatMap, finalize, map, tap} from 'rxjs/operators';
 import {User} from '../../model/user.model';
 import {PricingStructure} from '../../model/pricing-structure.model';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {MatSelectChange} from '@angular/material/select';
 import {PricedItem, TablePricedItem} from '../../model/item.model';
 import {toTablePricedItem} from "../../utils/item-to-table-items.util";
+import {PaginableApiResponse} from "../../model/api-response.model";
 
 
 @Component({
@@ -51,7 +52,8 @@ export class PartnerDataTablePageComponent implements OnInit {
                 this.tablePricedItems = toTablePricedItem(this.pricedItems);
             }),
             concatMap((_) => {
-                return this.attributeService.getAllAttributesByView(pricingStructure.viewId);
+                return this.attributeService.getAllAttributesByView(pricingStructure.viewId)
+                    .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
             }),
             tap((a: Attribute[]) => {
                 this.attributes = a;

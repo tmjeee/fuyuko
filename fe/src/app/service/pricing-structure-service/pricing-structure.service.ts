@@ -9,9 +9,11 @@ import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '../../model/api-response.model';
 import {map} from "rxjs/operators";
+import {LimitOffset} from "../../model/limit-offset.model";
+import {toQuery} from "../../utils/pagination.utils";
 
 const URL_ALL_PRICING_STRUCTURES = () => `${config().api_host_url}/pricingStructures`;
-const URL_ALL_ITEMS_WITH_PRICE = () => `${config().api_host_url}/pricingStructuresWithItems/:pricingStructureId`;
+const URL_ALL_ITEMS_WITH_PRICE = (limitOffset) => `${config().api_host_url}/pricingStructuresWithItems/:pricingStructureId?${toQuery(limitOffset)}`;
 const URL_UPDATE_PRICING_STRUCTURE_STATUS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/status/:status`;
 const URL_UPDATE_PRICING_STRUCTURE = () => `${config().api_host_url}/pricingStructures`;
 const URL_UPDATE_PRICING_STRUCTURE_ITEM = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/item`;
@@ -33,9 +35,9 @@ export class PricingStructureService {
             );
     }
 
-    pricingStructureWithItems(pricingStructureId: number): Observable<PricingStructureWithItems> {
+    pricingStructureWithItems(pricingStructureId: number, limitOffset?: LimitOffset): Observable<PricingStructureWithItems> {
         return this.httpClient
-            .get<ApiResponse<PricingStructureWithItems>>(URL_ALL_ITEMS_WITH_PRICE().replace(':pricingStructureId', `${pricingStructureId}`))
+            .get<ApiResponse<PricingStructureWithItems>>(URL_ALL_ITEMS_WITH_PRICE(limitOffset).replace(':pricingStructureId', `${pricingStructureId}`))
             .pipe(
                 map((r: ApiResponse<PricingStructureWithItems>) => r.payload)
             );

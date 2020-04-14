@@ -1,0 +1,7 @@
+<div class="pagination-component">
+    <mat-paginator [length]="pagination.total"
+                   [pageIndex]="pagination.offset / pagination.limit"
+                   [pageSize]="pagination.limit"
+                   [pageSizeOptions]="pagination.pageSizeOptions"
+                   (page)="onPaginatorEvent($event)"></mat-paginator>
+</div>

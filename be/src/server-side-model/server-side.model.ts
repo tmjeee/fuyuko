@@ -7,8 +7,6 @@ import {OperatorType} from "../model/operator.model";
 export type AuditCategory = "SYSTEM" | "APP" | "USER";
 
 
-
-
 // csv parsed models
 export interface CsvAttribute {
     name: string,
