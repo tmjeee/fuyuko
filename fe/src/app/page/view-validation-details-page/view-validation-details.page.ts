@@ -61,7 +61,8 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
             tap((v: View) => {
                 this.view = v;
                 forkJoin({
-                    attributes: this.attributeService.getAllAttributesByView(this.view.id),
+                    attributes: this.attributeService.getAllAttributesByView(this.view.id)
+                        .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
                     rules: this.ruleService.getAllRulesByView(this.view.id),
                     validationResult: this.validationService.getValidationDetails(this.view.id, Number(this.validationId)),
                 }).pipe(

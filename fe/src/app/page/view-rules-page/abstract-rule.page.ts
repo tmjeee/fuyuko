@@ -10,7 +10,7 @@ import {Attribute} from '../../model/attribute.model';
 import {Rule} from '../../model/rule.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RuleEditorComponentEvent} from '../../component/rules-component/rule-editor.component';
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
 
 export class AbstractRulePageComponent implements OnInit, OnDestroy {
@@ -59,7 +59,8 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
         const ruleId: string = this.route.snapshot.paramMap.get('ruleId');
         if (ruleId) {
             zip(
-                this.attributeService.getAllAttributesByView(this.currentView.id),
+                this.attributeService.getAllAttributesByView(this.currentView.id)
+                    .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
                 this.ruleService.getRuleByView(this.currentView.id, Number(ruleId))
             ).pipe(
                 tap((r: [Attribute[], Rule]) => {
@@ -70,7 +71,8 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
             ).subscribe();
         } else {
             combineLatest([
-                this.attributeService.getAllAttributesByView(this.currentView.id),
+                this.attributeService.getAllAttributesByView(this.currentView.id)
+                    .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
             ]).pipe(
                 tap((r: [Attribute[]]) => {
                     this.attributes = r[0];

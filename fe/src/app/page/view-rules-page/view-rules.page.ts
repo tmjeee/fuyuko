@@ -9,7 +9,7 @@ import {RulesTableComponentEvent} from '../../component/rules-component/rules-ta
 import {CounterService} from '../../service/counter-service/counter.service';
 import {combineAll, map, tap} from 'rxjs/operators';
 import {combineLatest, of, Subscription} from 'rxjs';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
@@ -71,7 +71,8 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
 
     private w() {
         combineLatest([
-            this.attributeService.getAllAttributesByView(this.currentView.id),
+            this.attributeService.getAllAttributesByView(this.currentView.id)
+                .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
             this.ruleService.getAllRulesByView(this.currentView.id),
             this.customRuleService.getAllCustomRules(),
             this.customRuleService.getCustomRulesByView(this.currentView.id),

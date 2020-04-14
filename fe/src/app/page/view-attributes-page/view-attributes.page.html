@@ -15,6 +15,8 @@
                            searchFieldPlaceholder="Search Attributes">
       </app-attribute-table>
 
+      <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
+
     </mat-card-content>
   </mat-card>
 

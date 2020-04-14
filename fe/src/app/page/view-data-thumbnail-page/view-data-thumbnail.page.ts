@@ -68,7 +68,8 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
     this.done = false;
     const viewId = this.currentView.id;
     combineLatest([
-      this.attributeService.getAllAttributesByView(viewId),
+      this.attributeService.getAllAttributesByView(viewId)
+          .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
       (this.search && this.searchType) ?
           this.itemService.searchForItems(viewId, this.searchType, this.search) :
           this.itemService.getAllItems(viewId, this.pagination.limitOffset())

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {View} from '../../model/view.model';
 import {ViewService} from '../../service/view-service/view.service';
 import {ExportDataService} from '../../service/export-data-service/export-data.service';
-import {tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {
     PreviewExportFn, SubmitExportJobFn,
     ViewAttributeFn, ViewPricingStructureFn,
@@ -14,6 +14,7 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {PricingStructure} from '../../model/pricing-structure.model';
 import {Observable} from "rxjs";
 import {PricingStructureService} from "../../service/pricing-structure-service/pricing-structure.service";
+import {PaginableApiResponse} from "../../model/api-response.model";
 
 @Component({
     templateUrl: './export.page.html',
@@ -40,7 +41,8 @@ export class ExportPageComponent implements OnInit {
         ).subscribe();
 
         this.viewAttributeFn = (viewId: number) => {
-           return this.attributeService.getAllAttributesByView(viewId);
+           return this.attributeService.getAllAttributesByView(viewId)
+               .pipe( map((r: PaginableApiResponse<Attribute[]>) => r.payload));
         };
 
         this.viewPricingStructuresFn = (viewId: number) => {
