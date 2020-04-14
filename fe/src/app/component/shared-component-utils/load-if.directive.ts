@@ -5,7 +5,8 @@ import {GlobalCommunicationService} from "../../service/global-communication-ser
 
 
 /**
- * like *ngIf but will not show if there is a global error, use this instead of ngIf for loading messages
+ * Like *ngIf but will not show if there is a global error, use this instead of ngIf for loading messages
+ *
  * <div *loadIf="isLoading">
  *    will show until isLoading is false or when an error is found in global-error-handler.service.ts
  * </div>
