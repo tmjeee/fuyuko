@@ -7,7 +7,7 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div *ngIf="!ready">Loading ...</div>
+            <div *loadIf="!ready">Loading ...</div>
             <app-custom-import-wizard
                     *ngIf="ready"
                     [customImportPreviewFn]="customImportPreviewFn"

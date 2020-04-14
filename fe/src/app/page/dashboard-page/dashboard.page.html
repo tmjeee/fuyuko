@@ -1,6 +1,6 @@
 <div class="dashboard-page" [attr.test-page-title]="'dashboard'">
 
-    <div *ngIf="loading">Loading ...</div>
+    <div *loadIf="loading">Loading ...</div>
     <app-dashboard
             *ngIf="!loading"
             [data]="data"

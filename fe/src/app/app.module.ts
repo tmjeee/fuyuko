@@ -65,7 +65,7 @@ import {DataListModule} from './component/data-list-component/data-list.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ProfilingInterceptor} from './interceptor/profiling.interceptor';
 import {ErrorPageComponent} from './page/error-page/error.page';
-import {GlobalErrorhandler} from './error-handler/global.errorhandler';
+import {GlobalErrorHandler} from './error-handler/global-error-handler.service';
 import {CarouselModule} from './component/carousel-component/carousel.module';
 import {ViewModule} from './component/view-component/view.module';
 import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
@@ -133,6 +133,8 @@ import {CustomImportService} from "./service/custom-import-service/custom-import
 import {CustomExportService} from "./service/custom-export-service/custom-export.service";
 import {ExportArtifactService} from "./service/export-artifact-service/export-artifact.service";
 import {PaginationModule} from "./component/pagination-component/pagination.module";
+import {SecurityModule} from "./component/security-directive/security.module";
+import {SharedComponentUtilsModule} from "./component/shared-component-utils/shared-component-utils.module";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -273,6 +275,8 @@ const appInitializer = (settingsService: SettingsService,
     ValidationResultModule,
     HelpModule,
     PaginationModule,
+    SecurityModule,
+    SharedComponentUtilsModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -313,7 +317,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true, deps: [AuthService]} as Provider,
-    {provide: ErrorHandler, useClass: GlobalErrorhandler} as Provider,
+    {provide: ErrorHandler, useClass: GlobalErrorHandler} as Provider,
   ],
   entryComponents: [
   ],

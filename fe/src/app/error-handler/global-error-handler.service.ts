@@ -4,28 +4,36 @@ import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
 import {ApiErrorContext} from "../model/api-error.model";
+import {GlobalCommunicationService} from "../service/global-communication-service/global-communication.service";
 
 @Injectable()
-export class GlobalErrorhandler extends ErrorHandler {
+export class GlobalErrorHandler extends ErrorHandler {
 
     notificationService: NotificationsService;
+    globalCommunicationService: GlobalCommunicationService;
 
     constructor(@Inject(Injector) private injector: Injector,
                 private locationHistoryService: BrowserLocationHistoryService) {
         super();
         this.notificationService = this.injector.get(NotificationsService);
+        this.globalCommunicationService = this.injector.get(GlobalCommunicationService);
     }
+
 
     handleError(error: any): void {
         console.error('********************** error', error);
         if (error instanceof HttpErrorResponse) { // service call
             const httpErrorResponse: HttpErrorResponse = error as HttpErrorResponse;
             if (!navigator.onLine) {
-                this.notificationService.error(`Offline`, `Browser offline`);
+                const msg = `Browser offline`;
+                this.notificationService.error(`Offline`, msg);
+                this.globalCommunicationService.publishGlobalError(msg);
             } else {
                 if (httpErrorResponse.status === 0 ) {
                     // api backend is down
+                    const msg = `Unable to connect to API services`;
                     this.notificationService.error(`API Service`, `Unable to connect to API services`);
+                    this.globalCommunicationService.publishGlobalError(msg);
                 } else if (httpErrorResponse.status === 401) {
                     // unauthorized 401
                     if (httpErrorResponse.error.context === 'login') { // when trying to login
@@ -38,18 +46,21 @@ export class GlobalErrorhandler extends ErrorHandler {
                     });
                 } else if (httpErrorResponse.status === 403) {
                     // forbidden - 403
-                    this.notificationService.error('Forbidden',
-                        `Not allowed access to ${httpErrorResponse.url}`);
-
+                    const msg = `Not allowed access to  ${httpErrorResponse.url}`
+                    this.notificationService.error('Forbidden', msg);
+                    this.globalCommunicationService.publishGlobalError(msg);
                 } else if (httpErrorResponse.status === 404) { // api service not found??
-                    this.notificationService.error('API Service',
-                        `unable to find API service ${httpErrorResponse.url}`);
+                    const msg = `Unable to find API service ${httpErrorResponse.url}`;
+                    this.notificationService.error('API Service', msg);
+                    this.globalCommunicationService.publishGlobalError(msg);
                 } else if (httpErrorResponse.status === 400) { // bad request (client error)
-                    this.notificationService.error('Client Error',
-                        `${this.getErrorMessages(httpErrorResponse)}`);
+                    const msg = `${this.getErrorMessages(httpErrorResponse)}`;
+                    this.notificationService.error('Client Error', msg);
+                    this.globalCommunicationService.publishGlobalError(msg);
                 } else {
-                    this.notificationService.error('API Service',
-                        `${error.message}`);
+                    const msg = `${error.message}`;
+                    this.notificationService.error('API Service', msg);
+                    this.globalCommunicationService.publishGlobalError(msg);
                 }
             }
         } else { // client error

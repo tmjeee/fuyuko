@@ -1,13 +1,16 @@
 import {NgModule} from "@angular/core";
-import {SafePipe} from "../../utils/safe.pipe";
+import {SafePipe} from "./safe.pipe";
+import {LoadIfDirective} from "./load-if.directive";
 
 
 @NgModule({
    declarations: [
-       SafePipe
+       SafePipe,
+       LoadIfDirective,
    ],
    exports: [
-       SafePipe
+       SafePipe,
+       LoadIfDirective,
    ]
 })
 export class SharedComponentUtilsModule {

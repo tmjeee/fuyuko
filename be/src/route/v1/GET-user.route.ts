@@ -10,7 +10,7 @@ import {
 } from "./common-middleware";
 import {getUserById} from "../../service";
 import {User} from "../../model/user.model";
-import {ROLE_ADMIN, ROLE_VIEW} from "../../model/role.model";
+import {ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
 
 // CHECKED
