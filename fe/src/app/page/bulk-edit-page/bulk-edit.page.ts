@@ -6,6 +6,7 @@ import {View} from '../../model/view.model';
 import {map} from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 import {Subscription} from 'rxjs';
+import {PaginableApiResponse} from "../../model/api-response.model";
 
 
 @Component({
@@ -36,6 +37,7 @@ export class BulkEditPageComponent implements OnInit, OnDestroy {
                                 this.currentView = this.allViews ? this.allViews.find((vv: View) => vv.id === v.id) : undefined;
                                 this.subscription = this.attributeService.getAllAttributesByView(this.currentView.id)
                                     .pipe(
+                                        map((r: PaginableApiResponse<Attribute[]>) => r.payload),
                                         map((a: Attribute[]) => {
                                             this.attributes = a;
                                         })

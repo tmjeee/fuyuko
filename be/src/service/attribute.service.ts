@@ -4,27 +4,40 @@ import {attributesRevert} from "./conversion-attribute.service";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {LoggingCallback} from "./job-log.service";
-const q1: string = `
+import {LimitOffset} from "../model/limit-offset.model";
+import {LIMIT_OFFSET} from "../util/utils";
+
+const q1_count: string = `
                 SELECT
-                    A.ID AS A_ID,
-                    A.VIEW_ID AS A_VIEW_ID,
-                    A.TYPE AS A_TYPE,
-                    A.NAME AS A_NAME,
-                    A.DESCRIPTION AS A_DESCRIPTION,
-                    A.CREATION_DATE AS A_CREATION_DATE,
-                    A.LAST_UPDATE AS A_LAST_UPDATE,
-                    M.ID as M_ID,
-                    M.NAME AS M_NAME,
-                    E.ID as E_ID,
-                    E.KEY AS E_KEY,
-                    E.VALUE AS E_VALUE
+                    COUNT(A.ID) AS COUNT
                 FROM TBL_VIEW_ATTRIBUTE AS A
-                LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS M ON M.VIEW_ATTRIBUTE_ID = A.ID
-                LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS E ON E.VIEW_ATTRIBUTE_METADATA_ID = M.ID
                 WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED'
 `;
 
-const q2: string = `
+const q2_count: string = `
+                SELECT
+                    COUNT(A.ID) AS COUNT
+                FROM TBL_VIEW_ATTRIBUTE AS A
+                WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED' AND A.ID IN ?
+`;
+
+const q1 = (limitOffset: LimitOffset) => `
+                SELECT
+                    A.ID AS A_ID
+                FROM TBL_VIEW_ATTRIBUTE AS A
+                WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED'
+                ${LIMIT_OFFSET(limitOffset)}
+`;
+
+const q2 = (limitOffset: LimitOffset) => `
+                SELECT
+                    A.ID AS A_ID
+                FROM TBL_VIEW_ATTRIBUTE AS A
+                WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED' AND A.ID IN ?
+                ${LIMIT_OFFSET(limitOffset)}
+`;
+
+const q_ = () => `
                 SELECT
                     A.ID AS A_ID,
                     A.VIEW_ID AS A_VIEW_ID,
@@ -41,17 +54,35 @@ const q2: string = `
                 FROM TBL_VIEW_ATTRIBUTE AS A
                 LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS M ON M.VIEW_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS E ON E.VIEW_ATTRIBUTE_METADATA_ID = M.ID
-                WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED' AND A.ID IN ?
+                WHERE A.ID IN ?
 `;
 
-export const getAttribute2sInView = async (viewId: number, attributeIds?: number[]): Promise<Attribute2[]> => {
+export const getTotalAttributesInView = async (viewId: number, attributeIds?: number[]): Promise<number> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await (
+            attributeIds && attributeIds.length > 0 ?
+                conn.query(q2_count, [viewId, attributeIds]) :
+                conn.query(q1_count, [viewId])
+            );
+        return q[0].COUNT;
+    });
+};
+export const getAttribute2sInView = async (viewId: number, attributeIds?: number[], limitOffset?: LimitOffset): Promise<Attribute2[]> => {
 
     return await doInDbConnection(async (conn: Connection) => {
 
-        const q: QueryA = await (
+        const qq: QueryA = await (
             attributeIds && attributeIds.length > 0 ?
-                 conn.query(q2, [viewId, attributeIds]) :
-                 conn.query(q1, [viewId]));
+                 conn.query(q2(limitOffset), [viewId, attributeIds]) :
+                 conn.query(q1(limitOffset), [viewId]));
+
+        const attIds: number[] = await qq.reduce((acc: number[], i: QueryI) => {
+            acc.push(i.A_ID);
+            return acc;
+        }, []);
+
+
+        const q: QueryA = await conn.query(q_(), [attIds]);
 
         const a: Map<string /* attributeId */, Attribute2> = new Map();
         const m: Map<string /* attributeId_metadataId */, AttributeMetadata2> = new Map();

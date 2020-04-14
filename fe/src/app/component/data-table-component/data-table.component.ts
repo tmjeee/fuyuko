@@ -293,7 +293,6 @@ export class DataTableComponent implements OnInit, OnChanges {
     this.events.emit(e);
     this.pendingSavingItems.clear();
     this.pendingDeletionItems.clear();
-    console.log('****** onSave', e, this.pendingSavingItems, this.pendingDeletionItems);
   }
 
   onReload($event: MouseEvent) {

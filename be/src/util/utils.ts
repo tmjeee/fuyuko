@@ -1,3 +1,5 @@
+import {LimitOffset} from "../model/limit-offset.model";
+
 export function range(start: number, stop: number, step: number = 1) {
     if (typeof stop == 'undefined') {
         // one param defined
@@ -20,3 +22,27 @@ export function range(start: number, stop: number, step: number = 1) {
 
     return result;
 };
+
+
+export const isLimit = (limit: string): boolean => {
+    return (!isNaN(Number(limit)) && Number.isInteger(Number(limit)) && Number(limit) > 0) ?  true : false;
+};
+
+export const isOffset = (offset: string): boolean => {
+    return (!isNaN(Number(offset)) && Number.isInteger(Number(offset)) && Number(offset) >= 0) ? true : false;
+}
+
+export const toLimitOffset = (limit: string, offset: string): LimitOffset => {
+    const _isLimit = isLimit(limit);
+    const _isOffset = isOffset(offset);
+    if (_isLimit && _isOffset) {
+        return { limit: Number(limit), offset: Number(offset)};
+    }
+    return undefined;
+}
+
+
+export const LIMIT_OFFSET = (limitoffset?: LimitOffset) => (limitoffset ? `LIMIT ${limitoffset.limit} OFFSET ${limitoffset.offset}` : ``);
+
+
+

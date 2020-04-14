@@ -6,13 +6,15 @@ import {
 import {toItem, toItemIgnoreParent} from '../../utils/item-to-table-items.util';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {map} from "rxjs/operators";
+import {LimitOffset} from "../../model/limit-offset.model";
+import {toQuery} from "../../utils/pagination.utils";
 
 
-const URL_GET_ITEMS = () => `${config().api_host_url}/view/:viewId/items/:itemIds`;
-const URL_GET_ALL_ITEMS = () => `${config().api_host_url}/view/:viewId/items`;
-const URL_GET_SEARCH_FOR_ITEMS = () => `${config().api_host_url}/view/:viewId/searchType/:searchType/search/:search`;
+const URL_GET_ITEMS = (limitOffset?: LimitOffset) => `${config().api_host_url}/view/:viewId/items/:itemIds?${toQuery(limitOffset)}`;
+const URL_GET_ALL_ITEMS = (limitOffset?: LimitOffset) => `${config().api_host_url}/view/:viewId/items?${toQuery(limitOffset)}`;
+const URL_GET_SEARCH_FOR_ITEMS = (limitOffset?: LimitOffset) => `${config().api_host_url}/view/:viewId/searchType/:searchType/search/:search?${toQuery(limitOffset)}`;
 const URL_UPDATE_ITEMS = () => `${config().api_host_url}/view/:viewId/items/update`;
 const URL_UPDATE_ITEM_STATUS = () => `${config().api_host_url}/view/:viewId/items/status/:status`;
 
@@ -26,23 +28,17 @@ export class ItemService {
   constructor(private httpClient: HttpClient) {}
 
 
-  getAllItems(viewId: number): Observable<Item[]> {
+  getAllItems(viewId: number, limitOffset?: LimitOffset): Observable<PaginableApiResponse<Item[]>> {
       return this.httpClient
-          .get<ApiResponse<Item[]>>(URL_GET_ALL_ITEMS().replace(':viewId', String(viewId)))
-          .pipe(
-              map((r: ApiResponse<Item[]>) => r.payload)
-          );
+          .get<PaginableApiResponse<Item[]>>(URL_GET_ALL_ITEMS(limitOffset).replace(':viewId', String(viewId)));
   }
 
-  searchForItems(viewId: number, searchType: ItemSearchType = 'basic', search: string = ''): Observable<Item[]> {
-    return this.httpClient.get<ApiResponse<Item[]>>(
-        URL_GET_SEARCH_FOR_ITEMS()
+  searchForItems(viewId: number, searchType: ItemSearchType = 'basic', search: string = '', limitOffset?: LimitOffset): Observable<PaginableApiResponse<Item[]>> {
+    return this.httpClient.get<PaginableApiResponse<Item[]>>(
+        URL_GET_SEARCH_FOR_ITEMS(limitOffset)
             .replace(':viewId', String(viewId))
             .replace(':searchType', searchType)
-            .replace(':search', search))
-        .pipe(
-            map((r: ApiResponse<Item[]>) => r.payload)
-        );
+            .replace(':search', search));
   }
 
   saveItems(viewId: number, items: Item[]): Observable<ApiResponse> {
@@ -82,19 +78,16 @@ export class ItemService {
   }
 
 
-  getItemsById(viewId: number, itemIds: number[]): Observable<Item[]> {
-    return this.httpClient.get<ApiResponse<Item[]>>(
-        URL_GET_ITEMS()
+  getItemsById(viewId: number, itemIds: number[], limitOffset?: LimitOffset): Observable<PaginableApiResponse<Item[]>> {
+    return this.httpClient.get<PaginableApiResponse<Item[]>>(
+        URL_GET_ITEMS(limitOffset)
             .replace(':viewId', String(viewId))
             .replace(':itemIds',
                 itemIds
                     .filter((i: number) => i) // no nulls, undefined or zeros
                     .filter((i: number, index: number, self: number[]) => self.indexOf(i) === index) // unique ones only
                     .join(',')
-            ))
-        .pipe(
-            map((r: ApiResponse<Item[]>) => r.payload)
-        );
+            ));
   }
 
   deleteItemImage(itemId: any, itemImageId: number): Observable<ApiResponse> {

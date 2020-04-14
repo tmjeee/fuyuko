@@ -7,9 +7,11 @@ import {Subscription} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {AttributeTableComponentEvent} from '../../component/attribute-table-component/attribute-table.component';
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {Router} from "@angular/router";
+import {Pagination} from "../../utils/pagination.utils";
+import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
 
 @Injectable()
 export class Prov {
@@ -23,6 +25,8 @@ export class Prov {
 })
 export class ViewAttributesPageComponent implements OnInit, OnDestroy {
 
+  pagination: Pagination;
+
   subscription: Subscription;
 
   currentView: View;
@@ -31,7 +35,9 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
   constructor(private attributeService: AttributeService,
               private router: Router,
               private notificationsService: NotificationsService,
-              private viewService: ViewService) {}
+              private viewService: ViewService) {
+      this.pagination = new Pagination();
+  }
 
   ngOnInit(): void {
     this.subscription = this.viewService
@@ -40,7 +46,7 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
         map((v: View) => {
           if (v) {
             this.currentView = v;
-            this.reloadAttributes();
+            this.reload();
           }
         })
       ).subscribe();
@@ -52,12 +58,13 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  reloadAttributes() {
+  reload() {
     if (this.currentView) {
-      this.attributeService.getAllAttributesByView(this.currentView.id)
+      this.attributeService.getAllAttributesByView(this.currentView.id, this.pagination.limitOffset())
         .pipe(
-          map((a: Attribute[]) => {
-            this.attributes = a;
+          map((r: PaginableApiResponse<Attribute[]>) => {
+            this.attributes = r.payload;
+            this.pagination.update(r);
           })
         ).subscribe();
     }
@@ -71,7 +78,7 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
           .pipe(
             map((a: ApiResponse) => {
               toNotifications(this.notificationsService, a);
-              this.reloadAttributes();
+              this.reload();
             })
           ).subscribe();
         break;
@@ -93,4 +100,9 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
+    onPaginationEvent($event: PaginationComponentEvent) {
+      this.pagination.updateFromPageEvent($event.pageEvent);
+      this.reload();
+    }
 }

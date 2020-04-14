@@ -11,10 +11,12 @@ import {View} from '../../model/view.model';
 import {DataTableComponentEvent} from '../../component/data-table-component/data-table.component';
 import {toTableItem} from '../../utils/item-to-table-items.util';
 import {ItemSearchComponentEvent} from '../../component/item-search-component/item-search.component';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
+import {Pagination} from "../../utils/pagination.utils";
+import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
 
 
 @Component({
@@ -27,6 +29,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   done: boolean;
 
 
+  pagination: Pagination;
   search: string;
   searchType: ItemSearchType;
   currentView: View;
@@ -36,6 +39,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
               private notificationService: NotificationsService,
               private viewService: ViewService,
               private itemService: ItemService) {
+      this.pagination = new Pagination();
   }
 
   ngOnInit(): void {
@@ -61,14 +65,16 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
     this.done = false;
     const viewId = this.currentView.id;
     combineLatest([
-      this.attributeService.getAllAttributesByView(viewId),
+      this.attributeService.getAllAttributesByView(viewId)
+          .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
       (this.search && this.searchType) ?
           this.itemService.searchForItems(viewId, this.searchType, this.search) :
-          this.itemService.getAllItems(viewId)
+          this.itemService.getAllItems(viewId, this.pagination.limitOffset())
     ]).pipe(
-      map( (r: [Attribute[], Item[]]) => {
+      map( (r: [Attribute[], PaginableApiResponse<Item[]>]) => {
        const attributes: Attribute[] = r[0];
-       const items: Item[] = r[1];
+       const items: Item[] = r[1].payload;
+       this.pagination.update(r[1]);
        const tableItems: TableItem[] = toTableItem(items);
        this.itemAndAttributeSet = {
          attributes,
@@ -138,4 +144,9 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
+    onPaginationEvent($event: PaginationComponentEvent) {
+      this.pagination.updateFromPageEvent($event.pageEvent);
+      this.reload();
+    }
 }

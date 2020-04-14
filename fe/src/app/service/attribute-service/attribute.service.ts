@@ -4,10 +4,12 @@ import {Observable, of} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {map} from "rxjs/operators";
+import {LimitOffset} from "../../model/limit-offset.model";
+import {toQuery} from "../../utils/pagination.utils";
 
-const URL_ALL_ATTRIBUTES_BY_VIEW = () => `${config().api_host_url}/attributes/view/:viewId`;
+const URL_ALL_ATTRIBUTES_BY_VIEW = (limitOffset: LimitOffset) => `${config().api_host_url}/attributes/view/:viewId?${toQuery(limitOffset)}`;
 const URL_ATTRIBUTE_BY_VIEW = () => `${config().api_host_url}/attribute/:attributeId/view/:viewId`;
 const URL_SEARCH_ALL_ATTRIBUTES_BY_VIEW = () => `${config().api_host_url}/attributes/view/:viewId/search/:attribute`;
 const URL_ADD_ATTRIBUTE_TO_VIEW = () => `${config().api_host_url}/view/:viewId/attributes/add`;
@@ -19,15 +21,11 @@ export class AttributeService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getAllAttributesByView(viewId: number): Observable<Attribute[]> {
+  // todo: needs changing
+  getAllAttributesByView(viewId: number, limitOffset?: LimitOffset): Observable<PaginableApiResponse<Attribute[]>> {
     return this.httpClient
-        .get<ApiResponse<Attribute[]>>(
-            URL_ALL_ATTRIBUTES_BY_VIEW().replace(':viewId', String(viewId)))
-        .pipe(
-            map((r: ApiResponse<Attribute[]>) => {
-                return r.payload;
-            })
-        );
+        .get<PaginableApiResponse<Attribute[]>>(
+            URL_ALL_ATTRIBUTES_BY_VIEW(limitOffset).replace(':viewId', String(viewId)));
   }
 
   getAttributeByView(viewId: number, attributeId: number): Observable<Attribute> {
