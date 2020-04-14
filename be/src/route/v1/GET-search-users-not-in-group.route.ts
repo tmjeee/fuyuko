@@ -56,7 +56,7 @@ const httpAction: any[] = [
                 LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
                 LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
                 LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
-                WHERE U.STATUS = 'ENABLED' AND G.STATUS = 'ENABLED'
+                WHERE U.STATUS = 'ENABLED' AND (G.STATUS IS NULL OR G.STATUS = 'ENABLED')
                 AND U.ID NOT IN (
                     SELECT 
                         U.ID
