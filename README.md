@@ -1,4 +1,7 @@
-# Documentation
+
+![fuyuko logo](https://github.com/tmjeee/fuyuko/blob/v1.0.0-beta/fe/src/assets/images/logo/fuyuko-logo-with-side-wordings.png)
+
+#  Documentation
 ## Gitbook
 [Documentation](https://tmjeee.gitbook.io/f-doc/)
 
