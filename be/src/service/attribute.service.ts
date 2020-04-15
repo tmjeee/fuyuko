@@ -82,7 +82,7 @@ export const getAttribute2sInView = async (viewId: number, attributeIds?: number
         }, []);
 
 
-        const q: QueryA = await conn.query(q_(), [attIds]);
+        const q: QueryA = await conn.query(q_(), [attIds.length ? attIds : [-1]]);
 
         const a: Map<string /* attributeId */, Attribute2> = new Map();
         const m: Map<string /* attributeId_metadataId */, AttributeMetadata2> = new Map();

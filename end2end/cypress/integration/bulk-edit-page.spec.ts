@@ -314,11 +314,12 @@ describe(`bulk edit spec`, () => {
 
     it(`should allow switching in where and change clause`, () => {
         const i = 0;
-        const viewName = createNewView();
+        const viewName = `Test View 2`;
         refreshVariables();
 
         bulkEditPage
             .visit()
+            .selectView(viewName)
             .startWizard()
             .verifyStep()
 
@@ -405,7 +406,7 @@ describe(`bulk edit spec`, () => {
     it(`should allow bulk edit process`, () => {
 
         let i = 0;
-        const viewName = createNewView();
+        const viewName = `Test View 2`
         refreshVariables();
         const increment = () => {
             i += 1;
@@ -413,6 +414,7 @@ describe(`bulk edit spec`, () => {
 
         const bulkEditPageStep1 = bulkEditPage
             .visit()
+            .selectView(viewName)
             .startWizard()
             .verifyStep()
         ;

@@ -58,8 +58,9 @@ describe('dashboard', () => {
             .validateTitle();
     });
 
-    it ('should be able to navigate to user group page', () => {
+    it('should be able to navigate to user group page', () => {
         dashboardPage
+            .visit()
             .visitUserPage()
             .visitUserGroupPage()
             .validateTitle();

@@ -37,7 +37,6 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
     expandItem(itemName: string): PartnerTablePage {
         cy.get(`[test-page-title]`).then((_) => {
             const length = _.find(`[test-table-partner-item] [test-icon-expand-item='${itemName}']`).length
-            console.log('**** length', length);
             if (length > 0) { // not already expanded
                 return cy.get(`[test-table-partner-item]`)
                     .find(`[test-icon-expand-item='${itemName}']`)
@@ -51,7 +50,7 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
         cy.get(`[test-page-title]`).then((_) => {
             const length = _.find(`[test-table-partner-item] [test-icon-collapse-item='${itemName}']`).length
             if (length > 0) { // already expanded
-                cy.get(`[test-table-partner-item]`)
+                return cy.get(`[test-table-partner-item]`)
                     .find(`[test-icon-collapse-item='${itemName}']`)
                     .click({force: true});
             }
@@ -77,12 +76,14 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
         cy.get(`[test-table-partner-item]`)
             .find(`[test-icon-more-attributes='${itemName}']`)
             .click({force: true})
+            .wait(100);
         return this;
     }
 
     verifyAttributeSideMenuVisible(): PartnerTablePage {
         cy.get(`[test-partner-data-table]`) //
-            .find(`[test-side-nav]`)
+            .find(`[test-side-nav] div.partner-item-info-table`)
+            .scrollIntoView()
             .should('be.visible');
         return this;
     }

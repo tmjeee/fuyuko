@@ -37,14 +37,23 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
     }
 
     verifyAttributeTableEntriesCount(count: number): ViewAttributePage {
+        this.selectPagination(100);
         cy.get(`[test-attribute-name]`)
             .should('have.length.gte', count);
         return this;
     }
 
     verifyAttributeTableHaveAttribute(attributeName: string): ViewAttributePage {
+        this.selectPagination(100);
         cy.get(`[test-attribute-name='${attributeName}']`)
             .should('exist');
+        return this;
+    }
+
+    selectPagination(pagination: 50 | 100): ViewAttributePage {
+        cy.get(`app-pagination mat-select`).click({force: true});
+        cy.get(`mat-option[ng-reflect-value='100']`).click({force: true});
+        cy.wait(100);
         return this;
     }
 

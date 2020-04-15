@@ -88,7 +88,8 @@ describe("user-role", () => {
             .fillIn(email, 'group', 'VIEW Group')
             .verifiedSendInvitationEnabled(true)
             .submitInvitation(10000)
-            .verifySuccessMessageExists()
+            .verifyErrorMessageExists() // bad smtp password
+            // .verifySuccessMessageExists()
         ;
     });
 });
