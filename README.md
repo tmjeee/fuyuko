@@ -3,11 +3,11 @@
 
 #  Documentation
 ## Gitbook
-[Documentation](https://tmjeee.gitbook.io/f-doc/)
+[Documentation](https://fuyuko-org.gitbook.io/fuyuko/)
 
 # Tests
 ## Cypress Integration Tests Results
-Cypress test run results are available [here](https://dashboard.cypress.io/projects/ozp71m/run)
+Cypress test run results are available [here](https://dashboard.cypress.io/projects/ozp71m)
 
 # Build & Integration 
 ## Back End Pipeline
