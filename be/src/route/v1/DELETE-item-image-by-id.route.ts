@@ -2,9 +2,8 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {ClientError, validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import { param } from "express-validator";
-import {doInDbConnection, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
+import {deleteItemImage} from "../../service/item-image.service";
 
 // CHECK:
 const httpAction: any[] = [
@@ -18,13 +17,9 @@ const httpAction: any[] = [
         const itemId: number = Number(req.params.itemId);
         const itemImageId: number = Number(req.params.itemImageId);
 
-        const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
-            return await conn.query(`
-               DELETE FROM TBL_ITEM_IMAGE WHERE ITEM_ID=? AND ID=?
-            `, [itemId, itemImageId]);
-        });
+        const r: boolean = await deleteItemImage(itemId, itemImageId);
 
-        if (q.affectedRows > 0) {
+        if (r) {
             res.status(200).json({
                status: 'SUCCESS',
                message: `Item image deleted`

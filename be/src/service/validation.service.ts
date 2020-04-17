@@ -1,5 +1,5 @@
 import {Validation} from "../model/validation.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 
 const SQL_1 = `
@@ -10,6 +10,39 @@ const SQL_1 = `
 
 const SQL_2 = `${SQL_1} AND ID=?`
 
+
+export const getALlViewValidations = async (viewId: number): Promise<Validation[]> => {
+    const v: Validation[] = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+                SELECT 
+                    ID, VIEW_ID, NAME, DESCRIPTION, PROGRESS, CREATION_DATE, LAST_UPDATE                
+                FROM TBL_VIEW_VALIDATION WHERE VIEW_ID=?
+            `, [viewId]);
+
+        return q.reduce((acc: Validation[], i: QueryI) => {
+            const val: Validation = {
+                id: i.ID,
+                name: i.NAME,
+                description: i.DESCRIPTION,
+                progress: i.PROGRESS,
+                viewId: i.VIEW_ID,
+                creationDate: i.CREATION_DATE,
+                lastUpdate: i.LAST_UPDATE
+            };
+            acc.push(val);
+            return acc;
+        }, []);
+    });
+    return v;
+};
+
+
+export const deleteValidationResult = async (viewId: number, validationId: number): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse =  await conn.query(`DELETE FROM TBL_VIEW_VALIDATION WHERE ID=? AND VIEW_ID=?`, [validationId, viewId])
+        return (q.affectedRows);
+    });
+};
 
 export const getValidationsByViewId = async (viewId: number): Promise<Validation[]> => {
     const v: Validation[] = await doInDbConnection(async (conn: Connection) => {

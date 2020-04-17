@@ -11,6 +11,7 @@ import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {ROLE_ADMIN} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {deleteSelfRegistration} from "../../service/self-registration.service";
 
 // CHECKED
 const httpAction: any[] = [
@@ -21,18 +22,21 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_ADMIN])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
+        const selfRegistrationId: number = Number(req.params.selfRegistrationId);
 
-        await doInDbConnection(async (conn: Connection) => {
+        const boolean = await deleteSelfRegistration(selfRegistrationId);
 
-            const selfRegistrationId: number = Number(req.params.selfRegistrationId);
-
-            await conn.query(`DELETE FROM TBL_SELF_REGISTRATION WHERE ID = ?`, [selfRegistrationId]);
-
+        if (boolean) {
             res.status(200).json({
                 status: 'SUCCESS',
                 message: `Self registration ${selfRegistrationId} deleted`
             } as ApiResponse);
-        });
+        } else {
+            res.status(200).json({
+                status: 'ERROR',
+                messasge: `Failed to delete self registration with id ${selfRegistrationId}`
+            })
+        }
     }
 ];
 

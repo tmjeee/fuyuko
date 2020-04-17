@@ -71,7 +71,6 @@ import registerPostPreviewPriceDataExportRoute from './POST-preview-price-data-e
 import registerPostScheduleAttributeDataExportRoute from './POST-schedule-attribute-data-export.route';
 import registerPostScheduleItemDataExportRoute from './POST-schedule-item-data-export.route';
 import registerPostSchedulePriceDataExportRoute from './POST-schedule-pricing-data-export.route';
-import registerGetExportedFileByIdRoute from './GET-export-file-by-id.route';
 import registerPostSaveUserDashboardRoute from './POST-save-user-dashboard.route';
 import registerGetUserDashboardRoute from './GET-user-dashboard.route';
 import registerPostUserDashboardWidgetDataRoute from './POST-user-dashboard-widget-data.route';
@@ -195,7 +194,6 @@ const reg = (router: Router, regi: Registry) => {
     registerPostScheduleAttributeDataExportRoute(v1AppRouter, registry);
     registerPostScheduleItemDataExportRoute(v1AppRouter, registry);
     registerPostSchedulePriceDataExportRoute(v1AppRouter, registry);
-    registerGetExportedFileByIdRoute(v1AppRouter, registry);
     registerPostSaveUserDashboardRoute(v1AppRouter, registry);
     registerGetUserDashboardRoute(v1AppRouter, registry);
     registerPostUserDashboardWidgetDataRoute(v1AppRouter, registry);

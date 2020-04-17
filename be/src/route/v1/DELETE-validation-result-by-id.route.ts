@@ -3,9 +3,8 @@ import {NextFunction, Router, Request, Response} from "express";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import { param } from "express-validator";
 import {ROLE_EDIT} from "../../model/role.model";
-import {doInDbConnection} from "../../db";
-import { Connection } from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
+import {deleteValidationResult} from "../../service/validation.service";
 
 // CHECKED
 const httpAction: any[] = [
@@ -20,14 +19,19 @@ const httpAction: any[] = [
       const viewId: number = Number(req.params.viewId);
       const validationId: number = Number(req.params.validationId);
 
-      await doInDbConnection(async (conn: Connection) => {
-          await conn.query(`DELETE FROM TBL_VIEW_VALIDATION WHERE ID=? AND VIEW_ID=?`, [validationId, viewId])
-      });
+      const r: boolean = await deleteValidationResult(viewId, validationId);
 
-      res.status(200).json({
-        status: 'SUCCESS',
-        message: `Deleted view successfully`
-      } as ApiResponse);
+      if (r) {
+         res.status(200).json({
+            status: 'SUCCESS',
+            message: `Deleted validation result for validation id ${validationId} successfully`
+         } as ApiResponse);
+      } else {
+         res.status(200).json({
+            status: 'ERROR',
+            message: `Failed to delete validation result for validation id ${validationId}`
+         } as ApiResponse);
+      }
    }
 ];
 

@@ -13,6 +13,13 @@ const SQL_2 = `${SQL_1} AND ID=?`;
 const SQL_3 = `${SQL_1} AND NAME=?`;
 
 
+export const deleteView = async (viewId: number): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW SET STATUS='DELETED' WHERE ID=?`,[viewId]);
+        return q.affectedRows;
+    });
+};
+
 export const saveOrUpdateViews = async (views: View[]): Promise<string[]> => {
     const badUpdates: string[] = [];
     for (const view of views) {

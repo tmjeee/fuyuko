@@ -2,7 +2,6 @@ import {Connection} from "mariadb";
 import {PriceDataItem, PricingStructureItemWithPrice} from "../model/pricing-structure.model";
 import {doInDbConnection, QueryA, QueryResponse} from "../db";
 import {LoggingCallback, newLoggingCallback} from "./job-log.service";
-import {i} from "../logger";
 
 export const setPrices = async (priceDataItems: PriceDataItem[], loggingCallback: LoggingCallback = newLoggingCallback()) => {
     let totalUpdates = 0;

@@ -7,11 +7,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
 import {check} from 'express-validator';
 import {ROLE_ADMIN} from "../../model/role.model";
+import {deleteUser} from "../../service/user.service";
 
 // CHECKED
 const httpAction: any[] = [
@@ -22,19 +21,20 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_ADMIN])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
+        const userId: number = Number(req.params.userId);
 
-        await doInDbConnection(async (conn: Connection) => {
-            const userId: number = Number(req.params.userId);
-
-            await conn.query(`
-                UPDATE TBL_USER SET STATUS = ? WHERE ID = ?
-            `, ['DELETED', userId]);
-
+        const r: boolean = await deleteUser(userId);
+        if (r) {
             res.status(200).json({
                 status: 'SUCCESS',
                 message: `User ${userId} deleted`
             } as ApiResponse );
-        });
+        } else {
+            res.status(200).json({
+                status: 'ERROR',
+                message: `Failed to delete user with id ${userId}`
+            } as ApiResponse);
+        }
     }
 ];
 

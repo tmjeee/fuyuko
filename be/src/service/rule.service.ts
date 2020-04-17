@@ -6,6 +6,8 @@ import {
     ValidateClauseMetadata2,
     ValidateClauseMetadataEntry2, WhenClause2, WhenClauseMetadata2, WhenClauseMetadataEntry2
 } from "../server-side-model/server-side.model";
+import {Rule} from "../model/rule.model";
+import {ruleConvert, rulesConvert} from "./conversion-rule.service";
 
 const SQL_1 = `
    SELECT
@@ -57,14 +59,31 @@ const SQL_2 = `${SQL_1} AND R.ID=?`;
 
 
 
+
+// ================
+// === getRules ===
+// ================
+export const getRules = async (viewId: number): Promise<Rule[]> => {
+    const rule2s: Rule2[] = await getRule2s(viewId);
+    return rulesConvert(rule2s);
+};
 export const getRule2s = async (viewId: number): Promise<Rule2[]>  => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_1, [viewId]);
         return p(q);
     });
 
-}
+};
 
+
+
+// ================
+// === getRule2 ===
+// ================
+export const getRule = async (viewId: number, ruleId: number): Promise<Rule> => {
+    const rule2: Rule2 = await getRule2(viewId, ruleId);
+    return ruleConvert(rule2);
+};
 export const getRule2 = async (viewId: number, ruleId: number): Promise<Rule2> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_2, [viewId, ruleId]);
@@ -76,6 +95,8 @@ export const getRule2 = async (viewId: number, ruleId: number): Promise<Rule2> =
     });
 }
 
+
+// ================================ misc, helper functions =======================================
 export const p = (q: QueryA): Rule2[] => {
     const rMap:     Map<string /* ruleId */,                                        Rule2> = new Map();
     const vcMap:    Map<string /* ruleId_validationClauseId */,                     ValidateClause2> = new Map();

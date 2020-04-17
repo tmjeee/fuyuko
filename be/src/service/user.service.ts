@@ -1,8 +1,270 @@
 import {User} from "../model/user.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Group} from "../model/group.model";
 import {Role} from "../model/role.model";
+import {BinaryContent} from "../model/binary-content.model";
+
+const getNoAvatarContent = async (conn: Connection): Promise<BinaryContent> => {
+        const q: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_IMAGE WHERE TAG = ?',
+            ['no-avatar']);
+        if (q.length > 0) {
+            return {
+               id: q[0].ID,
+               name: q[0].NAME,
+               mimeType: q[0].MIME_TYPE,
+               size: q[0].SIZE,
+               content: q[0].CONTENT
+            } as BinaryContent;
+        }
+        return null;
+};
+
+export const getUserAvatarContent = async (userId: number): Promise<BinaryContent> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q1: QueryA  = await conn.query(`SELECT ID, USER_ID, GLOBAL_AVATAR_ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_USER_AVATAR WHERE USER_ID = ?`,
+            [userId]);
+        if (q1.length > 0) { // have user avatar
+            if (q1[0].CONTENT) { // have private user avatar
+                return {
+                    id: q1[0].ID,
+                    name: q1[0].NAME,
+                    mimeType: q1[0].MIME_TYPE,
+                    size: q1[0].SIZE,
+                    content: q1[0].CONTENT
+                } as BinaryContent;
+            } else if (q1[0].GLOBAL_AVATAR_ID) { // have a global avatar
+                const q2: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_AVATAR WHERE ID = ?',
+                    [q1[0].GLOBAL_AVATAR_ID]);
+                if(q2.length > 0) {
+                    return {
+                       id: q2[0].ID,
+                       name: q2[0].NAME,
+                       mimeType: q2[0].MIME_TYPE,
+                       size: q2[0].SIZE,
+                       content: q2[0].CONTENT
+                    } as BinaryContent;
+                } else {
+                    await getNoAvatarContent(conn);
+                }
+            } else {
+                await getNoAvatarContent(conn);
+            }
+        } else {
+            await getNoAvatarContent(conn);
+        }
+    });
+};
+
+export const searchForUserNotInGroup = async (groupId: number, username?: string): Promise<User[]> => {
+    const u: User[] = await doInDbConnection(async (conn: Connection) => {
+
+        const q: QueryA = await conn.query(`
+                SELECT 
+                    U.ID AS U_ID,
+                    U.USERNAME AS U_USERNAME,
+                    U.CREATION_DATE AS U_CREATION_DATE,
+                    U.LAST_UPDATE AS U_LAST_UPDATE,
+                    U.EMAIL AS U_EMAIL,
+                    U.FIRSTNAME AS U_FIRSTNAME,
+                    U.LASTNAME AS U_LASTNAME,
+                    U.STATUS AS U_STATUS,
+                    U.PASSWORD AS U_PASSWORD,
+                    UT.THEME AS UT_THEME,
+                    G.ID AS G_ID,
+                    G.NAME AS G_NAME,
+                    G.DESCRIPTION AS G_DESCRIPTION,
+                    G.STATUS AS G_STATUS,
+                    R.ID AS R_ID,
+                    R.NAME AS R_NAME,
+                    R.DESCRIPTION AS R_DESCRIPTION
+                FROM TBL_USER AS U 
+                LEFT JOIN TBL_LOOKUP_USER_GROUP AS LUG ON LUG.USER_ID = U.ID 
+                LEFT JOIN TBL_USER_THEME AS UT ON UT.USER_ID = U.ID
+                LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
+                LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
+                LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
+                WHERE U.STATUS = 'ENABLED' AND (G.STATUS IS NULL OR G.STATUS = 'ENABLED')
+                AND U.ID NOT IN (
+                    SELECT 
+                        U.ID
+                    FROM TBL_USER AS U 
+                    LEFT JOIN TBL_LOOKUP_USER_GROUP AS LUG ON LUG.USER_ID = U.ID
+                    LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
+                    WHERE G.ID = ? 
+                ) AND U.USERNAME LIKE ?
+            `, [groupId, `%${username ? username : ''}%`]);
+
+
+        const u: Map<number/*user id*/, User> = new Map();
+        const g: Map<string/*<user id>_<group id>*/, Group> = new Map();
+        const r: Map<string/*<user id>_<group id>_<role id>*/, Role> = new Map();
+
+
+        return q.reduce((acc: User[], i: QueryI, index: number) => {
+                const userId = i.U_ID;
+                const uKey = `${userId}`;
+                if (!u.has(userId)) {
+                    const user: User = ({
+                        id: i.U_ID,
+                        username: i.U_USERNAME,
+                        firstName: i.U_FIRSTNAME,
+                        lastName: i.U_LASTNAME,
+                        email: i.U_EMAIL,
+                        theme: i.UT_THEME,
+                        groups: []
+                    } as User);
+                    u.set(userId, user);
+                    acc.push(user);
+                }
+
+                const groupId = i.G_ID;
+                const gKey = `${userId}_${groupId}`;
+                if (!g.has(gKey)) {
+                    const group: Group = ({
+                        id: i.G_ID,
+                        name: i.G_NAME,
+                        description: i.G_DESCRIPTION,
+                        status: i.G_STATUS,
+                        roles: []
+                    });
+                    g.set(gKey, group);
+                    u.get(userId).groups.push(group);
+                }
+
+                const roleId = i.R_ID;
+                const rKey = `${userId}_${groupId}_${roleId}`;
+                if (!r.has(rKey)) {
+                    const role: Role = {
+                        id: i.R_ID,
+                        name: i.R_NAME,
+                        description: i.R_DESCRIPTION
+                    } as Role;
+                    r.set(rKey, role);
+                    g.get(gKey).roles.push(role);
+                }
+
+                return acc;
+            }, []
+        );
+    });
+
+    return u;
+}
+
+export const searchUserByUsernameAndStatus = async (status: string, username?: string): Promise<User[]> => {
+    const u: User[] = await doInDbConnection(async (conn: Connection) => {
+
+        const q: QueryA = await conn.query(`
+                SELECT 
+                    U.ID AS U_ID,
+                    U.USERNAME AS U_USERNAME,
+                    U.CREATION_DATE AS U_CREATION_DATE,
+                    U.LAST_UPDATE AS U_LAST_UPDATE,
+                    U.EMAIL AS U_EMAIL,
+                    U.FIRSTNAME AS U_FIRSTNAME,
+                    U.LASTNAME AS U_LASTNAME,
+                    U.STATUS AS U_STATUS,
+                    U.PASSWORD AS U_PASSWORD,
+                    UT.THEME AS UT_THEME,
+                    G.ID AS G_ID,
+                    G.NAME AS G_NAME,
+                    G.DESCRIPTION AS G_DESCRIPTION,
+                    G.STATUS AS G_STATUS,
+                    R.ID AS R_ID,
+                    R.NAME AS R_NAME,
+                    R.DESCRIPTION AS R_DESCRIPTION
+                FROM TBL_USER AS U 
+                LEFT JOIN TBL_LOOKUP_USER_GROUP AS LUG ON LUG.USER_ID = U.ID 
+                LEFT JOIN TBL_USER_THEME AS UT ON UT.USER_ID = U.ID
+                LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
+                LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
+                LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
+                WHERE U.STATUS = ? AND (G.STATUS = 'ENABLED' OR G.STATUS IS NULL) AND U.USERNAME LIKE ? 
+            `, [status, `%${username ? username : ''}%`]);
+
+
+        const u: Map<number/*user id*/, User> = new Map();
+        const g: Map<string/*<user id>_<group id>*/, Group> = new Map();
+        const r: Map<string/*<user id>_<group id>_<role id>*/, Role> = new Map();
+
+
+        return q.reduce((acc: User[], i: QueryI, index: number) => {
+                const userId = i.U_ID;
+                const uKey = `${userId}`;
+                if (!u.has(userId)) {
+                    const user: User = ({
+                        id: i.U_ID,
+                        username: i.U_USERNAME,
+                        firstName: i.U_FIRSTNAME,
+                        lastName: i.U_LASTNAME,
+                        email: i.U_EMAIL,
+                        theme: i.UT_THEME,
+                        groups: []
+                    } as User);
+                    u.set(userId, user);
+                    acc.push(user);
+                }
+
+                const groupId = i.G_ID;
+                const gKey = `${userId}_${groupId}`;
+                if (!g.has(gKey)) {
+                    const group: Group = ({
+                        id: i.G_ID,
+                        name: i.G_NAME,
+                        description: i.G_DESCRIPTION,
+                        status: i.G_STATUS,
+                        roles: []
+                    });
+                    g.set(gKey, group);
+                    u.get(userId).groups.push(group);
+                }
+
+                const roleId = i.R_ID;
+                const rKey = `${userId}_${groupId}_${roleId}`;
+                if (!r.has(rKey)) {
+                    const role: Role = {
+                        id: i.R_ID,
+                        name: i.R_NAME,
+                        description: i.R_DESCRIPTION
+                    } as Role;
+                    r.set(rKey, role);
+                    g.get(gKey).roles.push(role);
+                }
+
+                return acc;
+            }, []
+        );
+    });
+    return u;
+};
+
+
+export const deleteUserFromGroup = async (userId: number, groupId: number): Promise<string[]> => {
+    const errors: string[] = [];
+    await doInDbConnection(async (conn: Connection) => {
+
+        const qCount: QueryA = await conn.query(`SELECT COUNT(*) FROM TBL_LOOKUP_USER_GROUP WHERE USER_ID = ? AND GROUP_ID = ? `, [userId, groupId]);
+        if (!qCount.length && !Number(qCount[0].COUNT)) { // aleady exists
+            errors.push(`User ${userId} not in group ${groupId}`);
+        } else {
+            const q: QueryResponse = await conn.query(`DELETE FROM TBL_LOOKUP_USER_GROUP WHERE USER_ID=? AND GROUP_ID=?`, [userId, groupId]);
+            if (!q.affectedRows) {
+                errors.push(`Failed to delete user with id ${userId} from group with id ${groupId}`);
+            }
+        }
+    });
+    return errors;
+}
+
+export const deleteUser = async (userId: number): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse = await conn.query(`
+                UPDATE TBL_USER SET STATUS = ? WHERE ID = ?
+            `, ['DELETED', userId]);
+        return (q.affectedRows);
+    });
+};
 
 export const hasAllUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
     return await doInDbConnection(async (conn: Connection) => {

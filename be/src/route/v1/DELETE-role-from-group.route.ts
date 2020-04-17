@@ -2,11 +2,9 @@ import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import { validateJwtMiddlewareFn, validateMiddlewareFn, v, aFnAnyTrue, vFnHasAnyUserRoles } from "./common-middleware";
 import {check} from "express-validator";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {makeApiError, makeApiErrorObj} from "../../util";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_ADMIN} from "../../model/role.model";
+import {removeRoleFromGroup} from "../../service/role.service";
 
 // CHECKED
 const httpAction: any[] = [
@@ -22,24 +20,19 @@ const httpAction: any[] = [
         const groupId: number = Number(req.params.groupId);
         const roleName: string = req.params.roleName;
 
-        await doInDbConnection(async (conn: Connection) => {
-            const qs: QueryA = await conn.query(`SELECT ID FROM TBL_ROLE WHERE NAME = ?`, [roleName]);
-            if (qs.length <= 0) {
-                res.status(400).json(makeApiErrorObj(
-                    makeApiError(`Invalid role ${roleName}, roleName not found in system`, 'roleName', roleName, 'System')
-                ));
-                return;
-            }
-            const roleId: number = qs[0].ID;
-            const q: QueryResponse = await conn.query(`
-                DELETE FROM TBL_LOOKUP_GROUP_ROLE WHERE GROUP_ID = ? AND ROLE_ID = ?
-            `, [groupId, roleId])
+        const errors: string[] = await removeRoleFromGroup(roleName, groupId);
 
+        if (errors && errors.length) {
             res.status(200).json({
-                status: (q.affectedRows ? 'SUCCESS' : 'ERROR'),
-                message: (q.affectedRows ? `Role ${roleName} deleted from group ${groupId}` : `Role ${roleName} is not in group ${groupId}`),
-            } as ApiResponse)
-        });
+               status: 'ERROR',
+               message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Role ${roleName} deleted from group ${groupId}`
+            } as ApiResponse);
+        }
     }
 ];
 

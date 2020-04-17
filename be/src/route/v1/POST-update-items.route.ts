@@ -12,7 +12,7 @@ import {Item} from "../../model/item.model";
 import {Item2} from "../../server-side-model/server-side.model";
 import {itemsRevert as itemRevert} from "../../service/conversion-item.service";
 import {ApiResponse} from "../../model/api-response.model";
-import {addItem2, addOrUpdateItem2, updateItem2} from "../../service/item.service";
+import {addOrUpdateItem2} from "../../service/item.service";
 import {ROLE_EDIT} from "../../model/role.model";
 
 // CHECKED

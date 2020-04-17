@@ -6,131 +6,13 @@ import {
     ItemMetadataEntry2,
     ItemValue2,
 } from "../server-side-model/server-side.model";
-import {ItemImage, ItemSearchType, ItemValTypes, Value} from "../model/item.model";
+import {Item, ItemImage, ItemSearchType, ItemValTypes, Value} from "../model/item.model";
 import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET} from "../util/utils";
+import {itemValueRevert} from "./conversion-item-value.service";
+import {itemConvert, itemRevert, itemsConvert} from "./conversion-item.service";
 
-
-export const updateItemValue2 = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
-    await doInDbConnection(async (conn: Connection) => {
-        const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND VIEW_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
-
-        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
-        const newItemValueId: number = q1.insertId;
-
-        for (const metadata of itemValue.metadatas) {
-            const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
-            const newMetadataId: number = q2.insertId;
-
-            for (const entry of metadata.entries) {
-                const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
-                    [newMetadataId, entry.key, entry.value, entry.dataType]);
-                const newMetadataEntryId = q3.insertId;
-            }
-        }
-    });
-}
-
-export const updateItem2 = async (viewId: number, item2: Item2) => {
-    await doInDbConnection(async (conn: Connection) => {
-        return await _updateItem2(conn, viewId, item2);
-    });
-}
-const _updateItem2 = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
-    const errors: string[] = [];
-    const itemId: number = item2.id;
-    const name: string = item2.name;
-    const description: string = item2.description;
-
-    const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ITEM WHERE ID=?`, [itemId]);
-    if (qq[0].COUNT <= 0) { // item with id do not exists
-        errors.push(`Item with id ${itemId} do not exists`);
-    } else {
-        const q: QueryResponse = await conn.query(`UPDATE TBL_ITEM SET NAME=? , DESCRIPTION=? WHERE STATUS='ENABLED' AND ID=?`,[ name, description, itemId]);
-
-        for (const itemValue of  item2.values) {
-
-            const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND VIEW_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
-
-            const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
-            const newItemValueId: number = q1.insertId;
-
-            for (const metadata of itemValue.metadatas) {
-                const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
-                const newMetadataId: number = q2.insertId;
-
-                for (const entry of metadata.entries) {
-                    const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
-                        [newMetadataId, entry.key, entry.value, entry.dataType]);
-                    const newMetadataEntryId = q3.insertId;
-                }
-            }
-        }
-
-        for (const child of item2.children) {
-            const  errs: string[] = await _addOrUpdateItem2(conn, viewId, child);
-            errors.push(...errs);
-        }
-    }
-
-    return errors;
-}
-
-export const addItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
-        return await _addItem2(conn, viewId, item2);
-    });
-}
-const _addItem2 = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
-    const errors: string[] = [];
-    const name: string = item2.name;
-    const description: string = item2.description;
-    const parentId: number = item2.parentId ? item2.parentId : null;
-
-    const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=? AND STATUS='ENABLED' `, [name, viewId]);
-    if (qq[0].COUNT > 0) { // item with name already exists in view
-        errors.push(`Item with name ${name} already exists in view id ${viewId}`);
-    } else {
-        const q: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`,[parentId, viewId, name, description]);
-        const newItemId: number = q.insertId;
-
-        for (const itemValue of item2.values) {
-            const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [newItemId, itemValue.attributeId]);
-            const newItemValueId: number = q1.insertId;
-
-            for (const metadata of itemValue.metadatas) {
-                const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
-                const newMetadataId: number = q2.insertId;
-
-                for (const entry of metadata.entries) {
-                    const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
-                        [newMetadataId, entry.key, entry.value ? entry.value : '', entry.dataType]);
-                }
-            }
-        }
-
-        for (const child of item2.children) {
-            child.parentId = newItemId;
-            const errs: string[] = await _addOrUpdateItem2(conn, viewId, child);
-            errors.push(...errs);
-        }
-    }
-    return errors;
-}
-
-const _addOrUpdateItem2 = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
-    if (item2.id > 0) {
-        return await _updateItem2(conn, viewId, item2);
-    } else {
-        return await _addItem2(conn, viewId, item2);
-    }
-}
-
-export const addOrUpdateItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
-        return await _addOrUpdateItem2(conn, viewId, item2);
-    }) ;
-}
+//////////////////////// SQLs //////////////////////////////////////////////////////////////////
 
 const SQL = `
                 SELECT
@@ -214,8 +96,176 @@ const SQL_SEARCH = (limitOffset?: LimitOffset) => `
          (E.KEY = 'value' AND E.VALUE LIKE ?)
     ) 
     ${LIMIT_OFFSET(limitOffset)}
-`
+`;
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// ============================
+// === updateItemValue(...) ===
+// ============================
+export const updateItemValue = async (viewId: number, itemId: number, value: Value) => {
+    const itemValue: ItemValue2 = itemValueRevert(value);
+    await updateItemValue2(viewId, itemId, itemValue);
+}
+export const updateItemValue2 = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
+    await doInDbConnection(async (conn: Connection) => {
+        const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND VIEW_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
+
+        const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
+        const newItemValueId: number = q1.insertId;
+
+        for (const metadata of itemValue.metadatas) {
+            const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
+            const newMetadataId: number = q2.insertId;
+
+            for (const entry of metadata.entries) {
+                const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
+                    [newMetadataId, entry.key, entry.value, entry.dataType]);
+                const newMetadataEntryId = q3.insertId;
+            }
+        }
+    });
+}
+
+
+// ============================
+// === updateItem(...) ===
+// ============================
+export const updateItem = async (viewId: number, item: Item): Promise<string[]> => {
+   const item2: Item2 = itemRevert(item);
+   return await updateItem2(viewId, item2);
+}
+export const updateItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        return await _updateItem2(conn, viewId, item2);
+    });
+}
+const _updateItem2 = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
+    const errors: string[] = [];
+    const itemId: number = item2.id;
+    const name: string = item2.name;
+    const description: string = item2.description;
+
+    const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ITEM WHERE ID=?`, [itemId]);
+    if (qq[0].COUNT <= 0) { // item with id do not exists
+        errors.push(`Item with id ${itemId} do not exists`);
+    } else {
+        const q: QueryResponse = await conn.query(`UPDATE TBL_ITEM SET NAME=? , DESCRIPTION=? WHERE STATUS='ENABLED' AND ID=?`,[ name, description, itemId]);
+
+        for (const itemValue of  item2.values) {
+
+            const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND VIEW_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
+
+            const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
+            const newItemValueId: number = q1.insertId;
+
+            for (const metadata of itemValue.metadatas) {
+                const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
+                const newMetadataId: number = q2.insertId;
+
+                for (const entry of metadata.entries) {
+                    const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
+                        [newMetadataId, entry.key, entry.value, entry.dataType]);
+                    const newMetadataEntryId = q3.insertId;
+                }
+            }
+        }
+
+        for (const child of item2.children) {
+            const  errs: string[] = await _addOrUpdateItem2(conn, viewId, child);
+            errors.push(...errs);
+        }
+    }
+
+    return errors;
+}
+
+
+// ============================
+// === addItem(...) ===
+// ============================
+export const addItem = async (viewId: number, item: Item): Promise<string[]> => {
+    const item2: Item2 = itemRevert(item);
+    return await addItem2(viewId, item2);
+}
+export const addItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        return await _addItem2(conn, viewId, item2);
+    });
+}
+const _addItem2 = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
+    const errors: string[] = [];
+    const name: string = item2.name;
+    const description: string = item2.description;
+    const parentId: number = item2.parentId ? item2.parentId : null;
+
+    const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=? AND STATUS='ENABLED' `, [name, viewId]);
+    if (qq[0].COUNT > 0) { // item with name already exists in view
+        errors.push(`Item with name ${name} already exists in view id ${viewId}`);
+    } else {
+        const q: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`,[parentId, viewId, name, description]);
+        const newItemId: number = q.insertId;
+
+        for (const itemValue of item2.values) {
+            const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [newItemId, itemValue.attributeId]);
+            const newItemValueId: number = q1.insertId;
+
+            for (const metadata of itemValue.metadatas) {
+                const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
+                const newMetadataId: number = q2.insertId;
+
+                for (const entry of metadata.entries) {
+                    const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
+                        [newMetadataId, entry.key, entry.value ? entry.value : '', entry.dataType]);
+                }
+            }
+        }
+
+        for (const child of item2.children) {
+            child.parentId = newItemId;
+            const errs: string[] = await _addOrUpdateItem2(conn, viewId, child);
+            errors.push(...errs);
+        }
+    }
+    return errors;
+}
+
+
+
+// ============================
+// === addOrUpdateItem(...) ===
+// ============================
+
+export const addOrUpdateItem = async (viewId: number, item: Item): Promise<string[]> =>  {
+    const item2: Item2 = itemRevert(item);
+    return await addOrUpdateItem2(viewId, item2);
+}
+export const addOrUpdateItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        return await _addOrUpdateItem2(conn, viewId, item2);
+    }) ;
+}
+const _addOrUpdateItem2 = async (conn: Connection, viewId: number, item2: Item2): Promise<string[]> => {
+    if (item2.id > 0) {
+        return await _updateItem2(conn, viewId, item2);
+    } else {
+        return await _addItem2(conn, viewId, item2);
+    }
+}
+
+
+
+
+
+// =================================
+// === searchForItemsInView(...) ===
+// =================================
+export const searchForItemsInView = async (viewId: number, searchType: ItemSearchType, search: string, limitOffset?: LimitOffset): Promise<Item[]> => {
+    const item2s: Item2[] = await searchForItem2sInView(viewId, searchType, search, limitOffset);
+    return itemsConvert(item2s);
+}
 export const searchForItem2sInView = async (viewId: number, searchType: ItemSearchType, search: string, limitOffset?: LimitOffset): Promise<Item2[]> => {
     // todo: support advance search type
     const iSearch = `%${search}%`;
@@ -238,11 +288,29 @@ export const searchForItem2sInView = async (viewId: number, searchType: ItemSear
     return [];
 };
 
+
+
+
+
+
+// ===================================
+// === getAllItemsInViewCount(...) ===
+// ===================================
 export const getAllItemsInViewCount = async (viewId: number, parentOnly: boolean = true): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(parentOnly ? SQL_1_B_COUNT() : SQL_1_A_COUNT(), [viewId]);
         return q[0].COUNT;
     });
+};
+
+
+
+// =============================
+// === getAllItemInView(...) ===
+// =============================
+export const getAllItemInView = async (viewId: number, parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item[]> => {
+    const item2s: Item2[] = await getAllItem2sInView(viewId, parentOnly, limitoffset);
+    return itemsConvert(item2s);
 };
 export const getAllItem2sInView = async (viewId: number, parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item2[]> => {
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
@@ -259,11 +327,28 @@ export const getAllItem2sInView = async (viewId: number, parentOnly: boolean = t
     return item2s;
 };
 
+
+
+
+
+// ===============================
+// === getItemsByIdsCount(...) ===
+// ===============================
+
 export const getItemsByIdsCount = async (viewId: number, itemIds: number[], parentOnly: boolean = true): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(parentOnly ? SQL_2_B_COUNT() : SQL_2_A_COUNT(), [viewId, itemIds]);
         return q[0].COUNT;
     });
+};
+
+
+// ============================
+// === getItemsByIds(...) ===
+// ============================
+export const getItemsByIds = async (viewId: number, itemIds: number[], parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item[]> => {
+    const item2s: Item2[] = await getItem2sByIds(viewId, itemIds, parentOnly, limitoffset);
+    return itemsConvert(item2s);
 };
 export const getItem2sByIds = async (viewId: number, itemIds: number[], parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item2[]> => {
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
@@ -280,6 +365,15 @@ export const getItem2sByIds = async (viewId: number, itemIds: number[], parentOn
     return item2s;
 };
 
+
+
+// ============================
+// === getItemById(...) ===
+// ============================
+export const getItemById = async (viewId: number, itemId: number): Promise<Item> => {
+    const item2: Item2 = await getItem2ById(viewId, itemId);
+    return itemConvert(item2);
+}
 export const getItem2ById = async (viewId: number, itemId: number): Promise<Item2> => {
 
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
@@ -320,12 +414,18 @@ export const getItem2ById = async (viewId: number, itemId: number): Promise<Item
         return _doQ(q);
     });
 
-
     await w(viewId, item2s);
     return (item2s && item2s.length > 0 ? item2s[0] : undefined);
 }
 
 
+// ============================
+// === getItemByName(...) ===
+// ============================
+export const getItemByName = async (viewId: number, itemName: string): Promise<Item> => {
+    const item2: Item2 = await getItem2ByName(viewId, itemName);
+    return itemConvert(item2);
+};
 export const getItem2ByName = async (viewId: number, itemName: string): Promise<Item2> => {
 
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
@@ -370,6 +470,10 @@ export const getItem2ByName = async (viewId: number, itemName: string): Promise<
     return (item2s && item2s.length > 0 ? item2s[0] : undefined);
 }
 
+
+
+////////////////////////////////////////////////////////////////////  ==== misc helpers ====
+
 // work out the children in each item
 const w = async (viewId: number, item2s: Item2[]) => {
     for (const item2 of item2s) {
@@ -378,7 +482,7 @@ const w = async (viewId: number, item2s: Item2[]) => {
     }
 }
 
-export const findChildrenItem2s = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
+const findChildrenItem2s = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
 
     const item2s: Item2[] =  await doInDbConnection(async (conn: Connection) => {
 
