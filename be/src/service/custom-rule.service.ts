@@ -3,6 +3,24 @@ import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 
 
+export const addCustomRuleToView = async (viewId: number, customRuleIds: number[]): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+
+        const q: QueryResponse = await conn.query(`DELETE FROM TBL_CUSTOM_RULE_VIEW WHERE VIEW_ID=?`, [viewId]);
+        for (const customRuleId of customRuleIds) {
+            const qq: QueryResponse = await conn.query(`
+                    INSERT INTO TBL_CUSTOM_RULE_VIEW (CUSTOM_RULE_ID, STATUS, VIEW_ID) VALUES (?,?,?)
+                `, [customRuleId, 'ENABLED', viewId]);
+            if (qq.affectedRows <= 0) {
+                errors.push(`Unable to add custom rule id ${customRuleId} to view id ${viewId}`);
+            }
+        }
+        return errors;
+    });
+};
+
+
 export const getAllCustomRules = async (): Promise<CustomRule[]> => {
     const r: CustomRule[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`

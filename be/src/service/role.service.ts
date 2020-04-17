@@ -2,6 +2,31 @@ import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Role} from "../model/role.model";
 
+export const addRoleToGroup = async (groupId: number, roleName: string): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+
+        const qa: QueryA = await conn.query('SELECT ID FROM TBL_ROLE WHERE NAME = ?', [roleName]);
+        if (!!!qa.length) {
+           errors.push(`Invalid role ${roleName}`, 'roleName');
+           return errors;
+        }
+        const roleId: number = qa[0].ID;
+
+        const q: QueryA = await conn.query(`
+               SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_GROUP_ROLE WHERE GROUP_ID = ? AND ROLE_ID = ?
+            `, [groupId, roleId]);
+
+        if (!!q.length && !!!Number(q[0].COUNT)) {
+            const q1: QueryResponse = await conn.query(`INSERT INTO TBL_LOOKUP_GROUP_ROLE (GROUP_ID, ROLE_ID) VALUES (?, ?)`, [groupId, roleId]);
+            if (q1.affectedRows <= 0) {
+               errors.push( `Role ${roleName} failed to be added to group ${groupId}`);
+            }
+        }
+        return errors;
+    });
+};
+
 
 export const getAllRoles = async (): Promise<Role[]> => {
     return await doInDbConnection(async (conn: Connection) => {

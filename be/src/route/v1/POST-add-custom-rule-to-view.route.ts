@@ -6,6 +6,7 @@ import {Connection} from "mariadb";
 import { param, body } from "express-validator";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {addCustomRuleToView} from "../../service/custom-rule.service";
 
 // CHECKED
 
@@ -22,21 +23,19 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const customRuleIds: number[] = req.body.customRuleIds;
 
-        await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = await addCustomRuleToView(viewId, customRuleIds);
 
-            await conn.query(`DELETE FROM TBL_CUSTOM_RULE_VIEW WHERE VIEW_ID=?`, [viewId]);
-
-            for (const customRuleId of customRuleIds) {
-                await conn.query(`
-                    INSERT INTO TBL_CUSTOM_RULE_VIEW (CUSTOM_RULE_ID, STATUS, VIEW_ID) VALUES (?,?,?)
-                `, [customRuleId, 'ENABLED', viewId]);
-            }
-        });
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Custom Rule(s) added`
-        } as ApiResponse);
+        if (errors && errors.length) {
+            res.status(200).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Custom Rule(s) added`
+            } as ApiResponse);
+        }
     }
 ];
 
