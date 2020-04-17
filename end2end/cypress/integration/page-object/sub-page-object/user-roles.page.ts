@@ -45,7 +45,7 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
     verifyGroupInRole(roleName: string, groupName: string) {
         cy.get(`[test-expansion-panel-content='${roleName}']`)
             .find(`[test-table-item-group='${groupName}']`).then((n) => {
-                cy.wrap(n).should('exist');
+                return cy.wrap(n).should('exist');
             });
         return this;
     }

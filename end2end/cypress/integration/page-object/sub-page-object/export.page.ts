@@ -115,7 +115,7 @@ export class ExportPageStep2 {
     selectExportSelectedAttributes(attributeNames: string[]): ExportPageStep2 {
         cy.get(`[test-radio-step2-export-selected-attributes]`).click({force: true});
         cy.wrap(attributeNames).each((e, i, a) => {
-            cy.get(`[test-checkbox-step2-attribute-select='${attributeNames[i]}']`).click({force: true});
+            return cy.get(`[test-checkbox-step2-attribute-select='${attributeNames[i]}']`).click({force: true});
         });
         return this;
     }

@@ -84,9 +84,9 @@ export class AbstractViewAttributePage {
         this.selectAttributeType('currency');
         cy.wrap(country).then((b) => {
             if (b) {
-                cy.get(`[test-radio-option-enable-country`).then((_) => {
+                return cy.get(`[test-radio-option-enable-country`).then((_) => {
                     if (!_.hasClass('mat-radio-checked')) {
-                        cy.get(`[test-radio-option-enable-country]`)
+                        return cy.get(`[test-radio-option-enable-country]`)
                             .find('label .mat-radio-container')
                             .click({force: true, multiple: true});
                     }
@@ -137,11 +137,12 @@ export class AbstractViewAttributePage {
         cy.wrap(kvs).each((e, i, a) => {
             cy.get('body').then(($body) => {
                 if (!$body.find(`[test-select-key='${i}']`).length) {  // not already exists
-                    cy.get(`[test-button-add-kp]`).click({force:true});
+                    return cy.get(`[test-button-add-kp]`).click({force:true});
                 }
             });
             cy.get(`[test-select-key='${i}']`).clear({force: true}).type(kvs[i].key, {force: true});
             cy.get(`[test-select-value='${i}']`).clear({force: true}).type(kvs[i].value, {force: true});
+            return cy.wait(1000);
         });
         return this;
     }
@@ -151,7 +152,7 @@ export class AbstractViewAttributePage {
         cy.wrap(kvs).each((e, i, a) => {
             cy.get('body').then(($body) => {
                 if (!$body.find(`[test-doubleselect-key1='${i}']`).length) { // not already exists
-                    cy.get(`[test-button-add-kp1]`).click({force:true});
+                    return cy.get(`[test-button-add-kp1]`).click({force:true});
                 }
             });
             cy.get(`[test-doubleselect-key1='${i}']`).clear({force: true}).type(kvs[i].key, {force: true});
@@ -159,13 +160,15 @@ export class AbstractViewAttributePage {
             cy.wrap(kvs[i].entries).each((e2, i2, a2) => {
                 cy.get('body').then(($body) => {
                     if (!$body.find(`[test-doubleselect-key2-1='${i2}']`).length) {  // not already exists
-                        cy.get(`[test-button-add-kp2]`).click({force: true});
+                        return cy.get(`[test-button-add-kp2]`).click({force: true});
                     }
                 });
                 cy.get(`[test-doubleselect-key2-1='${i2}']`).clear({force: true}).type(kvs[i].key, {force: true});
                 cy.get(`[test-doubleselect-key2-2='${i2}']`).clear({force: true}).type(kvs[i].entries[i2].key2, {force: true});
                 cy.get(`[test-doubleselect-value2='${i2}']`).clear({force: true}).type(kvs[i].entries[i2].value2, {force: true});
+                return cy.wait(1000);
             });
+            return cy.wait(1000);
         });
         return this;
     }

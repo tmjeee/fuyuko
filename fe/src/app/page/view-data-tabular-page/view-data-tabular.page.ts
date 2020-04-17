@@ -64,7 +64,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   reload() {
     this.done = false;
     const viewId = this.currentView.id;
-    combineLatest([
+    forkJoin([
       this.attributeService.getAllAttributesByView(viewId)
           .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
       (this.search && this.searchType) ?

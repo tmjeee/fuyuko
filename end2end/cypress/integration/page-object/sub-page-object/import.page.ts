@@ -85,7 +85,7 @@ export class ImportPageStep2 {
 
     uploadFile(fileName: string): ImportPageStep2 {
         cy.fixture(fileName).then(fileContent => {
-            cy.get(`[test-fileupload-step2]`).upload({ fileContent, fileName, mimeType: 'text/csv' });
+            return cy.get(`[test-fileupload-step2]`).upload({ fileContent, fileName, mimeType: 'text/csv' });
         });
         return this;
     }
@@ -129,7 +129,7 @@ export class ImportPageStep3 {
             .find(`[test-table-row='${itemName}']`).then((_) => {
                 const l = _.find(`[test-row-isExpanded='false']`).length;
                 if (l > 0) {
-                    cy.get(`[test-table-step3-item]`)
+                    return cy.get(`[test-table-step3-item]`)
                         .find(`[test-table-row='${itemName}']`)
                         .find(`[test-row-isExpanded]`)
                         .click({force: true});

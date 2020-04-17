@@ -30,42 +30,42 @@ export class RegisterPage implements ActualPage<RegisterPage> {
         // email
         cy.get(`[test-field-email]`).clear({force: true}).then((_) => {
             if (email) {
-                cy.get(`[test-field-email]`).type(email, {force: true});
+                return cy.get(`[test-field-email]`).type(email, {force: true});
             }
         });
 
         // username
         cy.get(`[test-field-username]`).clear({force: true}).then((_) => {
             if (username) {
-                cy.get(`[test-field-username]`).type(username, {force: true});
+                return cy.get(`[test-field-username]`).type(username, {force: true});
             }
         });
 
         // firstname
         cy.get(`[test-field-firstname]`).clear({force: true}).then((_) => {
             if (firstname) {
-                cy.get(`[test-field-firstname]`).type(firstname, {force: true});
+                return cy.get(`[test-field-firstname]`).type(firstname, {force: true});
             }
         });
 
         // lastname
         cy.get(`[test-field-lastname]`).clear({force: true}).then((_) => {
             if (lastname) {
-                cy.get(`[test-field-lastname]`).type(lastname, {force: true});
+                return cy.get(`[test-field-lastname]`).type(lastname, {force: true});
             }
         });
 
         // password
         cy.get(`[test-field-password]`).clear({force: true}).then((_) => {
             if (password) {
-                cy.get(`[test-field-password]`).type(password, {force: true});
+                return cy.get(`[test-field-password]`).type(password, {force: true});
             }
         });
 
         // confirm password
         cy.get(`[test-field-confirm-password]`).clear({force: true}).then((_) => {
             if (confirmPassword) {
-                cy.get(`[test-field-confirm-password]`).type(confirmPassword, {force: true});
+                return cy.get(`[test-field-confirm-password]`).type(confirmPassword, {force: true});
             }
         });
 

@@ -11,8 +11,8 @@
                 <mat-label>Pricing Structure</mat-label>
                 <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)" [attr.test-mat-select-pricing-structure]="''">
                     <mat-option [value]="null">--- Please select a Pricing Structure ---</mat-option>
-                    <mat-option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure" [attr.test-mat-select-option-pricing-structure]="pricingStructure.name">
-                        {{pricingStructure.name}}
+                    <mat-option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure" [attr.test-mat-select-option-pricing-structure]="pricingStructure.viewName+'-'+pricingStructure.name">
+                        {{pricingStructure.viewName}} - {{pricingStructure.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

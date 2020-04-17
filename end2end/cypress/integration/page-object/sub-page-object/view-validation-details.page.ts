@@ -46,7 +46,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-page-title]`).then((_) => {
             const l = _.find(`[test-mat-radio-item='${itemName}'].mat-radio-checked`).length;
             if (l <= 0) { // not already checked, let's check it
-                cy.get(`[test-mat-radio-item='${itemName}'] label`).click({force: true});
+                return cy.get(`[test-mat-radio-item='${itemName}'] label`).click({force: true});
             }
         });
         return this;
@@ -56,7 +56,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-page-title]`).then((_) => {
             const l = _.find(`[test-mat-radio-item='${itemName}'].mat-radio-checked`).length;
             if (l > 0) { // already checked, let's uncheck it
-                cy.get(`[test-mat-radio-item='${itemName}'] label`).click({force: true});
+                return cy.get(`[test-mat-radio-item='${itemName}'] label`).click({force: true});
             }
         });
         return this;
@@ -67,7 +67,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table]`).then((_) => {
             const visible = _.find(`[test-filtering-panel]`).is(':visible');
             if (!visible) { // not visible yet, open filtering panel
-                cy.get(`[test-validation-result-table]`)
+                return cy.get(`[test-validation-result-table]`)
                     .find(`[test-button-filter]`)
                     .click({force: true});
             }
@@ -95,7 +95,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table]`).then((_) => {
             const visible = _.find(`[test-filtering-panel]`).is(':visible');
             if (visible) { // visible , close filtering panel
-                cy.get(`[test-validation-result-table]`)
+                return cy.get(`[test-validation-result-table]`)
                     .find(`[test-button-filter]`)
                     .click({force: true});
             }
@@ -107,12 +107,12 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table] [test-filtering-panel]`).then((_) => {
             const l = _.find(`[test-mat-checkbox-visible='${attributeName}'].mat-checkbox-checked`).length;
             if (l > 0 && !check) { // already checked, but we want it unchecked
-                cy.get(`[test-validation-result-table]`)
+                return cy.get(`[test-validation-result-table]`)
                     .find(`[test-filtering-panel]`)
                     .find(`[test-mat-checkbox-visible='${attributeName}'] label`)
                     .click({force: true})
             } else if (l <= 0 && check) { // not checked, but we want it checked
-                cy.get(`[test-validation-result-table]`)
+                return cy.get(`[test-validation-result-table]`)
                     .find(`[test-filtering-panel]`)
                     .find(`[test-mat-checkbox-visible='${attributeName}'] label`)
                     .click({force: true})
@@ -161,7 +161,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table]`).then((_) => {
             const l = _.find(`[test-icon-expand-row='${itemName}']`).length;
             if (l > 0 ) { // exists, can be expanded (not already expanded)
-                cy.get(`[test-validation-result-table]`)
+                return cy.get(`[test-validation-result-table]`)
                     .find(`[test-icon-expand-row='${itemName}']`)
                     .click({force: true});
             }
@@ -173,7 +173,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table]`).then((_) => {
             const l = _.find(`[test-icon-collapse-row='${itemName}']`).length;
             if (l > 0 ) { // exists, can be collapse (not already collapsed)
-                cy.get(`[test-validation-result-table]`)
+                return cy.get(`[test-validation-result-table]`)
                     .find(`[test-icon-collapse-row='${itemName}']`)
                     .click({force: true});
             }
@@ -227,7 +227,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table]`).then((_) => {
             const l = _.find(`[test-mat-radio-item='${itemName}'].mat-radio-checked`).length;
             if (l <= 0) { // not already selected
-                cy.get(`[test-validation-result-table]`)
+                return cy.get(`[test-validation-result-table]`)
                     .find(`[test-mat-radio-item='${itemName}'] label`)
                     .click({force: true})
             }
@@ -239,7 +239,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         cy.get(`[test-validation-result-table]`).then((_) => {
             const l = _.find(`[test-mat-radio-item='${itemName}'].mat-radio-checked`).length;
             if (l > 0) { // already selected
-                cy.get(`[test-validation-result-table]`)
+                return cy.get(`[test-validation-result-table]`)
                     .find(`[test-mat-radio-item='${itemName}'] label`)
                     .click({force: true})
             }
@@ -249,7 +249,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
 
     verifyItemWithAttributeExists(itemName: string, attributeName: string, attributeValues: string[]): ViewValidationDetailsPage {
         cy.wrap(attributeValues).each((e, i, a) => {
-            cy.get(`[test-validation-result-table]`)
+            return cy.get(`[test-validation-result-table]`)
                 .find(`[test-table-row-item='${itemName}']`)
                 .find(`[test-data-editor='${attributeName}']`)
                 .find(`[test-data-editor-value='${attributeName}']`)

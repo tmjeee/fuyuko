@@ -25,10 +25,10 @@ export class PartnerListPage implements ActualPage<PartnerListPage> {
 
     //////
 
-    selectPricingStructure(pricingStructure: string): PartnerListPage {
+    selectPricingStructure(viewName: string, pricingStructureName: string): PartnerListPage {
         cy.get(`[test-mat-select-pricing-structure] div`)
             .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${pricingStructure}']`)
+        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .click({force: true});
         cy.wait(100);
         return this;
@@ -121,7 +121,7 @@ export class PartnerListPage implements ActualPage<PartnerListPage> {
 
     verifyItemSideMenuAttributeValue(attributeName: string, values: string[]): PartnerListPage {
         cy.wrap(values).each((e, i, a) => {
-            cy.get(`[test-partner-data-list]`)
+            return cy.get(`[test-partner-data-list]`)
                 .find(`[test-partner-attribute-table]`)
                 .find(`[test-cell-attribute='${attributeName}']`)
                 .should('contain.text', values[i])

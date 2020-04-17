@@ -49,7 +49,7 @@ describe('partner table spec', () => {
     it(`can expand row`, () => {
 
         partnerTablePage
-            .selectPricingStructure('Pricing Structure #1')
+            .selectPricingStructure(`Test View 1`, 'Pricing Structure #1')
             .expandItem(`Item-1`)
             .verifyItemVisible(`Item-1-1`)
             .verifyItemVisible(`Item-1-2`)
@@ -61,7 +61,7 @@ describe('partner table spec', () => {
 
     it(`can show attribute and item info side menu`, () => {
         partnerTablePage
-            .selectPricingStructure('Pricing Structure #1')
+            .selectPricingStructure(`Test View 1`, 'Pricing Structure #1')
             .clickOnShowAttributeIcon(`Item-1`)
             .verifyAttributeSideMenuVisible()
             .verifyAttributeSideMenuItemName(`Item-1`)
@@ -76,7 +76,7 @@ describe('partner table spec', () => {
 
     it(`have the right attribute and values`, () => {
         partnerTablePage
-            .selectPricingStructure('Pricing Structure #1')
+            .selectPricingStructure(`Test View 1`,'Pricing Structure #1')
             .verifyItemName(`Item-1`, `Item-1`)
             .verifyItemPrice(`Item-1`, '$1.10')
             .verifyItemAttributeValue(`Item-1`, 'string attribute', [`some`, `string`, `Item-1`])

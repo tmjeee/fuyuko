@@ -48,7 +48,7 @@ describe('partner list spec', () => {
 
     it(`should expand and collapse item list`, () => {
         partnerListPage
-            .selectPricingStructure(`Pricing Structure #1`)
+            .selectPricingStructure(`Test View 1`, `Pricing Structure #1`)
             .verifyItemExpanded(`Item-1`, false)
             .selectItemInList(`Item-1`)
             .verifyItemExpanded(`Item-1`, true)
@@ -62,7 +62,7 @@ describe('partner list spec', () => {
 
     it('should show / hide side attributes panel', () => {
         partnerListPage
-            .selectPricingStructure(`Pricing Structure #1`)
+            .selectPricingStructure(`Test View 1`, `Pricing Structure #1`)
             .selectItemInList(`Item-1`)
             .verifyItemExpanded(`Item-1`, true)
             .verifyItemSideMenuOpened(false)

@@ -2,6 +2,7 @@
   <div class="search-container">
     <app-item-search (events)="onItemSearchEvent($event)"></app-item-search>
   </div>
+  <ng-container *ngIf="!loading">
   <div class="main-controls">
     <button type="button" [attr.test-button-add-item]="''" mat-flat-button color="primary" (click)="onAddItem($event)">Add</button>
     <button type="button" [attr.test-button-delete-items]="''" mat-flat-button color="primary" [disabled]="!selectionModel.hasValue()" (click)="onDeleteItem($event)">Delete</button>
@@ -136,6 +137,7 @@
       <div>No Items</div>
     </div>
   </div>
+  </ng-container>
 </div>
 
 

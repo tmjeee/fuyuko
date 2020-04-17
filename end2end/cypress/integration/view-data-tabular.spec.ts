@@ -39,7 +39,9 @@ describe('view-data-tabular spec', () => {
 
     beforeEach(() => {
         cy.restoreLocalStorage();
-        viewDataTablePage.visit();
+        viewDataTablePage
+            .visit()
+            .clickReload();
     });
 
     afterEach(() => {
@@ -81,6 +83,7 @@ describe('view-data-tabular spec', () => {
                 .verifyAttributeCellExists(attrs[i], false)
                 .checkFilterCheckbox(attrs[i], true)
                 .verifyAttributeCellExists(attrs[i], true)
+            return cy.wait(1000);
         });
     });
 
@@ -109,6 +112,7 @@ describe('view-data-tabular spec', () => {
                     .moveAttributeFilterOrderUp(attrs[i])
                     .verifyAttributeCellOrder(attrs[i], i)
             }
+            return cy.wait(1000);
         });
     });
 
@@ -118,6 +122,7 @@ describe('view-data-tabular spec', () => {
         const itemName3 = `ChildChildItem-${Math.random()}`;
 
         viewDataTablePage
+            .clickReload()
             .verifySaveEnable(false)
             .clickOnAddItem(itemName)
             .verifySaveEnable(true)
@@ -148,6 +153,7 @@ describe('view-data-tabular spec', () => {
         const itemName3 = `ChildChildItem-${Math.random()}`;
 
         viewDataTablePage
+            .clickReload()
             .verifySaveEnable(false)
             .clickOnAddItem(itemName)
             .verifySaveEnable(true)
@@ -186,6 +192,7 @@ describe('view-data-tabular spec', () => {
         const itemName = `Item-${Math.random()}`;
 
         viewDataTablePage
+            .clickReload()
             .verifySaveEnable(false)
             .clickOnAddItem(itemName)
             .verifySaveEnable(true)
@@ -200,6 +207,7 @@ describe('view-data-tabular spec', () => {
         const itemName = `Item-${Math.random()}`;
 
         viewDataTablePage
+            .clickReload()
             .verifySaveEnable(false)
             .clickOnAddItem(itemName)
             .verifySaveEnable(true)
@@ -224,6 +232,7 @@ describe('view-data-tabular spec', () => {
             const v = attributeValue;
 
             viewDataTablePage
+                .clickReload()
                 // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -264,6 +273,7 @@ describe('view-data-tabular spec', () => {
             const v = attributeValue;
 
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editStringValue(attributeValue)
@@ -286,6 +296,7 @@ describe('view-data-tabular spec', () => {
             const v = attributeValue;
 
             viewDataTablePage
+                .clickReload()
                 // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -324,6 +335,7 @@ describe('view-data-tabular spec', () => {
             const attributeValue = `text value-${Math.random()}`;
             const v = `${attributeValue}`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editTextValue(attributeValue)
@@ -346,6 +358,7 @@ describe('view-data-tabular spec', () => {
             const v = `${attributeValue}`;
 
             viewDataTablePage
+                .clickReload()
             // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -383,6 +396,7 @@ describe('view-data-tabular spec', () => {
             const attributeValue = ((Math.random() + 1).toFixed(1));
             const v = `${attributeValue}`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editNumberValue(Number(attributeValue))
@@ -406,6 +420,7 @@ describe('view-data-tabular spec', () => {
             const v = `${attributeValue}`;
 
             viewDataTablePage
+                .clickReload()
             // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -445,6 +460,7 @@ describe('view-data-tabular spec', () => {
             const attributeValue = `0${(Math.random() * 8 + 1).toFixed(0)}-0${(Math.random() * 8 + 1).toFixed(0)}-${2000 + Number((Math.random() * 10).toFixed(0))}`;
             const v = `${attributeValue}`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editDateValue(attributeValue)
@@ -470,6 +486,7 @@ describe('view-data-tabular spec', () => {
             const v = `$${attributeValue} ${attributeUnit}`;
 
             viewDataTablePage
+                .clickReload()
             // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -499,7 +516,7 @@ describe('view-data-tabular spec', () => {
     });
 
 
-    it ('[currency attribute] edit and cancel should not be saveable', () => {
+    it('[currency attribute] edit and cancel should not be saveable', () => {
 
         const itemName = `Item-1`;
 
@@ -510,6 +527,7 @@ describe('view-data-tabular spec', () => {
             const attributeUnit = 'AUD'
             const v = `$${attributeValue} ${attributeUnit}`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editCurrencyValue(Number(attributeValue), attributeUnit)
@@ -537,7 +555,9 @@ describe('view-data-tabular spec', () => {
             const v = `${attributeValue} ${attributeUnit}`;
 
             viewDataTablePage
+                .clickReload()
             // create new item
+                .clickReload()
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
                 .verifyDataTableHasItem(itemName, true)
@@ -570,7 +590,7 @@ describe('view-data-tabular spec', () => {
 
 
 
-    it ('[volume attribute] edit and cancel should not be saveable', () => {
+    it('[volume attribute] edit and cancel should not be saveable', () => {
 
         const itemName = `Item-1`;
 
@@ -581,6 +601,7 @@ describe('view-data-tabular spec', () => {
             const attributeUnit = 'ml';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editVolumeValue(Number(attributeValue), attributeUnit)
@@ -611,6 +632,7 @@ describe('view-data-tabular spec', () => {
             ];
 
             viewDataTablePage
+                .clickReload()
                 // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -661,6 +683,7 @@ describe('view-data-tabular spec', () => {
                 `l:${attributeLengthValue} ${attributeUnit}`
             ];
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editDimensionValue(Number(attributeLengthValue), Number(attributeWidthValue), Number(attributeHeightValue), attributeUnit)
@@ -686,6 +709,7 @@ describe('view-data-tabular spec', () => {
             const v = `${attributeValue} ${attributeUnit}`;
 
             viewDataTablePage
+                .clickReload()
             // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -728,6 +752,7 @@ describe('view-data-tabular spec', () => {
             const attributeUnit = 'm2';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editAreaValue(Number(attributeValue), attributeUnit)
@@ -753,6 +778,7 @@ describe('view-data-tabular spec', () => {
             const v = `${attributeValue} ${attributeUnit}`;
 
             viewDataTablePage
+                .clickReload()
                 // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -793,6 +819,7 @@ describe('view-data-tabular spec', () => {
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editLengthValue(Number(attributeValue), attributeUnit)
@@ -818,6 +845,7 @@ describe('view-data-tabular spec', () => {
             const v = `${attributeValue} ${attributeUnit}`;
 
             viewDataTablePage
+                .clickReload()
             // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -858,6 +886,7 @@ describe('view-data-tabular spec', () => {
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editWidthValue(Number(attributeValue), attributeUnit)
@@ -883,6 +912,7 @@ describe('view-data-tabular spec', () => {
             const v = `${attributeValue} ${attributeUnit}`;
 
             viewDataTablePage
+                .clickReload()
             // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -924,6 +954,7 @@ describe('view-data-tabular spec', () => {
             const attributeUnit = 'cm';
             const v = `${attributeValue} ${attributeUnit}`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editHeightValue(Number(attributeValue), attributeUnit)
@@ -949,6 +980,7 @@ describe('view-data-tabular spec', () => {
             const v = `value3`;
 
             viewDataTablePage
+                .clickReload()
             // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -990,6 +1022,7 @@ describe('view-data-tabular spec', () => {
             const attributeValue = `key3`
             const v = `value3`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editSelectValue(attributeValue)
@@ -1015,6 +1048,7 @@ describe('view-data-tabular spec', () => {
             const v = `value2 - xvalue22`;
 
             viewDataTablePage
+                .clickReload()
             // create new item
                 .verifySaveEnable(false)
                 .clickOnAddItem(itemName)
@@ -1056,6 +1090,7 @@ describe('view-data-tabular spec', () => {
             const attributeValue2 = `xkey22`
             const v = `value2 - xvalue22`;
             viewDataTablePage
+                .clickReload()
                 .clickOnItemAttributeCellToEdit(itemName, attributeName)
                 .verifyPopupTitle()
                 .editDoubleSelectValue(attributeValue1, attributeValue2)

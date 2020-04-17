@@ -39,16 +39,21 @@ describe(`pricing structure spece`, () => {
     //////////////////
 
     it(`should select and display existing pricing structure`, () => {
+        const viewName1 = `Test View 1`;
         const pricingStructureName1 = `Pricing Structure #1`;
+        const viewName2 = `Test View 2`;
         const pricingStructureName2 = `Pricing Structure #2`;
 
         pricingPage
-            .selectPricingStructure(pricingStructureName1)
+            .selectPricingStructure(viewName1, pricingStructureName1)
             .verifyPricingStrucureHasItems(pricingStructureName1)
-            .selectPricingStructure(pricingStructureName2)
-            .verifyPricingStructureHasNoItems(pricingStructureName2)
+            .selectPricingStructure(viewName1, pricingStructureName2)
+            .verifyPricingStrucureHasItems(pricingStructureName2)
+            .selectPricingStructure(viewName2, pricingStructureName1)
+            .verifyPricingStrucureHasItems(pricingStructureName1)
+            .selectPricingStructure(viewName2, pricingStructureName2)
+            .verifyPricingStrucureHasItems(pricingStructureName2)
         ;
-
     });
 
     it(`should create, edit, edit item in pricing structure and then delete pricing structure`, () => {
@@ -67,7 +72,7 @@ describe(`pricing structure spece`, () => {
             .editDescription(pricingStructureDescription)
             .selectView(viewName)
             .clickCancel()
-            .verifyPricingStructureDoNotExist(pricingStructureName)
+            .verifyPricingStructureDoNotExist(viewName, pricingStructureName)
 
             // create
             .clickAddNewPricingStructure()
@@ -76,17 +81,17 @@ describe(`pricing structure spece`, () => {
             .selectView(viewName)
             .clickOk()
             .verifySuccessMessageExists()
-            .verifyPricingStructureExists(pricingStructureName)
+            .verifyPricingStructureExists(viewName, pricingStructureName)
 
             // edit pricing structure
-            .selectPricingStructure(pricingStructureName)
+            .selectPricingStructure(viewName, pricingStructureName)
             .clickEditPricingStructure(pricingStructureName)
             .editName(newPricingStructureName)
             .editDescription(newPricingStructureDescription)
             .clickOk()
             .verifySuccessMessageExists()
-            .verifyPricingStructureExists(newPricingStructureName)
-            .verifyPricingStructureDoNotExist(pricingStructureName)
+            .verifyPricingStructureExists(viewName, newPricingStructureName)
+            .verifyPricingStructureDoNotExist(viewName, pricingStructureName)
 
             // edit price
             .clickEditItemPricing(newPricingStructureName, `Item-1`)
@@ -118,7 +123,7 @@ describe(`pricing structure spece`, () => {
             // delete
             .clickDeletePricingStructure(newPricingStructureName)
             .verifySuccessMessageExists()
-            .verifyPricingStructureDoNotExist(newPricingStructureName)
+            .verifyPricingStructureDoNotExist(viewName, newPricingStructureName)
         ;
     });
 });

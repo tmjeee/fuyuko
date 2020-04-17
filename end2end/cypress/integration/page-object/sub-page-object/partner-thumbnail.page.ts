@@ -25,10 +25,10 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
 
     ////////////////////////////////////////////
 
-    selectPricingStructure(pricingStructureName: string): PartnerThumbnailPage {
+    selectPricingStructure(viewName: string, pricingStructureName: string): PartnerThumbnailPage {
         cy.get(`[test-mat-select-pricing-structure] div`)
             .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
+        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .click({force: true});
         cy.wait(100);
         return this;
@@ -41,7 +41,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
             .then((_) => {
             const l = _.find(`[test-show-more-link]`).length;
             if (l > 0) {
-                cy.get(`[test-partner-data-thumbnail]`)
+                return cy.get(`[test-partner-data-thumbnail]`)
                     .find(`[test-item='${itemName}']`)
                     .find(`[test-show-more-link]`)
                     .click({force: true})
@@ -56,7 +56,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
             .then((_) => {
             const l = _.find(`[test-show-less-link`).length;
             if (l > 0) {
-                cy.get(`[test-partner-data-thumbnail]`)
+                return cy.get(`[test-partner-data-thumbnail]`)
                     .find(`[test-item='${itemName}']`)
                     .find(`[test-show-less-link]`)
                     .click({force: true})
@@ -91,7 +91,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
 
     verifyItemAttributeValue(itemName: string, attributeName: string, values: string[]): PartnerThumbnailPage {
         cy.wrap(values).each((e, i , a) => {
-            cy.get(`[test-partner-data-thumbnail]`)
+            return cy.get(`[test-partner-data-thumbnail]`)
                 .find(`[test-item='${itemName}']`)
                 .find(`[test-attribute-value='${attributeName}']`)
                 .should('contain.text', values[i]);
@@ -129,7 +129,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
         cy.get(`[test-partner-data-thumbnail]`).then((_) => {
             const l = _.find(`[test-icon-close-item-details]`).length;
             if (l > 0) {
-                cy.get(`[test-partner-data-thumbnail]`)
+                return cy.get(`[test-partner-data-thumbnail]`)
                     .find(`[test-icon-close-item-details]`)
                     .click({force: true});
             }
@@ -162,7 +162,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
 
     verifySideMenuAttributeValue(attributeName: string, values: string[]): PartnerThumbnailPage {
         cy.wrap(values).each((e, i, a) => {
-            cy.get(`[test-partner-data-thumbnail]`)
+            return cy.get(`[test-partner-data-thumbnail]`)
                 .find(`[test-side-nav]`)
                 .find(`[test-cell-attribute='${attributeName}']`)
                 .should('contain.text', values[i]);

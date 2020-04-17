@@ -25,10 +25,10 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
 
     /////////////////
 
-    selectPricingStructure(pricingStructureName: string): PartnerTablePage {
+    selectPricingStructure(viewName: string, pricingStructureName: string): PartnerTablePage {
         cy.get(`[test-mat-select-pricing-structure] div`)
             .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
+        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .click({force: true});
         cy.wait(100);
         return this;
@@ -109,12 +109,12 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
 
     verifyAttributeSideMenuAttributeValue(attributeName: string, values: string[]): PartnerTablePage {
         cy.wrap(values).each((e, i, a) => {
-            cy.get(`[test-partner-data-table]`) //
+            return cy.get(`[test-partner-data-table]`) //
                 .find(`[test-side-nav]`)
                 .find(`[test-table-partner-attributes]`)
                 .find(`[test-cell-attribute='${attributeName}']`)
                 .then((_) => {
-                    cy.wrap(_).should('contain.text', values[i]);
+                    return cy.wrap(_).should('contain.text', values[i]);
                 })
         })
         return this;
@@ -138,7 +138,7 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
 
     verifyItemAttributeValue(itemName: string, attributeName: string, values: string[]): PartnerTablePage {
         cy.wrap(values).each((e, i, a) => {
-            cy.get(`[test-partner-data-table]`) //
+            return cy.get(`[test-partner-data-table]`) //
                 .find(`[test-row-item='${itemName}']`)
                 .find(`[test-table-cell='${attributeName}']`)
                 .should('contain.text', values[i]);

@@ -54,7 +54,7 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
         cy.get(`[test-checkbox-custom-rule='${customRuleName}']`).then((elem) => {
             const isChecked = elem.hasClass('mat-checkbox-checked');
             if (!isChecked) {
-                cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
+                return cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
                     .find(`input`).click({force: true});
             }
         });
@@ -65,7 +65,7 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
         cy.get(`[test-checkbox-custom-rule='${customRuleName}']`).then((elem) => {
             const isChecked = elem.hasClass('mat-checkbox-checked');
             if (isChecked) {
-                cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
+                return cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
                     .find(`input`).click({force: true});
             }
         });

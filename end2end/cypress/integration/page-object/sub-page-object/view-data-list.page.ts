@@ -44,10 +44,10 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
     clickDelete(itemNames: string[]): ViewDataListPage {
         cy.wrap(itemNames).each((e, i, a) => {
-            cy.get('[test-page-title]').then((_) => {
+            return cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-mat-checkbox-item='${itemNames[i]}'].mat-checkbox-checked`).length;
                 if (l <= 0) { // not already checked
-                    cy.get(`[test-mat-checkbox-item='${itemNames[i]}'] label`).click({force: true});
+                    return cy.get(`[test-mat-checkbox-item='${itemNames[i]}'] label`).click({force: true});
                 }
             });
         });
@@ -131,7 +131,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
     verifyInPanelAttributeValue(itemName: string, attributeName: string, value: string[]) {
         cy.wrap(value).each((e, i, a) => {
-            cy.get(`[test-panel-item='${itemName}']`)
+            return cy.get(`[test-panel-item='${itemName}']`)
                 .find(`[test-data-editor='${attributeName}']`)
                 .find(`[test-data-editor-value='${attributeName}']`)
                 .should('contain.text', value[i])
@@ -141,7 +141,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
     verifyInPanelAttributeNotValue(itemName: string, attributeName: string, value: string[]) {
         cy.wrap(value).each((e, i, a) => {
-            cy.get(`[test-panel-item='${itemName}']`)
+            return cy.get(`[test-panel-item='${itemName}']`)
                 .find(`[test-data-editor='${attributeName}']`)
                 .find(`[test-data-editor-value='${attributeName}']`)
                 .should('not.contain.text', value[i])

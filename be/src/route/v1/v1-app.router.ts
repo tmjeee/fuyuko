@@ -116,6 +116,7 @@ import registerGetAllCustomExportRoute from './GET-all-custom-export.route';
 import registerPostCustomExportValidateInputRoute from './POST-custom-export-validate-input.route';
 import registerPostCustomExportPreviewRoute from './POST-custom-export-preview.route';
 import registerPostCustomExportSubmitJobRoute from './POST-custom-export-submit-job.route';
+import registerGetPricingStructuresByViewRoute from './GET-pricing-structures-by-view.route';
 
 
 const v1AppRouter:Router  = express.Router();
@@ -231,7 +232,6 @@ const reg = (router: Router, regi: Registry) => {
     registerDeleteItemImageRoute(v1AppRouter, registry);
     registerPostMarkItemImageAsPrimaryRoute(v1AppRouter, registry);
     registerGetHelpRoute(v1AppRouter, registry);
-
     registerGetAllCustomImportRoute(v1AppRouter, registry);
     registerPostCustomImportValidateInputRoute(v1AppRouter, registry);
     registerPostCustomImportPreviewRoute(v1AppRouter, registry);
@@ -240,6 +240,8 @@ const reg = (router: Router, regi: Registry) => {
     registerPostCustomExportValidateInputRoute(v1AppRouter, registry);
     registerPostCustomExportPreviewRoute(v1AppRouter, registry);
     registerPostCustomExportSubmitJobRoute(v1AppRouter, registry);
+
+    registerGetPricingStructuresByViewRoute(v1AppRouter, registry);
 };
 
 

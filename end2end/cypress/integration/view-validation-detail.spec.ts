@@ -99,6 +99,7 @@ describe(`view validation details spec`, () => {
                 .verifyAttributeCellExists(attrs[i], false)
                 .checkFilterCheckbox(attrs[i], true)
                 .verifyAttributeCellExists(attrs[i], true)
+            return cy.wait(1000);
         });
     });
 
@@ -122,6 +123,7 @@ describe(`view validation details spec`, () => {
                     .moveAttributeFilterOrderUp(attrs[i])
                     .verifyAttributeCellOrder(attrs[i], i)
             }
+            return cy.wait(1000);
         });
     });
 

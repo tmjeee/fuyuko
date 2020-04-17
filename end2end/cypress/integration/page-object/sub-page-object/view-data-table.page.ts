@@ -52,8 +52,9 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             const visible = e.find(`[test-filtering-container]`).is(':visible');
             if (!visible) {
                 // not opened yet
-                cy.get(`[test-button-filter-items]`).click({force: true});
+                return cy.get(`[test-button-filter-items]`).click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -63,8 +64,9 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             const visible = e.find(`[test-filtering-container]`).is(':visible');
             if (visible) {
                 // already open
-                cy.get(`[test-button-filter-items]`).click({force: true});
+                return cy.get(`[test-button-filter-items]`).click({force: true});
             }
+            return cy.wait(1000);
         });
        return this;
     }
@@ -78,12 +80,12 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     checkFilterCheckbox(attributeName: string, b: boolean): ViewDataTablePage {
         cy.get(`[test-page-title]`).then((e) => {
             const c = e.find(`[test-checkbox-item-filtering='${attributeName}'].mat-checkbox-checked `).length;
-            console.log('*** already checked', c);
             if (c && !b) { // already checked but we want to uncheck it
-                cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`).click({force: true});
+                return cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`).click({force: true});
             } if (!c && b) { // already unchecked but we want to check it
-                cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`).click({force: true});
+                return cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`).click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -98,11 +100,12 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             .find(`[test-item-filtering='${attributeName}']`).then((e) => {
             const l = e.find(`[test-button-item-filtering-up]`).length;
             if (l) {
-                cy.get(`[test-page-title]`)
+                return cy.get(`[test-page-title]`)
                     .find(`[test-item-filtering='${attributeName}']`)
                     .find(`[test-button-item-filtering-up]`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         })
         return this;
     }
@@ -112,11 +115,12 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             .find(`[test-item-filtering='${attributeName}']`).then((e) => {
             const l = e.find(`[test-button-item-filtering-down]`).length;
             if (l) {
-                cy.get(`[test-page-title]`)
+                return cy.get(`[test-page-title]`)
                     .find(`[test-item-filtering='${attributeName}']`)
                     .find(`[test-button-item-filtering-down]`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         })
         return this;
     }
@@ -142,8 +146,8 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
                  .find(`[test-item-editor-value='name']`).click({force: true});
              cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
              cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
-             cy.wait(1000);
           }
+          return cy.wait(1000);
         });
         return this;
     }
@@ -156,22 +160,22 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
                     .find(`[test-item-editor-value='name']`).click({force: true});
                 cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
                 cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
-                cy.wait(1000);
             }
+            return cy.wait(1000);
         });
         return this;
     }
 
     clickOnDeleteItem(itemNames: string[]): ViewDataTablePage {
         cy.wrap(itemNames).each((e, i, a) => {
-            cy.get('[test-page-title]').then((_) => {
+            return cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-checkbox-data-table-item='${itemNames[i]}'].mat-checkbox-checked`).length;
                 if (!l) { // not already checked
-                    cy.get(`[test-checkbox-data-table-item='${itemNames[i]}'] label`).click({force: true});
+                    return cy.get(`[test-checkbox-data-table-item='${itemNames[i]}'] label`).click({force: true});
                 }
             })
         }).then((_) => {
-            cy.get(`[test-button-delete-items]`).click({force: true});
+            return cy.get(`[test-button-delete-items]`).click({force: true});
         });
         return this;
     }
@@ -182,7 +186,9 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     clickOnSaveItem(): ViewDataTablePage {
-        cy.get(`[test-button-save-items]`).click({force: true});
+        cy.wait(1000)
+          .get(`[test-button-save-items]`).click({force: true})
+          .wait(1000);
         return this;
     }
 
@@ -194,7 +200,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     verifyAttributeCellValue(itemName: string, attributeName: string, ...value: string[]): ViewDataTablePage {
         cy.wrap(value).each((e, i, a) => {
-            cy.get(`[test-data-table-row='${itemName}']`)
+            return cy.get(`[test-data-table-row='${itemName}']`)
                 .find(`[test-data-table-attribute='${attributeName}']`)
                 .find(`[test-data-editor-value]`).should('contain.text', value[i]);
         })
@@ -203,7 +209,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     verifyAttributeCellNotValue(itemName: string, attributeName: string, ...value: string[]): ViewDataTablePage {
         cy.wrap(value).each((e, i, a) => {
-            cy.get(`[test-data-table-row='${itemName}']`)
+            return cy.get(`[test-data-table-row='${itemName}']`)
                 .find(`[test-data-table-attribute='${attributeName}']`)
                 .find(`[test-data-editor-value]`).should('not.contain.text', value[i]);
         });

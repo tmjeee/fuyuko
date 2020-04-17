@@ -51,7 +51,7 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
         cy.get(`[test-expansion-panel='active-users']`).then((n) => {
             if (!n.find(`[test-expansion-panel-content='active-users']`)
                 .is(':visible')) {
-                cy.get(`[test-expansion-panel-header='active-users']`)
+                return cy.get(`[test-expansion-panel-header='active-users']`)
                     .click({force: true});
             }
         });
@@ -101,7 +101,7 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
         cy.get(`[test-expansion-panel='inactive-users']`).then((n) => {
             if (!n.find(`[test-expansion-panel-content='inactive-users']`)
                 .is(':visible')) {
-                cy.get(`[test-expansion-panel-header='inactive-users']`)
+                return cy.get(`[test-expansion-panel-header='inactive-users']`)
                     .click({force: true});
             }
         });

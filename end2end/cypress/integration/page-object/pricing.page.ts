@@ -29,11 +29,11 @@ export class PricingPage implements ActualPage<PricingPage> {
         return this;
     }
 
-    selectPricingStructure(pricingStructureName: string): PricingPage {
+    selectPricingStructure(viewName: string, pricingStructureName: string): PricingPage {
         cy.get(`[test-pricing-structure-table]`)
             .find(`[test-mat-select-pricing-structure] div`)
             .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
+        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .click({force: true});
         return this;
     }
@@ -42,6 +42,12 @@ export class PricingPage implements ActualPage<PricingPage> {
         cy.get(`[test-pricing-structure-table]`)
             .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
             .should(`exist`);
+        return this;
+    }
+
+    verifyNoPricingStructureTable(): PricingPage {
+        cy.get(`[test-pricing-structure-table]`)
+            .should('not.exist');
         return this;
     }
 
@@ -81,20 +87,20 @@ export class PricingPage implements ActualPage<PricingPage> {
         return new EditPricingStructurePopupPage();
     }
 
-    verifyPricingStructureExists(pricingStructureName: string): PricingPage {
+    verifyPricingStructureExists(viewName: string, pricingStructureName: string): PricingPage {
         cy.get(`[test-pricing-structure-table]`)
             .find(`[test-mat-select-pricing-structure] div`)
             .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
+        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .should('exist');
         return this;
     }
 
-    verifyPricingStructureDoNotExist(pricingStructureName: string): PricingPage {
+    verifyPricingStructureDoNotExist(viewName: string, pricingStructureName: string): PricingPage {
         cy.get(`[test-pricing-structure-table]`)
             .find(`[test-mat-select-pricing-structure] div`)
             .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
+        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .should('not.exist');
         return this;
     }
@@ -103,7 +109,7 @@ export class PricingPage implements ActualPage<PricingPage> {
         cy.get(`[test-pricing-structure-table]`).then((_) => {
             const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-pricing-table-row-expand='${itemName}']`).length;
             if (i > 0) { // expand button exists, click it to expand
-                cy.get(`[test-pricing-structure-table]`)
+                return cy.get(`[test-pricing-structure-table]`)
                     .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
                     .find(`[test-pricing-table-row-expand='${itemName}']`)
                     .click({force: true})
@@ -116,7 +122,7 @@ export class PricingPage implements ActualPage<PricingPage> {
         cy.get(`[test-pricing-structure-table]`).then((_) => {
             const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-pricing-table-row-collapse='${itemName}']`).length;
             if (i > 0) { // expand button exists, click it to expand
-                cy.get(`[test-pricing-structure-table]`)
+                return cy.get(`[test-pricing-structure-table]`)
                     .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
                     .find(`[test-pricing-table-row-collapse='${itemName}']`)
                     .click({force: true})

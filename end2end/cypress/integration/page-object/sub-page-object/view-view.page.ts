@@ -35,7 +35,7 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
             cy.get(`[test-page-title]`).then((_) => {
                 const length = _.find(`[test-mat-checkbox='${viewNames[i]}'].mat-checkbox-checked`).length;
                 if (length <= 0) { // not already checked
-                    cy.get(`[test-mat-checkbox='${viewNames[i]}'] label`).click({force: true});
+                    return cy.get(`[test-mat-checkbox='${viewNames[i]}'] label`).click({force: true});
                 }
             })
         });

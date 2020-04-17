@@ -18,7 +18,6 @@ import {
     VolumeUnits,
     WidthUnits
 } from "./model/unit.model";
-import {createNewView, deleteView} from "./util/util";
 
 describe(`bulk edit spec`, () => {
 
@@ -639,7 +638,5 @@ describe(`bulk edit spec`, () => {
             .verifyJobDone()
             .clickDone()
         ;
-
-        deleteView(viewName);
     });
 });

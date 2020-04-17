@@ -61,7 +61,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
 
     verifyThumbnailItemHasAttributeValue(itemName: string, attributeName: string, value: string[]): ViewDataThumbnailPage {
         cy.wrap(value).each((e, i, a) => {
-            cy.wait(100)
+            return cy.wait(100)
                 .get(`[test-thumbnail-item-name='${itemName}']`)
                 .find(`[test-data-editor='${attributeName}']`)
                 .find(`[test-data-editor-value='${attributeName}']`)
@@ -73,7 +73,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
 
     verifyThumbnailItemHasNoAttributeValue(itemName: string, attributeName: string, value: string[]): ViewDataThumbnailPage {
         cy.wrap(value).each((e, i, a) => {
-            cy.get(`[test-thumbnail-item-name='${itemName}']`)
+            return cy.get(`[test-thumbnail-item-name='${itemName}']`)
                 .find(`[test-data-editor='${attributeName}']`)
                 .find(`[test-data-editor-value='${attributeName}']`).should('not.contain', value[i]);
         });
@@ -101,14 +101,14 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
 
     clickDeleteThumbnail(itemNames: string[]): ViewDataThumbnailPage {
         cy.wrap(itemNames).each((e, i, a) => {
-            cy.get('[test-page-title]').then((_) => {
+            return cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-checkbox-thumbnail-item='${itemNames[i]}'].mat-checkbox-checked`).length;
                 if (!l) { // not already checked
-                    cy.get(`[test-checkbox-thumbnail-item='${itemNames[i]}'] label`).click({force: true});
+                    return cy.get(`[test-checkbox-thumbnail-item='${itemNames[i]}'] label`).click({force: true});
                 }
             })
         }).then((_) => {
-            cy.get(`[test-button-delete-items]`).click({force: true});
+            return cy.get(`[test-button-delete-items]`).click({force: true});
         });
         return this;
     }
@@ -130,7 +130,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         cy.get(`[test-thumbnail-item-name='${itemName}']`).then((_) => {
             const l = _.find(`[test-link-show-more]`).length;
             if (l) { // exists
-               cy.get(`[test-thumbnail-item-name='${itemName}']`)
+               return cy.get(`[test-thumbnail-item-name='${itemName}']`)
                    .find(`[test-link-show-more]`).click({force: true})
             }
         });
@@ -141,7 +141,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         cy.get(`[test-thumbnail-item-name='${itemName}']`).then((_) => {
             const l = _.find(`[test-link-show-less]`).length;
             if (l) { // exists
-                cy.get(`[test-thumbnail-item-name='${itemName}']`)
+                return cy.get(`[test-thumbnail-item-name='${itemName}']`)
                     .find(`[test-link-show-less]`).click({force: true})
             }
         });

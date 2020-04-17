@@ -101,7 +101,7 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
             .find(`[test-panel-when-clause-attribute='${attributeName}']`)
             .should('contain.text',operator);
         cy.wrap(vals).each((e, i, a) => {
-            cy.get(`[test-panel-content-rule='${ruleName}']`)
+            return cy.get(`[test-panel-content-rule='${ruleName}']`)
                 .find(`[test-panel-when-clause-attribute='${attributeName}']`)
                 .should('contain.text', vals[i]);
         });
@@ -117,7 +117,7 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
             .find(`[test-panel-validate-clause-attribute='${attributeName}']`)
             .should('contain.text',operator);
         cy.wrap(vals).each((e, i, a) => {
-            cy.get(`[test-panel-content-rule='${ruleName}']`)
+            return cy.get(`[test-panel-content-rule='${ruleName}']`)
                 .find(`[test-panel-validate-clause-attribute='${attributeName}']`)
                 .should('contain.text', vals[i]);
         });

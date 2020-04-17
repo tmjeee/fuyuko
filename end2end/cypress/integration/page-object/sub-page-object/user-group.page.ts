@@ -52,7 +52,7 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
     verifyUserInGroup(groupName: string, username: string): UserGroupPage {
         cy.get(`[test-expansion-panel-content='${groupName}']`)
             .find(`[test-table-item-user='${username}']`).then((n) => {
-                cy.wrap(n).should('exist');
+                return cy.wrap(n).should('exist');
             });
         return this;
     }

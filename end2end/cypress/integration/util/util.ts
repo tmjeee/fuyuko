@@ -52,25 +52,35 @@ export function toggleSubSideNav(fn: () => void) {
 export const toggleHelpSideNav = (fn: Function) => {
     cy.get('[test-help-nav-toggle-icon]').click({force: true}).then((n) => {
         fn && fn();
+        return cy.wait(100);
     });
 }
 
 export function validateSideNavStateOpen(b: boolean) {
+    cy.get(`[test-side-nav-state-open]`).should('have.attr', 'test-side-nav-state-open', `${b}`);
+    /*
     cy.get(`[test-side-nav-state-open]`).then((n) => {
-        expect(n).to.have.attr('test-side-nav-state-open', `${b}`)
+        return expect(n).to.have.attr('test-side-nav-state-open', `${b}`)
     });
+     */
 }
 
 export function validateHelpNavStateOpen(b: boolean) {
+    cy.get(`[test-help-nav-state-open]`).should('have.attr', 'test-help-nav-state-open', `${b}`);
+    /*
     cy.get(`[test-help-nav-state-open]`).then((n) => {
-        expect(n).to.have.attr('test-help-nav-state-open', `${b}`)
+        return expect(n).to.have.attr('test-help-nav-state-open', `${b}`)
     });
+     */
 }
 
 export function validateSubSideNavStateOpen(b: boolean) {
+    cy.get(`[test-sub-side-nav-state-open]`).should('have.attr', 'test-sub-side-nav-state-open', `${b}`);
+    /*
     cy.get(`[test-sub-side-nav-state-open]`).then((n) => {
         expect(n).to.have.attr('test-sub-side-nav-state-open', `${b}`);
     });
+     */
 }
 
 export const createNewView = (): string => {
@@ -89,6 +99,7 @@ export const createNewView = (): string => {
 
     cy.wait(100).then((_) => {
         viewViewPage.verifySuccessMessageExists();
+        return cy.wait(100);
     });
 
     return viewName;

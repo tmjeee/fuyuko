@@ -156,9 +156,9 @@ export class CustomImportPageStep3 {
         cy.get(`[test-step='step3']`).then((_) => {
             const length = _.find(`[test-input-type='date'][test-input-name='${inputName}'].mat-checkbox-checked`).length;
             if (length <= 0 && value) { // not already checked and we want to check it
-                cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
+                return cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
             } else if (length > 0 && !value) { // already checked and we want to uncheck it
-                cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
+                return cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
             }
         });
         return this;
@@ -192,7 +192,7 @@ export class CustomImportPageStep3 {
 
     editFileValue(inputName: string, fileName: string, mimeType: string): CustomImportPageStep3 {
         cy.fixture(fileName).then(fileContent => {
-            cy.get(`[test-input-type='file'][test-input-name='${inputName}']`).upload({ fileContent, fileName, mimeType });
+            return cy.get(`[test-input-type='file'][test-input-name='${inputName}']`).upload({ fileContent, fileName, mimeType });
         });
         return this;
     }

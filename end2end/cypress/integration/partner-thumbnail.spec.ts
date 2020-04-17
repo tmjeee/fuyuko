@@ -49,7 +49,7 @@ describe('partner thumbnail spec', () => {
 
     it(`should expand 'show more' link`, () => {
         partnerThumbnailPage
-            .selectPricingStructure(`Pricing Structure #1`)
+            .selectPricingStructure(`Test View 1`,`Pricing Structure #1`)
             .verifyIsShowMoreExpanded(`Item-1`, false)
             .clickShowMoreLink(`Item-1`)
             .verifyIsShowMoreExpanded(`Item-1`, true)
@@ -61,7 +61,7 @@ describe('partner thumbnail spec', () => {
 
     it(`should allow flipping through next and previous images`, () => {
         partnerThumbnailPage
-            .selectPricingStructure(`Pricing Structure #1`)
+            .selectPricingStructure(`Test View 1`,`Pricing Structure #1`)
             .clickNextItemImage(`Item-1`)
             .clickNextItemImage(`Item-1`)
             .clickPreviousItemImage(`Item-1`)
@@ -69,7 +69,7 @@ describe('partner thumbnail spec', () => {
 
     it(`should show side menu`, () => {
         partnerThumbnailPage
-            .selectPricingStructure(`Pricing Structure #1`)
+            .selectPricingStructure(`Test View 1`, `Pricing Structure #1`)
             .clickShowSideMenu(`Item-1`)
             .verifySideMenuVisible(true)
             .clickCloseSideMenu()
@@ -95,7 +95,7 @@ describe('partner thumbnail spec', () => {
 
     it(`should have the correct item and attribute values`, () => {
         partnerThumbnailPage
-            .selectPricingStructure(`Pricing Structure #1`)
+            .selectPricingStructure(`Test View 1`,`Pricing Structure #1`)
             .clickShowMoreLink(`Item-2`)
             .verifyIsShowMoreExpanded(`Item-2`, true)
             .verifyItemName(`Item-2`)

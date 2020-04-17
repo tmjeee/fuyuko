@@ -35,7 +35,7 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
         cy.get(`[test-page-title]`).then((_) => {
             const visible = _.find(`[test-panel-content='${validationName}']`).is(':visible');
             if (!visible) { // not already expanded, click to expand
-                cy.get(`[test-panel-header='${validationName}']`)
+                return cy.get(`[test-panel-header='${validationName}']`)
                     .click({force: true});
             }
         });
@@ -46,7 +46,7 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
         cy.get(`[test-page-title]`).then((_) => {
             const visible = _.find(`[test-panel-content='${validationName}']`).is(':visible');
             if (visible) { // already expanded, click to collapse
-                cy.get(`[test-panel-header='${validationName}']`)
+                return cy.get(`[test-panel-header='${validationName}']`)
                     .click({force: true});
             }
         });

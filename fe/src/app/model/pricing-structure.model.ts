@@ -3,6 +3,7 @@ import {PaginableApiResponse} from "./api-response.model";
 export interface PricingStructure {     // pricing structure
     id: number; // pricing structure id
     viewId: number;
+    viewName: string;
     name: string;
     description: string;
     creationDate: Date;

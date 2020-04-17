@@ -49,16 +49,30 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
                         break;
                     case 'name': // pricing structure name
                         await doInDbConnection(async (conn: Connection) => {
-                            const q: QueryA = await conn.query(`SELECT ID, VIEW_ID, NAME, DESCRIPTION, STATUS, CREATION_DATE, LAST_UPDATE FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND VIEW_ID=?  AND STATUS = 'ENABLED'`, [val, viewId]);
+                            const q: QueryA = await conn.query(`
+                                SELECT 
+                                    PS.ID AS PS_ID, 
+                                    PS.VIEW_ID AS PS_VIEW_ID, 
+                                    V.NAME AS V_NAME,
+                                    PS.NAME AS PS_NAME, 
+                                    PS.DESCRIPTION AS PS_DESCRIPTION, 
+                                    PS.STATUS AS PS_STATUS, 
+                                    PS.CREATION_DATE AS PS_CREATION_DATE, 
+                                    PS.LAST_UPDATE AS PS_LAST_UPDATE 
+                                FROM TBL_PRICING_STRUCTURE AS PS
+                                LEFT JOIN TBL_VIEW AS V ON V.ID = PS.VIEW_ID
+                                WHERE PS.NAME=? AND PS.VIEW_ID=? AND PS.STATUS = 'ENABLED'`,
+                                [val, viewId]);
                             if (q.length) {
-                                psViewId = q[0].VIEW_ID;
+                                psViewId = q[0].PS_VIEW_ID;
                                 ps = {
-                                    id: q[0].ID,
-                                    name: q[0].NAME,
-                                    viewId: q[0].VIEW_ID,
-                                    description: q[0].DESCRIPTION,
-                                    creationDate: q[0].CREATION_DATE,
-                                    lastUpdate: q[0].LAST_UPDATE
+                                    id: q[0].PS_ID,
+                                    name: q[0].PS_NAME,
+                                    viewName: q[0].V_NAME,
+                                    viewId: q[0].PS_VIEW_ID,
+                                    description: q[0].PS_DESCRIPTION,
+                                    creationDate: q[0].PS_CREATION_DATE,
+                                    lastUpdate: q[0].PS_LAST_UPDATE
                                 } as PricingStructure;
                             }
                         });

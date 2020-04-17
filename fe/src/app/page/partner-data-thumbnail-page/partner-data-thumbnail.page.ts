@@ -43,22 +43,24 @@ export class PartnerDataThumbnailPageComponent implements OnInit {
 
    onPricingStructureSelectionChanged($event: MatSelectChange) {
       const pricingStructure: PricingStructure = $event.value;
-      this.loading = true;
-      this.partnerService.getPartnerPriceItems(pricingStructure.id).pipe(
-          tap((i: PricedItem[]) => {
-             this.pricedItems = i;
-          }),
-          concatMap((_) => {
-             return this.attributeService.getAllAttributesByView(pricingStructure.viewId)
-                 .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
-          }),
-          tap((a: Attribute[]) => {
-             this.attributes = a;
-          }),
-          finalize(() => {
-             this.loading = false;
-          })
-      ).subscribe();
+      if (pricingStructure) {
+          this.loading = true;
+          this.partnerService.getPartnerPriceItems(pricingStructure.id).pipe(
+              tap((i: PricedItem[]) => {
+                  this.pricedItems = i;
+              }),
+              concatMap((_) => {
+                  return this.attributeService.getAllAttributesByView(pricingStructure.viewId)
+                      .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
+              }),
+              tap((a: Attribute[]) => {
+                  this.attributes = a;
+              }),
+              finalize(() => {
+                  this.loading = false;
+              })
+          ).subscribe();
+      }
    }
 
 }

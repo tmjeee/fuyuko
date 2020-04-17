@@ -10,6 +10,7 @@ import {MatSelectChange} from '@angular/material/select';
 import {PricedItem, TablePricedItem} from '../../model/item.model';
 import {toTablePricedItem} from "../../utils/item-to-table-items.util";
 import {PaginableApiResponse} from "../../model/api-response.model";
+import {View} from "../../model/view.model";
 
 
 @Component({
@@ -45,22 +46,24 @@ export class PartnerDataTablePageComponent implements OnInit {
 
     onPricingStructureSelectionChanged($event: MatSelectChange) {
         const pricingStructure: PricingStructure = $event.value;
-        this.loading = true;
-        this.partnerService.getPartnerPriceItems(pricingStructure.id).pipe(
-            tap((i: PricedItem[]) => {
-                this.pricedItems = i;
-                this.tablePricedItems = toTablePricedItem(this.pricedItems);
-            }),
-            concatMap((_) => {
-                return this.attributeService.getAllAttributesByView(pricingStructure.viewId)
-                    .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
-            }),
-            tap((a: Attribute[]) => {
-                this.attributes = a;
-            }),
-            finalize(() => {
-                this.loading = false;
-            })
-        ).subscribe();
+        if (pricingStructure) {
+            this.loading = true;
+            this.partnerService.getPartnerPriceItems(pricingStructure.id).pipe(
+                tap((i: PricedItem[]) => {
+                    this.pricedItems = i;
+                    this.tablePricedItems = toTablePricedItem(this.pricedItems);
+                }),
+                concatMap((_) => {
+                    return this.attributeService.getAllAttributesByView(pricingStructure.viewId)
+                        .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
+                }),
+                tap((a: Attribute[]) => {
+                    this.attributes = a;
+                }),
+                finalize(() => {
+                    this.loading = false;
+                })
+            ).subscribe();
+        }
     }
 }

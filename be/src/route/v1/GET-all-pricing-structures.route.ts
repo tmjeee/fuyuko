@@ -29,19 +29,28 @@ const httpAction: any[] = [
 
             const q: QueryA = await conn.query(`
                 SELECT 
-                    ID, VIEW_ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE 
-                FROM TBL_PRICING_STRUCTURE WHERE STATUS <> 'DELETED'
+                    PS.ID AS PS_ID, 
+                    PS.VIEW_ID AS PS_VIEW_ID, 
+                    PS.NAME AS PS_NAME, 
+                    V.NAME AS V_NAME,
+                    PS.DESCRIPTION AS PS_DESCRIPTION, 
+                    PS.CREATION_DATE AS PS_CREATION_DATE, 
+                    PS.LAST_UPDATE AS PS_LAST_UPDATE
+                FROM TBL_PRICING_STRUCTURE AS PS
+                LEFT JOIN TBL_VIEW AS V ON V.ID = PS.VIEW_ID 
+                WHERE PS.STATUS <> 'DELETED' AND V.STATUS = 'ENABLED' 
             `, []);
 
             const pricingStructures: PricingStructure[] = q.reduce((acc: PricingStructure[], i: QueryI) => {
 
                 const pricingStructure: PricingStructure = {
-                    id: i.ID,
-                    name: i.NAME,
-                    viewId: i.VIEW_ID,
-                    description: i.DESCRIPTION,
-                    creationDate: i.CREATION_DATE,
-                    lastUpdate: i.LAST_UPDATE
+                    id: i.PS_ID,
+                    name: i.PS_NAME,
+                    viewName: i.V_NAME,
+                    viewId: i.PS_VIEW_ID,
+                    description: i.PS_DESCRIPTION,
+                    creationDate: i.PS_CREATION_DATE,
+                    lastUpdate: i.PS_LAST_UPDATE
                 } as PricingStructure;
                 acc.push(pricingStructure);
 

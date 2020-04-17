@@ -87,7 +87,7 @@ const _addItem2 = async (conn: Connection, viewId: number, item2: Item2): Promis
     const description: string = item2.description;
     const parentId: number = item2.parentId ? item2.parentId : null;
 
-    const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=?`, [name, viewId]);
+    const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=? AND STATUS='ENABLED' `, [name, viewId]);
     if (qq[0].COUNT > 0) { // item with name already exists in view
         errors.push(`Item with name ${name} already exists in view id ${viewId}`);
     } else {
@@ -251,7 +251,7 @@ export const getAllItem2sInView = async (viewId: number, parentOnly: boolean = t
            acc.push(i.ID);
            return acc;
         }, []);
-        const q: QueryA = await conn.query(SQL, [itemIds]);
+        const q: QueryA = await conn.query(SQL, [itemIds && itemIds.length ? itemIds : [-1]]);
         return _doQ(q);
     });
 

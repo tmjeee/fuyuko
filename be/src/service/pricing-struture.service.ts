@@ -7,17 +7,27 @@ export const getPricingStructureById = async (pricingStructureId: number): Promi
     const pricingStructure: PricingStructure = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
-                    ID, VIEW_ID, NAME, DESCRIPTION, STATUS, CREATION_DATE, LAST_UPDATE
-                FROM TBL_PRICING_STRUCTURE WHERE ID=? 
+                    PS.ID AS PS_ID, 
+                    PS.VIEW_ID AS PS_VIEW_ID, 
+                    PS.NAME AS PS_NAME, 
+                    V.NAME AS V_NAME,
+                    PS.DESCRIPTION AS PS_DESCRIPTION, 
+                    PS.STATUS AS PS_STATUS, 
+                    PS.CREATION_DATE AS PS_CREATION_DATE, 
+                    PS.LAST_UPDATE AS PS_LAST_UPDATE
+                FROM TBL_PRICING_STRUCTURE AS PS
+                LEFT JOIN TBL_VIEW AS V ON V.ID = PS.VIEW_ID
+                WHERE PS.ID=? 
             `, [pricingStructureId]);
 
         return q.reduce((acc: PricingStructure, i: QueryI) => {
-            acc.id = i.ID;
-            acc.viewId = i.VIEW_ID;
-            acc.name = i.NAME;
-            acc.description = i.DESCRIPTION;
-            acc.creationDate = i.CREATION_DATE;
-            acc.lastUpdate = i.LAST_UPDATE;
+            acc.id = i.PS_ID;
+            acc.viewId = i.PS_VIEW_ID;
+            acc.name = i.PS_NAME;
+            acc.viewName = i.V_NAME;
+            acc.description = i.PS_DESCRIPTION;
+            acc.creationDate = i.PS_CREATION_DATE;
+            acc.lastUpdate = i.PS_LAST_UPDATE;
             return acc;
         }, {} as PricingStructure);
     });
