@@ -8,12 +8,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import { Connection } from "mariadb";
 import {ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {getPartnerPricingStructures} from "../../service/pricing-struture.service";
+import {getPartnerPricingStructures} from "../../service/pricing-structure.service";
 
 
 // CHECKED

@@ -4,7 +4,7 @@ import { param } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
 import {PricingStructure} from "../../model/pricing-structure.model";
-import {getPricingStructureById} from "../../service/pricing-struture.service";
+import {getPricingStructureById} from "../../service/pricing-structure.service";
 import {ApiResponse} from "../../model/api-response.model";
 
 

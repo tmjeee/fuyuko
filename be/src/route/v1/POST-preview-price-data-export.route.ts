@@ -14,7 +14,7 @@ import {PriceDataExport} from "../../model/data-export.model";
 import {preview, PreviewResult} from "../../service/export-csv/export-price.service";
 import {ROLE_EDIT} from "../../model/role.model";
 import {PricingStructure} from "../../model/pricing-structure.model";
-import {getPricingStructureById} from "../../service/pricing-struture.service";
+import {getPricingStructureById} from "../../service/pricing-structure.service";
 import {ApiResponse} from "../../model/api-response.model";
 const detectCsv = require('detect-csv');
 

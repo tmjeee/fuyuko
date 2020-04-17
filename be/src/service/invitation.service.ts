@@ -1,7 +1,85 @@
 import {Invitation} from "../model/invitation.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {ClientError} from "../route/v1/common-middleware";
+import {makeApiError, makeApiErrorObj} from "../util";
+import {DELETED, ENABLED} from "../model/status.model";
+import {hashedPassword} from "./password.service";
+import config from "../config";
+
+export const activateInvitation = async (code: string, username: string, email: string, firstName: string,
+                                         lastName: string, password: string): Promise<{ registrationId: number, errors: string[]}> => {
+
+    let registrationId;
+
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const q1: QueryA = await conn.query(`
+                SELECT ID, EMAIL, CREATION_DATE, CODE, ACTIVATED FROM TBL_INVITATION_REGISTRATION WHERE CODE=? AND ACTIVATED=?
+            `, [code, false]);
+
+        // do not allow creation if code is bad
+        if (q1.length <= 0) { // bad code
+            errors.push(`Code no longer active`);
+            return errors;
+        }
+
+        registrationId = q1[0].ID;
+
+        // do not allow creation if username already exists
+        const qU1: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE (USERNAME = ?) AND STATUS <> ?
+            `, [username, DELETED]);
+        if (qU1.length > 0 && qU1[0].COUNT > 0) {
+           errors.push(`User with either username ${username} already exists`);
+           return { registrationId, errors };
+        }
+
+        // do not allow creation if email already exists
+        const qU1_1: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE (EMAIL = ?) AND STATUS <> ?
+            `, [email, DELETED]);
+        if (qU1_1.length > 0 && qU1_1[0].COUNT > 0) {
+           errors.push(`User with either email ${email} already exists`);
+           return { registrationId, errors };
+        }
+
+        // do not allow activation if username or email has already being self-registered
+        const qU2: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_SELF_REGISTRATION WHERE (EMAIL = ? OR USERNAME = ?) AND ACTIVATED = ? 
+            `, [email, username, false]);
+        if (qU1.length > 0 && qU1[0].COUNT > 0) {
+           errors.push(`User with either username ${username} or email ${email} already registered`);
+           return { registrationId, errors };
+        }
+
+
+        await conn.query(`UPDATE TBL_INVITATION_REGISTRATION SET ACTIVATED=? WHERE CODE=?`,[true, code]);
+
+        const qGroups: QueryA = await conn.query(`
+                SELECT GROUP_ID FROM TBL_INVITATION_REGISTRATION_GROUP WHERE INVITATION_REGISTRATION_ID = ? 
+            `, [q1[0].ID]);
+
+        // activate
+        const qNewUser: QueryResponse = await conn.query(`
+                INSERT INTO TBL_USER (USERNAME, EMAIL, FIRSTNAME, LASTNAME, STATUS, PASSWORD, CREATION_DATE, LAST_UPDATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?) 
+            `, [username, email, firstName, lastName, ENABLED, hashedPassword(password), new Date(), new Date()]);
+
+        const newUserId: number = qNewUser.insertId;
+
+        await conn.query(`
+                INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)
+            `, [newUserId, config["default-theme"]]);
+
+        for (const g of qGroups) {
+            const gId: number = (g as QueryI).GROUP_ID;
+            await conn.query(`
+                    INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?,?)
+                `, [newUserId, gId]);
+        }
+        return  { registrationId, errors };
+    });
+};
 
 
 export const getInvitationByCode = async (code: string): Promise<Invitation> => {

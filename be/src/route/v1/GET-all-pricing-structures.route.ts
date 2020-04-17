@@ -7,12 +7,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {getAllPricingStructures} from "../../service/pricing-struture.service";
+import {getAllPricingStructures} from "../../service/pricing-structure.service";
 
 // CHECKED
 const httpAction: any[] = [

@@ -5,6 +5,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
 import {ApiErrorContext} from "../model/api-error.model";
 import {GlobalCommunicationService} from "../service/global-communication-service/global-communication.service";
+import {ApiResponse} from "../model/api-response.model";
 
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {
@@ -80,6 +81,8 @@ export class GlobalErrorHandler extends ErrorHandler {
     }
 
     private getErrorMessages(r: HttpErrorResponse): string {
+
+        // case 1:
         const apiErrorContext: ApiErrorContext = r.error;
         if (apiErrorContext && apiErrorContext.errors && apiErrorContext.errors.length > 0) {
             return apiErrorContext.errors.reduce((acc: string[], err: {message?: string, msg?: string}) => {
@@ -93,6 +96,13 @@ export class GlobalErrorHandler extends ErrorHandler {
             }, [])
             .map((c: string) => c).join('<br/>');
         }
+
+        // case 2:
+        const apiResponse: ApiResponse = r.error;
+        if (apiResponse.message && apiResponse.status) {
+            return apiResponse.message;
+        }
+
         return null;
     }
 }

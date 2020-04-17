@@ -18,9 +18,7 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
-        const settings: Settings = await doInDbConnection(async (conn: Connection) => {
-            return await getSettings(userId, conn)
-        });
+        const settings: Settings = await getSettings(userId);
         res.status(200).json({
             status: 'SUCCESS',
             message: `Settings retrieved`,

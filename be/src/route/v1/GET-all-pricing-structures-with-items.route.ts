@@ -23,7 +23,7 @@ import {LimitOffset} from "../../model/limit-offset.model";
 import {
     getAllPricingStructureItemsWithPrice,
     getAllPricingStructureItemsWithPriceCount, getPricingStructureById
-} from "../../service/pricing-struture.service";
+} from "../../service/pricing-structure.service";
 
 
 // CHECKED
