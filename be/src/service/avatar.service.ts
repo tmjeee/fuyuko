@@ -3,8 +3,6 @@ import {Connection} from "mariadb";
 import {GlobalAvatar} from "../model/avatar.model";
 import {BinaryContent} from "../model/binary-content.model";
 
-export const getUserAvatarInfo = async (): P
-
 
 export const getGlobalAvatarContentByName = async (avatarName: string): Promise<BinaryContent> => {
     return await doInDbConnection(async (conn: Connection) => {
