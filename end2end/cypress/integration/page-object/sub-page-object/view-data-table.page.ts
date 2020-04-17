@@ -145,6 +145,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
              cy.get(`[test-data-table-row-index='${i}']`)
                  .find(`[test-item-editor-value='name']`).click({force: true});
              cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
+             cy.get(`[test-field-name]`).should('contain.value', newItemName);
              cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
           }
           return cy.wait(1000);
@@ -159,6 +160,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
                 cy.get(`[test-data-table-row-index='${i}']`)
                     .find(`[test-item-editor-value='name']`).click({force: true});
                 cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
+                cy.get(`[test-field-name]`).should('contain.value', newItemName);
                 cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
             }
             return cy.wait(1000);

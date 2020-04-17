@@ -113,6 +113,8 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   reload() {
+    this.pendingSavingItems.clear();
+    this.pendingDeletionItems.clear();
     this.itemAndAttributeSet.tableItems.forEach((i: TableItem, index: number) => {
       this.rowInfoMap.set(i.id, {
         tableItem: i,
