@@ -3,7 +3,7 @@
 
 #  Documentation
 ## Gitbook
-[Documentation](https://tmjeee.gitbook.io/f-doc/)
+[Documentation](https://fuyuko-org.gitbook.io/fuyuko/)
 
 # Tests
 ## Cypress Integration Tests Results
