@@ -11,6 +11,7 @@ import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET} from "../util/utils";
 import {itemValueRevert} from "./conversion-item-value.service";
 import {itemConvert, itemRevert, itemsConvert} from "./conversion-item.service";
+import {parseAsync} from "json2csv";
 
 //////////////////////// SQLs //////////////////////////////////////////////////////////////////
 
@@ -471,18 +472,15 @@ export const getItem2ByName = async (viewId: number, itemName: string): Promise<
 }
 
 
+// ===============================
+// === findChildrenItems(...) ===
+// ===============================
 
-////////////////////////////////////////////////////////////////////  ==== misc helpers ====
-
-// work out the children in each item
-const w = async (viewId: number, item2s: Item2[]) => {
-    for (const item2 of item2s) {
-        const itemId: number = item2.id;
-        item2.children = await findChildrenItem2s(viewId, itemId);
-    }
+export const findChildrenItems = async (viewId: number, parentItemId: number): Promise<Item[]> => {
+   const item2s: Item2[] = await findChildrenItem2s(viewId, parentItemId);
+   return itemsConvert(item2s);
 }
-
-const findChildrenItem2s = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
+export const findChildrenItem2s = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
 
     const item2s: Item2[] =  await doInDbConnection(async (conn: Connection) => {
 
@@ -534,6 +532,19 @@ const findChildrenItem2s = async (viewId: number, parentItemId: number): Promise
     return item2s;
 
 }
+
+
+
+////////////////////////////////////////////////////////////////////  ==== misc helpers ====
+
+// work out the children in each item
+const w = async (viewId: number, item2s: Item2[]) => {
+    for (const item2 of item2s) {
+        const itemId: number = item2.id;
+        item2.children = await findChildrenItem2s(viewId, itemId);
+    }
+}
+
 
 // for findChildrenItems(...) and findItemById(...) only
 const _doQ = (q: QueryA): Item2[] => {
