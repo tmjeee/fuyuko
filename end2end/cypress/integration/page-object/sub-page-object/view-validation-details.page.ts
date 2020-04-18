@@ -48,6 +48,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
             if (l <= 0) { // not already checked, let's check it
                 return cy.get(`[test-mat-radio-item='${itemName}'] label`).click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -58,6 +59,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
             if (l > 0) { // already checked, let's uncheck it
                 return cy.get(`[test-mat-radio-item='${itemName}'] label`).click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -71,6 +73,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
                     .find(`[test-button-filter]`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -99,6 +102,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
                     .find(`[test-button-filter]`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -165,6 +169,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
                     .find(`[test-icon-expand-row='${itemName}']`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         })
         return this;
     }
@@ -177,6 +182,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
                     .find(`[test-icon-collapse-row='${itemName}']`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         })
         return this;
     }
@@ -231,6 +237,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
                     .find(`[test-mat-radio-item='${itemName}'] label`)
                     .click({force: true})
             }
+            return cy.wait(1000);
         })
         return this;
     }
@@ -243,6 +250,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
                     .find(`[test-mat-radio-item='${itemName}'] label`)
                     .click({force: true})
             }
+            return cy.wait(1000);
         })
         return this;
     }

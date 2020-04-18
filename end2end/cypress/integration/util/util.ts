@@ -97,9 +97,9 @@ export const createNewView = (): string => {
         .clickSave()
     ;
 
-    cy.wait(100).then((_) => {
+    cy.wait(1000).then((_) => {
         viewViewPage.verifySuccessMessageExists();
-        return cy.wait(100);
+        return cy.wait(1000);
     });
 
     return viewName;

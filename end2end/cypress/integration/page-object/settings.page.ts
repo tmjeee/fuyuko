@@ -31,18 +31,17 @@ export class SettingsPage implements ActualPage<SettingsPage> {
             const elem = _.find(`[test-slide-toggle='${name}']`);
             const hasClass = elem.hasClass('mat-checked');
             if(!hasClass && b) { // disabled and we want it enabled
-                console.log('**** 1');
-                cy.get(`[test-page-title]`)
+                return cy.get(`[test-page-title]`)
                     .find(`[test-slide-toggle='${name}'] label div.mat-slide-toggle-bar`)
                     .click({force: true})
-                    .wait(100);
+                    .wait(1000);
             } else if (hasClass && !b) { // enabled and we want it disabled
-                console.log('***** 2');
-                cy.get(`[test-page-title]`)
+                return cy.get(`[test-page-title]`)
                     .find(`[test-slide-toggle='${name}'] label div.mat-slide-toggle-bar`)
                     .click({force: true})
-                    .wait(100);
+                    .wait(1000);
             }
+            return cy.wait(1000);
         });
         return this;
     }

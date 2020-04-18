@@ -92,6 +92,7 @@ export class AbstractViewAttributePage {
                     }
                 })
             }
+            return cy.wait(1000);
         })
         return this;
     }
@@ -139,6 +140,7 @@ export class AbstractViewAttributePage {
                 if (!$body.find(`[test-select-key='${i}']`).length) {  // not already exists
                     return cy.get(`[test-button-add-kp]`).click({force:true});
                 }
+                return cy.wait(1000);
             });
             cy.get(`[test-select-key='${i}']`).clear({force: true}).type(kvs[i].key, {force: true});
             cy.get(`[test-select-value='${i}']`).clear({force: true}).type(kvs[i].value, {force: true});
@@ -154,6 +156,7 @@ export class AbstractViewAttributePage {
                 if (!$body.find(`[test-doubleselect-key1='${i}']`).length) { // not already exists
                     return cy.get(`[test-button-add-kp1]`).click({force:true});
                 }
+                return cy.wait(1000);
             });
             cy.get(`[test-doubleselect-key1='${i}']`).clear({force: true}).type(kvs[i].key, {force: true});
             cy.get(`[test-doubleselect-value1='${i}']`).clear({force: true}).type(kvs[i].value, {force: true});
@@ -162,6 +165,7 @@ export class AbstractViewAttributePage {
                     if (!$body.find(`[test-doubleselect-key2-1='${i2}']`).length) {  // not already exists
                         return cy.get(`[test-button-add-kp2]`).click({force: true});
                     }
+                    return cy.wait(1000);
                 });
                 cy.get(`[test-doubleselect-key2-1='${i2}']`).clear({force: true}).type(kvs[i].key, {force: true});
                 cy.get(`[test-doubleselect-key2-2='${i2}']`).clear({force: true}).type(kvs[i].entries[i2].key2, {force: true});

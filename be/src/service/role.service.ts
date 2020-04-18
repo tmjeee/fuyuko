@@ -60,7 +60,7 @@ export const removeRoleFromGroup = async (roleName: string, groupId: number): Pr
                 DELETE FROM TBL_LOOKUP_GROUP_ROLE WHERE GROUP_ID = ? AND ROLE_ID = ?
             `, [groupId, roleId])
 
-            if (q.affectedRows) {
+            if (q.affectedRows <= 0) {
                errors.push(`Role ${roleName} is not in group ${groupId}`);
             }
         }

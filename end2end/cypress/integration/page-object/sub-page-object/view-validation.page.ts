@@ -38,6 +38,7 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
                 return cy.get(`[test-panel-header='${validationName}']`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -49,6 +50,7 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
                 return cy.get(`[test-panel-header='${validationName}']`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }

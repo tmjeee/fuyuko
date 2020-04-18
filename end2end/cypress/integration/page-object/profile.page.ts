@@ -32,6 +32,7 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
                 expect(body).to.have.property('payload');
                 expect(body.payload).to.have.property('name');
                 expect(body.payload.name).to.eq(name);
+                return cy.wait(1000);
             });
         return this;
     }
@@ -71,7 +72,8 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
     validateThemeChanged(cssThemeName: string): ProfilePage {
         cy.get(`[test-theme-cssClassName]`).then((n) => {
             expect(n).to.have.attr('test-theme-cssClassName').eq(cssThemeName);
-        })
+            return cy.wait(1000);
+        });
         return this;
     }
 

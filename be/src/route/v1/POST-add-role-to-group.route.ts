@@ -38,8 +38,8 @@ const httpAction: any[] = [
             } as ApiResponse);
         } else {
             res.status(200).json({
-                status: 'ERROR',
-                message: `Role ${roleName} already exists in group ${groupId}`
+                status: 'SUCCESS',
+                message: `Role ${roleName} added to group ${groupId}`
             } as ApiResponse);
         }
     }

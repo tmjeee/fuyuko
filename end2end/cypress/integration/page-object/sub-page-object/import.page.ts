@@ -134,6 +134,7 @@ export class ImportPageStep3 {
                         .find(`[test-row-isExpanded]`)
                         .click({force: true});
                 }
+                return cy.wait(1000);
         });
         return this;
     }

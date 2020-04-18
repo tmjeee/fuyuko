@@ -106,6 +106,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
                 if (!l) { // not already checked
                     return cy.get(`[test-checkbox-thumbnail-item='${itemNames[i]}'] label`).click({force: true});
                 }
+                return cy.wait(1000);
             })
         }).then((_) => {
             return cy.get(`[test-button-delete-items]`).click({force: true});
@@ -133,6 +134,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
                return cy.get(`[test-thumbnail-item-name='${itemName}']`)
                    .find(`[test-link-show-more]`).click({force: true})
             }
+            return cy.wait(100);
         });
         return this;
     }
@@ -144,6 +146,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
                 return cy.get(`[test-thumbnail-item-name='${itemName}']`)
                     .find(`[test-link-show-less]`).click({force: true})
             }
+            return cy.wait(1000);
         });
         return this;
     }

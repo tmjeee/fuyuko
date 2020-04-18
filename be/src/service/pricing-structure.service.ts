@@ -159,9 +159,8 @@ export const getAllPricingStructureItemsWithPrice = async (pricingStructureId: n
                 } as PricingStructureItemWithPrice;
                 mItemMap.set(mItemMapKey, item);
             }
-
-            return [...mItemMap.values()];
         }
+        return [...mItemMap.values()];
     });
 }
 

@@ -230,13 +230,13 @@ export const getUserAvatarContent = async (userId: number): Promise<BinaryConten
                        content: q2[0].CONTENT
                     } as BinaryContent;
                 } else {
-                    await getNoAvatarContent(conn);
+                    return await getNoAvatarContent(conn);
                 }
             } else {
-                await getNoAvatarContent(conn);
+                return await getNoAvatarContent(conn);
             }
         } else {
-            await getNoAvatarContent(conn);
+            return await getNoAvatarContent(conn);
         }
     });
 };

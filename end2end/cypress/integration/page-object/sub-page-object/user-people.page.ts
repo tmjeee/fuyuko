@@ -54,6 +54,7 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
                 return cy.get(`[test-expansion-panel-header='active-users']`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -104,6 +105,7 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
                 return cy.get(`[test-expansion-panel-header='inactive-users']`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }

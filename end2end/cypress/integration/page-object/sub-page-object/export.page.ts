@@ -405,6 +405,7 @@ export class ExportPageStep4 {
                     .find(`[test-row-isExpanded]`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         }).wait(100);
         return this;
     }

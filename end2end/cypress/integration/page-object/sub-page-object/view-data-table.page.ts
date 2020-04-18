@@ -175,6 +175,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
                 if (!l) { // not already checked
                     return cy.get(`[test-checkbox-data-table-item='${itemNames[i]}'] label`).click({force: true});
                 }
+                return cy.wait(1000);
             })
         }).then((_) => {
             return cy.get(`[test-button-delete-items]`).click({force: true});

@@ -46,6 +46,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
                     .find(`[test-show-more-link]`)
                     .click({force: true})
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -61,6 +62,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
                     .find(`[test-show-less-link]`)
                     .click({force: true})
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -133,6 +135,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
                     .find(`[test-icon-close-item-details]`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }

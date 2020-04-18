@@ -434,7 +434,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereText(i, text_whenAttributeName, text_whenOp, text_whenValue)
                 .editChangeText(i, text_changeAttributeName, text_changeAttributeValue)
                 .verifyWhereClauseText(i, text_whenAttributeName, text_whenOp, text_whenValue)
-                .verifyChangeClauseText(i, text_changeAttributeName, text_changeAttributeValue)
+                .verifyChangeClauseText(i, text_changeAttributeName, text_changeAttributeValue);
+            return cy.wait(1000);
             ;
         });
 
@@ -447,7 +448,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereNumber(i, number_whenAttributeName, number_whenOp, number_whenValue)
                 .editChangeNumber(i, number_changeAttributeName, Number(number_changeAttributeValue))
                 .verifyWhereClauseNumber(i, number_whenAttributeName, number_whenOp, number_whenValue)
-                .verifyChangeClauseNumber(i, number_changeAttributeName, Number(number_changeAttributeValue))
+                .verifyChangeClauseNumber(i, number_changeAttributeName, Number(number_changeAttributeValue));
+            return cy.wait(1000);
             ;
         });
 
@@ -459,7 +461,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereDate(i, date_whenAttributeName, date_whenOp, date_whenValue)
                 .editChangeDate(i, date_changeAttributeName, date_changeAttributeValue)
                 .verifyWhereClauseDate(i, date_whenAttributeName, date_whenOp, date_whenValue)
-                .verifyChangeClauseDate(i, date_changeAttributeName, date_changeAttributeValue)
+                .verifyChangeClauseDate(i, date_changeAttributeName, date_changeAttributeValue);
+            return cy.wait(1000);
             ;
         });
 
@@ -472,7 +475,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereCurrency(i, currency_whenAttributeName, currency_whenOp, currency_whenValue, currency_whenUnit)
                 .editChangeCurrency(i, currency_changeAttributeName, Number(currency_changeAttributeValue), currency_changeAttributeUnit)
                 .verifyWhereClauseCurrency(i, currency_whenAttributeName, currency_whenOp, currency_whenValue, currency_whenUnit)
-                .verifyChangeClauseCurrency(i, currency_changeAttributeName, Number(currency_changeAttributeValue), currency_changeAttributeUnit)
+                .verifyChangeClauseCurrency(i, currency_changeAttributeName, Number(currency_changeAttributeValue), currency_changeAttributeUnit);
+            return cy.wait(1000);
             ;
         });
 
@@ -486,7 +490,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereVolume(i, volume_whenAttributeName, volume_whenOp, volume_whenValue, volume_whenUnit)
                 .editChangeVolume(i, volume_changeAttributeName, Number(volume_changeAttributeValue), volume_changeAttributeUnit)
                 .verifyWhereClauseVolume(i, volume_whenAttributeName, volume_whenOp, volume_whenValue, volume_whenUnit)
-                .verifyChangeClauseVolume(i, volume_changeAttributeName, Number(volume_changeAttributeValue), volume_changeAttributeUnit)
+                .verifyChangeClauseVolume(i, volume_changeAttributeName, Number(volume_changeAttributeValue), volume_changeAttributeUnit);
+            return cy.wait(1000);
             ;
         });
 
@@ -499,7 +504,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereDimension(i, dimension_whenAttributeName, dimension_whenOp, dimension_whenLengthValue, dimension_whenWidthValue, dimension_whenHeightValue, dimension_whenUnit)
                 .editChangeDimension(i, dimension_changeAttributeName, Number(dimension_changeAttributeLengthValue), Number(dimension_changeAttributeWidthValue), Number(dimension_changeAttributeHeightValue), dimension_changeAttributeUnit)
                 .verifyWhereClauseDimension(i, dimension_whenAttributeName, dimension_whenOp, dimension_whenLengthValue, dimension_whenWidthValue, dimension_whenHeightValue, dimension_whenUnit)
-                .verifyChangeClauseDimension(i, dimension_changeAttributeName, Number(dimension_changeAttributeLengthValue), Number(dimension_changeAttributeWidthValue), Number(dimension_changeAttributeHeightValue), dimension_changeAttributeUnit)
+                .verifyChangeClauseDimension(i, dimension_changeAttributeName, Number(dimension_changeAttributeLengthValue), Number(dimension_changeAttributeWidthValue), Number(dimension_changeAttributeHeightValue), dimension_changeAttributeUnit);
+            return cy.wait(1000);
             ;
         });
 
@@ -512,7 +518,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereArea(i, area_whenAttributeName, area_whenOp, area_whenValue, area_whenUnit)
                 .editChangeArea(i, area_changeAttributeName, Number(area_changeAttributeValue), area_changeAttributeUnit)
                 .verifyWhereClauseArea(i, area_whenAttributeName, area_whenOp, area_whenValue, area_whenUnit)
-                .verifyChangeClauseArea(i, area_changeAttributeName, Number(area_changeAttributeValue), area_changeAttributeUnit)
+                .verifyChangeClauseArea(i, area_changeAttributeName, Number(area_changeAttributeValue), area_changeAttributeUnit);
+            return cy.wait(1000);
             ;
         });
 
@@ -524,7 +531,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereLength(i, length_whenAttributeName, length_whenOp, length_whenValue, length_whenUnit)
                 .editChangeLength(i, length_changeAttributeName, Number(length_changeAttributeValue), length_changeAttributeUnit)
                 .verifyWhereClauseLength(i, length_whenAttributeName, length_whenOp, length_whenValue, length_whenUnit)
-                .verifyChangeClauseLength(i, length_changeAttributeName, Number(length_changeAttributeValue), length_changeAttributeUnit)
+                .verifyChangeClauseLength(i, length_changeAttributeName, Number(length_changeAttributeValue), length_changeAttributeUnit);
+            return cy.wait(1000);
             ;
         });
 
@@ -537,7 +545,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereWidth(i, width_whenAttributeName, width_whenOp, length_whenValue, width_whenUnit)
                 .editChangeWidth(i, width_changeAttributeName, Number(width_changeAttributeValue), width_changeAttributeUnit)
                 .verifyWhereClauseWidth(i, width_whenAttributeName, width_whenOp, length_whenValue, width_whenUnit)
-                .verifyChangeClauseWidth(i, width_changeAttributeName, Number(width_changeAttributeValue), width_changeAttributeUnit)
+                .verifyChangeClauseWidth(i, width_changeAttributeName, Number(width_changeAttributeValue), width_changeAttributeUnit);
+            return cy.wait(1000);
             ;
         });
 
@@ -550,7 +559,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereHeight(i, height_whenAttributeName, height_whenOp, length_whenValue, height_whenUnit)
                 .editChangeHeight(i, height_changeAttributeName, Number(height_changeAttributeValue), height_changeAttributeUnit)
                 .verifyWhereClauseHeight(i, height_whenAttributeName, height_whenOp, length_whenValue, height_whenUnit)
-                .verifyChangeClauseHeight(i, height_changeAttributeName, Number(height_changeAttributeValue), height_changeAttributeUnit)
+                .verifyChangeClauseHeight(i, height_changeAttributeName, Number(height_changeAttributeValue), height_changeAttributeUnit);
+            return cy.wait(1000);
             ;
         });
 
@@ -563,7 +573,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereSelect(i, select_whenAttributeName, select_whenOp, select_whenValue)
                 .editChangeSelect(i, select_changeAttributeName, select_changeAttributeValue)
                 .verifyWhereClauseSelect(i, select_whenAttributeName, select_whenOp, select_whenValue_forVerification)
-                .verifyChangeClauseSelect(i, select_changeAttributeName, select_changeAttributeValue_forVerification)
+                .verifyChangeClauseSelect(i, select_changeAttributeName, select_changeAttributeValue_forVerification);
+            return cy.wait(1000);
             ;
         });
 
@@ -576,7 +587,8 @@ describe(`bulk edit spec`, () => {
                 .editWhereDoubleselect(i, doubleselect_whenAttributeName, doubleselect_whenOp, doubleselect_whenValue1, doubleselect_whenValue2)
                 .editChangeDoubleselect(i, doubleselect_changeAttributeName, doubleselect_changeAttributeValue1, doubleselect_changeAttributeValue2)
                 .verifyWhereClauseDoubleselect(i, doubleselect_whenAttributeName, doubleselect_whenOp, doubleselect_whenValue1_forVerification, doubleselect_whenValue2_forVerification)
-                .verifyChangeClauseDoubleselect(i, doubleselect_changeAttributeName, doubleselect_changeAttributeValue1_forVerification, doubleselect_changeAttributeValue2_forVerification)
+                .verifyChangeClauseDoubleselect(i, doubleselect_changeAttributeName, doubleselect_changeAttributeValue1_forVerification, doubleselect_changeAttributeValue2_forVerification);
+            return cy.wait(1000);
             ;
         });
 

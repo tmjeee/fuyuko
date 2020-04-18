@@ -42,6 +42,7 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
                     .find(`[test-icon-expand-item='${itemName}']`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -54,6 +55,7 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
                     .find(`[test-icon-collapse-item='${itemName}']`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }

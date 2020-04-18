@@ -42,6 +42,7 @@ export class JobsPage implements ActualPage<JobsPage> {
                     .find(`[test-job-title-index='${index}']`)
                     .click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }

@@ -57,6 +57,7 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
                 return cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
                     .find(`input`).click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -68,6 +69,7 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
                 return cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
                     .find(`input`).click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }

@@ -114,6 +114,7 @@ export class PricingPage implements ActualPage<PricingPage> {
                     .find(`[test-pricing-table-row-expand='${itemName}']`)
                     .click({force: true})
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -127,6 +128,7 @@ export class PricingPage implements ActualPage<PricingPage> {
                     .find(`[test-pricing-table-row-collapse='${itemName}']`)
                     .click({force: true})
             }
+            return cy.wait(1000);
         });
         return this;
     }

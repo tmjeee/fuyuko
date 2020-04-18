@@ -32,6 +32,7 @@ export class RegisterPage implements ActualPage<RegisterPage> {
             if (email) {
                 return cy.get(`[test-field-email]`).type(email, {force: true});
             }
+            return cy.wait(1000);
         });
 
         // username
@@ -39,6 +40,7 @@ export class RegisterPage implements ActualPage<RegisterPage> {
             if (username) {
                 return cy.get(`[test-field-username]`).type(username, {force: true});
             }
+            return cy.wait(1000);
         });
 
         // firstname
@@ -46,6 +48,7 @@ export class RegisterPage implements ActualPage<RegisterPage> {
             if (firstname) {
                 return cy.get(`[test-field-firstname]`).type(firstname, {force: true});
             }
+            return cy.wait(1000);
         });
 
         // lastname
@@ -53,6 +56,7 @@ export class RegisterPage implements ActualPage<RegisterPage> {
             if (lastname) {
                 return cy.get(`[test-field-lastname]`).type(lastname, {force: true});
             }
+            return cy.wait(1000);
         });
 
         // password
@@ -60,6 +64,7 @@ export class RegisterPage implements ActualPage<RegisterPage> {
             if (password) {
                 return cy.get(`[test-field-password]`).type(password, {force: true});
             }
+            return cy.wait(1000);
         });
 
         // confirm password
@@ -67,6 +72,7 @@ export class RegisterPage implements ActualPage<RegisterPage> {
             if (confirmPassword) {
                 return cy.get(`[test-field-confirm-password]`).type(confirmPassword, {force: true});
             }
+            return cy.wait(1000);
         });
 
         return this;

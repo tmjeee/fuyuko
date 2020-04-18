@@ -49,6 +49,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
                 if (l <= 0) { // not already checked
                     return cy.get(`[test-mat-checkbox-item='${itemNames[i]}'] label`).click({force: true});
                 }
+                return cy.wait(1000);
             });
         });
         return this;

@@ -32,11 +32,12 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
 
     clickDelete(viewNames: string[]): ViewViewPage {
         cy.wrap(viewNames).each((e, i, a) => {
-            cy.get(`[test-page-title]`).then((_) => {
+            return cy.get(`[test-page-title]`).then((_) => {
                 const length = _.find(`[test-mat-checkbox='${viewNames[i]}'].mat-checkbox-checked`).length;
                 if (length <= 0) { // not already checked
                     return cy.get(`[test-mat-checkbox='${viewNames[i]}'] label`).click({force: true});
                 }
+                return cy.wait(1000);
             })
         });
         cy.get(`[test-button-delete-view]`).click({force: true});
