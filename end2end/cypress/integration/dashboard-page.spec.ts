@@ -5,6 +5,20 @@ import {LoginPage} from "./page-object/login.page";
 describe('dashboard', () => {
     let dashboardPage: DashboardPage;
     before(() => {
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // dashboardPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password);
+    });
+
+    after(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+    });
+
+    beforeEach(() => {
+        // cy.restoreLocalStorage();
         const username = Cypress.env('username');
         const password = Cypress.env('password');
         dashboardPage = new LoginPage()
@@ -12,13 +26,9 @@ describe('dashboard', () => {
             .login(username, password);
     });
 
-    beforeEach(() => {
-        cy.restoreLocalStorage();
-    });
-
     afterEach(() => {
-        cy.saveLocalStorage();
-    })
+        // cy.saveLocalStorage();
+    });
 
     it ('should load', () => {
         dashboardPage

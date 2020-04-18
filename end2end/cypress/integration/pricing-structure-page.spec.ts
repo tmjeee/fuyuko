@@ -6,12 +6,12 @@ describe(`pricing structure spece`, () => {
     let pricingPage: PricingPage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        pricingPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitPricingPage();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // pricingPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitPricingPage();
     });
 
     after(() => {
@@ -21,12 +21,18 @@ describe(`pricing structure spece`, () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        pricingPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitPricingPage();
         pricingPage.visit();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

@@ -9,13 +9,13 @@ describe('view-data-thumbnail spec', () => {
     let viewDataThumbnailPage: ViewDataThumbnailPage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        viewDataThumbnailPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitViewPage()
-            .visitViewDataThumbnail();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // viewDataThumbnailPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitViewPage()
+        //     .visitViewDataThumbnail();
     });
 
     after(() => {
@@ -25,12 +25,19 @@ describe('view-data-thumbnail spec', () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        viewDataThumbnailPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitViewPage()
+            .visitViewDataThumbnail();
         viewDataThumbnailPage.visit();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

@@ -8,13 +8,13 @@ describe(`view validation spec`, () => {
     let viewValidationPage: ViewValidationPage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        viewValidationPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitViewPage()
-            .visitValidations();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // viewValidationPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitViewPage()
+        //     .visitValidations();
     });
 
     after(() => {
@@ -24,12 +24,19 @@ describe(`view validation spec`, () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        viewValidationPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitViewPage()
+            .visitValidations();
         viewValidationPage.visit();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

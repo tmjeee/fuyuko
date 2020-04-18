@@ -10,15 +10,13 @@ describe('partner thumbnail spec', () => {
 
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-
-        // create new view
-        partnerPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitPartnerPage()
-        ;
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // partnerPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitPartnerPage()
+        // ;
     });
 
     after(() => {
@@ -28,13 +26,20 @@ describe('partner thumbnail spec', () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        partnerPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitPartnerPage()
+        ;
         partnerThumbnailPage = partnerPage.visitPartnerThumbnailPage();
-        cy.wait(1000);
+        // cy.wait(1000);
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

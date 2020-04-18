@@ -1,7 +1,5 @@
 import {LoginPage} from "./page-object/login.page";
 import {BulkEditPage} from "./page-object/bulk-edit.page";
-import {ViewPage} from "./page-object/view.page";
-import {ViewViewPage} from "./page-object/sub-page-object/view-view.page";
 import {
     AreaOperatorType,
     CurrencyOperatorType,
@@ -142,14 +140,12 @@ describe(`bulk edit spec`, () => {
     let doubleselect_changeAttributeValue2_forVerification: string;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-
-        // create new view
-        bulkEditPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitBulkEditPage();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // bulkEditPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitBulkEditPage();
     });
 
     after(() => {
@@ -159,12 +155,17 @@ describe(`bulk edit spec`, () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
-        bulkEditPage.visit();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        bulkEditPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitBulkEditPage();
+        // cy.restoreLocalStorage();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

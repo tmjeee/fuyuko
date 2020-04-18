@@ -13,13 +13,13 @@ describe(`data export spec`, () => {
     let exportPage: ExportPage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        exportPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitImportExportPage()
-            .visitExportPage();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // exportPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitImportExportPage()
+        //     .visitExportPage();
     });
 
     after(() => {
@@ -29,13 +29,18 @@ describe(`data export spec`, () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
-        exportPage.visit();
-        cy.wait(100);
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        exportPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitImportExportPage()
+            .visitExportPage();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

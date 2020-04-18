@@ -10,16 +10,14 @@ describe(`custom export spec`, () => {
 
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-
-        // create new view
-        customExportPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitImportExportPage()
-            .visitCustomExportPage()
-        ;
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // customExportPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitImportExportPage()
+        //     .visitCustomExportPage()
+        // ;
     });
 
     after(() => {
@@ -29,12 +27,19 @@ describe(`custom export spec`, () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
-        customExportPage.visit();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        customExportPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitImportExportPage()
+            .visitCustomExportPage()
+        ;
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

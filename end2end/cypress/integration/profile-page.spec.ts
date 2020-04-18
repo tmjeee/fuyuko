@@ -8,12 +8,12 @@ describe('profile', () => {
     let profilePage: ProfilePage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        profilePage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitProfilePage();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // profilePage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitProfilePage();
     });
 
     after(() => {
@@ -23,11 +23,17 @@ describe('profile', () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        profilePage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitProfilePage();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
 

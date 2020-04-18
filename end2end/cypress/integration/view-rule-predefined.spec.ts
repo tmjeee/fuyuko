@@ -8,13 +8,13 @@ describe('view-rule-predefined', () => {
     let viewRulePage: ViewRulePage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        viewRulePage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitViewPage()
-            .visitViewRule();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // viewRulePage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitViewPage()
+        //     .visitViewRule();
     });
 
     after(() => {
@@ -24,12 +24,19 @@ describe('view-rule-predefined', () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        viewRulePage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitViewPage()
+            .visitViewRule();
         viewRulePage.visit();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

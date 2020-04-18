@@ -61,12 +61,27 @@ describe(`view validation details spec`, () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
-        viewValidationDetailsPage.visit();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        viewValidationPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitViewPage()
+            .visitValidations()
+            .validateTitle()
+        ;
+        // viewValidationDetailsPage =
+        //     viewValidationPage
+        //         .clickReload()
+        //         .clickOnValidationDetails(validationName)
+        viewValidationDetailsPage
+            .visit();
+        cy.wait(1000);
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

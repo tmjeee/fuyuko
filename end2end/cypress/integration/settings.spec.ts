@@ -9,15 +9,13 @@ describe('settings spec', () => {
 
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-
-        // create new view
-        settingsPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitSettingsPage()
-        ;
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // settingsPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitSettingsPage()
+        // ;
     });
 
     after(() => {
@@ -27,13 +25,19 @@ describe('settings spec', () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
-        settingsPage.visit();
-        cy.wait(1000);
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        settingsPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitSettingsPage()
+        ;
+        cy.wait(1000); // wait for settings to be loaded
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

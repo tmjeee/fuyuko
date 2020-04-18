@@ -7,13 +7,13 @@ describe('view attribute spec', () => {
     let viewAttributePage: ViewAttributePage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        viewAttributePage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitViewPage()
-            .visitViewAttributes();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // viewAttributePage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitViewPage()
+        //     .visitViewAttributes();
     });
 
     after(() => {
@@ -23,12 +23,19 @@ describe('view attribute spec', () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
-        viewAttributePage.visit();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        viewAttributePage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitViewPage()
+            .visitViewAttributes();
+        // viewAttributePage.visit();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

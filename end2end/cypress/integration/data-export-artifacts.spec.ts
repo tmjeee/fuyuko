@@ -14,13 +14,13 @@ describe(`data export artifacts spec`, () => {
     let exportArtifactsPage: ExportArtifactsPage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        exportArtifactsPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitImportExportPage()
-            .visitExportArtifactsPage();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // exportArtifactsPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitImportExportPage()
+        //     .visitExportArtifactsPage();
     });
 
     after(() => {
@@ -30,12 +30,18 @@ describe(`data export artifacts spec`, () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
-        exportArtifactsPage.visit();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        exportArtifactsPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitImportExportPage()
+            .visitExportArtifactsPage();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

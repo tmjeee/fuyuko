@@ -22,13 +22,13 @@ describe('view-data-tabular spec', () => {
     let viewDataTablePage: ViewDataTablePage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        viewDataTablePage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitViewPage()
-            .visitViewDataTable();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // viewDataTablePage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitViewPage()
+        //     .visitViewDataTable();
     });
 
     after(() => {
@@ -38,14 +38,21 @@ describe('view-data-tabular spec', () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        viewDataTablePage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitViewPage()
+            .visitViewDataTable();
         viewDataTablePage
             .visit()
             .clickReload();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

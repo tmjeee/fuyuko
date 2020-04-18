@@ -8,13 +8,13 @@ describe(`data import spec`, () => {
     let importPage: ImportPage;
 
     before(() => {
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        importPage = new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitImportExportPage()
-            .visitImportPage();
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // importPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitImportExportPage()
+        //     .visitImportPage();
     });
 
     after(() => {
@@ -24,12 +24,18 @@ describe(`data import spec`, () => {
 
 
     beforeEach(() => {
-        cy.restoreLocalStorage();
-        importPage.visit();
+        // cy.restoreLocalStorage();
+        const username = Cypress.env('username');
+        const password = Cypress.env('password');
+        importPage = new LoginPage()
+            .visit()
+            .login(username, password)
+            .visitImportExportPage()
+            .visitImportPage();
     });
 
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
     it('should load', () => {

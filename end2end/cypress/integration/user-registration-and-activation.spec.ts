@@ -9,6 +9,24 @@ describe("user-role", () => {
     let registerPage: RegisterPage;
 
     before(() => {
+        // const username = Cypress.env('username');
+        // const password = Cypress.env('password');
+        // registerPage = new RegisterPage();
+        // userActivationPage = new LoginPage()
+        //     .visit()
+        //     .login(username, password)
+        //     .visitUserPage()
+        //     .visitUserActivationPage();
+    });
+
+    after(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+    });
+
+
+    beforeEach(() => {
+        // cy.restoreLocalStorage();
         const username = Cypress.env('username');
         const password = Cypress.env('password');
         registerPage = new RegisterPage();
@@ -19,18 +37,8 @@ describe("user-role", () => {
             .visitUserActivationPage();
     });
 
-    after(() => {
-        localStorage.clear();
-        sessionStorage.clear();
-    });
-
-
-    beforeEach(() => {
-        cy.restoreLocalStorage();
-    });
-
     afterEach(() => {
-        cy.saveLocalStorage();
+        // cy.saveLocalStorage();
     });
 
 
