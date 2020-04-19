@@ -75,8 +75,8 @@ describe(`view validation details spec`, () => {
         //     viewValidationPage
         //         .clickReload()
         //         .clickOnValidationDetails(validationName)
-        viewValidationDetailsPage
-            .visit();
+        // viewValidationDetailsPage
+        //    .visit();
         cy.wait(1000);
     });
 

@@ -32,7 +32,6 @@ describe('view-rule-predefined', () => {
             .login(username, password)
             .visitViewPage()
             .visitViewRule();
-        viewRulePage.visit();
     });
 
     afterEach(() => {

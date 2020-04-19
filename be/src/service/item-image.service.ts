@@ -5,6 +5,23 @@ import {BinaryContent} from "../model/binary-content.model";
 import {ClientError} from "../route/v1/common-middleware";
 
 
+export const markItemImageAsPrimary = async (itemId: number, itemImageId: number): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const q: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_ITEM_IMAGE WHERE ID=? AND ITEM_ID=?
+            `, [itemImageId, itemId]);
+        if (q[0].COUNT > 0) { // make sure such image actually exists
+            await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\`=false WHERE ITEM_ID=? `, [itemId]);
+            await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\`=true WHERE ITEM_ID=? AND ID=?`, [itemId, itemImageId]);
+        } else {
+            errors.push(`Item Image with id ${itemImageId} and itemId ${itemId} do not exists`);
+        }
+        return errors;
+    });
+};
+
+
 export const getItemPrimaryImage = async (itemId: number): Promise<BinaryContent> => {
     return await doInDbConnection(async (conn: Connection) => {
 

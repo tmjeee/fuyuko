@@ -6,6 +6,7 @@ import {Role} from "../model/role.model";
 import {BinaryContent} from "../model/binary-content.model";
 import {Status} from "../model/status.model";
 
+
 export const changeUserStatus = async (userId: number, status: string): Promise<boolean> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse  = await conn.query(`UPDATE TBL_USER SET STATUS = ? WHERE ID = ? `, [status, userId]);
