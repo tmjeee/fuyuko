@@ -8,10 +8,9 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {param} from 'express-validator';
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_ADMIN} from "../../model/role.model";
+import {changeUserStatus} from "../../service/user.service";
 
 // CHECKED
 
@@ -28,15 +27,18 @@ const httpAction: any[] = [
         const status: string = req.params.status;
         const userId: number = Number(req.params.userId);
 
-        await doInDbConnection(async (conn: Connection) => {
-
-            await conn.query(`UPDATE TBL_USER SET STATUS = ? WHERE ID = ? `, [status, userId]);
-
+        const r: boolean = await changeUserStatus(userId, status);
+        if (r) {
             res.status(200).json({
                 status: 'SUCCESS',
-                message: `User ${userId} status altered (${status})`
+                message: `User ${userId} status altered to (${status})`
             } as ApiResponse);
-        });
+        } else {
+            res.status(400).json({
+                status: 'ERROR',
+                message: `User ${userId} status FAILED to be altered to(${status})`
+            } as ApiResponse);
+        }
     }
 ];
 

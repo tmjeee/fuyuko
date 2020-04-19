@@ -6,6 +6,8 @@ import {Connection} from "mariadb";
 import {LoggingCallback} from "./job-log.service";
 import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET, toLimitOffset} from "../util/utils";
+import {Status} from "../model/status.model";
+import {ApiResponse} from "../model/api-response.model";
 
 const q1_count: string = `
                 SELECT
@@ -59,6 +61,15 @@ const q_ = () => `
 
 
 
+// =============================
+// === changeAttributeStatus ===
+// =============================
+export const changeAttributeStatus = async (attributeId: number, status: Status): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW_ATTRIBUTE SET STATUS = ? WHERE ID = ? `, [status, attributeId]);
+        return (q.affectedRows > 0);
+    });
+};
 
 
 

@@ -4,6 +4,12 @@ import {ViewDataTableEditPopupPage} from "./sub-sub-page-object/view-data-table-
 
 export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
+    selectGlobalView(viewName: string): ViewDataTablePage {
+        cy.get(`[mat-select-global-view] div`).click({force: true, multiple: true});
+        cy.get(`[mat-select-option-global-view='${viewName}']`).click({force: true});
+        return this;
+    }
+
     validateTitle(): ViewDataTablePage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-data-table');
         return this;
@@ -140,6 +146,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     clickOnAddItem(newItemName: string): ViewDataTablePage {
         cy.get(`[test-button-add-item]`).click({force: true});
+        cy.wait(1000);
         cy.get(`[test-data-table-row-index]`).each((e, i, a) => {
           if (a.length -1 === i) { // the last one
              cy.get(`[test-data-table-row-index='${i}']`)
@@ -164,6 +171,19 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
                 cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
             }
             return cy.wait(1000);
+        });
+        return this;
+    }
+
+    expandRow(rowIndex: number): ViewDataTablePage {
+        cy.get(`[test-data-table-row-index='${rowIndex}']`).then((_) => {
+           const i = _.find(`[test-data-table-item-expanded='false']`).length;
+           if (i) { // not expanded
+               return cy.get(`[test-data-table-row-index='${rowIndex}]`)
+                   .find(`[test-data-table-toggle-expand]`)
+                   .click({force: true});
+           }
+           return cy.wait(1000);
         });
         return this;
     }
@@ -196,7 +216,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     clickReload(): ViewDataTablePage {
-        cy.get(`[test-button-reload-items]`).click({force: true});
+        cy.get(`[test-button-reload-items]`).click({force: true}).wait(1000);
         return this;
     }
 

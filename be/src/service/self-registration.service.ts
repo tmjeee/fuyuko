@@ -1,8 +1,75 @@
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {SelfRegistration} from "../model/self-registration.model";
-import {ApiResponse} from "../model/api-response.model";
+import {ApiResponse, RegistrationResponse} from "../model/api-response.model";
+import {makeApiError, makeApiErrorObj} from "../util";
+import config from "../config";
+import {sendEmail} from "./send-email.service";
 
+
+export const approveSelfRegistration = async (selfRegistrationId: number): Promise<{username: string, email: string, errors: string[]}> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+
+        const q1: QueryA = await conn.query(`
+                SELECT ID, USERNAME, EMAIL, CREATION_DATE, ACTIVATED, FIRSTNAME, LASTNAME, PASSWORD FROM TBL_SELF_REGISTRATION WHERE ID = ? AND ACTIVATED = ?
+            `, [selfRegistrationId, false]);
+
+        if (q1.length < 0) { // is not valid anymore (maybe already activated?)
+           errors.push(`Self registration id ${selfRegistrationId} is no longer active anymore`);
+           return {
+               username: null,
+               email: null,
+               errors
+           };
+        }
+
+        const username: string = q1[0].USERNAME;
+        const email: string = q1[0].EMAIL;
+        const firstName: string = q1[0].FIRSTNAME;
+        const lastName: string = q1[0].LASTNAME;
+        const password: string = q1[0].PASSWORD;
+
+        const qUserExists: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE USERNAME = ? OR EMAIL = ?
+            `, [username, email]);
+        if (qUserExists[0].COUNT > 0) { // user already exists
+            errors.push(`User with username ${username} or email ${email} already exists`);
+            return {
+                username, email,
+                errors
+            };
+        }
+
+        const qNewUser: QueryResponse = await conn.query(`
+                INSERT INTO TBL_USER (USERNAME, EMAIL, FIRSTNAME, LASTNAME, STATUS, PASSWORD, CREATION_DATE, LAST_UPDATE) VALUES (?,?,?,?,?,?,?,?)
+            `,[username, email, firstName, lastName, 'ENABLED', password, new Date(), new Date()]);
+
+        const newUserId: number = qNewUser.insertId;
+
+        await conn.query(`
+                INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?,?)
+            `, [newUserId, config["default-theme"]]);
+
+        await conn.query(`UPDATE TBL_SELF_REGISTRATION SET ACTIVATED = true WHERE ID = ?`, q1[0].ID);
+
+        sendEmail(email,
+            `Registration Success`,
+            `
+                    Hi ${firstName} ${lastName},
+                    
+                    Your self registration with username ${username} (${email}) has been approved.
+                    
+                    Log on and check it out at ${config["fe-url-base"]}
+                    
+                    Welcome aboard and Enjoy !!!
+                `);
+
+        return {
+            username, email, errors
+        };
+    });
+}
 
 export const getAllSelfRegistrations = async (): Promise<SelfRegistration[]> => {
     return await doInDbConnection(async (conn: Connection) => {

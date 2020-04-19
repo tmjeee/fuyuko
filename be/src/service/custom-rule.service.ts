@@ -1,7 +1,17 @@
 import {CustomRule, CustomRuleForView} from "../model/custom-rule.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
+import {Status} from "../model/status.model";
 
+
+export const changeCustomRuleStatus = async (viewId: number, customRuleId: number, status: Status): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse = await conn.query(`
+                UPDATE TBL_CUSTOM_RULE_VIEW SET STATUS=? WHERE CUSTOM_RULE_ID=? AND VIEW_ID=?
+            `, [status, customRuleId, viewId]);
+        return (q.affectedRows > 0);
+    });
+};
 
 export const addCustomRuleToView = async (viewId: number, customRuleIds: number[]): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {

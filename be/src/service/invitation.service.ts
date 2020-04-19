@@ -2,10 +2,62 @@ import {Invitation} from "../model/invitation.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {ClientError} from "../route/v1/common-middleware";
-import {makeApiError, makeApiErrorObj} from "../util";
 import {DELETED, ENABLED} from "../model/status.model";
 import {hashedPassword} from "./password.service";
 import config from "../config";
+import uuid = require("uuid");
+import {SendMailOptions} from "nodemailer";
+import {sendEmail} from "./send-email.service";
+
+
+
+/**
+ * Send out invitation to register / activate account (through email)
+ */
+export const createInvitation = async (email: string, groupIds: number[] = []): Promise<string[]> => {
+
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+
+        const hasUserQuery: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE EMAIL = ?`, [email]);
+        if (hasUserQuery[0].COUNT > 0) {
+            errors.push(`Email ${email} has already been registered`);
+            return errors;
+        }
+
+
+        const hasInvitationQuery: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_INVITATION_REGISTRATION WHERE EMAIL = ?`, [email]);
+        if (hasInvitationQuery[0].COUNT > 0) {
+            await conn.query(`DELETE FROM TBL_INVITATION_REGISTRATION WHERE EMAIL = ? `, [email]);
+        }
+
+        const code: string = uuid();
+
+        const q1: QueryResponse = await conn.query(
+            `INSERT INTO TBL_INVITATION_REGISTRATION (EMAIL, CREATION_DATE, ACTIVATED, CODE) VALUES (?, ?, ?, ?)`,
+            [email, new Date(), false, code]);
+        const registrationId: number = q1.insertId;
+
+        for (const gId of groupIds) {
+            await conn.query(
+                `INSERT INTO TBL_INVITATION_REGISTRATION_GROUP (INVITATION_REGISTRATION_ID, GROUP_ID) VALUES (?, ?)`,
+                [registrationId, gId]);
+        }
+
+        const info: SendMailOptions = await sendEmail(email, 'Invitation to join Fukyko MDM',
+            `
+                Hello,
+                
+                You have been invited to join Fuyuko MDM. Please ${config["fe-url-base"]}/login-layout/activate/${code} to activate your 
+                account.
+                
+                Enjoy! and welcome aboard.
+            `);
+        return errors;
+    });
+};
+
+
 
 export const activateInvitation = async (code: string, username: string, email: string, firstName: string,
                                          lastName: string, password: string): Promise<{ registrationId: number, errors: string[]}> => {

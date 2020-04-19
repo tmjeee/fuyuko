@@ -80,8 +80,9 @@
                           (click)="onSubSidebarButtonClicked($event)">menu</mat-icon>
                 <mat-form-field class="view-selection">
                   <!--mat-label>View</mat-label -->
-                  <mat-select (selectionChange)="onViewSelectionChange($event)" [value]="currentView">
-                    <mat-option *ngFor="let view of allViews" [value]="view">
+                  <mat-select (selectionChange)="onViewSelectionChange($event)" [value]="currentView"
+                              [attr.mat-select-global-view]="''">
+                    <mat-option *ngFor="let view of allViews" [value]="view" [attr.mat-select-option-global-view]="view.name">
                       {{view.name}}
                     </mat-option>
                   </mat-select>

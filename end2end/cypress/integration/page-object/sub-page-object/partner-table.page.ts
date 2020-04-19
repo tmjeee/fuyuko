@@ -30,14 +30,14 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
             .click({force: true, multiple: true});
         cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .click({force: true});
-        cy.wait(100);
+        cy.wait(1000);
         return this;
     }
 
     expandItem(itemName: string): PartnerTablePage {
         cy.get(`[test-page-title]`).then((_) => {
             const length = _.find(`[test-table-partner-item] [test-icon-expand-item='${itemName}']`).length
-            if (length > 0) { // not already expanded
+            if (length > 0) { // can be expanded
                 return cy.get(`[test-table-partner-item]`)
                     .find(`[test-icon-expand-item='${itemName}']`)
                     .click({force: true});
@@ -50,7 +50,7 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
     collapseItem(itemName: string): PartnerTablePage {
         cy.get(`[test-page-title]`).then((_) => {
             const length = _.find(`[test-table-partner-item] [test-icon-collapse-item='${itemName}']`).length
-            if (length > 0) { // already expanded
+            if (length > 0) { // can be collapsed
                 return cy.get(`[test-table-partner-item]`)
                     .find(`[test-icon-collapse-item='${itemName}']`)
                     .click({force: true});

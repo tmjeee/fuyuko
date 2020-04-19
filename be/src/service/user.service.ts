@@ -6,6 +6,28 @@ import {Role} from "../model/role.model";
 import {BinaryContent} from "../model/binary-content.model";
 import {Status} from "../model/status.model";
 
+export const changeUserStatus = async (userId: number, status: string): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse  = await conn.query(`UPDATE TBL_USER SET STATUS = ? WHERE ID = ? `, [status, userId]);
+        return (q.affectedRows > 0);
+    });
+};
+
+
+export const addUserToGroup = async (userId: number, groupId: number): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const q1: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_USER_GROUP WHERE GROUP_ID = ? AND USER_ID = ?`, [groupId, userId]);
+        if (q1.length > 0 && q1[0].COUNT > 0) {
+            errors.push(`User ${userId} already in group ${groupId}`, 'userId');
+            return errors;
+        }
+
+        await conn.query(`INSERT INTO TBL_LOOKUP_USER_GROUP (GROUP_ID, USER_ID) VALUES (?, ?)`, [groupId, userId]);
+        return errors;
+    });
+}
+
 
 export const getUsersInGroup = async (groupId: number): Promise<User[]> => {
     const u: User[] = await doInDbConnection(async (conn: Connection) => {
