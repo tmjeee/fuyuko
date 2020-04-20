@@ -58,6 +58,7 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
     clickOnValidationDetails(validationName: string): ViewValidationDetailsPage {
         cy.get(`[test-icon-validation-details='${validationName}']`)
             .click({force: true});
+        cy.wait(1000);
         return new ViewValidationDetailsPage(validationName);
     }
 
@@ -75,6 +76,7 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
     clickReload(): ViewValidationPage {
         cy.get(`[test-button-reload-validation]`).click({force: true});
+        cy.wait(1000);
         return this;
     }
 

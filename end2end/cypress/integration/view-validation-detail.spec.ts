@@ -70,13 +70,10 @@ describe(`view validation details spec`, () => {
             .visitViewPage()
             .visitValidations()
             .validateTitle()
+            .clickReload();
+        viewValidationDetailsPage = viewValidationPage
+            .clickOnValidationDetails(validationName)
         ;
-        // viewValidationDetailsPage =
-        //     viewValidationPage
-        //         .clickReload()
-        //         .clickOnValidationDetails(validationName)
-        // viewValidationDetailsPage
-        //    .visit();
         cy.wait(1000);
     });
 
