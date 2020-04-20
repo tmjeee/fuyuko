@@ -55,6 +55,7 @@ export class DashboardPage implements ActualPage<DashboardPage> {
 
     visitViewPage(): ViewPage {
         cy.get(`[test-sidenav='view']`).click({force: true});
+        cy.wait(1000);
         return new ViewPage();
     }
 

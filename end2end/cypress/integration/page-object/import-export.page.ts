@@ -14,6 +14,7 @@ export class ImportExportPage {
 
     visitImportPage(): ImportPage {
         cy.visit('/import-export-gen-layout/(import//help:import-help)');
+        cy.wait(1000);
         return new ImportPage();
     }
 

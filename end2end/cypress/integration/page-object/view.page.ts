@@ -18,6 +18,7 @@ export class ViewPage  {
 
     visitViewRule(): ViewRulePage {
         cy.visit(`/view-gen-layout/(rules//help:view-help)`);
+        cy.wait(1000);
         return new ViewRulePage();
     }
 
