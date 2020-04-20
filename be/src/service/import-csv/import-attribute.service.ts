@@ -10,6 +10,7 @@ import * as util from "util";
 import * as fs from "fs";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {ApiResponse} from "../../model/api-response.model";
+import uuid = require("uuid");
 const detectCsv = require('detect-csv');
 
 const toPair1 = async (pair1: string): Promise<Pair1[]> => {
@@ -25,6 +26,8 @@ export const preview = async (viewId: number, attributeDataCsvFile: File): Promi
     return await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
+
+        const name: string = `attribute-data-import-${uuid()}`;
         const content: Buffer = await util.promisify(fs.readFile)(attributeDataCsvFile.path);
 
         const q: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_IMPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'ATTRIBUTE')`, [viewId, name]);
