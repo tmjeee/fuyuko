@@ -11,7 +11,7 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
             .find(`[test-button-item-editor-popup-ok]`)
             .click({force: true})
-            .wait(100);
+            .wait(1000);
         return new ViewDataThumbnailPage();
     }
 
@@ -19,7 +19,7 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
             .find(`[test-button-item-editor-popup-cancel]`)
             .click({force: true})
-            .wait(100);
+            .wait(1000);
         return new ViewDataThumbnailPage();
     }
 
@@ -28,7 +28,7 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
             .find(`[test-button-item-editor-popup-cancel]`)
             .click({force: true})
-            .wait(100);
+            .wait(1000);
         return new ViewDataThumbnailEditPopupPage();
     }
 
@@ -37,7 +37,7 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
             .find(`[test-button-item-editor-popup-ok]`)
             .click({force: true})
-            .wait(100);
+            .wait(1000);
         return new ViewDataThumbnailEditPopupPage();
     }
 }

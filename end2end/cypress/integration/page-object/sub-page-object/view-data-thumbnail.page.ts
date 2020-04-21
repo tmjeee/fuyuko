@@ -61,7 +61,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
 
     verifyThumbnailItemHasAttributeValue(itemName: string, attributeName: string, value: string[]): ViewDataThumbnailPage {
         cy.wrap(value).each((e, i, a) => {
-            return cy.wait(100)
+            return cy.wait(1000)
                 .get(`[test-thumbnail-item-name='${itemName}']`)
                 .find(`[test-data-editor='${attributeName}']`)
                 .find(`[test-data-editor-value='${attributeName}']`)
@@ -91,11 +91,11 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             .type(`${newItemName}`, {force: true})
         cy.get(`[test-button-item-editor-popup-ok]`)
             .click({force: true})
-        cy.wait(100);
+            .wait(1000);
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
             .find(`[test-button-item-data-editor-popup-ok]`)
             .click({force: true})
-        ;
+            .wait(1000);
         return this;
     }
 
@@ -134,7 +134,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
                return cy.get(`[test-thumbnail-item-name='${itemName}']`)
                    .find(`[test-link-show-more]`).click({force: true})
             }
-            return cy.wait(100);
+            return cy.wait(1000);
         });
         return this;
     }
