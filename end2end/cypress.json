@@ -9,5 +9,8 @@
     "username": "cypress",
     "password": "test"
   },
+  "video": false,
+  "videoUploadOnPasses": false,
+  "trashAssetsBeforeRuns": true,
   "projectId": "ozp71m"
 }
