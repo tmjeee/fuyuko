@@ -1,4 +1,4 @@
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {
     Rule2,
@@ -7,7 +7,9 @@ import {
     ValidateClauseMetadataEntry2, WhenClause2, WhenClauseMetadata2, WhenClauseMetadataEntry2
 } from "../server-side-model/server-side.model";
 import {Rule} from "../model/rule.model";
-import {ruleConvert, rulesConvert} from "./conversion-rule.service";
+import {ruleConvert, rulesConvert, rulesRevert} from "./conversion-rule.service";
+import {Status} from "../model/status.model";
+import {ApiResponse} from "../model/api-response.model";
 
 const SQL_1 = `
    SELECT
@@ -58,6 +60,141 @@ const SQL_1 = `
 const SQL_2 = `${SQL_1} AND R.ID=?`;
 
 
+// =======================
+// === addOrUpdateRule ===
+// =======================
+export const addOrUpdateRules = async (viewId: number, rules: Rule[]): Promise<string[]> => {
+    const rule2s: Rule2[] = rulesRevert(rules);
+    const errors: string[] = [];
+    for (const rule2 of rule2s) {
+        if (rule2.id && rule2.id > 0)  { // update
+            const errs: string[] = await doInDbConnection(async (conn: Connection) => {
+                const err: string[] = await _ruleUpdate(conn, viewId, rule2)
+                errors.push(...err);
+            });
+            errors.push(...errs);
+        } else { // add
+            const errs: string[] = await doInDbConnection(async (conn: Connection) => {
+                const err: string [] = await _ruleAdd(conn, viewId, rule2)
+                errors.push(...err);
+            });
+            errors.push(...errs);
+        }
+    }
+    return errors;
+};
+
+const _ruleUpdate = async (conn: Connection, viewId: number, rule2: Rule2) => {
+    const errors: string[] = [];
+    await doInDbConnection(async (conn: Connection) => {
+
+        const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_RULE WHERE NAME=? AND VIEW_ID=?`, [rule2.name, viewId]);
+        if (qq[0].COUNT > 0) { // rule with similar name already exists
+            errors.push(`Rule with name ${rule2.name} already exists in view id ${viewId}`);
+            return;
+        }
+
+
+        const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,'ENABLED')`, [viewId, rule2.name, rule2.description]);
+        const ruleId: number = rq.insertId;
+
+        for (const validateClause of rule2.validateClauses) {
+            const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, validateClause.attributeId, validateClause.operator]);
+            const clauseId: number = rc.insertId;
+
+            for (const metadata of validateClause.metadatas) {
+
+                const rm: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE_METADATA (RULE_VALIDATE_CLAUSE_ID, NAME) VALUES (?, '')`, [clauseId]);
+                const metaId: number = rm.insertId;
+
+                for (const entry of metadata.entries) {
+                    await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY (RULE_VALIDATE_CLAUSE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [metaId, entry.key, entry.value, entry.dataType]);
+                }
+            }
+        }
+
+        for (const whenClause of rule2.whenClauses) {
+            const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, whenClause.attributeId, whenClause.operator]);
+            const clauseId: number = rc.insertId;
+
+            for (const metadata of whenClause.metadatas) {
+
+                const rm: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE_METADATA (RULE_WHEN_CLAUSE_ID, NAME) VALUES (?, '')`, [clauseId]);
+                const metaId: number = rm.insertId;
+
+                for (const entry of metadata.entries) {
+                    await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY (RULE_WHEN_CLAUSE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [metaId, entry.key, entry.value, entry.dataType]);
+                }
+            }
+        }
+    });
+    return errors;
+}
+
+const _ruleAdd = async (conn: Connection, viewId: number, rule2: Rule2) => {
+    const errors: string[] = [];
+    await doInDbConnection(async (conn: Connection) => {
+
+        const ruleId: number = rule2.id;
+
+        const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_RULE WHERE ID=?`, [ruleId]);
+        if (qq[0].COUNT < 0) { // no such rule with id exists, cannot update rule that do not exists
+            errors.push(`Rule with id ${ruleId} do not exists`);
+            return;
+        }
+
+        await conn.query(`UPDATE TBL_RULE SET NAME=?, DESCRIPTION=? WHERE ID=?`, [rule2.name, rule2.description, ruleId]);
+
+        await conn.query(`DELETE FROM TBL_RULE_VALIDATE_CLAUSE WHERE RULE_ID=?`, [ruleId]);
+
+        for (const validateClause of rule2.validateClauses) {
+
+            const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, validateClause.attributeId, validateClause.operator]);
+            const clauseId: number = rc.insertId;
+
+            for (const metadata of validateClause.metadatas) {
+
+                const rm: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE_METADATA (RULE_VALIDATE_CLAUSE_ID, NAME) VALUES (?, '')`, [clauseId]);
+                const metaId: number = rm.insertId;
+
+                for (const entry of metadata.entries) {
+                    await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY (RULE_VALIDATE_CLAUSE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [metaId, entry.key, entry.value, entry.dataType]);
+                }
+            }
+        }
+
+        await conn.query(`DELETE FROM TBL_RULE_WHEN_CLAUSE WHERE RULE_ID=?`, [ruleId]);
+
+        for (const whenClause of rule2.whenClauses) {
+            const rc: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,'')`, [ruleId, whenClause.attributeId, whenClause.operator]);
+            const clauseId: number = rc.insertId;
+
+            for (const metadata of whenClause.metadatas) {
+
+                const rm: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE_METADATA (RULE_WHEN_CLAUSE_ID, NAME) VALUES (?, '')`, [clauseId]);
+                const metaId: number = rm.insertId;
+
+                for (const entry of metadata.entries) {
+                    await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY (RULE_WHEN_CLAUSE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [metaId, entry.key, entry.value, entry.dataType]);
+                }
+            }
+        }
+    });
+    return errors;
+}
+
+
+
+
+// ==============================
+// === updateRuleStatus ===
+// ========================
+export const updateRuleStatus = async (ruleId: number, status: Status): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse = await conn.query(`UPDATE TBL_RULE SET STATUS = ? WHERE ID = ? `, [status, ruleId]);
+        return (q.affectedRows > 0);
+    });
+};
 
 
 // ================

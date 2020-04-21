@@ -12,6 +12,7 @@ import {LIMIT_OFFSET} from "../util/utils";
 import {itemValueRevert} from "./conversion-item-value.service";
 import {itemConvert, itemRevert, itemsConvert} from "./conversion-item.service";
 import {parseAsync} from "json2csv";
+import {Status} from "../model/status.model";
 
 //////////////////////// SQLs //////////////////////////////////////////////////////////////////
 
@@ -101,6 +102,41 @@ const SQL_SEARCH = (limitOffset?: LimitOffset) => `
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// =============================
+// === updateItemStatus(...) ===
+// =============================
+export const updateItemsStatus = async (itemIds: number[], status: Status): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        for (const itemId of itemIds) {
+            // await conn.query(`UPDATE TBL_ITEM SET STATUS = ? WHERE ID=?`, [status,itemId]);
+            if (itemId) {
+                const errs: string[] = await updateItemStatus(conn, itemId, status);
+                errors.push(...errs);
+            }
+        }
+        return errors;
+    });
+};
+
+const updateItemStatus = async (conn: Connection, itemId: number, status: Status): Promise<string[]> => {
+    const errors: string[] = [];
+    if (itemId) {
+        const q: QueryA = await conn.query(`SELECT ID FROM TBL_ITEM WHERE PARENT_ID=?`, [itemId]);
+        for (const i of q) {
+            const itemId: number = i.ID;
+            const errs: string[] = await updateItemStatus(conn, itemId, status);
+            errors.push (...errs);
+        }
+        const _q: QueryResponse = await conn.query(`UPDATE TBL_ITEM SET STATUS = ? WHERE ID=?`, [status, itemId]);
+        if (_q.affectedRows <= 0) {
+           errors.push(`Failed to update item id ${itemId} to status ${status}`);
+        }
+    }
+    return errors;
+};
 
 
 // ============================

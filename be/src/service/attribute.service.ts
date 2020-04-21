@@ -60,6 +60,47 @@ const q_ = () => `
 `;
 
 
+// =====================
+// === updateAttribute ===
+// =======================
+export const updateAttributes = async (attributes: Attribute[]): Promise<{errors: string[], updatedAttributeIds: number[]}> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const atts2: Attribute2[] = attributesRevert(attributes);
+        const updatedAttributeIds: number[] = [];
+
+        for (const att2 of atts2) {
+
+            const q: QueryA = await conn.query('SELECT STATUS FROM TBL_VIEW_ATTRIBUTE WHERE ID = ?', [att2.id]);
+            if (q.length <= 0) {  // no such attribute found
+                errors.push(`Attribute with id ${att2.id} not found`);
+                continue;
+            }
+            else if (q.length && q[0].STATUS !== 'ENABLED') {
+                errors.push(`Attribute with id ${att2.id} is no enabled`);
+                continue;
+            }
+
+            await conn.query(`DELETE FROM TBL_VIEW_ATTRIBUTE_METADATA WHERE VIEW_ATTRIBUTE_ID = ? `, [att2.id]);
+            await conn.query(`UPDATE TBL_VIEW_ATTRIBUTE SET TYPE=?, NAME=?, DESCRIPTION=? WHERE ID=? `, [att2.type, att2.name, att2.description, att2.id]);
+
+            for (const metadata of att2.metadatas) {
+                const qMeta: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?,?)`, [att2.id, metadata.name]);
+                const metadataId: number = qMeta.insertId;
+                for (const entry of metadata.entries) {
+                    await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, \`KEY\`, \`VALUE\`) VALUES (?,?,?)`, [metadataId, entry.key, entry.value]);
+                }
+            }
+            updatedAttributeIds.push(att2.id);
+        }
+
+        return {
+            errors,
+            updatedAttributeIds
+        }
+    });
+}
+
 
 // =============================
 // === changeAttributeStatus ===

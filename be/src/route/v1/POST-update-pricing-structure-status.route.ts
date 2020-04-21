@@ -8,10 +8,12 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {param} from 'express-validator';
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
+import {updatePricingStructureStatus} from "../../service/pricing-structure.service";
+import {doInDbConnection} from "../../db";
+import {Connection} from "mariadb";
+import {Status} from "../../model/status.model";
 
 
 // CHECKED
@@ -28,16 +30,19 @@ const httpAction: any[] = [
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const status: string = req.params.status;
 
-        await doInDbConnection(async (conn: Connection) => {
-            conn.query(`
-                UPDATE TBL_PRICING_STRUCTURE SET STATUS=? WHERE ID=?
-            `, [status, pricingStructureId]);
-        });
+        const r: boolean = await updatePricingStructureStatus(pricingStructureId, status as Status);
 
-        res.status(200).json({
-            status: "SUCCESS",
-            message: `Pricing Structure status updated`
-        } as ApiResponse)
+        if (r) {
+            res.status(200).json({
+                status: "SUCCESS",
+                message: `Pricing Structure status updated`
+            } as ApiResponse)
+        } else {
+            res.status(200).json({
+                status: "ERROR",
+                message: `Pricing Structure status FAILED to be updated`
+            } as ApiResponse)
+        }
     }
 ];
 

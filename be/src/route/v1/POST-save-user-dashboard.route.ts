@@ -13,6 +13,7 @@ import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {saveUserDashboard} from "../../service/dashboard.service";
 
 
 // CHECKED
@@ -31,23 +32,19 @@ const httpAction: any[] = [
         const userId: number = Number(req.params.userId);
         const serializeFormat: SerializedDashboardFormat =  req.body.serializeFormat;
 
-        const serializeFormatInString: string = JSON.stringify(serializeFormat);
+        const errors: string[] = await saveUserDashboard(userId, serializeFormat);
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Dashboard saved`
+            } as ApiResponse);
+        }
 
-        await doInDbConnection(async (conn: Connection) => {
-            const q: QueryA = await conn.query('SELECT COUNT(*) AS COUNT FROM TBL_USER_DASHBOARD WHERE USER_ID=?', [userId]);
-            const c: number = q[0].COUNT;
-            if (c > 0) { // update
-                const q1: QueryResponse = await conn.query(`UPDATE TBL_USER_DASHBOARD SET USER_ID=?, SERIALIZED_DATA=?`, [userId, serializeFormatInString]);
-
-            } else { // insert
-                const q1: QueryResponse = await conn.query(`INSERT INTO TBL_USER_DASHBOARD (USER_ID, SERIALIZED_DATA) VALUES(?,?)`, [userId, serializeFormatInString]);
-            }
-        });
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Dashboard saved`
-        } as ApiResponse);
     }
 ]
 

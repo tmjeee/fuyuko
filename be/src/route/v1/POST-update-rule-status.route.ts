@@ -12,6 +12,8 @@ import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
+import {updateRuleStatus} from "../../service/rule.service";
+import {Status} from "../../model/status.model";
 
 // CHECKED
 
@@ -30,14 +32,18 @@ const httpAction: any[] = [
         const ruleId: number = Number(req.params.ruleId);
         const status: string = req.params.status;
 
-        await doInDbConnection(async (conn: Connection) => {
-            await conn.query(`UPDATE TBL_RULE SET STATUS = ? WHERE ID = ? `, [status, ruleId]);
-
+        const r: boolean = await updateRuleStatus(ruleId, status as Status);
+        if (r) {
             res.status(200).json({
                 status: 'SUCCESS',
-                message: `Status updated`
+                message: `Rule Status updated`
             } as ApiResponse);
-        });
+        } else {
+            res.status(400).json({
+                status: 'ERROR',
+                message: `Rule Status Failed to be updated`
+            } as ApiResponse);
+        }
     }
 ]
 

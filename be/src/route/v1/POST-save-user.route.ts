@@ -16,6 +16,7 @@ import {User} from "../../model/user.model";
 import {ROLE_EDIT} from "../../model/role.model";
 import {QueryA} from "../../db/db";
 import {ApiResponse} from "../../model/api-response.model";
+import {updateUser} from "../../service/user.service";
 
 // CHECKED
 
@@ -41,39 +42,23 @@ const httpAction: any[] = [
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
 
-        await doInDbConnection(async (conn: Connection) => {
-            if (firstName) {
-                await conn.query(`UPDATE TBL_USER SET FIRSTNAME = ? WHERE ID = ?`, [firstName, userId]);
-            }
-            if (lastName){
-                await conn.query(`UPDATE TBL_USER SET LASTNAME = ? WHERE ID = ?`, [lastName, userId]);
-            }
-            if (email) {
-                await conn.query(`UPDATE TBL_USER SET EMAIL = ? WHERE ID = ?`, [email, userId]);
-            }
-            if (password) {
-                await conn.query(`UPDATE TBL_USER SET PASSWORD=? WHERE ID=?`, [hashedPassword(password), userId]);
-            }
-            if (theme){
-                const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER_THEME WHERE USER_ID=?`, [userId]);
-                if (q[0].COUNT > 0) { // theme already exists, update
-                    await conn.query(`UPDATE TBL_USER_THEME SET THEME=? WHERE USER_ID=?`, [theme, userId]);
-                } else { // theme not already exists, insert
-                    await conn.query(`INSERT INTO TBL_USER_THEME (THEME, USER_ID) VALUES (?,?)`, [theme, userId]);
-                }
-            }
-        });
+        const errors: string[] = await updateUser({userId, firstName, lastName, email, theme, password});
+        const user: User = await getUserById(userId);
 
-        const user: User = await doInDbConnection(async (conn: Connection) => {
-            return await getUserById(userId);
-        });
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: errors.join(', '),
+                payload: user
+            } as ApiResponse<User>);
 
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `User saved`,
-            payload: user
-        } as ApiResponse<User>);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `User saved`,
+                payload: user
+            } as ApiResponse<User>);
+        }
     }
 ];
 
@@ -81,6 +66,6 @@ const reg = (router: Router, registry: Registry) =>{
     const p = '/user';
     registry.addItem('POST', p);
     router.post(p, ...httpAction);
-}
+};
 
 export default reg;

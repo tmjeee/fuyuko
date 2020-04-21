@@ -13,6 +13,7 @@ import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
+import {updatePricingStructures} from "../../service/pricing-structure.service";
 
 // CHECKED
 
@@ -29,48 +30,18 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next:NextFunction) => {
 
         const pricingStructures: PricingStructure[] = req.body.pricingStructures;
-        const badUpdates: string[] = [];
 
-        await doInDbConnection(async (conn: Connection) => {
-            for (const pricingStructure of pricingStructures) {
-                const viewId: number = pricingStructure.viewId;
-                if (pricingStructure.id <= 0) { // insert
-                    const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND VIEW_ID=?`, [pricingStructure.name, viewId]);
-                    if (qq[0].COUNT > 0) {
-                        badUpdates.push(`Pricing structure with name ${pricingStructure.name} aready exists in view id ${viewId}`);
-                    } else {
-                        const q: QueryResponse = await conn.query(`
-                            INSERT INTO TBL_PRICING_STRUCTURE (NAME, DESCRIPTION, VIEW_ID, STATUS) VALUE (?,?,?, 'ENABLED')
-                        `, [pricingStructure.name, pricingStructure.description, pricingStructure.viewId]);
-                        if (q.affectedRows <= 0) {
-                            badUpdates.push(`Unable to persist pricing structure name ${pricingStructure.name}`);
-                        }
-                    }
-                } else { // update
-                    const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_PRICING_STRUCTURE WHERE ID=?`, [pricingStructure.id]);
-                    if (qq[0].COUNT <= 0) { // pricing structure with id do not exists
-                        badUpdates.push(`Pricing structrue with id ${pricingStructure.id} do not exists`);
-                    } else {
-                        const q: QueryResponse = await conn.query(`
-                        UPDATE TBL_PRICING_STRUCTURE SET NAME=?, DESCRIPTION=? WHERE ID=? AND VIEW_ID=? AND STATUS='ENABLED' 
-                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.id, pricingStructure.viewId]);
-                        if (q.affectedRows <= 0) {
-                            badUpdates.push(`Unable to update pricing structure id ${pricingStructure.id}`);
-                        }
-                    }
-                }
-            }
-        });
+        const errors: string[] = await updatePricingStructures(pricingStructures);
 
-        if (badUpdates.length <= 0) {
+        if (errors && errors.length) {
             res.status(200).json({
-                status: `SUCCESS`,
-                message: `Pricing structure updated`
+                status: `ERROR`,
+                message: errors.join(', ')
             } as ApiResponse);
         } else {
             res.status(200).json({
-                status: `ERROR`,
-                message: badUpdates.join(', ')
+                status: `SUCCESS`,
+                message: `Pricing structure updated`
             } as ApiResponse);
         }
     }

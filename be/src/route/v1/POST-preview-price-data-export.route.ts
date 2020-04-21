@@ -16,7 +16,6 @@ import {ROLE_EDIT} from "../../model/role.model";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {getPricingStructureById} from "../../service/pricing-structure.service";
 import {ApiResponse} from "../../model/api-response.model";
-const detectCsv = require('detect-csv');
 
 // CHECKED
 

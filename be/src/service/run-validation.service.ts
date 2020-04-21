@@ -225,10 +225,32 @@ const match = (context: Context, attribute: Attribute, actualItemAttributeValueT
     return false;
 };
 
+export const scheduleValidation = async (viewId: number, name: string, description: string):Promise<{validationId: number, errors: string[]}> => {
+    const r: {validationId: number, errors: string[]} = await doInDbConnection(async (conn: Connection) => {
+        let validationId: number = null;
+        const errors: string[] = [];
+        const q: QueryResponse = await conn.query(`
+            
+                INSERT INTO TBL_VIEW_VALIDATION (VIEW_ID, NAME, DESCRIPTION, PROGRESS) VALUES (?,?,?,?)
+            `, [viewId, name, description, 'SCHEDULED']);
+
+        if (q.affectedRows <= 0) {
+           errors.push(`Failed to insert view validation`);
+        } else {
+            validationId = q.insertId;
+        }
+        return  {
+            errors, validationId
+        };
+    });
+    if (r.validationId && (!r.errors || !r.errors.length)) {
+        runValidation(viewId, r.validationId);
+    }
+    return r;
+};
 
 export const runValidation = async (viewId: number, validationId: number) => {
     try {
-
        await doInDbConnection(async (conn: Connection) => {
             await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['IN_PROGRESS', validationId]);
        });

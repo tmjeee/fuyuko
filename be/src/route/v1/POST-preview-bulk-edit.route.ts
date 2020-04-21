@@ -50,6 +50,7 @@ import {
 } from "../../service/compare-attribute-values.service";
 import {ApiResponse} from "../../model/api-response.model";
 import {attributeConvert} from "../../service/conversion-attribute.service";
+import {preview} from "../../service/bulk-edit.service";
 
 
 // CHECKED
@@ -139,33 +140,10 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
       const viewId: number = Number(req.params.viewId);
+      const changeClauses: ItemValueAndAttribute[] = req.body.changeClauses;
+      const whenClauses: ItemValueOperatorAndAttribute[] = req.body.whenClauses;
 
-      const bulkEditPackage: BulkEditPackage = await doInDbConnection(async (conn: Connection) => {
-
-        const changeClauses: ItemValueAndAttribute[] = req.body.changeClauses;
-        const whenClauses: ItemValueOperatorAndAttribute[] = req.body.whenClauses;
-
-        const {b: matchedBulkEditItem2s, m: attributeMap } = await doInDbConnection(async (conn: Connection) => {
-            return await getBulkEditItem2s(conn, viewId, null, whenClauses);
-        });
-
-        const bulkEditItems: BulkEditItem[] = convertToBulkEditItems(matchedBulkEditItem2s, changeClauses,
-            whenClauses.map((wc: ItemValueOperatorAndAttribute) => {
-                return {
-                   operator: wc.operator,
-                   itemValue: wc.itemValue,
-                   attribute: attributeMap.get(`${wc.attribute.id}`)
-                } as ItemValueOperatorAndAttribute;
-            }));
-        const changeAttributes: Attribute[] = changeClauses.map((c: ItemValueAndAttribute) => attributeMap.get(`${c.attribute.id}`));
-        const whenAttributes: Attribute[] = whenClauses.map((w: ItemValueOperatorAndAttribute) => attributeMap.get(`${w.attribute.id}`));
-        const r = {
-           changeAttributes,
-           whenAttributes,
-           bulkEditItems
-        } as BulkEditPackage
-        return r;
-      });
+      const bulkEditPackage: BulkEditPackage = await preview(viewId, changeClauses, whenClauses);
 
       res.status(200).json({
           status: 'SUCCESS',

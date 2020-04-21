@@ -1,15 +1,60 @@
 import {
     PricingStructure,
     PricingStructureItemWithPrice,
-    PricingStructureWithItems
 } from "../model/pricing-structure.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
-import {ApiResponse, PaginableApiResponse} from "../model/api-response.model";
 import {LIMIT_OFFSET} from "../util/utils";
 import {getChildrenWithConn} from "./pricing-structure-item.service";
 import {LimitOffset} from "../model/limit-offset.model";
 import {ROLE_PARTNER} from "../model/role.model";
+import {Status} from "../model/status.model";
+
+
+
+export const updatePricingStructureStatus = async (pricingStructureId: number, status: Status): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse = await conn.query(`
+                UPDATE TBL_PRICING_STRUCTURE SET STATUS=? WHERE ID=?
+            `, [status, pricingStructureId]);
+        return (q.affectedRows > 0);
+    });
+};
+
+
+export const updatePricingStructures = async (pricingStructures: PricingStructure[]): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        for (const pricingStructure of pricingStructures) {
+            const viewId: number = pricingStructure.viewId;
+            if (pricingStructure.id <= 0) { // insert
+                const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND VIEW_ID=?`, [pricingStructure.name, viewId]);
+                if (qq[0].COUNT > 0) {
+                    errors.push(`Pricing structure with name ${pricingStructure.name} aready exists in view id ${viewId}`);
+                } else {
+                    const q: QueryResponse = await conn.query(`
+                            INSERT INTO TBL_PRICING_STRUCTURE (NAME, DESCRIPTION, VIEW_ID, STATUS) VALUE (?,?,?, 'ENABLED')
+                        `, [pricingStructure.name, pricingStructure.description, pricingStructure.viewId]);
+                    if (q.affectedRows <= 0) {
+                        errors.push(`Unable to persist pricing structure name ${pricingStructure.name}`);
+                    }
+                }
+            } else { // update
+                const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_PRICING_STRUCTURE WHERE ID=?`, [pricingStructure.id]);
+                if (qq[0].COUNT <= 0) { // pricing structure with id do not exists
+                    errors.push(`Pricing structrue with id ${pricingStructure.id} do not exists`);
+                } else {
+                    const q: QueryResponse = await conn.query(`
+                        UPDATE TBL_PRICING_STRUCTURE SET NAME=?, DESCRIPTION=? WHERE ID=? AND VIEW_ID=? AND STATUS='ENABLED' 
+                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.id, pricingStructure.viewId]);
+                    if (q.affectedRows <= 0) {
+                        errors.push(`Unable to update pricing structure id ${pricingStructure.id}`);
+                    }
+                }
+            }
+        }
+    });
+};
 
 
 export const getPricingStructuresByView = async (viewId: number): Promise<PricingStructure[]> => {

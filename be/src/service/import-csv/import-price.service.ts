@@ -4,13 +4,45 @@ import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
 import {PriceDataItem, PricingStructure, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 import {addItemToPricingStructure, getPricingStructureItem} from "../pricing-structure-item.service";
-import {doInDbConnection, QueryA} from "../../db";
+import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import * as util from 'util';
 import {getViewById} from "../view.service";
 import {View} from "../../model/view.model";
+import {File} from "formidable";
+import * as fs from "fs";
+const uuid = require('uuid');
+const detectCsv = require('detect-csv');
 
-export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<PriceDataImport> => {
+export const preview = async (viewId: number, priceDataCsvFile: File): Promise<{errors: string[], priceDataImport: PriceDataImport}> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+
+        const name: string = `price-data-import-${uuid()}`;
+        const q: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_IMPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'PRICE')`, [viewId, name]);
+        const dataImportId: number = q.insertId;
+
+        const content: Buffer  = await util.promisify(fs.readFile)(priceDataCsvFile.path);
+
+        let mimeType = undefined;
+        if (detectCsv(content)) {
+            mimeType = 'text/csv';
+        } else {
+            errors.push(`Only support csv import`);
+            return;
+        }
+
+        await conn.query(`INSERT INTO TBL_DATA_IMPORT_FILE (DATA_IMPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)`,
+            [dataImportId, priceDataCsvFile.name, mimeType, content.length, content]);
+
+        const priceDataImport: PriceDataImport = await _preview(viewId, dataImportId, content);
+        return {
+            errors, priceDataImport
+        }
+    });
+};
+
+const _preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<PriceDataImport> => {
 
     const csvPrices: CsvPrice[]  = await readCsv<CsvPrice>(content);
     const errors: Message[] = [];

@@ -1,6 +1,15 @@
-import {AppNotification} from "../model/notification.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {AppNotification, NewNotification} from "../model/notification.model";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
+
+export const addUserNotification = async (userId: number, newNotification: NewNotification): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse = await conn.query(`
+                INSERT INTO TBL_USER_NOTIFICATION (USER_ID, IS_NEW, STATUS, TITLE, MESSAGE) VALUES (?,?,?,?,?)
+            `, [userId, true, newNotification.status, newNotification.title, newNotification.message]);
+        return (q.affectedRows > 0);
+    });
+}
 
 
 export const getUserNotifications = async (userId: number): Promise<AppNotification[]> => {

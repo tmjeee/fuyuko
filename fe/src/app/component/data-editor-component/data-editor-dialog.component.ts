@@ -229,7 +229,6 @@ export class DataEditorDialogComponent {
           itemValue.val = dateVal;
         }
         const m = moment(dateVal.value, attribute.format ? attribute.format : DATE_FORMAT);
-        console.log('******** date', attribute.format, dateVal.value);
         this.formControlDateAttributeValue.setValue(m);
         break;
       case 'currency':
@@ -337,7 +336,6 @@ export class DataEditorDialogComponent {
         setItemNumberValue(attribute, value, this.formControlNumberAttributeValue.value);
         break;
       case 'date':
-        console.log('********************* ', this.formControlDateAttributeValue.value);
         let dateInStringFormat = '';
         const format = attanditem.attribute.format ? attanditem.attribute.format : DEFAULT_DATE_FORMAT;
         if (moment.isMoment(this.formControlDateAttributeValue.value)) {
@@ -391,7 +389,9 @@ export class DataEditorDialogComponent {
   }
 
   onDoubleSelectPair1Change($event: MatOptionSelectionChange) {
-    const pair1Key: string = $event.source.value;
-    this.pairs2 =  this.pair2Map[pair1Key];
+    if ($event && $event.source && $event.source.value && $event.isUserInput) {
+      const pair1Key: string = $event.source.value;
+      this.pairs2 = this.pair2Map[pair1Key];
+    }
   }
 }

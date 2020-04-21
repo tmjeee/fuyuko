@@ -5,7 +5,52 @@ import {Group} from "../model/group.model";
 import {Role} from "../model/role.model";
 import {BinaryContent} from "../model/binary-content.model";
 import {Status} from "../model/status.model";
+import {hashedPassword} from "./password.service";
 
+export const updateUser = async (u: {userId: number, firstName?: string, lastName?: string, email?: string, theme?: string, password?: string}): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        if (u.firstName) {
+            const q: QueryResponse = await conn.query(`UPDATE TBL_USER SET FIRSTNAME = ? WHERE ID = ?`, [u.firstName, u.userId]);
+            if (q.affectedRows <= 0) {
+                errors.push(`Failed to update user id ${u.userId} first name`);
+            }
+        }
+        if (u.lastName){
+            const q: QueryResponse = await conn.query(`UPDATE TBL_USER SET LASTNAME = ? WHERE ID = ?`, [u.lastName, u.userId]);
+            if (q.affectedRows <= 0) {
+                errors.push (`Failed to update user id ${u.userId} last name`);
+            }
+        }
+        if (u.email) {
+            const q: QueryResponse = await conn.query(`UPDATE TBL_USER SET EMAIL = ? WHERE ID = ?`, [u.email, u.userId]);
+            if (q.affectedRows <= 0) {
+                errors.push (`Failed to update user id ${u.userId} email`);
+            }
+        }
+        if (u.password) {
+            const q: QueryResponse = await conn.query(`UPDATE TBL_USER SET PASSWORD=? WHERE ID=?`, [hashedPassword(u.password), u.userId]);
+            if (q.affectedRows <= 0) {
+                errors.push(`Failed to update user id ${u.userId} password`);
+            }
+        }
+        if (u.theme){
+            const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER_THEME WHERE USER_ID=?`, [u.userId]);
+            if (q[0].COUNT > 0) { // theme already exists, update
+                const q: QueryResponse = await conn.query(`UPDATE TBL_USER_THEME SET THEME=? WHERE USER_ID=?`, [u.theme, u.userId]);
+                if (q.affectedRows <= 0) {
+                    errors.push(`Failed to update user id ${u.userId} theme`);
+                }
+            } else { // theme not already exists, insert
+                const q: QueryResponse = await conn.query(`INSERT INTO TBL_USER_THEME (THEME, USER_ID) VALUES (?,?)`, [u.theme, u.userId]);
+                if (q.affectedRows <= 0) {
+                    errors.push(`Failed to add user id ${u.userId} theme`);
+                }
+            }
+        }
+        return errors;
+    });
+}
 
 export const changeUserStatus = async (userId: number, status: string): Promise<boolean> => {
     return await doInDbConnection(async (conn: Connection) => {

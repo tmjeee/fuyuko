@@ -1,12 +1,33 @@
 import {Settings} from "../model/settings.model";
 import {Connection} from "mariadb";
-import {doInDbConnection, QueryA} from "../db";
+import {doInDbConnection, QueryA, QueryResponse} from "../db";
 
 export const DEFAULT_SETTINGS: Settings = new Settings();
 DEFAULT_SETTINGS.id = 0;
 DEFAULT_SETTINGS.openHelpNav = false;
 DEFAULT_SETTINGS.openSideNav = true;
 DEFAULT_SETTINGS.openSubSideNav = true;
+
+export const updateUserSettings = async (userId: number, settings: {[key: string]: string}[]): Promise<string[]> => {
+    const errors: string[] = [];
+    for (const key in settings) {
+        const k = key;
+        const v = settings[key];
+
+        // @ts-ignore
+        const dv = DEFAULT_SETTINGS[k];
+        const tv = (dv !== null && dv !== undefined) ? typeof dv : 'string';
+
+        const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
+            await conn.query(`INSERT INTO TBL_USER_SETTING (USER_ID, SETTING, VALUE, TYPE) VALUES (?,?,?,?)`,
+                [userId, k, v, tv]);
+        });
+        if (q.affectedRows <= 0) {
+            errors.push(`Failed to update settings ${k} to ${v} of type ${tv}`);
+        }
+    }
+    return errors;
+}
 
 export const getSettings = async (userId: number): Promise<Settings> => {
     const settings: Settings = await doInDbConnection(async (conn: Connection) => {

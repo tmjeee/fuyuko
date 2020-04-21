@@ -7,6 +7,7 @@ import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {NewNotification} from "../../model/notification.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {addUserNotification} from "../../service/notification.service";
 
 // CHECKED
 
@@ -26,17 +27,19 @@ const httpAction: any[] = [
         const userId: number = Number(req.params.userId);
         const newNotification: NewNotification = req.body.notification;
 
-        await doInDbConnection(async (conn: Connection) => {
-            const q: QueryResponse = await conn.query(`
-                INSERT INTO TBL_USER_NOTIFICATION (USER_ID, IS_NEW, STATUS, TITLE, MESSAGE) VALUES (?,?,?,?,?)
-            `, [userId, true, newNotification.status, newNotification.title, newNotification.message]);
+        const r: boolean = await addUserNotification(userId, newNotification);
 
-        });
-
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `User notification added`
-        } as ApiResponse);
+        if (r) {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `User notification added`
+            } as ApiResponse);
+        } else {
+            res.status(400).json({
+                status: 'ERROR',
+                message: `User notification FAILED to be added`
+            } as ApiResponse);
+        }
     }
 ];
 

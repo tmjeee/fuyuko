@@ -1,10 +1,58 @@
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {SelfRegistration} from "../model/self-registration.model";
-import {ApiResponse, RegistrationResponse} from "../model/api-response.model";
-import {makeApiError, makeApiErrorObj} from "../util";
 import config from "../config";
 import {sendEmail} from "./send-email.service";
+import {RegistrationResponse} from "../model/api-response.model";
+import {hashedPassword} from "./password.service";
+
+
+export const selfRegister = async (username: string, email: string, firstName: string, lastName: string, password: string):
+    Promise<{errors: string[], registrationId: number, email: string, username: string}> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+
+        const q1: QueryA = await conn.query(
+            `SELECT COUNT(*) AS COUNT FROM TBL_SELF_REGISTRATION WHERE (USERNAME = ? OR EMAIL = ?) AND ACTIVATED = ?`,
+            [username, email, false]);
+        const q2: QueryA = await conn.query(
+            `SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE (USERNAME = ? OR EMAIL = ?) AND STATUS <> ? `,
+            [username, email, 'DELETED'])
+
+        if (!!q1[0].COUNT || !!q2[0].COUNT) {
+            errors.push(`username ${username} or ${email} is already taken`);
+            return {
+                errors,
+                registrationId: null,
+                email,
+                username,
+            };
+        }
+
+        const r: QueryResponse = await conn.query(
+            `
+                INSERT INTO TBL_SELF_REGISTRATION (USERNAME, EMAIL, FIRSTNAME, LASTNAME, PASSWORD, CREATION_DATE, ACTIVATED)
+                VALUES (?, ?, ?, ?, ?, ?, ?);
+            `,
+            [username, email, firstName, lastName, hashedPassword(password), new Date(), false]
+        );
+        if (r.affectedRows > 0) {
+            return {
+                errors,
+                registrationId: r.insertId,
+                email,
+                username,
+            }
+        }
+        errors.push(`Unable to insert into DB ( Username ${username} or ${email} )`);
+        return {
+            errors,
+            registrationId: null,
+            email,
+            username,
+        };
+    });
+};
 
 
 export const approveSelfRegistration = async (selfRegistrationId: number): Promise<{username: string, email: string, errors: string[]}> => {
