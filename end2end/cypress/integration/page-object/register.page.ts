@@ -15,12 +15,12 @@ export class RegisterPage implements ActualPage<RegisterPage> {
     }
 
     verifyErrorMessageExists(): RegisterPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): RegisterPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

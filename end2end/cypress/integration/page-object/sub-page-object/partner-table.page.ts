@@ -14,12 +14,12 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
     }
 
     verifyErrorMessageExists(): PartnerTablePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): PartnerTablePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

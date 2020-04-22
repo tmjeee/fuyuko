@@ -90,12 +90,12 @@ export class DashboardPage implements ActualPage<DashboardPage> {
     }
 
     verifyErrorMessageExists(): DashboardPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): DashboardPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

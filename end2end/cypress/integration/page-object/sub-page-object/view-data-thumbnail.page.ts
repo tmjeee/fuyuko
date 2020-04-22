@@ -17,12 +17,12 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
     }
 
     verifyErrorMessageExists(): ViewDataThumbnailPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewDataThumbnailPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

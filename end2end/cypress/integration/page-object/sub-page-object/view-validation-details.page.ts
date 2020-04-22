@@ -22,12 +22,12 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
     }
 
     verifyErrorMessageExists(): ViewValidationDetailsPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewValidationDetailsPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

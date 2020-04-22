@@ -26,12 +26,12 @@ export class LoginPage implements ActualPage<LoginPage> {
     }
 
     verifyErrorMessageExists(): LoginPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): LoginPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 }

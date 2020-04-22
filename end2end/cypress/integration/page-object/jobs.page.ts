@@ -17,12 +17,12 @@ export class JobsPage implements ActualPage<JobsPage> {
     }
 
     verifyErrorMessageExists(): JobsPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): JobsPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

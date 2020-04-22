@@ -10,12 +10,12 @@ export class CustomImportPage implements ActualPage<CustomImportPage> {
     }
 
     verifyErrorMessageExists(): CustomImportPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): CustomImportPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
@@ -78,8 +78,8 @@ export class CustomImportPageStep2 {
 
     selectView(viewName: string): CustomImportPageStep2 {
         cy.get(`[test-step='step2']`)
-            .find(`[test-mat-select-view] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-mat-select-view]`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-view='${viewName}']`)
             .click({force: true});
         return this;
@@ -175,8 +175,8 @@ export class CustomImportPageStep3 {
 
     editSelectValue(inputName: string, key: string): CustomImportPageStep3 {
         cy.get(`[test-step='step3']`)
-            .find(`[test-input-type='select'][test-mat-select-input-name='${inputName}'] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-input-type='select'][test-mat-select-input-name='${inputName}']`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-input-key=${key}]`)
             .click({force: true});
         return this;

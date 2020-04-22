@@ -17,12 +17,12 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     }
 
     verifyErrorMessageExists(): ViewDataListPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewDataListPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

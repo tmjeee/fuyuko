@@ -14,12 +14,12 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
     }
 
     verifyErrorMessageExists(): UserPeoplePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): UserPeoplePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

@@ -66,12 +66,12 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
     }
 
     verifySuccessMessageExists() {
-        util.clickOnSuccessMessageToasts(() =>{});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
     verifyErrorMessageExists(): UserRolesPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 

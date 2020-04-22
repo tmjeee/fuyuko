@@ -26,12 +26,12 @@ export class ExportPage implements ActualPage<ExportPage> {
     }
 
     verifyErrorMessageExists(): ExportPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ExportPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
@@ -52,7 +52,7 @@ export class ExportPageStep1 {
     }
 
     selectExportView(viewName: string): ExportPageStep1 {
-        cy.get(`[test-mat-select-step1-export-view] div:first-child`).click({force: true, multiple: true});
+        cy.get(`[test-mat-select-step1-export-view]`).first().click({force: true});
         cy.get(`[test-mat-select-option-step1-export-view='${viewName}']`).click({force: true});
         return this;
     }
@@ -102,7 +102,7 @@ export class ExportPageStep2 {
 
     selectExportType(type: 'ATTRIBUTE' | 'ITEM' | 'PRICE'): ExportPageStep2 {
         this.exportType = type;
-        cy.get(`[test-mat-select-step2-export-type] div:first-child`).click({force: true, multiple: true});
+        cy.get(`[test-mat-select-step2-export-type]`).first().click({force: true});
         cy.get(`[test-mat-select-option-step2-export-type='${type}']`).click({force: true});
         return this;
     }
@@ -121,7 +121,7 @@ export class ExportPageStep2 {
     }
 
     selectPricingStructure(pricingStructureName: string): ExportPageStep2 {
-        cy.get(`[test-mat-select-step2-pricing-structure] div:first-child`).click({force: true, multiple: true});
+        cy.get(`[test-mat-select-step2-pricing-structure]`).first().click({force: true});
         cy.get(`[test-mat-select-option-step2-pricing-structure='${pricingStructureName}']`).click({force: true});
         return this;
     }
@@ -138,8 +138,8 @@ export class ExportPageStep3 {
     _selectItemFilterAttribute(index: number, attributeName: string): ExportPageStep3 {
         // attribute
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-select-attribute] div:first-child`)
-            .click({force: true, multiple: true});
+            .find(`[test-select-attribute]`).first()
+            .click({force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
             .find(`[test-select-option-attribute='${attributeName}']`)
             .click({force: true});
@@ -149,8 +149,8 @@ export class ExportPageStep3 {
     _selectItemFilterOperator(index: number, operator: OperatorType): ExportPageStep3 {
         // operator
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-select-attribute-operator]`)
-            .click({force: true, multiple: true});
+            .find(`[test-select-attribute-operator]`).first()
+            .click({force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
             .find(`[test-select-option-attribute-operator='${operator}']`)
             .click({force: true});
@@ -210,7 +210,7 @@ export class ExportPageStep3 {
             .clear({force: true})
             .type(String(value), {force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-currency-unit] div:first-child`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-currency-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-field-currency-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -224,7 +224,7 @@ export class ExportPageStep3 {
             .clear({force: true})
             .type(String(value), {force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-volume-unit] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-volume-unit]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-volume-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -245,7 +245,7 @@ export class ExportPageStep3 {
             .clear({force: true})
             .type(String(height), {force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-dimension-unit] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-dimension-unit]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-dimension-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -258,7 +258,7 @@ export class ExportPageStep3 {
             .clear({force: true})
             .type(String(value), {force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-area-unit] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-area-unit]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-area-unit='${unit}']`)
         return this;
     }
@@ -271,7 +271,7 @@ export class ExportPageStep3 {
             .clear({force: true})
             .type(String(value), {force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-width-unit] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-width-unit]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-width-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -284,7 +284,7 @@ export class ExportPageStep3 {
             .clear({force: true})
             .type(String(value), {force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-length-unit] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-length-unit]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-length-unit='${unit}]`).click({force: true});
         return this;
     }
@@ -297,7 +297,7 @@ export class ExportPageStep3 {
             .clear({force: true})
             .type(String(value), {force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-height-unit] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-height-unit]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-height-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -306,7 +306,7 @@ export class ExportPageStep3 {
         this._selectItemFilterAttribute(index, attributeName);
         this._selectItemFilterOperator(index, operator);
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-select] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-at-select-field-select]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-select='${key}']`).click({force: true});
         return this;
     }
@@ -315,10 +315,10 @@ export class ExportPageStep3 {
         this._selectItemFilterAttribute(index, attributeName);
         this._selectItemFilterOperator(index, operator);
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-doubleselect-1] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-doubleselect-1]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-doubleselect-1='${key1}']`).click({force: true});
         cy.get(`[test-attribute-operator-editor-step3='${index}']`)
-            .find(`[test-mat-select-field-doubleselect-2] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-doubleselect-2]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-doubleselect-2='${key2}']`).click({force: true});
         return this;
     }

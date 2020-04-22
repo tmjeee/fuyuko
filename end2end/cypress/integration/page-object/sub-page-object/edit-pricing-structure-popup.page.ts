@@ -27,8 +27,8 @@ export class EditPricingStructurePopupPage {
 
     selectView(viewName: string): EditPricingStructurePopupPage {
         cy.get(`[test-popup-dialog-title='pricing-structure-dialog-popup']`)
-            .find(`[test-mat-select-pricing-structure-view] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-mat-select-pricing-structure-view]`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-pricing-structure-view='${viewName}']`)
             .click({force: true});
         return this;

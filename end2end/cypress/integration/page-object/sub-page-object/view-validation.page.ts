@@ -17,12 +17,12 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
     }
 
     verifyErrorMessageExists(): ViewValidationPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewValidationPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

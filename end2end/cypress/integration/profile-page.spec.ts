@@ -142,7 +142,7 @@ describe('profile', () => {
         profilePage.changePassword('test', 'test')
             .getPasswordSubmitButton().should('not.be.disabled')
             .click();
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
     });
 
     it('should change to theme-deeppurple-amber-dark', () => {

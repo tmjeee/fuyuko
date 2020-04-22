@@ -17,12 +17,12 @@ export class ImportPage implements ActualPage<ImportPage> {
     }
 
     verifyErrorMessageExists(): ImportPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ImportPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
@@ -42,7 +42,7 @@ export class ImportPageStep1 {
     }
 
     selectImportView(viewName: string): ImportPageStep1 {
-        cy.get(`[test-mat-select-step1-import-view] div:first-child`).click({force: true, multiple: true});
+        cy.get(`[test-mat-select-step1-import-view]`).first().click({force: true});
         cy.get(`[test-mat-select-option-step1-import-view='${viewName}']`).click({force: true});
         return this;
     }
@@ -78,7 +78,7 @@ export class ImportPageStep2 {
 
 
     selectImportType(type: 'ATTRIBUTE' | 'ITEM' | 'PRICE'): ImportPageStep2 {
-        cy.get(`[test-mat-select-step2-import-type] div:first-child`).click({force: true, multiple: true});
+        cy.get(`[test-mat-select-step2-import-type]`).first().click({force: true});
         cy.get(`[test-mat-select-option-step2-import-type='${type}']`).click({force: true});
         return this;
     }

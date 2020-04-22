@@ -13,12 +13,12 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
     }
 
     verifyErrorMessageExists(): ViewPredefinedRulePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewPredefinedRulePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

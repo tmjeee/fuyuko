@@ -6,12 +6,12 @@ import {ViewAttributePage} from "../view-attribute.page";
 export class AbstractViewAttributePage {
 
     verifyErrorMessageExists(): AbstractViewAttributePage {
-        util.clickOnErrorMessageToasts(() => { });
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): AbstractViewAttributePage {
-        util.clickOnSuccessMessageToasts(() => { });
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
@@ -87,8 +87,8 @@ export class AbstractViewAttributePage {
                 return cy.get(`[test-radio-option-enable-country`).then((_) => {
                     if (!_.hasClass('mat-radio-checked')) {
                         return cy.get(`[test-radio-option-enable-country]`)
-                            .find('label .mat-radio-container')
-                            .click({force: true, multiple: true});
+                            .find('label .mat-radio-container').first()
+                            .click({force: true});
                     }
                 })
             }

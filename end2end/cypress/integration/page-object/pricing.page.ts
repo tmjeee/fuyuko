@@ -20,30 +20,28 @@ export class PricingPage implements ActualPage<PricingPage> {
     }
 
     verifyErrorMessageExists(): PricingPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): PricingPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
-    ready(): PricingPage {
-        cy.get(`[test-pricing-structure-table]`, {timeout: 7000});
+    pricingTableReady(): PricingPage {
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]`));
         return this;
     }
 
     selectPricingStructure(viewName: string, pricingStructureName: string): PricingPage {
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-mat-select-pricing-structure]`).first()
-            .click({force: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`).then((_) => {
-            cy.wrap(_).click({force: true});
-        });
-        cy.get(`[test-pricing-structure-table]`).then((_) => {
-            return new Cypress.Promise((res, rej) => {
-                res(_);
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]`)).then((_) => {
+            cy.wrap(_)
+                .find(`[test-mat-select-pricing-structure]`).first()
+                .click({force: true});
+        }).then((_) => {
+            cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`).then((_) => {
+                cy.wrap(_).click({force: true});
             });
         });
         return this;
@@ -100,8 +98,8 @@ export class PricingPage implements ActualPage<PricingPage> {
 
     verifyPricingStructureExists(viewName: string, pricingStructureName: string): PricingPage {
         cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-mat-select-pricing-structure] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-mat-select-pricing-structure]`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .should('exist');
         return this;
@@ -109,8 +107,8 @@ export class PricingPage implements ActualPage<PricingPage> {
 
     verifyPricingStructureDoNotExist(viewName: string, pricingStructureName: string): PricingPage {
         cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-mat-select-pricing-structure] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-mat-select-pricing-structure]`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .should('not.exist');
         return this;
@@ -118,9 +116,7 @@ export class PricingPage implements ActualPage<PricingPage> {
 
     clickToExpandItem(pricingStructureName: string, itemName: string): PricingPage {
         cy.waitUntil(()=>cy.get(`[test-pricing-structure-table] [test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-expand='${itemName}']`)).then((_) => {
-            // const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-expand='${itemName}']`).length;
             const i = _.length;
-            cy.log('***************** click to expand ', i);
             if (i > 0) { // expand button exists, click it to expand
                 cy.get(`[test-pricing-structure-table]`)
                     .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)

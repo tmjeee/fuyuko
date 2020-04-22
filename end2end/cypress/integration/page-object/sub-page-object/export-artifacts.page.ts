@@ -14,12 +14,12 @@ export class ExportArtifactsPage {
     }
 
     verifyErrorMessageExists(): ExportArtifactsPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ExportArtifactsPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

@@ -16,12 +16,12 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
     }
 
     verifyErrorMessageExists(): ViewViewPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(callbackFn?: () => void): ViewViewPage {
-        util.clickOnSuccessMessageToasts(callbackFn);
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

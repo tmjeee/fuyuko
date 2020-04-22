@@ -14,12 +14,12 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
     }
 
     verifyErrorMessageExists(): UserActivationPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): UserActivationPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

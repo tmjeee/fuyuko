@@ -12,12 +12,12 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
     }
 
     verifyErrorMessageExists(): ViewCustomRulePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewCustomRulePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

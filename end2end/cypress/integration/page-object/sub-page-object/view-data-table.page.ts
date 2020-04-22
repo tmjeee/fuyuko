@@ -5,7 +5,7 @@ import {ViewDataTableEditPopupPage} from "./sub-sub-page-object/view-data-table-
 export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     selectGlobalView(viewName: string): ViewDataTablePage {
-        cy.get(`[mat-select-global-view] div`).click({force: true, multiple: true});
+        cy.get(`[mat-select-global-view]`).first().click({force: true});
         cy.get(`[mat-select-option-global-view='${viewName}']`).click({force: true});
         return this;
     }
@@ -21,12 +21,12 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     verifyErrorMessageExists(): ViewDataTablePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewDataTablePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

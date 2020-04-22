@@ -20,8 +20,8 @@ export class EditPricingPopupPage {
 
     editUnit(unit: CountryCurrencyUnits): EditPricingPopupPage {
         cy.get(`[test-popup-dialog-title='pricing-dialog-popup']`)
-            .find(`[test-mat-select-price-unit] div `)
-            .click({force: true, multiple: true});
+            .find(`[test-mat-select-price-unit]`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-price-unit='${unit}']`)
             .click({force: true});
         return this;
@@ -31,13 +31,13 @@ export class EditPricingPopupPage {
         cy.get(`[test-popup-dialog-title='pricing-dialog-popup']`)
             .find(`[test-button-ok]`)
             .click({force: true});
-        return new PricingPage().ready();
+        return new PricingPage().pricingTableReady();
     }
 
     clickCancel(): PricingPage {
         cy.get(`[test-popup-dialog-title='pricing-dialog-popup']`)
             .find(`[test-button-cancel]`)
             .click({force: true});
-        return new PricingPage().ready();
+        return new PricingPage().pricingTableReady();
     }
 }

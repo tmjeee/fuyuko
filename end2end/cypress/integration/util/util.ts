@@ -11,84 +11,58 @@ export const getMyself = (): any => {
 }
 
 export const clearAllMessageToasts = () => {
-    cy.wait(100).get('simple-notifications')
-        .find('.simple-notification')
-        .each(($el: any, index: number, $list: any[]) => {
-            cy.wrap($el).click({force: true});
-        }).wait(100);
-}
-
-
-export const clickOnSuccessMessageToasts = (callbackFn?: Function) => {
-    cy.get('simple-notifications .simple-notification.success', { timeout: 10000 }).each((n, index, list) => {
-        cy.log('**************************** calll back');
+    cy.waitUntil(() => cy.get('simple-notifications .simple-notification')).each((n, index, list) => {
         cy.wrap(n).click({force: true});
-        if (index === (list.length - 1)) { // last one
-        }
     });
-    /*
-    cy.wait(100).get('simple-notifications')
-        .find('.simple-notification.success').each((n, index, list) => {
-        cy.wrap(n).click({force: true});
-        if (index === (list.length -1)) { // last one
-            callbackFn && callbackFn();
-        }
-    }).wait(100);
-     */
 }
 
-export const clickOnErrorMessageToasts = (callbackFn?: Function) => {
-    cy.wait(100).get('simple-notifications')
-        .find('.simple-notification.error').each((n, index, list) => {
+
+export const clickOnSuccessMessageToasts = () => {
+    cy.waitUntil(() => cy.get('simple-notifications .simple-notification.success')).each((n, index, list) => {
         cy.wrap(n).click({force: true});
-        if (index === (list.length -1)) { // last one
-            callbackFn && callbackFn();
-        }
-    }).wait(100);
+    });
+}
+
+export const clickOnErrorMessageToasts = () => {
+    cy.waitUntil(() => cy.get(`simple-notifications .simple-notification.error`)).each((n, index, list) => {
+        cy.wrap(n).click({force: true});
+    });
 }
 
 export const toggleSideNav = (fn: Function) => {
-    cy.get('[test-side-nav-toggle-icon]').click({force: true});
-    fn && fn();
+    cy.waitUntil(() => cy.get('[test-side-nav-toggle-icon]')).click({force: true}).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-side-nav-state-open]`)).then((__) => {
+            fn && fn();
+        });
+    });
 }
 
 export function toggleSubSideNav(fn: () => void) {
-    cy.get(`[test-sub-side-nav-toggle-icon`).click({force: true});
-    fn && fn();
+    cy.waitUntil(() => cy.get(`[test-sub-side-nav-toggle-icon`)).click({force: true}).then((_) => {
+       cy.waitUntil(() => cy.get(`[test-sub-side-nav-state-open]`)).then((__) => {
+           fn && fn();
+       })
+    });
 }
 
 export const toggleHelpSideNav = (fn: Function) => {
-    cy.get('[test-help-nav-toggle-icon]').click({force: true}).then((n) => {
-        fn && fn();
-        return cy.wait(100);
+    cy.waitUntil(() => cy.get('[test-help-nav-toggle-icon]')).click({force: true}).then((n) => {
+        cy.waitUntil(() => cy.get(`[test-help-nav-state-open]`)).then((__) => {
+            fn && fn();
+        })
     });
 }
 
 export function validateSideNavStateOpen(b: boolean) {
-    cy.get(`[test-side-nav-state-open]`).should('have.attr', 'test-side-nav-state-open', `${b}`);
-    /*
-    cy.get(`[test-side-nav-state-open]`).then((n) => {
-        return expect(n).to.have.attr('test-side-nav-state-open', `${b}`)
-    });
-     */
+    cy.waitUntil(() => cy.get(`[test-side-nav-state-open]`)).should('have.attr', 'test-side-nav-state-open', `${b}`);
 }
 
 export function validateHelpNavStateOpen(b: boolean) {
-    cy.get(`[test-help-nav-state-open]`).should('have.attr', 'test-help-nav-state-open', `${b}`);
-    /*
-    cy.get(`[test-help-nav-state-open]`).then((n) => {
-        return expect(n).to.have.attr('test-help-nav-state-open', `${b}`)
-    });
-     */
+    cy.waitUntil(() => cy.get(`[test-help-nav-state-open]`)).should('have.attr', 'test-help-nav-state-open', `${b}`);
 }
 
 export function validateSubSideNavStateOpen(b: boolean) {
-    cy.get(`[test-sub-side-nav-state-open]`).should('have.attr', 'test-sub-side-nav-state-open', `${b}`);
-    /*
-    cy.get(`[test-sub-side-nav-state-open]`).then((n) => {
-        expect(n).to.have.attr('test-sub-side-nav-state-open', `${b}`);
-    });
-     */
+    cy.waitUntil(() => cy.get(`[test-sub-side-nav-state-open]`)).should('have.attr', 'test-sub-side-nav-state-open', `${b}`);
 }
 
 export const createNewView = (): string => {
@@ -103,13 +77,8 @@ export const createNewView = (): string => {
         .editDescription(viewDescription)
         .clickOk()
         .clickSave()
+        .verifySuccessMessageExists()
     ;
-
-    cy.wait(1000).then((_) => {
-        viewViewPage.verifySuccessMessageExists();
-        return cy.wait(1000);
-    });
-
     return viewName;
 };
 

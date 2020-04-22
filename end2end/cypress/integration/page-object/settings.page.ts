@@ -17,12 +17,12 @@ export class SettingsPage implements ActualPage<SettingsPage> {
     }
 
     verifyErrorMessageExists(): SettingsPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): SettingsPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

@@ -78,12 +78,12 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
     }
 
     verifyErrorMessageExists(): ProfilePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ProfilePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 }

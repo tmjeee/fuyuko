@@ -14,20 +14,20 @@ export class PartnerListPage implements ActualPage<PartnerListPage> {
     }
 
     verifyErrorMessageExists(): PartnerListPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): PartnerListPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
     //////
 
     selectPricingStructure(viewName: string, pricingStructureName: string): PartnerListPage {
-        cy.get(`[test-mat-select-pricing-structure] div`)
-            .click({force: true, multiple: true});
+        cy.get(`[test-mat-select-pricing-structure]`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .click({force: true});
         cy.wait(100);

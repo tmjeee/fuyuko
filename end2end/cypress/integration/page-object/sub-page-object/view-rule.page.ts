@@ -16,12 +16,12 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
     }
 
     verifyErrorMessageExists(): ViewRulePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewRulePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

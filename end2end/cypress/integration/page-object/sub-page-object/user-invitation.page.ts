@@ -15,12 +15,12 @@ export class UserInvitationPage implements ActualPage<UserInvitationPage> {
     }
 
     verifyErrorMessageExists(): UserInvitationPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): UserInvitationPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

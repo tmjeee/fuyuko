@@ -15,12 +15,12 @@ import validate = WebAssembly.validate;
 export class AbstractViewPredefinedRulePage {
 
     verifyErrorMessageExists(): AbstractViewPredefinedRulePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): AbstractViewPredefinedRulePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 

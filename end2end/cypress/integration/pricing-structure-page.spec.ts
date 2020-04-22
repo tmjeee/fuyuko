@@ -62,7 +62,7 @@ describe(`pricing structure spece`, () => {
         ;
     });
 
-    it.only(`should create, edit, edit item in pricing structure and then delete pricing structure`, () => {
+    it(`should create, edit, edit item in pricing structure and then delete pricing structure`, () => {
 
         const viewName = `Test View 1`;
         const random = `${Math.random()}`;

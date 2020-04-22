@@ -34,12 +34,12 @@ export class BulkEditPage implements ActualPage<BulkEditPage> {
     }
 
     verifyErrorMessageExists(): BulkEditPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): BulkEditPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
@@ -47,8 +47,8 @@ export class BulkEditPage implements ActualPage<BulkEditPage> {
 
     selectView(viewName: string): BulkEditPage {
         cy.get(`[test-page-title='bulk-edit']`)
-            .find(`[test-mat-select-current-view] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-mat-select-current-view]`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-current-view='${viewName}']`)
             .click({force: true});
         return this;
@@ -101,8 +101,8 @@ export class BulkEditPageStep1 {
 
     selectChangeAttribute(index: number, attributeName: string): BulkEditPageStep1 {
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-attribute] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-mat-select-attribute]`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-attribute='${attributeName}']`)
             .click({force: true});
         cy.wait(100);
@@ -197,7 +197,7 @@ export class BulkEditPageStep1 {
     editChangeCurrency(index: number, attributeName: string, value: number, unit: CountryCurrencyUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-currency-unit] div`).click({force: true, multiple: true});
+            .find(`[test-mat-select-currency-unit]`).first().click({force: true});
         cy.get(`[test-mat-select-option-currency-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-currency]`)
@@ -223,7 +223,7 @@ export class BulkEditPageStep1 {
     editChangeVolume(index: number, attributeName: string, value: number, unit: VolumeUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-volume-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-volume-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-volume-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-volume]`)
@@ -247,10 +247,9 @@ export class BulkEditPageStep1 {
 
     // dimension
     editChangeDimension(index: number, attributeName: string, length: number, width: number, height: number, unit: DimensionUnits): BulkEditPageStep1 {
-        console.log('********* change dimension', length, width, height);
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-dimension-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-dimension-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-dimension-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-dimension-length]`)
@@ -297,7 +296,7 @@ export class BulkEditPageStep1 {
     editChangeArea(index: number, attributeName: string, area: number, unit: AreaUnits):BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-area-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-area-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-area-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-area]`)
@@ -323,7 +322,7 @@ export class BulkEditPageStep1 {
     editChangeLength(index: number, attributeName: string, length: number, unit: LengthUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-length-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-length-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-length-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-length]`)
@@ -349,7 +348,7 @@ export class BulkEditPageStep1 {
     editChangeWidth(index: number, attributeName: string, width: number, unit: WidthUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-width-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-width-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-width-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-width]`)
@@ -375,7 +374,7 @@ export class BulkEditPageStep1 {
     editChangeHeight(index: number, attributeName: string, height: number, unit: HeightUnits): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-height-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-height-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-height-unit='${unit}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
             .find(`[test-field-height]`)
@@ -401,7 +400,7 @@ export class BulkEditPageStep1 {
     editChangeSelect(index: number, attributeName: string, key: string): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-select] div`).click({force: true, multiple: true});
+            .find(`[test-mat-select-select]`).first().click({force: true});
         cy.get(`[test-mat-select-option-select='${key}']`).click({force: true});
         return this;
     }
@@ -418,10 +417,10 @@ export class BulkEditPageStep1 {
     editChangeDoubleselect(index: number, attributeName: string, key1: string, key2: string): BulkEditPageStep1 {
         this.selectChangeAttribute(index, attributeName);
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-doubleselect-1] div`).click({force: true, multiple: true});
+            .find(`[test-mat-select-doubleselect-1]`).first().click({force: true});
         cy.get(`[test-mat-select-option-doubleselect-1='${key1}']`).click({force: true});
         cy.get(`[test-change-clause-editor='${index}']`)
-            .find(`[test-mat-select-doubleselect-2] div`).click({force: true, multiple: true});
+            .find(`[test-mat-select-doubleselect-2]`).first().click({force: true});
         cy.get(`[test-mat-select-option-doubleselect-2='${key2}']`).click({force: true});
         return this;
     }
@@ -441,8 +440,8 @@ export class BulkEditPageStep1 {
 
     selectWhereAttribute(index: number, attributeName: string): BulkEditPageStep1 {
         cy.get(`[test-where-clause-editor='${index}']`)
-            .find(`[test-select-attribute] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-select-attribute]`).first()
+            .click({force: true});
         cy.get(`[test-select-option-attribute='${attributeName}']`)
             .click({force: true});
         cy.wait(100);
@@ -451,8 +450,8 @@ export class BulkEditPageStep1 {
 
     selectWhereOperator(index: number, operator: OperatorType): BulkEditPageStep1 {
         cy.get(`[test-where-clause-editor='${index}']`)
-            .find(`[test-select-attribute-operator] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-select-attribute-operator]`).first()
+            .click({force: true});
         cy.get(`[test-select-option-attribute-operator='${operator}']`)
             .click({force: true});
         cy.wait(100);
@@ -614,9 +613,9 @@ export class BulkEditPageStep1 {
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         cy.get(`[test-where-clause-editor='${index}']`) // click outside of the text field
-            .find(`[test-mat-select-field-currency-unit] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-currency-unit]`).click({force: true});
         cy.get(`[test-where-clause-editor='${index}']`) // then click the drop down box
-            .find(`[test-mat-select-field-currency-unit] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-currency-unit]`).click({force: true});
         cy.get(`[test-mat-select-option-field-currency-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -637,9 +636,9 @@ export class BulkEditPageStep1 {
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         cy.get(`[test-where-clause-editor='${index}']`) // click outside of text field
-            .find(`[test-mat-select-field-volume-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-volume-unit]`).first().click({force: true})
         cy.get(`[test-where-clause-editor='${index}']`) // click on drop down
-            .find(`[test-mat-select-field-volume-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-volume-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-field-volume-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -662,9 +661,9 @@ export class BulkEditPageStep1 {
         this.editWhereFieldValue2(index, String(Number(width)));
         this.editWhereFieldValue3(index, String(Number(height)));
         cy.get(`[test-where-clause-editor='${index}']`) // click on outside of text field
-            .find(`[test-mat-select-field-dimension-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-dimension-unit]`).first().click({force: true})
         cy.get(`[test-where-clause-editor='${index}']`) // click on drop down
-            .find(`[test-mat-select-field-dimension-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-dimension-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-field-dimension-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -687,9 +686,9 @@ export class BulkEditPageStep1 {
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         cy.get(`[test-where-clause-editor='${index}']`) // click on outside of text field
-            .find(`[test-mat-select-field-area-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-area-unit]`).first().click({force: true})
         cy.get(`[test-where-clause-editor='${index}']`) // click on drop down
-            .find(`[test-mat-select-field-area-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-area-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-field-area-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -710,9 +709,9 @@ export class BulkEditPageStep1 {
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         cy.get(`[test-where-clause-editor='${index}']`) // click on outside of text field
-            .find(`[test-mat-select-field-length-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-length-unit]`).first().click({force: true})
         cy.get(`[test-where-clause-editor='${index}']`) // click on drop down
-            .find(`[test-mat-select-field-length-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-length-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-field-length-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -733,9 +732,9 @@ export class BulkEditPageStep1 {
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         cy.get(`[test-where-clause-editor='${index}']`) // click on outside of text field
-            .find(`[test-mat-select-field-width-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-width-unit]`).first().click({force: true})
         cy.get(`[test-where-clause-editor='${index}']`) // click on drop down
-            .find(`[test-mat-select-field-width-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-width-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-field-width-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -756,9 +755,9 @@ export class BulkEditPageStep1 {
         this.selectWhereOperator(index, operator);
         this.editWhereFieldValue(index, String(value));
         cy.get(`[test-where-clause-editor='${index}']`) // click on outside of text field
-            .find(`[test-mat-select-field-height-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-height-unit]`).first().click({force: true})
         cy.get(`[test-where-clause-editor='${index}']`) // click on drop down
-            .find(`[test-mat-select-field-height-unit] div`).click({force: true, multiple: true})
+            .find(`[test-mat-select-field-height-unit]`).first().click({force: true})
         cy.get(`[test-mat-select-option-field-height-unit='${unit}']`).click({force: true});
         return this;
     }
@@ -778,7 +777,7 @@ export class BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         cy.get(`[test-where-clause-editor='${index}']`)
-            .find(`[test-mat-select-field-select] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-select]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-select='${key}']`).click({force: true});
         return this;
     }
@@ -797,10 +796,10 @@ export class BulkEditPageStep1 {
         this.selectWhereAttribute(index, attributeName);
         this.selectWhereOperator(index, operator);
         cy.get(`[test-where-clause-editor='${index}']`)
-            .find(`[test-mat-select-field-doubleselect-1] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-doubleselect-1]`).first().click({force: true});
         cy.get(`[test-mat-select-option-field-doubleselect-1='${key1}']`).click({force: true});
         cy.get(`[test-where-clause-editor='${index}']`)
-            .find(`[test-mat-select-field-doubleselect-2] div:first-child`).click({force: true, multiple: true});
+            .find(`[test-mat-select-field-doubleselect-2]`).click({force: true});
         cy.get(`[test-mat-select-option-field-doubleselect-2='${key2}']`).click({force: true});
         return this;
     }

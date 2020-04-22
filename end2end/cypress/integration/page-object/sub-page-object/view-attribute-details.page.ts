@@ -17,12 +17,12 @@ export class ViewAttributeDetailsPage implements ActualPage<ViewAttributeDetails
     }
 
     verifyErrorMessageExists(): ViewAttributeDetailsPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewAttributeDetailsPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 }

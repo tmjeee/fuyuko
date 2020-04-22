@@ -12,14 +12,14 @@ function SaveLocalStorage(): Cypress.Chainable<JQuery> {
     Object.keys(localStorage).forEach((key) => {
         LOCAL_STORAGE_MEMORY[key] = localStorage[key];
     });
-    return cy;
+    return cy as any;
 }
 
 function RestoreLocalStorage(): Cypress.Chainable<JQuery> {
     Object.keys(LOCAL_STORAGE_MEMORY).forEach((key) => {
         localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
     });
-    return cy;
+    return cy as any;
 }
 
 

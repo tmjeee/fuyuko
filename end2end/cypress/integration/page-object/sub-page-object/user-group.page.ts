@@ -15,12 +15,12 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
     }
 
     verifyErrorMessageExists(): UserGroupPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): UserGroupPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
