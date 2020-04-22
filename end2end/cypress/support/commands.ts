@@ -40,3 +40,4 @@ Cypress.Commands.add('restoreLocalStorage', () => {
     });
 });
  */
+import 'cypress-wait-until';

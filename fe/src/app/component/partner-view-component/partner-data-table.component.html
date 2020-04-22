@@ -1,6 +1,6 @@
 <div class="partner-data-table-component">
-    <mat-sidenav-container [hasBackdrop]="false">
-        <mat-sidenav #sideNav position="end" mode="side" [disableClose]="true" [fixedInViewport]="true" fixedTopGap="65">
+    <mat-sidenav-container [hasBackdrop]="false" autosize>
+        <mat-sidenav #sideNav position="end" mode="over" [disableClose]="true" [fixedInViewport]="true" fixedTopGap="65">
             <mat-icon (click)="onCloseSideNav($event)" class="close-icon">close</mat-icon>
             <div class="side-nav" [attr.test-side-nav]="''">
                 <app-partner-item-info-table *ngIf="selectedTablePricedItem"

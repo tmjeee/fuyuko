@@ -42,8 +42,8 @@
                     <ng-container matColumnDef="expansion" sticky>
                         <th mat-header-cell class="expansion-header" *matHeaderCellDef></th>
                         <td mat-cell class="expansion" *matCellDef="let pricingStructureItem">
-                            <mat-icon class="selectable" [attr.test-table-row-expand]="pricingStructureItem.name" *ngIf="!isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">chevron_right</mat-icon>
-                            <mat-icon class="selectable" [attr.test-table-row-collapse]="pricingStructureItem.name" *ngIf="isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">expand_more</mat-icon>
+                            <mat-icon class="selectable" [attr.test-table-row-expand]="pricingStructureItem.itemName" *ngIf="!isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">chevron_right</mat-icon>
+                            <mat-icon class="selectable" [attr.test-table-row-collapse]="pricingStructureItem.itemName" *ngIf="isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">expand_more</mat-icon>
                         </td>
                     </ng-container>
 

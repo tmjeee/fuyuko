@@ -26,23 +26,32 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
     /////////////////
 
     selectPricingStructure(viewName: string, pricingStructureName: string): PartnerTablePage {
-        cy.get(`[test-mat-select-pricing-structure] div`)
-            .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
+        cy.get(`[test-mat-select-pricing-structure]`).first()
             .click({force: true});
-        cy.wait(1000);
+        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`).as('testMatOption');
+        cy.get('@testMatOption').then((_) => {
+            cy.wrap(_).click({force: true})
+        });
+        cy.get(`[test-partner-data-table]`).then((_) => {
+            return new Cypress.Promise((res, rej) => {
+                res(_);
+            });
+        });
         return this;
     }
 
     expandItem(itemName: string): PartnerTablePage {
         cy.get(`[test-page-title]`).then((_) => {
             const length = _.find(`[test-table-partner-item] [test-icon-expand-item='${itemName}']`).length
+            cy.log(`test-icon-expand-item=${itemName} length = ${length}`);
             if (length > 0) { // can be expanded
-                return cy.get(`[test-table-partner-item]`)
+                cy.get(`[test-table-partner-item]`)
                     .find(`[test-icon-expand-item='${itemName}']`)
                     .click({force: true});
             }
-            return cy.wait(1000);
+            return cy.get(`[test-table-partner-item] [test-icon-collapse-item='${itemName}`).then((_) => {
+                return new Cypress.Promise((res, rej) => res(_));
+            });
         });
         return this;
     }
@@ -51,11 +60,13 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
         cy.get(`[test-page-title]`).then((_) => {
             const length = _.find(`[test-table-partner-item] [test-icon-collapse-item='${itemName}']`).length
             if (length > 0) { // can be collapsed
-                return cy.get(`[test-table-partner-item]`)
+                cy.get(`[test-table-partner-item]`)
                     .find(`[test-icon-collapse-item='${itemName}']`)
                     .click({force: true});
             }
-            return cy.wait(1000);
+            cy.get(`[test-table-partner-item] [test-icon-expand-item='${itemName}`).then((_) => {
+                return new Cypress.Promise((res, rej) => res(_));
+            });
         });
         return this;
     }
@@ -77,8 +88,12 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
     clickOnShowAttributeIcon(itemName: string): PartnerTablePage {
         cy.get(`[test-table-partner-item]`)
             .find(`[test-icon-more-attributes='${itemName}']`)
-            .click({force: true})
-            .wait(100);
+            .click({force: true});
+        cy.get(`[test-side-nav] div.partner-item-info-table`).then((_) => {
+            return new Cypress.Promise((res, rej) => {
+                res(_);
+            });
+        });
         return this;
     }
 

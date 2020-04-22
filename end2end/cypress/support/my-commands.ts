@@ -26,3 +26,4 @@ function RestoreLocalStorage(): Cypress.Chainable<JQuery> {
 Cypress.Commands.add('saveLocalStorage', SaveLocalStorage);
 Cypress.Commands.add('restoreLocalStorage', RestoreLocalStorage);
 
+import 'cypress-wait-until';

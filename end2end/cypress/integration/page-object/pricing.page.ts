@@ -29,12 +29,23 @@ export class PricingPage implements ActualPage<PricingPage> {
         return this;
     }
 
+    ready(): PricingPage {
+        cy.get(`[test-pricing-structure-table]`, {timeout: 7000});
+        return this;
+    }
+
     selectPricingStructure(viewName: string, pricingStructureName: string): PricingPage {
         cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-mat-select-pricing-structure] div`)
-            .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
+            .find(`[test-mat-select-pricing-structure]`).first()
             .click({force: true});
+        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`).then((_) => {
+            cy.wrap(_).click({force: true});
+        });
+        cy.get(`[test-pricing-structure-table]`).then((_) => {
+            return new Cypress.Promise((res, rej) => {
+                res(_);
+            });
+        });
         return this;
     }
 
@@ -106,29 +117,39 @@ export class PricingPage implements ActualPage<PricingPage> {
     }
 
     clickToExpandItem(pricingStructureName: string, itemName: string): PricingPage {
-        cy.get(`[test-pricing-structure-table]`).then((_) => {
-            const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-pricing-table-row-expand='${itemName}']`).length;
+        cy.waitUntil(()=>cy.get(`[test-pricing-structure-table] [test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-expand='${itemName}']`)).then((_) => {
+            // const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-expand='${itemName}']`).length;
+            const i = _.length;
+            cy.log('***************** click to expand ', i);
             if (i > 0) { // expand button exists, click it to expand
-                return cy.get(`[test-pricing-structure-table]`)
+                cy.get(`[test-pricing-structure-table]`)
                     .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
-                    .find(`[test-pricing-table-row-expand='${itemName}']`)
+                    .find(`[test-table-row-expand='${itemName}']`)
                     .click({force: true})
             }
-            return cy.wait(1000);
+            return cy.get(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-collapse='${itemName}']`).then((_) => {
+                return new Cypress.Promise((res, rej) => {
+                    res(_);
+                });
+            });
         });
         return this;
     }
 
     clickToCollapseItem(pricingStructureName: string, itemName: string): PricingPage {
         cy.get(`[test-pricing-structure-table]`).then((_) => {
-            const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-pricing-table-row-collapse='${itemName}']`).length;
+            const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-collapse='${itemName}']`).length;
             if (i > 0) { // expand button exists, click it to expand
-                return cy.get(`[test-pricing-structure-table]`)
+                cy.get(`[test-pricing-structure-table]`)
                     .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
-                    .find(`[test-pricing-table-row-collapse='${itemName}']`)
+                    .find(`[test-table-row-collapse='${itemName}']`)
                     .click({force: true})
             }
-            return cy.wait(1000);
+            return cy.get(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-expand='${itemName}']`).then((_) => {
+                return new Cypress.Promise((res, rej) => {
+                    res(_);
+                });
+            });
         });
         return this;
     }

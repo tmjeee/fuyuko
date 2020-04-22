@@ -20,6 +20,13 @@ export const clearAllMessageToasts = () => {
 
 
 export const clickOnSuccessMessageToasts = (callbackFn?: Function) => {
+    cy.get('simple-notifications .simple-notification.success', { timeout: 10000 }).each((n, index, list) => {
+        cy.log('**************************** calll back');
+        cy.wrap(n).click({force: true});
+        if (index === (list.length - 1)) { // last one
+        }
+    });
+    /*
     cy.wait(100).get('simple-notifications')
         .find('.simple-notification.success').each((n, index, list) => {
         cy.wrap(n).click({force: true});
@@ -27,6 +34,7 @@ export const clickOnSuccessMessageToasts = (callbackFn?: Function) => {
             callbackFn && callbackFn();
         }
     }).wait(100);
+     */
 }
 
 export const clickOnErrorMessageToasts = (callbackFn?: Function) => {

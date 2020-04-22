@@ -31,13 +31,13 @@ export class EditPricingPopupPage {
         cy.get(`[test-popup-dialog-title='pricing-dialog-popup']`)
             .find(`[test-button-ok]`)
             .click({force: true});
-        return new PricingPage();
+        return new PricingPage().ready();
     }
 
     clickCancel(): PricingPage {
         cy.get(`[test-popup-dialog-title='pricing-dialog-popup']`)
             .find(`[test-button-cancel]`)
             .click({force: true});
-        return new PricingPage();
+        return new PricingPage().ready();
     }
 }
