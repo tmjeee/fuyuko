@@ -32,7 +32,7 @@ const httpAction: any[] = [
                 message: `Self registration ${selfRegistrationId} deleted`
             } as ApiResponse);
         } else {
-            res.status(200).json({
+            res.status(400).json({
                 status: 'ERROR',
                 messasge: `Failed to delete self registration with id ${selfRegistrationId}`
             })

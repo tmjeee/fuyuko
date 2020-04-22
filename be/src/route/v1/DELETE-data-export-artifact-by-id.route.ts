@@ -17,12 +17,19 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const dataExportArtifactId: number = Number(req.params.dataExportArtifactId);
 
-        await deleteExportArtifactById(dataExportArtifactId);
+        const r: boolean = await deleteExportArtifactById(dataExportArtifactId);
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Data Export artifact deleted`
-        } as ApiResponse);
+        if (r) {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Data Export artifact deleted`
+            } as ApiResponse);
+        } else {
+            res.status(400).json({
+                status: 'ERROR',
+                message: `Data Export artifact Failed to be deleted`
+            } as ApiResponse);
+        }
     }
 ];
 

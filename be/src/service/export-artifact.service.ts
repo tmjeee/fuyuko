@@ -1,4 +1,4 @@
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {DataExportArtifact} from "../model/data-export.model";
 import {View} from "../model/view.model";
@@ -27,11 +27,12 @@ export const getExportArtifactContent = async (dataExportId: number): Promise<Bi
     });
 }
 
-export const deleteExportArtifactById = async (dataExportArtifactId: number) => {
-    await doInDbConnection(async (conn: Connection) => {
-        await conn.query(`
+export const deleteExportArtifactById = async (dataExportArtifactId: number): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse = await conn.query(`
                 DELETE FROM TBL_DATA_EXPORT WHERE ID=?
             `, [dataExportArtifactId]);
+        return (q.affectedRows);
     });
 };
 

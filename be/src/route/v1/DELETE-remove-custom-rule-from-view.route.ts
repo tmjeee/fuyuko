@@ -1,8 +1,6 @@
 import {NextFunction, Router, Request, Response } from "express";
 import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
 import {param, body} from "express-validator";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
@@ -25,7 +23,7 @@ const httpAction: any[] = [
         const errors: string[] = await deleteCustomRules(viewId, customRuleIds);
 
         if (errors && errors.length) {
-            res.status(200).json({
+            res.status(400).json({
                 status: 'WARN',
                 message: errors.join(', ')
             } as ApiResponse);

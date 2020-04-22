@@ -30,7 +30,7 @@ const httpAction: any[] = [
                 message: `User ${userId} deleted`
             } as ApiResponse );
         } else {
-            res.status(200).json({
+            res.status(400).json({
                 status: 'ERROR',
                 message: `Failed to delete user with id ${userId}`
             } as ApiResponse);

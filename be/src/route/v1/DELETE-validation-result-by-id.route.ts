@@ -27,7 +27,7 @@ const httpAction: any[] = [
             message: `Deleted validation result for validation id ${validationId} successfully`
          } as ApiResponse);
       } else {
-         res.status(200).json({
+         res.status(400).json({
             status: 'ERROR',
             message: `Failed to delete validation result for validation id ${validationId}`
          } as ApiResponse);

@@ -30,7 +30,7 @@ const httpAction: any[] = [
 
         const errors: string[] = await deleteUserFromGroup(userId, groupId);
         if (errors && errors.length) {
-            res.status(200).json({
+            res.status(400).json({
                 status: 'ERROR',
                 message: `User ${userId} failed to be deleted from group ${groupId}`
             } as ApiResponse);

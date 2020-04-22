@@ -25,7 +25,10 @@ const httpAction: any[] = [
                message: `Item image deleted`
             } as ApiResponse);
         } else {
-            throw new ClientError(`Failed to delete itemId=${itemId} with itemImageId=${itemImageId}`);
+            res.status(400).json({
+                status: 'ERROR',
+                message: `Failed to delete itemId=${itemId} with itemImageId=${itemImageId}`
+            } as ApiResponse);
         }
     }
 ];

@@ -39,11 +39,10 @@ const httpAction: any[] = [
                 message: `Item image uploaded`
             } as ApiResponse);
         } else {
-            res.status(400).json(
-                makeApiErrorObj(
-                    makeApiError(`Unable to created uploaded item image ${file1.name}`)
-                )
-            );
+            res.status(400).json({
+                status: 'ERROR',
+                message: `Unable to created uploaded item image ${file1.name}`
+            } as ApiResponse);
         }
     }
 ];

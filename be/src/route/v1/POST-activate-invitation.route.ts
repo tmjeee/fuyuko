@@ -38,7 +38,7 @@ const httpAction = [
         const r: {registrationId: number, errors: string[]} = await activateInvitation(code, username, email, firstName, lastName, password);
 
         if (r.errors && r.errors.length) {
-            res.status(200).json({
+            res.status(400).json({
                 status: 'ERROR',
                 message: r.errors.join(', '),
                 payload: {

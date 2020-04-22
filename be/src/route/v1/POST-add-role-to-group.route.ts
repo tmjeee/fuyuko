@@ -32,7 +32,7 @@ const httpAction: any[] = [
 
         const errors: string[] = await addRoleToGroup(groupId, roleName);
         if (errors && errors.length) {
-            res.status(200).json({
+            res.status(400).json({
                 status: 'ERROR',
                 message: errors.join(', ')
             } as ApiResponse);
