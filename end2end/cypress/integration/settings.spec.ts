@@ -33,7 +33,8 @@ describe('settings spec', () => {
             .login(username, password)
             .visitSettingsPage()
         ;
-        cy.wait(1000); // wait for settings to be loaded
+        // cy.wait(1000); // wait for settings to be loaded
+        cy.waitUntil(() => cy.get(`[test-settings]`))
     });
 
     afterEach(() => {
