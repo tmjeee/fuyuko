@@ -52,7 +52,6 @@ export class SettingsComponent implements OnInit, OnChanges {
     }
 
     populate(s: Settings) {
-        console.log('****** settings', s);
         if (s) {
             this.formControlOpenHelpNav.setValue(s.openHelpNav);
             this.formControlOpenSideNav.setValue(s.openSideNav);

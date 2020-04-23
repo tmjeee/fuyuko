@@ -104,7 +104,7 @@ describe('view-rule-custom', () => {
             .verifyRuleEnabled('0.0.2-sample-rule-2.js', true)
     });
 
-    it ('should allow delete of custom rules', () => {
+    it('should allow delete of custom rules', () => {
         viewRulePage
             .selectCustomTab()
             .clickShowCustomRulesList()

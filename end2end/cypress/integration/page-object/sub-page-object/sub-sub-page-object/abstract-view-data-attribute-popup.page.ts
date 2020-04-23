@@ -55,7 +55,7 @@ export class AbstractViewDataAttributePopupPage {
             .clear({force: true})
             .type(String(v), {force: true})
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-currency]`).first().click({force: true});
+            .find(`[test-mat-select-currency] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-currency='${unit}']`).click({force: true});
         return this;
     }
@@ -66,7 +66,7 @@ export class AbstractViewDataAttributePopupPage {
             .clear({force: true})
             .type(String(v), {force: true});
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-area]`).first().click({force: true});
+            .find(`[test-mat-select-area] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-area='${unit}']`).click({force: true});
         return this;
     }
@@ -77,7 +77,7 @@ export class AbstractViewDataAttributePopupPage {
             .clear({force: true})
             .type(String(v), {force: true});
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-volume]`).first().click({force: true});
+            .find(`[test-mat-select-volume] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-volume='${unit}']`).click({force: true});
         return this;
     }
@@ -96,7 +96,7 @@ export class AbstractViewDataAttributePopupPage {
             .clear({force: true})
             .type(String(h), {force: true});
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-dimension]`).first().click({force: true});
+            .find(`[test-mat-select-dimension] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-dimension='${unit}']`).click({force: true});
         return this;
     }
@@ -107,7 +107,7 @@ export class AbstractViewDataAttributePopupPage {
             .clear({force: true})
             .type(String(v), {force: true});
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-width]`).first().click({force: true});
+            .find(`[test-mat-select-width] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-width='${unit}']`).click({force: true});
         return this;
     }
@@ -118,7 +118,7 @@ export class AbstractViewDataAttributePopupPage {
             .clear({force: true})
             .type(String(v), {force: true});
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-length]`).first().click({force: true});
+            .find(`[test-mat-select-length] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-length='${unit}']`).click({force: true});
         return this;
     }
@@ -129,24 +129,24 @@ export class AbstractViewDataAttributePopupPage {
             .clear({force: true})
             .type(String(v), {force: true});
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-height]`).first().click({force: true});
+            .find(`[test-mat-select-height] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-height='${unit}']`).click({force: true});
         return this;
     }
 
     editSelectAttribute(key: string): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-select-key]`).first().click({force: true});
+            .find(`[test-mat-select-select-key] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-select-key='${key}']`).click({force: true});
         return this;
     }
 
     editDoubleSelectAttribute(key1: string, key2: string): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-doubleselect-key1]`).first().click({force: true});
+            .find(`[test-mat-select-doubleselect-key1] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-doubleselect-key1='${key1}']`).click({force: true});
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-mat-select-doubleselect-key2]`).first().click({force: true});
+            .find(`[test-mat-select-doubleselect-key2] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-doubleselect-key2='${key2}']`).click({force: true});
         return this;
     }

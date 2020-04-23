@@ -141,7 +141,7 @@ describe('profile', () => {
 
         profilePage.changePassword('test', 'test')
             .getPasswordSubmitButton().should('not.be.disabled')
-            .click();
+            .click({force: true});
         util.clickOnSuccessMessageToasts();
     });
 

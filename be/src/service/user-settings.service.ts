@@ -19,7 +19,7 @@ export const updateUserSettings = async (userId: number, settings: {[key: string
         const tv = (dv !== null && dv !== undefined) ? typeof dv : 'string';
 
         const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
-            await conn.query(`INSERT INTO TBL_USER_SETTING (USER_ID, SETTING, VALUE, TYPE) VALUES (?,?,?,?)`,
+            return await conn.query(`INSERT INTO TBL_USER_SETTING (USER_ID, SETTING, VALUE, TYPE) VALUES (?,?,?,?)`,
                 [userId, k, v, tv]);
         });
         if (q.affectedRows <= 0) {

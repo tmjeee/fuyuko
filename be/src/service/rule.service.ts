@@ -70,13 +70,13 @@ export const addOrUpdateRules = async (viewId: number, rules: Rule[]): Promise<s
         if (rule2.id && rule2.id > 0)  { // update
             const errs: string[] = await doInDbConnection(async (conn: Connection) => {
                 const err: string[] = await _ruleUpdate(conn, viewId, rule2)
-                errors.push(...err);
+                return err;
             });
             errors.push(...errs);
         } else { // add
             const errs: string[] = await doInDbConnection(async (conn: Connection) => {
                 const err: string [] = await _ruleAdd(conn, viewId, rule2)
-                errors.push(...err);
+                return err;
             });
             errors.push(...errs);
         }
@@ -84,7 +84,7 @@ export const addOrUpdateRules = async (viewId: number, rules: Rule[]): Promise<s
     return errors;
 };
 
-const _ruleUpdate = async (conn: Connection, viewId: number, rule2: Rule2) => {
+const _ruleAdd = async (conn: Connection, viewId: number, rule2: Rule2) => {
     const errors: string[] = [];
     await doInDbConnection(async (conn: Connection) => {
 
@@ -131,14 +131,14 @@ const _ruleUpdate = async (conn: Connection, viewId: number, rule2: Rule2) => {
     return errors;
 }
 
-const _ruleAdd = async (conn: Connection, viewId: number, rule2: Rule2) => {
+const _ruleUpdate = async (conn: Connection, viewId: number, rule2: Rule2) => {
     const errors: string[] = [];
     await doInDbConnection(async (conn: Connection) => {
 
         const ruleId: number = rule2.id;
 
         const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_RULE WHERE ID=?`, [ruleId]);
-        if (qq[0].COUNT < 0) { // no such rule with id exists, cannot update rule that do not exists
+        if (qq[0].COUNT <= 0) { // no such rule with id exists, cannot update rule that do not exists
             errors.push(`Rule with id ${ruleId} do not exists`);
             return;
         }

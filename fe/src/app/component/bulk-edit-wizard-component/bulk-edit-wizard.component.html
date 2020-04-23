@@ -1,4 +1,4 @@
-<div class="bulk-edit-wizard-component">
+<div class="bulk-edit-wizard-component" [attr.test-bulk-edit-wizard-component]="''">
     <ng-container *ngIf="!(attributes && attributes.length > 0)">
         <div class="cannot-perform-bulk-edit-message">
            Cannot perform Builk edit for the time being, no attributes is being configured in this view.

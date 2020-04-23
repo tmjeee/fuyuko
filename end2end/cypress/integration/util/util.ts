@@ -12,20 +12,20 @@ export const getMyself = (): any => {
 
 export const clearAllMessageToasts = () => {
     cy.waitUntil(() => cy.get('simple-notifications .simple-notification')).each((n, index, list) => {
-        cy.wrap(n).click({force: true});
+        Cypress.dom.isAttached(n) && cy.wrap(n).click({force: true});
     });
 }
 
 
 export const clickOnSuccessMessageToasts = () => {
     cy.waitUntil(() => cy.get('simple-notifications .simple-notification.success')).each((n, index, list) => {
-        cy.wrap(n).click({force: true});
+        Cypress.dom.isAttached(n) && cy.wrap(n).click({force: true});
     });
 }
 
 export const clickOnErrorMessageToasts = () => {
     cy.waitUntil(() => cy.get(`simple-notifications .simple-notification.error`)).each((n, index, list) => {
-        cy.wrap(n).click({force: true});
+        Cypress.dom.isAttached(n) && cy.wrap(n).click({force: true});
     });
 }
 

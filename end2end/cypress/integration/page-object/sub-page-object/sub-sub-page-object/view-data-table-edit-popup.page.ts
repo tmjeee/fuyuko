@@ -51,7 +51,7 @@ export class ViewDataTableEditPopupPage {
         cy.get(`[test-field-currency]`)
             .clear({force: true})
             .type(String(v), {force: true});
-        cy.get(`[test-mat-select-currency]`).first().click({force: true});
+        cy.get(`[test-mat-select-currency] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-currency='${unit}']`).click({force: true});
         return this;
     }
@@ -60,7 +60,7 @@ export class ViewDataTableEditPopupPage {
         cy.get(`[test-field-area]`)
             .clear({force: true})
             .type(String(v), {force: true});
-        cy.get(`[test-mat-select-area]`).first().click({force: true});
+        cy.get(`[test-mat-select-area] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-area='${unit}']`).click({force: true});
         return this;
     }
@@ -69,7 +69,7 @@ export class ViewDataTableEditPopupPage {
         cy.get(`[test-field-volume]`)
             .clear({force: true})
             .type(String(v), {force: true});
-        cy.get(`[test-mat-select-volume]`).first().click({force: true});
+        cy.get(`[test-mat-select-volume] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-volume='${unit}']`).click({force: true});
         return this;
     }
@@ -84,7 +84,7 @@ export class ViewDataTableEditPopupPage {
         cy.get(`[test-field-dimension-height]`)
             .clear({force: true})
             .type(String(h), {force: true});
-        cy.get(`[test-mat-select-dimension]`).first().click({force: true});
+        cy.get(`[test-mat-select-dimension] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-dimension='${unit}']`).click({force: true});
         return this;
     }
@@ -93,7 +93,7 @@ export class ViewDataTableEditPopupPage {
         cy.get(`[test-field-length]`)
             .clear({force: true})
             .type(String(v), {force: true});
-        cy.get(`[test-mat-select-length]`).first().click({force: true});
+        cy.get(`[test-mat-select-length] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-length='${unit}']`).click({force: true});
         return this;
     }
@@ -102,7 +102,7 @@ export class ViewDataTableEditPopupPage {
         cy.get(`[test-field-width]`)
             .clear({force: true})
             .type(String(v), {force: true});
-        cy.get(`[test-mat-select-width]`).first().click({force: true});
+        cy.get(`[test-mat-select-width] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-width='${unit}']`).click({force: true});
         return this;
     }
@@ -111,21 +111,21 @@ export class ViewDataTableEditPopupPage {
         cy.get(`[test-field-height]`)
             .clear({force: true})
             .type(String(v), {force: true});
-        cy.get(`[test-mat-select-height]`).first().click({force: true});
+        cy.get(`[test-mat-select-height] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-height='${unit}']`).click({force: true});
         return this;
     }
 
     editSelectValue(key: string): ViewDataTableEditPopupPage {
-        cy.get(`[test-mat-select-select-key]`).first().click({force: true});
+        cy.get(`[test-mat-select-select-key] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-select-key='${key}']`).click({force: true});
         return this;
     }
 
     editDoubleSelectValue(key1: string, key2: string): ViewDataTableEditPopupPage {
-        cy.get(`[test-mat-select-doubleselect-key1]`).first().click({force: true});
+        cy.get(`[test-mat-select-doubleselect-key1] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-doubleselect-key1='${key1}']`).click({force: true});
-        cy.get(`[test-mat-select-doubleselect-key2]`).first().click({force: true});
+        cy.get(`[test-mat-select-doubleselect-key2] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-doubleselect-key2='${key2}']`).click({force: true});
         return this;
     }

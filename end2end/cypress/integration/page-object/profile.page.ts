@@ -17,9 +17,9 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
     }
 
     changePredefinedAvatar(predefinedAvatarName: string): ProfilePage {
-        cy.get(`[test-edit-avatar-icon]`).click();
-        cy.get(`[test-predefined-avatar-name='${predefinedAvatarName}']`).click();
-        cy.get(`[test-change-avatar-button]`).click().wait(100);
+        cy.get(`[test-edit-avatar-icon]`).click({force: true});
+        cy.get(`[test-predefined-avatar-name='${predefinedAvatarName}']`).click({force: true});
+        cy.get(`[test-change-avatar-button]`).click({force: true}).wait(100);
         return this;
     }
 
@@ -41,7 +41,7 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
         cy.get('[test-field-firstName]').clear().type(firstName);
         cy.get('[test-field-lastName]').clear().type(lastName);
         cy.get('[test-field-email]').clear().type(email);
-        cy.get('[test-profile-submit-button]').click();
+        cy.get('[test-profile-submit-button]').click({force: true});
         return this;
     }
 

@@ -26,12 +26,12 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
     }
 
     selectCustomTab(): ViewCustomRulePage {
-        cy.get(`[test-tab='custom']`).click();
+        cy.get(`[test-tab='custom']`).click({force: true});
         return new ViewCustomRulePage();
     }
 
     selectPredefinedTab(): ViewPredefinedRulePage {
-        cy.get(`[test-tab='predefined']`).click();
+        cy.get(`[test-tab='predefined']`).click({force: true});
         return new ViewPredefinedRulePage();
     }
 

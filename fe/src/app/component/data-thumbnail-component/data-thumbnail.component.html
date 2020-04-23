@@ -35,12 +35,12 @@
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Creation Date</mat-label>
-        <div>{{item.creationDate | date}}</div>
+        <div>{{item.creationDate ? (item.creationDate | date) : 'unknown' }}</div>
         <mat-hint class="mat-small mat-hint">Item creation date</mat-hint>
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Last update</mat-label>
-        <div>{{item.lastUpdate | date}}</div>
+        <div>{{item.lastUpdate ? (item.lastUpdate | date) : 'unknown'}}</div>
         <mat-hint class="mat-small mat-hint">Item last update</mat-hint>
       </div>
       <div class="attribute" *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index">
