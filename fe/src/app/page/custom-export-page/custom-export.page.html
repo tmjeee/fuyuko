@@ -10,6 +10,7 @@
             <div *loadIf="!ready">Loading ...</div>
             <app-custom-export-wizard
                     *ngIf="ready"
+                    [attr.test-custom-export-wizard]="''"
                     [customExportPreviewFn]="customExportPreviewFn"
                     [customExportSubmitFn]="customExportSubmitFn"
                     [customExportFormValidateFn]="customExportValidateFn"

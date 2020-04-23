@@ -11,6 +11,10 @@ export class JobsPage implements ActualPage<JobsPage> {
         return this;
     }
 
+    waitForReady(): JobsPage {
+        return this;
+    }
+
     validateTitle(): JobsPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'jobs');
         return this;

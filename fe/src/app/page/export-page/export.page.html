@@ -7,7 +7,10 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-export-data [views]="allViews"
+            <ng-container *loadIf="!ready">Loading ...</ng-container>
+            <app-export-data *ngIf="ready"
+                             [attr.test-export-data-wizard]="''"
+                             [views]="allViews"
                              [viewAttributesFn]="viewAttributeFn"
                              [viewPricingStructuresFn]="viewPricingStructuresFn"
                              [previewExportFn]="previewExportFn"

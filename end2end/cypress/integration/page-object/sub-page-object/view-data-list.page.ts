@@ -16,6 +16,10 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
         return this;
     }
 
+    waitForReady(): ViewDataListPage {
+        return this;
+    }
+
     verifyErrorMessageExists(): ViewDataListPage {
         util.clickOnErrorMessageToasts();
         return this;

@@ -22,6 +22,12 @@ export class CustomExportPage implements ActualPage<CustomExportPage> {
 
     visit(): CustomExportPage {
         cy.visit(`/import-export-gen-layout/(custom-export//help:export-help)`);
+        cy.waitUntil(() => cy.get(`[test-custom-export-wizard]`));
+        return this;
+    }
+
+    waitForReady(): CustomExportPage {
+        cy.waitUntil(() => cy.get(`[test-custom-export-wizard]`));
         return this;
     }
 
@@ -163,7 +169,6 @@ export class CustomExportPageStep3 {
             } else if (length > 0 && !value) { // already checked and we want to uncheck it
                 return cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
             }
-            return cy.wait(1000);
         });
         return this;
     }

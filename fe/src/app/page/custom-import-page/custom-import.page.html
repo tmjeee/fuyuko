@@ -10,6 +10,7 @@
             <div *loadIf="!ready">Loading ...</div>
             <app-custom-import-wizard
                     *ngIf="ready"
+                    [attr.test-custom-import-wizard]="''"
                     [customImportPreviewFn]="customImportPreviewFn"
                     [customImportSubmitFn]="customImportSubmitFn"
                     [customInputFormValidateFn]="customImportValidateFn"

@@ -17,6 +17,11 @@ export class ExportPage implements ActualPage<ExportPage> {
 
     visit(): ExportPage {
         cy.visit('/import-export-gen-layout/(export//help:import-help)');
+        cy.waitUntil(() => cy.get(`[test-export-data-wizard]`));
+        return this;
+    }
+
+    waitForReady(): ExportPage {
         return this;
     }
 

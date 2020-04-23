@@ -21,8 +21,8 @@ describe(`custom export spec`, () => {
     });
 
     after(() => {
-        localStorage.clear();
-        sessionStorage.clear();
+        // localStorage.clear();
+        // sessionStorage.clear();
     });
 
 
@@ -35,7 +35,7 @@ describe(`custom export spec`, () => {
             .login(username, password)
             .visitImportExportPage()
             .visitCustomExportPage()
-        ;
+            .visit();
     });
 
     afterEach(() => {

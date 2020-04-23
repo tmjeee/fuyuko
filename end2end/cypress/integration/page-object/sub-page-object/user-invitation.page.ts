@@ -14,6 +14,10 @@ export class UserInvitationPage implements ActualPage<UserInvitationPage> {
         return this;
     }
 
+    waitForReady(): UserInvitationPage {
+        return this;
+    }
+
     verifyErrorMessageExists(): UserInvitationPage {
         util.clickOnErrorMessageToasts();
         return this;

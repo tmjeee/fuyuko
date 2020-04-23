@@ -12,6 +12,10 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
         return this;
     }
 
+    waitForReady(): ViewPredefinedRulePage {
+        return this;
+    }
+
     verifyErrorMessageExists(): ViewPredefinedRulePage {
         util.clickOnErrorMessageToasts();
         return this;

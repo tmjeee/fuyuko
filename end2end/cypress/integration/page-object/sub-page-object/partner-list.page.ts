@@ -13,6 +13,10 @@ export class PartnerListPage implements ActualPage<PartnerListPage> {
         return this;
     }
 
+    waitForReady(): PartnerListPage {
+        return this;
+    }
+
     verifyErrorMessageExists(): PartnerListPage {
         util.clickOnErrorMessageToasts();
         return this;

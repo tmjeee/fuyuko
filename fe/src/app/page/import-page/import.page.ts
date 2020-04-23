@@ -19,7 +19,7 @@ import {
   styleUrls: ['./import.page.scss']
 })
 export class ImportPageComponent implements OnInit {
-
+  ready: boolean;
   allViews: View[] = [];
   showPreviewFn: ShowPreviewFn;
   submitDataImportFn: SubmitDataImportFn;
@@ -28,6 +28,7 @@ export class ImportPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+      this.ready = false;
       this.showPreviewFn = (viewId: number, uploadType: DataImportType, file: File) => {
           return this.importDataService.showPreview(viewId, uploadType, file);
       };
@@ -39,6 +40,7 @@ export class ImportPageComponent implements OnInit {
           .pipe(
               tap((v: View[]) => {
                   this.allViews = v;
+                  this.ready = true;
               })
           ).subscribe();
   }

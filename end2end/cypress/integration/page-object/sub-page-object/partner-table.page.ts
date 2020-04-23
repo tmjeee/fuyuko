@@ -13,6 +13,10 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
         return this;
     }
 
+    waitForReady(): PartnerTablePage {
+        return this;
+    }
+
     verifyErrorMessageExists(): PartnerTablePage {
         util.clickOnErrorMessageToasts();
         return this;

@@ -22,6 +22,7 @@ import {PaginableApiResponse} from "../../model/api-response.model";
 })
 export class ExportPageComponent implements OnInit {
 
+    ready: boolean;
     allViews: View[];
     viewAttributeFn: ViewAttributeFn;
     previewExportFn: PreviewExportFn;
@@ -34,12 +35,7 @@ export class ExportPageComponent implements OnInit {
                 private exportDataService: ExportDataService) { }
 
     ngOnInit(): void {
-        this.viewService.getAllViews().pipe(
-            tap((v: View[]) => {
-                this.allViews = v;
-            })
-        ).subscribe();
-
+        this.ready = false;
         this.viewAttributeFn = (viewId: number) => {
            return this.attributeService.getAllAttributesByView(viewId)
                .pipe( map((r: PaginableApiResponse<Attribute[]>) => r.payload));
@@ -59,6 +55,13 @@ export class ExportPageComponent implements OnInit {
                                   filter: ItemValueOperatorAndAttribute[]) => {
             return this.exportDataService.submitExportJobFn(exportType, viewId, attributes, dataExport, filter);
         };
+        this.viewService.getAllViews().pipe(
+            tap((v: View[]) => {
+                this.allViews = v;
+                this.ready = true;
+            })
+        ).subscribe();
+
     }
 
 }

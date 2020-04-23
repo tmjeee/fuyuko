@@ -11,8 +11,8 @@ export class ViewValidationAttributePopupPage extends AbstractViewDataAttributeP
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-button-popup-done]`)
             .click({force: true});
-        cy.wait(100);
-        return new ViewValidationDetailsPage(this.validationName);
+        // cy.wait(100);
+        return new ViewValidationDetailsPage(this.validationName).waitForReady();
     }
 
     clickCancel(): ViewValidationDetailsPage {

@@ -5,6 +5,7 @@ export class ExportArtifactsPage {
 
     visit(): ExportArtifactsPage {
         cy.visit('/import-export-gen-layout/(export-artifacts//help:import-help)');
+        cy.waitUntil(() => cy.get(`[test-export-artifacts-component]`));
         return this;
     }
 

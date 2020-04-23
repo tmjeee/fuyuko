@@ -13,6 +13,10 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
         return this;
     }
 
+    waitForReady(): UserPeoplePage {
+        return this;
+    }
+
     verifyErrorMessageExists(): UserPeoplePage {
         util.clickOnErrorMessageToasts();
         return this;

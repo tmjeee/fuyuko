@@ -5,9 +5,10 @@
             <mat-card-subtitle>Validation details of view (errors, logs etc.)</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div *ngIf="loading">Loading ...</div>
+            <div *loadIf="loading">Loading ...</div>
             <app-validation-result *ngIf="!loading"
                                    (events)="onValidationResultEvent($event)"
+                           [attr.test-validation-result-page]="''"
                            [validationResult]="validationResult"
                            [view]="view"
                            [items]="items"

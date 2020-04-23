@@ -21,6 +21,12 @@ export class CustomImportPage implements ActualPage<CustomImportPage> {
 
     visit(): CustomImportPage {
         cy.visit(`/import-export-gen-layout/(custom-import//help:import-help)`);
+        cy.waitUntil(() => cy.get(`[test-custom-import-wizard]`));
+        return this;
+    }
+
+    waitForReady(): CustomImportPage {
+        cy.waitUntil(() => cy.get(`[test-custom-import-wizard]`));
         return this;
     }
 
@@ -160,7 +166,6 @@ export class CustomImportPageStep3 {
             } else if (length > 0 && !value) { // already checked and we want to uncheck it
                 return cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
             }
-            return cy.wait(1000);
         });
         return this;
     }

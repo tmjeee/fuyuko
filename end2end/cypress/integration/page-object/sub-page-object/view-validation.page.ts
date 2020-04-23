@@ -13,6 +13,12 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
     visit(): ViewValidationPage {
         cy.visit(`/view-gen-layout/(validation//help:view-help)`);
+        cy.waitUntil(() => cy.get(`[test-validation-result-page]`));
+        return this;
+    }
+
+    waitForReady(): ViewValidationPage {
+        cy.waitUntil(() => cy.get(`[test-validation-result-page]`));
         return this;
     }
 

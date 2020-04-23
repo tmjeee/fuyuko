@@ -8,6 +8,10 @@ export class RegisterPage implements ActualPage<RegisterPage> {
         return this;
     }
 
+    waitForReady(): RegisterPage {
+        return this;
+    }
+
     validateTitle(): RegisterPage {
         cy.get(`[test-page-title]`)
             .should('have.attr', 'test-page-title', 'settings');

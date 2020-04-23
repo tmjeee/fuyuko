@@ -11,6 +11,10 @@ export class SettingsPage implements ActualPage<SettingsPage> {
         return this;
     }
 
+    waitForReady(): SettingsPage {
+        return this;
+    }
+
     validateTitle(): SettingsPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'settings');
         return this;

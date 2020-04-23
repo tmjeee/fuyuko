@@ -26,6 +26,10 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
         return this;
     }
 
+    waitForReady(): ViewCustomRulePage {
+        return this;
+    }
+
 
     verifyCustomTabSelected(): ViewCustomRulePage {
         cy.get(`[test-tab='custom']`).should('be.visible');

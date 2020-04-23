@@ -11,6 +11,10 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
         return this;
     }
 
+    waitForReady(): ProfilePage {
+        return this;
+    }
+
     validateTitle(): ProfilePage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'profile');
         return this;

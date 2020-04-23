@@ -14,6 +14,10 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
         return this;
     }
 
+    waitForReady(): UserGroupPage {
+        return this;
+    }
+
     verifyErrorMessageExists(): UserGroupPage {
         util.clickOnErrorMessageToasts();
         return this;

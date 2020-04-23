@@ -13,6 +13,10 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
         return this;
     }
 
+    waitForReady(): PartnerThumbnailPage {
+        return this;
+    }
+
     verifyErrorMessageExists(): PartnerThumbnailPage {
         util.clickOnErrorMessageToasts();
         return this;

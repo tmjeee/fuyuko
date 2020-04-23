@@ -31,6 +31,11 @@ export class BulkEditPage implements ActualPage<BulkEditPage> {
         return this;
     }
 
+    waitForReady(): BulkEditPage {
+        cy.waitUntil(() => cy.get(`[test-bulk-edit-wizard-component]`));
+        return this;
+    }
+
     validateTitle(): BulkEditPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'bulk-edit');
         return this;

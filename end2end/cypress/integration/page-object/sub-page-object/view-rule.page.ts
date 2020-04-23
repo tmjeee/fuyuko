@@ -15,6 +15,10 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
         return this;
     }
 
+    waitForReady(): ViewRulePage {
+        return this;
+    }
+
     verifyErrorMessageExists(): ViewRulePage {
         util.clickOnErrorMessageToasts();
         return this;

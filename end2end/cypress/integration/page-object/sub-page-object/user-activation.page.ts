@@ -13,6 +13,10 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
         return this;
     }
 
+    waitForReady(): UserActivationPage {
+        return this;
+    }
+
     verifyErrorMessageExists(): UserActivationPage {
         util.clickOnErrorMessageToasts();
         return this;

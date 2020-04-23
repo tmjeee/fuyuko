@@ -16,6 +16,10 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         return this;
     }
 
+    waitForReady(): ViewDataThumbnailPage {
+        return this;
+    }
+
     verifyErrorMessageExists(): ViewDataThumbnailPage {
         util.clickOnErrorMessageToasts();
         return this;

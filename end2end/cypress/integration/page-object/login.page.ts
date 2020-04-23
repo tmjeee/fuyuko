@@ -9,6 +9,10 @@ export class LoginPage implements ActualPage<LoginPage> {
          return this;
     }
 
+    waitForReady(): LoginPage {
+        return this;
+    }
+
     validateTitle(): LoginPage {
          cy.get(`[test-page-title]`)
              .should('have.attr', 'test-page-title', 'login');

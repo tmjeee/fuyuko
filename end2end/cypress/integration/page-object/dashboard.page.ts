@@ -18,6 +18,10 @@ export class DashboardPage implements ActualPage<DashboardPage> {
         return this;
     }
 
+    waitForReady(): DashboardPage {
+        return this;
+    }
+
     validateTitle(): DashboardPage {
        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'dashboard');
        return this;

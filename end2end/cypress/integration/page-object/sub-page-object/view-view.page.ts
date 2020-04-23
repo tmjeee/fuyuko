@@ -15,6 +15,10 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
         return this;
     }
 
+    waitForReady(): ViewViewPage {
+        return this;
+    }
+
     verifyErrorMessageExists(): ViewViewPage {
         util.clickOnErrorMessageToasts();
         return this;

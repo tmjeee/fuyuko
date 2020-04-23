@@ -20,6 +20,10 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
         return this;
     }
 
+    waitForReady(): ViewDataTablePage {
+        return this;
+    }
+
     verifyErrorMessageExists(): ViewDataTablePage {
         util.clickOnErrorMessageToasts();
         return this;

@@ -16,6 +16,10 @@ export class ViewAttributeDetailsPage implements ActualPage<ViewAttributeDetails
         return this;
     }
 
+    waitForReady(): ViewAttributeDetailsPage {
+        return this;
+    }
+
     verifyErrorMessageExists(): ViewAttributeDetailsPage {
         util.clickOnErrorMessageToasts();
         return this;

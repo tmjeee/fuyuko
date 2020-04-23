@@ -14,6 +14,10 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
         return this;
     }
 
+    waitForReady(): UserRolesPage {
+        return this;
+    }
+
     toggleRolePanel(roleName: string): UserRolesPage {
        cy.get(`[test-expansion-panel-header='${roleName}']`).click({force: true});
        return this;

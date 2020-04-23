@@ -8,7 +8,10 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
+      <ng-container *loadIf="!ready">Loading ...</ng-container>
       <app-import-data
+              *ngIf="ready"
+              [attr.test-import-data-wizard]="''"
               [views]="allViews"
               [showPreview]="showPreviewFn"
               [submitDataImport]="submitDataImportFn">

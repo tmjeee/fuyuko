@@ -14,6 +14,10 @@ export class PricingPage implements ActualPage<PricingPage> {
         return this;
     }
 
+    waitForReady(): PricingPage {
+        return this;
+    }
+
     validateTitle(): PricingPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'pricing');
         return this;
