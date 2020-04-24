@@ -51,10 +51,8 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
           if (v) {
             this.currentView = v;
             this.reload();
-          }
-        }),
-        finalize(() => {
             this.viewReady = true;
+          }
         })
       ).subscribe();
   }

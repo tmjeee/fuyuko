@@ -1,4 +1,5 @@
 <div class="view-attributes-page" [attr.test-page-title]="'view-attributes'" [attr.test-page-ready]="'' + (attributesReady && viewReady)">
+  {{attributesReady}} - {{viewReady}}
   <mat-card>
     <mat-card-header>
       <mat-card-title>Attributes</mat-card-title>

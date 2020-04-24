@@ -145,6 +145,7 @@ describe("user-role", () => {
             .verifyActivationEntriesSizeInTable(1)
             .activateUser(username)
             .verifySuccessMessageExists()
+            .search(`cypress-registration-${r}`)
             .verifyActivationEntriesSizeInTable(0);
     });
 
@@ -171,6 +172,7 @@ describe("user-role", () => {
             .verifyActivationEntriesSizeInTable(1)
             .deleteUser(username)
             .verifySuccessMessageExists()
+            .search(`cypress-registration-${r}`)
             .verifyActivationEntriesSizeInTable(0);
     });
 
