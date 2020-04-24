@@ -13,6 +13,7 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
     }
 
     waitForReady(): ViewPredefinedRulePage {
+        util.waitUntilTestPageReady();
         return this;
     }
 
@@ -28,6 +29,7 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
 
     visit(): ViewPredefinedRulePage {
         cy.visit(`/view-gen-layout/(rules//help:view-help)`);
+        this.waitForReady();
         return this;
     }
 

@@ -23,6 +23,7 @@ export class UserActivationPageComponent implements OnInit {
 
     pendingUserSearchFn: UserSearchFn;
 
+    ready: boolean;
     pendingUsers: SelfRegistration[];
     actionTypes: ActionType[];
 
@@ -43,9 +44,11 @@ export class UserActivationPageComponent implements OnInit {
     }
 
     reload() {
+        this.ready = false;
         this.userManagementService.getAllPendingUsers().pipe(
             map((u: SelfRegistration[]) => {
                 this.pendingUsers = u;
+                this.ready = true;
             })
         ).subscribe();
     }

@@ -1,4 +1,4 @@
-<div class="dashboard-page" [attr.test-page-title]="'dashboard'">
+<div class="dashboard-page" [attr.test-page-title]="'dashboard'" [attr.test-page-ready]="''+(!loading)">
 
     <div *loadIf="loading">Loading ...</div>
     <app-dashboard

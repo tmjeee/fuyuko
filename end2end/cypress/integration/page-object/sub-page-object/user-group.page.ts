@@ -11,10 +11,12 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
 
     visit(): UserGroupPage {
         cy.visit('/user-gen-layout/(group//help:user-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): UserGroupPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

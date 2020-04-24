@@ -13,10 +13,12 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
     visit(): ViewDataListPage {
         cy.visit(`/view-gen-layout/(data-list//help:view-help)`);
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ViewDataListPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

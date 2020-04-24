@@ -10,10 +10,12 @@ export class PartnerListPage implements ActualPage<PartnerListPage> {
 
     visit(): PartnerListPage {
         cy.visit('/partner-layout/(list//help:partner-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): PartnerListPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

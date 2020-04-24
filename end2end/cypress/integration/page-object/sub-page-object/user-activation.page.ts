@@ -10,10 +10,12 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
 
     visit(): UserActivationPage {
         cy.visit('/user-gen-layout/(activation//help:user-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): UserActivationPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

@@ -18,12 +18,12 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
         new ViewValidationPage()
             .visit()
             .clickOnValidationDetails(this.validationName);
-        cy.waitUntil(() => cy.get(`[test-validation-result-page]`));
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ViewValidationDetailsPage {
-        cy.waitUntil(() => cy.get(`[test-validation-result-page]`));
+        util.waitUntilTestPageReady();
         return this;
     }
 

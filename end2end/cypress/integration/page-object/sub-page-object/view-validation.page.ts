@@ -2,6 +2,7 @@ import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {ViewValidationEditPopupPage} from "./sub-sub-page-object/view-validation-edit-popup.page";
 import {ViewValidationDetailsPage} from "./view-validation-details.page";
+import {waitUntilTestPageReady} from "../../util/util";
 
 export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
@@ -13,12 +14,13 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
     visit(): ViewValidationPage {
         cy.visit(`/view-gen-layout/(validation//help:view-help)`);
-        cy.waitUntil(() => cy.get(`[test-validation-result-page]`));
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ViewValidationPage {
-        cy.waitUntil(() => cy.get(`[test-validation-result-page]`));
+        // cy.waitUntil<boolean>(() => cy.get(`[test-page-ready]`).then((n) => n.attr('test-page-ready') == 'true'));
+        waitUntilTestPageReady();
         return this;
     }
 

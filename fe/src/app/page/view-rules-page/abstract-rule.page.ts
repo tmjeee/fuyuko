@@ -3,7 +3,7 @@ import {ViewService} from '../../service/view-service/view.service';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {NotificationsService} from 'angular2-notifications';
 import {RuleService} from '../../service/rule-service/rule.service';
-import {map, tap} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 import {View} from '../../model/view.model';
 import {combineLatest, Subscription, zip} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
@@ -21,7 +21,8 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
     attributes: Attribute[];
     rule: Rule;
 
-    ready: boolean;
+    viewReady: boolean;
+    ruleReady: boolean;
 
     constructor(protected viewService: ViewService,
                 protected route: ActivatedRoute,
@@ -32,17 +33,15 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.ready = false;
+        this.viewReady = false;
         this.subscription = this.viewService
             .asObserver()
             .pipe(
-                map((currentView: View) => {
+                tap((currentView: View) => {
                     if (currentView) {
                         this.currentView = currentView;
                         this.reload();
-                        this.ready = true;
-                    } else {
-                        this.ready = true;
+                        this.viewReady = true;
                     }
                 }),
             ).subscribe();
@@ -55,7 +54,7 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
     }
 
     reload() {
-        this.ready = false;
+        this.ruleReady = false;
         const ruleId: string = this.route.snapshot.paramMap.get('ruleId');
         if (ruleId) {
             zip(
@@ -66,8 +65,8 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                 tap((r: [Attribute[], Rule]) => {
                     this.attributes = r[0];
                     this.rule = r[1];
-                    this.ready = true;
-                })
+                }),
+                finalize(() => { this.ruleReady = true; })
             ).subscribe();
         } else {
             combineLatest([
@@ -97,9 +96,9 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                             operator: null,
                             condition: []
                         }]
-                    },
-                    this.ready = true;
-                })
+                    };
+                }),
+                finalize(() => { this.ruleReady = true;})
             ).subscribe();
         }
     }

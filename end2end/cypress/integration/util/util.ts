@@ -10,11 +10,16 @@ export const getMyself = (): any => {
     return {};
 }
 
+export const waitUntilTestPageReady = () => {
+    cy.waitUntil(() => cy.get(`[test-page-ready]`).then((n) => n.attr('test-page-ready') == 'true'));
+};
+
 export const clearAllMessageToasts = () => {
     cy.waitUntil(() => cy.get('simple-notifications .simple-notification')).each((n, index, list) => {
         Cypress.dom.isAttached(n) && cy.wrap(n).click({force: true});
     });
 }
+
 
 
 export const clickOnSuccessMessageToasts = () => {

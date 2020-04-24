@@ -13,10 +13,12 @@ export class ViewAttributeDetailsPage implements ActualPage<ViewAttributeDetails
 
     visit(): ViewAttributeDetailsPage {
         cy.visit(`/view-gen-layout/(attribute/${this.attributeId}//help:view-help)`);
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ViewAttributeDetailsPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

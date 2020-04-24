@@ -1,4 +1,4 @@
-<div class="view-views-page" [attr.test-page-title]="'view-views'">
+<div class="view-views-page" [attr.test-page-title]="'view-views'" [attr.test-page-ready]="''+(done)">
     <mat-card class="mat-elevation-z20">
         <mat-card-header>
             <mat-card-title>Views Management</mat-card-title>
@@ -9,7 +9,7 @@
         <mat-card-content>
             <div *ngIf="!done"> Loading ... </div>
             <ng-container *ngIf="done">
-                <app-view-table [views]="views" (events)="onViewTableEvent($event)"></app-view-table>
+                <app-view-table [attr.test-view-view-page]="''" [views]="views" (events)="onViewTableEvent($event)"></app-view-table>
             </ng-container>
         </mat-card-content>
     </mat-card>

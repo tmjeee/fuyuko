@@ -21,12 +21,12 @@ export class CustomImportPage implements ActualPage<CustomImportPage> {
 
     visit(): CustomImportPage {
         cy.visit(`/import-export-gen-layout/(custom-import//help:import-help)`);
-        cy.waitUntil(() => cy.get(`[test-custom-import-wizard]`));
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): CustomImportPage {
-        cy.waitUntil(() => cy.get(`[test-custom-import-wizard]`));
+        util.waitUntilTestPageReady()
         return this;
     }
 

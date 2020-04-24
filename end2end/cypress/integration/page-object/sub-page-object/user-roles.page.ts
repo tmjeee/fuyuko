@@ -11,10 +11,12 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
 
     visit(): UserRolesPage {
         cy.visit('/user-gen-layout/(role//help:user-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): UserRolesPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

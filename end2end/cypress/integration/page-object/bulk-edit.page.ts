@@ -27,12 +27,12 @@ export class BulkEditPage implements ActualPage<BulkEditPage> {
 
     visit(): BulkEditPage {
         cy.visit('/gen-layout/(bulk-edit//help:bulk-edit-help)');
-        cy.waitUntil(() => cy.get(`[test-bulk-edit-wizard-component]`));
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): BulkEditPage {
-        cy.waitUntil(() => cy.get(`[test-bulk-edit-wizard-component]`));
+        util.waitUntilTestPageReady();
         return this;
     }
 

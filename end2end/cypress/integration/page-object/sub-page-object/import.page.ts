@@ -8,12 +8,12 @@ export class ImportPage implements ActualPage<ImportPage> {
 
     visit(): ImportPage {
         cy.visit('/import-export-gen-layout/(import//help:import-help)');
-        cy.waitUntil(() => cy.get(`[test-import-data-wizard]`));
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ImportPage {
-        cy.waitUntil(() => cy.get(`[test-import-data-wizard]`));
+        util.waitUntilTestPageReady();
         return this;
     }
 

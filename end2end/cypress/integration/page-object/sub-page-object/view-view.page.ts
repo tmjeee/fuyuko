@@ -12,10 +12,12 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
 
     visit(): ViewViewPage {
         cy.visit(`/view-gen-layout/(views//help:view-help)`);
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ViewViewPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

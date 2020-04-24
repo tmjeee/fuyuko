@@ -11,10 +11,12 @@ export class PricingPage implements ActualPage<PricingPage> {
 
     visit(): PricingPage {
         cy.visit('/gen-layout/(pricing-structure//help:pricing-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): PricingPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

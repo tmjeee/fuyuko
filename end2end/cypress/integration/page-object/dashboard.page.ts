@@ -15,10 +15,12 @@ export class DashboardPage implements ActualPage<DashboardPage> {
 
     visit(): DashboardPage {
         cy.visit('/dashboard-layout/(dashboard//help:dashboard-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): DashboardPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

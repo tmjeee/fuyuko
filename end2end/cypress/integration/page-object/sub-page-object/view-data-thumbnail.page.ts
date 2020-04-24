@@ -13,10 +13,12 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
 
     visit(): ViewDataThumbnailPage {
         cy.visit(`/view-gen-layout/(data-thumbnail//help:view-help)`);
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ViewDataThumbnailPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

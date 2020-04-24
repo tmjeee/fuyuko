@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {Group} from '../../model/group.model';
-import {map, tap} from 'rxjs/operators';
+import {combineAll, flatMap, map, mergeAll, tap} from 'rxjs/operators';
 import {User} from '../../model/user.model';
 import {Action, UserSearchFn, UserTableComponentEvent} from '../../component/user-table-component/user-table.component';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
 import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
@@ -18,6 +18,8 @@ export class UserGroupPageComponent implements OnInit {
 
   userSearchFn: (group: Group) => UserSearchFn;
 
+  groupsReady: boolean;
+  groupsUsersReady: boolean;
   allGroups: Group[];
 
   allGroupsUsers: Map<Group, User[]> = new Map(); // {[groupId: string]: User[]} = {};
@@ -31,6 +33,7 @@ export class UserGroupPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.groupsReady = false;
     this.userManagementService
       .getAllGroups()
       .pipe(
@@ -41,6 +44,7 @@ export class UserGroupPageComponent implements OnInit {
             return a;
           }, this.allGroupsUsers);
           this.reloadGroupUsers();
+          this.groupsReady = true;
         })
       ).subscribe();
 
@@ -53,18 +57,38 @@ export class UserGroupPageComponent implements OnInit {
     };
   }
 
-  reloadGroupUsers() {
+  reloadGroupUsers(fn?: ()=>void) {
+    this.groupsUsersReady = false;
+    const allGroups: Group[] = Array.from(this.allGroupsUsers.keys());
+    of(...allGroups.map((g: Group) => this.userManagementService.findUsersInGroup(g))).pipe(
+        combineAll(),
+        tap((r: User[][]) => {
+            for (let i=0; i<allGroups.length; i++) {
+                const group: Group = allGroups[i];
+                const usersInGroup: User[] = r[i];
+                this.allGroupsUsers.set(group, usersInGroup);
+            }
+            this.groupsUsersReady = true;
+        })
+    ).subscribe();
+
+    /*
     Array.from(this.allGroupsUsers.keys())
       .forEach((grp: Group) => {
           this._reloadGroupUser(grp);
       });
+     */
   }
 
+
+
   private _reloadGroupUser(grp: Group) {
+      this.groupsUsersReady = false;
       this.userManagementService.findUsersInGroup(grp)
           .pipe(
               map((users: User[]) => {
                   this.allGroupsUsers.set(grp, users);
+                  this.groupsUsersReady = true;
               })
           ).subscribe();
   }

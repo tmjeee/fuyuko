@@ -1,11 +1,13 @@
-<div class="user-activation-page" [attr.test-page-title]="'user-activation'">
+<div class="user-activation-page" [attr.test-page-title]="'user-activation'" [attr.test-page-ready]="''+(ready)">
     <mat-card>
         <mat-card-header>
             <mat-card-title>Self Registered User Activation</mat-card-title>
             <mat-card-subtitle>Activate / Approve all self registered User, so they can start participating and contribute.</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-user-search-table [userSearchFn]="pendingUserSearchFn"
+            <div *loadIf="!ready">Loading ...</div>
+            <app-user-search-table *ngIf="ready"
+                                   [userSearchFn]="pendingUserSearchFn"
                                    searchFieldHint="Search for users in pending list, key in approximate username and press enter to search"
                                    searchFieldLabel="Search users"
                                    searchFieldPlaceholder="Search for users"

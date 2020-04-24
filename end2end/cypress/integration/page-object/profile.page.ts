@@ -8,10 +8,12 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
 
     visit(): ProfilePage {
         cy.visit(`/gen-layout/(profile//help:profile-help)`);
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ProfilePage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

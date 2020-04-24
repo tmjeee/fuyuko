@@ -10,10 +10,12 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
 
     visit(): PartnerTablePage {
         cy.visit('/partner-layout/(table//help:partner-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): PartnerTablePage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

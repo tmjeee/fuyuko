@@ -1,4 +1,4 @@
-<div class="profile-page" [attr.test-page-title]="'profile'">
+<div class="profile-page" [attr.test-page-title]="'profile'" [attr.test-page-ready]="''+((!!allPredefinedAvatars) && (!!myself) && (!!allThemes))">
   <ng-container *ngIf="!ready">
     Loading ...
   </ng-container>

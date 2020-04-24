@@ -5,10 +5,12 @@ export class RegisterPage implements ActualPage<RegisterPage> {
 
     visit(): RegisterPage {
         cy.visit(`/login-layout/register`);
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): RegisterPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

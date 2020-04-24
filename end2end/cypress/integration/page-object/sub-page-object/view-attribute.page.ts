@@ -12,10 +12,12 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
     visit(): ViewAttributePage {
         cy.visit('/view-gen-layout/(attributes//help:view-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ViewAttributePage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

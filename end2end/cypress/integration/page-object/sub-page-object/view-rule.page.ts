@@ -12,10 +12,12 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
 
     visit(): ViewRulePage {
         cy.visit(`/view-gen-layout/(rules//help:view-help)`);
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): ViewRulePage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

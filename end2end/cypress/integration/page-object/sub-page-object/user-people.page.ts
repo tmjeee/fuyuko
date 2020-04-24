@@ -10,10 +10,12 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
 
     visit(): UserPeoplePage {
         cy.visit('/user-gen-layout/(people//help:user-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): UserPeoplePage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

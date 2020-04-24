@@ -1,5 +1,4 @@
 import {LoginPage} from "./page-object/login.page";
-import {ImportExportPage} from "./page-object/import-export.page";
 import {CustomImportPage} from "./page-object/sub-page-object/custom-import.page";
 import {JobsPage} from "./page-object/jobs.page";
 
@@ -51,7 +50,7 @@ describe('custom import spec', () => {
 
     //////////////////
 
-    it (`should go do import`, () => {
+    it(`should go do import`, () => {
         const jobName = `0.0.1-sample-custom-import-1.js`;
         customImportPage
             // step 1

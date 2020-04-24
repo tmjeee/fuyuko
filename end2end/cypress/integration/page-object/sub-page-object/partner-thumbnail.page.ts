@@ -10,10 +10,12 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
 
     visit(): PartnerThumbnailPage {
         cy.visit('/partner-layout/(thumbnail//help:partner-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): PartnerThumbnailPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

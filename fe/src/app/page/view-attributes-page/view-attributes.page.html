@@ -1,10 +1,11 @@
-<div class="view-attributes-page" [attr.test-page-title]="'view-attributes'">
+<div class="view-attributes-page" [attr.test-page-title]="'view-attributes'" [attr.test-page-ready]="'' + (attributesReady && viewReady)">
   <mat-card>
     <mat-card-header>
       <mat-card-title>Attributes</mat-card-title>
-      <mat-card-subtitle>Add / Edit / Delete attributes related to current active view.</mat-card-subtitle>
+      <mat-card-subtitle>Listing and Management of attributes related to current active view.</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
+      <div *ngIf="attributes != null && attributes != undefined" [attr.test-view-attribute-page]="''"></div>
       <div *ngIf="!attributes">No attributes.</div>
       <app-attribute-table *ngIf="attributes"
                            [attributes]="attributes"
@@ -14,10 +15,7 @@
                            searchFieldLabel="Search attributes"
                            searchFieldPlaceholder="Search Attributes">
       </app-attribute-table>
-
       <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
-
     </mat-card-content>
   </mat-card>
-
 </div>

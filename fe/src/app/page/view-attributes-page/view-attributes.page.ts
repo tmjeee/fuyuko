@@ -1,7 +1,7 @@
 import {Component, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ViewService} from '../../service/view-service/view.service';
-import {map} from 'rxjs/operators';
+import {finalize, map} from 'rxjs/operators';
 import {View} from '../../model/view.model';
 import {Subscription} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
@@ -29,6 +29,9 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
 
+  viewReady: boolean;
+  attributesReady: boolean;
+
   currentView: View;
   attributes: Attribute[];
 
@@ -40,6 +43,7 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.viewReady = false;
     this.subscription = this.viewService
       .asObserver()
       .pipe(
@@ -48,6 +52,9 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
             this.currentView = v;
             this.reload();
           }
+        }),
+        finalize(() => {
+            this.viewReady = true;
         })
       ).subscribe();
   }
@@ -60,11 +67,15 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
 
   reload() {
     if (this.currentView) {
+      this.attributesReady = false;
       this.attributeService.getAllAttributesByView(this.currentView.id, this.pagination.limitOffset())
         .pipe(
           map((r: PaginableApiResponse<Attribute[]>) => {
             this.attributes = r.payload;
             this.pagination.update(r);
+          }),
+          finalize(() => {
+              this.attributesReady = true;
           })
         ).subscribe();
     }

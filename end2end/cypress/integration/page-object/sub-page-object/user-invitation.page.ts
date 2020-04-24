@@ -11,10 +11,12 @@ export class UserInvitationPage implements ActualPage<UserInvitationPage> {
 
     visit(): UserInvitationPage {
         cy.visit('/user-gen-layout/(invitation//help:user-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): UserInvitationPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

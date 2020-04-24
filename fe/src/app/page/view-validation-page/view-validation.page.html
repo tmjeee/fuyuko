@@ -1,4 +1,4 @@
-<div class="view-validation-page" [attr.test-page-title]="'view-validations'">
+<div class="view-validation-page" [attr.test-page-title]="'view-validations'" [attr.test-page-ready]="''+(!loading && (!!view))">
     <mat-card>
         <mat-card-header>
             <mat-card-title>Validation</mat-card-title>
@@ -20,7 +20,6 @@
                 <div fxFlex="1 1 auto">
                     <app-validation-result-listing
                             *ngIf="view"
-                            [attr.test-validation-result-page]="''"
                             [view]="view"
                             [validations]="validations"
                             (events)="onValidationResultListingEvents($event)">

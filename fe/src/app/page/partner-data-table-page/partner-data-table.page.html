@@ -1,5 +1,5 @@
 
-<div class="partner-data-table-page" [attr.test-page-title]="'partner-table'">
+<div class="partner-data-table-page" [attr.test-page-title]="'partner-table'" [attr.test-page-ready]="''+ (!loading && (!!pricingStructures))">
     <mat-card class="mat-elevation-z-20">
         <mat-card-header>
             <mat-card-title>Partner Data Table</mat-card-title>

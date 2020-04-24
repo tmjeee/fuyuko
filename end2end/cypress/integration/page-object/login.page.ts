@@ -6,10 +6,12 @@ export class LoginPage implements ActualPage<LoginPage> {
 
     visit(): LoginPage {
          cy.visit(`/login-layout/login`);
+         this.waitForReady();
          return this;
     }
 
     waitForReady(): LoginPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

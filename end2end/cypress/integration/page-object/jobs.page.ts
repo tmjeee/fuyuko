@@ -8,10 +8,12 @@ export class JobsPage implements ActualPage<JobsPage> {
 
     visit(): JobsPage {
         cy.visit('/gen-layout/(jobs//help:jobs-help)');
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): JobsPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 

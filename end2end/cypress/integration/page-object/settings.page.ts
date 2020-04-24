@@ -8,10 +8,12 @@ export class SettingsPage implements ActualPage<SettingsPage> {
 
     visit(): SettingsPage {
         cy.visit(`/gen-layout/(settings//help:settings-help)`);
+        this.waitForReady();
         return this;
     }
 
     waitForReady(): SettingsPage {
+        util.waitUntilTestPageReady();
         return this;
     }
 
