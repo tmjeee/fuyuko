@@ -23,11 +23,17 @@ export class LoginPage implements ActualPage<LoginPage> {
 
     login(username: string, password: string): DashboardPage {
         cy.get(`[test-page-title='login']`)
-            .find(`[test-field-username]`).clear({force: true}).type(username, {force: true});
+            .find(`[test-field-username]`)
+            .clear({force: true})
+            .type(username, {force: true});
         cy.get(`[test-page-title='login']`)
-            .find(`[test-field-password]`).clear({force: true}).type(password, {force: true});
+            .find(`[test-field-password]`)
+            .clear({force: true})
+            .type(password, {force: true});
         cy.get(`[test-page-title='login']`)
-            .find(`[test-button-login]`).should('not.be.disabled').click({force: true});
+            .find(`[test-button-login]`)
+            .should('not.be.disabled')
+            .click({force: true});
         return new DashboardPage().visit();
     }
 

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {map, tap} from 'rxjs/operators';
@@ -14,7 +14,9 @@ import {LoginResponse} from "../../model/api-response.model";
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements AfterViewInit {
+
+  ready: boolean;
 
   formGroup: FormGroup;
   formControlUsername: FormControl;
@@ -32,6 +34,10 @@ export class LoginPageComponent {
       username: this.formControlUsername,
       password: this.formControlPassword
     });
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => (this.ready = true));
   }
 
   onSubmit() {

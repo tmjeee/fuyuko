@@ -1,4 +1,4 @@
-<div class="login-page" [attr.test-page-title]="'login'" [attr.test-page-ready]="'true'">
+<div class="login-page" [attr.test-page-title]="'login'" [attr.test-page-ready]="''+(ready)">
   <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
     <mat-card class="container">
       <mat-card-header>
