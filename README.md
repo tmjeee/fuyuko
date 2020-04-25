@@ -5,6 +5,12 @@
 ## Gitbook
 [Documentation](https://fuyuko-org.gitbook.io/fuyuko/)
 
+# Bugs and Issues
+Bug, Issues and features trackings are [here](https://github.com/tmjeee/fuyuko/issues)
+
+# Docker Images
+Docker images can be found [here](https://hub.docker.com/repositories/tmjee)
+
 # Tests
 ## Cypress Integration Tests Results
 Cypress test run results are available [here](https://dashboard.cypress.io/projects/ozp71m)
