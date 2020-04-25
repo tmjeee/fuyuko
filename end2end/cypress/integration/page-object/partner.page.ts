@@ -5,6 +5,11 @@ import {PartnerThumbnailPage} from "./sub-page-object/partner-thumbnail.page";
 
 export class PartnerPage {
 
+    visit(): PartnerPage {
+        new PartnerTablePage().visit();
+        return this;
+    }
+
     visitPartnerTablePage(): PartnerTablePage {
         // cy.visit('/partner-layout/(table//help:partner-help)');
         return new PartnerTablePage().visit();

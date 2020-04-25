@@ -25,8 +25,8 @@ export class DashboardPage implements ActualPage<DashboardPage> {
     }
 
     validateTitle(): DashboardPage {
-       cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'dashboard');
-       return this;
+       // cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'dashboard');
+       return new DashboardPage().visit();
     }
 
     changeDashboardStrategy(dashboardStrategyId: string): DashboardPage {
@@ -45,54 +45,54 @@ export class DashboardPage implements ActualPage<DashboardPage> {
 
 
     visitProfilePage() {
-        cy.get(`[test-sidenav='profile']`).click({force: true});
-        return new ProfilePage();
+        // cy.get(`[test-sidenav='profile']`).click({force: true});
+        return new ProfilePage().visit();
     }
 
     visitDashboardPage() {
-        cy.get(`[test-sidenav='dashboard']`).click({force: true});
-        return new DashboardPage();
+        // cy.get(`[test-sidenav='dashboard']`).click({force: true});
+        return new DashboardPage().visit();
     }
 
     visitUserPage() {
-        cy.get(`[test-sidenav='user']`).click({force: true});
-        return new UserPage();
+        // cy.get(`[test-sidenav='user']`).click({force: true});
+        return new UserPage().visit();
     }
 
     visitViewPage(): ViewPage {
-        cy.get(`[test-sidenav='view']`).click({force: true});
-        cy.wait(1000);
-        return new ViewPage();
+        // cy.get(`[test-sidenav='view']`).click({force: true});
+        // cy.wait(1000);
+        return new ViewPage().visit();
     }
 
-    visitPricingPage() {
-        cy.get(`[test-sidenav='pricing']`).click({force: true});
-        return new PricingPage();
+    visitPricingPage(): PricingPage {
+        // cy.get(`[test-sidenav='pricing']`).click({force: true});
+        return new PricingPage().visit();
     }
 
-    visitBulkEditPage() {
-        cy.get(`[test-sidenav='bulk-edit']`).click({force: true});
-        return new BulkEditPage();
+    visitBulkEditPage(): BulkEditPage {
+        // cy.get(`[test-sidenav='bulk-edit']`).click({force: true});
+        return new BulkEditPage().visit();
     }
 
-    visitSettingsPage() {
-        cy.get(`[test-sidenav='settings']`).click({force: true});
-        return new SettingsPage();
+    visitSettingsPage(): SettingsPage {
+        // cy.get(`[test-sidenav='settings']`).click({force: true});
+        return new SettingsPage().visit();
     }
 
-    visitImportExportPage() {
-        cy.get(`[test-sidenav='import-export']`).click({force: true});
-        return new ImportExportPage();
+    visitImportExportPage(): ImportExportPage {
+        // cy.get(`[test-sidenav='import-export']`).click({force: true});
+        return new ImportExportPage().visit();
     }
 
     visitJobsPage() {
-        cy.get(`[test-sidenav='jobs']`).click({force: true});
-        return new JobsPage();
+        // cy.get(`[test-sidenav='jobs']`).click({force: true});
+        return new JobsPage().visit();
     }
 
     visitPartnerPage() {
-        cy.get(`[test-sidenav='partner']`).click({force: true});
-        return new PartnerPage();
+        // cy.get(`[test-sidenav='partner']`).click({force: true});
+        return new PartnerPage().visit();
     }
 
     verifyErrorMessageExists(): DashboardPage {

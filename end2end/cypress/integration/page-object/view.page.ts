@@ -11,9 +11,10 @@ import {ViewViewPage} from "./sub-page-object/view-view.page";
 
 export class ViewPage  {
 
-    visit(): ViewRulePage {
+    visit(): ViewPage {
         // cy.visit(`/view-gen-layout/(rules//help:view-help)`);
-        return new ViewRulePage().visit();
+        new ViewRulePage().visit();
+        return this;
     }
 
     visitViewRule(): ViewRulePage {

@@ -7,9 +7,10 @@ import {CustomExportPage} from "./sub-page-object/custom-export.page";
 
 export class ImportExportPage {
 
-    visit(): ImportPage {
+    visit(): ImportExportPage {
         // cy.visit('/import-export-gen-layout/(import//help:import-help)');
-        return new ImportPage().visit();
+        new ImportPage().visit();
+        return this;
     }
 
     visitImportPage(): ImportPage {
