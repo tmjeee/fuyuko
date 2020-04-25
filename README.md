@@ -2,8 +2,7 @@
 ![fuyuko logo](https://github.com/tmjeee/fuyuko/blob/v1.0.0-beta/fe/src/assets/images/logo/fuyuko-logo-with-side-wordings.png)
 
 #  Documentation
-## Gitbook
-[Documentation](https://fuyuko-org.gitbook.io/fuyuko/)
+Documentations are [here](https://fuyuko-org.gitbook.io/fuyuko/)
 
 # Bugs and Issues
 Bug, Issues and features trackings are [here](https://github.com/tmjeee/fuyuko/issues)
@@ -12,8 +11,7 @@ Bug, Issues and features trackings are [here](https://github.com/tmjeee/fuyuko/i
 Docker images can be found [here](https://hub.docker.com/repositories/tmjee)
 
 # Tests
-## Cypress Integration Tests Results
-Cypress test run results are available [here](https://dashboard.cypress.io/projects/ozp71m)
+Cypress tests runs results are available [here](https://dashboard.cypress.io/projects/ozp71m)
 
 # Build & Integration 
 ## Back End Pipeline
