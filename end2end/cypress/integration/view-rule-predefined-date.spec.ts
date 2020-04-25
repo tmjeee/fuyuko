@@ -16,8 +16,8 @@ describe('view-rule-predefined-date', () => {
     });
 
     after(() => {
-        localStorage.clear();
-        sessionStorage.clear();
+        // localStorage.clear();
+        // sessionStorage.clear();
     });
 
 

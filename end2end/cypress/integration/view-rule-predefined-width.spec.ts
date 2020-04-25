@@ -16,8 +16,8 @@ describe('view-rule-predefined-width', () => {
     });
 
     after(() => {
-        localStorage.clear();
-        sessionStorage.clear();
+        // localStorage.clear();
+        // sessionStorage.clear();
     });
 
 

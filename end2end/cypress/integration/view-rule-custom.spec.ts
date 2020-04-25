@@ -16,8 +16,8 @@ describe('view-rule-custom', () => {
     });
 
     after(() => {
-        localStorage.clear();
-        sessionStorage.clear();
+        // localStorage.clear();
+        // sessionStorage.clear();
     });
 
 

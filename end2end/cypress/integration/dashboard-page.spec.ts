@@ -13,8 +13,8 @@ describe('dashboard', () => {
     });
 
     after(() => {
-        localStorage.clear();
-        sessionStorage.clear();
+        // localStorage.clear();
+        // sessionStorage.clear();
     });
 
     beforeEach(() => {

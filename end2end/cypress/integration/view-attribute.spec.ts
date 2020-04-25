@@ -17,8 +17,8 @@ describe('view attribute spec', () => {
     });
 
     after(() => {
-        localStorage.clear();
-        sessionStorage.clear();
+        // localStorage.clear();
+        // sessionStorage.clear();
     });
 
 

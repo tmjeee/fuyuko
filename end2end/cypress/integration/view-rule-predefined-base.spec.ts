@@ -18,8 +18,8 @@ describe('view-rule-predefined-base', () => {
     });
 
     after(() => {
-        localStorage.clear();
-        sessionStorage.clear();
+        // localStorage.clear();
+        // sessionStorage.clear();
     });
 
 

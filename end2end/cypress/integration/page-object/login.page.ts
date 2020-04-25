@@ -34,7 +34,7 @@ export class LoginPage implements ActualPage<LoginPage> {
             .find(`[test-button-login]`)
             .should('not.be.disabled')
             .click({force: true});
-        return new DashboardPage().visit();
+        return new DashboardPage().waitForReady();
     }
 
     verifyErrorMessageExists(): LoginPage {
