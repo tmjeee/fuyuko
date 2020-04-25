@@ -21,10 +21,6 @@ import {
 
 export class BulkEditPage implements ActualPage<BulkEditPage> {
 
-    constructor() {
-        cy.waitUntil(() => cy.get(`[test-bulk-edit-wizard-component]`));
-    }
-
     visit(): BulkEditPage {
         cy.visit('/gen-layout/(bulk-edit//help:bulk-edit-help)');
         this.waitForReady();

@@ -28,7 +28,7 @@ export class LoginPage implements ActualPage<LoginPage> {
             .find(`[test-field-password]`).clear({force: true}).type(password, {force: true});
         cy.get(`[test-page-title='login']`)
             .find(`[test-button-login]`).should('not.be.disabled').click({force: true});
-        return new DashboardPage();
+        return new DashboardPage().visit();
     }
 
     verifyErrorMessageExists(): LoginPage {
