@@ -46,7 +46,6 @@ describe(`data export artifacts spec`, () => {
 
     it('should load', () => {
         exportArtifactsPage
-            .visit()
             .validateTitle()
         ;
     });

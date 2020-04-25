@@ -14,6 +14,7 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
 
     waitForReady(): ViewPredefinedRulePage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

@@ -39,7 +39,6 @@ describe('view-rule-custom', () => {
 
     it('should load', () => {
         viewRulePage
-            .visit()
             .validateTitle();
     });
 

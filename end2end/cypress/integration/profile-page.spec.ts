@@ -39,7 +39,6 @@ describe('profile', () => {
 
     it ('should load', () => {
         profilePage
-            .visit()
             .validateTitle();
     });
 

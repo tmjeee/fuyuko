@@ -43,10 +43,7 @@ describe('partner thumbnail spec', () => {
     });
 
     it('should load', () => {
-        partnerPage
-            .visitPartnerThumbnailPage()
-            .validateTitle()
-        ;
+        partnerThumbnailPage.validateTitle();
     });
 
     //////////////////

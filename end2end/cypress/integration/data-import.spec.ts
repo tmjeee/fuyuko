@@ -40,7 +40,6 @@ describe(`data import spec`, () => {
 
     it('should load', () => {
         importPage
-            .visit()
             .validateTitle()
         ;
     });

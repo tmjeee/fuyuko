@@ -40,7 +40,6 @@ describe('view attribute spec', () => {
 
     it('should load', () => {
         viewAttributePage
-            .visit()
             .validateTitle();
     });
 

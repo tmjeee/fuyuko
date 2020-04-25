@@ -17,6 +17,7 @@ export class UserInvitationPage implements ActualPage<UserInvitationPage> {
 
     waitForReady(): UserInvitationPage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

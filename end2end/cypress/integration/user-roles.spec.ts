@@ -41,7 +41,6 @@ describe("user-role", () => {
 
     it ('should load', () => {
         userRolePage
-            .visit()
             .validateTitle();
     });
 
@@ -77,7 +76,6 @@ describe("user-role", () => {
     });
 
     it ('VIEW role panel should toggle between exapand and collapsed', () => {
-        userRolePage.visit();
         userRolePage
             .toggleRolePanel('VIEW')
             .verifyRolePanelExpanded('VIEW', true);
@@ -88,7 +86,6 @@ describe("user-role", () => {
 
 
     it ('EDIT role panel should toggle between exapand and collapsed', () => {
-        userRolePage.visit();
         userRolePage
             .toggleRolePanel('EDIT')
             .verifyRolePanelExpanded('EDIT', true);
@@ -99,7 +96,6 @@ describe("user-role", () => {
 
 
     it ('ADMIN role panel should toggle between exapand and collapsed', () => {
-        userRolePage.visit();
         userRolePage
             .toggleRolePanel('ADMIN')
             .verifyRolePanelExpanded('ADMIN', true);
@@ -110,7 +106,6 @@ describe("user-role", () => {
 
 
     it ('PARTNER role panel should toggle between exapand and collapsed', () => {
-        userRolePage.visit();
         userRolePage
             .toggleRolePanel('PARTNER')
             .verifyRolePanelExpanded('PARTNER', true);
@@ -124,7 +119,6 @@ describe("user-role", () => {
         const roleName = 'VIEW';
         const groupName1 = 'EDIT Group';
         const groupName2 = 'ADMIN Group';
-        userRolePage.visit();
         userRolePage
             .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
@@ -145,7 +139,6 @@ describe("user-role", () => {
         const roleName = 'EDIT';
         const groupName1 = 'VIEW Group';
         const groupName2 = 'ADMIN Group';
-        userRolePage.visit();
         userRolePage
             .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
@@ -166,7 +159,6 @@ describe("user-role", () => {
         const roleName = 'ADMIN';
         const groupName1 = 'VIEW Group';
         const groupName2 = 'EDIT Group';
-        userRolePage.visit();
         userRolePage
             .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
@@ -187,7 +179,6 @@ describe("user-role", () => {
         const roleName = 'PARTNER';
         const groupName1 = 'VIEW Group';
         const groupName2 = 'EDIT Group';
-        userRolePage.visit();
         userRolePage
             .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)

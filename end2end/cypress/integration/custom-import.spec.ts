@@ -43,7 +43,6 @@ describe('custom import spec', () => {
 
     it('should load', () => {
         customImportPage
-            .visit()
             .validateTitle()
         ;
     });

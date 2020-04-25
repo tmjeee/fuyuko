@@ -23,6 +23,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     waitForReady(): ViewDataTablePage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

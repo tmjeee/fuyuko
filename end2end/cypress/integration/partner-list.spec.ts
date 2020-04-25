@@ -42,8 +42,7 @@ describe('partner list spec', () => {
     });
 
     it('should load', () => {
-        partnerPage
-            .visitPartnerListPage()
+        partnerListPage
             .validateTitle()
         ;
     });

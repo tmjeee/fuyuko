@@ -17,6 +17,7 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
 
     waitForReady(): UserGroupPage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

@@ -19,6 +19,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
 
     waitForReady(): ViewDataThumbnailPage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

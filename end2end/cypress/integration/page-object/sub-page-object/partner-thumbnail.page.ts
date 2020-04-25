@@ -16,6 +16,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
 
     waitForReady(): PartnerThumbnailPage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

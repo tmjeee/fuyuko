@@ -21,7 +21,7 @@ export class DashboardPage implements ActualPage<DashboardPage> {
 
     waitForReady(): DashboardPage {
         util.waitUntilTestPageReady();
-        cy.wait(1000);
+        cy.wait(2000);
         return this;
     }
 

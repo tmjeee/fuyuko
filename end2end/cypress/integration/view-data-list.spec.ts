@@ -40,7 +40,6 @@ describe(`view-data-list spec`, () => {
 
     it('should load', () => {
         viewDataListPage
-            .visit()
             .validateTitle()
         ;
     });

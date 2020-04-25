@@ -45,7 +45,6 @@ describe(`data export spec`, () => {
 
     it('should load', () => {
         exportPage
-            .visit()
             .validateTitle()
         ;
     });

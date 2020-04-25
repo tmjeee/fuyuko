@@ -32,7 +32,6 @@ describe(`view validation spec`, () => {
             .login(username, password)
             .visitViewPage()
             .visitValidations();
-        viewValidationPage.visit();
     });
 
     afterEach(() => {
@@ -41,7 +40,6 @@ describe(`view validation spec`, () => {
 
     it('should load', () => {
         viewValidationPage
-            .visit()
             .validateTitle()
         ;
     });

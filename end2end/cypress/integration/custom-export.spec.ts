@@ -44,7 +44,6 @@ describe(`custom export spec`, () => {
 
     it('should load', () => {
         customExportPage
-            .visit()
             .validateTitle()
         ;
     });

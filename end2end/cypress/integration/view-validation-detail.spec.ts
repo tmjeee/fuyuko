@@ -74,7 +74,6 @@ describe(`view validation details spec`, () => {
         viewValidationDetailsPage = viewValidationPage
             .clickOnValidationDetails(validationName)
         ;
-        cy.wait(1000);
     });
 
     afterEach(() => {
@@ -83,7 +82,6 @@ describe(`view validation details spec`, () => {
 
     it('should load', () => {
         viewValidationDetailsPage
-            .visit()
             .validateTitle()
         ;
     });

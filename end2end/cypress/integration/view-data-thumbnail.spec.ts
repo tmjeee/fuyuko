@@ -42,7 +42,6 @@ describe('view-data-thumbnail spec', () => {
 
     it('should load', () => {
         viewDataThumbnailPage
-            .visit()
             .validateTitle()
         ;
     });

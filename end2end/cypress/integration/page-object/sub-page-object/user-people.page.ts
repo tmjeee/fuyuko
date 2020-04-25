@@ -16,6 +16,7 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
 
     waitForReady(): UserPeoplePage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

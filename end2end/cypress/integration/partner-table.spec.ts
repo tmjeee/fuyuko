@@ -43,8 +43,7 @@ describe('partner table spec', () => {
     });
 
     it('should load', () => {
-        partnerPage
-            .visitPartnerTablePage()
+        partnerTablePage
             .validateTitle()
         ;
     });

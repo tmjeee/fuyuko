@@ -17,6 +17,7 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
 
     waitForReady(): UserRolesPage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

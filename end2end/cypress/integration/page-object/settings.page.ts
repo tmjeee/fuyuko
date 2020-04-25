@@ -14,6 +14,7 @@ export class SettingsPage implements ActualPage<SettingsPage> {
 
     waitForReady(): SettingsPage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

@@ -28,6 +28,7 @@ export class CustomExportPage implements ActualPage<CustomExportPage> {
 
     waitForReady(): CustomExportPage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

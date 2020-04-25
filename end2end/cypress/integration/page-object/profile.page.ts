@@ -14,6 +14,7 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
 
     waitForReady(): ProfilePage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

@@ -44,7 +44,6 @@ describe("user-role", () => {
 
     it('should load', () => {
         userActivationPage
-            .visit()
             .validateTitle();
     });
 

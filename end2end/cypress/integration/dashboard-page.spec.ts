@@ -32,13 +32,11 @@ describe('dashboard', () => {
 
     it ('should load', () => {
         dashboardPage
-            .visit()
             .validateTitle();
     });
 
     it ('should be able to switch dashboard strategies', () => {
         dashboardPage
-            .visit()
             .changeDashboardStrategy('1x')
             .validateDashboardStrategyIs('1x')
             .changeDashboardStrategy('2x')
@@ -48,21 +46,18 @@ describe('dashboard', () => {
 
     it ('should be able to navigate to profile page', () => {
         dashboardPage
-            .visit()
             .visitProfilePage()
             .validateTitle();
     });
 
     it ('should be able to navigate to dashboard page', () => {
         dashboardPage
-            .visit()
             .visitDashboardPage()
             .validateTitle();
     });
 
     it ('should be able to navigate to user role page', () => {
         dashboardPage
-            .visit()
             .visitUserPage()
             .visitUserRolePage()
             .validateTitle();
@@ -70,7 +65,6 @@ describe('dashboard', () => {
 
     it('should be able to navigate to user group page', () => {
         dashboardPage
-            .visit()
             .visitUserPage()
             .visitUserGroupPage()
             .validateTitle();
@@ -78,7 +72,6 @@ describe('dashboard', () => {
 
     it ('should be able to navigate to user people page', () => {
         dashboardPage
-            .visit()
             .visitUserPage()
             .visitUserPeoplePage()
             .validateTitle();
@@ -86,7 +79,6 @@ describe('dashboard', () => {
 
     it ('should be able to navigate to user invitation page', () => {
         dashboardPage
-            .visit()
             .visitUserPage()
             .visitUserInvitationPage()
             .validateTitle();
@@ -94,7 +86,6 @@ describe('dashboard', () => {
 
     it ('should be able to navigate to user activation page', () => {
         dashboardPage
-            .visit()
             .visitUserPage()
             .visitUserActivationPage()
             .validateTitle();

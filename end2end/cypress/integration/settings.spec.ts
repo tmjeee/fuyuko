@@ -34,7 +34,7 @@ describe('settings spec', () => {
             .visitSettingsPage()
         ;
         // cy.wait(1000); // wait for settings to be loaded
-        cy.waitUntil(() => cy.get(`[test-settings]`))
+        // cy.waitUntil(() => cy.get(`[test-settings]`))
     });
 
     afterEach(() => {
@@ -43,7 +43,6 @@ describe('settings spec', () => {
 
     it('should load', () => {
         settingsPage
-            .visit()
             .validateTitle()
         ;
     });

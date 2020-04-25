@@ -41,7 +41,6 @@ describe("user-role", () => {
 
     it ('should load', () => {
         userGroupPage
-            .visit()
             .validateTitle();
     });
 

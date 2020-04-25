@@ -170,7 +170,6 @@ describe(`bulk edit spec`, () => {
 
     it('should load', () => {
         bulkEditPage
-            .visit()
             .validateTitle()
         ;
     });
@@ -318,7 +317,6 @@ describe(`bulk edit spec`, () => {
         refreshVariables();
 
         bulkEditPage
-            .visit()
             .selectView(viewName)
             .startWizard()
             .verifyStep()
@@ -413,7 +411,6 @@ describe(`bulk edit spec`, () => {
         };
 
         const bulkEditPageStep1 = bulkEditPage
-            .visit()
             .selectView(viewName)
             .startWizard()
             .verifyStep()

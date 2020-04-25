@@ -16,6 +16,7 @@ export class PartnerListPage implements ActualPage<PartnerListPage> {
 
     waitForReady(): PartnerListPage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

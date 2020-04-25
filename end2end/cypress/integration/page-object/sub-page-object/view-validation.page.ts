@@ -21,6 +21,7 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
     waitForReady(): ViewValidationPage {
         // cy.waitUntil<boolean>(() => cy.get(`[test-page-ready]`).then((n) => n.attr('test-page-ready') == 'true'));
         waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 
@@ -64,10 +65,10 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
     }
 
     clickOnValidationDetails(validationName: string): ViewValidationDetailsPage {
-        cy.get(`[test-icon-validation-details='${validationName}']`)
-            .click({force: true});
-        cy.wait(1000);
-        return new ViewValidationDetailsPage(validationName);
+        // cy.get(`[test-icon-validation-details='${validationName}']`)
+        //     .click({force: true});
+        // cy.wait(2000);
+        return new ViewValidationDetailsPage(validationName).visit();
     }
 
     verifyValidationPanelExpanded(validationName: string): ViewValidationPage {

@@ -27,6 +27,7 @@ export class CustomImportPage implements ActualPage<CustomImportPage> {
 
     waitForReady(): CustomImportPage {
         util.waitUntilTestPageReady()
+        cy.wait(2000);
         return this;
     }
 

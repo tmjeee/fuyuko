@@ -37,7 +37,6 @@ describe(`pricing structure spece`, () => {
 
     it('should load', () => {
         pricingPage
-            .visit()
             .validateTitle()
         ;
     });

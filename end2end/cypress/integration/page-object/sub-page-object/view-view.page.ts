@@ -18,6 +18,7 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
 
     waitForReady(): ViewViewPage {
         util.waitUntilTestPageReady();
+        cy.wait(2000);
         return this;
     }
 

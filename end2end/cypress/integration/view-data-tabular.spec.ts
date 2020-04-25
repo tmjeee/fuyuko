@@ -57,7 +57,6 @@ describe('view-data-tabular spec', () => {
 
     it('should load', () => {
         viewDataTablePage
-            .visit()
             .validateTitle()
         ;
     });
