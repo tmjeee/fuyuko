@@ -16,7 +16,6 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
 
     waitForReady(): PartnerTablePage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

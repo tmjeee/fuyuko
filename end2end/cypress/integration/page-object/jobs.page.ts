@@ -14,7 +14,6 @@ export class JobsPage implements ActualPage<JobsPage> {
 
     waitForReady(): JobsPage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

@@ -24,7 +24,6 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
 
     waitForReady(): ViewValidationDetailsPage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

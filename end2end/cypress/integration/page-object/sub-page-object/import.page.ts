@@ -14,7 +14,6 @@ export class ImportPage implements ActualPage<ImportPage> {
 
     waitForReady(): ImportPage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

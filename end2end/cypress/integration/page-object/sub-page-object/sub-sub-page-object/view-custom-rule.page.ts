@@ -29,7 +29,6 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
 
     waitForReady(): ViewCustomRulePage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

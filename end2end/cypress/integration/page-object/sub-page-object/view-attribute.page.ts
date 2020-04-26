@@ -18,7 +18,6 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
     waitForReady(): ViewAttributePage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

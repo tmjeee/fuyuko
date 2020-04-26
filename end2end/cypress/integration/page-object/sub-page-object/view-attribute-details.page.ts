@@ -19,7 +19,6 @@ export class ViewAttributeDetailsPage implements ActualPage<ViewAttributeDetails
 
     waitForReady(): ViewAttributeDetailsPage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

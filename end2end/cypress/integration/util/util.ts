@@ -23,9 +23,12 @@ export const clearAllMessageToasts = () => {
 
 
 export const clickOnSuccessMessageToasts = () => {
+    /*
     cy.get('simple-notifications .simple-notification.success').each((n, index, list) => {
         Cypress.dom.isAttached(n) && cy.wrap(n).click({force: true});
     });
+     */
+    cy.get('simple-notifications .simple-notification.success').first().click({force: true});
 }
 
 export const clickOnErrorMessageToasts = () => {

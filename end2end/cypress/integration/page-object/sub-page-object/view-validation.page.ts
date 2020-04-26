@@ -21,7 +21,6 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
     waitForReady(): ViewValidationPage {
         // cy.waitUntil<boolean>(() => cy.get(`[test-page-ready]`).then((n) => n.attr('test-page-ready') == 'true'));
         waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

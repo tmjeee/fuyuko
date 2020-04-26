@@ -29,7 +29,6 @@ export class BulkEditPage implements ActualPage<BulkEditPage> {
 
     waitForReady(): BulkEditPage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

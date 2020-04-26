@@ -19,7 +19,6 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
     waitForReady(): ViewDataListPage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

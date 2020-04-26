@@ -11,7 +11,6 @@ export class RegisterPage implements ActualPage<RegisterPage> {
 
     waitForReady(): RegisterPage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

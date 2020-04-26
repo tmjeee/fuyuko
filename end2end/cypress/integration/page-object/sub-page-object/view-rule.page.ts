@@ -18,7 +18,6 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
 
     waitForReady(): ViewRulePage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 

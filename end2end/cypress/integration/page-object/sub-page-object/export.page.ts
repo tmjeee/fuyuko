@@ -23,7 +23,6 @@ export class ExportPage implements ActualPage<ExportPage> {
 
     waitForReady(): ExportPage {
         util.waitUntilTestPageReady();
-        cy.wait(2000);
         return this;
     }
 
