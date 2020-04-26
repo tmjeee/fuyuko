@@ -34,19 +34,18 @@ const httpAction: any[] = [
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const pricingStructureItems: PricingStructureItemWithPrice[] =  req.body.pricingStructureItems;
 
-        const totalUpdates = await setPrices2(pricingStructureId, pricingStructureItems);
+        const errors: string[] = await setPrices2(pricingStructureId, pricingStructureItems);
 
-        if (totalUpdates === pricingStructureItems.length) {
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            });
+        } else {
             res.status(200).json({
                 status: "SUCCESS",
                 message: `Pricing updated`
             } as ApiResponse);
-        } else {
-            res.status(400).json(
-                makeApiErrorObj(
-                    makeApiError(`Pricing not/partiall updated`, 'pricingStructureItemWithPrice', 'api')
-                )
-            );
         }
     }
 ];

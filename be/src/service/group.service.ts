@@ -205,6 +205,52 @@ export const getGroupsWithRole = async (roleName: string): Promise<Group[]> => {
     });
 }
 
+export const getGroupByName = async (groupName: string): Promise<Group> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+                SELECT 
+                    G.ID AS G_ID,
+                    G.NAME AS G_NAME,
+                    G.DESCRIPTION AS G_DESCRIPTION,
+                    G.STATUS AS G_STATUS,
+                    R.ID AS R_ID,
+                    R.NAME AS R_NAME,
+                    R.DESCRIPTION AS R_DESCRIPTION
+                FROM TBL_GROUP AS G
+                LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
+                LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
+                WHERE G.STATUS = 'ENABLED' AND G.NAME=? 
+            `, [groupName]);
+
+        const group: Group = q.reduce((group: Group, c: QueryI, index: number) => {
+            const groupId: number = c.G_ID;
+            const groupName: string = c.G_NAME;
+            const groupDescription: string = c.G_DESCRIPTION;
+            const groupStatus: string = c.G_STATUS;
+            if (!!!group) {
+                group = {
+                    id: groupId,
+                    name: groupName,
+                    description: groupDescription,
+                    status: groupStatus,
+                    roles: []
+                } as Group;
+            }
+            const roleId: number = c.R_ID;
+            const roleName: string = c.R_NAME;
+            const roleDescription: string = c.R_DESCRIPTION;
+            group.roles.push({
+                id: roleId,
+                name: roleName,
+                description: roleDescription
+            } as Role);
+            return group;
+        }, null);
+
+        return group;
+    });
+};
+
 export const getGroupById = async (groupId: number): Promise<Group> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`

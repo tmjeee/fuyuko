@@ -54,7 +54,6 @@ export class AddAttributePageComponent implements OnInit {
             case 'update':
                 this.attributeService.addAttribute(this.currentView, $event.attribute).pipe(
                     tap((_: ApiResponse) => {
-                        console.log('*********** add attribute response', _);
                         toNotifications(this.notificationService, _);
                         this.reload();
                     })

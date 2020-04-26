@@ -3,7 +3,6 @@ import {Connection} from "mariadb";
 import {SelfRegistration} from "../model/self-registration.model";
 import config from "../config";
 import {sendEmail} from "./send-email.service";
-import {RegistrationResponse} from "../model/api-response.model";
 import {hashedPassword} from "./password.service";
 
 

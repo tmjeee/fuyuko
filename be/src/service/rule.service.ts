@@ -63,6 +63,7 @@ const SQL_2 = `${SQL_1} AND R.ID=?`;
 // =======================
 // === addOrUpdateRule ===
 // =======================
+// todo: need a type of Rule here to eliminate properties not needed
 export const addOrUpdateRules = async (viewId: number, rules: Rule[]): Promise<string[]> => {
     const rule2s: Rule2[] = rulesRevert(rules);
     const errors: string[] = [];
