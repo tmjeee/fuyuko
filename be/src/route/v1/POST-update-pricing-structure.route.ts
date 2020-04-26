@@ -13,7 +13,7 @@ import {Connection} from "mariadb";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
-import {updatePricingStructures} from "../../service/pricing-structure.service";
+import {addOrUpdatePricingStructures} from "../../service/pricing-structure.service";
 
 // CHECKED
 
@@ -31,7 +31,7 @@ const httpAction: any[] = [
 
         const pricingStructures: PricingStructure[] = req.body.pricingStructures;
 
-        const errors: string[] = await updatePricingStructures(pricingStructures);
+        const errors: string[] = await addOrUpdatePricingStructures(pricingStructures);
 
         if (errors && errors.length) {
             res.status(200).json({

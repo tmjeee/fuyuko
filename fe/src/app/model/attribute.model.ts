@@ -39,4 +39,11 @@ export interface Attribute {
   pair2?: Pair2[]; // for double select
 }
 
+export interface StringAttribute extends Attribute {
+  id: number,
+  name: string,
+  description: string,
+  type: 'string'
+}
+
 

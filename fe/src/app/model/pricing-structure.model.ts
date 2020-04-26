@@ -1,4 +1,5 @@
 import {PaginableApiResponse} from "./api-response.model";
+import {CountryCurrencyUnits} from "./unit.model";
 
 export interface PricingStructure {     // pricing structure
     id: number; // pricing structure id
@@ -26,7 +27,7 @@ export interface PricingStructureItemWithPrice {  // pricing structure item
     itemName: string;
     itemDescription: string;
     price: number;
-    country: string;
+    country: CountryCurrencyUnits;
     creationDate: Date;
     lastUpdate: Date;
 
@@ -40,7 +41,7 @@ export interface TablePricingStructureItemWithPrice {  // pricing structure item
     itemName: string;
     itemDescription: string;
     price: number;
-    country: string;
+    country: CountryCurrencyUnits;
     creationDate: Date;
     lastUpdate: Date;
 

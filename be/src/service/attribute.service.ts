@@ -5,9 +5,8 @@ import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {LoggingCallback} from "./job-log.service";
 import {LimitOffset} from "../model/limit-offset.model";
-import {LIMIT_OFFSET, toLimitOffset} from "../util/utils";
+import {LIMIT_OFFSET} from "../util/utils";
 import {Status} from "../model/status.model";
-import {ApiResponse} from "../model/api-response.model";
 
 const q1_count: string = `
                 SELECT
@@ -58,7 +57,6 @@ const q_ = () => `
                 LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS E ON E.VIEW_ATTRIBUTE_METADATA_ID = M.ID
                 WHERE A.ID IN ?
 `;
-
 
 // =====================
 // === updateAttribute ===
@@ -208,11 +206,11 @@ export const getAttribute2sInView = async (viewId: number, attributeIds?: number
 // ======================
 // === saveAttributes ===
 // ======================
-export const saveAttributes = async (viewId: number, att: Attribute[], loggingCallback?: LoggingCallback) => {
-    loggingCallback('INFO', `converting attribute to attribute2`);
+export const saveAttributes = async (viewId: number, att: Attribute[], loggingCallback?: LoggingCallback): Promise<string[]> => {
+    loggingCallback && loggingCallback('INFO', `converting attribute to attribute2`);
     const att2s: Attribute2[] = attributesRevert(att);
-    loggingCallback('INFO', `converted attribute to attribute2`)
-    await saveAttribute2s(viewId, att2s, loggingCallback);
+    loggingCallback && loggingCallback('INFO', `converted attribute to attribute2`)
+    return await saveAttribute2s(viewId, att2s, loggingCallback);
 };
 export const saveAttribute2s = async (viewId: number, attrs2: Attribute2[], loggingCallback?: LoggingCallback): Promise<string[]> => {
     const errors: string[] = [];

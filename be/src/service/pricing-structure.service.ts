@@ -11,6 +11,39 @@ import {ROLE_PARTNER} from "../model/role.model";
 import {Status} from "../model/status.model";
 
 
+export const linkPricingStructureWithGroupId = async(pricingStructureId: number, groupId: number): Promise<string[]> => {
+    // todo: check if group has ROLE_PARTNER
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const qa: QueryA = await conn.query(`
+            SELECT COUNT(GR.ID) AS COUNT FROM TBL_LOOKUP_GROUP_ROLE AS GR
+            LEFT JOIN TBL_GROUP AS G ON G.ID = GR.GROUP_ID
+            LEFT JOIN TBL_ROLE AS R ON R.ROLE_ID = GR.ROLE_ID
+            WHERE GR.GROUP_ID = ? AND R.NAME = ?
+        `, [groupId, ROLE_PARTNER]);
+        if (qa[0].COUNT <= 0) {
+           errors.push(`Group width id ${groupId} does not have PARTNER role`);
+        } else {
+            const q: QueryResponse = await conn.query(`
+            INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?)
+        `, [pricingStructureId, groupId]);
+            if (q.affectedRows <= 0) {
+                errors.push(`Failed to update pricing structure group`);
+            }
+        }
+        return errors;
+    });
+};
+
+export const unlinkPricingStructureWithGroupId = async (pricingStructureId: number, groupId: number): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryResponse = await conn.query(`
+            DELETE FROM TBL_LOOKUP_PRICING_STRUCTURE_GROUP WHERE PRICING_STRUCTURE_ID =? AND GROUP_ID = ?
+        `, [pricingStructureId, groupId]);
+        return (q.affectedRows > 0);
+    });
+}
+
 
 export const updatePricingStructureStatus = async (pricingStructureId: number, status: Status): Promise<boolean> => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -22,7 +55,7 @@ export const updatePricingStructureStatus = async (pricingStructureId: number, s
 };
 
 
-export const updatePricingStructures = async (pricingStructures: PricingStructure[]): Promise<string[]> => {
+export const addOrUpdatePricingStructures = async (pricingStructures: PricingStructure[]): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         for (const pricingStructure of pricingStructures) {
@@ -248,6 +281,37 @@ export const getAllPricingStructures = async (): Promise<PricingStructure[]> => 
     });
 };
 
+
+export const getPricingStructureByName =  async (pricingStructureName: string): Promise<PricingStructure> => {
+    const pricingStructure: PricingStructure = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+                SELECT 
+                    PS.ID AS PS_ID, 
+                    PS.VIEW_ID AS PS_VIEW_ID, 
+                    PS.NAME AS PS_NAME, 
+                    V.NAME AS V_NAME,
+                    PS.DESCRIPTION AS PS_DESCRIPTION, 
+                    PS.STATUS AS PS_STATUS, 
+                    PS.CREATION_DATE AS PS_CREATION_DATE, 
+                    PS.LAST_UPDATE AS PS_LAST_UPDATE
+                FROM TBL_PRICING_STRUCTURE AS PS
+                LEFT JOIN TBL_VIEW AS V ON V.ID = PS.VIEW_ID
+                WHERE PS.NAME=? 
+            `, [pricingStructureName]);
+
+        return q.reduce((acc: PricingStructure, i: QueryI) => {
+            acc.id = i.PS_ID;
+            acc.viewId = i.PS_VIEW_ID;
+            acc.name = i.PS_NAME;
+            acc.viewName = i.V_NAME;
+            acc.description = i.PS_DESCRIPTION;
+            acc.creationDate = i.PS_CREATION_DATE;
+            acc.lastUpdate = i.PS_LAST_UPDATE;
+            return acc;
+        }, {} as PricingStructure);
+    });
+    return pricingStructure;
+}
 
 
 export const getPricingStructureById = async (pricingStructureId: number): Promise<PricingStructure> => {

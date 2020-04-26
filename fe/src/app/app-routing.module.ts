@@ -55,6 +55,8 @@ import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-
 import {NgModule} from "@angular/core";
 import {CustomImportPageComponent} from "./page/custom-import-page/custom-import.page";
 import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
+import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
+import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
 
 const routes: Routes = [
 
@@ -418,13 +420,51 @@ const routes: Routes = [
     ]
   } as Route,
 
+  // price-layout
+  {
+    path: 'price-layout',
+    canActivate: [AuthGuard],
+    component: PriceLayoutComponent,
+    data: {
+      sideNav: 'pricing'
+    },
+    children: [
+      // pricing structure
+      {
+        path: 'pricing-structure',
+        canActivate: [AuthGuard],
+        component: PricingPageComponent,
+        data: {
+          subSideNav: 'pricing-structure'
+        }
+      } as Route,
+
+      // pricing-structure-partner-association
+      {
+        path: 'pricing-structure-partner-association',
+        canActivate: [AuthGuard],
+        component: PricingStructurePartnerAssociationPageComponent,
+        data: {
+          subSideNav: 'pricing-structure-partner-association'
+        }
+      } as Route,
+
+      // help
+      {
+        path: 'pricing-help',
+        canActivate: [AuthGuard],
+        component: PricingHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+    ]
+  } as Route,
 
   // gen-layout
- {
-   path: 'gen-layout',
-   canActivate: [AuthGuard],
-   component: GenLayoutComponent,
-   children: [
+  {
+    path: 'gen-layout',
+    canActivate: [AuthGuard],
+    component: GenLayoutComponent,
+    children: [
      // profile
      {
        path: '',
@@ -494,27 +534,10 @@ const routes: Routes = [
        component: JobsHelpPageComponent,
        outlet: 'help',
      } as Route,
-
-
-     // pricing
-     {
-       path: 'pricing-structure',
-       canActivate: [AuthGuard],
-       component: PricingPageComponent,
-       data: {
-         sideNav: 'pricing'
-       }
-     } as Route,
-     {
-       path: 'pricing-help',
-       canActivate: [AuthGuard],
-       component: PricingHelpPageComponent,
-       outlet: 'help'
-     }
    ]
  } as Route,
-  {
-    path: 'error',
+ {
+   path: 'error',
    component: ErrorPageComponent
  } as Route,
  {

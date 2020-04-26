@@ -1,14 +1,45 @@
 import {i} from "../../logger";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
+import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {sprintf} from "sprintf";
 import * as Path from "path";
 import util from "util";
 import {readFile} from "fs";
-import fileType from "file-type";
 import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
-import {hashedPassword} from "../../service";
+import {addOrUpdateItem, getItemByName, hashedPassword} from "../../service";
 import {UPDATER_PROFILE_TEST_DATA} from "../updater";
+import {getGroupByName} from "../../service/group.service";
+import {getViewByName, saveOrUpdateViews} from "../../service/view.service";
+import {View} from "../../model/view.model";
+import {selfRegister} from "../../service/self-registration.service";
+import {createInvitation} from "../../service/invitation.service";
+import {getAttributesInView, saveAttributes} from "../../service/attribute.service";
+import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
+import {
+    createAreaAttribute,
+    createCurrencyAttribute,
+    createDateAttribute,
+    createDimensionAttribute,
+    createDoubleSelectAttribute,
+    createHeightAttribute,
+    createLengthAttribute,
+    createNumberAttribute,
+    createSelectAttribute,
+    createStringAttribute,
+    createTextAttribute,
+    createVolumeAttribute,
+    createWidthAttribute
+} from "../../shared-utils/attribute-creator.utils";
+import {
+    addOrUpdatePricingStructures,
+    getPricingStructureByName, linkPricingStructureWithGroupId
+} from "../../service/pricing-structure.service";
+import {PricingStructure} from "../../model/pricing-structure.model";
+import {Item, StringValue, TextValue} from "../../model/item.model";
+import {addItemImage} from "../../service/item-image.service";
+import {setPrices} from "../../service/pricing-structure-item.service";
+import {addOrUpdateRules} from "../../service/rule.service";
+import {Rule, ValidateClause, WhenClause} from "../../model/rule.model";
 
 
 export const profiles = [UPDATER_PROFILE_TEST_DATA];
@@ -22,526 +53,445 @@ export const update = async () => {
     i(`done running update on ${__filename}`);
 };
 
+const checkErrors = (errors: string[], msg: string) => {
+    if (errors && errors.length) {
+        errors.forEach((error: string) => console.error(error));
+        throw new Error(msg);
+    }
+};
 
 const INSERT_DATA = async () => {
     await doInDbConnection(async (conn: Connection) => {
 
-        // lookup group ids
-        const viewGroupId: number = (await conn.query(`SELECT ID FROM TBL_GROUP WHERE NAME=?`, [GROUP_VIEW]) as QueryA)[0].ID;
-        const editGroupId: number = (await conn.query(`SELECT ID FROM TBL_GROUP WHERE NAME=?`, [GROUP_EDIT]) as QueryA)[0].ID;
-        const adminGroupId: number = (await conn.query(`SELECT ID FROM TBL_GROUP WHERE NAME=?`, [GROUP_ADMIN]) as QueryA)[0].ID;
-        const partnerGroupId: number = (await conn.query(`SELECT ID FROM TBL_GROUP WHERE NAME=?`, [GROUP_PARTNER]) as QueryA)[0].ID;
+        // === GROUPS
+        const viewGroupId: number = (await getGroupByName(GROUP_VIEW)).id;
+        const editGroupId: number = (await getGroupByName(GROUP_EDIT)).id;
+        const adminGroupId: number = (await getGroupByName(GROUP_ADMIN)).id;
+        const partnerGroupId: number = (await getGroupByName(GROUP_PARTNER)).id;
 
-        // views
-        const v1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)', ['Test View 1', 'Test View 1 Description', 'ENABLED']);
-        const v2: QueryResponse = await conn.query('INSERT INTO TBL_VIEW (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)', ['Test View 2', 'Test View 2 Description', 'ENABLED']);
-        const v3: QueryResponse = await conn.query('INSERT INTO TBL_VIEW (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)', ['Test View 3', 'Test View 3 Description', 'ENABLED']);
+        // === VIEWS
+        const errors: string[] = await saveOrUpdateViews([
+            {
+                id: -1,
+                name: `Test View 1`,
+                description: `Test View 1 Description`,
+            },
+            {
+                id: -1,
+                name: `Test View 2`,
+                description: `Test View 2 Description`,
+            },
+            {
+                id: -1,
+                name: `Test View 3`,
+                description: `Test View 3 Description`,
+            }
+        ]);
+        checkErrors(errors, `error creating test views`);
 
-        // invitation registrations
+        const v1: View = await getViewByName(`Test View 1`);
+        const v2: View = await getViewByName(`Test View 2`);
+        const v3: View = await getViewByName(`Test View 3`);
+
+        // === INVITATION
         for (let i = 1; i < 100; i++) {
-            const q: QueryResponse = await conn.query(`INSERT INTO TBL_INVITATION_REGISTRATION (EMAIL, CODE, ACTIVATED) VALUES (?,?,?)`, [`invitation${i}@gmail.com`, `code${i}`, false]);
-            await conn.query('INSERT INTO TBL_INVITATION_REGISTRATION_GROUP (INVITATION_REGISTRATION_ID, GROUP_ID) VALUES (?,?)', [q.insertId, 1]);
-            await conn.query('INSERT INTO TBL_INVITATION_REGISTRATION_GROUP (INVITATION_REGISTRATION_ID, GROUP_ID) VALUES (?,?)', [q.insertId, 4]);
+            const errors: string[] = await createInvitation(`invitation${i}@gmail.com`, [viewGroupId, partnerGroupId], false, `code${i}`);
+            checkErrors(errors, `error creating invitation`);
         }
 
-        // self-registrations
+        // === SELF REGISTRATIONS
         for (let i = 1; i < 100; i++) {
-            const q: QueryResponse = await conn.query(`INSERT INTO TBL_SELF_REGISTRATION (USERNAME, EMAIL, FIRSTNAME, LASTNAME, PASSWORD, ACTIVATED) VALUES (?,?,?,?,?,?)`, [`self${i}`,`self${i}@gmail.com`,`self${i}-firstname`,`self${i}-lastname`, hashedPassword(`test`),false]);
+            const r: {errors: string[], registrationId: number, email: string, username: string} = await selfRegister(`self${i}`, `self${i}@gmail.com`, `self${i}-firstname`, `self${i}-lastname`, hashedPassword(`test`));
+            checkErrors(r.errors, `error creating self registration`);
         }
 
-        await INSERT_VIEW_DATA(v1.insertId, viewGroupId, editGroupId, adminGroupId, partnerGroupId, conn);
-        await INSERT_VIEW_DATA(v2.insertId, viewGroupId, editGroupId, adminGroupId, partnerGroupId, conn);
+        await INSERT_VIEW_DATA(v1.id, viewGroupId, editGroupId, adminGroupId, partnerGroupId, conn);
+        await INSERT_VIEW_DATA(v2.id, viewGroupId, editGroupId, adminGroupId, partnerGroupId, conn);
     });
 }
 
 const INSERT_VIEW_DATA = async (viewId: number, viewGroupId: number, editGroupId: number, adminGroupId: number, partnerGroupId: number, conn: Connection) => {
 
     // === ATTRIBUTES ===
-    // string
-    const a1: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'string', 'string attribute', 'string attribute description']);
-    // text
-    const a2: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'text', 'text attribute', 'text attribute description']);
-    // number
-    const a3: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'number', 'number attribute', 'number attribute description']);
-    const a3m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a3.insertId, 'number metadata']);
-    const a3m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a3m1.insertId, 'format', '0.0']);
-    // date
-    const a4: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'date', 'date attribute', 'date attribute description']);
-    const a4m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a4.insertId, 'date metadata']);
-    const a4m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a4m1.insertId, 'format', 'DD-MM-YYYY']);
-    // currency
-    const a5: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'currency', 'currency attribute', 'currency attribute description']);
-    const a5m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a5.insertId, 'currency metadata']);
-    const a5m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a5m1.insertId, 'showCurrencyCountry', 'true']);
-    // volumne
-    const a6: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'volume', 'volume attribute', 'volume attribute description']);
-    const a6m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a6.insertId, 'number metadata']);
-    const a6m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a6m1.insertId, 'format', '0.0']);
-    // dimension
-    const a7: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'dimension', 'dimension attribute', 'dimension attribute description']);
-    const a7m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a7.insertId, 'number metadata']);
-    const a7m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a7m1.insertId, 'format', '0.0']);
-    // area
-    const a8: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'area', 'area attribute', 'area attribute description']);
-    const a8m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a8.insertId, 'number metadata']);
-    const a8m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a8m1.insertId, 'format', '0.0']);
-    // length
-    const a9: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'length', 'length attribute', 'length attribute description']);
-    const a9m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a9.insertId, 'number metadata']);
-    const a9m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a9m1.insertId, 'format', '0.0']);
-    // width
-    const a10: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'width', 'width attribute', 'width attribute description']);
-    const a10m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a10.insertId, 'number metadata']);
-    const a10m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a10m1.insertId, 'format', '0.0']);
-    // height
-    const a11: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'height', 'height attribute', 'height attribute description']);
-    const a11m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a11.insertId, 'number metadata']);
-    const a11m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a11m1.insertId, 'format', '0.0']);
-    // select
-    const a12: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?,'ENABLED')`, [viewId, 'select', 'select attribute', 'select attribute description']);
-    const a12m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a12.insertId, 'pair1']);
-    const a12m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key1', 'value1']);
-    const a12m1e2: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key2', 'value2']);
-    const a12m1e3: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key3', 'value3']);
-    const a12m1e4: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key4', 'value4']);
-    const a12m1e5: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key5', 'value5']);
-    const a12m1e6: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key6', 'value6']);
-    const a12m1e7: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key7', 'value7']);
-    const a12m1e8: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key8', 'value8']);
-    const a12m1e9: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a12m1.insertId, 'key9', 'value9']);
-    // double select
-    const a13: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_ATTRIBUTE (VIEW_ID, TYPE, NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?, ?, 'ENABLED')`, [viewId, 'doubleselect', 'doubleselect attribute', 'doubleselect attribute description']);
-    const a13m1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a13.insertId, 'pair1']);
-    const a13m1e1: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key1', 'value1']);
-    const a13m1e2: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key2', 'value2']);
-    const a13m1e3: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key3', 'value3']);
-    const a13m1e4: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key4', 'value4']);
-    const a13m1e5: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key5', 'value5']);
-    const a13m1e6: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key6', 'value6']);
-    const a13m1e7: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key7', 'value7']);
-    const a13m1e8: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key8', 'value8']);
-    const a13m1e9: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m1.insertId, 'key9', 'value9']);
-    const a13m2: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA (VIEW_ATTRIBUTE_ID, NAME) VALUES (?, ?)', [a13.insertId, 'pair2']);
-    const a13m2e11: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey11=xvalue11']);
-    const a13m2e12: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey12=xvalue12']);
-    const a13m2e13: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey13=xvalue13']);
-    const a13m2e14: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey14=xvalue14']);
-    const a13m2e15: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey15=xvalue15']);
-    const a13m2e16: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey16=xvalue16']);
-    const a13m2e17: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey17=xvalue17']);
-    const a13m2e18: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey18=xvalue18']);
-    const a13m2e19: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key1', 'xkey19=xvalue19']);
-    const a13m2e21: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey21=xvalue21']);
-    const a13m2e22: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey22=xvalue22']);
-    const a13m2e23: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey23=xvalue23']);
-    const a13m2e24: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey24=xvalue24']);
-    const a13m2e25: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey25=xvalue25']);
-    const a13m2e26: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey26=xvalue26']);
-    const a13m2e27: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey27=xvalue27']);
-    const a13m2e28: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey28=xvalue28']);
-    const a13m2e29: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key2', 'xkey29=xvalue29']);
-    const a13m2e31: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey31=xvalue31']);
-    const a13m2e32: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey32=xvalue32']);
-    const a13m2e33: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey33=xvalue33']);
-    const a13m2e34: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey34=xvalue34']);
-    const a13m2e35: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey35=xvalue35']);
-    const a13m2e36: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey36=xvalue36']);
-    const a13m2e37: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey37=xvalue37']);
-    const a13m2e38: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey38=xvalue38']);
-    const a13m2e39: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key3', 'xkey39=xvalue39']);
-    const a13m2e41: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey41=xvalue41']);
-    const a13m2e42: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey42=xvalue42']);
-    const a13m2e43: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey43=xvalue43']);
-    const a13m2e44: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey44=xvalue44']);
-    const a13m2e45: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey45=xvalue45']);
-    const a13m2e46: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey46=xvalue46']);
-    const a13m2e47: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey47=xvalue47']);
-    const a13m2e48: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey48=xvalue48']);
-    const a13m2e49: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key4', 'xkey49=xvalue49']);
-    const a13m2e51: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey51=xvalue51']);
-    const a13m2e52: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey52=xvalue52']);
-    const a13m2e53: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey53=xvalue53']);
-    const a13m2e54: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey54=xvalue54']);
-    const a13m2e55: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey55=xvalue55']);
-    const a13m2e56: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey56=xvalue56']);
-    const a13m2e57: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey57=xvalue57']);
-    const a13m2e58: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey58=xvalue58']);
-    const a13m2e59: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key5', 'xkey59=xvalue59']);
-    const a13m2e61: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey61=xvalue61']);
-    const a13m2e62: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey62=xvalue62']);
-    const a13m2e63: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey63=xvalue63']);
-    const a13m2e64: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey64=xvalue64']);
-    const a13m2e65: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey65=xvalue65']);
-    const a13m2e66: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey66=xvalue66']);
-    const a13m2e67: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey67=xvalue67']);
-    const a13m2e68: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey68=xvalue68']);
-    const a13m2e69: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key6', 'xkey69=xvalue69']);
-    const a13m2e71: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey71=xvalue71']);
-    const a13m2e72: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey72=xvalue72']);
-    const a13m2e73: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey73=xvalue73']);
-    const a13m2e74: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey74=xvalue74']);
-    const a13m2e75: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey75=xvalue75']);
-    const a13m2e76: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey76=xvalue76']);
-    const a13m2e77: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey77=xvalue77']);
-    const a13m2e78: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey78=xvalue78']);
-    const a13m2e79: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key7', 'xkey79=xvalue79']);
-    const a13m2e81: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey81=xvalue81']);
-    const a13m2e82: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey82=xvalue82']);
-    const a13m2e83: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey83=xvalue83']);
-    const a13m2e84: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey84=xvalue84']);
-    const a13m2e85: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey85=xvalue85']);
-    const a13m2e86: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey86=xvalue86']);
-    const a13m2e87: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey87=xvalue87']);
-    const a13m2e88: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey88=xvalue88']);
-    const a13m2e89: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key8', 'xkey89=xvalue89']);
-    const a13m2e91: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey91=xvalue91']);
-    const a13m2e92: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey92=xvalue92']);
-    const a13m2e93: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey93=xvalue93']);
-    const a13m2e94: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey94=xvalue94']);
-    const a13m2e95: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey95=xvalue95']);
-    const a13m2e96: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey96=xvalue96']);
-    const a13m2e97: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey97=xvalue97']);
-    const a13m2e98: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey98=xvalue98']);
-    const a13m2e99: QueryResponse = await conn.query('INSERT INTO TBL_VIEW_ATTRIBUTE_METADATA_ENTRY (VIEW_ATTRIBUTE_METADATA_ID, `KEY`, `VALUE`) VALUES (?, ?, ?)', [a13m2.insertId, 'key9', 'xkey99=xvalue99']);
+    let errors: string[] = await saveAttributes(viewId, [
+        createStringAttribute(`string attribute`, `string attribute description`),
+        createTextAttribute(`text attribute`, `text attribute description`),
+        createNumberAttribute(`number attribute`, `number attribute description`),
+        createDateAttribute(`date attribute`, `date attribute description`),
+        createCurrencyAttribute(`currency attribute`, `currency attribute description`),
+        createVolumeAttribute(`volume attribute`, `volume attribute description`),
+        createDimensionAttribute(`dimension attribute`, `dimension attribute description`),
+        createAreaAttribute(`area attribute`, `area attribute description`),
+        createLengthAttribute(`length attribute`, `length attribute description`),
+        createWidthAttribute(`width attribute`, `width attribute description`),
+        createHeightAttribute(`height attribute`, `height attribute description`),
+        createSelectAttribute(`select attribute`, `select attribute description`, [
+            { id:-1, key: 'key1', value: 'value1' } as Pair1,
+            { id:-1, key: 'key2', value: 'value2' } as Pair1,
+            { id:-1, key: 'key3', value: 'value3' } as Pair1,
+            { id:-1, key: 'key4', value: 'value4' } as Pair1,
+            { id:-1, key: 'key5', value: 'value5' } as Pair1,
+            { id:-1, key: 'key6', value: 'value6' } as Pair1,
+            { id:-1, key: 'key7', value: 'value7' } as Pair1,
+            { id:-1, key: 'key8', value: 'value8' } as Pair1,
+            { id:-1, key: 'key9', value: 'value9' } as Pair1,
+        ]),
+        createDoubleSelectAttribute(`doubleselect attribute`, `doubleselect attribute description`, [
+            { id:-1, key: 'key1', value: 'value1' } as Pair1,
+            { id:-1, key: 'key2', value: 'value2' } as Pair1,
+            { id:-1, key: 'key3', value: 'value3' } as Pair1,
+            { id:-1, key: 'key4', value: 'value4' } as Pair1,
+            { id:-1, key: 'key5', value: 'value5' } as Pair1,
+            { id:-1, key: 'key6', value: 'value6' } as Pair1,
+            { id:-1, key: 'key7', value: 'value7' } as Pair1,
+            { id:-1, key: 'key8', value: 'value8' } as Pair1,
+            { id:-1, key: 'key9', value: 'value9' } as Pair1,
+        ], [
+            { id: -1, key1: 'key1', key2: 'xkey11', value: 'xvalue11'} as Pair2,
+            { id: -1, key1: 'key1', key2: 'xkey12', value: 'xvalue12'} as Pair2,
+            { id: -1, key1: 'key1', key2: 'xkey13', value: 'xvalue13'} as Pair2,
+            { id: -1, key1: 'key1', key2: 'xkey14', value: 'xvalue14'} as Pair2,
+            { id: -1, key1: 'key1', key2: 'xkey15', value: 'xvalue15'} as Pair2,
+            { id: -1, key1: 'key1', key2: 'xkey16', value: 'xvalue16'} as Pair2,
+            { id: -1, key1: 'key1', key2: 'xkey17', value: 'xvalue17'} as Pair2,
+            { id: -1, key1: 'key1', key2: 'xkey18', value: 'xvalue18'} as Pair2,
+            { id: -1, key1: 'key1', key2: 'xkey19', value: 'xvalue19'} as Pair2,
 
+            { id: -1, key1: 'key2', key2: 'xkey21', value: 'xvalue21'} as Pair2,
+            { id: -1, key1: 'key2', key2: 'xkey22', value: 'xvalue22'} as Pair2,
+            { id: -1, key1: 'key2', key2: 'xkey23', value: 'xvalue23'} as Pair2,
+            { id: -1, key1: 'key2', key2: 'xkey24', value: 'xvalue24'} as Pair2,
+            { id: -1, key1: 'key2', key2: 'xkey25', value: 'xvalue25'} as Pair2,
+            { id: -1, key1: 'key2', key2: 'xkey26', value: 'xvalue26'} as Pair2,
+            { id: -1, key1: 'key2', key2: 'xkey27', value: 'xvalue27'} as Pair2,
+            { id: -1, key1: 'key2', key2: 'xkey28', value: 'xvalue28'} as Pair2,
+            { id: -1, key1: 'key2', key2: 'xkey29', value: 'xvalue29'} as Pair2,
 
-    // pricing structure
-    const ps1: QueryResponse = await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?, 'ENABLED')`, [viewId, 'Pricing Structure #1', 'Pricing Structure #1 Description']);
-    const ps2: QueryResponse = await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?, 'ENABLED')`, [viewId, 'Pricing Structure #2', 'Pricing Structure #2 Description']);
+            { id: -1, key1: 'key3', key2: 'xkey31', value: 'xvalue31'} as Pair2,
+            { id: -1, key1: 'key3', key2: 'xkey32', value: 'xvalue32'} as Pair2,
+            { id: -1, key1: 'key3', key2: 'xkey33', value: 'xvalue33'} as Pair2,
+            { id: -1, key1: 'key3', key2: 'xkey34', value: 'xvalue34'} as Pair2,
+            { id: -1, key1: 'key3', key2: 'xkey35', value: 'xvalue35'} as Pair2,
+            { id: -1, key1: 'key3', key2: 'xkey36', value: 'xvalue36'} as Pair2,
+            { id: -1, key1: 'key3', key2: 'xkey37', value: 'xvalue37'} as Pair2,
+            { id: -1, key1: 'key3', key2: 'xkey38', value: 'xvalue38'} as Pair2,
+            { id: -1, key1: 'key3', key2: 'xkey39', value: 'xvalue39'} as Pair2,
+
+            { id: -1, key1: 'key4', key2: 'xkey41', value: 'xvalue41'} as Pair2,
+            { id: -1, key1: 'key4', key2: 'xkey42', value: 'xvalue42'} as Pair2,
+            { id: -1, key1: 'key4', key2: 'xkey43', value: 'xvalue43'} as Pair2,
+            { id: -1, key1: 'key4', key2: 'xkey44', value: 'xvalue44'} as Pair2,
+            { id: -1, key1: 'key4', key2: 'xkey45', value: 'xvalue45'} as Pair2,
+            { id: -1, key1: 'key4', key2: 'xkey46', value: 'xvalue46'} as Pair2,
+            { id: -1, key1: 'key4', key2: 'xkey47', value: 'xvalue47'} as Pair2,
+            { id: -1, key1: 'key4', key2: 'xkey48', value: 'xvalue48'} as Pair2,
+            { id: -1, key1: 'key4', key2: 'xkey49', value: 'xvalue49'} as Pair2,
+
+            { id: -1, key1: 'key5', key2: 'xkey51', value: 'xvalue51'} as Pair2,
+            { id: -1, key1: 'key5', key2: 'xkey52', value: 'xvalue52'} as Pair2,
+            { id: -1, key1: 'key5', key2: 'xkey53', value: 'xvalue53'} as Pair2,
+            { id: -1, key1: 'key5', key2: 'xkey54', value: 'xvalue54'} as Pair2,
+            { id: -1, key1: 'key5', key2: 'xkey55', value: 'xvalue55'} as Pair2,
+            { id: -1, key1: 'key5', key2: 'xkey56', value: 'xvalue56'} as Pair2,
+            { id: -1, key1: 'key5', key2: 'xkey57', value: 'xvalue57'} as Pair2,
+            { id: -1, key1: 'key5', key2: 'xkey58', value: 'xvalue58'} as Pair2,
+            { id: -1, key1: 'key5', key2: 'xkey59', value: 'xvalue59'} as Pair2,
+
+            { id: -1, key1: 'key6', key2: 'xkey61', value: 'xvalue61'} as Pair2,
+            { id: -1, key1: 'key6', key2: 'xkey62', value: 'xvalue62'} as Pair2,
+            { id: -1, key1: 'key6', key2: 'xkey63', value: 'xvalue63'} as Pair2,
+            { id: -1, key1: 'key6', key2: 'xkey64', value: 'xvalue64'} as Pair2,
+            { id: -1, key1: 'key6', key2: 'xkey65', value: 'xvalue65'} as Pair2,
+            { id: -1, key1: 'key6', key2: 'xkey66', value: 'xvalue66'} as Pair2,
+            { id: -1, key1: 'key6', key2: 'xkey67', value: 'xvalue67'} as Pair2,
+            { id: -1, key1: 'key6', key2: 'xkey68', value: 'xvalue68'} as Pair2,
+            { id: -1, key1: 'key6', key2: 'xkey69', value: 'xvalue69'} as Pair2,
+
+            { id: -1, key1: 'key7', key2: 'xkey71', value: 'xvalue71'} as Pair2,
+            { id: -1, key1: 'key7', key2: 'xkey72', value: 'xvalue72'} as Pair2,
+            { id: -1, key1: 'key7', key2: 'xkey73', value: 'xvalue73'} as Pair2,
+            { id: -1, key1: 'key7', key2: 'xkey74', value: 'xvalue74'} as Pair2,
+            { id: -1, key1: 'key7', key2: 'xkey75', value: 'xvalue75'} as Pair2,
+            { id: -1, key1: 'key7', key2: 'xkey76', value: 'xvalue76'} as Pair2,
+            { id: -1, key1: 'key7', key2: 'xkey77', value: 'xvalue77'} as Pair2,
+            { id: -1, key1: 'key7', key2: 'xkey78', value: 'xvalue78'} as Pair2,
+            { id: -1, key1: 'key7', key2: 'xkey79', value: 'xvalue79'} as Pair2,
+
+            { id: -1, key1: 'key8', key2: 'xkey81', value: 'xvalue81'} as Pair2,
+            { id: -1, key1: 'key8', key2: 'xkey82', value: 'xvalue82'} as Pair2,
+            { id: -1, key1: 'key8', key2: 'xkey83', value: 'xvalue83'} as Pair2,
+            { id: -1, key1: 'key8', key2: 'xkey84', value: 'xvalue84'} as Pair2,
+            { id: -1, key1: 'key8', key2: 'xkey85', value: 'xvalue85'} as Pair2,
+            { id: -1, key1: 'key8', key2: 'xkey86', value: 'xvalue86'} as Pair2,
+            { id: -1, key1: 'key8', key2: 'xkey87', value: 'xvalue87'} as Pair2,
+            { id: -1, key1: 'key8', key2: 'xkey88', value: 'xvalue88'} as Pair2,
+            { id: -1, key1: 'key8', key2: 'xkey89', value: 'xvalue89'} as Pair2,
+
+            { id: -1, key1: 'key9', key2: 'xkey91', value: 'xvalue91'} as Pair2,
+            { id: -1, key1: 'key9', key2: 'xkey92', value: 'xvalue92'} as Pair2,
+            { id: -1, key1: 'key9', key2: 'xkey93', value: 'xvalue93'} as Pair2,
+            { id: -1, key1: 'key9', key2: 'xkey94', value: 'xvalue94'} as Pair2,
+            { id: -1, key1: 'key9', key2: 'xkey95', value: 'xvalue95'} as Pair2,
+            { id: -1, key1: 'key9', key2: 'xkey96', value: 'xvalue96'} as Pair2,
+            { id: -1, key1: 'key9', key2: 'xkey97', value: 'xvalue97'} as Pair2,
+            { id: -1, key1: 'key9', key2: 'xkey98', value: 'xvalue98'} as Pair2,
+            { id: -1, key1: 'key9', key2: 'xkey99', value: 'xvalue99'} as Pair2,
+        ])
+    ]);
+    checkErrors(errors, `Failed to save attributes`);
+    const viewAttributes: Attribute[] = await getAttributesInView(viewId);
+    const viewStringAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `string attribute`);
+    const viewTextAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `text attribute`);
+    const viewNumberAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `number attribute`);
+    const viewDateAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `date attribute`);
+    const viewCurrencyAttribute:Attribute = viewAttributes.find((a: Attribute) => a.name === `currency attribute`);
+    const viewVolumeAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `volume attribute`);
+    const viewDimensionAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `dimension attribute`);
+    const viewAreaAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `area attribute`);
+    const viewLengthAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `length attribute`);
+    const viewWidthAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `width attribute`);
+    const viewHeightAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `height attribute`);
+    const viewSelectAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `select attribute`);
+    const viewDoubleselectAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `doubleselect attribute`);
+
+    // === PRICING STRUCTURE
+    errors = await addOrUpdatePricingStructures([
+        {
+           id: -1,
+           name: `Pricing Structure #1`,
+           description: `Pricing Structure #1 Description`,
+           viewId,
+        } as PricingStructure,
+        {
+            id: -1,
+            name: `Pricing Structure #2`,
+            description: `Pricing Structure #2 Description`,
+            viewId,
+        } as PricingStructure,
+    ]);
+    checkErrors(errors, `Failed to save pricing structures`);
+
+    const ps1: PricingStructure = await getPricingStructureByName(`Pricing Structure #1`);
+    const ps2: PricingStructure = await getPricingStructureByName(`Pricing Structure #2`);
 
     // pricing structure with groups
-    await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps1.insertId, adminGroupId]);
-    await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps1.insertId, viewGroupId]);
-    await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps1.insertId, editGroupId]);
-    await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps1.insertId, partnerGroupId]);
-    await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps2.insertId, adminGroupId]);
-    await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps2.insertId, viewGroupId]);
-    await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps2.insertId, editGroupId]);
-    await conn.query(`INSERT INTO TBL_LOOKUP_PRICING_STRUCTURE_GROUP (PRICING_STRUCTURE_ID, GROUP_ID) VALUES (?,?) `, [ps2.insertId, partnerGroupId]);
+    errors = await linkPricingStructureWithGroupId(ps1.id, adminGroupId);
+    checkErrors(errors, `Failed to link group Id ${adminGroupId} with pricing structure ${ps1.id}`);
+    errors = await linkPricingStructureWithGroupId(ps1.id, viewGroupId);
+    checkErrors(errors, `Failed to link group Id ${viewGroupId} with pricing structure ${ps1.id}`);
+    errors = await linkPricingStructureWithGroupId(ps1.id, editGroupId);
+    checkErrors(errors, `Failed to link group Id ${editGroupId} with pricing structure ${ps1.id}`);
+    errors = await linkPricingStructureWithGroupId(ps1.id, partnerGroupId);
+    checkErrors(errors, `Failed to link group Id ${partnerGroupId} with pricing structure ${ps1.id}`);
+    errors = await linkPricingStructureWithGroupId(ps2.id, adminGroupId);
+    checkErrors(errors, `Failed to link group Id ${adminGroupId} with pricing structure ${ps2.id}`);
+    errors = await linkPricingStructureWithGroupId(ps2.id, viewGroupId);
+    checkErrors(errors, `Failed to link group Id ${viewGroupId} with pricing structure ${ps2.id}`);
+    errors = await linkPricingStructureWithGroupId(ps2.id, editGroupId);
+    checkErrors(errors, `Failed to link group Id ${editGroupId} with pricing structure ${ps2.id}`);
+    errors = await linkPricingStructureWithGroupId(ps2.id, partnerGroupId);
+    checkErrors(errors, `Failed to link group Id ${partnerGroupId} with pricing structure ${ps2.id}`);
 
     // items
-    await createManyItems(conn, ps1.insertId, viewId, a1.insertId, a2.insertId, a3.insertId, a4.insertId, a5.insertId, a6.insertId, a7.insertId, a8.insertId, a9.insertId, a10.insertId, a11.insertId, a12.insertId, a13.insertId);
+    await createManyItems(conn, ps1.id, viewId, viewStringAttribute, viewTextAttribute, viewNumberAttribute, viewDateAttribute, viewCurrencyAttribute,
+        viewVolumeAttribute, viewDimensionAttribute, viewAreaAttribute, viewLengthAttribute, viewWidthAttribute, viewHeightAttribute, viewSelectAttribute,
+        viewDoubleselectAttribute);
 
     // rules
-    await createManyRules(conn, viewId, a1.insertId, a2.insertId);
+    await createManyRules(conn, viewId, viewStringAttribute.id, viewTextAttribute.id);
 };
 
-type CreateRuleType = {
-    name: string,
-    viewId: number,
-    validateClauses: {
-        attributeId: number,
-        operator: string,
-        metadatas: {
-            entries: {
-                key: string,
-                value: string,
-                dataType: string
-            }[]
-        }[]
-    }[],
-    whenClauses: {
-        attributeId: number,
-        operator: string,
-        metadatas: {
-            entries: {
-                key: string,
-                value: string,
-                dataType: string
-            }[]
-        }[]
-    }[]
-}
-
 const createManyRules = async(conn: Connection, viewId: number, att1Id: number, att2Id: number) => {
-    let counter = 1;
-    const c = ()=>({
-        name: `Rule #${counter++}`,
-        viewId: viewId,
-        validateClauses: [
+
+    for (let x=1; x<=7; x++) {
+        await addOrUpdateRules(viewId, [
             {
-                attributeId: att1Id,
-                operator: 'eq',
-                metadatas: [
+                id: -1,
+                name: `Rule #${x}`,
+                description: `Rule #${x} Description`,
+                validateClauses: [
                     {
-                        entries:[
-                            { key: 'type', value: 'string', dataType: 'string'},
-                            { key: 'value', value: 'val string 1', dataType: 'string'},
+                        id: -1,
+                        attributeId: att1Id,
+                        operator: 'eq',
+                        condition: [
+                            {
+                                value: 'val string 1'
+                            } as StringValue,
+                            {
+                                value: 'val string 2'
+                            } as StringValue
                         ]
-                    },
+                    } as ValidateClause
+                ],
+                whenClauses: [
                     {
-                        entries:[
-                            { key: 'type', value: 'string', dataType: 'string'},
-                            { key: 'value', value: 'val string 2', dataType: 'string'},
+                        id: -1,
+                        attributeId: att2Id,
+                        operator: 'not eq',
+                        condition: [
+                            {
+                                value: 'val text 1'
+                            } as TextValue,
+                            {
+                                value: 'val text 2'
+                            } as TextValue
                         ]
-                    },
+                    } as WhenClause
                 ]
-            }
-        ],
-        whenClauses: [
-            {
-                attributeId: att2Id,
-                operator: 'not eq',
-                metadatas: [
-                    {
-                        entries:[
-                            { key: 'type', value: 'text', dataType: 'string'},
-                            { key: 'value', value: 'val text 1', dataType: 'string'},
-                        ]
-                    },
-                    {
-                        entries:[
-                            { key: 'type', value: 'text', dataType: 'string'},
-                            { key: 'value', value: 'val text 2', dataType: 'string'},
-                        ]
-                    },
-                ]
-            },
-        ]
-    });
 
-    await createRule(conn, c());
-    await createRule(conn, c());
-    await createRule(conn, c());
-    await createRule(conn, c());
-    await createRule(conn, c());
-    await createRule(conn, c());
-}
-
-const createRule = async (conn: Connection, t: CreateRuleType) => {
-    const r1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,'ENABLED')`, [t.viewId, t.name, `${t.name} Description`]);
-    for (const vc of t.validateClauses) {
-        const vc1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,?)`, [r1.insertId, vc.attributeId, vc.operator, '']);
-        for (const vcm of vc.metadatas) {
-            const vcm1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE_METADATA (RULE_VALIDATE_CLAUSE_ID, NAME) VALUES (?, '')`, [vc1.insertId]);
-            for (const vcme of vcm.entries) {
-                await conn.query(`INSERT INTO TBL_RULE_VALIDATE_CLAUSE_METADATA_ENTRY (RULE_VALIDATE_CLAUSE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [vcm1.insertId, vcme.key, vcme.value, vcme.dataType]);
-            }
-        }
-    }
-
-    for (const wc of t.whenClauses) {
-        const wc1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE (RULE_ID, VIEW_ATTRIBUTE_ID, \`OPERATOR\`, \`CONDITION\`) VALUES (?,?,?,?)`, [r1.insertId, wc.attributeId, wc.operator, '']);
-        for (const wcm of wc.metadatas) {
-            const wcm1: QueryResponse = await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE_METADATA (RULE_WHEN_CLAUSE_ID, NAME) VALUES (?, '')`, [wc1.insertId]);
-            for (const wcme of wcm.entries) {
-                await conn.query(`INSERT INTO TBL_RULE_WHEN_CLAUSE_METADATA_ENTRY (RULE_WHEN_CLAUSE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [wcm1.insertId, wcme.key, wcme.value, wcme.dataType]);
-            }
-        }
+            } as Rule
+        ]);
     }
 }
 
-type CreateItemType = {
-    viewId: number,
-    itemName: string,
-    images: {
-        fileName: string,
-        primary: boolean
-    }[],
-    values: {
-        attributeId: number,
-        metadatas:
-            {
-                entries: {
-                    key: string;
-                    value: string;
-                    dataType: string;
-                }[]
-            }[]
-    }[],
-    children: CreateItemType[]
-}
-
-const createManyItems = async (conn: Connection, pricingStructureId: number, viewId: number, att1Id: number, att2Id: number, att3Id: number, att4Id: number, att5Id: number, att6Id: number,
-                               att7Id: number, att8Id: number, att9Id: number, att10Id: number, att11Id: number, att12Id: number, att13Id: number) => {
+const createManyItems = async (conn: Connection, pricingStructureId: number, viewId: number,
+                               stringAttribute: Attribute, textAttribute: Attribute, numberAttribute: Attribute,
+                               dateAttribute: Attribute, currencyAttribute: Attribute, volumeAttribute: Attribute, dimensionAttribute: Attribute,
+                               areaAttribute: Attribute, lengthAttribute: Attribute, widthAttribute: Attribute, heightAttribute: Attribute,
+                               selectAttribute: Attribute, doubleSelectAttribute: Attribute) => {
     let _c = 0;
     const c = () => {
         return (((_c++)%351)+1);
     }
-    const createAnItemType = (itemName: string, children: CreateItemType[] = []): CreateItemType => ({
-        viewId: viewId,
-        itemName: itemName,
-        images: [
-            { fileName: sprintf('%04s.jpg', c()), primary: true },
-            { fileName: sprintf('%04s.jpg', c()), primary: false },
-            { fileName: sprintf('%04s.jpg', c()), primary: false },
-        ],
-        children,
-        values: [
-            {attributeId: att1Id, // string
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'string', dataType: 'string'},
-                        { key: 'value', value: `some string ${itemName}`, dataType: 'string'}
-                    ]}]},
-            {attributeId: att2Id, // text
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'text', dataType: 'string'},
-                        { key: 'value', value: `some text ${itemName}`, dataType: 'string'}
-                    ]}]},
-            {attributeId: att3Id, // number
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'number', dataType: 'string'},
-                        { key: 'value', value: `${random()}`, dataType: 'number'}
-                    ]}]},
-            {attributeId: att4Id, // date
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'date', dataType: 'string'},
-                        { key: 'value', value: `12-10-1988`, dataType: 'string'}
-                    ]}]},
-            {attributeId: att5Id, // currency
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'currency', dataType: 'string'},
-                        { key: 'value', value: `${random()}.10`, dataType: 'number'},
-                        { key: 'country', value: 'AUD', dataType: 'string'}
-                    ]}]},
-            {attributeId: att6Id, // volume
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'volume', dataType: 'string'},
-                        { key: 'value', value: `${random()}`, dataType: 'number'},
-                        { key: 'unit', value: 'l', dataType: 'string'}
-                    ]}]},
-            {attributeId: att7Id, // dimension
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'dimension', dataType: 'string'},
-                        { key: 'length', value: `${random()}`, dataType: 'number'},
-                        { key: 'width', value: `${random()}`, dataType: 'number'},
-                        { key: 'height', value: `${random()}`, dataType: 'number'},
-                        { key: 'unit', value: 'cm', dataType: 'string'}
-                    ]}]},
-            {attributeId: att8Id, // area
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'area', dataType: 'string'},
-                        { key: 'value', value: `${random()}`, dataType: 'number'},
-                        { key: 'unit', value: 'cm', dataType: 'string'}
-                    ]}]},
-            {attributeId: att9Id, // length
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'length', dataType: 'string'},
-                        { key: 'value', value: `${random()}`, dataType: 'number'},
-                        { key: 'unit', value: 'cm', dataType: 'string'}
-                    ]}]},
-            {attributeId: att10Id, // width
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'width', dataType: 'string'},
-                        { key: 'value', value: `${random()}`, dataType: 'number'},
-                        { key: 'unit', value: 'cm', dataType: 'string'}
-                    ]}]},
-            {attributeId: att11Id, // height
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'height', dataType: 'string'},
-                        { key: 'value', value: `${random()}`, dataType: 'number'},
-                        { key: 'unit', value: 'cm', dataType: 'string'}
-                    ]}]},
-            {attributeId: att12Id, // select
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'select', dataType: 'string'},
-                        { key: 'key', value: 'key2', dataType: 'string'},
-                    ]}]},
-            {attributeId: att13Id, // doubleselect
-                metadatas: [{
-                    entries: [
-                        { key: 'type', value: 'doubleselect', dataType: 'string'},
-                        { key: 'key1', value: 'key3', dataType: 'string'},
-                        { key: 'key2', value: 'xkey35', dataType: 'string'},
-                    ]}]},
-        ]
-    });
 
-    /*
-    const itemDef: CreateItemType =
-        createAnItemType([
-            createAnItemType([
-                createAnItemType([
-                    createAnItemType()
-                ]),
-                createAnItemType([
-                    createAnItemType([
-                        createAnItemType()
-                    ])
-                ]),
-                createAnItemType()
-            ]),
-            createAnItemType(),
-        ]);
-     */
 
-    const itemDef1: CreateItemType =
-        createAnItemType(`Item-1`, [
-            createAnItemType(`Item-1-1`),
-            createAnItemType(`Item-1-2`)
-        ]);
-    const itemDef2: CreateItemType =
-        createAnItemType(`Item-2`);
-    const itemDef3: CreateItemType =
-        createAnItemType(`Item-3`);
-    const itemDef4: CreateItemType =
-        createAnItemType(`Item-4`);
-    const itemDef5: CreateItemType =
-        createAnItemType(`Item-5`);
-    const itemDef6: CreateItemType =
-        createAnItemType(`Item-6`);
-    const itemDef7: CreateItemType =
-        createAnItemType(`Item-7`);
+    let errors: string[] = await addOrUpdateItem(viewId, {
+       id: -1,
+       name: `Item-1`,
+       description: `Item-1 Description`,
+       parentId: null,
+       images: [],
+       children: [
+           {
+               id: -1,
+               name: `Item-1-1`,
+               description: `Item-1-1 Description`,
+               children: []
+           } as Item,
+           {
+               id: -1,
+               name: `Item-1-2`,
+               description: `Item-1-2 Description`,
+               children: []
+           }
+       ]
+    } as Item);
+    checkErrors(errors, `Item-1 failed to be created`);
 
-    await _createItem(conn, pricingStructureId, itemDef1, null, 1.10);
-    await _createItem(conn, pricingStructureId, itemDef2, null, 2.20);
-    await _createItem(conn, pricingStructureId, itemDef3, null, 3.30);
-    await _createItem(conn, pricingStructureId, itemDef4, null, 4.40);
-    await _createItem(conn, pricingStructureId, itemDef5, null, 5.50);
-    await _createItem(conn, pricingStructureId, itemDef6, null, 6.60);
-    await _createItem(conn, pricingStructureId, itemDef7, null, 7.70);
-}
+    errors = await addOrUpdateItem(viewId, {
+        id: -1,
+        name: `Item-2`,
+        description: `Item-2 Description`,
+        parentId: null,
+        images: [],
+        children: []
+    } as Item);
+    checkErrors(errors, `Item-2 failed to be created`);
 
-const _createItem = async (conn: Connection, pricingStructureId: number, args: CreateItemType, parentItemId: number = null, price: number = Number((Math.random() * 10 + 1).toFixed(2))) => {
-    // item
-    const qItem: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM (PARENT_ID, VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,?,'ENABLED')`, [parentItemId, args.viewId, args.itemName, `${args.itemName} Description`]);
-    const itemId: number = qItem.insertId;
+    errors = await addOrUpdateItem(viewId, {
+        id: -1,
+        name: `Item-3`,
+        description: `Item-3 Description`,
+        parentId: null,
+        images: [],
+        children: []
+    } as Item);
+    checkErrors(errors, `Item-3 failed to be created`);
 
-    await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, COUNTRY, PRICE) VALUES (?,?,?,?) `, [qItem.insertId, pricingStructureId, 'AUD', price]);
+    errors = await addOrUpdateItem(viewId, {
+        id: -1,
+        name: `Item-4`,
+        description: `Item-4 Description`,
+        parentId: null,
+        images: [],
+        children: []
+    } as Item);
+    checkErrors(errors, `Item-4 failed to be created`);
 
-    for (const attr of args.values) {
-        const qItemValue: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, attr.attributeId]);
-        const itemValueId: number = qItemValue.insertId;
+    errors = await addOrUpdateItem(viewId, {
+        id: -1,
+        name: `Item-5`,
+        description: `Item-5 Description`,
+        parentId: null,
+        images: [],
+        children: []
+    } as Item);
+    checkErrors(errors, `Item-5 failed to be created`);
 
-        for (const metadata of attr.metadatas) {
-            const qItemValueMetadata: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUES (?,?)`, [itemValueId, '']);
-            const itemValueMetadataId: number = qItemValueMetadata.insertId;
+    errors = await addOrUpdateItem(viewId, {
+        id: -1,
+        name: `Item-6`,
+        description: `Item-6 Description`,
+        parentId: null,
+        images: [],
+        children: []
+    } as Item);
+    checkErrors(errors, `Item-6 failed to be created`);
 
-            for (const entry of metadata.entries) {
-                await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`, [itemValueMetadataId, entry.key, entry.value, entry.dataType]);
+    errors = await addOrUpdateItem(viewId, {
+        id: -1,
+        name: `Item-7`,
+        description: `Item-7 Description`,
+        parentId: null,
+        images: [],
+        children: []
+    } as Item);
+    checkErrors(errors, `Item-7 failed to be created`);
+
+    const item1: Item = await getItemByName(viewId, `Item-1`);
+    const item2: Item = await getItemByName(viewId, `Item-2`);
+    const item3: Item = await getItemByName(viewId, `Item-3`);
+    const item4: Item = await getItemByName(viewId, `Item-4`);
+    const item5: Item = await getItemByName(viewId, `Item-5`);
+    const item6: Item = await getItemByName(viewId, `Item-6`);
+    const item7: Item = await getItemByName(viewId, `Item-7`);
+
+    const allItems: Item[] = [item1, item2, item3, item4, item5, item6, item7];
+    for (const item of allItems) {
+        for (let i = 0; i< 3; i++) {
+            const fileName = sprintf('%04.jpg', c());
+            const isPrimary = (i === 0);
+            const fullPath = Path.resolve(__dirname, '../assets/item-images', fileName);
+
+            const buffer: Buffer = await util.promisify(readFile)(fullPath);
+            const r: boolean = await addItemImage(item.id, sprintf('%04s.jpg', c()), buffer, true);
+            if (!r) {
+                const msg = (`Failed to add image ${fileName} for Item ${item.name}`);
+                console.error(msg);
+                throw new Error(msg);
             }
         }
     }
-    for (const image of args.images) {
-        const fileName = image.fileName;
-        const isPrimary = image.primary;
-        const fullPath = Path.resolve(__dirname, '../assets/item-images', fileName);
 
-        const buffer: Buffer = await util.promisify(readFile)(fullPath);
-        const mimeType: fileType.FileTypeResult = fileType(buffer);
+    for (let i = 0; i< allItems.length; i++) {
+        const item: Item = allItems[i];
+        const prices: number[] = [1.10, 2.20, 3.30, 4.40, 5.50, 6.60, 7.70];
+        const errors: string[] = await setPrices([
+            {
+                pricingStructureId,
+                item: {
+                        itemId: item.id,
+                        price: prices[i%prices.length],
+                        country: 'AUD',
+                }
+            }
+        ]);
+        checkErrors(errors, `Failed to set price for item id ${item.id}`);
 
-        await conn.query(`INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)`, [itemId, isPrimary, mimeType.mime, fileName, buffer.length, buffer]);
-    }
-
-
-    for (const child of args.children) {
-        await _createItem(conn, pricingStructureId, child, itemId, 10.10);
+        for (let j = 0; j< item.children.length; j++) {
+            const i: Item = item.children[j];
+            const errors: string[] = await setPrices([{
+                pricingStructureId,
+                item: {
+                    itemId: i.id,
+                    price: 10.10,
+                    country: 'AUD'
+                }
+            }]);
+            checkErrors(errors, `Failed to set price for children item id ${i.id} with parent item id ${item.id}`);
+        }
     }
 }
 
 
-const random = (): string => {
-    return String(Math.round(Math.random() * 100000));
-}

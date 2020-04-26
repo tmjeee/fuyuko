@@ -14,7 +14,7 @@ import {sendEmail} from "./send-email.service";
 /**
  * Send out invitation to register / activate account (through email)
  */
-export const createInvitation = async (email: string, groupIds: number[] = []): Promise<string[]> => {
+export const createInvitation = async (email: string, groupIds: number[] = [], sendMail:boolean = true, invitationCode?: string): Promise<string[]> => {
 
     return await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
@@ -31,7 +31,7 @@ export const createInvitation = async (email: string, groupIds: number[] = []): 
             await conn.query(`DELETE FROM TBL_INVITATION_REGISTRATION WHERE EMAIL = ? `, [email]);
         }
 
-        const code: string = uuid();
+        const code: string = invitationCode ? invitationCode : uuid();
 
         const q1: QueryResponse = await conn.query(
             `INSERT INTO TBL_INVITATION_REGISTRATION (EMAIL, CREATION_DATE, ACTIVATED, CODE) VALUES (?, ?, ?, ?)`,
@@ -44,8 +44,9 @@ export const createInvitation = async (email: string, groupIds: number[] = []): 
                 [registrationId, gId]);
         }
 
-        const info: SendMailOptions = await sendEmail(email, 'Invitation to join Fukyko MDM',
-            `
+        if (sendMail) {
+            const info: SendMailOptions = await sendEmail(email, 'Invitation to join Fukyko MDM',
+                `
                 Hello,
                 
                 You have been invited to join Fuyuko MDM. Please ${config["fe-url-base"]}/login-layout/activate/${code} to activate your 
@@ -53,6 +54,7 @@ export const createInvitation = async (email: string, groupIds: number[] = []): 
                 
                 Enjoy! and welcome aboard.
             `);
+        }
         return errors;
     });
 };
