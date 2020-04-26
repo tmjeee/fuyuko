@@ -11,6 +11,7 @@ import {getViewById} from "../view.service";
 import {View} from "../../model/view.model";
 import {File} from "formidable";
 import * as fs from "fs";
+import {CountryCurrencyUnits} from "../../model/unit.model";
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
 
@@ -184,7 +185,7 @@ const _preview = async (viewId: number, dataImportId: number, content: Buffer): 
         let p: PricingStructureItemWithPrice = await getPricingStructureItem(viewId, pricingStructureId, itemId);
         if (p) {
             p.price = c.price;
-            p.country = c.country;
+            p.country = c.country as CountryCurrencyUnits;
         } else {
             if (c.addToPricingStructureIfItemNotAlreadyAdded) {
                 const added: boolean = await addItemToPricingStructure(viewId, pricingStructureId, itemId);

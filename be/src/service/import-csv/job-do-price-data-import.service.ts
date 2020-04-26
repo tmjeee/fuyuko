@@ -21,7 +21,7 @@ export const runJob = async (viewId: number, dataImportId: number, priceDataItem
             const errors: string[] = await setPrices(priceDataItems, newLoggingCallback(jobLogger));
             if (errors && errors.length) {
                 for (const error of errors) {
-                    await jobLogger.logError(errors);
+                    await jobLogger.logError(error);
                 }
                 await jobLogger.updateProgress("FAILED");
             } else {
