@@ -4,8 +4,28 @@ import {Connection} from "mariadb";
 import {Group} from "../model/group.model";
 import {Role} from "../model/role.model";
 import {BinaryContent} from "../model/binary-content.model";
-import {Status} from "../model/status.model";
+import {ENABLED, Status} from "../model/status.model";
 import {hashedPassword} from "./password.service";
+import { Themes } from "../model/theme.model";
+
+export const addUser = async (u: {username: string, firstName: string, lastName: string, email: string, passord: string, theme?: string}): Promise<string[]> => {
+    const _theme: string = u.theme ? u.theme : Themes[Themes.THEME_DEEPPURPLE_AMBER_LIGHT];
+    return doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE USERNAME=? OR EMAIL=?`, [u.username, u.email]);
+        if (qc[0].COUNT > 0) {
+            errors.push(`User with username ${u.username} or email ${u.email} already exists`);
+        } else {
+            const u1: QueryResponse = await conn.query(`
+            INSERT INTO TBL_USER (USERNAME, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?)
+        `, [u.username, u.email, ENABLED, hashedPassword(u.passord), u.firstName, u.lastName]);
+            if (u1.affectedRows <= 0) {
+                errors.push(`Failed to insert user ${u.username}`);
+            }
+        }
+        return errors;
+    });
+}
 
 export const updateUser = async (u: {userId: number, firstName?: string, lastName?: string, email?: string, theme?: string, password?: string}): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -576,6 +596,83 @@ export const hasNoneUserRoles = async (userId: number, roleNames: string[]): Pro
     });
 }
 
+export const getUserByUsername = async (username: string): Promise<User> => {
+    return doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query( `
+            SELECT 
+                U.ID AS U_ID,
+                U.USERNAME AS U_USERNAME,
+                U.CREATION_DATE AS U_CREATION_DATE,
+                U.LAST_UPDATE AS U_LAST_UPDATE,
+                U.EMAIL AS U_EMAIL,
+                U.FIRSTNAME AS U_FIRSTNAME,
+                U.LASTNAME AS U_LASTNAME,
+                U.STATUS AS U_STATUS,
+                U.PASSWORD AS U_PASSWORD,
+                UT.THEME AS UT_THEME,
+                G.ID AS G_ID,
+                G.NAME AS G_NAME,
+                G.DESCRIPTION AS G_DESCRIPTION,
+                G.STATUS AS G_STATUS,
+                R.ID AS R_ID,
+                R.NAME AS R_NAME,
+                R.DESCRIPTION AS R_DESCRIPTION
+             FROM TBL_USER AS U 
+             LEFT JOIN TBL_LOOKUP_USER_GROUP AS LUG ON LUG.USER_ID = U.ID 
+             LEFT JOIN TBL_USER_THEME AS UT ON UT.USER_ID = U.ID
+             LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
+             LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
+             LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
+             WHERE U.USERNAME = ? AND U.STATUS = 'ENABLED' AND (G.STATUS = 'ENABLED' OR G.STATUS IS NULL)
+        `, [username]);
+
+        const m: Map<number/*group id*/, Group> = new Map();
+        const r: Map<number/*group id*/, Role[]> = new Map();
+
+        return q.reduce((u: User, i: QueryI, index: number) => {
+            if (index === 0) {
+                u.id = i.U_ID;
+                u.firstName = i.U_FIRSTNAME;
+                u.lastName = i.U_LASTNAME;
+                u.username = i.U_USERNAME;
+                u.theme = i.UT_THEME;
+                u.email = i.U_EMAIL;
+            }
+            const groupId = i.G_ID;
+            if (groupId && !m.has(groupId)) {
+                const g: Group = ({
+                    id: groupId,
+                    name: i.G_NAME,
+                    description: i.G_DESCRIPTION,
+                    status: i.G_STATUS,
+                    roles: []
+                } as Group);
+                u.groups.push(g);
+                m.set(groupId, g);
+                r.set(groupId, g.roles);
+            }
+
+            const roleId = i.R_ID;
+            if (roleId && groupId) {
+                r.get(groupId).push({
+                    id: roleId,
+                    name: i.R_NAME,
+                    description: i.R_DESCRIPTION
+                } as Role);
+            }
+            return u;
+        }, {
+            id: null,
+            firstName: null,
+            lastName: null,
+            username: null,
+            theme: null,
+            email: null,
+            groups: []
+        } as User);
+    });
+};
+
 export const getUserById = async (userId: number): Promise<User>  => {
     return doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(
@@ -603,7 +700,7 @@ export const getUserById = async (userId: number): Promise<User>  => {
              LEFT JOIN TBL_GROUP AS G ON G.ID = LUG.GROUP_ID
              LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = G.ID
              LEFT JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID
-             WHERE U.ID = ? AND U.STATUS = 'ENABLED' AND G.STATUS = 'ENABLED'
+             WHERE U.ID = ? AND U.STATUS = 'ENABLED' AND (G.STATUS = 'ENABLED' OR G.STATUS IS NULL)
         `, [userId]);
 
         const m: Map<number/*group id*/, Group> = new Map();
@@ -619,7 +716,7 @@ export const getUserById = async (userId: number): Promise<User>  => {
                u.email = i.U_EMAIL;
            }
            const groupId = i.G_ID;
-           if (!m.has(groupId)) {
+           if (groupId && !m.has(groupId)) {
                const g: Group = ({
                    id: groupId,
                    name: i.G_NAME,
@@ -633,11 +730,14 @@ export const getUserById = async (userId: number): Promise<User>  => {
            }
 
            const roleId = i.R_ID;
-           r.get(groupId).push({
-             id: roleId,
-             name: i.R_NAME,
-             description: i.R_DESCRIPTION
-           } as Role);
+           if (roleId && groupId) {
+             r.get(groupId).push({
+               id: roleId,
+               name: i.R_NAME,
+               description: i.R_DESCRIPTION
+             } as Role);
+           }
+
 
 
            return u;
@@ -650,6 +750,5 @@ export const getUserById = async (userId: number): Promise<User>  => {
             email: null,
             groups: []
         } as User);
-
     });
 }

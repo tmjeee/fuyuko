@@ -47,7 +47,7 @@ const SQL = `
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.ID IN ?
 `;
@@ -89,7 +89,7 @@ const SQL_SEARCH = (limitOffset?: LimitOffset) => `
     LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
     LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
     LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
+    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
     LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
     WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
     AND I.PARENT_ID IS NULL
@@ -307,7 +307,7 @@ export const searchForItem2sInView = async (viewId: number, searchType: ItemSear
     // todo: support advance search type
     const iSearch = `%${search}%`;
     const itemIds: number[] = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryA = await conn.query(SQL_SEARCH(limitOffset), [viewId, iSearch, iSearch, iSearch]);
+        const q: QueryA = await conn.query(SQL_SEARCH(limitOffset), [viewId, viewId, iSearch, iSearch, iSearch]);
         return q.reduce((acc: number[], curr: QueryI) => {
             acc.push(curr.I_ID)
             return acc;
@@ -316,7 +316,7 @@ export const searchForItem2sInView = async (viewId: number, searchType: ItemSear
 
     if (itemIds.length) {
         const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
-            const q: QueryA = await conn.query(SQL, [itemIds]);
+            const q: QueryA = await conn.query(SQL, [viewId, itemIds]);
             return _doQ(q);
         });
         await w(viewId, item2s);
@@ -356,7 +356,7 @@ export const getAllItem2sInView = async (viewId: number, parentOnly: boolean = t
            acc.push(i.ID);
            return acc;
         }, []);
-        const q: QueryA = await conn.query(SQL, [itemIds && itemIds.length ? itemIds : [-1]]);
+        const q: QueryA = await conn.query(SQL, [viewId, itemIds && itemIds.length ? itemIds : [-1]]);
         return _doQ(q);
     });
 
@@ -394,7 +394,7 @@ export const getItem2sByIds = async (viewId: number, itemIds: number[], parentOn
            acc.push(i.ID);
            return acc;
         }, []);
-        const q: QueryA = await conn.query(SQL, [_itemIds]);
+        const q: QueryA = await conn.query(SQL, [viewId, _itemIds]);
         return _doQ(q);
     });
 
@@ -443,10 +443,10 @@ export const getItem2ById = async (viewId: number, itemId: number): Promise<Item
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
-            `, [itemId]);
+            `, [viewId, itemId]);
 
         return _doQ(q);
     });
@@ -461,7 +461,7 @@ export const getItem2ById = async (viewId: number, itemId: number): Promise<Item
 // ============================
 export const getItemByName = async (viewId: number, itemName: string): Promise<Item> => {
     const item2: Item2 = await getItem2ByName(viewId, itemName);
-    return itemConvert(item2);
+    return (item2 ? itemConvert(item2) : undefined);
 };
 export const getItem2ByName = async (viewId: number, itemName: string): Promise<Item2> => {
 
@@ -495,10 +495,10 @@ export const getItem2ByName = async (viewId: number, itemName: string): Promise<
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.NAME = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
-            `, [itemName]);
+            `, [viewId, itemName]);
 
         return _doQ(q);
     });
@@ -551,10 +551,10 @@ export const findChildrenItem2s = async (viewId: number, parentItemId: number): 
                 LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND I.PARENT_ID = ?
-            `, [viewId, parentItemId]);
+            `, [viewId, viewId, parentItemId]);
 
         return _doQ(q);
     });

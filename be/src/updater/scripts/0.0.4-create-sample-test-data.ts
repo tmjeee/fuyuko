@@ -1,4 +1,4 @@
-import {i} from "../../logger";
+import {e, i} from "../../logger";
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {sprintf} from "sprintf";
@@ -40,6 +40,7 @@ import {addItemImage} from "../../service/item-image.service";
 import {setPrices} from "../../service/pricing-structure-item.service";
 import {addOrUpdateRules} from "../../service/rule.service";
 import {Rule, ValidateClause, WhenClause} from "../../model/rule.model";
+import {checkErrors} from "../script-util";
 
 
 export const profiles = [UPDATER_PROFILE_TEST_DATA];
@@ -53,12 +54,6 @@ export const update = async () => {
     i(`done running update on ${__filename}`);
 };
 
-const checkErrors = (errors: string[], msg: string) => {
-    if (errors && errors.length) {
-        errors.forEach((error: string) => console.error(error));
-        throw new Error(msg);
-    }
-};
 
 const INSERT_DATA = async () => {
     await doInDbConnection(async (conn: Connection) => {
@@ -277,18 +272,10 @@ const INSERT_VIEW_DATA = async (viewId: number, viewGroupId: number, editGroupId
     // pricing structure with groups
     errors = await linkPricingStructureWithGroupId(ps1.id, adminGroupId);
     checkErrors(errors, `Failed to link group Id ${adminGroupId} with pricing structure ${ps1.id}`);
-    errors = await linkPricingStructureWithGroupId(ps1.id, viewGroupId);
-    checkErrors(errors, `Failed to link group Id ${viewGroupId} with pricing structure ${ps1.id}`);
-    errors = await linkPricingStructureWithGroupId(ps1.id, editGroupId);
-    checkErrors(errors, `Failed to link group Id ${editGroupId} with pricing structure ${ps1.id}`);
     errors = await linkPricingStructureWithGroupId(ps1.id, partnerGroupId);
     checkErrors(errors, `Failed to link group Id ${partnerGroupId} with pricing structure ${ps1.id}`);
     errors = await linkPricingStructureWithGroupId(ps2.id, adminGroupId);
     checkErrors(errors, `Failed to link group Id ${adminGroupId} with pricing structure ${ps2.id}`);
-    errors = await linkPricingStructureWithGroupId(ps2.id, viewGroupId);
-    checkErrors(errors, `Failed to link group Id ${viewGroupId} with pricing structure ${ps2.id}`);
-    errors = await linkPricingStructureWithGroupId(ps2.id, editGroupId);
-    checkErrors(errors, `Failed to link group Id ${editGroupId} with pricing structure ${ps2.id}`);
     errors = await linkPricingStructureWithGroupId(ps2.id, partnerGroupId);
     checkErrors(errors, `Failed to link group Id ${partnerGroupId} with pricing structure ${ps2.id}`);
 
@@ -440,22 +427,43 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
     checkErrors(errors, `Item-7 failed to be created`);
 
     const item1: Item = await getItemByName(viewId, `Item-1`);
+    if (!item1) {
+        throw new Error(`Failed to retrieve Item-1 from view id ${viewId}`);
+    }
     const item2: Item = await getItemByName(viewId, `Item-2`);
+    if (!item2) {
+        throw new Error(`Failed to retrieve Item-2 from view id ${viewId}`);
+    }
     const item3: Item = await getItemByName(viewId, `Item-3`);
+    if (!item3) {
+        throw new Error(`Failed to retrieve Item-3 for view id ${viewId}`);
+    }
     const item4: Item = await getItemByName(viewId, `Item-4`);
+    if (!item4) {
+        throw new Error(`Failed to retrieve Item-4 for view id ${viewId}`);
+    }
     const item5: Item = await getItemByName(viewId, `Item-5`);
+    if (!item5) {
+        throw new Error(`Failed to retrieve Item-5 for view id ${viewId}`);
+    }
     const item6: Item = await getItemByName(viewId, `Item-6`);
+    if (!item6) {
+        throw new Error(`Failed to retrieve Item-6 for view id ${viewId}`);
+    }
     const item7: Item = await getItemByName(viewId, `Item-7`);
+    if (!item7) {
+        throw new Error(`Failed to retrieve Item-7 for view id ${viewId}`);
+    }
 
     const allItems: Item[] = [item1, item2, item3, item4, item5, item6, item7];
     for (const item of allItems) {
         for (let i = 0; i< 3; i++) {
-            const fileName = sprintf('%04.jpg', c());
+            const fileName = sprintf('%04d.jpg', c());
             const isPrimary = (i === 0);
             const fullPath = Path.resolve(__dirname, '../assets/item-images', fileName);
 
             const buffer: Buffer = await util.promisify(readFile)(fullPath);
-            const r: boolean = await addItemImage(item.id, sprintf('%04s.jpg', c()), buffer, true);
+            const r: boolean = await addItemImage(item.id, fileName, buffer, true);
             if (!r) {
                 const msg = (`Failed to add image ${fileName} for Item ${item.name}`);
                 console.error(msg);

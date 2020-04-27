@@ -8,6 +8,46 @@ import fileType from "file-type";
 import {File} from "formidable";
 
 
+export const addGlobalAvatar = async (fileName: string, buffer: Buffer): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_GLOBAL_AVATAR WHERE NAME = ?`, [fileName]);
+        if (qc[0].COUNT > 0) {
+            errors.push(`Global avatar named ${fileName} already exists`);
+        } else {
+            const mimeType: fileType.FileTypeResult = fileType(buffer);
+            const size = buffer.length;
+
+            const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_AVATAR (NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?, ?, ?, ?)`,
+                [fileName, mimeType.mime, size, buffer]);
+            if (q.affectedRows <= 0) {
+                errors.push(`Failed to insert global avatar named ${fileName}`);
+            };
+        }
+        return errors;
+    });
+};
+
+export const addGlobalImage = async (fileName: string, tag: string, buffer: Buffer): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const q1: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_GLOBAL_IMAGE WHERE NAME=? OR TAG=?`, [fileName, tag]);
+        if (q1[0].COUNT > 0) {
+            errors.push(`Global image with name ${fileName} or tag ${tag} already exists`);
+        } else {
+            const mimeType: fileType.FileTypeResult = fileType(buffer);
+            const size = buffer.length;
+
+            const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_IMAGE (NAME, MIME_TYPE, SIZE, CONTENT, TAG) VALUES (?,?,?,?,?)`, [fileName, mimeType.mime, size, buffer, tag]);
+            if (q.affectedRows <= 0) {
+                errors.push(`Failed to insert global image ${fileName}`);
+            }
+        }
+        return errors;
+    });
+};
+
+
 export const saveUserAvatar = async (userId: number, avatar: { globalAvatarName?: string, customAvatarFile?: File}): Promise<{userAvatarId: number, errors: string[]}> => {
     const errors: string[] = [];
     let userAvatarId: number;

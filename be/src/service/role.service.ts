@@ -2,6 +2,34 @@ import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Role} from "../model/role.model";
 
+export const addOrUpdateRole = async (role: Role): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        if (role.id < 0) { // add
+            const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ROLE WHERE NAME=? `, [role.name]);
+            if (qc[0].COUNT > 0) {
+                errors.push(`Role ${role.name} already exists`);
+            } else {
+               const q: QueryResponse = await conn.query(`INSERT INTO TBL_ROLE (NAME, DESCRIPTION) VALUES (?,?)`, [role.name, role.description]);
+               if (q.affectedRows <= 0) {
+                   errors.push(`Failed to insert role name ${role.name}`);
+               }
+            }
+        } else { // update
+            const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ROLE WHERE ID=?`, [role.id]);
+            if (qc[0].COUNT > 0) {
+                errors.push(`Role id ${role.id} do not exists`);
+            } else {
+                const q: QueryResponse = await conn.query(`UPDATE TBL_ROLE SET NAME=?, DESCRIPTION=? WHERE ID=?`, [role.name, role.description, role.id]);
+                if (q.affectedRows <= 0) {
+                    errors.push(`Failed to update role id ${role.id}`);
+                }
+            }
+        }
+        return errors;
+    });
+}
+
 export const addRoleToGroup = async (groupId: number, roleName: string): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
@@ -27,6 +55,20 @@ export const addRoleToGroup = async (groupId: number, roleName: string): Promise
     });
 };
 
+
+export const getRoleByName = async (roleName: string): Promise<Role> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION FROM TBL_ROLE WHERE NAME=?`, roleName);
+        if (q.length) {
+            return {
+               id: q[0].ID,
+               name: q[0].NAME,
+               description: q[0].DESCRIPTION
+            } as Role;
+        }
+        return null;
+    });
+};
 
 export const getAllRoles = async (): Promise<Role[]> => {
     return await doInDbConnection(async (conn: Connection) => {

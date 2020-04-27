@@ -18,7 +18,7 @@ export const linkPricingStructureWithGroupId = async(pricingStructureId: number,
         const qa: QueryA = await conn.query(`
             SELECT COUNT(GR.ID) AS COUNT FROM TBL_LOOKUP_GROUP_ROLE AS GR
             LEFT JOIN TBL_GROUP AS G ON G.ID = GR.GROUP_ID
-            LEFT JOIN TBL_ROLE AS R ON R.ROLE_ID = GR.ROLE_ID
+            LEFT JOIN TBL_ROLE AS R ON R.ID = GR.ROLE_ID
             WHERE GR.GROUP_ID = ? AND R.NAME = ?
         `, [groupId, ROLE_PARTNER]);
         if (qa[0].COUNT <= 0) {

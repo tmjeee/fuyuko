@@ -1,7 +1,40 @@
 import {Group} from "../model/group.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Role} from "../model/role.model";
+import {ENABLED} from "../model/status.model";
+
+export const addOrUpdateGroup = async (g: {id: number, name: string, description: string}): Promise<string[]> => {
+    return doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        if (g.id < 0) { // add
+            const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_GROUP WHERE NAME=?`, [g.name]);
+            if (qc[0].COUNT > 0) {
+                errors.push(`Group with name ${g.name} already exists`);
+            } else {
+                const q: QueryResponse = await conn.query(`
+                    INSERT INTO TBL_GROUP (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)
+                `, [g.name, g.description, ENABLED]);
+                if (q.affectedRows < 0) {
+                    errors.push(`Failed to add group ${g.name}`);
+                }
+            }
+        } else { // update
+            const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_GROUP WHERE ID=?`, [g.id]);
+            if (qc[0].COUNT <= 0) {
+                errors.push(`Group with id ${g.id} do not exists`);
+            } else {
+                const q: QueryResponse = await conn.query(`
+                    UPDATE TBL_GROUP SET NAME=?, DESCRIPTION=? WHERE ID=?
+                `, [g.name, g.description, g.id]);
+                if (q.affectedRows < 0) {
+                    errors.push(`Failed to update group id ${g.id}`);
+                }
+            }
+        }
+        return errors;
+    });
+}
 
 export const searchForGroupsWithNoSuchRoleCount = async (roleName: string, groupName?: string): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {

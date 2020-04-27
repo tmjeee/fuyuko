@@ -60,7 +60,14 @@ export const runUpdate = async () => {
     const scriptsDir: string = (path.join(__dirname, 'scripts'));
     const scriptsInScriptsDir: string[] = await util.promisify(fs.readdir)(scriptsDir);
     const orderedScripts: string[] = scriptsInScriptsDir
-        .filter((f:string) => f.endsWith('.js'))
+        .filter((f: string) => f.endsWith('.js')) // only deal with javascript
+        .filter((f:string) => {
+            const validSemverSyntax: boolean = (semver.valid(f) !== null);
+            if (!validSemverSyntax) {
+                w(`Script ${f} is not semver valid, will be ignored`);
+            }
+            return validSemverSyntax;
+        })
         .sort((f1: string, f2: string) => semver.compare(f1, f2))
     for (const script of orderedScripts) {
         const scriptFileFullPath: string = (path.join(scriptsDir, script));
