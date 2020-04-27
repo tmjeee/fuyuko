@@ -2,6 +2,7 @@ import {ActualPage} from "./actual.page";
 import * as util from '../util/util';
 
 
+const PAGE_NAME = 'jobs';
 export class JobsPage implements ActualPage<JobsPage> {
 
     constructor() { }
@@ -13,12 +14,12 @@ export class JobsPage implements ActualPage<JobsPage> {
     }
 
     waitForReady(): JobsPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     validateTitle(): JobsPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'jobs');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 

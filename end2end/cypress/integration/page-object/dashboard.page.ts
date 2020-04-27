@@ -11,6 +11,7 @@ import {PartnerPage} from "./partner.page";
 import * as util from '../util/util';
 
 
+const PAGE_NAME = 'dashboard'
 export class DashboardPage implements ActualPage<DashboardPage> {
 
     visit(): DashboardPage {
@@ -20,13 +21,13 @@ export class DashboardPage implements ActualPage<DashboardPage> {
     }
 
     waitForReady(): DashboardPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     validateTitle(): DashboardPage {
-       // cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'dashboard');
-       return new DashboardPage().visit();
+       cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
+       return this;
     }
 
     changeDashboardStrategy(dashboardStrategyId: string): DashboardPage {

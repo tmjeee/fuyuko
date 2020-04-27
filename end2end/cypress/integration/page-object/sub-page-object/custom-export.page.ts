@@ -2,11 +2,11 @@ import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {CustomImportPageStep1, CustomImportPageStep5} from "./custom-import.page";
 
-
+const PAGE_NAME = 'custom-export';
 export class CustomExportPage implements ActualPage<CustomExportPage> {
 
     validateTitle(): CustomExportPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'custom-export');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -27,7 +27,7 @@ export class CustomExportPage implements ActualPage<CustomExportPage> {
     }
 
     waitForReady(): CustomExportPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

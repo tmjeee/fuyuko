@@ -3,10 +3,11 @@ import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {ViewViewEditPopupPage} from "./sub-sub-page-object/view-view-edit-popup.page";
 
+const PAGE_NAME = 'view-views';
 export class ViewViewPage implements ActualPage<ViewViewPage> {
 
     validateTitle(): ViewViewPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-views');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -17,7 +18,7 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
     }
 
     waitForReady(): ViewViewPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

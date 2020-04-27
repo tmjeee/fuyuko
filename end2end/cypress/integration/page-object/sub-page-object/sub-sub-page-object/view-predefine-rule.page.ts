@@ -5,15 +5,16 @@ import {ViewPredefinedRuleAddPage} from "./view-predefined-rule-add.page";
 import {OperatorType} from "../../../model/operator.model";
 
 
+const PAGE_NAME = 'view-rules';
 export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage>{
 
     validateTitle(): ViewPredefinedRulePage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-rules');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
     waitForReady(): ViewPredefinedRulePage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

@@ -1,9 +1,9 @@
 import {LoginPage} from "../page-object/login.page";
-import {PricingPage} from "../page-object/pricing.page";
+import {PricingStructurePage} from "../page-object/sub-page-object/pricing-structure.page";
 
 describe(`pricing structure spece`, () => {
 
-    let pricingPage: PricingPage;
+    let pricingStructurePage: PricingStructurePage;
 
     before(() => {
         // const username = Cypress.env('username');
@@ -24,11 +24,11 @@ describe(`pricing structure spece`, () => {
         // cy.restoreLocalStorage();
         const username = Cypress.env('username');
         const password = Cypress.env('password');
-        pricingPage = new LoginPage()
+        pricingStructurePage = new LoginPage()
             .visit()
             .login(username, password)
-            .visitPricingPage();
-        pricingPage.visit();
+            .visitPricingPage()
+            .visitPricingStructurePage();
     });
 
     afterEach(() => {
@@ -36,7 +36,7 @@ describe(`pricing structure spece`, () => {
     });
 
     it('should load', () => {
-        pricingPage
+        pricingStructurePage
             .validateTitle()
         ;
     });
@@ -49,7 +49,7 @@ describe(`pricing structure spece`, () => {
         const viewName2 = `Test View 2`;
         const pricingStructureName2 = `Pricing Structure #2`;
 
-        pricingPage
+        pricingStructurePage
             .selectPricingStructure(viewName1, pricingStructureName1)
             .verifyPricingStrucureHasItems(pricingStructureName1)
             .selectPricingStructure(viewName1, pricingStructureName2)
@@ -71,7 +71,7 @@ describe(`pricing structure spece`, () => {
         const newPricingStructureName = `New-New-Pricing-Structure-${random}`;
         const newPricingStructureDescription = `New-New-Pricing-Structure-Description-${random}`;
 
-        pricingPage
+        pricingStructurePage
             .clickAddNewPricingStructure()
             .editName(pricingStructureName)
             .editDescription(pricingStructureDescription)

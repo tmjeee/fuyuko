@@ -165,6 +165,7 @@ describe(`data import spec`, () => {
         // create pricing structure for view
         new PricingPage()
             .visit()
+            .visitPricingStructurePage()
             .clickAddNewPricingStructure()
             .editName(pricingStructureName)
             .editDescription(pricingStructureDescription)

@@ -4,10 +4,11 @@ import {ViewDataListEditPopupPage} from "./sub-sub-page-object/view-data-list-ed
 import {ViewDataListItemPopupPage} from "./sub-sub-page-object/view-data-list-item-popup.page";
 import {ViewDataListAttributePopupPage} from "./sub-sub-page-object/view-data-list-attribute-popup.page";
 
+const PAGE_NAME = 'view-data-list';
 export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
     validateTitle(): ViewDataListPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-data-list');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -18,7 +19,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     }
 
     waitForReady(): ViewDataListPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

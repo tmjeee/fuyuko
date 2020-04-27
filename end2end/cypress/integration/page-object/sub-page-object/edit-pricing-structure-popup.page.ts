@@ -1,4 +1,5 @@
 import {PricingPage} from "../pricing.page";
+import {PricingStructurePage} from "./pricing-structure.page";
 
 export class EditPricingStructurePopupPage {
 
@@ -34,18 +35,18 @@ export class EditPricingStructurePopupPage {
         return this;
     }
 
-    clickOk(): PricingPage {
+    clickOk(): PricingStructurePage {
         cy.get(`[test-popup-dialog-title='pricing-structure-dialog-popup']`)
             .find(`[test-button-ok]`)
             .click({force: true});
-        return new PricingPage();
+        return new PricingStructurePage().waitForReady();
     }
 
-    clickCancel(): PricingPage {
+    clickCancel(): PricingStructurePage {
         cy.get(`[test-popup-dialog-title='pricing-structure-dialog-popup']`)
             .find(`[test-button-cancel]`)
             .click({force: true});
-        return new PricingPage();
+        return new PricingStructurePage().waitForReady();
     }
 
 }

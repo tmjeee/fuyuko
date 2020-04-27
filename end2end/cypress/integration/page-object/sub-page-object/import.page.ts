@@ -3,7 +3,7 @@ import * as util from '../../util/util';
 import 'cypress-file-upload';
 import {AttributeType} from "../../model/attribute.model";
 
-
+const PAGE_NAME = 'import';
 export class ImportPage implements ActualPage<ImportPage> {
 
     visit(): ImportPage {
@@ -13,12 +13,12 @@ export class ImportPage implements ActualPage<ImportPage> {
     }
 
     waitForReady(): ImportPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     validateTitle(): ImportPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'import');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 

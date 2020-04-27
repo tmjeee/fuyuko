@@ -14,10 +14,10 @@ import {LimitOffset} from "../../model/limit-offset.model";
 
 
 @Component({
-  templateUrl: './pricing.page.html',
-  styleUrls: ['./pricing.page.scss']
+  templateUrl: './pricing-structure.page.html',
+  styleUrls: ['./pricing-structure.page.scss']
 })
-export class PricingPageComponent implements OnInit  {
+export class PricingStructurePageComponent implements OnInit  {
 
     loading: boolean;
     views: View[];

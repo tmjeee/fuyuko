@@ -2,6 +2,7 @@ import {ActualPage} from "./actual.page";
 import * as util from '../util/util';
 
 
+const PAGE_NAME = 'profile';
 export class ProfilePage  implements ActualPage<ProfilePage> {
 
     constructor() { }
@@ -13,12 +14,12 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
     }
 
     waitForReady(): ProfilePage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     validateTitle(): ProfilePage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'profile');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 

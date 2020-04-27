@@ -2,10 +2,11 @@ import {ActualPage} from "../actual.page";
 import * as util from '../../util/util';
 
 
+const PAGE_NAME = 'user-invitation';
 export class UserInvitationPage implements ActualPage<UserInvitationPage> {
 
     validateTitle(): UserInvitationPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'user-invitation');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -16,7 +17,7 @@ export class UserInvitationPage implements ActualPage<UserInvitationPage> {
     }
 
     waitForReady(): UserInvitationPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

@@ -10,8 +10,17 @@ export const getMyself = (): any => {
     return {};
 }
 
-export const waitUntilTestPageReady = () => {
-    cy.waitUntil(() => cy.get(`[test-page-ready]`).then((n) => n.attr('test-page-ready') == 'true'));
+export const waitUntilTestPageReady = (pageName: string) => {
+    cy.waitUntil(() => {
+        return cy.get(`[test-page-ready]`)
+            .then((n) => {
+                return ((n.attr('test-page-ready') == 'true') &&
+                        (n.attr('test-page-title') == pageName));
+            })
+    }, {
+        timeout: 100000,
+        interval: 1000,
+    });
 };
 
 export const clearAllMessageToasts = () => {

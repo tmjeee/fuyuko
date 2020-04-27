@@ -13,6 +13,7 @@ import {
 import {AttributeType} from "../../model/attribute.model";
 
 
+const PAGE_NAME = 'export';
 export class ExportPage implements ActualPage<ExportPage> {
 
     visit(): ExportPage {
@@ -22,12 +23,12 @@ export class ExportPage implements ActualPage<ExportPage> {
     }
 
     waitForReady(): ExportPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     validateTitle(): ExportPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'export');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 

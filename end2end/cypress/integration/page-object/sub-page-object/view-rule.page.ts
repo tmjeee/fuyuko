@@ -3,10 +3,12 @@ import * as util from "../../util/util";
 import {ViewPredefinedRulePage} from "./sub-sub-page-object/view-predefine-rule.page";
 import {ViewCustomRulePage} from "./sub-sub-page-object/view-custom-rule.page";
 
+const PAGE_NAME: string = 'view-rules';
+
 export class ViewRulePage implements ActualPage<ViewRulePage> {
 
     validateTitle(): ViewRulePage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-rules');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -17,7 +19,7 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
     }
 
     waitForReady(): ViewRulePage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

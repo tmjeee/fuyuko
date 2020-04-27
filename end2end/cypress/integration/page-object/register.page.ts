@@ -1,6 +1,7 @@
 import {ActualPage} from "./actual.page";
 import * as util from "../util/util";
 
+const PAGE_NAME = 'register'
 export class RegisterPage implements ActualPage<RegisterPage> {
 
     visit(): RegisterPage {
@@ -10,13 +11,13 @@ export class RegisterPage implements ActualPage<RegisterPage> {
     }
 
     waitForReady(): RegisterPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     validateTitle(): RegisterPage {
         cy.get(`[test-page-title]`)
-            .should('have.attr', 'test-page-title', 'settings');
+            .should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 

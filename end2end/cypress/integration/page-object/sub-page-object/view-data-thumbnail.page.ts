@@ -4,10 +4,11 @@ import {ViewDataThumbnailEditPopupPage} from "./sub-sub-page-object/view-data-th
 import {ViewDataThumbnailItemPopupPage} from "./sub-sub-page-object/view-data-thumbnail-item-popup.page";
 import {ViewDataThumbnailAttributePopupPage} from "./sub-sub-page-object/view-data-thumbnail-attribute-popup.page";
 
+const PAGE_NAME = 'view-data-thumbnail';
 export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> {
 
     validateTitle(): ViewDataThumbnailPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-data-thumbnail');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -18,7 +19,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
     }
 
     waitForReady(): ViewDataThumbnailPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

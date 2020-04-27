@@ -1,13 +1,14 @@
 import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 
+const PAGE_NAME = 'view-edit-attribute';
 export class ViewAttributeDetailsPage implements ActualPage<ViewAttributeDetailsPage> {
 
     constructor(private attributeId: number) {
     }
 
     validateTitle(): ViewAttributeDetailsPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-edit-attribute');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -18,7 +19,7 @@ export class ViewAttributeDetailsPage implements ActualPage<ViewAttributeDetails
     }
 
     waitForReady(): ViewAttributeDetailsPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

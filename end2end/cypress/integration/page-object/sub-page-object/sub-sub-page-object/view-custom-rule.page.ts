@@ -4,10 +4,11 @@ import * as util from "../../../util/util";
 interface AcutalPage {
 }
 
+const PAGE_NAME = 'view-rules';
 export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
 
     validateTitle(): ViewCustomRulePage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-rules');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -28,7 +29,7 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
     }
 
     waitForReady(): ViewCustomRulePage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

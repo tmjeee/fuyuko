@@ -13,7 +13,7 @@ export class ViewPage  {
 
     visit(): ViewPage {
         // cy.visit(`/view-gen-layout/(rules//help:view-help)`);
-        new ViewRulePage().visit();
+        // new ViewRulePage().visit();
         return this;
     }
 

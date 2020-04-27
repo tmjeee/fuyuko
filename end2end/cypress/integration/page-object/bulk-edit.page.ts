@@ -19,6 +19,7 @@ import {
 } from "../model/unit.model";
 
 
+const PAGE_NAME = 'bulk-edit';
 export class BulkEditPage implements ActualPage<BulkEditPage> {
 
     visit(): BulkEditPage {
@@ -28,12 +29,12 @@ export class BulkEditPage implements ActualPage<BulkEditPage> {
     }
 
     waitForReady(): BulkEditPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     validateTitle(): BulkEditPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'bulk-edit');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 

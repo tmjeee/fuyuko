@@ -2,6 +2,7 @@ import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {ViewDataTableEditPopupPage} from "./sub-sub-page-object/view-data-table-edit-popup.page";
 
+const PAGE_NAME = 'view-data-table';
 export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     selectGlobalView(viewName: string): ViewDataTablePage {
@@ -11,7 +12,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     validateTitle(): ViewDataTablePage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-data-table');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -22,7 +23,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     waitForReady(): ViewDataTablePage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

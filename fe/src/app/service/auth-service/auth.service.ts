@@ -5,7 +5,7 @@ import {ThemeService} from '../theme-service/theme.service';
 import {HttpClient} from '@angular/common/http';
 
 import config from '../../utils/config.util';
-import {map, tap} from 'rxjs/operators';
+import {delay, map, tap} from 'rxjs/operators';
 import {BrowserLocationHistoryService} from "../browser-location-history-service/browser-location-history.service";
 import {ApiResponse, LoginResponse} from "../../model/api-response.model";
 

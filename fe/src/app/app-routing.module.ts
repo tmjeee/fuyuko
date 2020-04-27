@@ -20,7 +20,7 @@ import {UserPeoplePageComponent} from './page/user-people-page/user-people.page'
 import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
 import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
 import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
-import {PricingPageComponent} from './page/pricing-page/pricing.page';
+import {PricingStructurePageComponent} from './page/pricing-structure-page/pricing-structure.page';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
 import {DashboardPageComponent} from './page/dashboard-page/dashboard.page';
@@ -433,7 +433,7 @@ const routes: Routes = [
       {
         path: 'pricing-structure',
         canActivate: [AuthGuard],
-        component: PricingPageComponent,
+        component: PricingStructurePageComponent,
         data: {
           subSideNav: 'pricing-structure'
         }

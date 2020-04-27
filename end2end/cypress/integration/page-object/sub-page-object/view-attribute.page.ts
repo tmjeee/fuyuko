@@ -3,10 +3,11 @@ import * as util from "../../util/util";
 import {ViewAttributeAddPage} from "./sub-sub-page-object/view-attribute-add.page";
 import {ViewAttributeEditPage} from "./sub-sub-page-object/view-attribute-edit.page";
 
+const PAGE_NAME = 'view-attributes';
 export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
     validateTitle(): ViewAttributePage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-attributes');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -17,7 +18,7 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
     }
 
     waitForReady(): ViewAttributePage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

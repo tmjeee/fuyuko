@@ -1,10 +1,11 @@
 import {ActualPage} from "../actual.page";
 import * as util from '../../util/util';
 
+const PAGE_NAME = 'partner-thumbnail'
 export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
 
     validateTitle(): PartnerThumbnailPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'partner-thumbnail');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -15,7 +16,7 @@ export class PartnerThumbnailPage implements ActualPage<PartnerThumbnailPage> {
     }
 
     waitForReady(): PartnerThumbnailPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

@@ -34,7 +34,7 @@ import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
 import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
 import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
-import {PricingPageComponent} from './page/pricing-page/pricing.page';
+import {PricingStructurePageComponent} from './page/pricing-structure-page/pricing-structure.page';
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
 import {DashboardPageComponent} from './page/dashboard-page/dashboard.page';
 import {UserManagementService} from './service/user-management-service/user-management.service';
@@ -198,7 +198,7 @@ const appInitializer = (settingsService: SettingsService,
     ImportHelpPageComponent,
     ExportHelpPageComponent,
     ExportPageComponent,
-    PricingPageComponent,
+    PricingStructurePageComponent,
     PricingHelpPageComponent,
     FileNotFoundPageComponent,
     ViewAttributesPageComponent,

@@ -2,6 +2,7 @@ import {DashboardPage} from "./dashboard.page";
 import {ActualPage} from "./actual.page";
 import * as util from '../util/util';
 
+const PAGE_NAME = 'login';
 export class LoginPage implements ActualPage<LoginPage> {
 
     visit(): LoginPage {
@@ -11,14 +12,14 @@ export class LoginPage implements ActualPage<LoginPage> {
     }
 
     waitForReady(): LoginPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         cy.wait(2000);
         return this;
     }
 
     validateTitle(): LoginPage {
          cy.get(`[test-page-title]`)
-             .should('have.attr', 'test-page-title', 'login');
+             .should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -35,6 +36,7 @@ export class LoginPage implements ActualPage<LoginPage> {
             .find(`[test-button-login]`)
             .should('not.be.disabled')
             .click({force: true});
+        // cy.get(`form`).submit();
         return new DashboardPage().waitForReady();
     }
 

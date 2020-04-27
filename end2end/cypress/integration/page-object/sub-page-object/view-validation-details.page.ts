@@ -4,12 +4,13 @@ import {ViewValidationPage} from "./view-validation.page";
 import {ViewValidationAttributePopupPage} from "./sub-sub-page-object/view-validation-attribute-popup.page";
 import {ViewValidationItemPopupPage} from "./sub-sub-page-object/view-validation-item-popup.page";
 
+const PAGE_NAME = 'view-validation-details';
 export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetailsPage> {
 
     constructor(private validationName: string){ }
 
     validateTitle(): ViewValidationDetailsPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-validation-details');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -23,7 +24,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
     }
 
     waitForReady(): ViewValidationDetailsPage {
-        util.waitUntilTestPageReady();
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 

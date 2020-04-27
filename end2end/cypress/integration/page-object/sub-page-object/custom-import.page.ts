@@ -2,10 +2,11 @@ import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {cyan} from "color-name";
 
+const PAGE_NAME = 'custom-import';
 export class CustomImportPage implements ActualPage<CustomImportPage> {
 
     validateTitle(): CustomImportPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'custom-import');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -26,7 +27,7 @@ export class CustomImportPage implements ActualPage<CustomImportPage> {
     }
 
     waitForReady(): CustomImportPage {
-        util.waitUntilTestPageReady()
+        util.waitUntilTestPageReady(PAGE_NAME)
         return this;
     }
 

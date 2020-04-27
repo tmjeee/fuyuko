@@ -4,11 +4,12 @@ import {ViewValidationEditPopupPage} from "./sub-sub-page-object/view-validation
 import {ViewValidationDetailsPage} from "./view-validation-details.page";
 import {waitUntilTestPageReady} from "../../util/util";
 
+const PAGE_NAME = 'view-validations';
 export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
     validateTitle(): ViewValidationPage {
         cy.get(`[test-page-title]`)
-            .should('have.attr', 'test-page-title', 'view-validations');
+            .should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
@@ -20,7 +21,7 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
     waitForReady(): ViewValidationPage {
         // cy.waitUntil<boolean>(() => cy.get(`[test-page-ready]`).then((n) => n.attr('test-page-ready') == 'true'));
-        waitUntilTestPageReady();
+        waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
