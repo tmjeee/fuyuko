@@ -38,6 +38,7 @@ import {
 } from "../model/unit.model";
 import moment from "moment";
 import {itemValueConvert} from "./conversion-item-value.service";
+import * as util from 'util';
 
 const SQL: string = `
            SELECT 
@@ -89,7 +90,7 @@ const SQL: string = `
            
            FROM TBL_ITEM AS I
            LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
-           LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
+           LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS AME ON AME.VIEW_ATTRIBUTE_METADATA_ID = AM.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA AS IM ON IM.ITEM_VALUE_ID = V.ID
@@ -170,13 +171,16 @@ const getBulkEditItem2s = async (conn: Connection,
         const itemImageId: number = i.IMG_ID;
 
         const iMapKey: string = `${itemId}`;
-        const itemAttValueMetaMapKey: string = `${itemId}_${attributeId}_${metaId}`;
-        const itemAttValueMetaEntryMapKey: string = `${itemId}_${attributeId}_${metaId}_${entryId}`;
-        const itemImageMapKey: string = `${itemId}_${itemImageId}`;
+        const itemAttValueMetaMapKey: string = metaId ? `${itemId}_${attributeId}_${metaId}` : undefined;
+        const itemAttValueMetaEntryMapKey: string = metaId ? `${itemId}_${attributeId}_${metaId}_${entryId}`: undefined;
+        const itemImageMapKey: string = itemImageId ? `${itemId}_${itemImageId}` : undefined;
         const attributeMapKey: string = `${attributeId}`;
         const attributeMetadataMapKey: string = `${attributeId}_${attributeMetadataId}`;
         const attributeMetadataEntryMapKey: string = `${attributeId}_${attributeMetadataId}_${attributeMetadataEntryId}`;
 
+        console.log('***** iMapKey', itemId);
+        console.log('****** itemAttValueMetaMapKey', itemAttValueMetaMapKey);
+        console.log('***** itemImageMapKey', itemImageMapKey);
 
         if (!iMap.has(iMapKey)) {
             const item: BulkEditItem2 = {
@@ -195,7 +199,7 @@ const getBulkEditItem2s = async (conn: Connection,
             item.children = b;
         }
 
-        if (!itemImageMap.has(itemImageMapKey)) {
+        if (itemImageMapKey && !itemImageMap.has(itemImageMapKey)) {
             const itemImage = {
                 id: i.IMG_ID,
                 name: i.IMG_NAME,
@@ -207,7 +211,7 @@ const getBulkEditItem2s = async (conn: Connection,
             iMap.get(iMapKey).images.push(itemImage);
         }
 
-        if (!itemAttValueMetaMap.has(itemAttValueMetaMapKey)) {
+        if (itemAttValueMetaMapKey && !itemAttValueMetaMap.has(itemAttValueMetaMapKey)) {
             const meta: ItemMetadata2 = {
                 id: i.IM_ID,
                 name: i.IM_NAME,
@@ -219,7 +223,7 @@ const getBulkEditItem2s = async (conn: Connection,
             iMap.get(iMapKey).metadatas.push(meta);
         }
 
-        if (!itemAttValueMetaEntryMap.has(itemAttValueMetaEntryMapKey)) {
+        if (itemAttValueMetaEntryMapKey && !itemAttValueMetaEntryMap.has(itemAttValueMetaEntryMapKey)) {
             const entry: ItemMetadataEntry2 = {
                 id: i.IE_ID,
                 key: i.IE_KEY,
@@ -272,12 +276,18 @@ const getBulkEditItem2s = async (conn: Connection,
         );
 
 
+    console.log('**** before filter bulk edit item size', bulkEditItem2s.length);
     const matchedBulkEditItem2s: BulkEditItem2[] = bulkEditItem2s.filter((b: BulkEditItem2) => {
         let r: boolean = false;
         for (const itemValueOperatorAndAttribute of whenClauses) {
             const value: Value = itemValueOperatorAndAttribute.itemValue;
             const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;
+            console.log('******* b.metadatas', b.metadatas);
+
+            if (!b.metadatas || !b.metadatas.length) { // no metadatas
+                return true;
+            }
 
             const metas: ItemMetadata2[] = b.metadatas.filter((m: ItemMetadata2) =>  {
                 if (m.attributeId === attribute.id) {
@@ -287,15 +297,17 @@ const getBulkEditItem2s = async (conn: Connection,
                             const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                             const v1: string = (value ? (value.val as StringValue).value : null); // from rest API
-                            const v2: string = eValue.value; // actual item attribute value
+                            const v2: string = eValue ? eValue.value : undefined; // actual item attribute value
 
-                            return compareString(v1, v2, operator);
+                            const b: boolean =  compareString(v1, v2, operator);
+                            console.log('****** compare string', v1, v2, operator, b);
+                            return b;
                         }
                         case "text": {
                             const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                             const v1: string = (value ? (value.val as TextValue).value : null); // from rest api
-                            const v2: string = eValue.value; // from actual item attribute value
+                            const v2: string = eValue ? eValue.value : undefined; // from actual item attribute value
 
                             return compareString(v1, v2, operator);
                         }
@@ -303,7 +315,7 @@ const getBulkEditItem2s = async (conn: Connection,
                             const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                             const v1: number = (value ? (value.val as NumberValue).value : null);
-                            const v2: number = Number(eValue.value);
+                            const v2: number = eValue ? Number(eValue.value) : undefined;
 
                             return compareNumber(v1, v2, operator);
                         }
@@ -314,8 +326,8 @@ const getBulkEditItem2s = async (conn: Connection,
                             const v1: number = (value ? (value.val as AreaValue).value : null);
                             const u1: AreaUnits = (value ? (value.val as AreaValue).unit : null);
 
-                            const v2: number = Number((eValue.value));
-                            const u2: AreaUnits = (eUnit.value) as AreaUnits;
+                            const v2: number = eValue ? Number((eValue.value)): undefined;
+                            const u2: AreaUnits = eUnit ? (eUnit.value) as AreaUnits : undefined;
 
                             return compareArea(v1, u1, v2, u2, operator);
                         }
@@ -326,8 +338,8 @@ const getBulkEditItem2s = async (conn: Connection,
                             const v1: number = (value ? (value.val as CurrencyValue).value : null);
                             const u1: CountryCurrencyUnits = (value ? (value.val as CurrencyValue).country : null);
 
-                            const v2: number = Number(eValue.value);
-                            const u2: CountryCurrencyUnits = (eUnit.value) as CountryCurrencyUnits;
+                            const v2: number = eValue ? Number(eValue.value) : undefined;
+                            const u2: CountryCurrencyUnits = eUnit ? (eUnit.value) as CountryCurrencyUnits : undefined;
 
                             return compareCurrency(v1, u1, v2, u2, operator);
                         }
@@ -336,7 +348,7 @@ const getBulkEditItem2s = async (conn: Connection,
                             const format = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
 
                             const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
-                            const v2: moment.Moment = (eValue.value ? moment(eValue.value, format) : undefined);
+                            const v2: moment.Moment = (eValue && eValue.value ? moment(eValue.value, format) : undefined);
 
                             return compareDate(v1, v2, operator);
                         }
@@ -351,10 +363,10 @@ const getBulkEditItem2s = async (conn: Connection,
                             const l1: number = (value ? ((value.val) as DimensionValue).length : null);
                             const u1: DimensionUnits = (value ? ((value.val) as DimensionValue).unit : null);
 
-                            const h2: number = Number(eH.value);
-                            const w2: number = Number(eW.value);
-                            const l2: number = Number(eL.value);
-                            const u2: DimensionUnits = (eU.value) as DimensionUnits;
+                            const h2: number = eH ? Number(eH.value) : undefined;
+                            const w2: number = eW ? Number(eW.value) : undefined;
+                            const l2: number = eL ? Number(eL.value) : undefined;
+                            const u2: DimensionUnits = eU ? (eU.value) as DimensionUnits : undefined;
 
                             return compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
                         }
@@ -365,8 +377,8 @@ const getBulkEditItem2s = async (conn: Connection,
                             const v1: number = (value ? (value.val as HeightValue).value : null);
                             const u1: HeightUnits = (value ? (value.val as HeightValue).unit : null);
 
-                            const v2: number = Number(eV.value);
-                            const u2: HeightUnits = eU.value as HeightUnits;
+                            const v2: number = eV ?  Number(eV.value) : undefined;
+                            const u2: HeightUnits = eU ? eU.value as HeightUnits : undefined;
 
                             return compareHeight(v1, u1, v2, u2, operator);
                         }
@@ -377,8 +389,8 @@ const getBulkEditItem2s = async (conn: Connection,
                             const v1: number = (value ? (value.val as LengthValue).value : null);
                             const u1: LengthUnits = (value ? (value.val as LengthValue).unit : null);
 
-                            const v2: number = Number(eV.value);
-                            const u2: LengthUnits = eU.value as LengthUnits;
+                            const v2: number = eV ? Number(eV.value) : undefined;
+                            const u2: LengthUnits = eU ? eU.value as LengthUnits : undefined;
 
                             return compareLength(v1, u1, v2, u2, operator);
                         }
@@ -389,8 +401,8 @@ const getBulkEditItem2s = async (conn: Connection,
                             const v1: number = (value ? (value.val as VolumeValue).value : null);
                             const u1: VolumeUnits = (value ? (value.val as VolumeValue).unit : null);
 
-                            const v2: number = Number(eV.value);
-                            const u2: VolumeUnits = eU.value as VolumeUnits;
+                            const v2: number = eV ? Number(eV.value) : undefined;
+                            const u2: VolumeUnits = eU ? eU.value as VolumeUnits : undefined;
 
                             return compareVolume(v1, u1, v2, u2, operator);
                         }
@@ -401,8 +413,8 @@ const getBulkEditItem2s = async (conn: Connection,
                             const v1: number = (value ? (value.val as WidthValue).value : null);
                             const u1: WidthUnits = (value ? (value.val as WidthValue).unit : null);
 
-                            const v2: number = Number(eV.value);
-                            const u2: WidthUnits = eU.value as WidthUnits;
+                            const v2: number = eV ? Number(eV.value) : undefined;
+                            const u2: WidthUnits = eU ? eU.value as WidthUnits : undefined;
 
                             return compareWidth(v1, u1, v2, u2, operator);
                         }
@@ -411,7 +423,7 @@ const getBulkEditItem2s = async (conn: Connection,
                             const eK: ItemMetadataEntry2 = findEntry(m.entries, 'key');
 
                             const k1: string = (value ? (value.val as SelectValue).key : null);
-                            const k2: string = eK.value;
+                            const k2: string = eK ? eK.value : undefined;
 
                             return compareSelect(k1, k2, operator);
                         }
@@ -421,8 +433,8 @@ const getBulkEditItem2s = async (conn: Connection,
 
                             const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null);
                             const kTwo1: string = (value ? (value.val as DoubleSelectValue).key2 : null);
-                            const kOne2: string = eOne.value;
-                            const kTwo2: string = eTwo.value;
+                            const kOne2: string = eOne ? eOne.value : undefined;
+                            const kTwo2: string = eTwo ? eTwo.value : undefined;
 
                             return compareDoubleselect(kOne1, kTwo1, kOne1, kOne2, operator);
                         }
@@ -449,19 +461,22 @@ const convertToBulkEditItems = (b2s: BulkEditItem2[], changes: ItemValueAndAttri
 const convertToBulkEditItem = (b2: BulkEditItem2, changes: ItemValueAndAttribute[], whens: ItemValueOperatorAndAttribute[]): BulkEditItem => {
     const c = changes.reduce((acc: any, change: ItemValueAndAttribute) => {
         const met: ItemMetadata2 = b2.metadatas.find((m: ItemMetadata2) => m.attributeId === change.attribute.id);
+        /*
         const _new = {
             attributeId: met.attributeId,
             val: {}
         } as Value;
+         */
+        const attributeId: number = met ? met.attributeId: change.attribute.id;
         const _c = {
             old: itemValueConvert({
                 id: -1,
-                attributeId: met.attributeId,
-                metadatas: [met]
+                attributeId,
+                metadatas: met? [met] : []
             } as ItemValue2),
             new: change.itemValue
         };
-        acc[met.attributeId] = _c ;
+        acc[attributeId] = _c ;
         return acc;
     }, {});
     const w = whens.reduce((acc: any, when: ItemValueOperatorAndAttribute) => {
