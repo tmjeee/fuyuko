@@ -13,6 +13,7 @@ import {itemValueRevert} from "./conversion-item-value.service";
 import {itemConvert, itemRevert, itemsConvert} from "./conversion-item.service";
 import {parseAsync} from "json2csv";
 import {Status} from "../model/status.model";
+import * as util from "util";
 
 //////////////////////// SQLs //////////////////////////////////////////////////////////////////
 
@@ -44,10 +45,10 @@ const SQL = `
                     IMG.SIZE AS IMG_SIZE,
                     IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
-                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
+                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.ID IN ?
 `;
@@ -86,10 +87,10 @@ const SQL_SEARCH = (limitOffset?: LimitOffset) => `
     SELECT DISTINCT
        I.ID AS I_ID
     FROM TBL_ITEM AS I
-    LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
+    LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
     LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
     LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
     LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
     WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
     AND I.PARENT_ID IS NULL
@@ -440,10 +441,10 @@ export const getItem2ById = async (viewId: number, itemId: number): Promise<Item
                     IMG.SIZE AS IMG_SIZE,
                     IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
-                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
+                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
             `, [viewId, itemId]);
@@ -492,13 +493,13 @@ export const getItem2ByName = async (viewId: number, itemName: string): Promise<
                     IMG.SIZE AS IMG_SIZE,
                     IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
-                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
+                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
-                WHERE I.NAME = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
-            `, [viewId, itemName]);
+                WHERE I.VIEW_ID =? AND I.NAME = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
+            `, [viewId, viewId, itemName]);
 
         return _doQ(q);
     });
@@ -548,10 +549,10 @@ export const findChildrenItem2s = async (viewId: number, parentItemId: number): 
                     IMG.SIZE AS IMG_SIZE,
                     IMG.\`PRIMARY\` AS IMG_PRIMARY
                 FROM TBL_ITEM AS I
-                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
+                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND I.PARENT_ID = ?
             `, [viewId, viewId, parentItemId]);
@@ -598,17 +599,18 @@ const _doQ = (q: QueryA): Item2[] => {
 
         const attributeId: number = c.A_ID;
         const attributeType: string = c.A_TYPE;
+
         const valueId: number = c.V_ID;
-        const valueMapKey: string = `${itemId}_${attributeId}_${valueId}`;
+        const valueMapKey: string = valueId ? `${itemId}_${attributeId}_${valueId}` : undefined;
 
         const metadataId: number = c.M_ID;
-        const metaMapKey = `${itemId}_${attributeId}_${valueId}_${metadataId}`;
+        const metaMapKey = valueId ? `${itemId}_${attributeId}_${valueId}_${metadataId}` : undefined;
 
         const entryId: number = c.E_ID;
         const entryMapKey = `${itemId}_${attributeId}_${metadataId}_${entryId}`;
 
         const imageId: number = c.IMG_ID;
-        const imgMapKey: string = `${itemId}_${imageId}`;
+        const imgMapKey: string = imageId ? `${itemId}_${imageId}` : undefined;
 
         if (!itemMap.has(itemMapKey)) {
             const item: Item2 = {
@@ -627,7 +629,7 @@ const _doQ = (q: QueryA): Item2[] => {
             acc.push(item);
         }
 
-        if (!imgMap.has(imgMapKey)) {
+        if (imgMapKey && !imgMap.has(imgMapKey)) {
             const img: ItemImage = {
                 id: imageId,
                 name: c.IMG_NAME,
@@ -640,7 +642,7 @@ const _doQ = (q: QueryA): Item2[] => {
             item.images.push(img);
         }
 
-        if (!valueMap.has(valueMapKey)) {
+        if (valueMapKey && !valueMap.has(valueMapKey)) {
             const itemValue: ItemValue2 = {
                 id: valueId,
                 attributeId,
@@ -651,7 +653,7 @@ const _doQ = (q: QueryA): Item2[] => {
             item.values.push(itemValue);
         }
 
-        if (!metaMap.has(metaMapKey)) {
+        if (metaMapKey && !metaMap.has(metaMapKey)) {
             const itemMetadata: ItemMetadata2 = {
                 id: metadataId,
                 name: c.M_NAME,
@@ -672,8 +674,10 @@ const _doQ = (q: QueryA): Item2[] => {
                 dataType: c.E_DATA_TYPE
             };
             entMap.set(entryMapKey, entry);
-            const meta: ItemMetadata2 = metaMap.get(metaMapKey);
-            meta.entries.push(entry);
+            if(metaMapKey) {
+                const meta: ItemMetadata2 = metaMap.get(metaMapKey); // item value metas
+                meta.entries.push(entry);
+            }
         }
 
         return acc;

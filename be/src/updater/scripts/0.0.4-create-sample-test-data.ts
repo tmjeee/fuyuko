@@ -455,8 +455,9 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         throw new Error(`Failed to retrieve Item-7 for view id ${viewId}`);
     }
 
-    const allItems: Item[] = [item1, item2, item3, item4, item5, item6, item7];
-    for (const item of allItems) {
+
+    // setup item images
+    const giveItemImages = async (item: Item) => {
         for (let i = 0; i< 3; i++) {
             const fileName = sprintf('%04d.jpg', c());
             const isPrimary = (i === 0);
@@ -470,8 +471,17 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
                 throw new Error(msg);
             }
         }
+        for (const childItem of item.children) {
+            await giveItemImages(childItem);
+        }
+    };
+    const allItems: Item[] = [item1, item2, item3, item4, item5, item6, item7];
+    for (const item of allItems) {
+        await giveItemImages(item);
     }
 
+
+    // setup item pricing
     for (let i = 0; i< allItems.length; i++) {
         const item: Item = allItems[i];
         const prices: number[] = [1.10, 2.20, 3.30, 4.40, 5.50, 6.60, 7.70];

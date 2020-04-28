@@ -178,10 +178,6 @@ const getBulkEditItem2s = async (conn: Connection,
         const attributeMetadataMapKey: string = `${attributeId}_${attributeMetadataId}`;
         const attributeMetadataEntryMapKey: string = `${attributeId}_${attributeMetadataId}_${attributeMetadataEntryId}`;
 
-        console.log('***** iMapKey', itemId);
-        console.log('****** itemAttValueMetaMapKey', itemAttValueMetaMapKey);
-        console.log('***** itemImageMapKey', itemImageMapKey);
-
         if (!iMap.has(iMapKey)) {
             const item: BulkEditItem2 = {
                 id: i.I_ID,
@@ -275,15 +271,12 @@ const getBulkEditItem2s = async (conn: Connection,
             }, new Map()
         );
 
-
-    console.log('**** before filter bulk edit item size', bulkEditItem2s.length);
     const matchedBulkEditItem2s: BulkEditItem2[] = bulkEditItem2s.filter((b: BulkEditItem2) => {
         let r: boolean = false;
         for (const itemValueOperatorAndAttribute of whenClauses) {
             const value: Value = itemValueOperatorAndAttribute.itemValue;
             const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;
-            console.log('******* b.metadatas', b.metadatas);
 
             if (!b.metadatas || !b.metadatas.length) { // no metadatas
                 return true;
@@ -300,7 +293,6 @@ const getBulkEditItem2s = async (conn: Connection,
                             const v2: string = eValue ? eValue.value : undefined; // actual item attribute value
 
                             const b: boolean =  compareString(v1, v2, operator);
-                            console.log('****** compare string', v1, v2, operator, b);
                             return b;
                         }
                         case "text": {

@@ -10,22 +10,27 @@ import {
 } from "../model/item.model";
 
 export const itemValTypesConvert = (metadatas: ItemMetadata2[]): ItemValTypes => {
-    const o: any = {};
+    let o: any = null;
     for (const metadata of metadatas) {
         for (const entry of metadata.entries) {
             const k: string = entry.key;
             const t: string = entry.dataType;
             const v: string = entry.value;
             let _v: string | number = null;
-            switch (t) {
-                case 'string':
-                    _v = String(v);
-                    break;
-                case 'number':
-                    _v = Number(v);
-                    break;
+            if (k) {
+                switch (t) {
+                    case 'string':
+                        _v = String(v);
+                        break;
+                    case 'number':
+                        _v = Number(v);
+                        break;
+                }
+                if (!o) {
+                    o = {};
+                }
+                o[k] = _v;
             }
-            o[k] = _v;
         }
     }
     return o;
