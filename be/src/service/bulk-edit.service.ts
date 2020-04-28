@@ -278,166 +278,278 @@ const getBulkEditItem2s = async (conn: Connection,
             const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;
 
-            if (!b.metadatas || !b.metadatas.length) { // no metadatas
-                return true;
-            }
+            if (!b.metadatas || !b.metadatas.length) { // no metadatas which means there is no value for the item attribute
+                // return true;
+                switch(attribute.type) {
+                    case "string": {
+                        const v1: string = (value ? (value.val as StringValue).value : null); // from rest API
+                        const v2: string = undefined; // from actual item attribute value
 
-            const metas: ItemMetadata2[] = b.metadatas.filter((m: ItemMetadata2) =>  {
-                if (m.attributeId === attribute.id) {
-                    switch(attribute.type) {
-                        case "string": {
-                            const eType: ItemMetadataEntry2 = findEntry(m.entries, 'type');
-                            const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-
-                            const v1: string = (value ? (value.val as StringValue).value : null); // from rest API
-                            const v2: string = eValue ? eValue.value : undefined; // actual item attribute value
-
-                            const b: boolean =  compareString(v1, v2, operator);
-                            return b;
-                        }
-                        case "text": {
-                            const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-
-                            const v1: string = (value ? (value.val as TextValue).value : null); // from rest api
-                            const v2: string = eValue ? eValue.value : undefined; // from actual item attribute value
-
-                            return compareString(v1, v2, operator);
-                        }
-                        case "number": {
-                            const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-
-                            const v1: number = (value ? (value.val as NumberValue).value : null);
-                            const v2: number = eValue ? Number(eValue.value) : undefined;
-
-                            return compareNumber(v1, v2, operator);
-                        }
-                        case "area": {
-                            const eValue: ItemMetadataEntry2 = findEntry(m.entries, "value");
-                            const eUnit: ItemMetadataEntry2 = findEntry(m.entries, "unit");
-
-                            const v1: number = (value ? (value.val as AreaValue).value : null);
-                            const u1: AreaUnits = (value ? (value.val as AreaValue).unit : null);
-
-                            const v2: number = eValue ? Number((eValue.value)): undefined;
-                            const u2: AreaUnits = eUnit ? (eUnit.value) as AreaUnits : undefined;
-
-                            return compareArea(v1, u1, v2, u2, operator);
-                        }
-                        case "currency": {
-                            const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-                            const eUnit: ItemMetadataEntry2 = findEntry(m.entries, "country");
-
-                            const v1: number = (value ? (value.val as CurrencyValue).value : null);
-                            const u1: CountryCurrencyUnits = (value ? (value.val as CurrencyValue).country : null);
-
-                            const v2: number = eValue ? Number(eValue.value) : undefined;
-                            const u2: CountryCurrencyUnits = eUnit ? (eUnit.value) as CountryCurrencyUnits : undefined;
-
-                            return compareCurrency(v1, u1, v2, u2, operator);
-                        }
-                        case "date": {
-                            const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-                            const format = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
-
-                            const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
-                            const v2: moment.Moment = (eValue && eValue.value ? moment(eValue.value, format) : undefined);
-
-                            return compareDate(v1, v2, operator);
-                        }
-                        case "dimension": {
-                            const eH: ItemMetadataEntry2 = findEntry(m.entries, 'height');
-                            const eW: ItemMetadataEntry2 = findEntry(m.entries, 'width');
-                            const eL: ItemMetadataEntry2 = findEntry(m.entries, 'length');
-                            const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
-
-                            const h1: number = (value ? ((value.val) as DimensionValue).height: null);
-                            const w1: number = (value ? ((value.val) as DimensionValue).width : null);
-                            const l1: number = (value ? ((value.val) as DimensionValue).length : null);
-                            const u1: DimensionUnits = (value ? ((value.val) as DimensionValue).unit : null);
-
-                            const h2: number = eH ? Number(eH.value) : undefined;
-                            const w2: number = eW ? Number(eW.value) : undefined;
-                            const l2: number = eL ? Number(eL.value) : undefined;
-                            const u2: DimensionUnits = eU ? (eU.value) as DimensionUnits : undefined;
-
-                            return compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
-                        }
-                        case "height": {
-                            const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-                            const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
-
-                            const v1: number = (value ? (value.val as HeightValue).value : null);
-                            const u1: HeightUnits = (value ? (value.val as HeightValue).unit : null);
-
-                            const v2: number = eV ?  Number(eV.value) : undefined;
-                            const u2: HeightUnits = eU ? eU.value as HeightUnits : undefined;
-
-                            return compareHeight(v1, u1, v2, u2, operator);
-                        }
-                        case "length": {
-                            const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-                            const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
-
-                            const v1: number = (value ? (value.val as LengthValue).value : null);
-                            const u1: LengthUnits = (value ? (value.val as LengthValue).unit : null);
-
-                            const v2: number = eV ? Number(eV.value) : undefined;
-                            const u2: LengthUnits = eU ? eU.value as LengthUnits : undefined;
-
-                            return compareLength(v1, u1, v2, u2, operator);
-                        }
-                        case "volume": {
-                            const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-                            const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
-
-                            const v1: number = (value ? (value.val as VolumeValue).value : null);
-                            const u1: VolumeUnits = (value ? (value.val as VolumeValue).unit : null);
-
-                            const v2: number = eV ? Number(eV.value) : undefined;
-                            const u2: VolumeUnits = eU ? eU.value as VolumeUnits : undefined;
-
-                            return compareVolume(v1, u1, v2, u2, operator);
-                        }
-                        case "width": {
-                            const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-                            const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
-
-                            const v1: number = (value ? (value.val as WidthValue).value : null);
-                            const u1: WidthUnits = (value ? (value.val as WidthValue).unit : null);
-
-                            const v2: number = eV ? Number(eV.value) : undefined;
-                            const u2: WidthUnits = eU ? eU.value as WidthUnits : undefined;
-
-                            return compareWidth(v1, u1, v2, u2, operator);
-                        }
-                        case "select": {
-
-                            const eK: ItemMetadataEntry2 = findEntry(m.entries, 'key');
-
-                            const k1: string = (value ? (value.val as SelectValue).key : null);
-                            const k2: string = eK ? eK.value : undefined;
-
-                            return compareSelect(k1, k2, operator);
-                        }
-                        case "doubleselect": {
-                            const eOne: ItemMetadataEntry2 = findEntry(m.entries, 'key1');
-                            const eTwo: ItemMetadataEntry2 = findEntry(m.entries, 'key2');
-
-                            const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null);
-                            const kTwo1: string = (value ? (value.val as DoubleSelectValue).key2 : null);
-                            const kOne2: string = eOne ? eOne.value : undefined;
-                            const kTwo2: string = eTwo ? eTwo.value : undefined;
-
-                            return compareDoubleselect(kOne1, kTwo1, kOne1, kOne2, operator);
-                        }
+                        const b: boolean =  compareString(v1, v2, operator);
+                        return b;
                     }
-                    return true;
-                }
-                return false;
-            });
+                    case "text": {
+                        const v1: string = (value ? (value.val as TextValue).value : null); // from rest api
+                        const v2: string =  undefined; // from actual item attribute value
 
-            if (metas && metas.length) { //  this bulkEditItem2 match the 'when' criteria
-                r = true;
+                        return compareString(v1, v2, operator);
+                    }
+                    case "number": {
+                        const v1: number = (value ? (value.val as NumberValue).value : null);
+                        const v2: number = undefined;  // from actual item attribute value
+
+                        return compareNumber(v1, v2, operator);
+                    }
+                    case "area": {
+                        // from REST api
+                        const v1: number = (value ? (value.val as AreaValue).value : null);
+                        const u1: AreaUnits = (value ? (value.val as AreaValue).unit : null);
+
+                        // from actual item attribute value
+                        const v2: number = undefined;
+                        const u2: AreaUnits = undefined;
+
+                        return compareArea(v1, u1, v2, u2, operator);
+                    }
+                    case "currency": {
+                        const v1: number = (value ? (value.val as CurrencyValue).value : null);
+                        const u1: CountryCurrencyUnits = (value ? (value.val as CurrencyValue).country : null);
+
+                        const v2: number = undefined;
+                        const u2: CountryCurrencyUnits = undefined;
+
+                        return compareCurrency(v1, u1, v2, u2, operator);
+                    }
+                    case "date": {
+                        const format = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
+                        const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
+                        const v2: moment.Moment = undefined;
+
+                        return compareDate(v1, v2, operator);
+                    }
+                    case "dimension": {
+                        const h1: number = (value ? ((value.val) as DimensionValue).height: null);
+                        const w1: number = (value ? ((value.val) as DimensionValue).width : null);
+                        const l1: number = (value ? ((value.val) as DimensionValue).length : null);
+                        const u1: DimensionUnits = (value ? ((value.val) as DimensionValue).unit : null);
+
+                        const h2: number = undefined;
+                        const w2: number = undefined;
+                        const l2: number = undefined;
+                        const u2: DimensionUnits =  undefined;
+
+                        return compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
+                    }
+                    case "height": {
+                        const v1: number = (value ? (value.val as HeightValue).value : null);
+                        const u1: HeightUnits = (value ? (value.val as HeightValue).unit : null);
+
+                        const v2: number = undefined;
+                        const u2: HeightUnits = undefined;
+
+                        return compareHeight(v1, u1, v2, u2, operator);
+                    }
+                    case "length": {
+                        const v1: number = (value ? (value.val as LengthValue).value : null);
+                        const u1: LengthUnits = (value ? (value.val as LengthValue).unit : null);
+
+                        const v2: number = undefined;
+                        const u2: LengthUnits = undefined;
+
+                        return compareLength(v1, u1, v2, u2, operator);
+                    }
+                    case "volume": {
+                        const v1: number = (value ? (value.val as VolumeValue).value : null);
+                        const u1: VolumeUnits = (value ? (value.val as VolumeValue).unit : null);
+
+                        const v2: number = undefined;
+                        const u2: VolumeUnits = undefined;
+
+                        return compareVolume(v1, u1, v2, u2, operator);
+                    }
+                    case "width": {
+                        const v1: number = (value ? (value.val as WidthValue).value : null);
+                        const u1: WidthUnits = (value ? (value.val as WidthValue).unit : null);
+
+                        const v2: number = undefined;
+                        const u2: WidthUnits = undefined;
+
+                        return compareWidth(v1, u1, v2, u2, operator);
+                    }
+                    case "select": {
+                        const k1: string = (value ? (value.val as SelectValue).key : null);
+                        const k2: string = undefined;
+
+                        return compareSelect(k1, k2, operator);
+                    }
+                    case "doubleselect": {
+                        const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null);
+                        const kTwo1: string = (value ? (value.val as DoubleSelectValue).key2 : null);
+
+                        const kOne2: string = undefined;
+                        const kTwo2: string = undefined;
+
+                        return compareDoubleselect(kOne1, kTwo1, kOne1, kOne2, operator);
+                    }
+                }
+            } else {
+                const metas: ItemMetadata2[] = b.metadatas.filter((m: ItemMetadata2) =>  {
+                    if (m.attributeId === attribute.id) {
+                        switch(attribute.type) {
+                            case "string": {
+                                const eType: ItemMetadataEntry2 = findEntry(m.entries, 'type');
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+
+                                const v1: string = (value ? (value.val as StringValue).value : null); // from rest API
+                                const v2: string = eValue ? eValue.value : undefined; // actual item attribute value
+
+                                const b: boolean =  compareString(v1, v2, operator);
+                                return b;
+                            }
+                            case "text": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+
+                                const v1: string = (value ? (value.val as TextValue).value : null); // from rest api
+                                const v2: string = eValue ? eValue.value : undefined; // from actual item attribute value
+
+                                return compareString(v1, v2, operator);
+                            }
+                            case "number": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+
+                                const v1: number = (value ? (value.val as NumberValue).value : null);
+                                const v2: number = eValue ? Number(eValue.value) : undefined;
+
+                                return compareNumber(v1, v2, operator);
+                            }
+                            case "area": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, "value");
+                                const eUnit: ItemMetadataEntry2 = findEntry(m.entries, "unit");
+
+                                const v1: number = (value ? (value.val as AreaValue).value : null);
+                                const u1: AreaUnits = (value ? (value.val as AreaValue).unit : null);
+
+                                const v2: number = eValue ? Number((eValue.value)): undefined;
+                                const u2: AreaUnits = eUnit ? (eUnit.value) as AreaUnits : undefined;
+
+                                return compareArea(v1, u1, v2, u2, operator);
+                            }
+                            case "currency": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const eUnit: ItemMetadataEntry2 = findEntry(m.entries, "country");
+
+                                const v1: number = (value ? (value.val as CurrencyValue).value : null);
+                                const u1: CountryCurrencyUnits = (value ? (value.val as CurrencyValue).country : null);
+
+                                const v2: number = eValue ? Number(eValue.value) : undefined;
+                                const u2: CountryCurrencyUnits = eUnit ? (eUnit.value) as CountryCurrencyUnits : undefined;
+
+                                return compareCurrency(v1, u1, v2, u2, operator);
+                            }
+                            case "date": {
+                                const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const format = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
+
+                                const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
+                                const v2: moment.Moment = (eValue && eValue.value ? moment(eValue.value, format) : undefined);
+
+                                return compareDate(v1, v2, operator);
+                            }
+                            case "dimension": {
+                                const eH: ItemMetadataEntry2 = findEntry(m.entries, 'height');
+                                const eW: ItemMetadataEntry2 = findEntry(m.entries, 'width');
+                                const eL: ItemMetadataEntry2 = findEntry(m.entries, 'length');
+                                const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
+
+                                const h1: number = (value ? ((value.val) as DimensionValue).height: null);
+                                const w1: number = (value ? ((value.val) as DimensionValue).width : null);
+                                const l1: number = (value ? ((value.val) as DimensionValue).length : null);
+                                const u1: DimensionUnits = (value ? ((value.val) as DimensionValue).unit : null);
+
+                                const h2: number = eH ? Number(eH.value) : undefined;
+                                const w2: number = eW ? Number(eW.value) : undefined;
+                                const l2: number = eL ? Number(eL.value) : undefined;
+                                const u2: DimensionUnits = eU ? (eU.value) as DimensionUnits : undefined;
+
+                                return compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
+                            }
+                            case "height": {
+                                const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
+
+                                const v1: number = (value ? (value.val as HeightValue).value : null);
+                                const u1: HeightUnits = (value ? (value.val as HeightValue).unit : null);
+
+                                const v2: number = eV ?  Number(eV.value) : undefined;
+                                const u2: HeightUnits = eU ? eU.value as HeightUnits : undefined;
+
+                                return compareHeight(v1, u1, v2, u2, operator);
+                            }
+                            case "length": {
+                                const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
+
+                                const v1: number = (value ? (value.val as LengthValue).value : null);
+                                const u1: LengthUnits = (value ? (value.val as LengthValue).unit : null);
+
+                                const v2: number = eV ? Number(eV.value) : undefined;
+                                const u2: LengthUnits = eU ? eU.value as LengthUnits : undefined;
+
+                                return compareLength(v1, u1, v2, u2, operator);
+                            }
+                            case "volume": {
+                                const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
+
+                                const v1: number = (value ? (value.val as VolumeValue).value : null);
+                                const u1: VolumeUnits = (value ? (value.val as VolumeValue).unit : null);
+
+                                const v2: number = eV ? Number(eV.value) : undefined;
+                                const u2: VolumeUnits = eU ? eU.value as VolumeUnits : undefined;
+
+                                return compareVolume(v1, u1, v2, u2, operator);
+                            }
+                            case "width": {
+                                const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
+
+                                const v1: number = (value ? (value.val as WidthValue).value : null);
+                                const u1: WidthUnits = (value ? (value.val as WidthValue).unit : null);
+
+                                const v2: number = eV ? Number(eV.value) : undefined;
+                                const u2: WidthUnits = eU ? eU.value as WidthUnits : undefined;
+
+                                return compareWidth(v1, u1, v2, u2, operator);
+                            }
+                            case "select": {
+
+                                const eK: ItemMetadataEntry2 = findEntry(m.entries, 'key');
+
+                                const k1: string = (value ? (value.val as SelectValue).key : null);
+                                const k2: string = eK ? eK.value : undefined;
+
+                                return compareSelect(k1, k2, operator);
+                            }
+                            case "doubleselect": {
+                                const eOne: ItemMetadataEntry2 = findEntry(m.entries, 'key1');
+                                const eTwo: ItemMetadataEntry2 = findEntry(m.entries, 'key2');
+
+                                const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null);
+                                const kTwo1: string = (value ? (value.val as DoubleSelectValue).key2 : null);
+                                const kOne2: string = eOne ? eOne.value : undefined;
+                                const kTwo2: string = eTwo ? eTwo.value : undefined;
+
+                                return compareDoubleselect(kOne1, kTwo1, kOne1, kOne2, operator);
+                            }
+                        }
+                        return true;
+                    }
+                    return false;
+                });
+
+                if (metas && metas.length) { //  this bulkEditItem2 match the 'when' criteria
+                    r = true;
+                }
             }
         }
         return r; // this bulkEditItem2 do not match the 'when' criteria

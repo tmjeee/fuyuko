@@ -6,7 +6,7 @@ import * as Path from "path";
 import util from "util";
 import {readFile} from "fs";
 import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
-import {addOrUpdateItem, getItemByName, hashedPassword} from "../../service";
+import {addOrUpdateItem, getItemByName, hashedPassword, updateItemValue} from "../../service";
 import {UPDATER_PROFILE_TEST_DATA} from "../updater";
 import {getGroupByName} from "../../service/group.service";
 import {getViewByName, saveOrUpdateViews} from "../../service/view.service";
@@ -35,7 +35,7 @@ import {
     getPricingStructureByName, linkPricingStructureWithGroupId
 } from "../../service/pricing-structure.service";
 import {PricingStructure} from "../../model/pricing-structure.model";
-import {Item, StringValue, TextValue} from "../../model/item.model";
+import {Item, StringValue, TextValue, Value} from "../../model/item.model";
 import {addItemImage} from "../../service/item-image.service";
 import {setPrices} from "../../service/pricing-structure-item.service";
 import {addOrUpdateRules} from "../../service/rule.service";
@@ -479,6 +479,26 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
     for (const item of allItems) {
         await giveItemImages(item);
     }
+
+
+
+    // set item value
+    await updateItemValue(viewId, item1.id, {
+        attributeId: stringAttribute.id,
+        val: {
+           type: 'string',
+           value: 'some string'
+        } as StringValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: textAttribute.id,
+        val: {
+            type: 'text',
+            value: 'some text'
+        } as TextValue
+    } as Value);
+
+
 
 
     // setup item pricing

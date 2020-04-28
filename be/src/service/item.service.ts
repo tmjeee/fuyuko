@@ -154,16 +154,16 @@ export const updateItemValue2 = async (viewId: number, itemId: number, itemValue
         const q1: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE (ITEM_ID, VIEW_ATTRIBUTE_ID) VALUES (?,?)`, [itemId, itemValue.attributeId]);
         const newItemValueId: number = q1.insertId;
 
-        for (const metadata of itemValue.metadatas) {
-            const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
-            const newMetadataId: number = q2.insertId;
+            for (const metadata of itemValue.metadatas) {
+                const q2: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA (ITEM_VALUE_ID, NAME) VALUE (?,?)`, [newItemValueId, metadata.name]);
+                const newMetadataId: number = q2.insertId;
 
-            for (const entry of metadata.entries) {
-                const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
-                    [newMetadataId, entry.key, entry.value, entry.dataType]);
-                const newMetadataEntryId = q3.insertId;
+                for (const entry of metadata.entries) {
+                    const q3: QueryResponse = await conn.query(`INSERT INTO TBL_ITEM_VALUE_METADATA_ENTRY (ITEM_VALUE_METADATA_ID, \`KEY\`, \`VALUE\`, DATA_TYPE) VALUES (?,?,?,?)`,
+                        [newMetadataId, entry.key, entry.value, entry.dataType]);
+                    const newMetadataEntryId = q3.insertId;
+                }
             }
-        }
     });
 }
 

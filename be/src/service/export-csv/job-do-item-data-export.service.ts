@@ -71,7 +71,7 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
             await jobLogger.updateProgress('COMPLETED');
         } catch(err) {
             e(err.toString(), err);
-            await jobLogger.logError(`${e.toString()}`);
+            await jobLogger.logError(`${err.toString()}`);
             await jobLogger.updateProgress("FAILED");
         } finally {
             await jobLogger.logInfo(`Done with ${name}`);

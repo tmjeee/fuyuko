@@ -127,17 +127,17 @@
         <ng-container *ngIf="attribute.type === 'dimension'">
             <mat-form-field>
                 <mat-label>Length Value</mat-label>
-                <input type="text" matInput [formControl]="formControl" (focusout)="valueChanged()" placeholder="Enter a length" [attr.test-field-dimension-width]="''">
+                <input type="text" matInput [formControl]="formControl" (focusout)="valueChanged()" placeholder="Enter a length" [attr.test-field-dimension-length]="''">
                 <mat-hint>Enter a length</mat-hint>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Width Value</mat-label>
-                <input type="text" matInput [formControl]="formControl2" (focusout)="valueChanged()" placeholder="Enter a width" [attr.test-field-dimension-height]="''">
+                <input type="text" matInput [formControl]="formControl2" (focusout)="valueChanged()" placeholder="Enter a width" [attr.test-field-dimension-width]="''">
                 <mat-hint>Enter a width</mat-hint>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Height Value</mat-label>
-                <input type="text" matInput [formControl]="formControl3" (focusout)="valueChanged()" placeholder="Enter a height" [attr.test-field-dimension-length]="''">
+                <input type="text" matInput [formControl]="formControl3" (focusout)="valueChanged()" placeholder="Enter a height" [attr.test-field-dimension-height]="''">
                 <mat-hint>Enter a height</mat-hint>
             </mat-form-field>
             <mat-form-field>
