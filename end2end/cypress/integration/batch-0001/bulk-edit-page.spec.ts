@@ -401,7 +401,7 @@ describe(`bulk edit spec`, () => {
         ;
     });
 
-    it.only(`should allow bulk edit process`, () => {
+    it(`should allow bulk edit process`, () => {
 
         let i = 0;
         const viewName = `Test View 2`

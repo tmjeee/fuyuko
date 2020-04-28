@@ -45,41 +45,33 @@ describe(`view validation spec`, () => {
 
     //////////////////
 
-    it(`should run validation and show details and delete validation`, () => {
+    it.only(`should run validation and show details and delete validation`, () => {
 
         const validationName = `test-validation-${Math.random()}`;
         const validationDescription = `test-validation-description-${Math.random()}`;
 
-        viewValidationPage
+       viewValidationPage
             .clickRunValidation()
-            .verifyPopupTitle()
+             .verifyPopupTitle()
             .editName(validationName)
             .editDescription(validationDescription)
-            .clickOk()
+             .clickOk()
             .verifySuccessMessageExists()
-        ;
+       ;
 
-        cy.wait(1000); // wait for validation to be done
+       cy.wait(1000); // wait for validation to be done
 
         // try expand and collapse
         viewValidationPage
-            .clickReload()
+             .clickReload()
+             .expandValidationPanel(validationName)
+             .verifyValidationPanelExpanded(validationName)
+             .collapseValidationPanel(validationName)
+             .verifyValidationPanelCollapsed(validationName)
             .expandValidationPanel(validationName)
             .verifyValidationPanelExpanded(validationName)
-            .collapseValidationPanel(validationName)
-            .verifyValidationPanelCollapsed(validationName)
-        ;
-
-        // go to validation details page
-        viewValidationPage
-            .clickOnValidationDetails(validationName)
-            .validateTitle()
-        ;
-
-        // delete validation result
-        viewValidationPage
-            .visit()
             .clickDelete(validationName)
+            .verifySuccessMessageExists()
         ;
     });
 

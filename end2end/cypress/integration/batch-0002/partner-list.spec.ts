@@ -74,8 +74,8 @@ describe('partner list spec', () => {
             .verifyItemSideMenuOpened(true)
             .verifyItemSideMenuItemName(`Item-1`)
             .verifyItemSideMenuItemPrice(`$1.10`)
-            .verifyItemSideMenuAttributeValue(`string attribute`, [`some`, `string`, `Item-1`])
-            .verifyItemSideMenuAttributeValue(`text attribute`, [`some`, `text`, `Item-1`])
+            .verifyItemSideMenuAttributeValue(`string attribute`, [`some`, `string`])
+            .verifyItemSideMenuAttributeValue(`text attribute`, [`some`, `text`])
 
             .selectItemInList(`Item-2`)
             .verifyItemExpanded(`Item-2`, true)
@@ -85,8 +85,8 @@ describe('partner list spec', () => {
             .verifyItemSideMenuOpened(true)
             .verifyItemSideMenuItemName(`Item-2`)
             .verifyItemSideMenuItemPrice(`$2.20`)
-            .verifyItemSideMenuAttributeValue(`string attribute`, [`some`, `string`, `Item-2`])
-            .verifyItemSideMenuAttributeValue(`text attribute`, [`some`, `text`, `Item-2`])
+            .verifyItemSideMenuAttributeValue(`string attribute`, [])
+            .verifyItemSideMenuAttributeValue(`text attribute`, [])
         ;
     });
 

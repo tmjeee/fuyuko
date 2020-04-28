@@ -8,6 +8,7 @@ import {addUser, addUserToGroup, getUserByUsername, updateUser} from "../../serv
 import {checkErrors} from "../script-util";
 import {getGroupByName} from "../../service/group.service";
 import {User} from "../../model/user.model";
+import {DISABLED} from "../../model/status.model";
 
 export const profiles = [UPDATER_PROFILE_TEST_DATA];
 
@@ -26,20 +27,26 @@ const INSERT_DATA = async () => {
     await doInDbConnection(async (conn: Connection) => {
         // === USER
         let errors: string[];
-        errors = await addUser({ username: 'cypress', email: 'tmjeee@gmail.com', firstName: 'cypress', lastName: 'jee', passord: 'test'});
+        errors = await addUser({ username: 'cypress', email: 'tmjeee@gmail.com', firstName: 'cypress', lastName: 'jee', password: 'test'});
         checkErrors(errors, `Failed to create user cypress`);
         const cypress: User = await getUserByUsername(`cypress`);
         if (!cypress || !cypress.id) { throw new Error(`Failed to get user cypress`)}
 
-        errors = await addUser({ username: 'tmjee', email: 'tmjee1@gmail.com', firstName: 'toby', lastName: 'jee', passord: 'test'});
+        errors = await addUser({ username: 'tmjee', email: 'tmjee1@gmail.com', firstName: 'toby', lastName: 'jee', password: 'test'});
         checkErrors(errors, `Failed to create user tmjee`);
         const tmjee: User = await getUserByUsername('tmjee');
         if (!tmjee || !tmjee.id) { throw new Error(`Failed to get user tmjee`)}
 
-        errors = await addUser({ username: 'sxjee', email: 'sxjee@gmail.com', firstName: 'song xian', lastName: 'jee', passord: 'test'});
+        errors = await addUser({ username: 'sxjee', email: 'sxjee@gmail.com', firstName: 'song xian', lastName: 'jee', password: 'test'});
         checkErrors(errors, `Failed to create user sxjee`);
         const sxjee: User = await getUserByUsername('sxjee');
         if (!sxjee || !sxjee.id) { throw new Error(`Failed to get user sxjee`)}
+
+
+        for (let i = 1; i< 10; i++ ) {
+            errors = await addUser({username: `disabled${i}`, email: `disabled${i}@gmail.com`, firstName: `disabled${i}_firstName`, lastName: `disabled${i}_lastName`, password: `test`, status: DISABLED});
+            checkErrors(errors, `Failed to create user disabled${i}`);
+        }
 
 
         // GROUPS
@@ -90,22 +97,22 @@ const INSERT_DATA = async () => {
 
         // various users (group, theme etc)
         for (const i of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
-            errors = await addUser({ username: `viewer${i}`, email: `viewer${i}@gmail.com`, firstName: `viewer${i}_firstname`, lastName: `viewer${i}_lastname`, passord: 'test'});
+            errors = await addUser({ username: `viewer${i}`, email: `viewer${i}@gmail.com`, firstName: `viewer${i}_firstname`, lastName: `viewer${i}_lastname`, password: 'test'});
             checkErrors(errors, `Failed to add user viewer${i}`);
             const viewer: User = await getUserByUsername(`viewer${i}`);
             if (!viewer) { throw Error(`Failed to get user viewer${i}`)};
 
-            errors = await addUser({ username: `editor${i}`, email: `editor${i}@gmail.com`, firstName: `editor${i}_firstname`, lastName: `editor${i}_lastname`, passord: 'test'});
+            errors = await addUser({ username: `editor${i}`, email: `editor${i}@gmail.com`, firstName: `editor${i}_firstname`, lastName: `editor${i}_lastname`, password: 'test'});
             checkErrors(errors, `Failed to add user editor${i}`);
             const editor: User = await getUserByUsername(`editor${i}`);
             if (!editor) { throw Error(`Failed to get user editor${i}`)};
 
-            errors = await addUser({ username: `admin${i}`, email: `admin${i}@gmail.com`, firstName: `admin${i}_firstname`, lastName: `admin${i}_lastname`, passord: 'test'});
+            errors = await addUser({ username: `admin${i}`, email: `admin${i}@gmail.com`, firstName: `admin${i}_firstname`, lastName: `admin${i}_lastname`, password: 'test'});
             checkErrors(errors, `Failed to add user admin${i}`);
             const admin: User = await getUserByUsername(`admin${i}`);
             if (!viewer) { throw Error(`Failed to get user admin${i}`)};
 
-            errors = await addUser({ username: `partner${i}`, email: `partner${i}@gmail.com`, firstName: `partner${i}_firstname`, lastName: `partner${i}_lastname`, passord: 'test'});
+            errors = await addUser({ username: `partner${i}`, email: `partner${i}@gmail.com`, firstName: `partner${i}_firstname`, lastName: `partner${i}_lastname`, password: 'test'});
             checkErrors(errors, `Failed to add user partner${i}`);
             const partner: User = await getUserByUsername(`partner${i}`);
             if (!viewer) { throw Error(`Failed to get user partner${i}`)};

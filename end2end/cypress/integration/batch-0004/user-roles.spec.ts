@@ -115,44 +115,31 @@ describe("user-role", () => {
     });
 
 
-    it ('should be able to add / remove group to / from VIEW role panel table', () => {
+    it.only('should be able to add / remove group to / from VIEW role panel table', () => {
         const roleName = 'VIEW';
-        const groupName1 = 'EDIT Group';
-        const groupName2 = 'ADMIN Group';
+        const groupName1 = 'PARTNER Group';
         userRolePage
             .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
             .verifySuccessMessageExists()
-            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
-            .verifySuccessMessageExists()
             .verifyGroupInRole(roleName, groupName1)
-            .verifyGroupInRole(roleName, groupName2)
             .clickDeleteGroupFromRoleTable(roleName, groupName1)
             .verifySuccessMessageExists()
-            .clickDeleteGroupFromRoleTable(roleName, groupName2)
             .verifySuccessMessageExists()
             .verifyGroupInRoleDeleted(roleName, groupName1)
-            .verifyGroupInRoleDeleted(roleName, groupName2);
     });
 
-    it ('should be able to add / remove group to / from EDIT role panel table', () => {
+    it.only('should be able to add / remove group to / from EDIT role panel table', () => {
         const roleName = 'EDIT';
-        const groupName1 = 'VIEW Group';
-        const groupName2 = 'ADMIN Group';
+        const groupName1 = 'PARTNER Group';
         userRolePage
             .toggleRolePanel(roleName)
             .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName1)
             .verifySuccessMessageExists()
-            .searchForAutoCompleteGroupToAddToRole(roleName, 'Group', groupName2)
-            .verifySuccessMessageExists()
             .verifyGroupInRole(roleName, groupName1)
-            .verifyGroupInRole(roleName, groupName2)
             .clickDeleteGroupFromRoleTable(roleName, groupName1)
             .verifySuccessMessageExists()
-            .clickDeleteGroupFromRoleTable(roleName, groupName2)
-            .verifySuccessMessageExists()
             .verifyGroupInRoleDeleted(roleName, groupName1)
-            .verifyGroupInRoleDeleted(roleName, groupName2);
     });
 
     it ('should be able to add / remove group to / from ADMIN role panel table', () => {

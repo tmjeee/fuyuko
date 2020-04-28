@@ -89,10 +89,10 @@ const SQL: string = `
             IMG.SIZE AS IMG_SIZE
            
            FROM TBL_ITEM AS I
-           LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS AME ON AME.VIEW_ATTRIBUTE_METADATA_ID = AM.ID
+           LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA AS IM ON IM.ITEM_VALUE_ID = V.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
            LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
@@ -565,13 +565,8 @@ const convertToBulkEditItems = (b2s: BulkEditItem2[], changes: ItemValueAndAttri
 const convertToBulkEditItem = (b2: BulkEditItem2, changes: ItemValueAndAttribute[], whens: ItemValueOperatorAndAttribute[]): BulkEditItem => {
     const c = changes.reduce((acc: any, change: ItemValueAndAttribute) => {
         const met: ItemMetadata2 = b2.metadatas.find((m: ItemMetadata2) => m.attributeId === change.attribute.id);
-        /*
-        const _new = {
-            attributeId: met.attributeId,
-            val: {}
-        } as Value;
-         */
         const attributeId: number = met ? met.attributeId: change.attribute.id;
+        console.log(`************************  attributeId ${attributeId}`, met);
         const _c = {
             old: itemValueConvert({
                 id: -1,

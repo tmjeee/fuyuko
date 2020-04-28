@@ -57,8 +57,8 @@ describe('partner thumbnail spec', () => {
             .verifyIsShowMoreExpanded(`Item-1`, true)
             .verifyItemName(`Item-1`)
             .verifyItemPrice(`Item-1`, '1.10')
-            .verifyItemAttributeValue(`Item-1`, `string attribute`, [`some`, `string`, `Item-1`])
-            .verifyItemAttributeValue(`Item-1`, `text attribute`, [`some`, `text`, `Item-1`])
+            .verifyItemAttributeValue(`Item-1`, `string attribute`, [`some`, `string`])
+            .verifyItemAttributeValue(`Item-1`, `text attribute`, [`some`, `text`])
     });
 
     it(`should allow flipping through next and previous images`, () => {
@@ -80,8 +80,8 @@ describe('partner thumbnail spec', () => {
             .verifySideMenuVisible(true)
             .verifySideMenuItemName(`Item-1`)
             .verifySideMenuItemPrice(`1.10`)
-            .verifySideMenuAttributeValue(`string attribute`, [`some`, `string`, `Item-1`])
-            .verifySideMenuAttributeValue(`text attribute`, [`some`, `text`, `Item-1`])
+            .verifySideMenuAttributeValue(`string attribute`, [`some`, `string`])
+            .verifySideMenuAttributeValue(`text attribute`, [`some`, `text`])
 
             .clickShowSideMenu(`Item-2`)
             .verifySideMenuVisible(true)
@@ -91,8 +91,8 @@ describe('partner thumbnail spec', () => {
             .verifySideMenuVisible(true)
             .verifySideMenuItemName(`Item-2`)
             .verifySideMenuItemPrice(`2.20`)
-            .verifySideMenuAttributeValue(`string attribute`, [`some`, `string`, `Item-2`])
-            .verifySideMenuAttributeValue(`text attribute`, [`some`, `text`, `Item-2`])
+            .verifySideMenuAttributeValue(`string attribute`, [])
+            .verifySideMenuAttributeValue(`text attribute`, [])
     });
 
     it(`should have the correct item and attribute values`, () => {
@@ -102,8 +102,8 @@ describe('partner thumbnail spec', () => {
             .verifyIsShowMoreExpanded(`Item-2`, true)
             .verifyItemName(`Item-2`)
             .verifyItemPrice(`Item-2`, '2.20')
-            .verifyItemAttributeValue(`Item-2`, `string attribute`, [`some`, `string`, `Item-2`])
-            .verifyItemAttributeValue(`Item-2`, `text attribute`, [`some`, `text`, `Item-2`])
+            .verifyItemAttributeValue(`Item-2`, `string attribute`, [])
+            .verifyItemAttributeValue(`Item-2`, `text attribute`, [])
     });
 
 });

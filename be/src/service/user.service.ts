@@ -8,7 +8,7 @@ import {ENABLED, Status} from "../model/status.model";
 import {hashedPassword} from "./password.service";
 import { Themes } from "../model/theme.model";
 
-export const addUser = async (u: {username: string, firstName: string, lastName: string, email: string, passord: string, theme?: string}): Promise<string[]> => {
+export const addUser = async (u: {username: string, firstName: string, lastName: string, email: string, password: string, theme?: string, status?: Status}): Promise<string[]> => {
     const _theme: string = u.theme ? u.theme : Themes[Themes.THEME_DEEPPURPLE_AMBER_LIGHT];
     return doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
@@ -18,7 +18,7 @@ export const addUser = async (u: {username: string, firstName: string, lastName:
         } else {
             const u1: QueryResponse = await conn.query(`
             INSERT INTO TBL_USER (USERNAME, EMAIL, STATUS, PASSWORD, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?)
-        `, [u.username, u.email, ENABLED, hashedPassword(u.passord), u.firstName, u.lastName]);
+        `, [u.username, u.email, u.status ? u.status : ENABLED, hashedPassword(u.password), u.firstName, u.lastName]);
             if (u1.affectedRows <= 0) {
                 errors.push(`Failed to insert user ${u.username}`);
             }

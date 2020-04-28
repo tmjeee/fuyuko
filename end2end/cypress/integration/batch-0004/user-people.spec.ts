@@ -137,7 +137,7 @@ describe("user-role", () => {
         ;
     });
 
-    it ('Search inactivate users from Inactive Users Panel', () => {
+    it('Search inactivate users from Inactive Users Panel', () => {
         //  try to ACTIVATE them
         userPeoplePage
             .openInactiveUserPanel()
