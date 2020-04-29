@@ -6,8 +6,8 @@ const PAGE_NAME = 'view-data-table';
 export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     selectGlobalView(viewName: string): ViewDataTablePage {
-        cy.get(`[mat-select-global-view]`).first().click({force: true});
-        cy.get(`[mat-select-option-global-view='${viewName}']`).click({force: true});
+        cy.waitUntil(() => cy.get(`[mat-select-global-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[mat-select-option-global-view='${viewName}']`)).click({force: true});
         return this;
     }
 
@@ -38,15 +38,15 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     doBasicSearch(search: string): ViewDataTablePage {
-        cy.get(`[test-mat-tab-basic-search]`).click({force: true});
-        cy.get(`[test-field-data-table-search]`)
+        cy.waitUntil(() => cy.get(`[test-mat-tab-basic-search]`)).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-field-data-table-search]`))
             .clear({force: true})
             .type(`${search}{enter}`, {force: true})
         return this;
     }
 
     selectBasicSearch(): ViewDataTablePage {
-        cy.get(`[test-mat-tab-basic-search]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-tab-basic-search]`)).click({force: true});
         return this;
     }
 
@@ -65,7 +65,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             const visible = e.find(`[test-filtering-container]`).is(':visible');
             if (!visible) {
                 // not opened yet
-                return cy.get(`[test-button-filter-items]`).click({force: true});
+                cy.waitUntil(() => cy.get(`[test-button-filter-items]`)).click({force: true});
             }
             return cy.wait(1000);
         });
@@ -77,7 +77,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             const visible = e.find(`[test-filtering-container]`).is(':visible');
             if (visible) {
                 // already open
-                return cy.get(`[test-button-filter-items]`).click({force: true});
+                cy.waitUntil(() => cy.get(`[test-button-filter-items]`)).click({force: true});
             }
             return cy.wait(1000);
         });
@@ -94,9 +94,9 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
         cy.get(`[test-page-title]`).then((e) => {
             const c = e.find(`[test-checkbox-item-filtering='${attributeName}'].mat-checkbox-checked `).length;
             if (c && !b) { // already checked but we want to uncheck it
-                return cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`).click({force: true});
+                cy.waitUntil(() => cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`)).click({force: true});
             } if (!c && b) { // already unchecked but we want to check it
-                return cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`).click({force: true});
+                cy.waitUntil(() => cy.get(`[test-checkbox-item-filtering='${attributeName}'] label`)).click({force: true});
             }
             return cy.wait(1000);
         });
@@ -109,13 +109,13 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     moveAttributeFilterOrderUp(attributeName: string): ViewDataTablePage {
-        cy.get('[test-page-title]')
-            .find(`[test-item-filtering='${attributeName}']`).then((e) => {
+        cy.waitUntil(() => cy.get(`[test-page-title]
+            [test-item-filtering='${attributeName}']`)).then((e) => {
             const l = e.find(`[test-button-item-filtering-up]`).length;
             if (l) {
-                return cy.get(`[test-page-title]`)
-                    .find(`[test-item-filtering='${attributeName}']`)
-                    .find(`[test-button-item-filtering-up]`)
+                cy.waitUntil(() => cy.get(`[test-page-title]
+                    [test-item-filtering='${attributeName}']
+                    [test-button-item-filtering-up]`))
                     .click({force: true});
             }
             return cy.wait(1000);
@@ -124,13 +124,13 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     moveAttributeFilterOrderDown(attributeName: string): ViewDataTablePage {
-        cy.get('[test-page-title]')
-            .find(`[test-item-filtering='${attributeName}']`).then((e) => {
+        cy.waitUntil(() => cy.get(`[test-page-title]
+            [test-item-filtering='${attributeName}']`)).then((e) => {
             const l = e.find(`[test-button-item-filtering-down]`).length;
             if (l) {
-                return cy.get(`[test-page-title]`)
-                    .find(`[test-item-filtering='${attributeName}']`)
-                    .find(`[test-button-item-filtering-down]`)
+                cy.waitUntil(() => cy.get(`[test-page-title]
+                    [test-item-filtering='${attributeName}']
+                    [test-button-item-filtering-down]`))
                     .click({force: true});
             }
             return cy.wait(1000);
@@ -145,22 +145,22 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     clickOnItemAttributeCellToEdit(itemName: string, attributeName: string): ViewDataTableEditPopupPage {
-        cy.get(`[test-data-table-row='${itemName}']`)
-            .find(`[test-data-editor-value='${attributeName}']`)
+        cy.waitUntil(() => cy.get(`[test-data-table-row='${itemName}']
+            [test-data-editor-value='${attributeName}']`))
             .click({force: true});
         return new ViewDataTableEditPopupPage();
     }
 
     clickOnAddItem(newItemName: string): ViewDataTablePage {
-        cy.get(`[test-button-add-item]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-add-item]`)).click({force: true});
         cy.wait(1000);
-        cy.get(`[test-data-table-row-index]`).each((e, i, a) => {
+        cy.waitUntil(() => cy.get(`[test-data-table-row-index]`)).each((e, i, a) => {
           if (a.length -1 === i) { // the last one
-             cy.get(`[test-data-table-row-index='${i}']`)
-                 .find(`[test-item-editor-value='name']`).click({force: true});
-             cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
-             cy.get(`[test-field-name]`).should('contain.value', newItemName);
-             cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
+             cy.waitUntil(() => cy.get(`[test-data-table-row-index='${i}']
+                 [test-item-editor-value='name']`)).click({force: true});
+             cy.waitUntil(() => cy.get(`[test-field-name]`)).clear({force: true}).type(newItemName, {force: true});
+             cy.waitUntil(() => cy.get(`[test-field-name]`)).should('contain.value', newItemName);
+             cy.waitUntil(() => cy.get(`[test-button-item-editor-popup-ok]`)).click({force: true});
           }
           return cy.wait(1000);
         });
@@ -168,14 +168,14 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     clickOnAddChildItem(childItemName: string, newItemName: string): ViewDataTablePage {
-        cy.get(`[test-button-data-table-add-children='${childItemName}']`).click({force: true});
-        cy.get(`[test-data-table-row-index]`).each((e, i, a) => {
+        cy.waitUntil(() => cy.get(`[test-button-data-table-add-children='${childItemName}']`)).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-data-table-row-index]`)).each((e, i, a) => {
             if (a.length -1 === i) { // the last one
-                cy.get(`[test-data-table-row-index='${i}']`)
-                    .find(`[test-item-editor-value='name']`).click({force: true});
-                cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
-                cy.get(`[test-field-name]`).should('contain.value', newItemName);
-                cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
+                cy.waitUntil(() => cy.get(`[test-data-table-row-index='${i}']
+                    [test-item-editor-value='name']`)).click({force: true});
+                cy.waitUntil(() => cy.get(`[test-field-name]`)).clear({force: true}).type(newItemName, {force: true});
+                cy.waitUntil(() => cy.get(`[test-field-name]`)).should('contain.value', newItemName);
+                cy.waitUntil(() => cy.get(`[test-button-item-editor-popup-ok]`)).click({force: true});
             }
             return cy.wait(1000);
         });
@@ -183,11 +183,11 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     expandRow(rowIndex: number): ViewDataTablePage {
-        cy.get(`[test-data-table-row-index='${rowIndex}']`).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-data-table-row-index='${rowIndex}']`)).then((_) => {
            const i = _.find(`[test-data-table-item-expanded='false']`).length;
            if (i) { // not expanded
-               return cy.get(`[test-data-table-row-index='${rowIndex}]`)
-                   .find(`[test-data-table-toggle-expand]`)
+               cy.waitUntil(() => cy.get(`[test-data-table-row-index='${rowIndex}]
+                   [test-data-table-toggle-expand]`))
                    .click({force: true});
            }
            return cy.wait(1000);
@@ -200,30 +200,31 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             return cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-checkbox-data-table-item='${itemNames[i]}'].mat-checkbox-checked`).length;
                 if (!l) { // not already checked
-                    return cy.get(`[test-checkbox-data-table-item='${itemNames[i]}'] label`).click({force: true});
+                    cy.waitUntil(() => cy.get(`[test-checkbox-data-table-item='${itemNames[i]}'] label`))
+                        .click({force: true});
                 }
                 return cy.wait(1000);
             })
         }).then((_) => {
-            return cy.get(`[test-button-delete-items]`).click({force: true});
+            cy.waitUntil(() => cy.get(`[test-button-delete-items]`)).click({force: true});
+            cy.waitUntil(() => cy.get(`[test-button-save-items]`).then((e) => (!e.is(':disabled'))));
         });
         return this;
     }
 
     clickOnDeleteChildItem(itemName: string): ViewDataTablePage {
-        cy.get(`[test-button-data-table-delete-item='${itemName}']`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-data-table-delete-item='${itemName}']`))
+            .click({force: true});
         return this;
     }
 
     clickOnSaveItem(): ViewDataTablePage {
-        cy.wait(1000)
-          .get(`[test-button-save-items]`).click({force: true})
-          .wait(1000);
+        cy.waitUntil(() =>  cy.get(`[test-button-save-items]`)).click({force: true});
         return this;
     }
 
     clickReload(): ViewDataTablePage {
-        cy.get(`[test-button-reload-items]`).click({force: true}).wait(1000);
+        cy.waitUntil(() => cy.get(`[test-button-reload-items]`)).click({force: true});
         return this;
     }
 

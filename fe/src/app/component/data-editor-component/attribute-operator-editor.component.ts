@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Attribute, DEFAULT_DATE_FORMAT, Pair2} from '../../model/attribute.model';
+import {Attribute, Pair2} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
 import { OperatorType } from '../../model/operator.model';
 import {
@@ -135,7 +135,7 @@ export class AttributeOperatorEditorComponent implements OnInit {
                         const dateInString = this.itemValue ? convertToString(this.attribute, this.itemValue) : '';
                         let m: moment.Moment = null;
                         if (dateInString) {
-                            m = moment(dateInString, this.attribute.format ? this.attribute.format : DEFAULT_DATE_FORMAT);
+                            m = moment(dateInString, this.attribute.format ? this.attribute.format : DATE_FORMAT);
                         }
                         this.formControl = this.formBuilder.control(m, [Validators.required]);
                         this.formGroup.addControl('formControl', this.formControl);

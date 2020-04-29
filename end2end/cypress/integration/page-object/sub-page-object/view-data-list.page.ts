@@ -35,17 +35,17 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
 
     clickAdd(): ViewDataListEditPopupPage {
-        cy.get(`[test-button-add-item]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-add-item]`)).click({force: true});
         return new ViewDataListEditPopupPage();
     }
 
     clickSave(): ViewDataListPage {
-        cy.get(`[test-button-save]`).click({force: true});
+        cy.waitUntil(() => cy.waitUntil(() => cy.get(`[test-button-save]`))).click({force: true});
         return this;
     }
 
     clickReload(): ViewDataListPage {
-        cy.get(`[test-button-reload-items]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-reload-items]`)).click({force: true});
         return this;
     }
 
@@ -54,7 +54,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
             return cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-mat-checkbox-item='${itemNames[i]}'].mat-checkbox-checked`).length;
                 if (l <= 0) { // not already checked
-                    return cy.get(`[test-mat-checkbox-item='${itemNames[i]}'] label`).click({force: true});
+                    cy.waitUntil(() => cy.get(`[test-mat-checkbox-item='${itemNames[i]}'] label`)).click({force: true});
                 }
                 return cy.wait(1000);
             });
@@ -63,7 +63,7 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     }
 
     clickOnPanel(itemName: string): ViewDataListPage {
-       cy.get(`[test-panel-item='${itemName}'] section:first-child`).click({force: true});
+       cy.waitUntil(() => cy.get(`[test-panel-item='${itemName}'] section:first-child`)).click({force: true});
        return this;
     }
 
@@ -158,25 +158,22 @@ export class ViewDataListPage implements ActualPage<ViewDataListPage> {
     }
 
     clickOnItemName(itemName: string): ViewDataListItemPopupPage {
-        cy.get(`[test-panel-item='${itemName}']`)
-            .find(`[test-item-editor='name']`)
-            .find(`[test-item-editor-value='name']`)
+        cy.waitUntil(() =>
+            cy.get(`[test-panel-item='${itemName}'] [test-item-editor='name'] [test-item-editor-value='name']`))
             .click({force: true});
         return new ViewDataListItemPopupPage();
     }
 
     clickOnItemDescription(itemName: string): ViewDataListItemPopupPage {
-        cy.get(`[test-panel-item='${itemName}']`)
-            .find(`[test-item-editor='description']`)
-            .find(`[test-item-editor-value='description']`)
+        cy.waitUntil(() =>
+            cy.get(`[test-panel-item='${itemName}'] [test-item-editor='description'] [test-item-editor-value='description']`))
             .click({force: true});
         return new ViewDataListItemPopupPage();
     }
 
     clickOnAttribute(itemName: string, attributeName: string): ViewDataListAttributePopupPage {
-        cy.get(`[test-panel-item='${itemName}']`)
-            .find(`[test-data-editor='${attributeName}']`)
-            .find(`[test-data-editor-value='${attributeName}']`)
+        cy.waitUntil(() =>
+            cy.get(`[test-panel-item='${itemName}'] [test-data-editor='${attributeName}'] [test-data-editor-value='${attributeName}']`))
             .click({force: true});
         return new ViewDataListAttributePopupPage()
     }

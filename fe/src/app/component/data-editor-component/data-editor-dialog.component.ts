@@ -11,7 +11,7 @@ import {
   VOLUME_UNITS,
   WIDTH_UNITS
 } from '../../model/unit.model';
-import {Attribute, DEFAULT_DATE_FORMAT, Pair2} from '../../model/attribute.model';
+import {Attribute, Pair2} from '../../model/attribute.model';
 import {
   AreaValue,
   CurrencyValue,
@@ -337,7 +337,7 @@ export class DataEditorDialogComponent {
         break;
       case 'date':
         let dateInStringFormat = '';
-        const format = attanditem.attribute.format ? attanditem.attribute.format : DEFAULT_DATE_FORMAT;
+        const format = attanditem.attribute.format ? attanditem.attribute.format : DATE_FORMAT;
         if (moment.isMoment(this.formControlDateAttributeValue.value)) {
           dateInStringFormat = this.formControlDateAttributeValue.value ?
               this.formControlDateAttributeValue.value.format(format) : '';

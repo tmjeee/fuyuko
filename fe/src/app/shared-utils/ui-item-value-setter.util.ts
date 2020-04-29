@@ -1,4 +1,4 @@
-import {Attribute, DEFAULT_DATE_FORMAT} from '../model/attribute.model';
+import {Attribute} from '../model/attribute.model';
 import {
   AreaValue,
   CurrencyValue,
@@ -8,7 +8,7 @@ import {
   NumberValue, SelectValue,
   StringValue,
   TextValue,
-  Value, VolumeValue, WidthValue, Item
+  Value, VolumeValue, WidthValue, Item, DATE_FORMAT
 } from '../model/item.model';
 import {AreaUnits, CountryCurrencyUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from '../model/unit.model';
 import numeral from 'numeral';
@@ -89,14 +89,14 @@ export function setItemNumberValue(attribute: Attribute, value: Value, val: numb
 export function setItemDateValue(attribute: Attribute, value: Value, val: string | moment.Moment) {
   let _value: string;
   if (moment.isMoment(val)) {
-    _value = (val as moment.Moment).format(DEFAULT_DATE_FORMAT);
+    _value = (val as moment.Moment).format(DATE_FORMAT);
   } else {
     _value = val;
   }
   _setItemValue(attribute, value, {
     type: 'date',
     value: _value,
-    format: DEFAULT_DATE_FORMAT
+    format: DATE_FORMAT
   } as DateValue);
 }
 

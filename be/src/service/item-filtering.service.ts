@@ -1,6 +1,6 @@
 import {Connection} from "mariadb";
 import {ItemValueOperatorAndAttribute} from "../model/item-attribute.model";
-import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
+import {Attribute} from "../model/attribute.model";
 import {QueryA} from "../db";
 import {
     Attribute2,
@@ -12,7 +12,7 @@ import {
 } from "../server-side-model/server-side.model";
 import {
     AreaValue,
-    CurrencyValue,
+    CurrencyValue, DATE_FORMAT,
     DateValue, DimensionValue, DoubleSelectValue, HeightValue, Item,
     ItemImage, LengthValue,
     NumberValue, SelectValue,
@@ -321,7 +321,7 @@ export const getItem2WithFiltering = async (conn: Connection,
                             }
                             case "date": {
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-                                const format = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
+                                const format = attribute.format ? attribute.format : DATE_FORMAT;
 
                                 const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
                                 const v2: moment.Moment = (eValue.value ? moment(eValue.value, format) : undefined);

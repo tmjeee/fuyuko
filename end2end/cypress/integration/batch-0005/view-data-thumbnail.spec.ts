@@ -82,7 +82,7 @@ describe('view-data-thumbnail spec', () => {
 
 
 
-    it.only('should change name / description of thumbnail', ()=> {
+    it('should change name / description of thumbnail', ()=> {
         const itemName = `Test-Item-${Math.random()}`;
         const newItemName = `New-Test-Item-${Math.random()}`;
         const description = `New-Test-Item-Description-${Math.random()}`;

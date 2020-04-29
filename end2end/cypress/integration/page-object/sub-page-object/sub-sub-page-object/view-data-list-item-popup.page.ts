@@ -5,8 +5,8 @@ import {ViewDataListPage} from "../view-data-list.page";
 export class ViewDataListItemPopupPage extends AbstractViewDataItemPopupPage {
 
     clickCancel2(): ViewDataListEditPopupPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-button-item-editor-popup-cancel]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-cancel]`))
             .click({force: true})
             .wait(100);
         return new ViewDataListEditPopupPage();
@@ -14,24 +14,24 @@ export class ViewDataListItemPopupPage extends AbstractViewDataItemPopupPage {
 
 
     clickOk2(): ViewDataListEditPopupPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-button-item-editor-popup-ok]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-ok]`))
             .click({force: true})
             .wait(100);
         return new ViewDataListEditPopupPage();
     }
 
     clickOk(): ViewDataListPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-button-item-editor-popup-ok]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-ok]`))
             .click({force: true})
             .wait(100);
         return new ViewDataListPage();
     };
 
     clickCancel(): ViewDataListPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-button-item-editor-popup-cancel]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-cancel]`))
             .click({force: true})
             .wait(100);
         return new ViewDataListPage();

@@ -7,7 +7,7 @@ import {Validation} from "../model/validation.model";
 import {Attribute2, Item2, ItemMetadata2, Rule2} from "../server-side-model/server-side.model";
 import {
     AreaValue,
-    CurrencyValue,
+    CurrencyValue, DATE_FORMAT,
     DateValue, DimensionValue, DoubleSelectValue, HeightValue,
     Item,
     ItemValTypes,
@@ -23,7 +23,7 @@ import {getRule2s} from "./rule.service";
 import {Rule, WhenClause} from "../model/rule.model";
 import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from "../model/operator.model";
 import {getAttribute2sInView} from "./attribute.service";
-import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
+import {Attribute} from "../model/attribute.model";
 import moment from 'moment';
 import * as logger from '../logger';
 import {convertToDebugString, convertToDebugStrings} from "../shared-utils/ui-item-value-converters.util";
@@ -103,7 +103,7 @@ const match = (context: Context, attribute: Attribute, actualItemAttributeValueT
         case 'date': {
             const a1 = actualItemAttributeValueType as DateValue;
             const a2 = conditionValueType as DateValue;
-            const format: string = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
+            const format: string = attribute.format ? attribute.format : DATE_FORMAT;
             const m1: moment.Moment = moment(a1.value, format);
             const m2: moment.Moment = a2 ? moment(a2.value, format) : null;
 

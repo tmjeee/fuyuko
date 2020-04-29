@@ -8,16 +8,16 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
     //////////////////////////////////////////////////////////////////////
 
     clickOk(): ViewDataThumbnailPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-button-item-editor-popup-ok]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-ok]`))
             .click({force: true})
             .wait(1000);
         return new ViewDataThumbnailPage();
     }
 
     clickCancel(): ViewDataThumbnailPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-button-item-editor-popup-cancel]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-cancel]`))
             .click({force: true})
             .wait(1000);
         return new ViewDataThumbnailPage();
@@ -25,8 +25,8 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
 
 
     clickCancel2(): ViewDataThumbnailEditPopupPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-button-item-editor-popup-cancel]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-cancel]`))
             .click({force: true})
             .wait(1000);
         return new ViewDataThumbnailEditPopupPage();
@@ -34,8 +34,8 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
 
 
     clickOk2(): ViewDataThumbnailEditPopupPage {
-        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
-            .find(`[test-button-item-editor-popup-ok]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-ok]`))
             .click({force: true})
             .wait(1000);
         return new ViewDataThumbnailEditPopupPage();

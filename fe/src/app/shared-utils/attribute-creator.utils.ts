@@ -1,9 +1,9 @@
-import {Attribute, DEFAULT_DATE_FORMAT, DEFAULT_NUMERIC_FORMAT, Pair1, Pair2} from "../model/attribute.model";
+import {Attribute, Pair1, Pair2} from "../model/attribute.model";
 import {
-    AREA_FORMAT,
+    AREA_FORMAT, DATE_FORMAT,
     DIMENSION_FORMAT,
     HEIGHT_FORMAT,
-    LENGTH_FORMAT,
+    LENGTH_FORMAT, NUMBER_FORMAT,
     VOLUME_FORMAT,
     WIDTH_FORMAT
 } from "../model/item.model";
@@ -24,7 +24,7 @@ export const createTextAttribute = (name: string, description: string): Attribut
         type: 'text'
     } as Attribute
 };
-export const createNumberAttribute = (name: string, description: string, format: string = DEFAULT_NUMERIC_FORMAT): Attribute => {
+export const createNumberAttribute = (name: string, description: string, format: string = NUMBER_FORMAT): Attribute => {
     return {
        id: -1,
        type: 'number',
@@ -33,7 +33,7 @@ export const createNumberAttribute = (name: string, description: string, format:
        format
     } as Attribute;
 };
-export const createDateAttribute = (name: string, description: string, format: string = DEFAULT_DATE_FORMAT): Attribute => {
+export const createDateAttribute = (name: string, description: string, format: string = DATE_FORMAT): Attribute => {
     return {
         id: -1,
         type: 'date',

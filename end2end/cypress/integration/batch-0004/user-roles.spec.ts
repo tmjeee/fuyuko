@@ -115,7 +115,7 @@ describe("user-role", () => {
     });
 
 
-    it.only('should be able to add / remove group to / from VIEW role panel table', () => {
+    it('should be able to add / remove group to / from VIEW role panel table', () => {
         const roleName = 'VIEW';
         const groupName1 = 'PARTNER Group';
         userRolePage
@@ -129,7 +129,7 @@ describe("user-role", () => {
             .verifyGroupInRoleDeleted(roleName, groupName1)
     });
 
-    it.only('should be able to add / remove group to / from EDIT role panel table', () => {
+    it('should be able to add / remove group to / from EDIT role panel table', () => {
         const roleName = 'EDIT';
         const groupName1 = 'PARTNER Group';
         userRolePage

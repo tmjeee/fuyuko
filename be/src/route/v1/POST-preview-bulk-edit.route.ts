@@ -7,49 +7,13 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
 import {param, body} from 'express-validator';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import moment from 'moment';
-import {
-    AreaValue,
-    CurrencyValue, DateValue, DimensionValue, DoubleSelectValue, HeightValue, ItemImage, ItemValTypes,
-    LengthValue,
-    NumberValue, SelectValue,
-    StringValue,
-    TextValue,
-    Value, VolumeValue, WidthValue
-} from "../../model/item.model";
-import {Attribute, DEFAULT_DATE_FORMAT} from "../../model/attribute.model";
-import {OperatorType} from "../../model/operator.model";
-import {BulkEditItem, BulkEditPackage} from "../../model/bulk-edit.model";
-import {
-    Attribute2,
-    AttributeMetadata2,
-    AttributeMetadataEntry2,
-    ItemMetadata2,
-    ItemMetadataEntry2, ItemValue2
-} from "../../server-side-model/server-side.model";
-import {
-    AreaUnits,
-    CountryCurrencyUnits,
-    DimensionUnits,
-    HeightUnits,
-    LengthUnits,
-    VolumeUnits,
-    WidthUnits
-} from "../../model/unit.model";
-import {itemValueConvert} from '../../service/conversion-item-value.service';
+import { ItemImage } from "../../model/item.model";
+import {BulkEditPackage} from "../../model/bulk-edit.model";
+import { ItemMetadata2, } from "../../server-side-model/server-side.model";
 import {ROLE_EDIT} from "../../model/role.model";
-import {
-    compareArea, compareCurrency,
-    compareDate, compareDimension, compareDoubleselect, compareHeight, compareLength,
-    compareNumber, compareSelect,
-    compareString, compareVolume, compareWidth,
-} from "../../service/compare-attribute-values.service";
 import {ApiResponse} from "../../model/api-response.model";
-import {attributeConvert} from "../../service/conversion-attribute.service";
 import {preview} from "../../service/bulk-edit.service";
 
 

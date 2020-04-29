@@ -1,11 +1,11 @@
 import moment from 'moment';
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges, OnInit} from '@angular/core';
 import {ItemValueAndAttribute} from '../../model/item-attribute.model';
-import {Attribute, DEFAULT_DATE_FORMAT} from '../../model/attribute.model';
+import {Attribute} from '../../model/attribute.model';
 import {
     AreaValue,
     CURRENCY_FORMAT,
-    CurrencyValue, DimensionValue, DoubleSelectValue, HEIGHT_FORMAT, HeightValue,
+    CurrencyValue, DATE_FORMAT, DimensionValue, DoubleSelectValue, HEIGHT_FORMAT, HeightValue,
     LengthValue, SelectValue,
     Value,
     VolumeValue,
@@ -118,7 +118,7 @@ export class DataEditorNoPopupComponent implements OnInit {
                    const dateInString: string = convertToString(this.attribute, this.itemValue);
                    let m: moment.Moment = null;
                    if (dateInString) {
-                       m = moment(dateInString, this.attribute.format ? this.attribute.format : DEFAULT_DATE_FORMAT);
+                       m = moment(dateInString, this.attribute.format ? this.attribute.format : DATE_FORMAT);
                    }
                    this.formControl = this.formBuilder.control(m, [Validators.required]);
                    this.formGroup.addControl('formControl', this.formControl);

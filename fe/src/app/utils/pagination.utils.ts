@@ -14,7 +14,7 @@ export class Pagination {
     offset: number;
     total: number;
 
-    private readonly INC: number = 10;
+    private readonly INC: number = 50;
     pageSizeOptions: number[] = [5, 10, 30, 50, 100];
 
     constructor() {

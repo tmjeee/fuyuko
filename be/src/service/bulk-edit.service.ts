@@ -1,6 +1,6 @@
 import {
     AreaValue,
-    CurrencyValue,
+    CurrencyValue, DATE_FORMAT,
     DateValue, DimensionValue, DoubleSelectValue, HeightValue,
     ItemImage, LengthValue,
     NumberValue, SelectValue,
@@ -18,7 +18,7 @@ import {BulkEditItem, BulkEditPackage} from "../model/bulk-edit.model";
 import {doInDbConnection, QueryA} from "../db";
 import {Connection} from "mariadb";
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../model/item-attribute.model";
-import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
+import {Attribute} from "../model/attribute.model";
 import {attributeConvert} from "./conversion-attribute.service";
 import {OperatorType} from "../model/operator.model";
 import {
@@ -321,7 +321,7 @@ const getBulkEditItem2s = async (conn: Connection,
                         return compareCurrency(v1, u1, v2, u2, operator);
                     }
                     case "date": {
-                        const format = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
+                        const format = attribute.format ? attribute.format : DATE_FORMAT;
                         const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
                         const v2: moment.Moment = undefined;
 
@@ -448,7 +448,7 @@ const getBulkEditItem2s = async (conn: Connection,
                             }
                             case "date": {
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-                                const format = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
+                                const format = attribute.format ? attribute.format : DATE_FORMAT;
 
                                 const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
                                 const v2: moment.Moment = (eValue && eValue.value ? moment(eValue.value, format) : undefined);
@@ -566,7 +566,6 @@ const convertToBulkEditItem = (b2: BulkEditItem2, changes: ItemValueAndAttribute
     const c = changes.reduce((acc: any, change: ItemValueAndAttribute) => {
         const met: ItemMetadata2 = b2.metadatas.find((m: ItemMetadata2) => m.attributeId === change.attribute.id);
         const attributeId: number = met ? met.attributeId: change.attribute.id;
-        console.log(`************************  attributeId ${attributeId}`, met);
         const _c = {
             old: itemValueConvert({
                 id: -1,
