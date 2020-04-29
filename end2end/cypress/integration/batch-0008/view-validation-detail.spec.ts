@@ -1,6 +1,7 @@
 import {ViewValidationPage} from "../page-object/sub-page-object/view-validation.page";
 import {LoginPage} from "../page-object/login.page";
 import {ViewValidationDetailsPage} from "../page-object/sub-page-object/view-validation-details.page";
+import "cypress-localstorage-commands";
 
 
 describe(`view validation details spec`, () => {
@@ -36,22 +37,25 @@ describe(`view validation details spec`, () => {
             .login(username, password)
             .visitViewPage()
             .visitValidations()
-            // .validateTitle()
+            .validateTitle()
             .clickRunValidation()
-            // .verifyPopupTitle()
+            .verifyPopupTitle()
             .editName(validationName)
             .editDescription(validationDescription)
             .clickOk()
             .verifySuccessMessageExists()
         ;
 
-        // cy.wait(1000); // wait for validation to be done
+        cy.wait(1000); // wait for validation to be done
 
-        // viewValidationDetailsPage =
-        //     viewValidationPage
-        //         .clickReload()
-        //         .clickOnValidationDetails(validationName)
-        // ;
+        viewValidationDetailsPage =
+            viewValidationPage
+                .clickReload()
+                .clickOnValidationDetails(validationName)
+        ;
+
+        // @ts-ignore
+        cy.saveLocalStorage();
     });
 
     after(() => {
@@ -61,28 +65,18 @@ describe(`view validation details spec`, () => {
 
 
     beforeEach(() => {
-        // cy.restoreLocalStorage();
-        const username = Cypress.env('username');
-        const password = Cypress.env('password');
-        new LoginPage()
-            .visit()
-            .login(username, password)
-            .visitViewPage()
-            .visitValidations()
-            .validateTitle()
-            .clickOnValidationDetails(validationName)
-            // .clickReload();
-        ;
+        // @ts-ignore
+        cy.restoreLocalStorage();
     });
 
     afterEach(() => {
         // cy.saveLocalStorage();
     });
 
-    it.only('should load', () => {
-        // viewValidationDetailsPage
-        //     .validateTitle()
-        // ;
+    it('should load', () => {
+         viewValidationDetailsPage
+             .validateTitle()
+        ;
     });
 
     //////////////////

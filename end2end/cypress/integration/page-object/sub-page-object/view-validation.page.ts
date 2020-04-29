@@ -65,10 +65,10 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
     }
 
     clickOnValidationDetails(validationName: string): ViewValidationDetailsPage {
-        // cy.get(`[test-icon-validation-details='${validationName}']`)
-        //     .click({force: true});
+        cy.get(`[test-link-validation-details='${validationName}']`)
+             .click({force: true});
         // cy.wait(2000);
-        return new ViewValidationDetailsPage(validationName).visit();
+        return new ViewValidationDetailsPage(validationName).waitForReady();
     }
 
     verifyValidationPanelExpanded(validationName: string): ViewValidationPage {

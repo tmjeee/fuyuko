@@ -4,7 +4,13 @@
      "module":"commonjs",
      "target": "es2016",
      "esModuleInterop": true,
-     "types": ["cypress", "node", "cypress-wait-until"]
+     "types": [
+       "cypress",
+       "node",
+       "cypress-wait-until",
+       "cypress-file-upload",
+       "cypress-localstorage-commands"
+     ]
   },
   "include": [
      "**/*.ts"
