@@ -1,6 +1,5 @@
-
-
 <div class="user-group-page" [attr.test-page-title]="'user-group'" [attr.test-page-ready]="''+((!!groupsReady) && (!!groupsUsersReady))">
+  <div *loadIf="!(groupsReady && groupsUsersReady)">Loading ...</div>
   <mat-card>
     <mat-card-header>
       <mat-card-title>Groups</mat-card-title>
@@ -10,10 +9,24 @@
       <mat-accordion>
         <div *loadIf="!groupsReady || !groupsUsersReady">Loading ...</div>
         <ng-container *ngIf="groupsReady && groupsUsersReady">
+          <div class="controls">
+            <button mat-flat-button color="primary" (click)="onAddGroup($event)">Add Group</button>
+            <button mat-flat-button color="primary" (click)="onDeleteGroup($event)" [disabled]="groupsSelectionModel.isEmpty()">Delete Group</button>
+          </div>
           <ng-container *ngFor="let g of allGroups">
             <mat-expansion-panel [attr.test-expansion-panel]="g.name">
               <mat-expansion-panel-header [attr.test-expansion-panel-header]="g.name">
-                <mat-panel-title>{{g.name}}</mat-panel-title>
+                <mat-panel-title>
+                  <div>
+                    <mat-checkbox *ngIf="!g.isSystem"
+                                  [checked]="groupsSelectionModel.isSelected(g)"
+                                  (click)="preventDefault($event)"
+                                  (keydown)="preventDefault($event)"
+                                  (change)="groupChecked($event, g)">
+                      {{g.name}}
+                    </mat-checkbox>
+                  </div>
+                </mat-panel-title>
                 <mat-panel-description>{{g.description}}</mat-panel-description>
               </mat-expansion-panel-header>
               <app-user-table [attr.test-expansion-panel-content]="g.name"

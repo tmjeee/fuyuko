@@ -114,6 +114,7 @@ export const getUsersInGroup = async (groupId: number): Promise<User[]> => {
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -165,6 +166,7 @@ export const getUsersInGroup = async (groupId: number): Promise<User[]> => {
                         name: i.G_NAME,
                         description: i.G_DESCRIPTION,
                         status: i.G_STATUS,
+                        isSystem: i.G_IS_SYSTEM,
                         roles: []
                     });
                     g.set(gKey, group);
@@ -209,6 +211,7 @@ export const getUsersByStatus = async (status: Status): Promise<User[]> => {
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -252,6 +255,7 @@ export const getUsersByStatus = async (status: Status): Promise<User[]> => {
                         name: i.G_NAME,
                         description: i.G_DESCRIPTION,
                         status: i.G_STATUS,
+                        isSystem: i.G_IS_SYSTEM,
                         roles: []
                     });
                     g.set(gKey, group);
@@ -348,6 +352,7 @@ export const searchForUserNotInGroup = async (groupId: number, username?: string
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -399,6 +404,7 @@ export const searchForUserNotInGroup = async (groupId: number, username?: string
                         name: i.G_NAME,
                         description: i.G_DESCRIPTION,
                         status: i.G_STATUS,
+                        isSystem: i.G_IS_SYSTEM,
                         roles: []
                     });
                     g.set(gKey, group);
@@ -444,6 +450,7 @@ export const searchUserByUsernameAndStatus = async (status: string, username?: s
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -487,6 +494,7 @@ export const searchUserByUsernameAndStatus = async (status: string, username?: s
                         name: i.G_NAME,
                         description: i.G_DESCRIPTION,
                         status: i.G_STATUS,
+                        isSystem: i.G_IS_SYSTEM,
                         roles: []
                     });
                     g.set(gKey, group);
@@ -614,6 +622,7 @@ export const getUserByUsername = async (username: string): Promise<User> => {
                 G.NAME AS G_NAME,
                 G.DESCRIPTION AS G_DESCRIPTION,
                 G.STATUS AS G_STATUS,
+                G.IS_SYSTEM AS G_IS_SYSTEM,
                 R.ID AS R_ID,
                 R.NAME AS R_NAME,
                 R.DESCRIPTION AS R_DESCRIPTION
@@ -645,6 +654,7 @@ export const getUserByUsername = async (username: string): Promise<User> => {
                     name: i.G_NAME,
                     description: i.G_DESCRIPTION,
                     status: i.G_STATUS,
+                    isSystem: i.G_IS_SYSTEM,
                     roles: []
                 } as Group);
                 u.groups.push(g);
@@ -691,6 +701,7 @@ export const getUserById = async (userId: number): Promise<User>  => {
                 G.NAME AS G_NAME,
                 G.DESCRIPTION AS G_DESCRIPTION,
                 G.STATUS AS G_STATUS,
+                G.IS_SYSTEM AS G_IS_SYSTEM,
                 R.ID AS R_ID,
                 R.NAME AS R_NAME,
                 R.DESCRIPTION AS R_DESCRIPTION
@@ -722,6 +733,7 @@ export const getUserById = async (userId: number): Promise<User>  => {
                    name: i.G_NAME,
                    description: i.G_DESCRIPTION,
                    status: i.G_STATUS,
+                   isSystem: i.G_IS_SYSTEM,
                    roles: []
                } as Group);
                u.groups.push(g);

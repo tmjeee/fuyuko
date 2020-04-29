@@ -2,9 +2,22 @@ import {Group} from "../model/group.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Role} from "../model/role.model";
-import {ENABLED} from "../model/status.model";
+import {DISABLED, ENABLED} from "../model/status.model";
 
-export const addOrUpdateGroup = async (g: {id: number, name: string, description: string}): Promise<string[]> => {
+export const deleteGroup = async (groupIds: number[]): Promise<string[]> => {
+    return doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        for (const groupId of groupIds) {
+            const q: QueryResponse = await conn.query(`UPDATE TBL_GROUP SET STATUS = ? WHERE ID=?`, [DISABLED, groupId]);
+            if (q.affectedRows <= 0) {
+                errors.push(`Failed to delete group id ${groupId}`);
+            }
+        }
+        return errors;
+    });
+};
+
+export const addOrUpdateGroup = async (g: {id: number, name: string, description: string, isSystem?: boolean}): Promise<string[]> => {
     return doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         if (g.id < 0) { // add
@@ -13,8 +26,8 @@ export const addOrUpdateGroup = async (g: {id: number, name: string, description
                 errors.push(`Group with name ${g.name} already exists`);
             } else {
                 const q: QueryResponse = await conn.query(`
-                    INSERT INTO TBL_GROUP (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)
-                `, [g.name, g.description, ENABLED]);
+                    INSERT INTO TBL_GROUP (NAME, DESCRIPTION, STATUS, IS_SYSTEM) VALUES (?, ?, ?, ?)
+                `, [g.name, g.description, ENABLED, (g.isSystem ? true : false) ]);
                 if (q.affectedRows < 0) {
                     errors.push(`Failed to add group ${g.name}`);
                 }
@@ -25,8 +38,8 @@ export const addOrUpdateGroup = async (g: {id: number, name: string, description
                 errors.push(`Group with id ${g.id} do not exists`);
             } else {
                 const q: QueryResponse = await conn.query(`
-                    UPDATE TBL_GROUP SET NAME=?, DESCRIPTION=? WHERE ID=?
-                `, [g.name, g.description, g.id]);
+                    UPDATE TBL_GROUP SET NAME=?, DESCRIPTION=?, IS_SYSTEM = ? WHERE ID=?
+                `, [g.name, g.description, (g.isSystem ? true : false), g.id]);
                 if (q.affectedRows < 0) {
                     errors.push(`Failed to update group id ${g.id}`);
                 }
@@ -65,6 +78,7 @@ export const searchForGroupsWithNoSuchRole = async (roleName: string, groupName?
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -87,12 +101,14 @@ export const searchForGroupsWithNoSuchRole = async (roleName: string, groupName?
             const groupName: string = c.G_NAME;
             const groupDescription: string = c.G_DESCRIPTION;
             const groupStatus: string = c.G_STATUS;
+            const groupIsSystem: boolean = c.G_IS_SYSTEM;
             if (!m.has(groupId)) {
                 const g: Group = {
                     id: groupId,
                     name: groupName,
                     description: groupDescription,
                     status: groupStatus,
+                    isSystem: groupIsSystem,
                     roles: []
                 } as Group;
                 groups.push(g);
@@ -121,6 +137,7 @@ export const searchForGroupByName = async (groupName: string): Promise<Group[]> 
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -135,12 +152,14 @@ export const searchForGroupByName = async (groupName: string): Promise<Group[]> 
             const groupName: string = c.G_NAME;
             const groupDescription: string = c.G_DESCRIPTION;
             const groupStatus: string = c.G_STATUS;
+            const groupIsSystem: boolean = c.G_IS_SYSTEM;
             if (!m.has(groupId)) {
                 const g: Group = {
                     id: groupId,
                     name: groupName,
                     description: groupDescription,
                     status: groupStatus,
+                    isSystem: groupIsSystem,
                     roles: []
                 } as Group;
                 groups.push(g);
@@ -189,6 +208,7 @@ export const getGroupsWithRole = async (roleName: string): Promise<Group[]> => {
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -211,12 +231,14 @@ export const getGroupsWithRole = async (roleName: string): Promise<Group[]> => {
             const groupName: string = c.G_NAME;
             const groupDescription: string = c.G_DESCRIPTION;
             const groupStatus: string = c.G_STATUS;
+            const groupIsSystem: boolean = c.G_IS_SYSTEM;
             if (!m.has(groupId)) {
                 const g: Group = {
                     id: groupId,
                     name: groupName,
                     description: groupDescription,
                     status: groupStatus,
+                    isSystem: groupIsSystem,
                     roles: []
                 } as Group;
                 groups.push(g);
@@ -246,6 +268,7 @@ export const getGroupByName = async (groupName: string): Promise<Group> => {
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -260,12 +283,14 @@ export const getGroupByName = async (groupName: string): Promise<Group> => {
             const groupName: string = c.G_NAME;
             const groupDescription: string = c.G_DESCRIPTION;
             const groupStatus: string = c.G_STATUS;
+            const groupIsSystem: boolean = c.G_IS_SYSTEM;
             if (!!!group) {
                 group = {
                     id: groupId,
                     name: groupName,
                     description: groupDescription,
                     status: groupStatus,
+                    isSystem: groupIsSystem,
                     roles: []
                 } as Group;
             }
@@ -292,6 +317,7 @@ export const getGroupById = async (groupId: number): Promise<Group> => {
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -306,12 +332,14 @@ export const getGroupById = async (groupId: number): Promise<Group> => {
             const groupName: string = c.G_NAME;
             const groupDescription: string = c.G_DESCRIPTION;
             const groupStatus: string = c.G_STATUS;
+            const groupIsSystem: boolean = c.G_IS_SYSTEM;
             if (!!!group) {
                 group = {
                     id: groupId,
                     name: groupName,
                     description: groupDescription,
                     status: groupStatus,
+                    isSystem: groupIsSystem,
                     roles: []
                 } as Group;
             }
@@ -352,6 +380,7 @@ export const getAllGroups = async (): Promise<Group[]> => {
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -366,12 +395,14 @@ export const getAllGroups = async (): Promise<Group[]> => {
             const groupName: string = c.G_NAME;
             const groupDescription: string = c.G_DESCRIPTION;
             const groupStatus: string = c.G_STATUS;
+            const groupIsSystem: boolean = c.G_IS_SYSTEM;
             if (!m.has(groupId)) {
                 const g: Group = {
                     id: groupId,
                     name: groupName,
                     description: groupDescription,
                     status: groupStatus,
+                    isSystem: groupIsSystem,
                     roles: []
                 } as Group;
                 groups.push(g);

@@ -27,6 +27,7 @@ const URL_POST_APPROVE_SELF_REGISTRATION = () => `${config().api_host_url}/self-
 const URL_DELETE_SELF_REGISTRATION = () => `${config().api_host_url}/self-register/:selfRegistrationId`;
 const URL_GET_SEARCH_GROUP_BY_NAME = () => `${config().api_host_url}/group/:groupName/search`;
 const URL_GET_SEARCH_SELF_REGISTRATION_BY_USERNAME = () => `${config().api_host_url}/search/self-registration/:username`;
+const URL_POST_UPDATE_GROUP = () => `${config().api_host_url}/group`;
 
 
 @Injectable()
@@ -75,6 +76,11 @@ export class UserManagementService {
 
 
   // ===== Groups ===============================
+  updateGroup(g: Group): Observable<ApiResponse> {
+      return this.httpClient
+          .post<ApiResponse>(URL_POST_UPDATE_GROUP(), g);
+  }
+
   findInGroup(groupName: string): Observable<Group[]> {
     return this.httpClient
         .get<ApiResponse<Group[]>>(URL_GET_SEARCH_GROUP_BY_NAME().replace(':groupName', groupName))

@@ -116,6 +116,7 @@ import registerPostCustomExportValidateInputRoute from './POST-custom-export-val
 import registerPostCustomExportPreviewRoute from './POST-custom-export-preview.route';
 import registerPostCustomExportSubmitJobRoute from './POST-custom-export-submit-job.route';
 import registerGetPricingStructuresByViewRoute from './GET-pricing-structures-by-view.route';
+import registerPostUpdateGroupRoute from './POST-update-group.route';
 
 
 const v1AppRouter:Router  = express.Router();
@@ -238,8 +239,8 @@ const reg = (router: Router, regi: Registry) => {
     registerPostCustomExportValidateInputRoute(v1AppRouter, registry);
     registerPostCustomExportPreviewRoute(v1AppRouter, registry);
     registerPostCustomExportSubmitJobRoute(v1AppRouter, registry);
-
     registerGetPricingStructuresByViewRoute(v1AppRouter, registry);
+    registerPostUpdateGroupRoute(v1AppRouter, registry);
 };
 
 

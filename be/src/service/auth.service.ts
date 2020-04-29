@@ -54,6 +54,7 @@ export const login = async (usrname: string, password: string): Promise<{errors:
                     G.NAME AS G_NAME,
                     G.DESCRIPTION AS G_DESCRIPTION,
                     G.STATUS AS G_STATUS,
+                    G.IS_SYSTEM AS G_IS_SYSTEM,
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
                     R.DESCRIPTION AS R_DESCRIPTION
@@ -71,6 +72,7 @@ export const login = async (usrname: string, password: string): Promise<{errors:
                         name: g.G_NAME,
                         description: g.G_DESCRIPTION,
                         status: g.G_STATUS,
+                        isSystem: g.G_IS_SYSTEM,
                         roles: []
                     } as Group);
                 }

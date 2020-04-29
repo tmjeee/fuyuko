@@ -8,6 +8,11 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
 import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
+import {MatDialog} from "@angular/material/dialog";
+import {EditGroupPopupComponent} from "../../component/group-table-component/edit-group-popup.component";
+import {SUCCESS} from "../../model/api-response-status.model";
+import {MatCheckboxChange} from "@angular/material/checkbox";
+import {SelectionModel} from "@angular/cdk/collections";
 
 
 @Component({
@@ -22,6 +27,8 @@ export class UserGroupPageComponent implements OnInit {
   groupsUsersReady: boolean;
   allGroups: Group[];
 
+  groupsSelectionModel: SelectionModel<Group>;
+
   allGroupsUsers: Map<Group, User[]> = new Map(); // {[groupId: string]: User[]} = {};
 
 
@@ -29,32 +36,42 @@ export class UserGroupPageComponent implements OnInit {
       { icon: '', tooltip: 'Remove user from group', type: 'DELETE'} as Action
   ];
 
-  constructor(private userManagementService: UserManagementService, private notificationsService: NotificationsService) {
+  constructor(private userManagementService: UserManagementService,
+              private matDialog: MatDialog,
+              private notificationsService: NotificationsService) {
+      this.groupsSelectionModel = new SelectionModel<Group>();
   }
 
   ngOnInit(): void {
-    this.groupsReady = false;
-    this.userManagementService
-      .getAllGroups()
-      .pipe(
-        map((g: Group[]) => {
-          this.allGroups = g;
-          g.reduce((a: Map<Group, User[]>, grp: Group ) => {
-            a.set(grp, []);
-            return a;
-          }, this.allGroupsUsers);
-          this.reloadGroupUsers();
-          this.groupsReady = true;
-        })
-      ).subscribe();
-
-
-
     this.userSearchFn = (group: Group): UserSearchFn  => {
       return (user: string): Observable<User[]> => {
         return this.userManagementService.findUsersNotInGroup(user, group);
       };
     };
+    this.reload();
+  }
+
+  reload() {
+      const selectedGroups: Group[] = this.groupsSelectionModel.selected;
+      this.groupsSelectionModel.clear();
+      this.groupsReady = false;
+      this.userManagementService
+          .getAllGroups()
+          .pipe(
+              map((g: Group[]) => {
+                  this.allGroups = g;
+                  g.reduce((a: Map<Group, User[]>, grp: Group ) => {
+                      a.set(grp, []);
+                      // make sure already checked group remains checked on reload
+                      if (selectedGroups && selectedGroups.find((g: Group) => g.id === grp.id)) {
+                          this.groupsSelectionModel.select(grp);
+                      }
+                      return a;
+                  }, this.allGroupsUsers);
+                  this.reloadGroupUsers();
+                  this.groupsReady = true;
+              })
+          ).subscribe();
   }
 
   reloadGroupUsers(fn?: ()=>void) {
@@ -71,15 +88,7 @@ export class UserGroupPageComponent implements OnInit {
             this.groupsUsersReady = true;
         })
     ).subscribe();
-
-    /*
-    Array.from(this.allGroupsUsers.keys())
-      .forEach((grp: Group) => {
-          this._reloadGroupUser(grp);
-      });
-     */
   }
-
 
 
   private _reloadGroupUser(grp: Group) {
@@ -113,4 +122,46 @@ export class UserGroupPageComponent implements OnInit {
         break;
     }
   }
+
+    onAddGroup($event: MouseEvent) {
+      this.matDialog
+          .open(EditGroupPopupComponent, {
+              width: '95vw',
+              height: '95vh'
+          })
+          .afterClosed()
+          .pipe(
+              flatMap((g: Group) => {
+                  if (g) {
+                     return this.userManagementService.updateGroup(g);
+                  }
+                  return of(null);
+              }),
+              tap((r: ApiResponse) => {
+                  if (r) {
+                      toNotifications(this.notificationsService, r);
+                      if (r.status === SUCCESS) {
+                          this.reload();
+                      }
+                  }
+              })
+          ).subscribe();
+    }
+
+    groupChecked($event: MatCheckboxChange, g: Group) {
+      if ($event.checked) {
+          this.groupsSelectionModel.select(g);
+      } else {
+          this.groupsSelectionModel.deselect(g);
+      }
+      return false;
+    }
+
+    preventDefault($event: MouseEvent) {
+      $event.stopPropagation();
+    }
+
+    onDeleteGroup($event: MouseEvent) {
+
+    }
 }

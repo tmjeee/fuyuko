@@ -11,6 +11,7 @@ export interface Group {
   name: string;
   description: string;
   status: Status;
+  isSystem: boolean;
   roles: Role[];
 }
 

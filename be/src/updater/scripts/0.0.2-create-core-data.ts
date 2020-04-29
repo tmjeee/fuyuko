@@ -29,19 +29,19 @@ const INSERT_GROUPS_AND_ROLES = async () => {
     await doInDbConnection(async (conn: Connection) => {
         // === GROUP
         let errors: string[] = [];
-        errors = await addOrUpdateGroup({ id: -1, name: GROUP_VIEW, description: `Group with VIEW role` });
+        errors = await addOrUpdateGroup({ id: -1, name: GROUP_VIEW, description: `Group with VIEW role`, isSystem: true });
         checkErrors(errors, `Failed to create Group with VIEW role`);
         const gView: Group = await getGroupByName(GROUP_VIEW);
 
-        errors = await addOrUpdateGroup({ id: -1, name: GROUP_EDIT, description: `Group with VIEW & EDIT roles` });
+        errors = await addOrUpdateGroup({ id: -1, name: GROUP_EDIT, description: `Group with VIEW & EDIT roles`, isSystem: true });
         checkErrors(errors, `Failed to create Group with VIEW & EDIT roles`);
         const gEdit: Group = await getGroupByName(GROUP_EDIT);
 
-        errors = await addOrUpdateGroup({ id: -1, name: GROUP_ADMIN, description: `Group with VIEW & EDIT & PARTNER & ADMIN roles` });
+        errors = await addOrUpdateGroup({ id: -1, name: GROUP_ADMIN, description: `Group with VIEW & EDIT & PARTNER & ADMIN roles`, isSystem: true });
         checkErrors(errors, `Failed to create Group with VIEW & EDIT & PARTNER & ADMIN roles`);
         const gAdmin: Group = await getGroupByName(GROUP_ADMIN);
 
-        errors = await addOrUpdateGroup({ id: -1, name: GROUP_PARTNER, description: `Group with PARTNER role` });
+        errors = await addOrUpdateGroup({ id: -1, name: GROUP_PARTNER, description: `Group with PARTNER role`, isSystem: true });
         checkErrors(errors, `Failed to create Group with PARTNER role`);
         const gPartner: Group = await getGroupByName(GROUP_PARTNER);
 
