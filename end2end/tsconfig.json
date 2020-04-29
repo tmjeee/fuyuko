@@ -8,8 +8,7 @@
        "cypress",
        "node",
        "cypress-wait-until",
-       "cypress-file-upload",
-       "cypress-localstorage-commands"
+       "cypress-file-upload"
      ]
   },
   "include": [
