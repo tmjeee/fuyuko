@@ -8,7 +8,8 @@
   "env": {
     "apiBaseUrl": "http://localhost:8888/api/v1",
     "username": "cypress",
-    "password": "test"
+    "password": "test",
+    "RETRIES": 2
   },
   "video": true,
   "videoUploadOnPasses": false,

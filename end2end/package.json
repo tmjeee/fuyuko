@@ -11,6 +11,7 @@
     "cypress": "^4.5.0",
     "cypress-file-upload": "^3.5.3",
     "cypress-localstorage-commands": "^1.1.9",
+    "cypress-plugin-retries": "^1.5.2",
     "cypress-wait-until": "^1.6.1",
     "madge": "^3.6.0",
     "typescript": "^3.7.4"

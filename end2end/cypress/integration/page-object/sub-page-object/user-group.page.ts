@@ -31,8 +31,10 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
         return this;
     }
 
+    //////////////////////////////////
+
     toggleGroupPanel(groupName: string): UserGroupPage {
-        cy.get(`[test-expansion-panel-header='${groupName}']`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-header='${groupName}']`)).click({force: true});
         return this;
     }
 
@@ -43,21 +45,21 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
     }
 
     searchForAutoCompleteUserToAddToGroup(groupName: string, search: string, autoCompleteUsername: string): UserGroupPage {
-        cy.get(`[test-expansion-panel-content='${groupName}'`)
-            .find(`[test-field-search]`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-content='${groupName}']
+            [test-field-search]`))
             .clear({force: true})
             .type(search, {force: true})
             .wait(5000)
-        cy.get(`[test-auto-complete-option='${autoCompleteUsername}']`)
+        cy.waitUntil(() => cy.get(`[test-auto-complete-option='${autoCompleteUsername}']`))
             .focus();
-        cy.get(`[test-auto-complete-option='${autoCompleteUsername}']`)
+        cy.waitUntil(() => cy.get(`[test-auto-complete-option='${autoCompleteUsername}']`))
             .focus()
             .click({force: true});
         return this;
     }
 
     verifyUserInGroup(groupName: string, username: string): UserGroupPage {
-        cy.get(`[test-expansion-panel-content='${groupName}']`)
+        cy.waitUntil(()=>cy.get(`[test-expansion-panel-content='${groupName}']`))
             .find(`[test-table-item-user='${username}']`).then((n) => {
                 return cy.wrap(n).should('exist');
             });
@@ -65,14 +67,14 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
     }
 
     clickDeleteUserFromGroupTable(groupName: string, username: string): UserGroupPage {
-        cy.get(`[test-expansion-panel-content='${groupName}']`)
-            .find(`[test-icon-delete-user='${username}']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-content='${groupName}']
+            [test-icon-delete-user='${username}']`))
             .click({force: true});
         return this;
     }
 
     verifyUserInGroupDeleted(groupName: string, username: string): UserGroupPage {
-        cy.get(`[test-expansion-panel-content='${groupName}']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-content='${groupName}']`))
             .contains(`[test-table-item-user='${username}']`)
             .should('not.exist');
         return this;

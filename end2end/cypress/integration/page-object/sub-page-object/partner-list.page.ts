@@ -49,7 +49,7 @@ export class PartnerListPage implements ActualPage<PartnerListPage> {
     }
 
     verifyItemExpanded(itemName: string, b: boolean): PartnerListPage {
-        cy.waitUntil(() => cy.get(`[test-partner-data-list]
+        cy.wait(100).waitUntil(() => cy.get(`[test-partner-data-list]
             [test-panel-content='${itemName}']`))
             .should(b ? 'be.visible' : 'not.be.visible');
         return this;

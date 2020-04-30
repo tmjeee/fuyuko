@@ -33,18 +33,20 @@ export class SettingsPage implements ActualPage<SettingsPage> {
         return this;
     }
 
+    ////////////////////////////////////
+
     clickEnable(b: boolean, name: string): SettingsPage {
-        cy.get(`[test-page-title]`).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-page-title]`)).then((_) => {
             const elem = _.find(`[test-slide-toggle='${name}']`);
             const hasClass = elem.hasClass('mat-checked');
             if(!hasClass && b) { // disabled and we want it enabled
-                return cy.get(`[test-page-title]`)
-                    .find(`[test-slide-toggle='${name}'] label div.mat-slide-toggle-bar`)
+                cy.waitUntil(() => cy.get(`[test-page-title]
+                    [test-slide-toggle='${name}'] label div.mat-slide-toggle-bar`))
                     .click({force: true})
                     .wait(1000);
             } else if (hasClass && !b) { // enabled and we want it disabled
-                return cy.get(`[test-page-title]`)
-                    .find(`[test-slide-toggle='${name}'] label div.mat-slide-toggle-bar`)
+                cy.waitUntil(() => cy.get(`[test-page-title]
+                    [test-slide-toggle='${name}'] label div.mat-slide-toggle-bar`))
                     .click({force: true})
                     .wait(1000);
             }
@@ -54,14 +56,14 @@ export class SettingsPage implements ActualPage<SettingsPage> {
     }
 
     verifyEnable(b: boolean, name: string): SettingsPage {
-        cy.get(`[test-page-title]`)
-            .find(`[test-slide-toggle='${name}']`)
+        cy.waitUntil(() => cy.get(`[test-page-title]
+            [test-slide-toggle='${name}']`))
             .should(b ? 'have.class' : 'not.have.class', 'mat-checked')
         return this;
     }
 
     clickSubmit(): SettingsPage {
-        cy.get(`[test-button-save]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-save]`)).click({force: true});
         return this;
     }
 }

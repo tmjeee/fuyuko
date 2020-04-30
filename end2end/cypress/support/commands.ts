@@ -43,3 +43,4 @@ Cypress.Commands.add('restoreLocalStorage', () => {
 import 'cypress-wait-until';
 import 'cypress-localstorage-commands';
 import 'cypress-file-upload';
+import 'cypress-plugin-retries';

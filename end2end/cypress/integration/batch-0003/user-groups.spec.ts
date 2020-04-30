@@ -71,6 +71,8 @@ describe("user-role", () => {
         });
     });
 
+    //////////////////////////////////////////////////////
+
     it (`'VIEW Group' panel should toggle between expand and collapse`, () => {
         userGroupPage
             .toggleGroupPanel('VIEW Group')
