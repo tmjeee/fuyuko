@@ -34,6 +34,9 @@ export class PricingStructurePage implements ActualPage<PricingStructurePage> {
         return this;
     }
 
+
+    //////////////////////////////////////////////
+
     pricingTableReady(): PricingStructurePage {
         cy.waitUntil(() => cy.get(`[test-pricing-structure-table]`));
         return this;
@@ -45,74 +48,75 @@ export class PricingStructurePage implements ActualPage<PricingStructurePage> {
                 .find(`[test-mat-select-pricing-structure]`).first()
                 .click({force: true});
         }).then((_) => {
-            cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`).then((_) => {
-                cy.wrap(_).click({force: true});
-            });
+            cy.waitUntil(() => cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`))
+                .then((_) => {
+                    cy.wrap(_).click({force: true});
+                });
         });
         return this;
     }
 
     verifyPricingStrucureHasItems(pricingStructureName: string): PricingStructurePage {
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+            [test-pricing-structure-items-table='${pricingStructureName}']`))
             .should(`exist`);
         return this;
     }
 
     verifyNoPricingStructureTable(): PricingStructurePage {
-        cy.get(`[test-pricing-structure-table]`)
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]`))
             .should('not.exist');
         return this;
     }
 
     verifyPricingStructureHasNoItems(pricingStructureName: string): PricingStructurePage {
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+            [test-pricing-structure-items-table='${pricingStructureName}']`))
             .should(`not.exist`);
         return this;
     }
 
     clickDeletePricingStructure(pricingStructureName: string): PricingStructurePage {
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-button-delete-pricing-structure='${pricingStructureName}']`)
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+            [test-button-delete-pricing-structure='${pricingStructureName}']`))
             .click({force: true});
         return this;
     }
 
     clickEditPricingStructure(pricingStructureName: string): EditPricingStructurePopupPage {
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-button-edit-pricing-structure='${pricingStructureName}']`)
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+            [test-button-edit-pricing-structure='${pricingStructureName}']`))
             .click({force: true});
         return new EditPricingStructurePopupPage();
     }
 
     clickEditItemPricing(pricingStructureName: string, itemName: string): EditPricingPopupPage {
-        cy.get(`[test-pricing-structure-items-table='${pricingStructureName}']`)
-            .find(`[test-button-edit-pricing='${itemName}']`)
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-items-table='${pricingStructureName}']
+            [test-button-edit-pricing='${itemName}']`))
             .click({force: true});
         return new EditPricingPopupPage();
     }
 
 
     clickAddNewPricingStructure(): EditPricingStructurePopupPage {
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-button-new-pricing-structure]`)
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+            [test-button-new-pricing-structure]`))
             .click({force: true});
         return new EditPricingStructurePopupPage();
     }
 
     verifyPricingStructureExists(viewName: string, pricingStructureName: string): PricingStructurePage {
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-mat-select-pricing-structure]`).first()
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+            [test-mat-select-pricing-structure]`)).first()
             .click({force: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`))
             .should('exist');
         return this;
     }
 
     verifyPricingStructureDoNotExist(viewName: string, pricingStructureName: string): PricingStructurePage {
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-mat-select-pricing-structure]`).first()
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+            [test-mat-select-pricing-structure]`)).first()
             .click({force: true});
         cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)
             .should('not.exist');
@@ -123,12 +127,12 @@ export class PricingStructurePage implements ActualPage<PricingStructurePage> {
         cy.waitUntil(()=>cy.get(`[test-pricing-structure-table] [test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-expand='${itemName}']`)).then((_) => {
             const i = _.length;
             if (i > 0) { // expand button exists, click it to expand
-                cy.get(`[test-pricing-structure-table]`)
-                    .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
-                    .find(`[test-table-row-expand='${itemName}']`)
+                cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+                    [test-pricing-structure-items-table='${pricingStructureName}']
+                    [test-table-row-expand='${itemName}']`))
                     .click({force: true})
             }
-            return cy.get(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-collapse='${itemName}']`).then((_) => {
+            return cy.waitUntil(() => cy.get(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-collapse='${itemName}']`)).then((_) => {
                 return new Cypress.Promise((res, rej) => {
                     res(_);
                 });
@@ -138,15 +142,15 @@ export class PricingStructurePage implements ActualPage<PricingStructurePage> {
     }
 
     clickToCollapseItem(pricingStructureName: string, itemName: string): PricingStructurePage {
-        cy.get(`[test-pricing-structure-table]`).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]`)).then((_) => {
             const i = _.find(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-collapse='${itemName}']`).length;
             if (i > 0) { // expand button exists, click it to expand
-                cy.get(`[test-pricing-structure-table]`)
-                    .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
-                    .find(`[test-table-row-collapse='${itemName}']`)
+                cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+                    [test-pricing-structure-items-table='${pricingStructureName}']
+                    [test-table-row-collapse='${itemName}']`))
                     .click({force: true})
             }
-            return cy.get(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-expand='${itemName}']`).then((_) => {
+            return cy.waitUntil(() => cy.get(`[test-pricing-structure-items-table='${pricingStructureName}'] [test-table-row-expand='${itemName}']`)).then((_) => {
                 return new Cypress.Promise((res, rej) => {
                     res(_);
                 });
@@ -156,15 +160,15 @@ export class PricingStructurePage implements ActualPage<PricingStructurePage> {
     }
 
     verifyPricingStructureItemHasPrice(pricingStructureName: string, itemName: string, price: number, unit: CountryCurrencyUnits): PricingStructurePage {
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
-            .find(`[test-table-row-item='${itemName}']`)
-            .find(`[test-table-column-price='${itemName}']`)
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+            [test-pricing-structure-items-table='${pricingStructureName}']
+            [test-table-row-item='${itemName}']
+            [test-table-column-price='${itemName}']`))
             .should('contain.text', price);
-        cy.get(`[test-pricing-structure-table]`)
-            .find(`[test-pricing-structure-items-table='${pricingStructureName}']`)
-            .find(`[test-table-row-item='${itemName}']`)
-            .find(`[test-table-column-unit='${itemName}']`)
+        cy.waitUntil(() => cy.get(`[test-pricing-structure-table]
+            [test-pricing-structure-items-table='${pricingStructureName}']
+            [test-table-row-item='${itemName}']
+            [test-table-column-unit='${itemName}']`))
             .should('contain.text', unit);
         return this;
     }
