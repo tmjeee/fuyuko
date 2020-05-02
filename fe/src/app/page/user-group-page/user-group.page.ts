@@ -161,7 +161,15 @@ export class UserGroupPageComponent implements OnInit {
       $event.stopPropagation();
     }
 
-    onDeleteGroup($event: MouseEvent) {
-
+    onDeleteGroup($event: MouseEvent, g: Group) {
+      const groupIds: number[] = this.groupsSelectionModel.selected.map((g: Group) => g.id);
+      this.userManagementService.deleteGroup(groupIds).pipe(
+          tap((r: ApiResponse) => {
+              toNotifications(this.notificationsService, r);
+              if (r.status === 'SUCCESS') {
+                  this.reload();
+              }
+          })
+      ).subscribe();
     }
 }

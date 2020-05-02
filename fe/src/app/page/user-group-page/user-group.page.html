@@ -17,15 +17,16 @@
             <mat-expansion-panel [attr.test-expansion-panel]="g.name">
               <mat-expansion-panel-header [attr.test-expansion-panel-header]="g.name">
                 <mat-panel-title>
-                  <div>
+                  <div *ngIf="!g.isSystem">
                     <mat-checkbox *ngIf="!g.isSystem"
                                   [checked]="groupsSelectionModel.isSelected(g)"
                                   (click)="preventDefault($event)"
                                   (keydown)="preventDefault($event)"
                                   (change)="groupChecked($event, g)">
+                      {{g.name}}
                     </mat-checkbox>
-                    {{g.name}}
                   </div>
+                  <div *ngIf="g.isSystem">{{g.name}}</div>
                 </mat-panel-title>
                 <mat-panel-description>{{g.description}}</mat-panel-description>
               </mat-expansion-panel-header>

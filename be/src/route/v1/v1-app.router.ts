@@ -117,6 +117,11 @@ import registerPostCustomExportPreviewRoute from './POST-custom-export-preview.r
 import registerPostCustomExportSubmitJobRoute from './POST-custom-export-submit-job.route';
 import registerGetPricingStructuresByViewRoute from './GET-pricing-structures-by-view.route';
 import registerPostUpdateGroupRoute from './POST-update-group.route';
+import registerDeleteGroupsRoute from './DELETE-groups.route';
+import registerGetPricingStructureGroupAssociationsRoute from './GET-pricing-structure-group-associations.route';
+import registerGetGroupsNotAssociatedWithPricingStructureRoute from './GET-groups-not-associated-with-pricing-structure.route';
+import registerPostLinkPricingStructureGroupRoute from './POST-link-pricing-structure-group.route';
+import registerPostUnlinkPricingStructureGroupRoute from './POST-unlink-pricing-structure-group.route'
 
 
 const v1AppRouter:Router  = express.Router();
@@ -241,6 +246,12 @@ const reg = (router: Router, regi: Registry) => {
     registerPostCustomExportSubmitJobRoute(v1AppRouter, registry);
     registerGetPricingStructuresByViewRoute(v1AppRouter, registry);
     registerPostUpdateGroupRoute(v1AppRouter, registry);
+    registerDeleteGroupsRoute(v1AppRouter, registry);
+
+    registerGetPricingStructureGroupAssociationsRoute(v1AppRouter, registry);
+    registerGetGroupsNotAssociatedWithPricingStructureRoute(v1AppRouter, registry);
+    registerPostLinkPricingStructureGroupRoute(v1AppRouter, registry);
+    registerPostUnlinkPricingStructureGroupRoute(v1AppRouter, registry);
 };
 
 

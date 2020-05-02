@@ -6,7 +6,7 @@ import {User} from '../../model/user.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse, PaginableApiResponse, RegistrationResponse} from '../../model/api-response.model';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {SelfRegistration} from '../../model/self-registration.model';
 
 const URL_ALL_ROLES = () => `${config().api_host_url}/roles`;
@@ -28,7 +28,8 @@ const URL_DELETE_SELF_REGISTRATION = () => `${config().api_host_url}/self-regist
 const URL_GET_SEARCH_GROUP_BY_NAME = () => `${config().api_host_url}/group/:groupName/search`;
 const URL_GET_SEARCH_SELF_REGISTRATION_BY_USERNAME = () => `${config().api_host_url}/search/self-registration/:username`;
 const URL_POST_UPDATE_GROUP = () => `${config().api_host_url}/group`;
-
+const URL_GET_SEARCH_GROUPS_NOT_ASSOCIATED_WITH_PRICING_STRUCTURE = () => `${config().api_host_url}/pricing-structure/:pricingStructureId/groups-not-associated/:groupName`;
+const URL_DELETE_GROUPS = () => `${config().api_host_url}/groups`;
 
 @Injectable()
 export class UserManagementService {
@@ -76,6 +77,26 @@ export class UserManagementService {
 
 
   // ===== Groups ===============================
+
+  deleteGroup(groupIds: number[]): Observable<ApiResponse> {
+      return this.httpClient
+          .request<ApiResponse>('DELETE', URL_DELETE_GROUPS(), {
+              body: {
+                  groupIds
+              }
+          });
+  }
+
+  findGroupsNotAssociatedWithPricingStructure(pricingStructureId: number, groupName: string): Observable<Group[]> {
+      return this.httpClient
+          .get<ApiResponse<Group[]>>(URL_GET_SEARCH_GROUPS_NOT_ASSOCIATED_WITH_PRICING_STRUCTURE()
+              .replace(`:pricingStructureId`, String(pricingStructureId))
+              .replace(`:groupName`, groupName))
+          .pipe(
+              map((r: ApiResponse<Group[]>) => r.payload)
+          );
+  }
+
   updateGroup(g: Group): Observable<ApiResponse> {
       return this.httpClient
           .post<ApiResponse>(URL_POST_UPDATE_GROUP(), g);
@@ -197,5 +218,8 @@ export class UserManagementService {
         URL_POST_APPROVE_SELF_REGISTRATION()
             .replace(':selfRegistrationId', String(selfRegistration.id)), {});
   }
+
+
+
 }
 

@@ -9,6 +9,7 @@ import {ApiResponse} from "../../model/api-response.model";
 
 const httpAction: any[] = [
     [
+        body('id').exists().isNumeric(),
         body(`name`).exists(),
         body(`description`).exists(),
     ],

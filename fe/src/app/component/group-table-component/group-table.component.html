@@ -2,14 +2,14 @@
 <div class="group-table-component">
 
   <mat-form-field>
-    <mat-label>Search for a group to add to role.</mat-label>
+    <mat-label>Search for a group to add.</mat-label>
     <input type="text"
-           placeholder="Group Name to add to role"
+           placeholder="Group Name to add"
            matInput
            [attr.test-field-search]="''"
            [matAutocomplete]="auto"
            [formControl]="formControlGroupSearch">
-    <mat-hint>Search from auto suggest group to add to role</mat-hint>
+    <mat-hint>Search from auto suggest group to add</mat-hint>
   </mat-form-field>
   <mat-autocomplete #auto="matAutocomplete"
                     autoActiveFirstOption

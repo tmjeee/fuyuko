@@ -1,5 +1,6 @@
 import {PaginableApiResponse} from "./api-response.model";
 import {CountryCurrencyUnits} from "./unit.model";
+import {Group} from "./group.model";
 
 export interface PricingStructure {     // pricing structure
     id: number; // pricing structure id
@@ -56,5 +57,11 @@ export interface PriceDataItem {
     viewId: number;
     viewName: string;
     item: PricingStructureItemWithPrice;
+}
+
+
+export interface PricingStructureGroupAssociation {
+   pricingStructure: PricingStructure,
+   groups: Group[]
 }
 

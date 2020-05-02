@@ -10,6 +10,8 @@ import {ViewOnlyPriceTableComponent} from './view-only-price-table.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {ViewOnlyPriceDataItemsTableComponent} from "./view-only-price-data-items-table.component";
 import {PaginationModule} from "../pagination-component/pagination.module";
+import {PricingStructureGroupAssociationComponent} from "./pricing-structure-group-association.component";
+import {GroupTableModule} from "../group-table-component/group-table.module";
 
 
 @NgModule({
@@ -21,6 +23,7 @@ import {PaginationModule} from "../pagination-component/pagination.module";
         BrowserAnimationsModule,
         FlexLayoutModule,
         PaginationModule,
+        GroupTableModule,
     ],
     declarations: [
         PricingStructurePopupComponent,
@@ -28,6 +31,7 @@ import {PaginationModule} from "../pagination-component/pagination.module";
         ItemPricePopupComponent,
         ViewOnlyPriceTableComponent,
         ViewOnlyPriceDataItemsTableComponent,
+        PricingStructureGroupAssociationComponent,
     ],
     exports: [
         PricingStructurePopupComponent,
@@ -36,6 +40,7 @@ import {PaginationModule} from "../pagination-component/pagination.module";
         BrowserAnimationsModule,
         ViewOnlyPriceTableComponent,
         ViewOnlyPriceDataItemsTableComponent,
+        PricingStructureGroupAssociationComponent,
     ],
     entryComponents: [
         PricingStructurePopupComponent,

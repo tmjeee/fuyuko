@@ -2,13 +2,13 @@ import {Group} from "../model/group.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Role} from "../model/role.model";
-import {DISABLED, ENABLED} from "../model/status.model";
+import {DELETED, DISABLED, ENABLED} from "../model/status.model";
 
 export const deleteGroup = async (groupIds: number[]): Promise<string[]> => {
     return doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         for (const groupId of groupIds) {
-            const q: QueryResponse = await conn.query(`UPDATE TBL_GROUP SET STATUS = ? WHERE ID=?`, [DISABLED, groupId]);
+            const q: QueryResponse = await conn.query(`UPDATE TBL_GROUP SET STATUS = ? WHERE ID=?`, [DELETED, groupId]);
             if (q.affectedRows <= 0) {
                 errors.push(`Failed to delete group id ${groupId}`);
             }
