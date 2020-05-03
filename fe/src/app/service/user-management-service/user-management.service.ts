@@ -28,8 +28,10 @@ const URL_DELETE_SELF_REGISTRATION = () => `${config().api_host_url}/self-regist
 const URL_GET_SEARCH_GROUP_BY_NAME = () => `${config().api_host_url}/group/:groupName/search`;
 const URL_GET_SEARCH_SELF_REGISTRATION_BY_USERNAME = () => `${config().api_host_url}/search/self-registration/:username`;
 const URL_POST_UPDATE_GROUP = () => `${config().api_host_url}/group`;
-const URL_GET_SEARCH_GROUPS_NOT_ASSOCIATED_WITH_PRICING_STRUCTURE = () => `${config().api_host_url}/pricing-structure/:pricingStructureId/groups-not-associated/:groupName`;
 const URL_DELETE_GROUPS = () => `${config().api_host_url}/groups`;
+const URL_GET_SEARCH_GROUPS_ASSOCIATED_WITH_PRICING_STRUCTURE = () => `${config().api_host_url}/pricing-structure/:pricingStructureId/groups-associated/:groupName`;
+const URL_GET_SEARCH_GROUPS_NOT_ASSOCIATED_WITH_PRICING_STRUCTURE = () => `${config().api_host_url}/pricing-structure/:pricingStructureId/groups-not-associated/:groupName`;
+
 
 @Injectable()
 export class UserManagementService {
@@ -85,6 +87,16 @@ export class UserManagementService {
                   groupIds
               }
           });
+  }
+
+  findGroupsAssociatedWithPricingStructure(pricingStructureId: number, groupName: string): Observable<Group[]> {
+      return this.httpClient
+          .get<ApiResponse<Group[]>>(URL_GET_SEARCH_GROUPS_ASSOCIATED_WITH_PRICING_STRUCTURE()
+              .replace(':pricingStructureId', String(pricingStructureId))
+              .replace(':groupName', groupName))
+          .pipe(
+              map((r: ApiResponse<Group[]>) => r.payload)
+          );
   }
 
   findGroupsNotAssociatedWithPricingStructure(pricingStructureId: number, groupName: string): Observable<Group[]> {

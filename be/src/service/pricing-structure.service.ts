@@ -12,6 +12,69 @@ import {Status} from "../model/status.model";
 import { Group } from "../model/group.model";
 
 
+export const searchGroupsAssociatedWithPricingStructure = async (pricingStructureId: number, groupName: string): Promise<Group[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+            SELECT 
+                G.ID AS G_ID,
+                G.NAME AS G_NAME,
+                G.DESCRIPTION AS G_DESCRIPTION,
+                G.STATUS AS G_STATUS,
+                G.IS_SYSTEM AS G_IS_SYSTEM,
+                G.CREATION_DATE AS G_CREATION_DATE,
+                G.LAST_UPDATE AS G_LAST_UPDATE,
+                R.ID AS R_ID,
+                R.NAME AS R_NAME,
+                R.DESCRIPTION AS R_DESCRIPTION,
+                R.CREATION_DATE AS R_CREATION_DATE,
+                R.LAST_UPDATE AS R_LAST_UPDATE
+            FROM TBL_GROUP AS G
+            LEFT JOIN TBL_LOOKUP_GROUP_ROLE AS GR ON GR.GROUP_ID = G.ID
+            LEFT JOIN TBL_ROLE AS R ON R.ID = GR.ROLE_ID
+            WHERE G.ID IN (
+                SELECT 
+                   PSG.GROUP_ID
+                FROM TBL_LOOKUP_PRICING_STRUCTURE_GROUP AS PSG
+                WHERE PSG.PRICING_STRUCTURE_ID = ?
+            ) AND G.NAME LIKE ?
+        `, [pricingStructureId, `%${groupName ? groupName : ''}%`]);
+
+
+        const g: Map<string /* groupId */, Group> = new Map();
+        const r: Map<string /* groupId_roleId */, Role> = new Map();
+
+        return q.reduce((a: Group[], i: QueryI) => {
+
+            const groupKey = String(i.G_ID);
+            const roleKey = `${i.G_ID}_${i.R_ID}`;
+
+            if (!g.has(groupKey)) {
+                const group: Group = {
+                    id: i.G_ID,
+                    name: i.G_NAME,
+                    isSystem: i.G_IS_SYSTEM,
+                    description: i.G_DESCRIPTION,
+                    status: i.G_STATUS,
+                    roles: []
+                };
+                g.set(groupKey, group)
+                a.push(group);
+            };
+
+            if (i.R_ID && !r.has(roleKey)) {
+                const role: Role = {
+                    id: i.R_ID,
+                    name: i.R_NAME,
+                    description: i.R_DESCRIPTION
+                };
+                r.set(roleKey, role);
+                g.get(groupKey).roles.push(role);
+            }
+            return a;
+        }, []);
+    });
+};
+
 export const searchGroupsNotAssociatedWithPricingStructure = async (pricingStructureId: number, groupName: string): Promise<Group[]> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`

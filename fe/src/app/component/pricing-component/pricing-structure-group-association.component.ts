@@ -7,7 +7,6 @@ import {
     SEARCH_ACTION_TYPE
 } from "../group-table-component/group-table.component";
 import {Group} from "../../model/group.model";
-import {tap} from "rxjs/operators";
 
 
 export interface PricingStructureGroupAssociationComponentEvent {
@@ -43,7 +42,6 @@ export class PricingStructureGroupAssociationComponent implements OnInit {
 
 
     onGroupTableEvent($event: GroupTableComponentEvent, pricingStructure: PricingStructure) {
-        console.log('******************* pricing structure group association component event', $event);
        switch($event.type) {
            case 'unlink': {
                const g: Group = $event.group;

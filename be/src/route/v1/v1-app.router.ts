@@ -122,6 +122,7 @@ import registerGetPricingStructureGroupAssociationsRoute from './GET-pricing-str
 import registerGetGroupsNotAssociatedWithPricingStructureRoute from './GET-groups-not-associated-with-pricing-structure.route';
 import registerPostLinkPricingStructureGroupRoute from './POST-link-pricing-structure-group.route';
 import registerPostUnlinkPricingStructureGroupRoute from './POST-unlink-pricing-structure-group.route'
+import registerGetGroupsAssociatedWithPricingStructureRoute from './GET-groups-associated-with-pricing-structure.route';
 
 
 const v1AppRouter:Router  = express.Router();
@@ -247,11 +248,11 @@ const reg = (router: Router, regi: Registry) => {
     registerGetPricingStructuresByViewRoute(v1AppRouter, registry);
     registerPostUpdateGroupRoute(v1AppRouter, registry);
     registerDeleteGroupsRoute(v1AppRouter, registry);
-
     registerGetPricingStructureGroupAssociationsRoute(v1AppRouter, registry);
     registerGetGroupsNotAssociatedWithPricingStructureRoute(v1AppRouter, registry);
     registerPostLinkPricingStructureGroupRoute(v1AppRouter, registry);
     registerPostUnlinkPricingStructureGroupRoute(v1AppRouter, registry);
+    registerGetGroupsAssociatedWithPricingStructureRoute(v1AppRouter, registry);
 };
 
 

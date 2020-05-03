@@ -49,24 +49,18 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
 
 
     onPricingStructureGroupAssociationEvent($event: PricingStructureGroupAssociationComponentEvent) {
-        console.log('**** pricing structure partner association page', $event);
         switch($event.type) {
             case "link": {
                 this.pricingStructureService.linkPricingStructureGroup($event.pricingStructure.id, $event.group.id)
                     .pipe(
                         tap((r: ApiResponse) => {
-                            console.log('****** link response', r);
                             const g: Group = $event.group;
                             const a: PricingStructureGroupAssociation = this.pricingStructureGroupAssociations.find((a: PricingStructureGroupAssociation) => a.pricingStructure.id === $event.pricingStructure.id);
-                            const fn: GroupSearchFn = this.groupSearchFnsMap.get($event.pricingStructure.id);
-                            /*
-                            fn('').pipe(
+                            this.userManagementService.findGroupsAssociatedWithPricingStructure($event.pricingStructure.id, '').pipe(
                                 tap((g: Group[]) => {
                                     a.groups = g;
                                 })
                             ).subscribe();
-                             */
-                            this.reload();
                             toNotifications(this.notificationsService, r);
                         })
                     ).subscribe();
@@ -75,25 +69,22 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
             case 'unlink': {
                 this.pricingStructureService.unlinkPricingStructureGroup($event.pricingStructure.id, $event.group.id).pipe(
                     tap((r: ApiResponse) => {
-                        console.log('***** unlink response', r);
                         const g: Group = $event.group;
                         const a: PricingStructureGroupAssociation = this.pricingStructureGroupAssociations.find((a: PricingStructureGroupAssociation) => a.pricingStructure.id === $event.pricingStructure.id);
-                        const fn: GroupSearchFn = this.groupSearchFnsMap.get($event.pricingStructure.id);
-                        /*
-                        fn('').pipe(
+                        this.userManagementService.findGroupsAssociatedWithPricingStructure($event.pricingStructure.id, '').pipe(
                             tap((g: Group[]) => {
                                 a.groups = g;
                             })
                         ).subscribe();
-                         */
-                        this.reload();
                         toNotifications(this.notificationsService, r);
                     })
                 ).subscribe();
                 break;
             }
         }
+    }
 
-
+    reloadClicked($event: MouseEvent) {
+        this.reload();
     }
 }
