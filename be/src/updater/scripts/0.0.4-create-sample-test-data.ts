@@ -461,7 +461,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         for (let i = 0; i< 3; i++) {
             const fileName = sprintf('%04d.jpg', c());
             const isPrimary = (i === 0);
-            const fullPath = Path.resolve(__dirname, '../assets/item-images', fileName);
+            const fullPath = Path.resolve(__dirname, '../assets/test-data-item-images', fileName);
 
             const buffer: Buffer = await util.promisify(readFile)(fullPath);
             const r: boolean = await addItemImage(item.id, fileName, buffer, true);

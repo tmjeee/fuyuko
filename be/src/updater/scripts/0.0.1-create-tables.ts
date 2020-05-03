@@ -58,17 +58,46 @@ export const update = async () => {
    await TBL_VIEW_VALIDATION_ERROR();
    await TBL_USER_SETTING();
    await TBL_USER_NOTIFICATION();
-
    await TBL_CUSTOM_DATA_IMPORT();
    await TBL_CUSTOM_DATA_IMPORT_FILE();
-
    await TBL_CUSTOM_DATA_EXPORT();
    await TBL_CUSTOM_DATA_EXPORT_FILE();
+   await TBL_VIEW_CATEGORY();
+   await TBL_LOOKUP_VIEW_CATEGORY_ITEM();
 
    await ADD_FK_CONSTRAINT();
    await ADD_INDEXES();
 
    i(`done running update on ${__filename}`);
+};
+
+const TBL_VIEW_CATEGORY = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_VIEW_CATEGORY (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(200) NOT NULL,
+            DESCRIPTION VARCHAR(500),
+            STATUS VARCHAR(200),
+            VIEW_ID INT,
+            PARENT_ID INT,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+         );
+      `);
+   });
+};
+
+const TBL_LOOKUP_VIEW_CATEGORY_ITEM = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_LOOKUP_VIEW_CATEGORY_ITEM (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            VIEW_CATEGORY_ID INT NOT NULL,
+            ITEM_ID INT NOT NULL 
+         );
+      `);
+   });
 };
 
 const TBL_CUSTOM_DATA_EXPORT = async () => {
@@ -986,6 +1015,10 @@ const ADD_FK_CONSTRAINT = async () => {
 
       await conn.query(`ALTER TABLE TBL_CUSTOM_DATA_IMPORT_FILE ADD CONSTRAINT \`fk_tbl_custom_data_import_file-1\` FOREIGN KEY IF NOT EXISTS (CUSTOM_DATA_IMPORT_ID) REFERENCES TBL_CUSTOM_DATA_IMPORT(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_CUSTOM_DATA_EXPORT_FILE ADD CONSTRAINT \`fk_tbl_custom_data_export_file-1\` FOREIGN KEY IF NOT EXISTS (CUSTOM_DATA_EXPORT_ID) REFERENCES TBL_CUSTOM_DATA_EXPORT(ID) ON DELETE CASCADE`);
+
+      await conn.query(`ALTER TABLE TBL_VIEW_CATEGORY ADD CONSTRAINT \`fk_tbl_view_category-1\` FOREIGN KEY IF NOT EXISTS (VIEW_ID) REFERENCES TBL_VIEW(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_LOOKUP_VIEW_CATEGORY_ITEM ADD CONSTRAINT \`fk_tbl_lookup_view_category_item-1\` FOREIGN KEY IF NOT EXISTS (VIEW_CATEGORY_ID) REFERENCES TBL_VIEW_CATEGORY(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_LOOKUP_VIEW_CATEGORY_ITEM ADD CONSTRAINT \`fk_tbl_lookup_view_category_item-2\` FOREIGN KEY IF NOT EXISTS (ITEM_ID) REFERENCES TBL_ITEM(ID) ON DELETE CASCADE`);
    });
 }
 

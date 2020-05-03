@@ -12,6 +12,8 @@ import config from '../config';
 export type UpdaterProfile = "CORE" | "TEST-DATA"
 export const UPDATER_PROFILE_CORE = "CORE";
 export const UPDATER_PROFILE_TEST_DATA = "TEST-DATA";
+export const UPDATER_PROFILE_CARS_DATA = "CARS-DATA";
+export const UPDATER_PROFILE_LEEFAHMEE_DATA = "LEEFAHMEE-DATA";
 
 
 export const isProfile = (profile: UpdaterProfile): boolean => {

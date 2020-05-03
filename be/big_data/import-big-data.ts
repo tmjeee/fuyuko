@@ -3,41 +3,40 @@ import fs from 'fs';
 import util from 'util';
 import {getViewByName, saveOrUpdateViews} from "../src/service/view.service";
 import {View} from "../src/model/view.model";
-import {getAttribute2sInView, saveAttributes} from "../src/service/attribute.service";
+import {getAttributesInView, saveAttributes} from "../src/service/attribute.service";
 import {l} from "../src/logger/logger";
 import {Attribute} from "../src/model/attribute.model";
-import {addOrUpdateItem2, getItem2ById, getItem2ByName} from "../src/service/item.service";
 import {
-    Attribute2,
-    Item2,
-} from "../src/server-side-model/server-side.model";
-import {itemRevert} from "../src/service/conversion-item.service";
-import {attributesConvert,} from "../src/service/conversion-attribute.service";
+    addOrUpdateItem,
+    getItemByName
+} from "../src/service/item.service";
 import {Item} from "../src/model/item.model";
 import {createNewItem} from "../src/shared-utils/ui-item-value-creator.utils";
 import {setItemNumberValue, setItemStringValue} from "../src/shared-utils/ui-item-value-setter.util";
 import {addItemImage} from "../src/service/item-image.service";
+import {checkErrors} from "../src/updater/script-util";
 
 
 const runImport = async () => {
     // create view
     let view: View = await getViewByName('Cars');
     if (!view) {
-        await saveOrUpdateViews([
+        const errors: string[] = await saveOrUpdateViews([
             {
                 id: -1,
                 name: 'Cars',
                 description: 'Cars View'
             } as View
         ]);
+        checkErrors(errors, `Failed to create Cars view`);
         view = await getViewByName('Cars');
     }
 
 
     // create attributes
-    let attribute2s: Attribute2[] = await getAttribute2sInView(view.id);
-    if (!attribute2s || !attribute2s.length) {
-        await saveAttributes(view.id, [
+    let attributes: Attribute[] = await getAttributesInView(view.id);
+    if (!attributes || !attributes.length) {
+        const errors: string[] = await saveAttributes(view.id, [
             {
                 id: -1,
                 name: `Make`,
@@ -57,9 +56,9 @@ const runImport = async () => {
                 description: 'Year description'
             } as Attribute
         ], (level, msg) => l(level, msg));
-        attribute2s = await getAttribute2sInView(view.id);
+        checkErrors(errors, `Failed ot create attributes for Cars view`);
+        attributes = await getAttributesInView(view.id);
     }
-    const attributes: Attribute[] = attributesConvert(attribute2s);
 
 
     // create items & images for all files
@@ -72,10 +71,10 @@ const runImport = async () => {
         const model = fileSegments[1];
         const year = fileSegments[2];
 
-       let item2: Item2 = await getItem2ByName(view.id, name);
+       let item: Item = await getItemByName(view.id, name);
        let primaryImage = false;
-       if (!item2) {  //  item not already exists
-           const item: Item = createNewItem(-1, attributes);
+       if (!item) {  //  item not already exists
+           item = createNewItem(-1, attributes);
            item.name = name;
            item.description = `${name} description`;
            for (const attribute of attributes) {
@@ -88,14 +87,20 @@ const runImport = async () => {
                }
            }
 
-           item2 = itemRevert(item);
-           await addOrUpdateItem2(view.id, item2);
-           item2 = await getItem2ByName(view.id, item2.name);
+           const errors: string[] = await addOrUpdateItem(view.id, item);
+           checkErrors(errors, `Failed to create item ${name} for Cars view`);
+           item = await getItemByName(view.id, item.name);
+           if (!item) {
+              throw new Error(`Failed to create item ${item.name}`);
+           }
            primaryImage = true;
        }
 
        const image: Buffer = await util.promisify(fs.readFile)(Path.join(pathToAssetsDir, fileInDir));
-       await addItemImage(item2.id, fileInDir, image, primaryImage);
+       const ok: boolean  = await addItemImage(item.id, fileInDir, image, primaryImage);
+       if (!ok) {
+           throw new Error(`Failed to add image for item ${item.name}`);
+       }
     }
 };
 
