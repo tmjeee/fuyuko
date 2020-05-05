@@ -57,6 +57,9 @@ import {CustomImportPageComponent} from "./page/custom-import-page/custom-import
 import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
 import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
 import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
+import {CategoryLayoutComponent} from "./layout/category-layout/category.layout";
+import {CategoryPageComponent} from "./page/category-page/category.page";
+import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
 
 const routes: Routes = [
 
@@ -419,6 +422,36 @@ const routes: Routes = [
       } as Route,
     ]
   } as Route,
+
+  // category-layout
+  {
+    path: 'category-layout',
+    canActivate: [AuthGuard],
+    component: CategoryLayoutComponent,
+    data: {
+      sideNav: 'category'
+    },
+    children: [
+      // category
+      {
+        path: 'category',
+        canActivate: [AuthGuard],
+        component: CategoryPageComponent,
+        data: {
+          subSideNav: 'category'
+        }
+      } as Route,
+
+      // category-help
+      {
+        path: 'category-help',
+        canActivate: [AuthGuard],
+        component: CategoryHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+    ]
+  } as Route,
+
 
   // price-layout
   {

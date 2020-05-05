@@ -9,6 +9,7 @@
 
   "updater-run": true,
   "updater-profiles": ["CORE", "TEST-DATA"],
+  "updater-profiles-help": "Available updater profiles are CORE, TEST-DATA, CARS-DATA, LEEFAHMEE-DATA",
 
   "salt": "some-salt",
 

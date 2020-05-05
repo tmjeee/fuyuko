@@ -20,7 +20,7 @@ export const deleteView = async (viewId: number): Promise<boolean> => {
     });
 };
 
-export const saveOrUpdateViews = async (views: {id: number, name: string, description: string}[]): Promise<string[]> => {
+export const addOrUpdateViews = async (views: {id: number, name: string, description: string}[]): Promise<string[]> => {
     const badUpdates: string[] = [];
     for (const view of views) {
         await doInDbConnection(async (conn: Connection) => {

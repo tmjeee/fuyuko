@@ -14,7 +14,7 @@ import {Connection} from "mariadb";
 import {e} from '../../logger';
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
-import {saveOrUpdateViews} from "../../service/view.service";
+import {addOrUpdateViews} from "../../service/view.service";
 
 
 // CHECKED
@@ -31,7 +31,7 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const views: View[] = req.body;
 
-        const badUpdates: string[] = await saveOrUpdateViews(views);
+        const badUpdates: string[] = await addOrUpdateViews(views);
 
         if (badUpdates.length > 0) {
             e(`bad updates`, ...badUpdates);

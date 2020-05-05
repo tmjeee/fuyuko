@@ -123,6 +123,14 @@ import registerGetGroupsNotAssociatedWithPricingStructureRoute from './GET-group
 import registerPostLinkPricingStructureGroupRoute from './POST-link-pricing-structure-group.route';
 import registerPostUnlinkPricingStructureGroupRoute from './POST-unlink-pricing-structure-group.route'
 import registerGetGroupsAssociatedWithPricingStructureRoute from './GET-groups-associated-with-pricing-structure.route';
+import registerGetViewCategoryItemsRoute from './GET-view-category-items.route';
+import registerPostAddItemToCategoryRoute from './POST-add-item-to-category.route';
+import registerDeleteRemoveItemFromCategoryRoute from './DELETE-remove-item-from-category.route';
+import registryGetViewCategoriesRoute from './GET-view-categories.route';
+import registryGetViewCategoriesWithItemsRoute from './GET-view-categories-with-items.route';
+import registerPostAddCategoryRoute from './POST-add-category.route';
+import registerPostUpdateCategoryRoute from './POST-update-category.route';
+import registerDeleteCategoryRoute from './DELETE-category.route';
 
 
 const v1AppRouter:Router  = express.Router();
@@ -253,6 +261,16 @@ const reg = (router: Router, regi: Registry) => {
     registerPostLinkPricingStructureGroupRoute(v1AppRouter, registry);
     registerPostUnlinkPricingStructureGroupRoute(v1AppRouter, registry);
     registerGetGroupsAssociatedWithPricingStructureRoute(v1AppRouter, registry);
+
+
+    registryGetViewCategoriesRoute (v1AppRouter, registry);
+    registerDeleteCategoryRoute(v1AppRouter, registry);
+    registryGetViewCategoriesWithItemsRoute(v1AppRouter, registry);
+    registerGetViewCategoryItemsRoute(v1AppRouter, registry);
+    registerPostAddCategoryRoute (v1AppRouter, registry);
+    registerPostUpdateCategoryRoute(v1AppRouter, registry);
+    registerPostAddItemToCategoryRoute(v1AppRouter, registry);
+    registerDeleteRemoveItemFromCategoryRoute(v1AppRouter, registry);
 };
 
 

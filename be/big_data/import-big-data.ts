@@ -1,7 +1,7 @@
 import Path from 'path';
 import fs from 'fs';
 import util from 'util';
-import {getViewByName, saveOrUpdateViews} from "../src/service/view.service";
+import {getViewByName, addOrUpdateViews} from "../src/service/view.service";
 import {View} from "../src/model/view.model";
 import {getAttributesInView, saveAttributes} from "../src/service/attribute.service";
 import {l} from "../src/logger/logger";
@@ -21,7 +21,7 @@ const runImport = async () => {
     // create view
     let view: View = await getViewByName('Cars');
     if (!view) {
-        const errors: string[] = await saveOrUpdateViews([
+        const errors: string[] = await addOrUpdateViews([
             {
                 id: -1,
                 name: 'Cars',

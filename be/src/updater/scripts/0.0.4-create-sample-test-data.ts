@@ -9,7 +9,7 @@ import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/gr
 import {addOrUpdateItem, getItemByName, hashedPassword, updateItemValue} from "../../service";
 import {UPDATER_PROFILE_TEST_DATA} from "../updater";
 import {getGroupByName} from "../../service/group.service";
-import {getViewByName, saveOrUpdateViews} from "../../service/view.service";
+import {getViewByName, addOrUpdateViews} from "../../service/view.service";
 import {View} from "../../model/view.model";
 import {selfRegister} from "../../service/self-registration.service";
 import {createInvitation} from "../../service/invitation.service";
@@ -41,6 +41,12 @@ import {setPrices} from "../../service/pricing-structure-item.service";
 import {addOrUpdateRules} from "../../service/rule.service";
 import {Rule, ValidateClause, WhenClause} from "../../model/rule.model";
 import {checkErrors} from "../script-util";
+import {
+    addCategory, addItemToViewCateogry,
+    getViewCategories,
+    getViewCategoryByName
+} from "../../service/category.service";
+import { Category } from "../../model/category.model";
 
 
 export const profiles = [UPDATER_PROFILE_TEST_DATA];
@@ -65,7 +71,7 @@ const INSERT_DATA = async () => {
         const partnerGroupId: number = (await getGroupByName(GROUP_PARTNER)).id;
 
         // === VIEWS
-        const errors: string[] = await saveOrUpdateViews([
+        const errors: string[] = await addOrUpdateViews([
             {
                 id: -1,
                 name: `Test View 1`,
@@ -530,6 +536,92 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
             checkErrors(errors, `Failed to set price for children item id ${i.id} with parent item id ${item.id}`);
         }
     }
-}
+
+
+
+    // set up categories
+    errors = await addCategory(viewId, null,
+        {
+            name: 'Category-1',
+            description: 'Category 1 description',
+            children: [
+                {
+                    name: 'Category-1-1',
+                    description: 'Category 1-1 description',
+                    children: [
+                        {
+                            name: 'Category-1-1-1',
+                            description: 'Category 1-1-1 description',
+                            children: []
+                        },
+                        {
+                            name: 'Category-1-1-2',
+                            description: 'Category 1-1-2 description',
+                            children: []
+                        }
+                    ]
+                },
+                {
+                    name: 'Category-1-2',
+                    description: 'Category 1-2 description',
+                    children: [
+                        {
+                            name: 'Category-1-2-1',
+                            description: 'Category 1-2-1 description',
+                            children: []
+                        },
+                    ]
+                }
+            ],
+        },
+    );
+    checkErrors(errors, `Errors creating Category-1`);
+    const category1: Category = await getViewCategoryByName(viewId, `Category-1`);
+
+    errors = await addCategory(viewId, null,
+        {
+            name: 'Category-2',
+            description: 'Category 2 description',
+            children: [
+                {
+                    name: 'Category-2-1',
+                    description: 'Category 2-1 description',
+                    children: []
+                },
+                {
+                    name: 'Category-2-2',
+                    description: 'Category 2-2 description',
+                    children: []
+                },
+            ]
+        });
+    checkErrors(errors, `Error creating category-2`);
+    const category2: Category = await getViewCategoryByName(viewId, `Category-2`);
+
+    errors = await addCategory(viewId, null,
+        {
+            name: 'Category-3',
+            description: 'Category-3',
+            children: []
+        });
+    checkErrors(errors, `Error creating category-3`);
+    const category3: Category = await getViewCategoryByName(viewId, `Category-3`);
+
+
+    errors = await addItemToViewCateogry(category1.id, item1.id);
+    checkErrors(errors, `Error adding item1 to category1`);
+    errors = await addItemToViewCateogry(category1.id, item2.id);
+    checkErrors(errors, `Error adding item2 to category1`);
+    errors = await addItemToViewCateogry(category1.children[0].id, item3.id);
+    checkErrors(errors, `Error adding item3 to category1-1`);
+    errors = await addItemToViewCateogry(category1.children[0].id, item4.id);
+    checkErrors(errors, `Error adding item4 to category1-1`);
+    errors = await addItemToViewCateogry(category1.children[0].children[0].id, item5.id);
+    checkErrors(errors, `Error adding item5 to category1-1-1`);
+    errors = await addItemToViewCateogry(category1.children[0].children[0].id, item6.id);
+    checkErrors(errors, `Error adding item6 to category1-1-1`);
+    errors = await addItemToViewCateogry(category1.children[0].children[0].id, item7.id);
+    checkErrors(errors, `Error adding item7 to category1-1-1`);
+};
 
 

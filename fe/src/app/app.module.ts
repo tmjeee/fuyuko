@@ -137,6 +137,9 @@ import {SecurityModule} from "./component/security-directive/security.module";
 import {SharedComponentUtilsModule} from "./component/shared-component-utils/shared-component-utils.module";
 import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
 import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
+import {CategoryLayoutComponent} from "./layout/category-layout/category.layout";
+import {CategoryPageComponent} from "./page/category-page/category.page";
+import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -174,6 +177,7 @@ const appInitializer = (settingsService: SettingsService,
     ViewLayoutComponent,
     PartnerLayoutComponent,
     PriceLayoutComponent,
+    CategoryLayoutComponent,
 
     // pages
     LoginPageComponent,
@@ -224,6 +228,8 @@ const appInitializer = (settingsService: SettingsService,
     CustomExportPageComponent,
     CustomImportPageComponent,
     PricingStructurePartnerAssociationPageComponent,
+    CategoryPageComponent,
+    CategoryHelpPageComponent,
   ],
   imports: [
     BrowserModule,

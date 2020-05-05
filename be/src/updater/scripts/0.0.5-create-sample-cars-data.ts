@@ -1,6 +1,6 @@
 import {UPDATER_PROFILE_CARS_DATA} from "../updater";
 import {View} from "../../model/view.model";
-import {getViewByName, saveOrUpdateViews} from "../../service/view.service";
+import {getViewByName, addOrUpdateViews} from "../../service/view.service";
 import {checkErrors} from "../script-util";
 import {Attribute} from "../../model/attribute.model";
 import {getAttributesInView, saveAttributes} from "../../service/attribute.service";
@@ -30,7 +30,7 @@ const runImport = async () => {
     // create view
     let view: View = await getViewByName('Cars');
     if (!view) {
-        const errors: string[] = await saveOrUpdateViews([
+        const errors: string[] = await addOrUpdateViews([
             {
                 id: -1,
                 name: 'Cars',

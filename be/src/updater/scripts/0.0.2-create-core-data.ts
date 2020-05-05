@@ -11,6 +11,8 @@ import {checkErrors} from "../script-util";
 import {addOrUpdateRole, addRoleToGroup, getRoleByName} from "../../service/role.service";
 import {Role, ROLE_ADMIN, ROLE_EDIT, ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
 import {addGlobalAvatar, addGlobalImage} from "../../service/avatar.service";
+import {addOrUpdateViews} from "../../service/view.service";
+import {addUser} from "../../service/user.service";
 
 export const profiles = [UPDATER_PROFILE_CORE];
 
@@ -21,8 +23,20 @@ export const update = async () => {
     await INSERT_GLOBAL_AVATARS();
     await INSERT_GLOBAL_IMAGES();
     await INSERT_GROUPS_AND_ROLES();
+    await INSERT_DEFAULT_USERS();
+    await INSERT_DEFAULT_VIEWS();
 
     i(`done running update on ${__filename}`);
+};
+
+const INSERT_DEFAULT_USERS = async () => {
+    const errors: string[] = await addUser({username: 'root', password: 'root', firstName: 'root_firstname', lastName: 'root_lastname', email: 'root@changeMe.com'})
+    checkErrors(errors, `Failed to create default root user`);
+};
+
+const INSERT_DEFAULT_VIEWS = async () => {
+    const errors: string[] = await addOrUpdateViews([{id: -1, name: `Default View`, description: `A Default View`}]);
+    checkErrors(errors, `Failed to create a default view`);
 };
 
 const INSERT_GROUPS_AND_ROLES = async () => {

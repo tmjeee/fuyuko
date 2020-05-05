@@ -11,6 +11,17 @@ export interface Category {
     children: Category[];
 };
 
+export interface CategoryWithItems {
+    id: number;
+    name: string;
+    description: string;
+    status: Status;
+    items: {id: number, name: string, description: string}[],
+    creationDate: Date;
+    lastUpdate: Date;
+    children: CategoryWithItems[];
+}
+
 
 export interface CategoryAndItems {
     id: number;         // category id
