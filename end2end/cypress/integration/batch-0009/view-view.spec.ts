@@ -31,7 +31,8 @@ describe(`view view spec`, () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitViews();
+            .visitViews()
+            .selectGlobalView(`Test View 1`);
     });
 
     afterEach(() => {

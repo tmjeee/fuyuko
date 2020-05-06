@@ -6,6 +6,13 @@ import {ViewAttributeEditPage} from "./sub-sub-page-object/view-attribute-edit.p
 const PAGE_NAME = 'view-attributes';
 export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
+
+    selectGlobalView(viewName: string): ViewAttributePage {
+        cy.waitUntil(() => cy.get(`[test-mat-select-global-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-global-view='${viewName}']`)).click({force: true});
+        return this;
+    }
+
     validateTitle(): ViewAttributePage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;

@@ -7,6 +7,12 @@ import {ViewDataListAttributePopupPage} from "./sub-sub-page-object/view-data-li
 const PAGE_NAME = 'view-data-list';
 export class ViewDataListPage implements ActualPage<ViewDataListPage> {
 
+    selectGlobalView(viewName: string): ViewDataListPage {
+        cy.waitUntil(() => cy.get(`[test-mat-select-global-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-global-view='${viewName}']`)).click({force: true});
+        return this;
+    }
+
     validateTitle(): ViewDataListPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;

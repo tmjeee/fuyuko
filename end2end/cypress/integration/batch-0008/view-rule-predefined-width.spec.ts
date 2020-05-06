@@ -29,7 +29,8 @@ describe('view-rule-predefined-width', () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitViewRule();
+            .visitViewRule()
+            .selectGlobalView(`Test View 1`);
     });
 
     afterEach(() => {

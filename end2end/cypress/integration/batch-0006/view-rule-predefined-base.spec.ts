@@ -30,7 +30,8 @@ describe('view-rule-predefined-base', () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitViewRule();
+            .visitViewRule()
+            .selectGlobalView(`Test View 1`);
     });
 
     afterEach(() => {

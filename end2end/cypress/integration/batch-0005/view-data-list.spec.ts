@@ -30,7 +30,8 @@ describe(`view-data-list spec`, () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitViewDataList();
+            .visitViewDataList()
+            .selectGlobalView(`Test View 1`);
         // viewDataListPage.visit();
     });
 

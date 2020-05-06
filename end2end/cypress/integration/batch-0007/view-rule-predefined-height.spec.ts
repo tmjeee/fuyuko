@@ -29,7 +29,8 @@ describe('view-rule-predefined-height', () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitViewRule();
+            .visitViewRule()
+            .selectGlobalView(`Test View 1`);
     });
 
     afterEach(() => {

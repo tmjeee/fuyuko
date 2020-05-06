@@ -37,6 +37,7 @@ describe(`view validation details spec`, () => {
             .login(username, password)
             .visitViewPage()
             .visitValidations()
+            .selectGlobalView(`Test View 1`)
             .validateTitle()
             .clickRunValidation()
             .verifyPopupTitle()
@@ -50,6 +51,7 @@ describe(`view validation details spec`, () => {
 
         viewValidationDetailsPage =
             viewValidationPage
+                .selectGlobalView(`Test View 1`)
                 .clickReload()
                 .clickOnValidationDetails(validationName)
         ;

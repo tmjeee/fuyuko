@@ -7,6 +7,12 @@ export class ViewAttributeDetailsPage implements ActualPage<ViewAttributeDetails
     constructor(private attributeId: number) {
     }
 
+    selectGlobalView(viewName: string): ViewAttributeDetailsPage {
+        cy.waitUntil(() => cy.get(`[test-mat-select-global-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-global-view='${viewName}']`)).click({force: true});
+        return this;
+    }
+
     validateTitle(): ViewAttributeDetailsPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;

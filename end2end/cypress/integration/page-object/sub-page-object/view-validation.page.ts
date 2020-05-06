@@ -7,6 +7,12 @@ import {waitUntilTestPageReady} from "../../util/util";
 const PAGE_NAME = 'view-validations';
 export class ViewValidationPage implements ActualPage<ViewValidationPage> {
 
+    selectGlobalView(viewName: string): ViewValidationPage {
+        cy.waitUntil(() => cy.get(`[test-mat-select-global-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-global-view='${viewName}']`)).click({force: true});
+        return this;
+    }
+
     validateTitle(): ViewValidationPage {
         cy.get(`[test-page-title]`)
             .should('have.attr', 'test-page-title', PAGE_NAME);

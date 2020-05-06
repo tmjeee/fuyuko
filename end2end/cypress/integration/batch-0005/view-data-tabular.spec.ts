@@ -46,8 +46,8 @@ describe('view-data-tabular spec', () => {
             .login(username, password)
             .visitViewPage()
             .visitViewDataTable()
-            .selectGlobalView('Test View 1')
-            .clickReload()
+            .selectGlobalView('Test View 1');
+            // .clickReload()
         ;
     });
 

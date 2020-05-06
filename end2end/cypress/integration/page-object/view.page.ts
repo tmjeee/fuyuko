@@ -22,37 +22,37 @@ export class ViewPage  {
         return new ViewRulePage().visit();
     }
 
-    visitViewAttributes() {
+    visitViewAttributes(): ViewAttributePage {
         // cy.visit(`/view-gen-layout/(attributes//help:view-help)`);
         return new ViewAttributePage().visit();
     }
 
-    visitViewAttributeWithId(attributeId: number) {
+    visitViewAttributeWithId(attributeId: number): ViewAttributeDetailsPage {
         // cy.visit(`/view-gen-layout/(attribute/${attributeId}//help:view-help)`);
         return new ViewAttributeDetailsPage(attributeId).visit();
     }
 
-    visitViewDataTable() {
+    visitViewDataTable(): ViewDataTablePage {
         // cy.visit(`/view-gen-layout/(data-tabular//help:view-help)`);
         return new ViewDataTablePage().visit();
     }
 
-    visitViewDataThumbnail() {
+    visitViewDataThumbnail(): ViewDataThumbnailPage {
         // cy.visit(`/view-gen-layout/(data-thumbnail//help:view-help)`);
         return new ViewDataThumbnailPage().visit();
     }
 
-    visitViewDataList() {
+    visitViewDataList(): ViewDataListPage {
         // cy.visit(`/view-gen-layout/(data-list//help:view-help)`);
         return new ViewDataListPage().visit();
     }
 
-    visitViews() {
+    visitViews(): ViewViewPage {
         // cy.visit(`/view-gen-layout/(views//help:view-help)`);
         return new ViewViewPage().visit();
     }
 
-    visitValidations() {
+    visitValidations(): ViewValidationPage {
         // cy.visit(`/view-gen-layout/(validation//help:view-help)`);
         return new ViewValidationPage().visit();
     }

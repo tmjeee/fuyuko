@@ -6,6 +6,12 @@ import {ViewViewEditPopupPage} from "./sub-sub-page-object/view-view-edit-popup.
 const PAGE_NAME = 'view-views';
 export class ViewViewPage implements ActualPage<ViewViewPage> {
 
+    selectGlobalView(viewName: string): ViewViewPage {
+        cy.waitUntil(() => cy.get(`[test-mat-select-global-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-global-view='${viewName}']`)).click({force: true});
+        return this;
+    }
+
     validateTitle(): ViewViewPage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;

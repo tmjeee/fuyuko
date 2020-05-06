@@ -7,6 +7,12 @@ const PAGE_NAME: string = 'view-rules';
 
 export class ViewRulePage implements ActualPage<ViewRulePage> {
 
+    selectGlobalView(viewName: string): ViewRulePage {
+        cy.waitUntil(() => cy.get(`[test-mat-select-global-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-global-view='${viewName}']`)).click({force: true});
+        return this;
+    }
+
     validateTitle(): ViewRulePage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;

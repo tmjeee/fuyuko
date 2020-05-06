@@ -6,8 +6,8 @@ const PAGE_NAME = 'view-data-table';
 export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     selectGlobalView(viewName: string): ViewDataTablePage {
-        cy.waitUntil(() => cy.get(`[mat-select-global-view]`)).first().click({force: true});
-        cy.waitUntil(() => cy.get(`[mat-select-option-global-view='${viewName}']`)).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-global-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-global-view='${viewName}']`)).click({force: true});
         return this;
     }
 

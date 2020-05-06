@@ -29,8 +29,9 @@ describe('view-rule-custom', () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitViewRule();
-        viewRulePage.visit();
+            .visitViewRule()
+            .selectGlobalView(`Test View 1`);
+        // viewRulePage.visit();
     });
 
     afterEach(() => {

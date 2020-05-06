@@ -30,7 +30,8 @@ describe('view attribute spec', () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitViewAttributes();
+            .visitViewAttributes()
+            .selectGlobalView(`Test View 1`);
         // viewAttributePage.visit();
     });
 

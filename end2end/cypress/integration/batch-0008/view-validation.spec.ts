@@ -30,7 +30,8 @@ describe(`view validation spec`, () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitValidations();
+            .visitValidations()
+            .selectGlobalView(`Test View 1`);
     });
 
     afterEach(() => {

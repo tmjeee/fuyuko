@@ -31,8 +31,9 @@ describe('view-data-thumbnail spec', () => {
             .visit()
             .login(username, password)
             .visitViewPage()
-            .visitViewDataThumbnail();
-        viewDataThumbnailPage.visit();
+            .visitViewDataThumbnail()
+            .selectGlobalView(`Test View 1`);
+        // viewDataThumbnailPage.visit();
     });
 
     afterEach(() => {
