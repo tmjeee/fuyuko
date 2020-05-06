@@ -309,9 +309,11 @@ const createManyRules = async(conn: Connection, viewId: number, att1Id: number, 
                         operator: 'eq',
                         condition: [
                             {
+                                type: 'string',
                                 value: 'val string 1'
                             } as StringValue,
                             {
+                                type: 'string',
                                 value: 'val string 2'
                             } as StringValue
                         ]
@@ -324,9 +326,11 @@ const createManyRules = async(conn: Connection, viewId: number, att1Id: number, 
                         operator: 'not eq',
                         condition: [
                             {
+                                type: 'text',
                                 value: 'val text 1'
                             } as TextValue,
                             {
+                                type: 'text',
                                 value: 'val text 2'
                             } as TextValue
                         ]

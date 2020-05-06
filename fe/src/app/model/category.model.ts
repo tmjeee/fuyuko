@@ -11,12 +11,14 @@ export interface Category {
     children: Category[];
 };
 
+export type CategorySimpleItem = {id: number, name: string, description: string};
+
 export interface CategoryWithItems {
     id: number;
     name: string;
     description: string;
     status: Status;
-    items: {id: number, name: string, description: string}[],
+    items: CategorySimpleItem[],
     creationDate: Date;
     lastUpdate: Date;
     children: CategoryWithItems[];

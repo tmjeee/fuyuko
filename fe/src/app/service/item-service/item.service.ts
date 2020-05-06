@@ -78,7 +78,7 @@ export class ItemService {
   }
 
 
-  getItemsById(viewId: number, itemIds: number[], limitOffset?: LimitOffset): Observable<PaginableApiResponse<Item[]>> {
+  getItemsByIds(viewId: number, itemIds: number[], limitOffset?: LimitOffset): Observable<PaginableApiResponse<Item[]>> {
     return this.httpClient.get<PaginableApiResponse<Item[]>>(
         URL_GET_ITEMS(limitOffset)
             .replace(':viewId', String(viewId))

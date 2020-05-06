@@ -71,7 +71,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
                         this.rules = r.rules;
                         this.validationResult = r.validationResult;
                         const itemIds: number[] = r.validationResult.errors.map((e: ValidationError) => e.itemId);
-                        this.itemService.getItemsById(this.view.id, itemIds)
+                        this.itemService.getItemsByIds(this.view.id, itemIds)
                             .pipe(
                                 map((r: PaginableApiResponse<Item[]>) => r.payload),
                                 tap((i: Item[]) => {

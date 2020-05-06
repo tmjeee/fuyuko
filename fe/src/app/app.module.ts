@@ -141,6 +141,7 @@ import {CategoryLayoutComponent} from "./layout/category-layout/category.layout"
 import {CategoryPageComponent} from "./page/category-page/category.page";
 import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
 import {CategoryModule} from "./component/category-component/category.module";
+import {CategoryService} from "./service/category-service/category.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -323,6 +324,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: CustomImportService, useClass: CustomImportService} as Provider,
     {provide: CustomExportService, useClass: CustomExportService} as Provider,
     {provide: ExportArtifactService, useClass: ExportArtifactService} as Provider,
+    {provide: CategoryService, useClass: CategoryService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
