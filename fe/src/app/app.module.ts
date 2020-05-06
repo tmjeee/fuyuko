@@ -140,6 +140,7 @@ import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-st
 import {CategoryLayoutComponent} from "./layout/category-layout/category.layout";
 import {CategoryPageComponent} from "./page/category-page/category.page";
 import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
+import {CategoryModule} from "./component/category-component/category.module";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -287,6 +288,7 @@ const appInitializer = (settingsService: SettingsService,
     PaginationModule,
     SecurityModule,
     SharedComponentUtilsModule,
+    CategoryModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
