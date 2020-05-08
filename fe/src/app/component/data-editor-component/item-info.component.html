@@ -1,0 +1,47 @@
+<div class="item-info-compoennt">
+    <div>
+        <app-carousel [itemId]="item.id" [images]="getCarouselImages(item)" (events)="onCarouselEvent($event)"></app-carousel>
+    </div>
+    <div>
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input type="text" matInput [ngStyle]="{visibility: 'hidden', display: 'block'} ">
+            <app-item-editor [item]="item" [attr.test-item-editor]="'name'" [type]="'name'" (events)="onItemDataChange($event)"></app-item-editor>
+            <mat-hint>Item name</mat-hint>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <input type="text" matInput [ngStyle]="{visibility: 'hidden', display: 'none'} ">
+            <app-item-editor [item]="item" [attr.test-item-editor]="'description'" [type]="'description'" (events)="onItemDataChange($event)"></app-item-editor>
+            <mat-hint>Item description</mat-hint>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <mat-label>Creation Date</mat-label>
+            <div>{{item.creationDate | date}}</div>
+            <input type="text" matInput [ngStyle]="{visibility: 'hidden', display: 'none'} ">
+            <mat-hint>Item creation date</mat-hint>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <mat-label>Last Update</mat-label>
+            <div>{{item.lastUpdate | date}}</div>
+            <input type="text" matInput [ngStyle]="{visibility: 'hidden', display: 'none'} ">
+            <mat-hint>Item last update</mat-hint>
+        </mat-form-field>
+    </div>
+    <div *ngFor="let attribute of attributes; let i = index;">
+        <mat-form-field>
+            <mat-label>{{attribute.name}}</mat-label>
+            <input type="text" matInput [ngStyle]="{visibility: 'hidden', display: 'none'} ">
+            <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute}"
+                             [attr.test-data-editor]="attribute.name"
+                             (events)="onAttributeDataChange($event, item)"></app-data-editor>
+            <mat-hint>{{attribute.description}}</mat-hint>
+        </mat-form-field>
+    </div>
+</div>

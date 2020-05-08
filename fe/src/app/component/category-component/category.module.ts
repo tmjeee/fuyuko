@@ -7,6 +7,9 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {CategoryComponent} from "./category.component";
 import {CategoryTreeComponent} from "./category-tree.component";
 import {DataTableModule} from "../data-table-component/data-table.module";
+import {DataEditorModule} from "../data-editor-component/data-editor.module";
+import {CarouselModule} from "../carousel-component/carousel.module";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -17,7 +20,10 @@ import {DataTableModule} from "../data-table-component/data-table.module";
         ReactiveFormsModule,
         AppMaterialsModule,
         FlexLayoutModule,
+        SharedComponentUtilsModule,
         DataTableModule,
+        DataEditorModule,
+        CarouselModule,
     ],
     declarations: [
         CategoryComponent,

@@ -1,0 +1,14 @@
+.category-component {
+  .tree-container {
+    overflow-x: scroll;
+  }
+
+  .table-container {
+    ::ng-deep {
+      mat-table {
+        width: 77vw !important;
+      }
+    }
+
+  }
+}

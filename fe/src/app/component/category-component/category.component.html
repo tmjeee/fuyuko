@@ -1,24 +1,33 @@
 <div class="category-component">
-    <div fxLayout="row">
-        <div fxFlex="0 0 auto">
-            <!--
-            <app-category-tree [categoriesWithItem]="categoriesWithItems"
-                               (events)="onCategoryTreeEvent($event)">
-            </app-category-tree>
-            -->
+    <div fxLayout="row" fxLayoutGap="10px">
+        <div fxFlex="0 0 200px">
+            <div class="tree-container">
+                <app-category-tree [categoriesWithItem]="categoriesWithItems"
+                                   (events)="onCategoryTreeEvent($event)">
+                </app-category-tree>
+            </div>
         </div>
-        <div fxFlex="0 0 auto">
+        <div fxFlex="1 1 auto">
             <div fxLayout="column">
-                <div fxFlex="0 0 auto">
-                    Tool bar
-                </div>
-                <div fxFlex="0 0 auto">
-                    <!--
-                    <app-data-table [itemAndAttributeSet]="itemAndAttributeSet">
-                    </app-data-table>
-                    -->
-
-                </div>
+                <div *loadIf="loading">Loading...</div>
+                <ng-container *ngIf="!loading && displayType === 'category'">
+                    <div fxFlex="1 0 auto">
+                        Tool bar
+                    </div>
+                    <div fxFlex="1 0 auto">
+                        <div class="table-container">
+                            <app-data-table [itemAndAttributeSet]="itemAndAttributeSet">
+                            </app-data-table>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!loading && displayType === 'item'">
+                    <div fxFlex="0 1 auto">
+                        <app-item-info [attributes]="attributes"
+                                       [item]="item">
+                        </app-item-info>
+                    </div>
+                </ng-container>
             </div>
         </div>
     </div>

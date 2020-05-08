@@ -1,6 +1,10 @@
 <div class="category-page">
     <div *loadIf="treeLoading">Loading ...</div>
-    <app-category *ngIf="!treeLoading"
+    <div *ngIf="(!treeLoading && (!categoriesWithItems || !!!categoriesWithItems.length))">No Categories</div>
+    <app-category *ngIf="!treeLoading && view && categoriesWithItems && !!categoriesWithItems.length"
+                  [getAttributesFn]="getAttributesFn"
+                  [getItemsFn]="getItemsFn"
+                  [viewId]="view.id"
                   [categoriesWithItems]="categoriesWithItems">
     </app-category>
 </div>

@@ -1,11 +1,11 @@
 import {Component, Input} from "@angular/core";
 import {CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
 import {CategoryTreeComponentEvent} from "./category-tree.component";
-import {Observable, of} from "rxjs";
+import {forkJoin, Observable, of} from "rxjs";
 import {PaginableApiResponse} from "../../model/api-response.model";
 import {Item} from "../../model/item.model";
-import {combineAll, finalize, tap} from "rxjs/operators";
-import {ItemAndAttributeSet, TableItemAndAttributeSet} from "../../model/item-attribute.model";
+import {combineAll, delay, finalize, tap} from "rxjs/operators";
+import {TableItemAndAttributeSet} from "../../model/item-attribute.model";
 import {Attribute} from "../../model/attribute.model";
 import {toTableItem} from "../../utils/item-to-table-items.util";
 
@@ -29,7 +29,9 @@ export class CategoryComponent {
     displayType: 'category' | 'item'
     paginableApiResponse: PaginableApiResponse<Item[]>;
     attributes: Attribute[];
-    itemAndAttributeSet: TableItemAndAttributeSet;
+
+    itemAndAttributeSet: TableItemAndAttributeSet; // available when displayType is 'category'
+    item: Item; // available when displayType is 'item'
 
     onCategoryTreeEvent($event: CategoryTreeComponentEvent) {
         switch($event.node.type) {
@@ -44,13 +46,15 @@ export class CategoryComponent {
                     this.getItemsFn(this.viewId, itemIds),
                     this.getAttributesFn(this.viewId)
                 ).pipe(
-                    combineAll((r:[PaginableApiResponse<Item[]>, Attribute[]]) => {
+                    combineAll(),
+                    tap((r: [PaginableApiResponse<Item[]>, Attribute[]]) => {
                         this.paginableApiResponse = r[0];
                         this.attributes = r[1];
                         this.itemAndAttributeSet = {
                             attributes: this.attributes,
-                            tableItems: toTableItem(this.paginableApiResponse.payload)
+                            tableItems: this.paginableApiResponse.payload ? toTableItem(this.paginableApiResponse.payload) : []
                         }
+                        this.loading = false;
                     }),
                     finalize(() => this.loading = false)
                 ).subscribe();
@@ -63,8 +67,10 @@ export class CategoryComponent {
                     this.getItemsFn(this.viewId, [$event.node.currentItem.id]),
                     this.getAttributesFn(this.viewId)
                 ).pipe(
-                    combineAll((r:[PaginableApiResponse<Item[]>, Attribute[]]) => {
+                    combineAll(),
+                    tap((r:[PaginableApiResponse<Item[]>, Attribute[]]) => {
                         this.paginableApiResponse = r[0];
+                        this.item = r[0].payload[0];
                         this.attributes = r[1];
                     }),
                     finalize(() => this.loading = false)
