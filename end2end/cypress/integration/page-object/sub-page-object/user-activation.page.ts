@@ -31,7 +31,7 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
     }
 
     search(search: string): UserActivationPage {
-        cy.get(`[test-field-search]`)
+        cy.waitUntil(() => cy.get(`[test-field-search]`))
             .clear({force: true})
             .type(`${search}{enter}`, {force: true})
             .wait(3000)
@@ -39,18 +39,18 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
     }
 
     verifyActivationEntriesSizeInTable(count: number): UserActivationPage {
-        cy.get(`[test-table-item-user]`).should('have.length', count);
+        cy.waitUntil(() => cy.get(`[test-table-item-user]`)).should('have.length', count);
         return this;
     }
 
     activateUser(username: string): UserActivationPage {
-        cy.get(`[test-icon-user-action='ACTIVATE_${username}']`)
+        cy.waitUntil(() => cy.get(`[test-icon-user-action='ACTIVATE_${username}']`))
             .click({force: true});
         return this;
     }
 
     deleteUser(username: string): UserActivationPage {
-        cy.get(`[test-icon-user-action='DELETE_${username}']`)
+        cy.waitUntil(() => cy.get(`[test-icon-user-action='DELETE_${username}']`))
             .click({force: true});
         return this;
     }

@@ -33,42 +33,50 @@ export class UserInvitationPage implements ActualPage<UserInvitationPage> {
 
 
     fillIn(email: string, groupSearch: string, groupName?: string): UserInvitationPage {
-        cy.get(`[test-field-email]`)
+        cy.waitUntil(() => cy.get(`[test-field-email]`))
             .focus()
             .clear({force: true});
-        if (email) {
-            cy.get(`[test-field-email]`)
-                .focus()
-                .type(email, {force: true});
-        }
-        cy.get(`[test-field-groups`)
+        cy.wrap(email).then((_) => {
+            if (email) {
+                cy.waitUntil(() => cy.get(`[test-field-email]`))
+                    .focus()
+                    .type(email, {force: true});
+            }
+        });
+        cy.waitUntil(() => cy.get(`[test-field-groups`))
             .focus()
             .clear({force: true});
-        if (groupSearch) {
-            cy.get(`[test-field-groups`)
-                .type(groupSearch, {force: true})
-                .wait(5000);
-        }
-        if (groupName) {
-            cy.get(`[test-autocomplete-option='${groupName}']`)
-                .click({force: true});
-        }
+        cy.wrap(groupSearch).then((_) => {
+            if (groupSearch) {
+                cy.get(`[test-field-groups`)
+                    .type(groupSearch, {force: true})
+                    .wait(5000);
+            }
+        });
+        cy.wrap(groupName).then((_) => {
+            if (groupName) {
+                cy.get(`[test-autocomplete-option='${groupName}']`)
+                    .click({force: true});
+            }
+        });
         return this;
     }
 
     verifiedSendInvitationEnabled(b: boolean): UserInvitationPage {
-        cy.get(`[test-button-submit-invitation]`)
+        cy.waitUntil(() => cy.get(`[test-button-submit-invitation]`))
             .should(b ? 'be.enabled' : 'be.disabled');
         return this;
     }
 
     submitInvitation(wait?: number): UserInvitationPage {
-        cy.get(`[test-button-submit-invitation]`)
+        cy.waitUntil(() => cy.get(`[test-button-submit-invitation]`))
             .should('be.enabled')
             .click({force: true});
-        if (wait) {
-            cy.wait(wait);
-        }
+        cy.wrap((wait)).then((_) => {
+            if (wait) {
+                cy.wait(wait);
+            }
+        });
        return this;
     }
 }

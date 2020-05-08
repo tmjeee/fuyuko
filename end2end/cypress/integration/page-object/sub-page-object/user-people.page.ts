@@ -31,7 +31,7 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
     }
 
     toggleActiveUsersPanel(): UserPeoplePage {
-        cy.get(`[test-expansion-panel-header='active-users']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-header='active-users']`))
             .click({force: true});
         return this;
     }
@@ -43,7 +43,7 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
     }
 
     toggleInactiveUsersPanel(): UserPeoplePage {
-        cy.get(`[test-expansion-panel-header='inactive-users']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-header='inactive-users']`))
             .click({force: true});
         return this;
     }
@@ -55,10 +55,10 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
     }
 
     openActiveUserPanel(): UserPeoplePage {
-        cy.get(`[test-expansion-panel='active-users']`).then((n) => {
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='active-users']`)).then((n) => {
             if (!n.find(`[test-expansion-panel-content='active-users']`)
                 .is(':visible')) {
-                return cy.get(`[test-expansion-panel-header='active-users']`)
+                return cy.waitUntil(() => cy.get(`[test-expansion-panel-header='active-users']`))
                     .click({force: true});
             }
             return cy.wait(1000);
@@ -67,7 +67,7 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
     }
 
     searchActiveUser(search: string): UserPeoplePage {
-        cy.get(`[test-expansion-panel='active-users'] [test-field-search]`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='active-users'] [test-field-search]`))
             .clear({force: true})
             .type(`${search}{enter}`, {force: true})
             .wait(3000);
@@ -75,41 +75,41 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
     }
 
     verifyUserDoesNotExistsInActiveUsersPanel(username: string): UserPeoplePage {
-       cy.get(`[test-expansion-panel='active-users']`)
+       cy.waitUntil(() => cy.get(`[test-expansion-panel='active-users']`))
             .find(`[test-table-item-user='${username}']`).should('not.exist');
        return this;
     }
 
     verifyUserExistsInActiveUsersPanel(username: string): UserPeoplePage {
-        cy.get(`[test-expansion-panel='active-users']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='active-users']`))
             .find(`[test-table-item-user='${username}']`).should('exist');
         return this;
     }
 
 
     verifyUserDoesNotExistsInInactiveUsersPanel(username: string): UserPeoplePage {
-        cy.get(`[test-expansion-panel='inactive-users']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='inactive-users']`))
             .find(`[test-table-item-user='${username}']`).should('not.exist');
         return this;
     }
 
     verifyUserExistsInInactiveUsersPanel(username: string): UserPeoplePage {
-        cy.get(`[test-expansion-panel='inactive-users']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='inactive-users']`))
             .find(`[test-table-item-user='${username}']`).should('exist');
         return this;
     }
 
     verifyActiveUsersSizeInTable(number: number) {
-        cy.get(`[test-expansion-panel='active-users']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='active-users']`))
             .find(`[test-table-item-user]`).should('have.length', number);
         return this;
     }
 
     openInactiveUserPanel(): UserPeoplePage {
-        cy.get(`[test-expansion-panel='inactive-users']`).then((n) => {
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='inactive-users']`)).then((n) => {
             if (!n.find(`[test-expansion-panel-content='inactive-users']`)
                 .is(':visible')) {
-                return cy.get(`[test-expansion-panel-header='inactive-users']`)
+                cy.waitUntil(() => cy.get(`[test-expansion-panel-header='inactive-users']`))
                     .click({force: true});
             }
             return cy.wait(1000);
@@ -118,7 +118,7 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
     }
 
     searchInactiveUser(search: string): UserPeoplePage {
-        cy.get(`[test-expansion-panel='inactive-users'] [test-field-search]`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='inactive-users'] [test-field-search]`))
             .clear({force: true})
             .type(`${search}{enter}`, {force: true})
             .wait(3000);
@@ -127,21 +127,21 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
 
 
     verifyInactiveUsersSizeInTable(number: number) {
-        cy.get(`[test-expansion-panel='inactive-users']`)
-            .find(`[test-table-item-user]`).should('have.length', number);
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='inactive-users']
+            [test-table-item-user]`)).should('have.length', number);
         return this;
     }
 
     deactivateUser(username: string): UserPeoplePage {
-        cy.get(`[test-expansion-panel='active-users']`)
-            .find(`[test-icon-user-action='DEACTIVATE_${username}']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='active-users']
+            [test-icon-user-action='DEACTIVATE_${username}']`))
             .click({force: true})
         return this;
     }
 
     activateUser(username: string): UserPeoplePage {
-        cy.get(`[test-expansion-panel='inactive-users']`)
-            .find(`[test-icon-user-action='ACTIVATE_${username}']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel='inactive-users']
+            [test-icon-user-action='ACTIVATE_${username}']`))
             .click({force: true})
         return this;
     }

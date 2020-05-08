@@ -35,49 +35,49 @@ export class RegisterPage implements ActualPage<RegisterPage> {
     fillIn(email: string, username: string, firstname: string, lastname: string, password:
         string, confirmPassword: string): RegisterPage {
         // email
-        cy.get(`[test-field-email]`).clear({force: true}).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-field-email]`)).clear({force: true}).then((_) => {
             if (email) {
-                return cy.get(`[test-field-email]`).type(email, {force: true});
+                cy.waitUntil(() => cy.get(`[test-field-email]`)).type(email, {force: true});
             }
             return cy.wait(1000);
         });
 
         // username
-        cy.get(`[test-field-username]`).clear({force: true}).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-field-username]`)).clear({force: true}).then((_) => {
             if (username) {
-                return cy.get(`[test-field-username]`).type(username, {force: true});
+                cy.waitUntil(() => cy.get(`[test-field-username]`)).type(username, {force: true});
             }
             return cy.wait(1000);
         });
 
         // firstname
-        cy.get(`[test-field-firstname]`).clear({force: true}).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-field-firstname]`)).clear({force: true}).then((_) => {
             if (firstname) {
-                return cy.get(`[test-field-firstname]`).type(firstname, {force: true});
+                cy.waitUntil(() => cy.get(`[test-field-firstname]`)).type(firstname, {force: true});
             }
             return cy.wait(1000);
         });
 
         // lastname
-        cy.get(`[test-field-lastname]`).clear({force: true}).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-field-lastname]`)).clear({force: true}).then((_) => {
             if (lastname) {
-                return cy.get(`[test-field-lastname]`).type(lastname, {force: true});
+                cy.waitUntil(() => cy.get(`[test-field-lastname]`)).type(lastname, {force: true});
             }
             return cy.wait(1000);
         });
 
         // password
-        cy.get(`[test-field-password]`).clear({force: true}).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-field-password]`)).clear({force: true}).then((_) => {
             if (password) {
-                return cy.get(`[test-field-password]`).type(password, {force: true});
+                cy.waitUntil(() => cy.get(`[test-field-password]`)).type(password, {force: true});
             }
             return cy.wait(1000);
         });
 
         // confirm password
-        cy.get(`[test-field-confirm-password]`).clear({force: true}).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-field-confirm-password]`)).clear({force: true}).then((_) => {
             if (confirmPassword) {
-                return cy.get(`[test-field-confirm-password]`).type(confirmPassword, {force: true});
+                cy.waitUntil(() => cy.get(`[test-field-confirm-password]`)).type(confirmPassword, {force: true});
             }
             return cy.wait(1000);
         });
@@ -86,12 +86,12 @@ export class RegisterPage implements ActualPage<RegisterPage> {
     }
 
     verifyFormSubmittable(b: boolean): RegisterPage {
-        cy.get(`[test-button-submit-registration]`).should(b ? 'be.enabled' : 'be.disabled');
+        cy.waitUntil(() => cy.get(`[test-button-submit-registration]`)).should(b ? 'be.enabled' : 'be.disabled');
         return this;
     }
 
     submitRegistration(): RegisterPage {
-        cy.get(`[test-button-submit-registration]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-submit-registration]`)).click({force: true});
         return this;
     }
 }

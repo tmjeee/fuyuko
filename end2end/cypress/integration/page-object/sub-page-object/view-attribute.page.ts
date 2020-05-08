@@ -44,7 +44,7 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
 
     search(search: string): ViewAttributePage {
-       cy.get(`[test-field-search]`)
+       cy.waitUntil(() => cy.get(`[test-field-search]`))
            .clear({force: true})
            .type(`${search}{enter}`, {force: true})
        return this;
@@ -52,37 +52,37 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
     verifyAttributeTableEntriesCount(count: number): ViewAttributePage {
         this.selectPagination(100);
-        cy.get(`[test-attribute-name]`)
+        cy.waitUntil(() => cy.get(`[test-attribute-name]`))
             .should('have.length.gte', count);
         return this;
     }
 
     verifyAttributeTableHaveAttribute(attributeName: string): ViewAttributePage {
         this.selectPagination(100);
-        cy.get(`[test-attribute-name='${attributeName}']`)
+        cy.waitUntil(() => cy.get(`[test-attribute-name='${attributeName}']`))
             .should('exist');
         return this;
     }
 
     selectPagination(pagination: 50 | 100): ViewAttributePage {
-        cy.get(`app-pagination mat-select`).click({force: true});
-        cy.get(`mat-option[ng-reflect-value='100']`).click({force: true});
+        cy.waitUntil(() => cy.get(`app-pagination mat-select`)).click({force: true});
+        cy.waitUntil(() => cy.get(`mat-option[ng-reflect-value='100']`)).click({force: true});
         cy.wait(100);
         return this;
     }
 
     clickAddAttribute(): ViewAttributeAddPage {
-        cy.get(`[test-button-add-attribute]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-add-attribute]`)).click({force: true});
         return new ViewAttributeAddPage();
     }
 
     clickDeleteAttribute(attributeName: string): ViewAttributePage {
-        cy.get(`[test-button-delete-attribute='${attributeName}']`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-delete-attribute='${attributeName}']`)).click({force: true});
         return this;
     }
 
     clickEditAttribute(attributeName: string): ViewAttributeEditPage {
-        cy.get(`[test-button-edit-attribute='${attributeName}']`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-edit-attribute='${attributeName}']`)).click({force: true});
         return new ViewAttributeEditPage();
     }
 }
