@@ -52,14 +52,14 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
 
     verifyAttributeTableEntriesCount(count: number): ViewAttributePage {
         this.selectPagination(100);
-        cy.waitUntil(() => cy.get(`[test-attribute-name]`))
+        cy.get(`[test-attribute-name]`)
             .should('have.length.gte', count);
         return this;
     }
 
     verifyAttributeTableHaveAttribute(attributeName: string): ViewAttributePage {
         this.selectPagination(100);
-        cy.waitUntil(() => cy.get(`[test-attribute-name='${attributeName}']`))
+        cy.get(`[test-attribute-name='${attributeName}']`)
             .should('exist');
         return this;
     }

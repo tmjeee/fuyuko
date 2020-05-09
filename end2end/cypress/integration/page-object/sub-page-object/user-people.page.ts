@@ -127,8 +127,8 @@ export class UserPeoplePage implements ActualPage<UserPeoplePage> {
 
 
     verifyInactiveUsersSizeInTable(number: number) {
-        cy.waitUntil(() => cy.get(`[test-expansion-panel='inactive-users']
-            [test-table-item-user]`)).should('have.length', number);
+        cy.get(`[test-expansion-panel='inactive-users']
+            [test-table-item-user]`).should('have.length', number);
         return this;
     }
 

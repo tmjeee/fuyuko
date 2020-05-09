@@ -90,7 +90,7 @@ describe("user-role", () => {
             .verifyInactiveUsersPanelExpanded(false);
     });
 
-    it ('Search activate users from Active Users Panel', () => {
+    it('Search activate users from Active Users Panel', () => {
         // try to DEACTIVATE them
         userPeoplePage
             .openActiveUserPanel()
