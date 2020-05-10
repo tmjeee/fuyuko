@@ -6,7 +6,7 @@ import {AuthService} from "../../service/auth-service/auth.service";
 import {SettingsService} from "../../service/settings-service/settings.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ViewService} from "../../service/view-service/view.service";
-import {map} from "rxjs/operators";
+import {finalize, map} from "rxjs/operators";
 import {MatSelectChange} from "@angular/material/select";
 import {AbstractGenSubLayoutComponent} from "../abstract-gen-sub.layout";
 
@@ -44,10 +44,6 @@ export class CategoryLayoutComponent  extends AbstractGenSubLayoutComponent impl
           .pipe(
               map((v: View[]) => {
                  this.allViews = v;
-                 if (!this.currentView && this.allViews.length) {
-                    this.viewService.setCurrentView(v[0]);
-                 }
-                 this.ready = true;
               }),
               map(() => {
                  this.subscription = this.viewService
@@ -56,12 +52,14 @@ export class CategoryLayoutComponent  extends AbstractGenSubLayoutComponent impl
                          map((v: View) => {
                             if (v) {
                                this.currentView = this.allViews ? this.allViews.find((vv: View) => vv.id === v.id) : undefined;
+                            } else if (!this.currentView && this.allViews.length) {
+                                this.viewService.setCurrentView(this.allViews[0]);
                             }
-                         })
+                         }),
+                         finalize(() => this.ready = true)
                      ).subscribe();
               })
           ).subscribe();
-
    }
 
    ngOnDestroy(): void {

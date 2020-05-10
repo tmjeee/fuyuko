@@ -39,7 +39,7 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
     }
 
     verifyActivationEntriesSizeInTable(count: number): UserActivationPage {
-        cy.waitUntil(() => cy.get(`[test-table-item-user]`)).should('have.length', count);
+        cy.get(`[test-table-item-user]`).should('have.length', count);
         return this;
     }
 

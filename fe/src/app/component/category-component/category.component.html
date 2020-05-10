@@ -7,14 +7,14 @@
                 </app-category-tree>
             </div>
         </div>
-        <div fxFlex="1 1 auto">
+        <div fxFlex="0 0 calc(100% - 220px)">
             <div fxLayout="column">
                 <div *loadIf="loading">Loading...</div>
                 <ng-container *ngIf="!loading && displayType === 'category'">
-                    <div fxFlex="1 0 auto">
+                    <div fxFlex="0 0 100%">
                         Tool bar
                     </div>
-                    <div fxFlex="1 0 auto">
+                    <div fxFlex="0 0 100%">
                         <div class="table-container">
                             <app-data-table [itemAndAttributeSet]="itemAndAttributeSet">
                             </app-data-table>
@@ -22,7 +22,7 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="!loading && displayType === 'item'">
-                    <div fxFlex="0 1 auto">
+                    <div fxFlex="0 0 100%">
                         <app-item-info [attributes]="attributes"
                                        [item]="item">
                         </app-item-info>
