@@ -474,7 +474,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
             const fullPath = Path.resolve(__dirname, '../assets/test-data-item-images', fileName);
 
             const buffer: Buffer = await util.promisify(readFile)(fullPath);
-            const r: boolean = await addItemImage(item.id, fileName, buffer, true);
+            const r: boolean = await addItemImage(item.id, fileName, buffer, isPrimary);
             if (!r) {
                 const msg = (`Failed to add image ${fileName} for Item ${item.name}`);
                 console.error(msg);

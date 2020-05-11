@@ -33,6 +33,7 @@ const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImage
 export class DataListComponent {
     counter: number;
 
+    @Input() enableSearch: boolean;
     @Input() itemAndAttributeSet: ItemAndAttributeSet;
 
     @Output() events: EventEmitter<DataListComponentEvent>;
@@ -44,6 +45,7 @@ export class DataListComponent {
     selectionModel: SelectionModel<Item>;
 
     constructor(private matDialog: MatDialog) {
+        this.enableSearch = true;
         this.counter = 0;
         this.selectionModel = new SelectionModel(true);
         this.pendingSaving = [];

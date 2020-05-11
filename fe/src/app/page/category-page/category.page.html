@@ -1,12 +1,16 @@
 <div class="category-page">
     <div *loadIf="treeLoading">Loading ...</div>
     <div *ngIf="(!treeLoading && (!categoriesWithItems || !!!categoriesWithItems.length))">No Categories</div>
-    <div>
-        <app-category *ngIf="!treeLoading && view && categoriesWithItems && !!categoriesWithItems.length"
-                      [getAttributesFn]="getAttributesFn"
-                      [getItemsFn]="getItemsFn"
-                      [viewId]="view.id"
-                      [categoriesWithItems]="categoriesWithItems">
-        </app-category>
-    </div>
+    <app-category *ngIf="!treeLoading && view && categoriesWithItems && !!categoriesWithItems.length"
+                  [viewId]="view.id"
+                  [categoriesWithItems]="categoriesWithItems"
+                  [getAttributesFn]="getAttributesFn"
+                  [getItemsFn]="getItemsFn"
+                  [deleteItemImageFn]="deleteItemImageFn"
+                  [markItemImageAsPrimaryFn]="markItemImageAsPrimaryFn"
+                  [saveItemAttributeValueFn]="saveItemAttributeValueFn"
+                  [saveItemInfoFn]="saveItemInfoFn"
+                  [saveOrUpdateTableItemsFn]="saveOrUpdateTableItemsFn"
+                  [uploadItemImageFn]="uploadItemImageFn">
+    </app-category>
 </div>

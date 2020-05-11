@@ -25,7 +25,7 @@
                       (click)="onHelpNavExpandCollapseButtonClicked($event)">help</mat-icon>
         </mat-toolbar-row>
     </mat-toolbar>
-    <mat-sidenav-container class="main-side-nav-container">
+    <mat-sidenav-container class="main-side-nav-container" [autosize]="true">
         <mat-sidenav mode="side" [fixedInViewport]="true" [fixedTopGap]="65" [opened]="sideNavOpened" position="start">
             <div class="side-nav">
                 <app-side-nav (logoutEvent)="logout()"></app-side-nav>
@@ -39,7 +39,7 @@
         <mat-sidenav-content>
             <div class="main-content">
                 <!-- user sub-side-nav -->
-                <mat-sidenav-container class="sub-side-nav-container">
+                <mat-sidenav-container class="sub-side-nav-container" [autosize]="true">
                     <mat-sidenav [opened]="subSideBarOpened" mode="side" [fixedInViewport]="true" [fixedTopGap]="65" position="start">
                         <mat-list>
                             <mat-list-item [class.selected]="routeSubSideNavData === 'category'">

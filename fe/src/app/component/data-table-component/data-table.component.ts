@@ -77,6 +77,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Output() searchEvents: EventEmitter<ItemSearchComponentEvent>;
   @Output() carouselEvent: EventEmitter<CarouselComponentEvent>;
   @Input() itemAndAttributeSet: TableItemAndAttributeSet;
+  @Input() enableSearch: boolean;
 
   pendingSavingItems: Map<number, TableItem>;
   pendingDeletionItems: Map<number, TableItem>;
@@ -96,6 +97,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   loading: boolean;
 
   constructor(private matDialog: MatDialog) {
+    this.enableSearch = true;
     this.filterOptionsVisible = false;
     this.events = new EventEmitter();
     this.searchEvents = new EventEmitter();

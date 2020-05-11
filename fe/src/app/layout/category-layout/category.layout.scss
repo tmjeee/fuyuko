@@ -15,6 +15,9 @@
               margin-left: 20px;
             }
           }
+          .primary-outlet {
+            overflow: hidden; // to remove horizontal scrollbar
+          }
         }
       }
     }

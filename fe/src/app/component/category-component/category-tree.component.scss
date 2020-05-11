@@ -1,0 +1,11 @@
+.category-tree-component {
+  ::ng-deep {
+    .mat-tree {
+      .mat-tree-node {
+        .label {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

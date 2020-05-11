@@ -1,7 +1,7 @@
 <div class="data-list-component">
 
     <!-- search -->
-    <div class="search-container">
+    <div class="search-container" *ngIf="enableSearch">
         <app-item-search (events)="onItemSearchEvent($event)"></app-item-search>
     </div>
 

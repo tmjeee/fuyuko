@@ -27,7 +27,6 @@ export class ItemSearchComponent {
 
 
   onBasicSearch($event: Event) {
-    console.log('***** onBasicSearch', $event);
     this.events.emit({
       type: 'basic',
       search: this.formControlValue.value

@@ -1,6 +1,6 @@
 <div class="data-thumbnail-component">
   <!-- search -->
-  <div class="search-container">
+  <div class="search-container" *ngIf="enableSearch">
     <app-item-search (events)="onItemSearchEvent($event)"></app-item-search>
   </div>
 
@@ -11,7 +11,6 @@
     <button type="button" [attr.test-button-delete-items]="''" (click)="delete($event)" [disabled]="!canDelete()" color="primary" mat-flat-button>Delete</button>
     <button type="button" [attr.test-button-reload]="''" (click)="reload($event)" color="primary" mat-flat-button>Reload</button>
   </div>
-
   <!-- thumbnails -->
   <div class="container">
     <div class="no-items" *ngIf="itemAndAttributeSet && itemAndAttributeSet.items && itemAndAttributeSet.items.length == 0">No Items</div>

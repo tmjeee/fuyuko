@@ -10,10 +10,13 @@ export const itemValueConvert = (itemValue2: ItemValue2): Value => {
 }
 
 export const itemValueRevert = (value: Value): ItemValue2 => {
-    return {
-        id: -1,
-        attributeId: value.attributeId,
-        metadatas: itemValueTypesRevert(value.val, value.attributeId)
-    } as ItemValue2
+    if (value && value.val) {
+        return {
+            id: -1,
+            attributeId: value.attributeId,
+            metadatas: itemValueTypesRevert(value.val, value.attributeId)
+        } as ItemValue2
+    }
+    return null;
 }
 

@@ -1,34 +1,57 @@
 <div class="category-component">
-    <div fxLayout="row" fxLayoutGap="10px">
-        <div fxFlex="0 0 200px">
-            <div class="tree-container">
-                <app-category-tree [categoriesWithItem]="categoriesWithItems"
-                                   (events)="onCategoryTreeEvent($event)">
-                </app-category-tree>
-            </div>
-        </div>
-        <div fxFlex="0 0 calc(100% - 220px)">
-            <div fxLayout="column">
-                <div *loadIf="loading">Loading...</div>
-                <ng-container *ngIf="!loading && displayType === 'category'">
-                    <div fxFlex="0 0 100%">
-                        Tool bar
+    <mat-sidenav-container [autosize]="true">
+        <mat-sidenav mode="side" [opened]="showCategorySidebar" [fixedInViewport]="true" [fixedTopGap]="130">
+            <app-category-tree [categoriesWithItem]="categoriesWithItems"
+                               (events)="onCategoryTreeEvent($event)">
+            </app-category-tree>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *loadIf="loading">Loading...</div>
+            <ng-container *ngIf="!loading && displayType === 'category'">
+                <div class="view-switch">
+                    <mat-icon matTooltip="Toogle category sidebar" (click)="toggleCategorySideBar($event)">menu</mat-icon>
+                    <mat-icon matTooltip="Tablular View" (click)="switchToTabularView($event)">view_quilt</mat-icon>     <!-- tabular -->
+                    <mat-icon matTooltip="Thumbnail View" (click)="switchToThumbnailView($event)">view_module</mat-icon>    <!-- thumbnail -->
+                    <mat-icon matTooltip="List View" (click)="switchToListView($event)">view_list</mat-icon>      <!-- list -->
+                </div>
+                <div>
+                    <div class="table-container" *ngIf="viewType === 'table'">
+                        <app-data-table [itemAndAttributeSet]="tableItemAndAttributeSet"
+                                        [enableSearch]="false"
+                                        (events)="onDataTableEvent($event)"
+                                        (carouselEvent)="onDataTableCarouselEvent($event)"
+                                        (searchEvents)="onDataTableSearchEvent($event)">
+                        </app-data-table>
                     </div>
-                    <div fxFlex="0 0 100%">
-                        <div class="table-container">
-                            <app-data-table [itemAndAttributeSet]="itemAndAttributeSet">
-                            </app-data-table>
-                        </div>
+                    <div class="thumbnail-container" *ngIf="viewType === 'thumbnail'">
+                        <app-data-thumbnail [itemAndAttributeSet]="itemAndAttributeSet"
+                                            [enableSearch]="false"
+                                            (events)="onThumbnailEvent($event)"
+                                            (carouselEvents)="onThumbnailCarouselEvent($event)"
+                                            (searchEvents)="onThumbnailSearchEvent($event)">
+                        </app-data-thumbnail>
                     </div>
-                </ng-container>
-                <ng-container *ngIf="!loading && displayType === 'item'">
-                    <div fxFlex="0 0 100%">
-                        <app-item-info [attributes]="attributes"
-                                       [item]="item">
-                        </app-item-info>
+                    <div class="list-container" *ngIf="viewType === 'list'">
+                        <app-data-list [itemAndAttributeSet]="itemAndAttributeSet"
+                                       [enableSearch]="false"
+                                       (events)="onListEvent($event)"
+                                       (searchEvents)="onListSearchEvent($event)"
+                                       (carouselEvents)="onListCarouselEvent($event)"
+                                       >
+                        </app-data-list>
                     </div>
-                </ng-container>
-            </div>
-        </div>
-    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!loading && displayType === 'item'">
+                <div fxFlex="0 0 100%">
+                    <app-item-info [attributes]="attributes"
+                                   (carouselEvent)="onItemInfoCarouselEvent($event)"
+                                   (itemEditorEvent)="onItemInfoItemEditorEvent($event)"
+                                   (dataEditorEvent)="onItemInfoDataEditorEvent($event)"
+                                   [item]="item">
+                    </app-item-info>
+                </div>
+            </ng-container>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 </div>

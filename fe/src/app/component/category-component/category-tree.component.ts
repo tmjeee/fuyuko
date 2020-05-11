@@ -28,7 +28,7 @@ const isCategoryWithItem = (i: CategoryWithItems | CategorySimpleItem): i is Cat
 @Component({
     selector: 'app-category-tree',
     templateUrl: './category-tree.component.html',
-    styleUrls: ['./category.component.scss']
+    styleUrls: ['./category-tree.component.scss']
 })
 export class CategoryTreeComponent implements OnInit {
 

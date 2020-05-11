@@ -1,6 +1,39 @@
 .category-component {
+  height: 100%;
+  mat-sidenav-container {
+    height: 100%;
+    mat-sidenav {
+      white-space: nowrap;
+      min-width: 250px;
+      padding-right: 10px;
+      .no-scroll {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        .scroll {
+          overflow: auto;
+        }
+      }
+    }
+    mat-sidenav-content {
+      padding-left: 10px;
+      padding-right: 10px;
+      .view-switch {
+        .mat-icon {
+          cursor: pointer;
+        }
+      }
+    }
+  }
   .tree-container {
-    overflow-x: scroll;
+    // overflow-x: scroll;
+    // position: fixed;
+    // margin-right: 10px;
+    // width: 200px;
+    // white-space: nowrap;
   }
 
   .table-container {
