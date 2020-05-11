@@ -1,9 +1,21 @@
 .category-tree-component {
+  .controls {
+    margin-top: 5px;
+    button {
+      margin-left: 5px;
+    }
+  }
   ::ng-deep {
     .mat-tree {
       .mat-tree-node {
         .label {
           cursor: pointer;
+          padding: 5px;
+          border-radius: 2px;
+          &.selected {
+            background-color: var(--my-app-primary-lighter);
+            color: var(--my-app-primary-lighter-contrast) !important;
+          }
         }
       }
     }
