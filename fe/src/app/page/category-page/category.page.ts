@@ -21,6 +21,8 @@ import {Type} from "../../component/data-editor-component/item-editor.component"
 import {ItemValueAndAttribute} from "../../model/item-attribute.model";
 import {toNotifications} from "../../service/common.service";
 import {NotificationsService} from "angular2-notifications";
+import {Pagination} from "../../utils/pagination.utils";
+import {LimitOffset} from "../../model/limit-offset.model";
 
 @Component({
     templateUrl: './category.page.html',
@@ -52,8 +54,8 @@ export class CategoryPageComponent implements OnInit {
         this.getAttributesFn = (viewId: number): Observable<Attribute[]> => {
             return this.attributeService.getAllAttributesByView(viewId).pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
         };
-        this.getItemsFn = (viewId: number, itemIds: number[]): Observable<PaginableApiResponse<Item[]>> => {
-            return this.itemService.getItemsByIds(viewId, itemIds);
+        this.getItemsFn = (viewId: number, itemIds: number[], limitOffset: LimitOffset): Observable<PaginableApiResponse<Item[]>> => {
+            return this.itemService.getItemsByIds(viewId, itemIds, limitOffset);
         };
         this.deleteItemImageFn = (itemId: number, image: CarouselItemImage) => {
             return this.itemService.deleteItemImage(itemId, image.id).pipe(

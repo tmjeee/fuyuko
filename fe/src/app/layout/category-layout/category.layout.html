@@ -46,6 +46,10 @@
                                 <mat-icon>category</mat-icon>
                                 <a href="#" [routerLink]="['/category-layout', {outlets: {primary:['category'], help:['category-help']}}]">Categories</a>
                             </mat-list-item>
+                            <mat-list-item [class.selected]="routeSubSideNavData === 'category-management'">
+                                <mat-icon>group_work</mat-icon>
+                                <a href="#" [routerLink]="['/category-layout', {outlets: {primary:['category-management'], help:['category-help']}}]">Management</a>
+                            </mat-list-item>
                         </mat-list>
                     </mat-sidenav>
                     <mat-sidenav-content class="content-2">

@@ -53,9 +53,9 @@ export const w = (viewRulePage: ViewRulePage, opts: {
         .togglePanel(ruleName)
         .verifyPanelExpanded(ruleName, true)
         .verifyPanelWhenClauseContains(ruleName, opts.attributeName, opts.whenClause_opForAdd, opts.whenClause_valForAdd)  // (5)
-        .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'eq', ['1.1', '2.1'])
+        .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'eq', ['1.10', '2.10'])
         .verifyPanelValidateClauseContains(ruleName, opts.attributeName, opts.validateClause_opForAdd, opts.validateClause_valForAdd) // (6)
-        .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'eq', ['3.1', '4.1'])
+        .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'eq', ['3.10', '4.10'])
     ;
 
     // edit added rule
@@ -82,9 +82,9 @@ export const w = (viewRulePage: ViewRulePage, opts: {
         .selectPredefinedTab()
         .togglePanel(ruleName)
         .verifyPanelExpanded(ruleName, true)
-        .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'not eq', ['10.1', '20.1'])
+        .verifyPanelWhenClauseContains(ruleName, 'number attribute', 'not eq', ['10.10', '20.10'])
         .verifyPanelWhenClauseContains(ruleName, opts.attributeName, opts.whenClause_opForEdit, opts.whenClause_valForEdit)  // (11)
-        .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'not eq', ['30.1', '40.1'])
+        .verifyPanelValidateClauseContains(ruleName, 'number attribute', 'not eq', ['30.10', '40.10'])
         .verifyPanelValidateClauseContains(ruleName, opts.attributeName, opts.validateClause_opForEdit, opts.validateClause_valForEdit) // (12)
     ;
 

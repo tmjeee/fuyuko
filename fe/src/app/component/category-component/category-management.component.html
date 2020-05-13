@@ -1,0 +1,22 @@
+
+<div class="category-management-component">
+    <div class="controls">
+        <button mat-flat-button color="primary">Add Root Category</button>
+        <button mat-flat-button color="primary">Add Child Category</button>
+        <button mat-flat-button color="primary">Delete Category</button>
+    </div>
+    <div>
+        <div fxLayout="row">
+            <div fxFlex="1 0 auto">
+                <div *ngIf="!treeLoading && categoriesWithItems && !categoriesWithItems.length">No categories</div>
+                <div *loadIf="treeLoading">Loading ...</div>
+                <app-category-tree *ngIf="!treeLoading"
+                                   [categoriesWithItem]="categoriesWithItems">
+                </app-category-tree>
+            </div>
+            <div fxFlex="1 0 auto">
+                two
+            </div>
+        </div>
+    </div>
+</div>

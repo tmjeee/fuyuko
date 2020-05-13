@@ -60,6 +60,7 @@ import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-st
 import {CategoryLayoutComponent} from "./layout/category-layout/category.layout";
 import {CategoryPageComponent} from "./page/category-page/category.page";
 import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
+import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
 
 const routes: Routes = [
 
@@ -439,6 +440,16 @@ const routes: Routes = [
         component: CategoryPageComponent,
         data: {
           subSideNav: 'category'
+        }
+      } as Route,
+
+      // category-management
+      {
+        path: 'category-management',
+        canActivate: [AuthGuard],
+        component: CategoryManagementPageComponent,
+        data: {
+          subSideNav: 'category-management'
         }
       } as Route,
 

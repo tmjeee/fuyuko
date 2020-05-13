@@ -1,0 +1,13 @@
+.category-management-component {
+  .controls {
+    button {
+      &:first-child {
+        margin-left: 5px;
+      }
+      &:not(:last-child) {
+        margin-right: 5px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

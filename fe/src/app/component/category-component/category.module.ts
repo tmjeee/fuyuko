@@ -12,6 +12,8 @@ import {CarouselModule} from "../carousel-component/carousel.module";
 import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 import {DataThumbnailModule} from "../data-thumbnail-component/data-thumbnail.module";
 import {DataListModule} from "../data-list-component/data-list.module";
+import {PaginationModule} from "../pagination-component/pagination.module";
+import {CategoryManagementComponent} from "./category-management.component";
 
 
 @NgModule({
@@ -28,14 +30,17 @@ import {DataListModule} from "../data-list-component/data-list.module";
         DataListModule,
         DataEditorModule,
         CarouselModule,
+        PaginationModule,
     ],
     declarations: [
         CategoryComponent,
         CategoryTreeComponent,
+        CategoryManagementComponent,
     ],
     exports: [
         CategoryComponent,
         CategoryTreeComponent,
+        CategoryManagementComponent,
     ]
 })
 export class CategoryModule {

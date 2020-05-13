@@ -1,8 +1,4 @@
 <div class="category-tree-component">
-    <div class="controls">
-        <button mat-flat-button color="primary">Add Root</button>
-        <button mat-flat-button color="primary">Add Child</button>
-    </div>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
             <button mat-icon-button disabled></button>

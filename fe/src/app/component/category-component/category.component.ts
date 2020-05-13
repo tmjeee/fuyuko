@@ -18,8 +18,11 @@ import {
     DataThumbnailSearchComponentEvent
 } from "../data-thumbnail-component/data-thumbnail.component";
 import {DataListComponentEvent, DataListSearchComponentEvent} from "../data-list-component/data-list.component";
+import {Pagination} from "../../utils/pagination.utils";
+import {PaginationComponentEvent} from "../pagination-component/pagination.component";
+import {LimitOffset} from "../../model/limit-offset.model";
 
-export type GetItemsFn = (viewId: number, itemIds: number[])=> Observable<PaginableApiResponse<Item[]>>
+export type GetItemsFn = (viewId: number, itemIds: number[], limitOffset: LimitOffset)=> Observable<PaginableApiResponse<Item[]>>
 export type GetAttributesFn = (viewId: number) => Observable<Attribute[]>
 export type SaveOrUpdateTableItemsFn = (modifiedTableItems: TableItem[], deletedTableItems: TableItem[]) => Observable<ApiResponse[]>;
 export type MarkItemImageAsPrimaryFn = (itemId: number, image: CarouselItemImage)=> Observable<ApiResponse>;
@@ -64,11 +67,15 @@ export class CategoryComponent {
 
     tableItemAndAttributeSet: TableItemAndAttributeSet; // available when displayType is 'category'
     itemAndAttributeSet: ItemAndAttributeSet;          // available when displayType is 'category'
-    item: Item; // available when displayType is 'item'
+    item: Item;
+    pagination: Pagination;
+
+    // available when displayType is 'item'
 
     constructor() {
         this.viewType = 'table';
         this.showCategorySidebar = true;
+        this.pagination = new Pagination();
     }
 
 
@@ -281,13 +288,14 @@ export class CategoryComponent {
                         return acc;
                     }, []);
                     of(
-                        this.getItemsFn(this.viewId, itemIds),
+                        this.getItemsFn(this.viewId, itemIds, this.pagination.limitOffset()),
                         this.getAttributesFn(this.viewId)
                     ).pipe(
                         combineAll(),
                         tap((r: [PaginableApiResponse<Item[]>, Attribute[]]) => {
                             this.paginableApiResponse = r[0];
                             this.attributes = r[1];
+                            this.pagination.update(r[0]);
                             this.tableItemAndAttributeSet = {
                                 attributes: this.attributes,
                                 tableItems: this.paginableApiResponse.payload ? toTableItem(this.paginableApiResponse.payload) : []
@@ -307,7 +315,7 @@ export class CategoryComponent {
                 if (this.currentItem) {
                     this.loading = true;
                     of(
-                        this.getItemsFn(this.viewId, [this.currentItem.id]),
+                        this.getItemsFn(this.viewId, [this.currentItem.id], this.pagination.limitOffset()),
                         this.getAttributesFn(this.viewId)
                     ).pipe(
                         combineAll(),
@@ -340,5 +348,10 @@ export class CategoryComponent {
     toggleCategorySideBar($event: MouseEvent) {
         this.showCategorySidebar = !this.showCategorySidebar;
 
+    }
+
+    onPaginationEvent($event: PaginationComponentEvent) {
+        this.pagination.updateFromPageEvent($event.pageEvent);
+        this.reload();
     }
 }

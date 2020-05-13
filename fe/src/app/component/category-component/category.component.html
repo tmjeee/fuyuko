@@ -40,6 +40,7 @@
                                        >
                         </app-data-list>
                     </div>
+                    <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
                 </div>
             </ng-container>
             <ng-container *ngIf="!loading && displayType === 'item'">

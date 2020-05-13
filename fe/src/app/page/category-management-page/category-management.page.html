@@ -1,0 +1,7 @@
+<div class="category-management-page">
+    <div *loadIf="loading">Loading...</div>
+    <app-category-management *ngIf="!loading"
+                             [viewId]="view.id"
+                             [getCategoriesWithItemsFn]="getCategoriesWithItemsFn">
+    </app-category-management>
+</div>

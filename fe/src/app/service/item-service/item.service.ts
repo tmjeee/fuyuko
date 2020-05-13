@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {
     TableItem, Item, ItemSearchType
 } from '../../model/item.model';
@@ -79,6 +79,16 @@ export class ItemService {
 
 
   getItemsByIds(viewId: number, itemIds: number[], limitOffset?: LimitOffset): Observable<PaginableApiResponse<Item[]>> {
+    if(!!!itemIds || !itemIds.length) { // no item ids
+        return of({
+            message: 'Success',
+            status: 'SUCCESS',
+            total: 0,
+            limit: limitOffset.limit,
+            offset: limitOffset.offset,
+            payload: []
+        } as PaginableApiResponse<Item[]>);
+    }
     return this.httpClient.get<PaginableApiResponse<Item[]>>(
         URL_GET_ITEMS(limitOffset)
             .replace(':viewId', String(viewId))

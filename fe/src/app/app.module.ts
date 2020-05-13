@@ -142,6 +142,7 @@ import {CategoryPageComponent} from "./page/category-page/category.page";
 import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
 import {CategoryModule} from "./component/category-component/category.module";
 import {CategoryService} from "./service/category-service/category.service";
+import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -232,6 +233,7 @@ const appInitializer = (settingsService: SettingsService,
     PricingStructurePartnerAssociationPageComponent,
     CategoryPageComponent,
     CategoryHelpPageComponent,
+    CategoryManagementPageComponent,
   ],
   imports: [
     BrowserModule,
