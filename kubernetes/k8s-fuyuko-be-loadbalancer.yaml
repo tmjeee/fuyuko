@@ -1,0 +1,16 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-loadbalancer-fuyuko-be
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "http"
+spec:
+  type: LoadBalancer
+  selector:
+    app: kubernetes-pod-fuyuko-be
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888
+      name: http
