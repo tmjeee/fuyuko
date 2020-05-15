@@ -62,7 +62,7 @@ import {RulesModule} from './component/rules-component/rules.module';
 import {CounterService} from './service/counter-service/counter.service';
 import {DataThumbnailModule} from './component/data-thumbnail-component/data-thumbnail.module';
 import {DataListModule} from './component/data-list-component/data-list.module';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {ProfilingInterceptor} from './interceptor/profiling.interceptor';
 import {ErrorPageComponent} from './page/error-page/error.page';
 import {GlobalErrorHandler} from './error-handler/global-error-handler.service';
@@ -143,12 +143,15 @@ import {CategoryHelpPageComponent} from "./page/category-help-page/category-help
 import {CategoryModule} from "./component/category-component/category.module";
 import {CategoryService} from "./service/category-service/category.service";
 import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
+import {reload} from "./utils/config.util";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
                         themeService: ThemeService,
-                        viewService: ViewService) => {
+                        viewService: ViewService, 
+                        httpClient: HttpClient) => {
   return () => {
+    reload(httpClient);
     authService.asObservable()
       .pipe(
         tap((u: User) => {
@@ -328,7 +331,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: ExportArtifactService, useClass: ExportArtifactService} as Provider,
     {provide: CategoryService, useClass: CategoryService} as Provider,
 
-    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
+    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
