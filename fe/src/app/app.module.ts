@@ -151,21 +151,22 @@ const appInitializer = (settingsService: SettingsService,
                         viewService: ViewService, 
                         httpClient: HttpClient) => {
   return () => {
-    reload(httpClient);
-    authService.asObservable()
-      .pipe(
-        tap((u: User) => {
-          console.log('**************************** app initializer authService callback', u);
-        if (u == null) {  // logout
-          viewService.destroy();
-          settingsService.destroy();
-        } else {          // login
-          themeService.setTheme(u.theme);
-          settingsService.init(u);
-          viewService.init();
-        }
-      })
-      ).subscribe();
+    reload(httpClient, () => {
+      authService.asObservable()
+          .pipe(
+              tap((u: User) => {
+                console.log('**************************** app initializer authService callback', u);
+                if (u == null) {  // logout
+                  viewService.destroy();
+                  settingsService.destroy();
+                } else {          // login
+                  themeService.setTheme(u.theme);
+                  settingsService.init(u);
+                  viewService.init();
+                }
+              })
+          ).subscribe();
+    });
     console.log(`** Fuyuko App initialize **`);
   };
 };

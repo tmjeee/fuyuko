@@ -10,12 +10,13 @@ export interface ConfigType {
 
 let currentConfig: ConfigType = _config;
 
-export const reload = (httpClient: HttpClient) => {
+export const reload = (httpClient: HttpClient, callback?: ()=>void) => {
    httpClient.get('/assets/config.json')
        .pipe(
            tap((j: any) => {
                currentConfig = j;
                console.log(`&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& config reloaded`, currentConfig);
+               callback && callback();
            })
        ).subscribe();
 };
