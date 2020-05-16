@@ -58,10 +58,10 @@ export const saveUserAvatar = async (userId: number, avatar: { globalAvatarName?
             const q1: QueryA = await conn.query(`SELECT ID FROM TBL_GLOBAL_AVATAR WHERE NAME = ? `, [avatar.globalAvatarName]);
             if (q1.length > 0) {
                 const globalAvatarId: number = q1[0].ID;
-                const qCount: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT, ID FROM TBL_USER_AVATAR WHERE USER_ID = ? `, [userId]);
+                const qCount: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT, ID FROM TBL_USER_AVATAR WHERE USER_ID = ? GROUP BY ID`, [userId]);
                 let q: QueryResponse;
                 let userAvatarId: number;
-                if (qCount[0].COUNT > 0) {
+                if (qCount.length && qCount[0].COUNT > 0) {
                     q = await conn.query(`UPDATE TBL_USER_AVATAR SET GLOBAL_AVATAR_ID = ?, MIME_TYPE = ?, SIZE = ?, CONTENT =? WHERE USER_ID = ?`,
                         [globalAvatarId, null, null, null, userId]);
                     userAvatarId = qCount[0].ID;
@@ -79,9 +79,9 @@ export const saveUserAvatar = async (userId: number, avatar: { globalAvatarName?
             const name: string = avatar.customAvatarFile.name;
             const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(avatar.customAvatarFile.path));
             const ft: fileType.FileTypeResult = fileType(buffer);
-            const qCount: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT, ID FROM TBL_USER_AVATAR WHERE USER_ID = ? `, [userId]);
+            const qCount: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT, ID FROM TBL_USER_AVATAR WHERE USER_ID = ? GROUP BY ID`, [userId]);
             let q: QueryResponse;
-            if (qCount[0].COUNT > 0) {
+            if (qCount.length && qCount[0].COUNT > 0) {
                 q = await conn.query(`UPDATE TBL_USER_AVATAR SET NAME=?, GLOBAL_AVATAR_ID = ?, MIME_TYPE = ?, SIZE = ?, CONTENT =? WHERE USER_ID = ?`,
                     [name, null, ft.mime, buffer.length, buffer, userId]);
                 userAvatarId = qCount[0].ID;
