@@ -4,6 +4,9 @@
 #  Documentation
 Documentations are [here](https://fuyuko-org.gitbook.io/fuyuko/)
 
+# Demo
+Demo running [here](https://demo.fuyuko.org)
+
 # Bugs and Issues
 Bug, Issues and features trackings are [here](https://github.com/tmjeee/fuyuko/issues)
 
