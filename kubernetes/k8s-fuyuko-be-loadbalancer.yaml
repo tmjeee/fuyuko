@@ -5,6 +5,9 @@ metadata:
   name: kubernetes-loadbalancer-fuyuko-be
   annotations:
     service.beta.kubernetes.io/do-loadbalancer-protocol: "http"
+    service.beta.kubernetes.io/do-loadbalancer-algorithm: "round_robin"
+    service.beta.kubernetes.io/do-loadbalancer-tls-ports: "8443"
+    service.beta.kubernetes.io/do-loadbalancer-certificate-id: "7c901bd8-b215-4d67-9a22-28d6a6f6d4eb"
 spec:
   type: LoadBalancer
   selector:
@@ -14,3 +17,7 @@ spec:
       port: 8888
       targetPort: 8888
       name: http
+    - protocol: TCP
+      port: 8443
+      targetPort: 8888
+      name: https
