@@ -119,8 +119,8 @@ export const updateCategory = async (viewId: number, parentId: number, c: Update
             if (c.name) {
                 // make sure category name do not already exists
                 const qc1: QueryA = await conn.query(
-                    `SELECT COUNT(*) AS COUNT FROM TBL_VIEW_CATEGORY WHERE NAME=? AND VIEW_ID=? AND STATUS=? AND ${parentId>0 ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}`,
-                    parentId>0 ? [c.name, viewId, ENABLED, parentId] : [c.name, viewId, ENABLED]);
+                    `SELECT COUNT(*) AS COUNT FROM TBL_VIEW_CATEGORY WHERE NAME=? AND VIEW_ID=? AND STATUS=? AND ${(parentId && parentId>0) ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}`,
+                    (parentId && parentId>0) ? [c.name, viewId, ENABLED, parentId] : [c.name, viewId, ENABLED]);
                 if (qc1[0].COUNT <= 0) {
                     if (c.name) {
                         const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW_CATEGORY SET NAME=? WHERE VIEW_ID=? AND ID=?`, [c.name, viewId, c.id]);

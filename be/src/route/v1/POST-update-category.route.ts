@@ -13,7 +13,7 @@ const httpAction: any[] = [
         body('id').exists().isNumeric(),
         body('name').exists(),
         body('description').exists(),
-        body('parentId').optional().isNumeric()
+        body('parentId').optional()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,

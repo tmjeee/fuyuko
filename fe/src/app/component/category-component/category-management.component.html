@@ -4,6 +4,7 @@
         <button mat-flat-button color="primary" [disabled]="!hasCategory()" (click)="addRootCategory($event)">Add Root Category</button>
         <button mat-flat-button color="primary" [disabled]="!hasCategory() || !hasTreeNodeSelected()" (click)="addChildCategory($event)">Add Child Category</button>
         <button mat-flat-button color="primary" [disabled]="!hasCategory() || !hasTreeNodeSelected()" (click)="deleteCategory($event)">Delete Category</button>
+        <button mat-flat-button color="primary" [disabled]="!hasCategory() || !hasTreeNodeSelected()" (click)="editCategory($event)">Rename Category</button>
     </div>
     <div>
         <div fxLayout="row">

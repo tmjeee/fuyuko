@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from "@angular/core";
-import {CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
+import {Category, CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
 import {Observable} from "rxjs";
 import {finalize, tap} from "rxjs/operators";
 import {CategoryTreeComponentEvent, TreeNode} from "./category-tree.component";
@@ -187,6 +187,23 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
         ).subscribe();
     }
 
+    editCategory($event: MouseEvent) {
+        const category: Category = this.selectedTreeNode.currentCategoryWithItems;
+        this.matDialog
+            .open(EditCategoryPopupComponent, {width: '90vw', height: '90vh', data: category})
+            .afterClosed().pipe(
+                tap((r: {id: number, name: string, description: string}) => {
+                    this.editCategoryFn(r.id, r.name, r.description).pipe(
+                        tap((res: ApiResponse) => {
+                            if (res.status === 'SUCCESS') {
+                                this.reloadTree(this.viewId);
+                            }
+                        })
+                    ).subscribe();
+                })
+        ).subscribe();
+    }
+
     onAddableCategoryTableEvent($event: CategoryItemTableComponentEvent) {
        const items: CategorySimpleItem[] = $event.items;
        const categoryId: number = this.selectedTreeNode.currentCategoryWithItems.id;
@@ -214,4 +231,5 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
             })
         ).subscribe();
     }
+
 }
