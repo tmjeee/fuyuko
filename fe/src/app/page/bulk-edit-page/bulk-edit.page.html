@@ -17,7 +17,7 @@
                <mat-hint>Select a view for bulk editing</mat-hint>
            </mat-form-field>
 
-           <ng-container *ngIf="attributes">
+           <ng-container *ngIf="attributes && attributes.length">
                <app-bulk-edit-wizard [attr.test-bulk-edit-wizard]="currentView.name"
                                      [view]="currentView"
                                      [attributes]="attributes">

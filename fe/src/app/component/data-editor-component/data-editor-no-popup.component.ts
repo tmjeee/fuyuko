@@ -241,7 +241,6 @@ export class DataEditorNoPopupComponent implements OnInit {
                         setItemNumberValue(this.attribute, this.itemValue, this.formControl.value);
                         break;
                     case 'date':
-                        console.log(this.formControl.value);
                         setItemDateValue(this.attribute, this.itemValue, this.formControl.value);
                         break;
                     case 'currency':
@@ -278,7 +277,6 @@ export class DataEditorNoPopupComponent implements OnInit {
             this.events.emit({
                 attribute: this.attribute,
                 itemValue: this.itemValue
-
             } as ItemValueAndAttribute);
         }
     }

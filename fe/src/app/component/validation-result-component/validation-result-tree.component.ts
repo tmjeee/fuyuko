@@ -193,9 +193,7 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
     }
 
     handleExternalItemChange(i: Item) {
-        console.log('******* handleExternalItemChange (tree)');
         const f: Flattened = this.returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(this.treeControl.dataNodes, i.id);
-        console.log('*** f', f);
         if (f && this.selected !== f) {
             this.selected = f;
             this.treeControl.expand(f);

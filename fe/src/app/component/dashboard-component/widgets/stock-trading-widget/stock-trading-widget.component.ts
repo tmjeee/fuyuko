@@ -29,11 +29,9 @@ export class StockTradingWidgetComponent extends DashboardWidget implements OnIn
     }
 
     ngOnInit(): void {
-        console.log('&&&&&& [stock-widget] init', this.dashboardWidgetService.widgetInstance, this.dashboardWidgetService.currentUser);
     }
 
     ngAfterViewInit(): void {
-        console.log('&&&&&& [stock-widget] after view init', this.dashboardWidgetService.widgetInstance, this.dashboardWidgetService.currentUser);
         this.f();
     }
 
@@ -47,7 +45,6 @@ export class StockTradingWidgetComponent extends DashboardWidget implements OnIn
         s.src =`https://s3.tradingview.com/tv.js`;
         const fjs = (document.getElementsByTagName(`script`)[0] as HTMLScriptElement);
         fjs.parentNode.insertBefore(s, fjs);
-        console.log('***** ', TradingView);
          */
         setTimeout(() => {
             new TradingView.widget(

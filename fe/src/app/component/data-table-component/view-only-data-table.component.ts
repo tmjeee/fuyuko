@@ -77,7 +77,6 @@ export class ViewOnlyDataTableComponent implements OnInit, OnChanges {
                 expanded: false,
             } as RowInfo);
         });
-        console.log('***************table items', this.tableItems);
         this.datasource.update(this.tableItems);
     }
 

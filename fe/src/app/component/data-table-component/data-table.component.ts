@@ -279,7 +279,6 @@ export class DataTableComponent implements OnInit, OnChanges {
         const r = ( // filter out the item and all of it's children
             !(b1 || b2 || b3)
         );
-        // console.log(` exixting id ${existingItem.id} rootParentId ${existingItem.rootParentId} parentId ${existingItem.parentId} vs selected item id ${selectedItem.id} ==> ${b1} || ${b2} || ${b3} = ${r}`);
         return r;
       });
       if (selectedItem.id > 0) { // if it is newly added item that have not been saved before deleting it doesn't need savings
@@ -289,7 +288,6 @@ export class DataTableComponent implements OnInit, OnChanges {
     });
     this.itemAndAttributeSet.tableItems = existingItems;
     this.datasource.update(existingItems);
-    console.log(this.pendingSavingItems, this.pendingDeletionItems);
   }
 
   onSave($event: MouseEvent) {

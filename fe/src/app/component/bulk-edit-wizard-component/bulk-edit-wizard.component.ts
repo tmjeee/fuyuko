@@ -182,12 +182,10 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     onFirstStepSubmit() {
         this.secondStepReady = false;
-        console.log('***************', this.whereClauses);
         this.bulkEditService
             .previewBuilEdit(this.view.id, this.changeClauses, this.whereClauses)
             .pipe(
                 tap((b: BulkEditPackage) => {
-                    console.log('************************* bulkEditPackage', b);
                    this.bulkEditPackage = b;
                    if (this.bulkEditPackage) {
                        const bulkEditItems: BulkEditItem[] = this.bulkEditPackage.bulkEditItems;

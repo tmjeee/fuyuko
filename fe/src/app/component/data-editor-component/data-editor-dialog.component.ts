@@ -321,7 +321,6 @@ export class DataEditorDialogComponent {
   }
 
   onEditDone() {
-    console.log('**** onEditDone ', this.data);
     const attanditem: ItemValueAndAttribute = this.data;
     const attribute: Attribute = attanditem.attribute;
     const value: Value = attanditem.itemValue;

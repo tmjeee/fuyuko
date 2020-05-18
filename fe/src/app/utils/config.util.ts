@@ -15,7 +15,6 @@ export const reload = (httpClient: HttpClient, callback?: ()=>void) => {
        .pipe(
            tap((j: any) => {
                currentConfig = j;
-               console.log(`&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& config reloaded`, currentConfig);
                callback && callback();
            })
        ).subscribe();

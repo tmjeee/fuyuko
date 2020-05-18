@@ -72,12 +72,10 @@ export class WeatherWidgetComponent extends DashboardWidget implements OnInit, O
     }
 
     ngOnInit(): void {
-        console.log('&&&&&& [weather-widget] init', this.dashboardWidgetService.widgetInstance, this.dashboardWidgetService.currentUser);
         this.currentLocation = this.locations[0];
     }
 
     ngAfterViewInit(): void {
-        console.log('&&&&&& [weather-widget] after view init', this.dashboardWidgetService.widgetInstance, this.dashboardWidgetService.currentUser);
         this.f(document, 'script', this.uid);
     }
 

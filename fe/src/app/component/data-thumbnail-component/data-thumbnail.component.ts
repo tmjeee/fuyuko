@@ -222,7 +222,6 @@ export class DataThumbnailComponent implements OnInit {
   }
 
   onCarouselEvent($event: CarouselComponentEvent) {
-      console.log('******* onCarouselEvent', $event);
       this.carouselEvents.emit($event);
   }
 }

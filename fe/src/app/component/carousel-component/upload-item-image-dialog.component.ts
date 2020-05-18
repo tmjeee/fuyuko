@@ -24,7 +24,6 @@ export class UploadItemImageDialogComponent {
 
     onFileChange($event: Event) {
         const fileList: FileList = ($event.target as HTMLInputElement).files;
-        console.log(fileList);
         this.selectedFile = fileList[0];
     }
 }

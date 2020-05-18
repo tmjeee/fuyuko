@@ -20,7 +20,6 @@ fdescribe('Dashboard', () => {
         await browser.refresh();
         const isPage = await dashboardPage.isThisPage()
         const hasTitle = await dashboardPage.hasTitle();
-        console.log('*******************', isPage, hasTitle);
         await dashboardPage.selectDashboardLayout();
 
         browser.sleep(10000);

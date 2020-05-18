@@ -155,7 +155,6 @@ const appInitializer = (settingsService: SettingsService,
       authService.asObservable()
           .pipe(
               tap((u: User) => {
-                console.log('**************************** app initializer authService callback', u);
                 if (u == null) {  // logout
                   viewService.destroy();
                   settingsService.destroy();

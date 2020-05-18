@@ -27,7 +27,6 @@ export class GlobalCommunicationService {
     }
 
     publishGlobalError(err: string) {
-        console.log('**** publish error', err);
         this.subject.next(err);
     }
 }

@@ -119,7 +119,6 @@ export class CustomImportWizardComponent implements OnInit {
     }
 
     onStep5Submit() {
-        console.log('***** on step 5 submit', this.stepper);
         const d: CustomDataImport = this.formControlCustomDataImport.value;
 
         this.step1Ready = true;

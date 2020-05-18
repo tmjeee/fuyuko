@@ -119,7 +119,6 @@ export class CarouselComponent implements OnInit, AfterViewInit, OnChanges  {
         .pipe(
           tap((r: File) => {
             if (r) {
-              console.log('********** file', r);
               this.events.emit({
                 type: 'upload',
                 itemId: this.itemId,

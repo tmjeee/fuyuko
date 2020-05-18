@@ -62,15 +62,6 @@ export class GroupTableComponent implements OnInit, OnChanges {
         debounceTime(1000),
         switchMap((groupSearch: string) => {
           return (this.groupSearchFn(groupSearch));
-              /*
-            .pipe(
-              map((gs: Group[]) => {
-                const ggg: Group[] =  gs.filter((g: Group) => g.name.includes(groupSearch))
-                console.log('ggg', ggg);
-                return ggg;
-              })
-            ))
-           */
         })
       );
   }

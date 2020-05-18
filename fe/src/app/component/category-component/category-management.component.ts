@@ -208,8 +208,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
        const items: CategorySimpleItem[] = $event.items;
        const categoryId: number = this.selectedTreeNode.currentCategoryWithItems.id;
        // add these items to category
-        console.log('******* onAdd click', categoryId, items);
-        this.reloadAddableItemsTable(this.viewId, categoryId);
+       this.reloadAddableItemsTable(this.viewId, categoryId);
        this.addItemsToCategoryFn(categoryId, items).pipe(
            tap((r: ApiResponse) => {
               // this.reloadTree(this.viewId); 
@@ -231,5 +230,4 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
             })
         ).subscribe();
     }
-
 }

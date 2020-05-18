@@ -101,7 +101,6 @@ export class CustomExportWizardComponent {
    }
 
    onStep1Submit() {
-      console.log("**** on step1 submit");
       this.step2Ready = true;
    }
 

@@ -58,11 +58,9 @@ export class ClockWidgetComponent extends DashboardWidget implements OnInit, Aft
 
     ngOnInit(): void {
         this.currentLocation = this.locations[0];
-        console.log('&&&&&& [clock-widget] init', this.dashboardWidgetService.widgetInstance, this.dashboardWidgetService.currentUser);
     }
 
     ngAfterViewInit(): void {
-        console.log('&&&&&& [clock-widget] after view init', this.dashboardWidgetService.widgetInstance, this.dashboardWidgetService.currentUser);
     }
 
     onLocationChange($event: MatOptionSelectionChange) {

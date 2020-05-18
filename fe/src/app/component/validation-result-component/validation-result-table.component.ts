@@ -134,7 +134,6 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
                         }
                     })
                 ).subscribe();
-            console.log('**** table subscribed');
         }
     }
 
@@ -149,7 +148,6 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
     }
 
     handleExternalItemChange(i: Item) {
-        console.log('*** table received item change ', i);
         const t: TableItem = this.itemAndAttributeSet.tableItems.find((ti: TableItem) => ti.id === i.id);
         if (t) {
             this.selectionModel.select(t);

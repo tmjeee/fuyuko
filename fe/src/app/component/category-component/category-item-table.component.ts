@@ -75,12 +75,10 @@ export class CategoryItemTableComponent implements OnInit, OnChanges {
             const change: SimpleChange = changes.categorySimpleItems;
             const i: CategorySimpleItem[] = change.currentValue ? change.currentValue : [];
             this.datasource.update(i);
-            console.log('***** nchange', this.selectionModel.selected);
         }
     }
     
     masterToggle($event: MatCheckboxChange) {
-        console.log('****** mastertoggle', this.categorySimpleItems.length, this.selectionModel.selected);
         if (this.categorySimpleItems.length > 0 &&
             this.selectionModel.selected.length === this.categorySimpleItems.length) {
             this.selectionModel.clear();

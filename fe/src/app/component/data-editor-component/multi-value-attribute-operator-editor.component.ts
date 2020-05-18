@@ -288,7 +288,6 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
         const attribute: Attribute = this.formControlAttribute.value;
         const operator: OperatorType = this.formControlOperator.value;
         const itemValues: Value[] = [];
-        console.log('**** emitEvent', this.itemValues);
         for (let i = 0; i < this.itemValues.length; i++) {
             if (this.formArray) {
                 const fg: FormGroup = this.formArray.at(i) as FormGroup;
