@@ -1,10 +1,11 @@
-import {Category, CategoryWithItems} from "../model/category.model";
+import {Category, CategorySimpleItem, CategoryWithItems} from "../model/category.model";
 import {Item} from "../model/item.model";
 import {LimitOffset} from "../model/limit-offset.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import { Connection } from "mariadb";
 import {DELETED, ENABLED} from "../model/status.model";
 import {getItemsByIds, getItemsByIdsCount} from "./index";
+import {LIMIT_OFFSET} from "../util/utils";
 
 export interface AddCategoryInput {
     name: string;
@@ -18,6 +19,96 @@ export interface UpdateCategoryInput {
     description: string;
 };
 
+
+export const categorySimpleItemsInCategoryCount = async (viewId: number, categoryId: number): Promise<number> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+            SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_VIEW_CATEGORY_ITEM WHERE VIEW_CATEGORY_ID = ?
+        `, [categoryId]);
+        return q[0].COUNT;
+    });
+};
+
+export const categorySimpleItemsInCategory = async (viewId: number, categoryId: number, limitOffset?: LimitOffset): Promise<CategorySimpleItem[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q1: QueryA = await conn.query(`
+                SELECT ITEM_ID 
+                FROM TBL_LOOKUP_VIEW_CATEGORY_ITEM
+                WHERE VIEW_CATEGORY_ID = ? 
+                ${LIMIT_OFFSET(limitOffset)}
+        `, [categoryId]);
+        const itemIds: number[] = q1.reduce((a: number[], i: QueryI) => {
+            a.push(i.ITEM_ID);
+            return a;
+        }, []);
+        if (!itemIds.length) { // if length is zero
+            itemIds.push(-1); // so we don't get sql exception for putting in empty []
+        }
+        const q: QueryA = await conn.query(`
+            SELECT 
+                I.ID AS I_ID,
+                I.NAME AS I_NAME,
+                I.DESCRIPTION AS I_DESCRIPTION 
+            FROM TBL_ITEM AS I
+            WHERE I.ID IN ? AND I.STATUS = ? AND I.PARENT_ID IS NULL
+        `, [itemIds, ENABLED]);
+
+        return q.reduce((a: CategorySimpleItem[], i: QueryI) => {
+            const itm: CategorySimpleItem = {
+                id: i.I_ID,
+                name: i.I_NAME,
+                description: i.I_DESCRIPTION
+            };
+            a.push(itm);
+            return a;
+        }, []);
+    });
+};
+
+export const categorySimpleItemsNotInCategoryCount = async (viewId: number, categoryId: number): Promise<number> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+            SELECT COUNT(*) AS COUNT FROM TBL_ITEM WHERE PARENT_ID IS NULL AND VIEW_ID = ? AND ID NOT IN (SELECT ITEM_ID FROM TBL_LOOKUP_VIEW_CATEGORY_ITEM WHERE VIEW_CATEGORY_ID = ?)
+        `, [viewId, categoryId]);
+        return q[0].COUNT;
+    });
+};
+
+export const categorySimpleItemsNotInCategory = async (viewId: number, categoryId: number, limitOffset?: LimitOffset): Promise<CategorySimpleItem[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q1: QueryA = await conn.query(`
+                SELECT ITEM_ID 
+                FROM TBL_LOOKUP_VIEW_CATEGORY_ITEM
+                WHERE VIEW_CATEGORY_ID = ? 
+                ${LIMIT_OFFSET(limitOffset)}
+        `, [categoryId]);
+        const itemIds: number[] = q1.reduce((a: number[], i: QueryI) => {
+            a.push(i.ITEM_ID);
+            return a;
+        }, []);
+        if (!itemIds.length) { // if length is zero
+            itemIds.push(-1); // so we don't get sql exception for putting in empty []
+        }
+        const q: QueryA = await conn.query(`
+            SELECT 
+                I.ID AS I_ID,
+                I.NAME AS I_NAME,
+                I.DESCRIPTION AS I_DESCRIPTION 
+            FROM TBL_ITEM AS I
+            WHERE I.ID NOT IN ? AND I.STATUS = ? AND I.PARENT_ID IS NULL AND I.VIEW_ID=?
+        `, [itemIds, ENABLED, viewId]);
+
+        return q.reduce((a: CategorySimpleItem[], i: QueryI) => {
+            const itm: CategorySimpleItem = {
+                id: i.I_ID,
+                name: i.I_NAME,
+                description: i.I_DESCRIPTION
+            };
+            a.push(itm);
+            return a;
+        }, []);
+    });
+};
 
 export const updateCategory = async (viewId: number, parentId: number, c: UpdateCategoryInput): Promise<string[]> => {
     return await doInDbConnection(async(conn: Connection) => {
@@ -136,8 +227,8 @@ export const getViewCategories = async (viewId: number, parentId: number = null)
         const q: QueryA = await conn.query(`
             SELECT 
                 ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
-            FROM TBL_VIEW_CATEGORY WHERE VIEW_ID=? AND ${parentId ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}
-        `, parentId ? [viewId, parentId] : [viewId]);
+            FROM TBL_VIEW_CATEGORY WHERE VIEW_ID=? AND ${parentId ? 'PARENT_ID=? AND STATUS=?' : 'PARENT_ID IS NULL AND STATUS = ?'}
+        `, parentId ? [viewId, parentId, ENABLED] : [viewId, ENABLED]);
         return q.reduce(async (acc: Promise<Category[]>, i: QueryI) => {
             const c: Category = {
                 id: i.ID,
@@ -160,8 +251,8 @@ export const getViewCategoriesWithItems = async (viewId: number, parentId: numbe
         const q: QueryA = await conn.query(`
             SELECT 
                 ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
-            FROM TBL_VIEW_CATEGORY WHERE VIEW_ID=? AND ${parentId ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}
-        `, parentId ? [viewId, parentId] : [viewId]);
+            FROM TBL_VIEW_CATEGORY WHERE VIEW_ID=? AND ${parentId ? 'PARENT_ID=? AND STATUS=?' : 'PARENT_ID IS NULL AND STATUS=?'}
+        `, parentId ? [viewId, parentId, ENABLED] : [viewId, ENABLED]);
         return q.reduce(async (a: Promise<Category[]>, i: QueryI) => {
             const categoryId: number = i.ID;
             const c: CategoryWithItems = {

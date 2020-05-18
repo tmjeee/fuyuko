@@ -1,7 +1,15 @@
 <div class="category-management-page">
     <div *loadIf="loading">Loading...</div>
-    <app-category-management *ngIf="!loading"
+    <div *ngIf="!loading && !view">No view selected</div>
+    <app-category-management *ngIf="!loading && view"
                              [viewId]="view.id"
-                             [getCategoriesWithItemsFn]="getCategoriesWithItemsFn">
+                             [getCategorySimpleItemsInCategoryFn]="getCategorySimpleItemsInCatgoryFn"
+                             [getCategorySimpleItemsNotInCategoryFn]="getCategorySimpleItemsNotInCategoryFn"
+                             [getCategoriesWithItemsFn]="getCategoriesWithItemsFn"
+                             [addCategoryFn]="addCategoryFn"
+                             [editCategoryFn]="editCategoryFn"
+                             [deleteCategoryFn]="deleteCategoryFn"
+                             [addItemsToCategoryFn]="addItemsToCategoryFn"
+                             [removeItemsFromCategoryFn]="removeItemsFromCategoryFn">
     </app-category-management>
 </div>

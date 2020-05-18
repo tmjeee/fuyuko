@@ -1,0 +1,57 @@
+
+<div class="category-item-table-component">
+    <div class="actions">
+        <button mat-flat-button color="primary" *ngFor="let action of actions" (click)="onActionClicked($event, action)" [matTooltip]="action.description">{{action.name}}</button>
+    </div>
+    <div class="table-container">
+        <mat-table [dataSource]="datasource" [multiTemplateDataRows]="false">
+            <ng-container matColumnDef="selection" sticky>
+                <mat-header-cell class="selection-header" *matHeaderCellDef>
+                    <mat-checkbox (change)="masterToggle($event)"
+                                  [attr.test-checkbox-data-table-master]="''"
+                                  [checked]="isMasterToggleChecked()"
+                                  [indeterminate]="isMasterToggleIndetermine()">
+                    </mat-checkbox>
+                </mat-header-cell>
+                <mat-cell class="selection" *matCellDef="let tableItem">
+                    <mat-checkbox (change)="nonMasterToggle($event, tableItem)"
+                                  [attr.test-checkbox-data-table-item]="tableItem.name"
+                                  [checked]="isNonMasterToggleChecked(tableItem)">
+                    </mat-checkbox>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <mat-header-cell class="attribute-header" *matHeaderCellDef>Name</mat-header-cell>
+                <mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-data-table-cell-item-name]="tableItem.name">
+                    {{tableItem.name}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <mat-header-cell class="attribute-header" *matHeaderCellDef>Description</mat-header-cell>
+                <mat-cell class="attribute" *matCellDef="let tableItem" [attr.test-data-table-cell-item-description]="''">
+                    {{tableItem.description}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="creationDate">
+                <mat-header-cell class="attribute-header" *matHeaderCellDef>Creation Date</mat-header-cell>
+                <mat-cell class="attribute" *matCellDef="let tableItem">{{tableItem.creationDate | date}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="lastUpdate">
+                <mat-header-cell class="attribute-header" *matHeaderCellDef>Last Update</mat-header-cell>
+                <mat-cell class="attribute" *matCellDef="let tableItem">{{tableItem.lastUpdate | date}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row class="item-header" *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row class="item" *matRowDef="let tableItem; columns: displayedColumns; let i = index;"
+                     [attr.test-data-table-row-index]="i"
+                     [attr.test-data-table-row]="tableItem.name"></mat-row>
+        </mat-table>
+        <div class="no-items" *ngIf="categorySimpleItems && categorySimpleItems.length == 0">
+            <div>No Items</div>
+        </div>
+    </div>
+</div>

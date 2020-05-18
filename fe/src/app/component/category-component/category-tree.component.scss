@@ -1,6 +1,8 @@
 .category-tree-component {
+  height: 100%;
   ::ng-deep {
     .mat-tree {
+      height: 100%;
       .mat-tree-node {
         .label {
           cursor: pointer;

@@ -1,13 +1,13 @@
 <div class="category-component">
     <mat-sidenav-container [autosize]="true">
         <mat-sidenav mode="side" [opened]="showCategorySidebar" [fixedInViewport]="true" [fixedTopGap]="130">
-            <app-category-tree [categoriesWithItem]="categoriesWithItems"
+            <app-category-tree [categoriesWithItems]="categoriesWithItems"
                                (events)="onCategoryTreeEvent($event)">
             </app-category-tree>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *loadIf="loading">Loading...</div>
-            <ng-container *ngIf="!loading && displayType === 'category'">
+            <div *ngIf="!loading && displayType === 'category'">
                 <div class="view-switch">
                     <mat-icon matTooltip="Toogle category sidebar" (click)="toggleCategorySideBar($event)">menu</mat-icon>
                     <mat-icon matTooltip="Tablular View" (click)="switchToTabularView($event)">view_quilt</mat-icon>     <!-- tabular -->
@@ -42,9 +42,9 @@
                     </div>
                     <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
                 </div>
-            </ng-container>
+            </div>
             <ng-container *ngIf="!loading && displayType === 'item'">
-                <div fxFlex="0 0 100%">
+                <div>
                     <app-item-info [attributes]="attributes"
                                    (carouselEvent)="onItemInfoCarouselEvent($event)"
                                    (itemEditorEvent)="onItemInfoItemEditorEvent($event)"

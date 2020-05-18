@@ -14,6 +14,8 @@ import {DataThumbnailModule} from "../data-thumbnail-component/data-thumbnail.mo
 import {DataListModule} from "../data-list-component/data-list.module";
 import {PaginationModule} from "../pagination-component/pagination.module";
 import {CategoryManagementComponent} from "./category-management.component";
+import {CategoryItemTableComponent} from "./category-item-table.component";
+import {EditCategoryPopupComponent} from "./edit-category-popup.component";
 
 
 @NgModule({
@@ -36,11 +38,15 @@ import {CategoryManagementComponent} from "./category-management.component";
         CategoryComponent,
         CategoryTreeComponent,
         CategoryManagementComponent,
+        CategoryItemTableComponent,
+        EditCategoryPopupComponent,
     ],
     exports: [
         CategoryComponent,
         CategoryTreeComponent,
         CategoryManagementComponent,
+        CategoryItemTableComponent,
+        EditCategoryPopupComponent,
     ]
 })
 export class CategoryModule {

@@ -1,5 +1,4 @@
 <div class="user-group-page" [attr.test-page-title]="'user-group'" [attr.test-page-ready]="''+((!!groupsReady) && (!!groupsUsersReady))">
-  <div *loadIf="!(groupsReady && groupsUsersReady)">Loading ...</div>
   <mat-card>
     <mat-card-header>
       <mat-card-title>Groups</mat-card-title>
