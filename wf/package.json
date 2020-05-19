@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "test": "jasmine-ts --config=jasmine.json"
+    "test": "jasmine-ts --config=jasmine.json",
+    "prebuild": "",
+    "build": "npm run tsc",
+    "postbuild": ""
   },
   "keywords": [],
   "author": "",
