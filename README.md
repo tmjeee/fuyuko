@@ -1,9 +1,14 @@
 
 ![fuyuko logo](https://github.com/tmjeee/fuyuko/blob/v1.0.0-beta/fe/src/assets/images/logo/fuyuko-logo-with-side-wordings.png)
 
-#  Documentation
+# Documentation
 Documentations are [here](https://fuyuko-org.gitbook.io/fuyuko/)
 
+# Demo
+Demo app running [here](https://demo.fuyuko.org)
+| username | password |
+| -------- | -------- |
+| admin1 | test |
 
 # Bugs and Issues
 Bug, Issues and features trackings are [here](https://github.com/tmjeee/fuyuko/issues)
