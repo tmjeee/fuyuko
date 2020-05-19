@@ -150,23 +150,26 @@ const appInitializer = (settingsService: SettingsService,
                         themeService: ThemeService,
                         viewService: ViewService, 
                         httpClient: HttpClient) => {
-  return () => {
-    reload(httpClient, () => {
-      authService.asObservable()
-          .pipe(
-              tap((u: User) => {
-                if (u == null) {  // logout
-                  viewService.destroy();
-                  settingsService.destroy();
-                } else {          // login
-                  themeService.setTheme(u.theme);
-                  settingsService.init(u);
-                  viewService.init();
-                }
-              })
-          ).subscribe();
+  return ():Promise<any> => {
+    return new Promise((res, rej) => {
+      reload(httpClient, () => {
+        authService.asObservable()
+            .pipe(
+                tap((u: User) => {
+                  if (u == null) {  // logout
+                    viewService.destroy();
+                    settingsService.destroy();
+                  } else {          // login
+                    themeService.setTheme(u.theme);
+                    settingsService.init(u);
+                    viewService.init();
+                  }
+                })
+            ).subscribe();
+        res();
+        console.log(`** Fuyuko App initialize **`);
+      });
     });
-    console.log(`** Fuyuko App initialize **`);
   };
 };
 
