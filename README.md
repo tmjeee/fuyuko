@@ -20,11 +20,9 @@ Docker images can be found [here](https://hub.docker.com/repositories/tmjee)
 Cypress tests runs results are available [here](https://dashboard.cypress.io/projects/ozp71m)
 
 # Build & Integration 
-Integration build [here](https://jenkins.fuyuko.org)
+Integration build available [here](https://jenkins.fuyuko.org)
 
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-fe&subject=FE%20Build%20Status)](https://jenkins.fuyuko.org/job/fuyuko-fe/)
-
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-be&subject=BE%20Build%20Status)](https://jenkins.fuyuko.org/job/fuyuko-be/)
-
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-wf&subject=WF%20Build%20Status)](https://jenkins.fuyuko.org/job/fuyuko-wf/)
 
