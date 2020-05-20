@@ -61,6 +61,7 @@ import {CategoryLayoutComponent} from "./layout/category-layout/category.layout"
 import {CategoryPageComponent} from "./page/category-page/category.page";
 import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
 import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
+import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
 
 const routes: Routes = [
 
@@ -70,17 +71,31 @@ const routes: Routes = [
     pathMatch: 'full',
     redirectTo: '/dashboard-layout/(dashboard//help:dashboard-help)',
   },
+  {
+    path: 'login',
+    pathMatch: 'full',
+    redirectTo: '/login-layout/login'
+  },
+  {
+    path: 'register',
+    pathMatch: 'full',
+    redirectTo: '/login-layout/register'
+  },
+  {
+    path: 'forgot-password',
+    pathMatch: 'full',
+    redirectTo: '/login-layout/forgot-password'
+  },
+  {
+    path: 'activate/:code',
+    redirectTo: '/login-layout/activate/:code'
+  },
 
   // login-layout
  {
    path: 'login-layout',
    component: LoginLayoutComponent,
    children: [
-     {
-       path: '',
-       pathMatch: 'full',
-       redirectTo: '/login-layout/login',
-     } as Route,
      {
        path: 'login',
        component: LoginPageComponent,
@@ -92,7 +107,16 @@ const routes: Routes = [
      {
        path: 'activate/:code',
        component: ActivatePageComponent,
-     } as Route
+     } as Route,
+     {
+       path: 'forgot-password',
+       component: ForgotPasswordPageComponent,
+     } as Route,
+     {
+       path: '',
+       pathMatch: 'full',
+       redirectTo: '/login-layout/login',
+     } as Route,
    ]
  } as Route,
 

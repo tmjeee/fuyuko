@@ -1,9 +1,107 @@
 import {User} from "../model/user.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Group} from "../model/group.model";
 import {Role} from "../model/role.model";
 import {createJwtToken} from "./jwt.service";
+import {DISABLED, ENABLED} from "../model/status.model";
+import uuid = require("uuid");
+import {hashedPassword, sendEmail} from "./index";
+import {SendMailOptions} from "nodemailer";
+import config from "../config";
+
+
+export const isValidForgottenPasswordCode = async (code: string): Promise<boolean> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_FORGOT_PASSWORD WHERE CODE=? AND STATUS=?`, [code, ENABLED]);
+        if (q[0].COUNT) {
+            return true;
+        }
+        return false;
+    });
+}
+
+export const resetForgottenPassword = async (code: string, password: string): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const q: QueryA = await conn.query(`SELECT ID, USER_ID, CODE, STATUS FROM TBL_FORGOT_PASSWORD WHERE CODE=? AND STATUS=?`, [code, ENABLED]);
+        if (q.length > 0) {
+            const q0: QueryResponse = await conn.query(`UPDATE TBL_USER SET PASSWORD=? WHERE ID =?`, [hashedPassword(password), q[0].USER_ID]);
+            if (q0.affectedRows <= 0) {
+                errors.push(`Failed to reset password for code ${code}`);
+            } else {
+                const q1: QueryResponse = await conn.query(`UPDATE TBL_FORGOT_PASSWORD SET STATUS=? WHERE ID=?`, [DISABLED, q[0].ID])
+                if (q1.affectedRows <= 0) {
+                    errors.push(`Failed to disable code ${code}`);
+                }
+            }
+        } else {
+            errors.push(`Invalid code ${code}`);
+        }
+        return errors;
+    });
+};
+
+export const forgotPassword = async (o: {username?: string, email?: string}): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = []
+        if (!o.username && !o.email) {
+            errors.push(`No username or email provided`);
+        } else if (o.username) {
+            const q: QueryA = await conn.query(`SELECT ID, USERNAME, FIRSTNAME, LASTNAME, EMAIL FROM TBL_USER WHERE USERNAME=? AND STATUS=?`, [o.username, ENABLED]);
+            if (q.length > 0) { // found
+                await registerForgottenPassword({
+                    userId: q[0].ID,
+                    email: q[0].EMAIL,
+                    username: q[0].USERNAME,
+                    firstName: q[0].FIRSTNAME,
+                    lastName: q[0].LASTNAME
+                });
+
+            } else {
+                errors.push(`Username ${o.username} do not exists`);
+            }
+        } else if (o.email) {
+            const q: QueryA = await conn.query(`SELECT ID, USERNAME, FIRSTNAME, LASTNAME, EMAIL FROM TBL_USER WHERE EMAIL=? AND STATUS=?`, [o.email, ENABLED]);
+            if (q.length > 0) { // found
+                await registerForgottenPassword({
+                    userId: q[0].ID,
+                    email: q[0].EMAIL,
+                    username: q[0].USERNAME,
+                    firstName: q[0].FIRSTNAME,
+                    lastName: q[0].LASTNAME
+                });
+            } else {
+                errors.push(`Email ${o.email} do not exists`);
+            }
+        }
+        return errors;
+    });
+};
+
+const registerForgottenPassword = async (i: {userId: number, email: string, username: string, firstName: string, lastName: string}): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const code: string = uuid();
+        const errors: string[] = []
+        const q: QueryResponse = await conn.query(`INSERT INTO TBL_FORGOT_PASSWORD (USER_ID, CODE, STATUS) VALUES (?,?,?)`, [i.userId, code, ENABLED]);
+        if (q.affectedRows <= 0) {
+            errors.push(`Failed to register forgot password entry`);
+        } else {
+            const sendMailOptions: SendMailOptions = await sendEmail(i.email, `Rest Password`, `
+                 Hi ${i.firstName} ${i.lastName} (a.k.a ${i.username}),
+                 
+                 Use this link
+                 
+                 ${config['fe-url-base']}/login-layout/reset-password/${code}
+                 
+                 to reset your password. If you did not engage a forgotten passsword reset, simply ignore this email. 
+                 
+                 Thanks and have a nice day :)
+            `);
+        }
+        return errors;
+    });
+};
 
 
 export const logout = async (user: User): Promise<void> => {

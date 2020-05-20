@@ -64,11 +64,28 @@ export const update = async () => {
    await TBL_CUSTOM_DATA_EXPORT_FILE();
    await TBL_VIEW_CATEGORY();
    await TBL_LOOKUP_VIEW_CATEGORY_ITEM();
+   await TBL_FORGOT_PASSWORD();
 
    await ADD_FK_CONSTRAINT();
    await ADD_INDEXES();
 
    i(`done running update on ${__filename}`);
+};
+
+
+const TBL_FORGOT_PASSWORD = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_FORGOT_PASSWORD (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            USER_ID INT,
+            CODE VARCHAR(500),
+            STATUS VARCHAR(200),
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+         );
+      `)
+   });
 };
 
 const TBL_VIEW_CATEGORY = async () => {
@@ -1019,6 +1036,8 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_VIEW_CATEGORY ADD CONSTRAINT \`fk_tbl_view_category-1\` FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_LOOKUP_VIEW_CATEGORY_ITEM ADD CONSTRAINT \`fk_tbl_lookup_view_category_item-1\` FOREIGN KEY (VIEW_CATEGORY_ID) REFERENCES TBL_VIEW_CATEGORY(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_LOOKUP_VIEW_CATEGORY_ITEM ADD CONSTRAINT \`fk_tbl_lookup_view_category_item-2\` FOREIGN KEY (ITEM_ID) REFERENCES TBL_ITEM(ID) ON DELETE CASCADE`);
+
+      await conn.query(`ALTER TABLE TBL_FORGOT_PASSWORD ADD CONSTRAINT \`fk_tbl_forgot_password-1\` FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE`)
    });
 }
 

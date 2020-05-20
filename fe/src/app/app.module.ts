@@ -144,6 +144,7 @@ import {CategoryModule} from "./component/category-component/category.module";
 import {CategoryService} from "./service/category-service/category.service";
 import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
 import {reload} from "./utils/config.util";
+import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -240,6 +241,7 @@ const appInitializer = (settingsService: SettingsService,
     CategoryPageComponent,
     CategoryHelpPageComponent,
     CategoryManagementPageComponent,
+    ForgotPasswordPageComponent,
   ],
   imports: [
     BrowserModule,
