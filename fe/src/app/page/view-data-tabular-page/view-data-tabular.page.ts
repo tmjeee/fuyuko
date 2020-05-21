@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ItemService} from '../../service/item-service/item.service';
-import {combineLatest, forkJoin, Subscription} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {combineLatest, forkJoin, Subscription, concat, Observable} from 'rxjs';
+import {concatAll, concatMap, map, tap} from 'rxjs/operators';
 import {Item, ItemSearchType, TableItem} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';
 import {TableItemAndAttributeSet} from '../../model/item-attribute.model';
@@ -87,22 +87,20 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
 
   onDataTableEvent($event: DataTableComponentEvent) {
+    const o: Observable<ApiResponse>[] = [];
+    if ($event.modifiedItems && $event.modifiedItems.length) {
+        o.push(this.itemService.saveTableItems(this.currentView.id, $event.modifiedItems));
+    }
+    if ($event.deletedItems && $event.deletedItems.length) {
+        o.push(this.itemService.deleteTableItems(this.currentView.id, $event.deletedItems));
+    }
     switch ($event.type) {
       case 'modification':
-        forkJoin([
-          this.itemService.deleteTableItems(this.currentView.id, $event.deletedItems),
-          this.itemService.saveTableItems(this.currentView.id, $event.modifiedItems)
-        ]).pipe(
-          tap((r: [ApiResponse, ApiResponse]) => {
-            if ($event.deletedItems && $event.deletedItems.length) {
-                toNotifications(this.notificationService, r[0]);
-            }
-            if ($event.modifiedItems && $event.modifiedItems.length) {
-                toNotifications(this.notificationService, r[1]);
-            }
-            this.reload();
-          })
-        ).subscribe();
+          concat(...o).pipe(
+              tap((r: ApiResponse) => {
+                toNotifications(this.notificationService, r);
+              })
+          ).subscribe();
         break;
       case 'reload':
         this.reload();

@@ -72,9 +72,6 @@ describe('view-data-tabular-select spec', () => {
 
                 // delete created item
                 .clickOnDeleteItem([itemName])
-                .verifySaveEnable(true)
-                .clickOnSaveItem()
-                .verifySuccessMessageExists()
                 .verifyDataTableHasItem(itemName, false)
             ;
         }

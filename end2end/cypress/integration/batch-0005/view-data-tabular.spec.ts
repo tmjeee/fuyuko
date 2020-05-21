@@ -150,7 +150,6 @@ describe('view-data-tabular spec', () => {
             .verifyDataTableHasItem('Item-4', true)
             .verifyDataTableHasItem('Item-5', true)
             .verifyDataTableHasItem('Item-6', true)
-            .verifyDataTableHasItem('Item-7', true)
 
             .clickOnDeleteChildItem(itemName)
             .verifyDataTableHasItem(itemName, false)
@@ -162,7 +161,6 @@ describe('view-data-tabular spec', () => {
             .verifyDataTableHasItem('Item-4', true)
             .verifyDataTableHasItem('Item-5', true)
             .verifyDataTableHasItem('Item-6', true)
-            .verifyDataTableHasItem('Item-7', true)
         ;
     });
 
@@ -180,15 +178,18 @@ describe('view-data-tabular spec', () => {
             .verifyDataTableHasItem(itemName, true)
             .clickOnAddChildItem(itemName, itemName2)
             .verifySaveEnable(true)
+            .verifyDataTableHasItem(itemName2, true)
+            .clickOnAddChildItem(itemName2, itemName3)
+            .verifySaveEnable(true)
+            .verifyDataTableHasItem(itemName3, true)
             .clickOnSaveItem()
             .verifySuccessMessageExists()
+            .clickReload()
+            .verifyDataTableHasItem(itemName, true)
             .verifyDataTableHasItem(itemName2, true)
-             .clickOnAddChildItem(itemName2, itemName3)
-             .verifySaveEnable(true)
-             .clickOnSaveItem()
-             .verifySuccessMessageExists()
-             .verifyDataTableHasItem(itemName3, true)
+            .verifyDataTableHasItem(itemName3, true)
 
+            .expandRow(itemName)
             .clickOnDeleteChildItem(itemName3)
             .verifySaveEnable(true)
             .clickOnSaveItem()
@@ -202,7 +203,6 @@ describe('view-data-tabular spec', () => {
             .verifyDataTableHasItem('Item-4', true)
             .verifyDataTableHasItem('Item-5', true)
             .verifyDataTableHasItem('Item-6', true)
-            .verifyDataTableHasItem('Item-7', true)
 
 
             .clickOnDeleteChildItem(itemName)
@@ -218,11 +218,10 @@ describe('view-data-tabular spec', () => {
             .verifyDataTableHasItem('Item-4', true)
             .verifyDataTableHasItem('Item-5', true)
             .verifyDataTableHasItem('Item-6', true)
-            .verifyDataTableHasItem('Item-7', true)
         ;
     });
 
-    it ('should be able to add and delete item (without save)', () => {
+    it('should be able to add and delete item (without save)', () => {
 
         const itemName = `Item-${Math.random()}`;
 
@@ -242,27 +241,20 @@ describe('view-data-tabular spec', () => {
         const itemName = `Item-${Math.random()}`;
 
         viewDataTablePage
-            .clickReload()
-            .verifySaveEnable(false)
             .clickOnAddItem(itemName)
             .verifySaveEnable(true)
+            .verifyDataTableHasItem(itemName, true)
             .clickOnSaveItem()
+            .clickReload()
             .verifySuccessMessageExists()
 
             .verifyDataTableHasItem(itemName, true)
             .clickOnDeleteItem([itemName])
             .clickOnSaveItem()
+            .verifyDataTableHasItem(itemName, false)
+            .clickReload()
             .verifySuccessMessageExists()
             .verifyDataTableHasItem(itemName, false)
         ;
     });
-
-
-
-
-
-
-
-
-
 });

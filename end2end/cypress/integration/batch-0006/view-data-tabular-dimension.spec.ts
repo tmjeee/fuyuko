@@ -42,7 +42,7 @@ describe('view-data-tabular-dimension spec', () => {
 
 
 
-    it(`[dimension attribute] add item, edit attribute and delete item`, () => {
+    it.only(`[dimension attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
         // dimension attribute
@@ -80,9 +80,6 @@ describe('view-data-tabular-dimension spec', () => {
 
                 // delete created item
                 .clickOnDeleteItem([itemName])
-                .verifySaveEnable(true)
-                .clickOnSaveItem()
-                .verifySuccessMessageExists()
                 .verifyDataTableHasItem(itemName, false)
             ;
         }

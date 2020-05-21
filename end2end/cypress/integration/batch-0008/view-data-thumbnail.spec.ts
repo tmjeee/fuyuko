@@ -120,7 +120,7 @@ describe('view-data-thumbnail spec', () => {
     });
 
     /////////////// set 1
-    it(`[string attribute] should change attributes of thumbnail`, () => {
+    it.only(`[string attribute] should change attributes of thumbnail`, () => {
 
         const itemName = `Test-Item-${Math.random()}`;
 
