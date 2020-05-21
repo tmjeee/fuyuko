@@ -6,18 +6,21 @@ import {BrowserLocationHistoryService} from '../service/browser-location-history
 import {ApiErrorContext} from "../model/api-error.model";
 import {GlobalCommunicationService} from "../service/global-communication-service/global-communication.service";
 import {ApiResponse} from "../model/api-response.model";
+import {AuthService, isUnauthorizationFailedRedirectable} from "../service/auth-service/auth.service";
 
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {
 
     notificationService: NotificationsService;
     globalCommunicationService: GlobalCommunicationService;
+    authService: AuthService;
 
     constructor(@Inject(Injector) private injector: Injector,
                 private locationHistoryService: BrowserLocationHistoryService) {
         super();
         this.notificationService = this.injector.get(NotificationsService);
         this.globalCommunicationService = this.injector.get(GlobalCommunicationService);
+        this.authService = this.injector.get(AuthService);
     }
 
 
@@ -37,14 +40,14 @@ export class GlobalErrorHandler extends ErrorHandler {
                     this.globalCommunicationService.publishGlobalError(msg);
                 } else if (httpErrorResponse.status === 401) {
                     // unauthorized 401
-                    if (httpErrorResponse.error.context === 'login') { // when trying to login
-                    } else {
-                        this.locationHistoryService.storeLastUrlKey(location.href);
+                    this.authService.destroyToken();
+                    this.locationHistoryService.storeLastUrlKey(location.href);
+                    if (isUnauthorizationFailedRedirectable(location.href)) {
+                        this.getNgZone().run(() => {
+                            this.notificationService.error('Unauthorized', httpErrorResponse.error.errors.map((e) => e.msg).join(', '));
+                            this.getRouter().navigate(['/login-layout', 'login']);
+                        });
                     }
-                    this.getNgZone().run(() => {
-                        this.notificationService.error('Unauthorized', httpErrorResponse.error.errors.map((e) => e.msg).join(', '));
-                        this.getRouter().navigate(['/login-layout', 'login']);
-                    });
                 } else if (httpErrorResponse.status === 403) {
                     // forbidden - 403
                     const msg = `Not allowed access to  ${httpErrorResponse.url}`

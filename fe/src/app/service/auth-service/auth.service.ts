@@ -21,6 +21,19 @@ export interface StorageToken  {
   myself: User;
 }
 
+
+export const isUnauthorizationFailedRedirectable = (url: string): boolean => {
+    return (
+        (!url.endsWith('/login')) &&
+        (!url.endsWith('/register')) &&
+        (!url.endsWith('/forgot-password')) &&
+        (!url.match(/\/activate\/.*$/))
+    );
+};
+
+
+
+
 @Injectable()
 export class AuthService {
 

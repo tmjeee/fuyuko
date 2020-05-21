@@ -4,12 +4,14 @@ export const LAST_URL_KEY = `LAST_URL_KEY`;
 
 
 export const isNotLoginUrl = (url: string): boolean => {
-    return !isLoginUrl(url);
+    return (
+        (!url.endsWith('/login')) &&
+        (!url.endsWith('/register')) &&
+        (!url.endsWith('/forgot-password')) &&
+        (!url.match(/\/activate\/.*$/))
+    );
 };
 
-export const isLoginUrl = (url: string): boolean => {
-    return url.endsWith('/login-layout/login');
-};
 
 @Injectable()
 export class BrowserLocationHistoryService {
