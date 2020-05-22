@@ -9,6 +9,10 @@ Documentations are [here](https://fuyuko-org.gitbook.io/fuyuko/)
 
 # Demo
 Demo app running [here](https://demo.fuyuko.org)
+
+> This will most of the time be the latest from `v1.0.0-beta` pre-release bleading-edge branch, 
+> so we'll be potentially breaking things and fixing them at the same time.
+
 | username | password |
 | -------- | -------- |
 | admin1 | test |
