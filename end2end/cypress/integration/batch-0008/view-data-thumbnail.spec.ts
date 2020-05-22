@@ -33,7 +33,6 @@ describe('view-data-thumbnail spec', () => {
             .visitViewPage()
             .visitViewDataThumbnail()
             .selectGlobalView(`Test View 1`);
-        // viewDataThumbnailPage.visit();
     });
 
     afterEach(() => {

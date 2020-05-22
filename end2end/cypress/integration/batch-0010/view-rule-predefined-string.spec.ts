@@ -38,8 +38,9 @@ describe('view-rule-predefined-string', () => {
         // cy.saveLocalStorage();
     });
 
-    it (`(string, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
+    it.only(`(string, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
         w(viewRulePage, {
+            viewName: `Test View 1`,
             fillInWhenClauseFnName: `fillInWhenClauseStringAttribute`,
             verifyWhenClauseFnName: `verifyWhenClauseStringAttribute`,
             fillInValidateClauseFnName: `fillInValidateClauseStringAttribute`,
@@ -58,6 +59,7 @@ describe('view-rule-predefined-string', () => {
 
     it(`(string, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
         w(viewRulePage, {
+            viewName: `Test View 1`,
             fillInWhenClauseFnName: `fillInWhenClauseStringAttribute`,
             verifyWhenClauseFnName: `verifyWhenClauseStringAttribute`,
             fillInValidateClauseFnName: `fillInValidateClauseStringAttribute`,
