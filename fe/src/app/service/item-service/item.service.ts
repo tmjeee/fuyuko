@@ -8,7 +8,7 @@ import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {map} from "rxjs/operators";
-import {LimitOffset} from "../../model/limit-offset.model";
+import {DEFAULT_LIMIT, DEFAULT_OFFSET, LimitOffset} from "../../model/limit-offset.model";
 import {toQuery} from "../../utils/pagination.utils";
 
 
@@ -84,8 +84,8 @@ export class ItemService {
             message: 'Success',
             status: 'SUCCESS',
             total: 0,
-            limit: limitOffset.limit,
-            offset: limitOffset.offset,
+            limit: limitOffset ? limitOffset.limit : DEFAULT_LIMIT,
+            offset: limitOffset ? limitOffset.offset : DEFAULT_OFFSET,
             payload: []
         } as PaginableApiResponse<Item[]>);
     }

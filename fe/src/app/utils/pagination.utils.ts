@@ -1,4 +1,4 @@
-import {LimitOffset} from "../model/limit-offset.model";
+import {DEFAULT_LIMIT, LimitOffset} from "../model/limit-offset.model";
 import {PageEvent} from "@angular/material/paginator";
 
 
@@ -14,7 +14,7 @@ export class Pagination {
     offset: number;
     total: number;
 
-    private readonly INC: number = 50;
+    private readonly INC: number = DEFAULT_LIMIT;
     pageSizeOptions: number[] = [5, 10, 30, 50, 100];
 
     constructor() {

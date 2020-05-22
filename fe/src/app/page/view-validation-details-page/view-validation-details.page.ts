@@ -55,6 +55,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
 
     reload() {
         this.loading = true;
+        this.items = [];
         this.viewId = this.route.snapshot.params.viewId;
         this.validationId = this.route.snapshot.params.validationId;
         this.viewService.getViewById(this.viewId).pipe(

@@ -91,7 +91,7 @@ const createNode = (i: Item, vr: ValidationResult, rules: Rule[]): Node => {
 
 const merge = (items: Item[], vr: ValidationResult, rules: Rule[]): Node[] => {
     const a = [];
-    for (const item of items) {
+    for (const item of (items ? items : [])) {
         const n: Node = mergeRecursively(item, vr, rules);
         a.push(n);
     }

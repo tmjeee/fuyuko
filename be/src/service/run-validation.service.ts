@@ -40,6 +40,7 @@ import {
     compareString,
     compareVolume, compareWidth
 } from "./compare-attribute-values.service";
+import {createNewItemValue} from "../shared-utils/ui-item-value-creator.utils";
 
 interface Context {
    validationId: number;
@@ -359,7 +360,7 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
             for (const whenClause of rule.whenClauses) {
                 const att: Attribute = as.find((a: Attribute) => a.id === whenClause.attributeId);
                 const value: Value = item[whenClause.attributeId];
-                const i1: ItemValTypes = value.val;
+                const i1: ItemValTypes = value ? value.val : createNewItemValue(att).val;
                 const i2: ItemValTypes[] = whenClause.condition;
                 const op: OperatorType = whenClause.operator;
                 currentContext.attribute = att;
@@ -394,7 +395,7 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
                 for (const validateClause of rule.validateClauses) {
                     const att: Attribute = as.find((a: Attribute) => a.id === validateClause.attributeId);
                     const value: Value = item[validateClause.attributeId];
-                    const i1: ItemValTypes = value.val;
+                    const i1: ItemValTypes = value ? value.val : createNewItemValue(att).val;
                     const i2: ItemValTypes[] = validateClause.condition;
                     const op: OperatorType = validateClause.operator;
                     currentContext.attribute = att;
