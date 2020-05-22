@@ -6,8 +6,10 @@
         </mat-card-header>
         <mat-card-content>
             <div *loadIf="loading">Loading ...</div>
-            <app-validation-result *ngIf="!loading"
-                                   (events)="onValidationResultEvent($event)"
+            <div *ngIf="!loading && !validationResult">No validation results.</div>
+            <app-validation-result
+                           *ngIf="!loading && validationResult"
+                           (events)="onValidationResultEvent($event)"
                            [attr.test-validation-result-page]="''"
                            [validationResult]="validationResult"
                            [view]="view"
