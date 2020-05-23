@@ -9,9 +9,9 @@
     "apiBaseUrl": "http://localhost:8888/api/v1",
     "username": "cypress",
     "password": "test",
-    "RETRIES": 2
+    "RETRIES": 1
   },
-  "video": true,
+  "video": false,
   "videoUploadOnPasses": false,
   "trashAssetsBeforeRuns": true,
   "projectId": "ozp71m"
