@@ -5,7 +5,7 @@
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-wf&subject=WF%20Build%20Status)](https://jenkins.fuyuko.org/job/fuyuko-wf/)
 
 # Documentation
-Documentations are [here](https://fuyuko-org.gitbook.io/fuyuko/)
+Documentations are [here](https://docs.fuyuko.org)
 
 # Demo
 Demo app running [here](https://demo.fuyuko.org)
