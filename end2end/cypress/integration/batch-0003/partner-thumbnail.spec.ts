@@ -49,7 +49,7 @@ describe('partner thumbnail spec', () => {
     //////////////////
 
 
-    it.only(`should expand 'show more' link`, () => {
+    it(`should expand 'show more' link`, () => {
         partnerThumbnailPage
             .selectPricingStructure(`Test View 1`,`Pricing Structure #1`)
             .verifyIsShowMoreExpanded(`Item-1`, false)

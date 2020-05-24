@@ -42,7 +42,7 @@ describe('view-data-tabular-dimension spec', () => {
 
 
 
-    it.only(`[dimension attribute] add item, edit attribute and delete item`, () => {
+    it(`[dimension attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
         // dimension attribute

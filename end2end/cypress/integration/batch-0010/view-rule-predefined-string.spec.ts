@@ -38,7 +38,7 @@ describe('view-rule-predefined-string', () => {
         // cy.saveLocalStorage();
     });
 
-    it.only(`(string, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
+    it(`(string, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
         w(viewRulePage, {
             viewName: `Test View 1`,
             fillInWhenClauseFnName: `fillInWhenClauseStringAttribute`,
