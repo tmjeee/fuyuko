@@ -84,11 +84,13 @@ export class CustomImportPageStep2 {
     }
 
     selectView(viewName: string): CustomImportPageStep2 {
-        cy.get(`[test-step='step2']`)
-            .find(`[test-mat-select-view]`).first()
-            .click({force: true});
-        cy.waitUntil(() => cy.get(`[test-mat-select-option-view='${viewName}']`))
-            .click({force: true});
+        cy.waitUntil(() => cy.get(`[test-view-selector-component-ready='true']`)).then((_) => {
+            cy.get(`[test-step='step2']`)
+                .find(`[test-mat-select-view]`).first()
+                .click({force: true});
+            cy.waitUntil(() => cy.get(`[test-mat-select-option-view='${viewName}']`))
+                .click({force: true});
+        });
         return this;
     }
 
