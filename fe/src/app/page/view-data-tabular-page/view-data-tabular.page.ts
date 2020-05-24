@@ -99,6 +99,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
           concat(...o).pipe(
               tap((r: ApiResponse) => {
                 toNotifications(this.notificationService, r);
+                this.reload();
               })
           ).subscribe();
         break;

@@ -9,7 +9,7 @@
     "apiBaseUrl": "http://localhost:8888/api/v1",
     "username": "cypress",
     "password": "test",
-    "RETRIES": 1
+    "RETRIES": 0
   },
   "video": false,
   "videoUploadOnPasses": false,
