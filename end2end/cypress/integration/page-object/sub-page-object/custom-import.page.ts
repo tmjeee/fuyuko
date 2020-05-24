@@ -40,7 +40,7 @@ export class CustomImportPage implements ActualPage<CustomImportPage> {
 
 export class CustomImportPageStep1 {
     verifyInStep(): CustomImportPageStep1 {
-        cy.get(`mat-step-header[aria-posinset='1']`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='1']`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -78,7 +78,7 @@ export class CustomImportPageStep1 {
 
 export class CustomImportPageStep2 {
     verifyInStep(): CustomImportPageStep2 {
-        cy.get(`mat-step-header[aria-posinset='2']`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='2']`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -87,7 +87,7 @@ export class CustomImportPageStep2 {
         cy.get(`[test-step='step2']`)
             .find(`[test-mat-select-view]`).first()
             .click({force: true});
-        cy.get(`[test-mat-select-option-view='${viewName}']`)
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-view='${viewName}']`))
             .click({force: true});
         return this;
     }
@@ -109,7 +109,7 @@ export class CustomImportPageStep2 {
 
 export class CustomImportPageStep3 {
     verifyInStep(): CustomImportPageStep3 {
-        cy.get(`mat-step-header[aria-posinset='3']`)
+       cy.waitUntil(() =>  cy.get(`mat-step-header[aria-posinset='3']`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -234,7 +234,7 @@ export class CustomImportPageStep3 {
 
 export class CustomImportPageStep4 {
     verifyInStep(): CustomImportPageStep4 {
-        cy.get(`mat-step-header[aria-posinset='4']`)
+       cy.waitUntil(() =>  cy.get(`mat-step-header[aria-posinset='4']`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -264,7 +264,7 @@ export class CustomImportPageStep4 {
 
 export class CustomImportPageStep5 {
     verifyInStep(): CustomImportPageStep5 {
-        cy.get(`mat-step-header[aria-posinset='5']`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='5']`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }

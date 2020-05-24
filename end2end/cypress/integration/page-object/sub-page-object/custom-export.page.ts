@@ -41,7 +41,7 @@ export class CustomExportPage implements ActualPage<CustomExportPage> {
 export class CustomExportPageStep1 {
 
     verifyInStep(): CustomExportPageStep1 {
-        cy.get(`mat-step-header[aria-posinset='1'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='1'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -80,7 +80,7 @@ export class CustomExportPageStep1 {
 export class CustomExportPageStep2 {
 
     verifyInStep(): CustomExportPageStep2 {
-        cy.get(`mat-step-header[aria-posinset='2'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='2'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -89,7 +89,7 @@ export class CustomExportPageStep2 {
         cy.get(`[test-step='step2']`)
             .find(`[test-mat-select-view]`).first()
             .click({force: true});
-        cy.get(`[test-mat-select-option-view='${viewName}']`)
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-view='${viewName}']`))
             .click({force: true});
         return this;
     }
@@ -111,7 +111,7 @@ export class CustomExportPageStep2 {
 
 export class CustomExportPageStep3 {
     verifyInStep(): CustomExportPageStep3 {
-        cy.get(`mat-step-header[aria-posinset='3'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='3'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -236,7 +236,7 @@ export class CustomExportPageStep3 {
 
 export class CustomExportPageStep4 {
     verifyInStep(): CustomExportPageStep4 {
-        cy.get(`mat-step-header[aria-posinset='4'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='4'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -265,7 +265,7 @@ export class CustomExportPageStep4 {
 
 export class CustomExportPageStep5 {
     verifyInStep(): CustomExportPageStep5 {
-        cy.get(`mat-step-header[aria-posinset='5'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='5'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
