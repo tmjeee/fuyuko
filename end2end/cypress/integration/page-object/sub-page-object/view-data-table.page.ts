@@ -222,6 +222,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     clickReload(): ViewDataTablePage {
         cy.get(`[test-button-reload-items]`).click({force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -245,6 +246,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     verifySaveEnable(b: boolean): ViewDataTablePage {
+        this.waitForReady();
         cy.get(`[test-button-save-items]`).should(b ? 'be.enabled' : 'be.disabled');
         return this;
     }

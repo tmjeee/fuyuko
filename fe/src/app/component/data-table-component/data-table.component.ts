@@ -94,8 +94,6 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   filterOptionsVisible: boolean;
 
-  loading: boolean;
-
   constructor(private matDialog: MatDialog) {
     this.enableSearch = true;
     this.filterOptionsVisible = false;
