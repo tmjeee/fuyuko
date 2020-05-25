@@ -86,8 +86,8 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
     }
 
     verifyItemNotVisible(itemName: string): PartnerTablePage {
-        cy.waitUntil(() => cy.get(`[test-table-partner-item]
-            [test-row-item='${itemName}']`))
+        cy.get(`[test-table-partner-item]
+            [test-row-item='${itemName}']`)
             .should('not.be.visible');
         return this;
     }
