@@ -6,7 +6,7 @@
             </app-category-tree>
         </mat-sidenav>
         <mat-sidenav-content>
-            <div *loadIf="loading">Loading...</div>
+            <app-loading [show]="loading"></app-loading>
             <div *ngIf="!loading && displayType === 'category'">
                 <div class="view-switch">
                     <mat-icon matTooltip="Toogle category sidebar" (click)="toggleCategorySideBar($event)">menu</mat-icon>

@@ -12,7 +12,7 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div *loadIf="!ready">Loading ...</div>
+      <app-loading [show]="!ready"></app-loading>
       <mat-accordion>
         <!-- active users -->
         <mat-expansion-panel [attr.test-expansion-panel]="'active-users'">

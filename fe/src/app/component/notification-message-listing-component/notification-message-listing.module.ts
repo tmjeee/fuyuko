@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {DataTableModule} from '../data-table-component/data-table.module';
 import {NotificationMessageListingComponent} from './notification-message-listing.component';
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import {NotificationMessageListingComponent} from './notification-message-listin
         ReactiveFormsModule,
         AppMaterialsModule,
         DataTableModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
         NotificationMessageListingComponent

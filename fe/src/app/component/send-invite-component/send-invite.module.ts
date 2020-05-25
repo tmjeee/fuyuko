@@ -4,6 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {SendInviteComponent} from './send-invite.component';
 import {NgModule} from "@angular/core";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import {NgModule} from "@angular/core";
         FormsModule,
         ReactiveFormsModule,
         AppMaterialsModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
        SendInviteComponent,

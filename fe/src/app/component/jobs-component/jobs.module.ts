@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {JobsListingsComponent} from './jobs-listings.component';
 import {JobDetailsComponent} from './job-details.component';
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import {JobDetailsComponent} from './job-details.component';
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        AppMaterialsModule
+        AppMaterialsModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
         JobsListingsComponent,

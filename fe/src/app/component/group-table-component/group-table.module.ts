@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {GroupTableComponent} from './group-table.component';
 import {EditGroupPopupComponent} from "./edit-group-popup.component";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import {EditGroupPopupComponent} from "./edit-group-popup.component";
       FormsModule,
       ReactiveFormsModule,
       AppMaterialsModule,
+      SharedComponentUtilsModule,
    ],
    declarations: [
       GroupTableComponent,

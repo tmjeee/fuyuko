@@ -1,5 +1,5 @@
 <simple-notifications></simple-notifications>
-<div *loadingIf="loading">Loading ...</div>
+<app-loading [show]="loading"></app-loading>
 <div class="price-layout"
      *ngIf="!loading"
      [attr.test-sub-side-nav-state-open]="''+subSideBarOpened"

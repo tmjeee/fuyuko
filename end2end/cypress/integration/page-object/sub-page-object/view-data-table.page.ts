@@ -155,7 +155,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     clickOnAddItem(newItemName: string): ViewDataTablePage {
         cy.get(`[test-button-add-item]`).click({force: true});
-        cy.get(`[test-button-add-item]`).click({force: true});
+        // cy.get(`[test-button-add-item]`).click({force: true});
         // cy.wait(10000);
         cy.get(`[test-data-table-root-row-index]`)
             .last()

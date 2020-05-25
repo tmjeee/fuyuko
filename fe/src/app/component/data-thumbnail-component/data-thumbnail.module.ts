@@ -9,6 +9,7 @@ import {ItemSearchModule} from '../item-search-component/item-search.module';
 import {ItemDataEditorDialogComponent} from './item-data-editor-dialog.component';
 import {CarouselModule} from '../carousel-component/carousel.module';
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     ItemSearchModule,
     CarouselModule,
     FlexLayoutModule,
+    SharedComponentUtilsModule,
   ],
   declarations: [
     DataThumbnailComponent,

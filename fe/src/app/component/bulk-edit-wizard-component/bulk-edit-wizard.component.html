@@ -81,7 +81,7 @@
             <!-- 2] Second Step -->
             <mat-step [stepControl]="formGroupSecondStep" [editable]="editable">
                 <ng-template matStepLabel>Review bulk edit</ng-template>
-                <ng-container *ngIf="!secondStepReady">Loading ...</ng-container>
+                <app-loading [show]="!secondStepReady"></app-loading>
                 <ng-container *ngIf="secondStepReady">
                     <app-bulk-edit-review-table
                             [attr.test-bulk-edit-review-table]="''"

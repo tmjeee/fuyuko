@@ -17,7 +17,7 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <div *ngIf="loading">Loading ...</div>
+            <app-loading [show]="loading"></app-loading>
             <app-partner-data-table
                     [attr.test-partner-data-table]="''"
                     *ngIf="attributes && tablePricedItems"

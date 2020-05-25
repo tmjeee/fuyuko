@@ -14,6 +14,7 @@ import {MultiValueAttributeOperatorEditorComponent} from "./multi-value-attribut
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {ItemInfoComponent} from "./item-info.component";
 import {CarouselModule} from "../carousel-component/carousel.module";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import {CarouselModule} from "../carousel-component/carousel.module";
     AppMaterialsModule,
     FlexLayoutModule,
     CarouselModule,
+    SharedComponentUtilsModule,
   ],
   declarations: [
     DataEditorComponent,

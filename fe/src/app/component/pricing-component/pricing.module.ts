@@ -12,6 +12,7 @@ import {ViewOnlyPriceDataItemsTableComponent} from "./view-only-price-data-items
 import {PaginationModule} from "../pagination-component/pagination.module";
 import {PricingStructureGroupAssociationComponent} from "./pricing-structure-group-association.component";
 import {GroupTableModule} from "../group-table-component/group-table.module";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import {GroupTableModule} from "../group-table-component/group-table.module";
         FlexLayoutModule,
         PaginationModule,
         GroupTableModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
         PricingStructurePopupComponent,

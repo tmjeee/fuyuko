@@ -1,5 +1,5 @@
 <div class="category-management-page">
-    <div *loadIf="loading">Loading...</div>
+    <app-loading [show]="loading"></app-loading>
     <div *ngIf="!loading && !view">No view selected</div>
     <app-category-management *ngIf="!loading && view"
                              [viewId]="view.id"

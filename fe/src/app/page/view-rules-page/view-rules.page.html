@@ -5,7 +5,7 @@
       <mat-card-subtitle>Configuration of rules related the current view</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div *ngIf="!(viewReady && rulesReady)">Loading ... </div>
+      <app-loading [show]="!(viewReady && rulesReady)"></app-loading>
       <mat-tab-group *ngIf="viewReady" [dynamicHeight]="true">
         <mat-tab>
           <ng-template mat-tab-label><span [attr.test-tab]="'predefined'">Build In</span></ng-template>

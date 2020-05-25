@@ -4,6 +4,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {UserSearchTableComponent} from './user-search-table.component';
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import {UserSearchTableComponent} from './user-search-table.component';
         FormsModule,
         ReactiveFormsModule,
         AppMaterialsModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
         UserSearchTableComponent

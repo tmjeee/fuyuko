@@ -8,6 +8,7 @@ import {AppMaterialsModule} from '../../app-materials.module';
 import {DoubleSelectComponent} from './double-select.component';
 import {ViewOnlyAttributeTableComponent} from './view-only-attribute-table.component';
 import {EditAttributeComponent} from "./edit-attribute.component";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import {EditAttributeComponent} from "./edit-attribute.component";
     FormsModule,
     ReactiveFormsModule,
     AppMaterialsModule,
+    SharedComponentUtilsModule,
   ],
   declarations: [
     AttributeTableComponent,

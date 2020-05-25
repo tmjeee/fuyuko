@@ -6,7 +6,7 @@
     </mat-card-header>
     <mat-card-content>
       <mat-accordion>
-        <div *loadIf="!groupsReady || !groupsUsersReady">Loading ...</div>
+        <app-loading [show]="!groupsReady || !groupsUsersReady"></app-loading>
         <ng-container *ngIf="groupsReady && groupsUsersReady">
           <div class="controls">
             <button mat-flat-button color="primary" (click)="onAddGroup($event)">Add Group</button>

@@ -1,6 +1,11 @@
 import {Component} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatTabChangeEvent} from "@angular/material/tabs";
+import {AuthService} from "../../service/auth-service/auth.service";
+import {ApiResponse} from "../../model/api-response.model";
+import {tap} from "rxjs/operators";
+import {toNotifications} from "../../service/common.service";
+import {NotificationsService} from "angular2-notifications";
 
 @Component({
     templateUrl: './forgot-password.page.html',
@@ -13,7 +18,9 @@ export class ForgotPasswordPageComponent {
     formControlUsername: FormControl;
     formControlEmail: FormControl;
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: FormBuilder,
+                private notificationsService: NotificationsService,
+                private authService: AuthService) {
         this.formControlUsername = formBuilder.control('', [Validators.required]);
         this.formGroupUsername = formBuilder.group({
             username: this.formControlUsername
@@ -25,10 +32,18 @@ export class ForgotPasswordPageComponent {
     }
 
     onSubmitByEmail() {
-
+        this.authService.forgotPassword({email: this.formGroupEmail.value}).pipe(
+            tap((r: ApiResponse) => {
+                toNotifications(this.notificationsService, r);
+            })
+        ).subscribe()
     }
 
     onSubmitByUsername() {
-
+        this.authService.forgotPassword({email: this.formGroupUsername.value}).pipe(
+            tap((r: ApiResponse) => {
+                toNotifications(this.notificationsService, r);
+            })
+        ).subscribe()
     }
 }

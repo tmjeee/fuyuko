@@ -7,6 +7,7 @@ import {BulkEditWizardComponent} from './bulk-edit-wizard.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {BulkEditReviewTableComponent} from './bulk-edit-review-table.component';
 import {JobsModule} from '../jobs-component/jobs.module';
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 @NgModule({
     imports: [
@@ -17,6 +18,7 @@ import {JobsModule} from '../jobs-component/jobs.module';
         AppMaterialsModule,
         DataEditorModule,
         JobsModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
         BulkEditWizardComponent,

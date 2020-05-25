@@ -7,6 +7,7 @@ import {ItemSearchModule} from '../item-search-component/item-search.module';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {DataListComponent} from './data-list.component';
 import {CarouselModule} from '../carousel-component/carousel.module';
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import {CarouselModule} from '../carousel-component/carousel.module';
     AppMaterialsModule,
     DataEditorModule,
     ItemSearchModule,
-    CarouselModule
+    CarouselModule,
+    SharedComponentUtilsModule
   ],
   declarations: [
     DataListComponent

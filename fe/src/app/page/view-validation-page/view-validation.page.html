@@ -5,7 +5,7 @@
             <mat-card-subtitle>Validation of view (it's attribute, item and data)</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div *ngIf="loading">Loading ...</div>
+            <app-loading [show]="loading"></app-loading>
             <div fxLayout="column" fxLayoutGap="20px">
                 <div fxFlex="1 1 auto">
                     <div fxLayout="row" fxLayoutGap="10px">

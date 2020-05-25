@@ -7,6 +7,7 @@ import {ViewTableComponent} from './view-table.component';
 import {ViewEditorComponent} from './view-editor.component';
 import {ViewEditorDialogComponent} from './view-editor-dialog.component';
 import {ViewSelectorComponent} from "./view-selector.component";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import {ViewSelectorComponent} from "./view-selector.component";
         FormsModule,
         ReactiveFormsModule,
         AppMaterialsModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
         ViewTableComponent,

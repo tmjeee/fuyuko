@@ -7,7 +7,7 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <ng-container *loadIf="!ready">Loading ...</ng-container>
+        <app-loading [show]="!ready"></app-loading>
         <app-settings *ngIf="ready"
                       [attr.test-settings]="''"
                       [user]="currentUser"

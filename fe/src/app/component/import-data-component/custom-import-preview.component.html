@@ -1,6 +1,6 @@
 
 <div class="custom-import-preview">
-    <div *ngIf="!ready">Loading ...</div>
+    <app-loading [show]="!ready"></app-loading>
     <table *ngIf="ready" mat-table [dataSource]="datasource">
         <ng-container *ngFor="let column of preview.columns">
             <ng-container [matColumnDef]="column">
