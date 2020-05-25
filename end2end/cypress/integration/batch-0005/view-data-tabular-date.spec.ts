@@ -43,6 +43,7 @@ describe('view-data-tabular-date spec', () => {
     it(`[date attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // text attribute
         {
             const attributeName = `date attribute`;
@@ -84,6 +85,7 @@ describe('view-data-tabular-date spec', () => {
     it ('[date attribute] edit and cancel should not be saveable', () => {
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // date attribute
         {
             const attributeName = `date attribute`;

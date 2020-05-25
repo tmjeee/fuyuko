@@ -43,6 +43,7 @@ describe('view-data-tabular-string spec', () => {
     it(`[string attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // string attribute
         {
             const attributeName = `string attribute`;
@@ -84,6 +85,7 @@ describe('view-data-tabular-string spec', () => {
 
         const itemName = `Item-1`
 
+        Cypress.currentTest.retries(1);
         // string attribute
         {
             const attributeName = `string attribute`;

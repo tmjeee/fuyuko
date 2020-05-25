@@ -45,6 +45,7 @@ describe('view-data-tabular-dimension spec', () => {
     it(`[dimension attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // dimension attribute
         {
             const attributeName = `dimension attribute`;
@@ -94,6 +95,7 @@ describe('view-data-tabular-dimension spec', () => {
 
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // dimension attribute
         {
             const attributeName = `dimension attribute`;

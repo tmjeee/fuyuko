@@ -43,6 +43,7 @@ describe('view-data-tabular-area spec', () => {
     it(`[area attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // area attribute
         {
             const attributeName = `area attribute`;
@@ -87,6 +88,7 @@ describe('view-data-tabular-area spec', () => {
 
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // area attribute
         {
             const attributeName = `area attribute`;

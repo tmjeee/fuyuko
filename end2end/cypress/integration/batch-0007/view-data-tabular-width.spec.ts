@@ -43,6 +43,7 @@ describe('view-data-tabular-width spec', () => {
     it(`[width attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // width attribute
         {
             const attributeName = `width attribute`;
@@ -85,6 +86,8 @@ describe('view-data-tabular-width spec', () => {
 
     it ('[width attribute] edit and cancel should not be saveable', () => {
         const itemName = `Item-1`;
+
+        Cypress.currentTest.retries(1);
         // width attribute
         {
             const attributeName = `width attribute`;

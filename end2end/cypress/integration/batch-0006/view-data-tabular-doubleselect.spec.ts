@@ -43,6 +43,7 @@ describe('view-data-tabular-doubleselect spec', () => {
     it(`[doubleselect attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // doubleselect attribute
         {
             const attributeName = `doubleselect attribute`;
@@ -86,6 +87,7 @@ describe('view-data-tabular-doubleselect spec', () => {
     it('[doubleselect attribute] edit and cancel should not be saveable', () => {
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // doubleselect attribute
         {
             const attributeName = `doubleselect attribute`;

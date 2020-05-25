@@ -44,6 +44,7 @@ describe('view-data-tabular-volume spec', () => {
     it(`[volume attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // volume attribute
         {
             const attributeName = `volume attribute`;
@@ -87,6 +88,7 @@ describe('view-data-tabular-volume spec', () => {
 
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // volume attribute
         {
             const attributeName = `volume attribute`;

@@ -43,6 +43,7 @@ describe('view-data-tabular-currency spec', () => {
     it(`[currency attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // text attribute
         {
             const attributeName = `currency attribute`;
@@ -85,6 +86,7 @@ describe('view-data-tabular-currency spec', () => {
 
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // currency attribute
         {
             const attributeName = `currency attribute`;

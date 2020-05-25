@@ -45,6 +45,8 @@ describe('view-data-tabular-length spec', () => {
     it(`[length attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+
+        Cypress.currentTest.retries(1);
         // length attribute
         {
             const attributeName = `length attribute`;
@@ -87,6 +89,7 @@ describe('view-data-tabular-length spec', () => {
 
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // length attribute
         {
             const attributeName = `length attribute`;

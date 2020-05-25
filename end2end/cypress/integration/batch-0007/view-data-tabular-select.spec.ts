@@ -44,6 +44,7 @@ describe('view-data-tabular-select spec', () => {
     it(`[select attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // select attribute
         {
             const attributeName = `select attribute`;
@@ -84,6 +85,7 @@ describe('view-data-tabular-select spec', () => {
     it ('[select attribute] edit and cancel should not be saveable', () => {
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // select attribute
         {
             const attributeName = `select attribute`;

@@ -46,6 +46,8 @@ describe('view-data-tabular-height spec', () => {
     it(`[height attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+
+        Cypress.currentTest.retries(1);
         // height attribute
         {
             const attributeName = `height attribute`;
@@ -89,6 +91,7 @@ describe('view-data-tabular-height spec', () => {
 
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // height attribute
         {
             const attributeName = `height attribute`;

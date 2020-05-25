@@ -43,6 +43,7 @@ describe('view-data-tabular-number spec', () => {
     it(`[number attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
+        Cypress.currentTest.retries(1);
         // text attribute
         {
             const attributeName = `number attribute`;
@@ -82,6 +83,7 @@ describe('view-data-tabular-number spec', () => {
     it ('[number attribute] edit and cancel should not be saveable', () => {
         const itemName = `Item-1`;
 
+        Cypress.currentTest.retries(1);
         // number attribute
         {
             const attributeName = `number attribute`;
