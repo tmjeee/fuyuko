@@ -131,15 +131,15 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
     }
 
     clickEditThumbnailIcon(itemName: string): ViewDataThumbnailEditPopupPage {
-        cy.waitUntil(() => cy.get(`[test-icon-thumbnail-edit-item='${itemName}']`))
+        cy.get(`[test-icon-thumbnail-edit-item='${itemName}']`)
             .click({force: true});
         return new ViewDataThumbnailEditPopupPage();
     }
 
     clickThumbnailItemName(itemName: string): ViewDataThumbnailItemPopupPage {
-        cy.waitUntil(() => cy.get(`[test-thumbnail-item-name='${itemName}']
+        cy.get(`[test-thumbnail-item-name='${itemName}']
             [test-item-editor='name']
-            [test-item-editor-value='name']`))
+            [test-item-editor-value='name']`)
             .click({force: true});
         return new ViewDataThumbnailItemPopupPage();
     }
@@ -181,28 +181,30 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
     }
 
     clickThumbnailItemDescription(itemName: string): ViewDataThumbnailItemPopupPage {
-        cy.waitUntil(() => cy.get(`[test-thumbnail-item-name='${itemName}']
+        cy.get(`[test-thumbnail-item-name='${itemName}']
             [test-item-editor='description']
-            [test-item-editor-value='description']`))
+            [test-item-editor-value='description']`)
             .click({force: true});
         return new ViewDataThumbnailItemPopupPage();
     }
 
     clickThumbnailItemAttribute(itemName: string, attributeName: string): ViewDataThumbnailAttributePopupPage {
-        cy.waitUntil(() => cy.get(`[test-thumbnail-item-name='${itemName}']
+        cy.get(`[test-thumbnail-item-name='${itemName}']
             [test-data-editor='${attributeName}']
-            [test-data-editor-value='${attributeName}']`))
+            [test-data-editor-value='${attributeName}']`)
             .click({force: true});
         return new ViewDataThumbnailAttributePopupPage();
     }
 
     clickSave(): ViewDataThumbnailPage {
-        cy.waitUntil(() => cy.get(`[test-button-save-items]`)).click({force: true});
+        cy.get(`[test-button-save-items]`).click({force: true});
+        this.waitForReady();
         return this;
     }
 
     clickReload(): ViewDataThumbnailPage {
-        cy.waitUntil(() => cy.get(`[test-button-reload]`)).click({force: true});
+        cy.get(`[test-button-reload]`).click({force: true});
+        this.waitForReady();
         return this;
     }
 }
