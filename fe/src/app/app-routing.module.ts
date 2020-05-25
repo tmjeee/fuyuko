@@ -62,6 +62,7 @@ import {CategoryPageComponent} from "./page/category-page/category.page";
 import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
 import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
 import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
+import {ResetPasswordPageComponent} from "./page/reset-password-page/reset-password.page";
 
 const routes: Routes = [
 
@@ -88,8 +89,15 @@ const routes: Routes = [
   },
   {
     path: 'activate/:code',
+    pathMatch: 'full',
     redirectTo: '/login-layout/activate/:code'
   },
+  {
+    path: 'reset-password/:code',
+    pathMatch: 'full',
+    redirectTo: '/login-layout/reset-password/:code'
+  },
+
 
   // login-layout
  {
@@ -105,12 +113,16 @@ const routes: Routes = [
        component: RegisterPageComponent,
      } as Route,
      {
+       path: 'forgot-password',
+       component: ForgotPasswordPageComponent,
+     } as Route,
+     {
        path: 'activate/:code',
        component: ActivatePageComponent,
      } as Route,
      {
-       path: 'forgot-password',
-       component: ForgotPasswordPageComponent,
+       path: 'reset-password/:code',
+       component: ResetPasswordPageComponent,
      } as Route,
      {
        path: '',

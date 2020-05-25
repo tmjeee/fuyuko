@@ -32,7 +32,7 @@ export class ForgotPasswordPageComponent {
     }
 
     onSubmitByEmail() {
-        this.authService.forgotPassword({email: this.formGroupEmail.value}).pipe(
+        this.authService.forgotPassword({email: this.formControlEmail.value}).pipe(
             tap((r: ApiResponse) => {
                 toNotifications(this.notificationsService, r);
             })
@@ -40,7 +40,7 @@ export class ForgotPasswordPageComponent {
     }
 
     onSubmitByUsername() {
-        this.authService.forgotPassword({email: this.formGroupUsername.value}).pipe(
+        this.authService.forgotPassword({username: this.formControlUsername.value}).pipe(
             tap((r: ApiResponse) => {
                 toNotifications(this.notificationsService, r);
             })

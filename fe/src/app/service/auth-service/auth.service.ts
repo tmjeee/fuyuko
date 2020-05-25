@@ -13,6 +13,9 @@ import {ApiResponse, LoginResponse} from "../../model/api-response.model";
 const URL_LOGIN = () => `${config().api_host_url}/login`;
 const URL_LOGOUT = () => `${config().api_host_url}/logout`;
 const URL_SAVE_USER = () => `${config().api_host_url}/user`;
+const URL_POST_FORGOT_PASSWORD = () => `${config().api_host_url}/forgot-password`;
+const URL_POST_FORGOT_PASSWORD_RESET = () => `${config().api_host_url}/forgot-password/code/:code/reset`;
+const URL_POST_FORGOT_PASSWORD_CHECK_CODE = () => `${config().api_host_url}/forgot-password/code/:code/validity`;
 
 export const KEY = `MY_APP_MYSELF`;
 
@@ -137,6 +140,23 @@ export class AuthService {
       return token.myself;
     }
     return null;
+  }
+
+  forgotPassword(i: {username?: string, email?: string}): Observable<ApiResponse> {
+     return this.httpClient.post<ApiResponse>(URL_POST_FORGOT_PASSWORD(), {
+         username: i.username,
+         email: i.email
+     });
+  }
+
+  forgotPasswordReset(code: string, password: string) {
+     return this.httpClient.post<ApiResponse>(URL_POST_FORGOT_PASSWORD_RESET().replace(':code', code), {
+         password
+     });
+  }
+
+  forgotPasswordCheck(code: string): Observable<ApiResponse<boolean>> {
+     return this.httpClient.post<ApiResponse<boolean>>(URL_POST_FORGOT_PASSWORD_CHECK_CODE().replace(':code', code), {});
   }
 
 }
