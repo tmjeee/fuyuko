@@ -10,12 +10,13 @@ import config from './config';
 import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from "./route/v1/common-middleware";
 import {Registry} from "./registry";
 import {runCustomRuleSync} from "./custom-rule";
-import {validationResult} from 'express-validator';
 import {Options} from "body-parser";
 import {runCustomImportSync} from "./custom-import";
 import {runCustomExportSync} from "./custom-export/custom-export-executor";
+import {runTimezoner} from "./timezoner";
 
-runBanner();
+i(`Run Timezoner`);
+runTimezoner(config.timezone);
 
 const port: number = Number(config.port);
 const app: Express = express();
@@ -33,6 +34,7 @@ app.use(cookieParser());
 app.use(httpLogMiddlewareFn);
 
 app.all('*', cors());
+
 
 const registry: Registry = Registry.newRegistry('api');
 const apiRouter: Router = express.Router();
@@ -82,8 +84,14 @@ const fns: PromiseFn[] = [
 
     // ready message
     () => {
-        i(`Fuyuko ready for operation !!!`);
-       return Promise.resolve();
+       return new Promise((res, rej) => {
+           runBanner();
+           i(`Fuyuko ready for operation !!!`);
+           app.listen(port, () => {
+               i(`Fuyuko API started listening at port ${port}`);
+               res();
+           });
+       });
     }
 ];
 
@@ -91,4 +99,3 @@ fns.reduce((p: Promise<any>, fn: PromiseFn) => {
     return p.then(_ => fn())
 }, Promise.resolve());
 
-app.listen(port, () => i(`Fuyuko API started listening at port ${port}`));

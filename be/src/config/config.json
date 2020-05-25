@@ -7,6 +7,8 @@
   "version": "1.0.0-beta",
   "port": 8888,
 
+  "timezone": "Australia/Sydney",
+
   "updater-run": true,
   "updater-profiles": ["CORE", "TEST-DATA"],
   "updater-profiles-help": "Available updater profiles are CORE, TEST-DATA, CARS-DATA, LEEFAHMEE-DATA",
