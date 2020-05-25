@@ -71,7 +71,7 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
                     [test-icon-collapse-item='${itemName}']`))
                     .click({force: true});
             }
-            cy.waitUntil(() => cy.get(`[test-table-partner-item] [test-icon-expand-item='${itemName}`)).then((_) => {
+            return cy.waitUntil(() => cy.get(`[test-table-partner-item] [test-icon-expand-item='${itemName}`)).then((_) => {
                 return new Cypress.Promise((res, rej) => res(_));
             });
         });
