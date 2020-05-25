@@ -1,6 +1,7 @@
 {
   "baseUrl": "http://localhost:4200",
   "testFiles": "**/*.spec.js",
+  "defaultCommandTimeout": 100000,
   "pageLoadTimeout": 70000,
   "requestTimeout": 50000,
   "responseTimeout": 50000,
