@@ -2,40 +2,98 @@ import {i} from "../../logger";
 import path from "path";
 import util from "util";
 import fs from "fs";
-import fileType from "file-type";
-import {doInDbConnection, QueryResponse} from "../../db";
+import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
-import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
+import {Group, GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
+import {UPDATER_PROFILE_CORE} from "../updater";
+import {addOrUpdateGroup, getGroupByName} from "../../service/group.service";
+import {checkErrors} from "../script-util";
+import {addOrUpdateRole, addRoleToGroup, getRoleByName} from "../../service/role.service";
+import {Role, ROLE_ADMIN, ROLE_EDIT, ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
+import {addGlobalAvatar, addGlobalImage} from "../../service/avatar.service";
+import {addOrUpdateViews} from "../../service/view.service";
+import {addUser} from "../../service/user.service";
+
+export const profiles = [UPDATER_PROFILE_CORE];
 
 export const update = async () => {
+
     i(`running scripts in ${__filename}`);
 
     await INSERT_GLOBAL_AVATARS();
     await INSERT_GLOBAL_IMAGES();
     await INSERT_GROUPS_AND_ROLES();
+    await INSERT_DEFAULT_USERS();
+    await INSERT_DEFAULT_VIEWS();
 
     i(`done running update on ${__filename}`);
 };
 
+const INSERT_DEFAULT_USERS = async () => {
+    const errors: string[] = await addUser({username: 'root', password: 'root', firstName: 'root_firstname', lastName: 'root_lastname', email: 'root@changeMe.com'})
+    checkErrors(errors, `Failed to create default root user`);
+};
+
+const INSERT_DEFAULT_VIEWS = async () => {
+    const errors: string[] = await addOrUpdateViews([{id: -1, name: `Default View`, description: `A Default View`}]);
+    checkErrors(errors, `Failed to create a default view`);
+};
+
 const INSERT_GROUPS_AND_ROLES = async () => {
     await doInDbConnection(async (conn: Connection) => {
-        // groups
-        const gView: QueryResponse = await conn.query('INSERT INTO TBL_GROUP (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)', [GROUP_VIEW, 'Group with VIEW role', 'ENABLED']);
-        const gEdit: QueryResponse = await conn.query('INSERT INTO TBL_GROUP (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)', [GROUP_EDIT, 'Group with VIEW & EDIT role', 'ENABLED']);
-        const gAdmin: QueryResponse = await conn.query('INSERT INTO TBL_GROUP (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)', [GROUP_ADMIN, 'Group with VIEW & EDIT & PARTNER & ADMIN role', 'ENABLED']);
-        const gPartner: QueryResponse = await conn.query('INSERT INTO TBL_GROUP (NAME, DESCRIPTION, STATUS) VALUES (?, ?, ?)', [GROUP_PARTNER, 'Group with PARTNER role', 'ENABLED']);
+        // === GROUP
+        let errors: string[] = [];
+        errors = await addOrUpdateGroup({ id: -1, name: GROUP_VIEW, description: `Group with VIEW role`, isSystem: true });
+        checkErrors(errors, `Failed to create Group with VIEW role`);
+        const gView: Group = await getGroupByName(GROUP_VIEW);
 
-        // roles
-        const rView: QueryResponse = await conn.query(`INSERT INTO TBL_ROLE (NAME, DESCRIPTION) VALUES (?, ?)`, ['VIEW', 'VIEW Role']);
-        const rEdit: QueryResponse = await conn.query(`INSERT INTO TBL_ROLE (NAME, DESCRIPTION) VALUES (?, ?)`, ['EDIT', 'EDIT Role']);
-        const rAdmin: QueryResponse = await conn.query(`INSERT INTO TBL_ROLE (NAME, DESCRIPTION) VALUES (?, ?)`, ['ADMIN', 'ADMIN Role']);
-        const rPartner: QueryResponse = await conn.query(`INSERT INTO TBL_ROLE (NAME, DESCRIPTION) VALUES (?, ?)`, ['PARTNER', 'PARTNER Role']);
+        errors = await addOrUpdateGroup({ id: -1, name: GROUP_EDIT, description: `Group with VIEW & EDIT roles`, isSystem: true });
+        checkErrors(errors, `Failed to create Group with VIEW & EDIT roles`);
+        const gEdit: Group = await getGroupByName(GROUP_EDIT);
+
+        errors = await addOrUpdateGroup({ id: -1, name: GROUP_ADMIN, description: `Group with VIEW & EDIT & PARTNER & ADMIN roles`, isSystem: true });
+        checkErrors(errors, `Failed to create Group with VIEW & EDIT & PARTNER & ADMIN roles`);
+        const gAdmin: Group = await getGroupByName(GROUP_ADMIN);
+
+        errors = await addOrUpdateGroup({ id: -1, name: GROUP_PARTNER, description: `Group with PARTNER role`, isSystem: true });
+        checkErrors(errors, `Failed to create Group with PARTNER role`);
+        const gPartner: Group = await getGroupByName(GROUP_PARTNER);
+
+        // === ROLE
+        errors = await addOrUpdateRole({id: -1, name: ROLE_VIEW, description: `VIEW Role`});
+        checkErrors(errors, `Failed to create VIEW role`);
+        const rView: Role = await getRoleByName(ROLE_VIEW);
+
+        errors = await addOrUpdateRole({id: -1, name: ROLE_EDIT, description: `EDIT Role`});
+        checkErrors(errors, `Failed to create EDIT role`);
+        const rEdit: Role = await getRoleByName(ROLE_EDIT);
+
+        errors = await addOrUpdateRole({id: -1, name: ROLE_ADMIN, description: `ADMIN Role`});
+        checkErrors(errors, `Failed to create ADMIN role`);
+        const rAdmin: Role = await getRoleByName(ROLE_ADMIN);
+
+        errors = await addOrUpdateRole({id: -1, name: ROLE_PARTNER, description: `PARTNER Role`});
+        checkErrors(errors, `Failed to create PARTNER role`);
+        const rPartner: Role = await getRoleByName(ROLE_PARTNER);
+
 
         // group-roles
-        await conn.query(`INSERT INTO TBL_LOOKUP_GROUP_ROLE (GROUP_ID, ROLE_ID) VALUES (?,?)`, [gView.insertId, rView.insertId]);
-        await conn.query(`INSERT INTO TBL_LOOKUP_GROUP_ROLE (GROUP_ID, ROLE_ID) VALUES (?,?)`, [gEdit.insertId, rEdit.insertId]);
-        await conn.query(`INSERT INTO TBL_LOOKUP_GROUP_ROLE (GROUP_ID, ROLE_ID) VALUES (?,?)`, [gAdmin.insertId, rAdmin.insertId]);
-        await conn.query(`INSERT INTO TBL_LOOKUP_GROUP_ROLE (GROUP_ID, ROLE_ID) VALUES (?,?)`, [gPartner.insertId, rPartner.insertId]);
+        errors = await addRoleToGroup(gView.id, ROLE_VIEW);
+        checkErrors(errors, `Failed to link Group id ${gView.id} to ${ROLE_VIEW}`)
+        errors = await addRoleToGroup(gEdit.id, ROLE_VIEW);
+        checkErrors(errors, `Failed to link Group id ${gEdit.id} to ${ROLE_VIEW}`)
+        errors = await addRoleToGroup(gEdit.id, ROLE_EDIT);
+        checkErrors(errors, `Failed to link Group id ${gEdit.id} to ${ROLE_EDIT}`)
+        errors = await addRoleToGroup(gAdmin.id, ROLE_VIEW);
+        checkErrors(errors, `Failed to link Group id ${gAdmin.id} to ${ROLE_VIEW}`)
+        errors = await addRoleToGroup(gAdmin.id, ROLE_EDIT);
+        checkErrors(errors, `Failed to link Group id ${gAdmin.id} to ${ROLE_EDIT}`)
+        errors = await addRoleToGroup(gAdmin.id, ROLE_ADMIN);
+        checkErrors(errors, `Failed to link Group id ${gAdmin.id} to ${ROLE_ADMIN}`)
+        errors = await addRoleToGroup(gAdmin.id, ROLE_PARTNER);
+        checkErrors(errors, `Failed to link Group id ${gAdmin.id} to ${ROLE_PARTNER}`)
+        errors = await addRoleToGroup(gPartner.id, ROLE_PARTNER);
+        checkErrors(errors, `Failed to link Group id ${gPartner.id} to ${ROLE_PARTNER}`)
     });
 }
 
@@ -43,33 +101,27 @@ const INSERT_GLOBAL_AVATARS = async () => {
     const avatarAssetsDir: string = path.resolve(__dirname, '../assets/avatars');
     const files: string[] = await util.promisify(fs.readdir)(avatarAssetsDir);
 
+    const errs: string[] = [];
     for (const file of files) {
         const fullPath = `${avatarAssetsDir}${path.sep}${file}`;
         const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(fullPath));
-        const mimeType: fileType.FileTypeResult = fileType(buffer);
-        const size = buffer.length;
-
-        await doInDbConnection(async (conn: Connection) => {
-            const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_AVATAR (NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?, ?, ?, ?)`,
-                [file, mimeType.mime, size, buffer]);
-        });
+        errs.push(...await addGlobalAvatar(file, buffer));
     }
+    checkErrors(errs, errs.join(', '));
 };
 
 const INSERT_GLOBAL_IMAGES = async () => {
     const globalImagesAssetsDir: string = path.resolve(__dirname, '../assets/global-images');
     const files: string[] = await util.promisify(fs.readdir)(globalImagesAssetsDir);
 
+    const errs: string[] = [];
     for (const file of files) {
         const fullPath = `${globalImagesAssetsDir}${path.sep}${file}`;
         const fileNameOnly = path.basename(file).split('.')[0];
         const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(fullPath));
-        const mimeType: fileType.FileTypeResult = fileType(buffer);
-        const size = buffer.length;
 
-        await doInDbConnection(async (conn: Connection) => {
-            const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_IMAGE (NAME, MIME_TYPE, SIZE, CONTENT, TAG) VALUES (?,?,?,?,?)`, [file, mimeType.mime, size, buffer, fileNameOnly]);
-        });
+        errs.push(... await addGlobalImage(file, fileNameOnly, buffer));
     }
+    checkErrors(errs, errs.join(', '));
 }
 

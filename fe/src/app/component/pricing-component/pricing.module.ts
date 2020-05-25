@@ -9,6 +9,10 @@ import {PricingStructureTableComponent} from './pricing-structure-table.componen
 import {ViewOnlyPriceTableComponent} from './view-only-price-table.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {ViewOnlyPriceDataItemsTableComponent} from "./view-only-price-data-items-table.component";
+import {PaginationModule} from "../pagination-component/pagination.module";
+import {PricingStructureGroupAssociationComponent} from "./pricing-structure-group-association.component";
+import {GroupTableModule} from "../group-table-component/group-table.module";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -19,6 +23,9 @@ import {ViewOnlyPriceDataItemsTableComponent} from "./view-only-price-data-items
         AppMaterialsModule,
         BrowserAnimationsModule,
         FlexLayoutModule,
+        PaginationModule,
+        GroupTableModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
         PricingStructurePopupComponent,
@@ -26,6 +33,7 @@ import {ViewOnlyPriceDataItemsTableComponent} from "./view-only-price-data-items
         ItemPricePopupComponent,
         ViewOnlyPriceTableComponent,
         ViewOnlyPriceDataItemsTableComponent,
+        PricingStructureGroupAssociationComponent,
     ],
     exports: [
         PricingStructurePopupComponent,
@@ -34,6 +42,7 @@ import {ViewOnlyPriceDataItemsTableComponent} from "./view-only-price-data-items
         BrowserAnimationsModule,
         ViewOnlyPriceTableComponent,
         ViewOnlyPriceDataItemsTableComponent,
+        PricingStructureGroupAssociationComponent,
     ],
     entryComponents: [
         PricingStructurePopupComponent,

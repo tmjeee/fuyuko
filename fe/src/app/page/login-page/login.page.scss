@@ -36,7 +36,7 @@
     .control {
       .link {
         margin-top: 10px;
-        .register-link {
+        .register-link, .forgot-password-link {
           padding: 3px;
           border-radius: 2px;
           color: var(--my-app-accent-default-contrast);

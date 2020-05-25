@@ -232,7 +232,7 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
                 this.itemValues[i] = itemValue;
             }
             const fg: FormGroup = this.formArray.at(i) as FormGroup;
-            if (fg && fg.controls.formControl) {
+            if (fg && fg.controls && fg.controls.formControl) {
                 switch (this.attribute.type) {
                     case 'string':
                         setItemStringValue(this.attribute, itemValue, fg.controls.formControl.value);
@@ -291,52 +291,54 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
         for (let i = 0; i < this.itemValues.length; i++) {
             if (this.formArray) {
                 const fg: FormGroup = this.formArray.at(i) as FormGroup;
-                const itemValue: Value = createNewItemValue(this.attribute);
-                itemValues.push(itemValue);
-                switch (this.attribute.type) {
-                    case 'string':
-                        setItemStringValue(this.attribute, itemValue, fg.controls.formControl.value);
-                        break;
-                    case 'text':
-                        setItemTextValue(this.attribute, itemValue, fg.controls.formControl.value);
-                        break;
-                    case 'number':
-                        setItemNumberValue(this.attribute, itemValue, fg.controls.formControl.value);
-                        break;
-                    case 'date':
-                        setItemDateValue(this.attribute, itemValue, fg.controls.formControl.value);
-                        break;
-                    case 'currency':
-                        setItemCurrencyValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
-                        break;
-                    case 'area':
-                        setItemAreaValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
-                        break;
-                    case 'volume':
-                        setItemVolumeValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
-                        break;
-                    case 'width':
-                        setItemWidthValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
-                        break;
-                    case 'length':
-                        setItemLengthValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
-                        break;
-                    case 'height': {
-                        setItemHeightValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
-                        break;
-                    }
-                    case 'dimension': {
-                        setItemDimensionValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value,
-                            fg.controls.formControl3.value, fg.controls.formControl4.value);
-                        break;
-                    }
-                    case 'select': {
-                        setItemSelectValue(this.attribute, itemValue, fg.controls.formControl.value);
-                        break;
-                    }
-                    case 'doubleselect': {
-                        setItemDoubleSelectValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
-                        break;
+                if (fg && fg.controls && fg.controls.formControl) {
+                    const itemValue: Value = createNewItemValue(this.attribute);
+                    itemValues.push(itemValue);
+                    switch (this.attribute.type) {
+                        case 'string':
+                            setItemStringValue(this.attribute, itemValue, fg.controls.formControl.value);
+                            break;
+                        case 'text':
+                            setItemTextValue(this.attribute, itemValue, fg.controls.formControl.value);
+                            break;
+                        case 'number':
+                            setItemNumberValue(this.attribute, itemValue, fg.controls.formControl.value);
+                            break;
+                        case 'date':
+                            setItemDateValue(this.attribute, itemValue, fg.controls.formControl.value);
+                            break;
+                        case 'currency':
+                            setItemCurrencyValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
+                            break;
+                        case 'area':
+                            setItemAreaValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
+                            break;
+                        case 'volume':
+                            setItemVolumeValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
+                            break;
+                        case 'width':
+                            setItemWidthValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
+                            break;
+                        case 'length':
+                            setItemLengthValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
+                            break;
+                        case 'height': {
+                            setItemHeightValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
+                            break;
+                        }
+                        case 'dimension': {
+                            setItemDimensionValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value,
+                                fg.controls.formControl3.value, fg.controls.formControl4.value);
+                            break;
+                        }
+                        case 'select': {
+                            setItemSelectValue(this.attribute, itemValue, fg.controls.formControl.value);
+                            break;
+                        }
+                        case 'doubleselect': {
+                            setItemDoubleSelectValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
+                            break;
+                        }
                     }
                 }
             }
@@ -356,5 +358,6 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
 
     removeConditionValue($event: MouseEvent, index: number) {
         this.formArray.removeAt(index);
+        this.onValueChange();
     }
 }

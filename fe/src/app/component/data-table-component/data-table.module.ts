@@ -9,6 +9,7 @@ import {ItemSearchModule} from '../item-search-component/item-search.module';
 import {ViewOnlyDataTableComponent} from './view-only-data-table.component';
 import {ItemImageDialogComponent} from "./item-image-dialog.component";
 import {CarouselModule} from "../carousel-component/carousel.module";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {CarouselModule} from "../carousel-component/carousel.module";
     DataEditorModule,
     ItemSearchModule,
     CarouselModule,
+    SharedComponentUtilsModule,
   ],
   declarations: [
     DataTableComponent,

@@ -1,11 +1,11 @@
 import {ItemDataImport} from "../../model/data-import.model";
-import {Attribute2, CsvItem} from "../../route/model/server-side.model";
+import {Attribute2, CsvItem} from "../../server-side-model/server-side.model";
 import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
 import {Item, Value} from "../../model/item.model";
 import {Attribute} from "../../model/attribute.model";
-import {getAttributesInView} from "../attribute.service";
-import { convert } from "../conversion-attribute.service";
+import {getAttribute2sInView} from "../attribute.service";
+import { attributesConvert } from "../conversion-attribute.service";
 import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
 import {
     setItemAreaValue,
@@ -16,6 +16,15 @@ import {
     setItemTextValue, setItemVolumeValue, setItemWidthValue
 } from "../../shared-utils/ui-item-value-setter.util";
 import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../../model/unit.model";
+import {doInDbConnection, QueryResponse} from "../../db";
+import {Connection} from "mariadb";
+import {File} from "formidable";
+import * as util from "util";
+import * as fs from "fs";
+import {makeApiError, makeApiErrorObj} from "../../util";
+import {ApiResponse} from "../../model/api-response.model";
+const uuid = require('uuid');
+const detectCsv = require('detect-csv');
 
 
 const createNewItem = (a: Attribute, csvValueFormat: string) => {
@@ -84,7 +93,34 @@ const createNewItem = (a: Attribute, csvValueFormat: string) => {
     return val;
 }
 
-export const preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<ItemDataImport> => {
+export const preview = async (viewId: number, itemDataCsvFile: File): Promise<{errors: string[], itemDataImport: ItemDataImport}> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const name: string = `item-data-import-${uuid()}`;
+        const q: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_IMPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'ITEM')`, [viewId, name]);
+        const dataImportId: number = q.insertId;
+
+        const content: Buffer  = await util.promisify(fs.readFile)(itemDataCsvFile.path);
+
+        let mimeType = undefined;
+        if (detectCsv(content)) {
+            mimeType = 'text/csv';
+        } else {
+            errors.push(`Only support csv import`)
+            return {
+                errors, itemDataImport: null
+            };
+        }
+
+        await conn.query(`INSERT INTO TBL_DATA_IMPORT_FILE (DATA_IMPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)`,
+            [dataImportId, itemDataCsvFile.name, mimeType, content.length, content]);
+
+        const itemDataImport: ItemDataImport = await _preview(viewId, dataImportId, content);
+        return {errors, itemDataImport};
+    });
+}
+
+const _preview = async (viewId: number, dataImportId: number, content: Buffer): Promise<ItemDataImport> => {
 
     let counter: number = -1;
 
@@ -98,8 +134,8 @@ export const preview = async (viewId: number, dataImportId: number, content: Buf
 
 
 
-    const att2s: Attribute2[] = await getAttributesInView(viewId);
-    const attributes: Attribute[] = convert(att2s);
+    const att2s: Attribute2[] = await getAttribute2sInView(viewId);
+    const attributes: Attribute[] = attributesConvert(att2s);
 
     const [attributeByIdMap, attributeByNameMap] = attributes.reduce((acc: [Map<number, Attribute>, Map<string, Attribute>], a: Attribute) => {
         acc[0].set(a.id, a);

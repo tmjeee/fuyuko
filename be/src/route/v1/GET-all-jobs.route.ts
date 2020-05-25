@@ -7,11 +7,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
 import {Job} from "../../model/job.model";
 import {ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {getAllJobs} from "../../service/job.service";
 
 // CHECKED
 const httpAction: any[] = [
@@ -21,32 +20,13 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
+        const jobs: Job[] = await getAllJobs();
 
-        await doInDbConnection(async (conn: Connection) => {
-            const q: QueryA = await conn.query(`
-                SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE, STATUS, PROGRESS FROM TBL_JOB ORDER BY ID DESC
-            `, []);
-
-            const jobs: Job[] = q.reduce((acc: Job[], i: QueryI) => {
-                const j: Job = {
-                    id: i.ID,
-                    name: i.NAME,
-                    description: i.DESCRIPTION,
-                    creationDate: i.CREATION_DATE,
-                    lastUpdate: i.LAST_UPDATE,
-                    status: i.STATUS,
-                    progress: i.PROGRESS
-                } as Job;
-                acc.push(j);
-                return acc;
-            }, []);
-
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Jobs retrieved successfully`,
-                payload: jobs
-            } as ApiResponse<Job[]>);
-        });
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: `Jobs retrieved successfully`,
+            payload: jobs
+        } as ApiResponse<Job[]>);
     }
 ];
 

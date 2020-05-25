@@ -1,30 +1,37 @@
 import {ActualPage} from "../actual.page";
 import * as util from '../../util/util';
 
+const PAGE_NAME = 'user-activation';
 export class UserActivationPage implements ActualPage<UserActivationPage> {
 
     validateTitle(): UserActivationPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'user-activation');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
     visit(): UserActivationPage {
         cy.visit('/user-gen-layout/(activation//help:user-help)');
+        this.waitForReady();
+        return this;
+    }
+
+    waitForReady(): UserActivationPage {
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     verifyErrorMessageExists(): UserActivationPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): UserActivationPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
     search(search: string): UserActivationPage {
-        cy.get(`[test-field-search]`)
+        cy.waitUntil(() => cy.get(`[test-field-search]`))
             .clear({force: true})
             .type(`${search}{enter}`, {force: true})
             .wait(3000)
@@ -37,13 +44,13 @@ export class UserActivationPage implements ActualPage<UserActivationPage> {
     }
 
     activateUser(username: string): UserActivationPage {
-        cy.get(`[test-icon-user-action='ACTIVATE_${username}']`)
+        cy.waitUntil(() => cy.get(`[test-icon-user-action='ACTIVATE_${username}']`))
             .click({force: true});
         return this;
     }
 
     deleteUser(username: string): UserActivationPage {
-        cy.get(`[test-icon-user-action='DELETE_${username}']`)
+        cy.waitUntil(() => cy.get(`[test-icon-user-action='DELETE_${username}']`))
             .click({force: true});
         return this;
     }

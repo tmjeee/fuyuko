@@ -8,6 +8,7 @@ import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {RuleEditorComponent} from './rule-editor.component';
 import {CustomRuleTableComponent} from "./custom-rule-table.component";
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     AppMaterialsModule,
     DataEditorModule,
     FlexLayoutModule,
+    SharedComponentUtilsModule,
   ],
   declarations: [
     RulesTableComponent,

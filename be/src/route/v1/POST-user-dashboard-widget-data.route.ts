@@ -9,10 +9,9 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {SerializedDashboardWidgetInstanceDataFormat} from "../../model/dashboard-serialzable.model";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import { Connection } from "mariadb";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {saveUserDashboardWidgetData} from "../../service/dashboard.service";
 
 
 // CHECKED
@@ -27,24 +26,18 @@ const httpAction: any[] = [
         const userId: number = Number(req.params.userId);
         const d: SerializedDashboardWidgetInstanceDataFormat = req.body;
 
-        await doInDbConnection(async (conn: Connection) => {
-
-            const q: QueryA = await conn.query(`SELECT ID FROM TBL_USER_DASHBOARD WHERE USER_ID=?`, [userId]);
-            let dashboardId: number = null;
-            if (q && q.length <= 0) { // dashboard not already exists
-                const q2: QueryResponse = await conn.query(`INSERT INTO TBL_USER_DASHBOARD (USER_ID, SERIALIZED_DATA) VALUES (?, NULL)`, [userId]);
-                dashboardId = q2.insertId;
-            } else {
-                dashboardId = q[0].ID;
-            }
-            const serializedData: string = JSON.stringify(d.data);
-            await conn.query(`INSERT INTO TBL_USER_DASHBOARD_WIDGET (USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA) VALUES(?,?,?,?)`,
-                [dashboardId, d.instanceId, d.typeId, serializedData]);
-        });
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Dashboard widget data updated`
-        } as ApiResponse);
+        const errors: string[] = await saveUserDashboardWidgetData(userId, d);
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Dashboard widget data updated`
+            } as ApiResponse);
+        }
     }
 ];
 

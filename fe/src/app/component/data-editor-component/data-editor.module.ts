@@ -12,6 +12,9 @@ import {DataEditorNoPopupComponent} from './data-editor-no-popup.component';
 import {AttributeOperatorEditorComponent} from './attribute-operator-editor.component';
 import {MultiValueAttributeOperatorEditorComponent} from "./multi-value-attribute-operator-editor.component";
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {ItemInfoComponent} from "./item-info.component";
+import {CarouselModule} from "../carousel-component/carousel.module";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 @NgModule({
   imports: [
@@ -21,6 +24,8 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     ReactiveFormsModule,
     AppMaterialsModule,
     FlexLayoutModule,
+    CarouselModule,
+    SharedComponentUtilsModule,
   ],
   declarations: [
     DataEditorComponent,
@@ -30,7 +35,8 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     ItemEditorDialogComponent,
     DataEditorNoPopupComponent,
     AttributeOperatorEditorComponent,
-    MultiValueAttributeOperatorEditorComponent
+    MultiValueAttributeOperatorEditorComponent,
+    ItemInfoComponent,
   ],
   exports: [
     DataEditorComponent,
@@ -40,7 +46,8 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     ItemEditorDialogComponent,
     DataEditorNoPopupComponent,
     AttributeOperatorEditorComponent,
-    MultiValueAttributeOperatorEditorComponent
+    MultiValueAttributeOperatorEditorComponent,
+    ItemInfoComponent,
   ],
   entryComponents: [
     DataEditorDialogComponent,

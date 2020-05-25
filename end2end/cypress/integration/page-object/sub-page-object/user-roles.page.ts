@@ -1,21 +1,27 @@
 import {ActualPage} from "../actual.page";
 import * as util from '../../util/util';
 
-
+const PAGE_NAME = 'user-role';
 export class UserRolesPage implements ActualPage<UserRolesPage> {
 
     validateTitle(): UserRolesPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'user-role');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
     visit(): UserRolesPage {
         cy.visit('/user-gen-layout/(role//help:user-help)');
+        this.waitForReady();
+        return this;
+    }
+
+    waitForReady(): UserRolesPage {
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     toggleRolePanel(roleName: string): UserRolesPage {
-       cy.get(`[test-expansion-panel-header='${roleName}']`).click({force: true});
+       cy.waitUntil(() => cy.get(`[test-expansion-panel-header='${roleName}']`)).click({force: true});
        return this;
     }
 
@@ -26,14 +32,14 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
     }
 
     searchForAutoCompleteGroupToAddToRole(roleName: string, search: string, autoCompleteGroupName: string) {
-        cy.get(`[test-expansion-panel-content='${roleName}']`)
-            .find(`[test-field-search]`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-content='${roleName}']
+            [test-field-search]`))
             .clear()
             .type(search)
             .wait(5000);
-        cy.get(`[test-auto-complete-option='${autoCompleteGroupName}']`)
+        cy.waitUntil(() => cy.get(`[test-auto-complete-option='${autoCompleteGroupName}']`))
             .focus();
-        cy.get(`[test-auto-complete-option='${autoCompleteGroupName}']`)
+        cy.waitUntil(() => cy.get(`[test-auto-complete-option='${autoCompleteGroupName}']`))
             .focus()
             .click({force: true})
             // .click({force: true})
@@ -43,7 +49,7 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
     }
 
     verifyGroupInRole(roleName: string, groupName: string) {
-        cy.get(`[test-expansion-panel-content='${roleName}']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-content='${roleName}']`))
             .find(`[test-table-item-group='${groupName}']`).then((n) => {
                 cy.wrap(n).should('exist');
             });
@@ -51,27 +57,27 @@ export class UserRolesPage implements ActualPage<UserRolesPage> {
     }
 
     verifyGroupInRoleDeleted(roleName: string, groupName: string) {
-        cy.get(`[test-expansion-panel-content='${roleName}']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-content='${roleName}']`))
             .contains(`[test-table-item-group='${groupName}']`)
             .should('not.exist');
         return this;
     }
 
     clickDeleteGroupFromRoleTable(roleName: string, groupName: string) {
-        cy.get(`[test-expansion-panel-content='${roleName}']`)
-            .find(`[test-icon-group-action='DELETE_${groupName}']`)
+        cy.waitUntil(() => cy.get(`[test-expansion-panel-content='${roleName}']
+            [test-icon-group-action='DELETE_${groupName}']`))
             // .find(`[test-icon-delete-group='${groupName}']`)
             .click({force: true});
         return this;
     }
 
     verifySuccessMessageExists() {
-        util.clickOnSuccessMessageToasts(() =>{});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
     verifyErrorMessageExists(): UserRolesPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 

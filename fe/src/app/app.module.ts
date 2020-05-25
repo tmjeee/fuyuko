@@ -34,7 +34,7 @@ import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
 import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
 import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
-import {PricingPageComponent} from './page/pricing-page/pricing.page';
+import {PricingStructurePageComponent} from './page/pricing-structure-page/pricing-structure.page';
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
 import {DashboardPageComponent} from './page/dashboard-page/dashboard.page';
 import {UserManagementService} from './service/user-management-service/user-management.service';
@@ -62,10 +62,10 @@ import {RulesModule} from './component/rules-component/rules.module';
 import {CounterService} from './service/counter-service/counter.service';
 import {DataThumbnailModule} from './component/data-thumbnail-component/data-thumbnail.module';
 import {DataListModule} from './component/data-list-component/data-list.module';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {ProfilingInterceptor} from './interceptor/profiling.interceptor';
 import {ErrorPageComponent} from './page/error-page/error.page';
-import {GlobalErrorhandler} from './error-handler/global.errorhandler';
+import {GlobalErrorHandler} from './error-handler/global-error-handler.service';
 import {CarouselModule} from './component/carousel-component/carousel.module';
 import {ViewModule} from './component/view-component/view.module';
 import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
@@ -132,27 +132,46 @@ import {CustomImportPageComponent} from "./page/custom-import-page/custom-import
 import {CustomImportService} from "./service/custom-import-service/custom-import.service";
 import {CustomExportService} from "./service/custom-export-service/custom-export.service";
 import {ExportArtifactService} from "./service/export-artifact-service/export-artifact.service";
+import {PaginationModule} from "./component/pagination-component/pagination.module";
+import {SecurityModule} from "./component/security-directive/security.module";
+import {SharedComponentUtilsModule} from "./component/shared-component-utils/shared-component-utils.module";
+import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
+import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
+import {CategoryLayoutComponent} from "./layout/category-layout/category.layout";
+import {CategoryPageComponent} from "./page/category-page/category.page";
+import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
+import {CategoryModule} from "./component/category-component/category.module";
+import {CategoryService} from "./service/category-service/category.service";
+import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
+import {reload} from "./utils/config.util";
+import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
+import {ResetPasswordPageComponent} from "./page/reset-password-page/reset-password.page";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
                         themeService: ThemeService,
-                        viewService: ViewService) => {
-  return () => {
-    authService.asObservable()
-      .pipe(
-        tap((u: User) => {
-          console.log('**************************** app initializer authService callback', u);
-        if (u == null) {  // logout
-          viewService.destroy();
-          settingsService.destroy();
-        } else {          // login
-          themeService.setTheme(u.theme);
-          settingsService.init(u);
-          viewService.init();
-        }
-      })
-      ).subscribe();
-    console.log(`** Fuyuko App initialize **`);
+                        viewService: ViewService, 
+                        httpClient: HttpClient) => {
+  return ():Promise<any> => {
+    return new Promise((res, rej) => {
+      reload(httpClient, () => {
+        authService.asObservable()
+            .pipe(
+                tap((u: User) => {
+                  if (u == null) {  // logout
+                    viewService.destroy();
+                    settingsService.destroy();
+                  } else {          // login
+                    themeService.setTheme(u.theme);
+                    settingsService.init(u);
+                    viewService.init();
+                  }
+                })
+            ).subscribe();
+        res();
+        console.log(`** Fuyuko App initialize **`);
+      });
+    });
   };
 };
 
@@ -168,6 +187,8 @@ const appInitializer = (settingsService: SettingsService,
     ImportExportLayoutComponent,
     ViewLayoutComponent,
     PartnerLayoutComponent,
+    PriceLayoutComponent,
+    CategoryLayoutComponent,
 
     // pages
     LoginPageComponent,
@@ -192,7 +213,7 @@ const appInitializer = (settingsService: SettingsService,
     ImportHelpPageComponent,
     ExportHelpPageComponent,
     ExportPageComponent,
-    PricingPageComponent,
+    PricingStructurePageComponent,
     PricingHelpPageComponent,
     FileNotFoundPageComponent,
     ViewAttributesPageComponent,
@@ -217,6 +238,12 @@ const appInitializer = (settingsService: SettingsService,
     ExportArtifactsPageComponent,
     CustomExportPageComponent,
     CustomImportPageComponent,
+    PricingStructurePartnerAssociationPageComponent,
+    CategoryPageComponent,
+    CategoryHelpPageComponent,
+    CategoryManagementPageComponent,
+    ForgotPasswordPageComponent,
+    ResetPasswordPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -271,6 +298,10 @@ const appInitializer = (settingsService: SettingsService,
     PartnerViewModule,
     ValidationResultModule,
     HelpModule,
+    PaginationModule,
+    SecurityModule,
+    SharedComponentUtilsModule,
+    CategoryModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -305,13 +336,14 @@ const appInitializer = (settingsService: SettingsService,
     {provide: CustomImportService, useClass: CustomImportService} as Provider,
     {provide: CustomExportService, useClass: CustomExportService} as Provider,
     {provide: ExportArtifactService, useClass: ExportArtifactService} as Provider,
+    {provide: CategoryService, useClass: CategoryService} as Provider,
 
-    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService] } as Provider,
+    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true, deps: [AuthService]} as Provider,
-    {provide: ErrorHandler, useClass: GlobalErrorhandler} as Provider,
+    {provide: ErrorHandler, useClass: GlobalErrorHandler} as Provider,
   ],
   entryComponents: [
   ],

@@ -1,4 +1,4 @@
-<div class="view-data-thumbnail-page" [attr.test-page-title]="'view-data-thumbnail'">
+<div class="view-data-thumbnail-page" [attr.test-page-title]="'view-data-thumbnail'" [attr.test-page-ready]="''+(done)">
   <mat-card class="mat-elevation-z20">
     <mat-card-header>
       <mat-card-title>Data - Thubnail perspective</mat-card-title>
@@ -7,7 +7,7 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div *ngIf="!done"> Loading ... </div>
+      <app-loading [show]="!done"></app-loading>
       <div *ngIf="done && !itemAndAttributeSet">No Items</div>
       <ng-container *ngIf="itemAndAttributeSet">
         <app-data-thumbnail [itemAndAttributeSet]="itemAndAttributeSet"
@@ -15,6 +15,7 @@
                             (searchEvents)="onDataThumbnailSearchEvent($event)"
                             (events)="onDataThumbnailEvent($event)">
         </app-data-thumbnail>
+        <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
       </ng-container>
     </mat-card-content>
   </mat-card>

@@ -1,9 +1,10 @@
-<div class="dashboard-page" [attr.test-page-title]="'dashboard'">
+<div class="dashboard-page" [attr.test-page-title]="'dashboard'" [attr.test-page-ready]="''+(!loading)">
 
-    <div *ngIf="loading">Loading ...</div>
+    <app-loading [show]="loading"></app-loading>
     <app-dashboard
             *ngIf="!loading"
             [data]="data"
+            [currentUser]="currentUser"
             [dashboardWidgetInfos]="dashboardWidgetInfos"
             [strategies]="strategies"
             [initialStrategy]="selectedStrategy"

@@ -4,9 +4,14 @@
   "db-password": "root",
   "db-port": 3306,
   "db-database": "fuyuko",
-  "db-runUpdater": true,
   "version": "1.0.0-beta",
   "port": 8888,
+
+  "timezone": "Australia/Sydney",
+
+  "updater-run": true,
+  "updater-profiles": ["CORE", "TEST-DATA"],
+  "updater-profiles-help": "Available updater profiles are CORE, TEST-DATA, CARS-DATA, LEEFAHMEE-DATA",
 
   "salt": "some-salt",
 
@@ -22,7 +27,7 @@
   "smtp-port": 587,
   "smtp-secure": false,
   "smtp-user": "fuyuko.mdm@gmail.com",
-  "smtp-password": "oeckyqpcyhazcoij",
+  "smtp-password": "wvxrolxhrfqglvqm",
   "smtp-from-email": "app@fuyuko.com",
 
   "default-theme": "deeppurple_amber_light"

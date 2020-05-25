@@ -1,6 +1,6 @@
 import {Connection} from "mariadb";
 import {ItemValueOperatorAndAttribute} from "../model/item-attribute.model";
-import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
+import {Attribute} from "../model/attribute.model";
 import {QueryA} from "../db";
 import {
     Attribute2,
@@ -8,10 +8,10 @@ import {
     AttributeMetadataEntry2, Item2,
     ItemMetadata2,
     ItemMetadataEntry2, ItemValue2, PricedItem2
-} from "../route/model/server-side.model";
+} from "../server-side-model/server-side.model";
 import {
     AreaValue,
-    CurrencyValue,
+    CurrencyValue, DATE_FORMAT,
     DateValue, DimensionValue, DoubleSelectValue, HeightValue, Item,
     ItemImage, LengthValue,
     NumberValue, SelectValue,
@@ -19,7 +19,7 @@ import {
     TextValue,
     Value, VolumeValue, WidthValue
 } from "../model/item.model";
-import {_convert as _attributeConvert} from "./conversion-attribute.service";
+import {attributeConvert} from "./conversion-attribute.service";
 import {OperatorType} from "../model/operator.model";
 import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../model/unit.model";
 import moment from "moment";
@@ -87,10 +87,10 @@ const SQL: string = `
             PSI.PRICE AS PSI_PRICE
            
            FROM TBL_ITEM AS I
-           LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
-           LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
-           LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID + A.ID
+           LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID
+           LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS AME ON AME.VIEW_ATTRIBUTE_METADATA_ID = AM.ID
+           LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA AS IM ON IM.ITEM_VALUE_ID = V.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
            LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
@@ -260,7 +260,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
 
     const attMap: Map<string /* attributeId */, Attribute> =
         ([...attributeMap.values()]).reduce((m: Map<string /* attributeId */, Attribute>, i: Attribute2) => {
-                m.set(`${i.id}`, _attributeConvert(i));
+                m.set(`${i.id}`, attributeConvert(i));
                 return m;
             }, new Map()
         );
@@ -328,7 +328,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                             }
                             case "date": {
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
-                                const format = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
+                                const format = attribute.format ? attribute.format : DATE_FORMAT;
 
                                 const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
                                 const v2: moment.Moment = (eValue.value ? moment(eValue.value, format) : undefined);

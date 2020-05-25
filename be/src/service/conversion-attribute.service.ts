@@ -1,18 +1,16 @@
 import {
     Attribute,
-    DEFAULT_DATE_FORMAT,
-    DEFAULT_NUMERIC_FORMAT,
-    DEFAULT_SHOW_COUNTRY_CURRENCY,
     Pair1,
     Pair2
 } from "../model/attribute.model";
-import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../route/model/server-side.model';
+import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../server-side-model/server-side.model';
+import {DATE_FORMAT, NUMBER_FORMAT, SHOW_COUNTRY_CURRENCY} from "../model/item.model";
 
-export const revert = (attributes: Attribute[]) : Attribute2[]=> {
-   return (attributes ? attributes.map(_revert) : []);
+export const attributesRevert = (attributes: Attribute[]) : Attribute2[]=> {
+   return (attributes ? attributes.map(attributeRevert) : []);
 }
 
-export const _revert = (attribute: Attribute) : Attribute2 => {
+export const attributeRevert = (attribute: Attribute) : Attribute2 => {
     const att: Attribute2 = {
         id: attribute.id,
         name: attribute.name,
@@ -37,7 +35,7 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
                 entries:[{
                     id: -1,
                     key: 'format',
-                    value: (attribute.format ? attribute.format : DEFAULT_NUMERIC_FORMAT)
+                    value: (attribute.format ? attribute.format : NUMBER_FORMAT)
                 } as AttributeMetadataEntry2]
             } as AttributeMetadata2);
             break;
@@ -49,7 +47,7 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
                 entries:[{
                     id: -1,
                     key: 'format',
-                    value: (attribute.format ? attribute.format : DEFAULT_DATE_FORMAT)
+                    value: (attribute.format ? attribute.format : NUMBER_FORMAT)
                 } as AttributeMetadataEntry2]
             } as AttributeMetadata2);
             break;
@@ -61,7 +59,7 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
                 entries:[{
                     id: -1,
                     key: 'showCurrencyCountry',
-                    value: (attribute.showCurrencyCountry ? attribute.showCurrencyCountry : DEFAULT_SHOW_COUNTRY_CURRENCY)
+                    value: (attribute.showCurrencyCountry ? String(attribute.showCurrencyCountry) : String(SHOW_COUNTRY_CURRENCY))
                 } as AttributeMetadataEntry2]
             } as AttributeMetadata2);
             break;
@@ -117,11 +115,11 @@ export const _revert = (attribute: Attribute) : Attribute2 => {
 }
 
 
-export const convert = (attribute2s: Attribute2[]) : Attribute[] => {
-    return (attribute2s ? attribute2s.map(_convert) : []);
+export const attributesConvert = (attribute2s: Attribute2[]) : Attribute[] => {
+    return (attribute2s ? attribute2s.map(attributeConvert) : []);
 }
 
-export const _convert = (attribute2: Attribute2): Attribute => {
+export const attributeConvert = (attribute2: Attribute2): Attribute => {
     const att: Attribute = {
         id: attribute2.id,
         name: attribute2.name,
@@ -139,10 +137,10 @@ export const _convert = (attribute2: Attribute2): Attribute => {
         case 'length':
         case 'height':
         case "volume":
-            att.format = getMetadataEntry('format', attribute2, DEFAULT_NUMERIC_FORMAT);
+            att.format = getMetadataEntry('format', attribute2, NUMBER_FORMAT);
             break;
         case 'date':
-            att.format = getMetadataEntry('format', attribute2, DEFAULT_DATE_FORMAT);
+            att.format = getMetadataEntry('format', attribute2, DATE_FORMAT);
             break;
         case 'currency':
             att.showCurrencyCountry = Boolean(getMetadataEntry('showCurrencyCountry', attribute2, 'true'));

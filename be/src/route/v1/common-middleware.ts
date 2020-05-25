@@ -4,7 +4,7 @@ import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {verifyJwtToken } from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
-import {hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
+import {hasAllUserRoles, hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
 
 
 
@@ -66,6 +66,15 @@ export const vFnHasAnyUserRoles  = (roleNames: string[]): ValidateFn => {
             return false;
         }
         return true;
+    }
+}
+
+export const vFnHasAllUserRoles = (roleNames: string[]): ValidateFn => {
+    return async (req: Request, res: Response) => {
+        const jwtPayload: JwtPayload = getJwtPayload(res);
+        const userId: number = jwtPayload.user.id;
+        const hasAllRole: boolean = await hasAllUserRoles(userId, roleNames);
+        return hasAllRole;
     }
 }
 

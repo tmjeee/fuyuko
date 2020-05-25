@@ -1,5 +1,5 @@
 
-<div class="partner-data-table-page" [attr.test-page-title]="'partner-table'">
+<div class="partner-data-table-page" [attr.test-page-title]="'partner-table'" [attr.test-page-ready]="''+ (!loading && (!!pricingStructures))">
     <mat-card class="mat-elevation-z-20">
         <mat-card-header>
             <mat-card-title>Partner Data Table</mat-card-title>
@@ -12,12 +12,12 @@
                 <mat-label>Pricing Structure</mat-label>
                 <mat-select (selectionChange)="onPricingStructureSelectionChanged($event)" [attr.test-mat-select-pricing-structure]="''">
                     <mat-option [value]="null">--- Please select a Pricing Structure ---</mat-option>
-                    <mat-option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure" [attr.test-mat-select-option-pricing-structure]="pricingStructure.name">
-                        {{pricingStructure.name}}
+                    <mat-option *ngFor="let pricingStructure of pricingStructures" [value]="pricingStructure" [attr.test-mat-select-option-pricing-structure]="pricingStructure.viewName+'-'+pricingStructure.name">
+                        {{pricingStructure.viewName}} - {{pricingStructure.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <div *ngIf="loading">Loading ...</div>
+            <app-loading [show]="loading"></app-loading>
             <app-partner-data-table
                     [attr.test-partner-data-table]="''"
                     *ngIf="attributes && tablePricedItems"

@@ -20,23 +20,23 @@
             <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">Item</th>
         </ng-container>
         <ng-container *ngFor="let whenAttribute of whenAttributes">
-            <ng-container matColumnDef="when-attributes-header-{{whenAttribute.id}}">
+            <ng-container matColumnDef="when-attributes-header-{{whenAttribute['uid']}}-{{whenAttribute.id}}">
                 <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">
                     {{whenAttribute.name}}
                 </th>
             </ng-container>
         </ng-container>
         <ng-container *ngFor="let changeAttribute of changeAttributes">
-            <ng-container matColumnDef="change-attributes-header-{{changeAttribute.id}}">
+            <ng-container matColumnDef="change-attributes-header-{{changeAttribute['uid']}}-{{changeAttribute.id}}">
                 <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">{{changeAttribute.name}}</th>
             </ng-container>
         </ng-container>
 
         <ng-container *ngFor="let changeAttribute of changeAttributes">
-            <ng-container matColumnDef="change-old-values-header-{{changeAttribute.id}}">
+            <ng-container matColumnDef="change-old-values-header-{{changeAttribute['uid']}}-{{changeAttribute.id}}">
                 <th mat-header-cell *matHeaderCellDef>Old</th>
             </ng-container>
-            <ng-container matColumnDef="change-new-values-header-{{changeAttribute.id}}">
+            <ng-container matColumnDef="change-new-values-header-{{changeAttribute['uid']}}-{{changeAttribute.id}}">
                 <th mat-header-cell *matHeaderCellDef>New</th>
             </ng-container>
         </ng-container>
@@ -52,7 +52,7 @@
         </ng-container>
 
         <ng-container *ngFor="let whenAttribute of whenAttributes">
-            <ng-container matColumnDef="{{whenAttribute.id}}">
+            <ng-container matColumnDef="{{whenAttribute['uid']}}-{{whenAttribute.id}}">
                 <td mat-cell *matCellDef="let bulkEditTableItem" [attr.test-table-column-when]="whenAttribute.name">
                     {{bulkEditTableItem.whens[whenAttribute.id].operator}}
                     {{bulkEditTableItem.whens[whenAttribute.id].val | itemAttributeValueAsString:whenAttribute}}
@@ -60,11 +60,15 @@
             </ng-container>
         </ng-container>
         <ng-container *ngFor="let changeAttribute of changeAttributes">
-            <ng-container matColumnDef="old-{{changeAttribute.id}}">
-                <td [attr.test-table-column-old-value]="changeAttribute.name" mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.changes[changeAttribute.id]?.old | itemAttributeValueAsString:changeAttribute}}</td>
+            <ng-container matColumnDef="old-{{changeAttribute['uid']}}-{{changeAttribute.id}}">
+                <td [attr.test-table-column-old-value]="changeAttribute.name" mat-cell *matCellDef="let bulkEditTableItem">
+                    {{bulkEditTableItem.changes[changeAttribute.id]?.old | itemAttributeValueAsString:changeAttribute}}
+                </td>
             </ng-container>
-            <ng-container matColumnDef="new-{{changeAttribute.id}}">
-                <td [attr.test-table-column-new-value]="changeAttribute.name" mat-cell *matCellDef="let bulkEditTableItem">{{bulkEditTableItem.changes[changeAttribute.id]?.new | itemAttributeValueAsString:changeAttribute}}</td>
+            <ng-container matColumnDef="new-{{changeAttribute['uid']}}-{{changeAttribute.id}}">
+                <td [attr.test-table-column-new-value]="changeAttribute.name" mat-cell *matCellDef="let bulkEditTableItem">
+                    {{bulkEditTableItem.changes[changeAttribute.id]?.new | itemAttributeValueAsString:changeAttribute}}
+                </td>
             </ng-container>
         </ng-container>
 

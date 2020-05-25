@@ -15,6 +15,7 @@ import {CustomImportInputFormComponent} from "./custom-import-input-form.compone
 import {CustomImportPreviewComponent} from "./custom-import-preview.component";
 import {CustomImportSubmitJobComponent} from "./custom-import-submit-job.component";
 import {NotificationModule} from "../notification-component/notification.module";
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 @NgModule({
     imports: [
@@ -29,6 +30,7 @@ import {NotificationModule} from "../notification-component/notification.module"
         PricingModule,
         ViewModule,
         NotificationModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
         ImportDataComponent,

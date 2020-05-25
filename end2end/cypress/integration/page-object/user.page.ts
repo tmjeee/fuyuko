@@ -9,32 +9,33 @@ export class UserPage {
 
 
     visit(): UserPage {
-        cy.visit(`/user-gen-layout/(role//help:user-help)`);
+        // cy.visit(`/user-gen-layout/(role//help:user-help)`);
+        new UserRolesPage().visit();
         return this;
     }
 
     visitUserRolePage(): UserRolesPage {
-        cy.visit(`/user-gen-layout/(role//help:user-help)`);
-        return new UserRolesPage();
+        // cy.visit(`/user-gen-layout/(role//help:user-help)`);
+        return new UserRolesPage().visit();
     }
 
     visitUserGroupPage(): UserGroupPage {
-        cy.visit(`/user-gen-layout/(group//help:user-help)`);
-        return new UserGroupPage();
+        // cy.visit(`/user-gen-layout/(group//help:user-help)`);
+        return new UserGroupPage().visit();
     }
 
     visitUserPeoplePage(): UserPeoplePage {
-        cy.visit(`/user-gen-layout/(people//help:user-help)`);
-        return new UserPeoplePage();
+        // cy.visit(`/user-gen-layout/(people//help:user-help)`);
+        return new UserPeoplePage().visit();
     }
 
     visitUserInvitationPage() {
-        cy.visit(`/user-gen-layout/(invitation//help:user-help)`);
-        return new UserInvitationPage();
+        // cy.visit(`/user-gen-layout/(invitation//help:user-help)`);
+        return new UserInvitationPage().visit();
     }
 
     visitUserActivationPage() {
-        cy.visit(`/user-gen-layout/(activation//help:user-help)`);
-        return new UserActivationPage();
+        // cy.visit(`/user-gen-layout/(activation//help:user-help)`);
+        return new UserActivationPage().visit();
     }
 }

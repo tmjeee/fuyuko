@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ItemService} from '../../service/item-service/item.service';
-import {combineLatest, forkJoin, Subscription} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {combineLatest, forkJoin, Subscription, concat, Observable} from 'rxjs';
+import {concatAll, concatMap, map, tap} from 'rxjs/operators';
 import {Item, ItemSearchType, TableItem} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';
 import {TableItemAndAttributeSet} from '../../model/item-attribute.model';
@@ -11,10 +11,12 @@ import {View} from '../../model/view.model';
 import {DataTableComponentEvent} from '../../component/data-table-component/data-table.component';
 import {toTableItem} from '../../utils/item-to-table-items.util';
 import {ItemSearchComponentEvent} from '../../component/item-search-component/item-search.component';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
+import {Pagination} from "../../utils/pagination.utils";
+import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
 
 
 @Component({
@@ -27,6 +29,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   done: boolean;
 
 
+  pagination: Pagination;
   search: string;
   searchType: ItemSearchType;
   currentView: View;
@@ -36,6 +39,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
               private notificationService: NotificationsService,
               private viewService: ViewService,
               private itemService: ItemService) {
+      this.pagination = new Pagination();
   }
 
   ngOnInit(): void {
@@ -60,15 +64,17 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   reload() {
     this.done = false;
     const viewId = this.currentView.id;
-    combineLatest([
-      this.attributeService.getAllAttributesByView(viewId),
+    forkJoin([
+      this.attributeService.getAllAttributesByView(viewId)
+          .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
       (this.search && this.searchType) ?
           this.itemService.searchForItems(viewId, this.searchType, this.search) :
-          this.itemService.getAllItems(viewId)
+          this.itemService.getAllItems(viewId, this.pagination.limitOffset())
     ]).pipe(
-      map( (r: [Attribute[], Item[]]) => {
+      map( (r: [Attribute[], PaginableApiResponse<Item[]>]) => {
        const attributes: Attribute[] = r[0];
-       const items: Item[] = r[1];
+       const items: Item[] = r[1].payload;
+       this.pagination.update(r[1]);
        const tableItems: TableItem[] = toTableItem(items);
        this.itemAndAttributeSet = {
          attributes,
@@ -81,22 +87,21 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
 
   onDataTableEvent($event: DataTableComponentEvent) {
+    const o: Observable<ApiResponse>[] = [];
+    if ($event.modifiedItems && $event.modifiedItems.length) {
+        o.push(this.itemService.saveTableItems(this.currentView.id, $event.modifiedItems));
+    }
+    if ($event.deletedItems && $event.deletedItems.length) {
+        o.push(this.itemService.deleteTableItems(this.currentView.id, $event.deletedItems));
+    }
     switch ($event.type) {
       case 'modification':
-        forkJoin([
-          this.itemService.deleteTableItems(this.currentView.id, $event.deletedItems),
-          this.itemService.saveTableItems(this.currentView.id, $event.modifiedItems)
-        ]).pipe(
-          tap((r: [ApiResponse, ApiResponse]) => {
-            if ($event.deletedItems) {
-                toNotifications(this.notificationService, r[0]);
-            }
-            if ($event.modifiedItems) {
-                toNotifications(this.notificationService, r[1]);
-            }
-            this.reload();
-          })
-        ).subscribe();
+          concat(...o).pipe(
+              tap((r: ApiResponse) => {
+                toNotifications(this.notificationService, r);
+                this.reload();
+              })
+          ).subscribe();
         break;
       case 'reload':
         this.reload();
@@ -138,4 +143,9 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
+    onPaginationEvent($event: PaginationComponentEvent) {
+      this.pagination.updateFromPageEvent($event.pageEvent);
+      this.reload();
+    }
 }

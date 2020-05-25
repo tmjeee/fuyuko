@@ -3,9 +3,8 @@ import {NextFunction, Router, Request, Response} from "express";
 import { param } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_EDIT} from "../../model/role.model";
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
+import {deleteExportArtifactById} from "../../service/export-artifact.service";
 
 // CHECKED
 const httpAction: any[] = [
@@ -18,16 +17,19 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const dataExportArtifactId: number = Number(req.params.dataExportArtifactId);
 
-        await doInDbConnection(async (conn: Connection) => {
-            await conn.query(`
-                DELETE FROM TBL_DATA_EXPORT WHERE ID=?
-            `, [dataExportArtifactId]);
-        });
+        const r: boolean = await deleteExportArtifactById(dataExportArtifactId);
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Data Export artifact deleted`
-        } as ApiResponse);
+        if (r) {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Data Export artifact deleted`
+            } as ApiResponse);
+        } else {
+            res.status(400).json({
+                status: 'ERROR',
+                message: `Data Export artifact Failed to be deleted`
+            } as ApiResponse);
+        }
     }
 ];
 

@@ -1,11 +1,10 @@
 import {NextFunction, Router, Request, Response } from "express";
 import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
 import {param, body} from "express-validator";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {deleteCustomRules} from "../../service/custom-rule.service";
 
 // CHECKED:
 const httpAction: any[] = [
@@ -21,18 +20,19 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const customRuleIds: number[] = req.body.customRuleIds;
 
-        await doInDbConnection(async (conn: Connection) => {
-            for (const customRuleId of customRuleIds) {
-                await conn.query(`
-                    DELETE FROM TBL_CUSTOM_RULE_VIEW WHERE CUSTOM_RULE_ID=? AND VIEW_ID=?
-                `, [customRuleId, viewId]);
-            }
-        });
+        const errors: string[] = await deleteCustomRules(viewId, customRuleIds);
 
-        res.status(200).json({
-           status: 'SUCCESS',
-            message: `Custom rule successfully deleted`
-        } as ApiResponse);
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: 'WARN',
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Custom rule successfully deleted`
+            } as ApiResponse);
+        }
     }
 ];
 

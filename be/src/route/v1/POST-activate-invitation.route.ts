@@ -9,6 +9,8 @@ import config from '../../config';
 import {Activation} from "../../model/activation.model";
 import {Registry} from "../../registry";
 import {ApiResponse} from "../../model/api-response.model";
+import {DELETED, ENABLED} from "../../model/status.model";
+import {activateInvitation} from "../../service/invitation.service";
 
 // CHECKED
 
@@ -32,76 +34,27 @@ const httpAction = [
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         const password = req.body.password;
-        let registrationId;
 
-        const r: boolean = await doInDbConnection(async (conn: Connection) => {
-            const q1: QueryA = await conn.query(`
-                SELECT ID, EMAIL, CREATION_DATE, CODE, ACTIVATED FROM TBL_INVITATION_REGISTRATION WHERE CODE=? AND ACTIVATED=?
-            `, [code, false]);
+        const r: {registrationId: number, errors: string[]} = await activateInvitation(code, username, email, firstName, lastName, password);
 
-            if (q1.length <= 0) { // bad code
-                res.status(400).json(makeApiErrorObj(
-                    makeApiError(`Code no longer active`, 'code', code, 'api')
-                ));
-                return false;
-            }
-
-            registrationId = q1[0].ID;
-
-            const qU1: QueryA = await conn.query(`
-                SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE (EMAIL = ? OR USERNAME = ?) AND STATUS <> ?
-            `, [email, username, 'DELETED']);
-            if (qU1.length > 0 && qU1[0].COUNT > 0) {
-                res.status(400).json(makeApiErrorObj(
-                    makeApiError(`User with either username ${username} or email ${email} already exists`)
-                ));
-                return false;
-            }
-
-            const qU2: QueryA = await conn.query(`
-                SELECT COUNT(*) AS COUNT FROM TBL_SELF_REGISTRATION WHERE (EMAIL = ? OR USERNAME = ?) AND ACTIVATED = ? 
-            `, [email, username, false]);
-            if (qU1.length > 0 && qU1[0].COUNT > 0) {
-                res.status(400).json(makeApiErrorObj(
-                    makeApiError(`User with either username ${username} or email ${email} already registered`)
-                ));
-                return false;
-            }
-
-
-            await conn.query(`UPDATE TBL_INVITATION_REGISTRATION SET ACTIVATED=? WHERE CODE=?`,[true, code]);
-
-            const qGroups: QueryA = await conn.query(`
-                SELECT GROUP_ID FROM TBL_INVITATION_REGISTRATION_GROUP WHERE INVITATION_REGISTRATION_ID = ? 
-            `, [q1[0].ID]);
-
-            // activate
-            const qNewUser: QueryResponse = await conn.query(`
-                INSERT INTO TBL_USER (USERNAME, EMAIL, FIRSTNAME, LASTNAME, STATUS, PASSWORD, CREATION_DATE, LAST_UPDATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?) 
-            `, [username, email, firstName, lastName, 'ENABLED', hashedPassword(password), new Date(), new Date()]);
-
-            const newUserId: number = qNewUser.insertId;
-
-            await conn.query(`
-                INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?, ?)
-            `, [newUserId, config["default-theme"]]);
-
-            for (const g of qGroups) {
-                const gId: number = (g as QueryI).GROUP_ID;
-                await conn.query(`
-                    INSERT INTO TBL_LOOKUP_USER_GROUP (USER_ID, GROUP_ID) VALUES (?,?)
-                `, [newUserId, gId]);
-            }
-            return true;
-        });
-
-        if (r) { // if no errors send before
-            res.status(200).json( {
+        if (r.errors && r.errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: r.errors.join(', '),
+                payload: {
+                    email,
+                    registrationId: r.registrationId,
+                    message: r.errors.join(', '),
+                    status: 'ERROR'
+                }
+            });
+        } else { // if no errors send before
+            res.status(200).json({
                 status: 'SUCCESS',
                 message: `Successfully activated ${username} (${email})`,
                 payload: {
                     email,
-                    registrationId,
+                    registrationId: r.registrationId,
                     message: `Successfully activated ${username} (${email})`,
                     status: 'SUCCESS',
                     username

@@ -1,4 +1,4 @@
-<div class="login-page" [attr.test-page-title]="'login'">
+<div class="login-page" [attr.test-page-title]="'login'" [attr.test-page-ready]="''+(ready)">
   <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
     <mat-card class="container">
       <mat-card-header>
@@ -29,6 +29,7 @@
           <div class="link">
             Not registered yet?
             <a href="#" class="register-link" [routerLink]="['/login-layout', 'register']">Register</a> here.
+            <a href="#" class="forgot-password-link" [routerLink]="['/login-layout', 'forgot-password']">Forgot Password?</a>
           </div>
         </div>
       </mat-card-actions>

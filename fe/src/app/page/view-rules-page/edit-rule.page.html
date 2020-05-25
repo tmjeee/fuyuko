@@ -1,11 +1,12 @@
-<div class="edit-rule-page" [attr.test-page-title]="'view-edit-rule'">
+<div class="edit-rule-page" [attr.test-page-title]="'view-edit-rule'" [attr.test-page-ready]="''+(viewReady && ruleReady)">
     <mat-card>
         <mat-card-header>
             <mat-card-title>Edit Rule</mat-card-title>
             <mat-card-subtitle>Edit rule in curent view</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div class="content">
+            <app-loading [show]="!(viewReady && ruleReady)"></app-loading>
+            <div class="content" *ngIf="viewReady">
                 <app-rule-editor
                         [rule]="rule"
                         [attributes]="attributes"

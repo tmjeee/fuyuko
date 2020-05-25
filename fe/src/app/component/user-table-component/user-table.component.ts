@@ -10,6 +10,7 @@ import {switchMap} from 'rxjs/internal/operators/switchMap';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {SelfRegistration} from '../../model/self-registration.model';
+import {MatDialog} from "@angular/material/dialog";
 
 
 export type UserSearchFn = (user: string) => Observable<User[]>;
@@ -22,7 +23,7 @@ export interface UserTableComponentEvent {
 
 class UserTableDataSource implements DataSource<User> {
 
-  constructor(private userManagementService: UserManagementService) { }
+  constructor() { }
 
   subject: BehaviorSubject<User[]> = new BehaviorSubject([]);
 
@@ -69,10 +70,10 @@ export class UserTableComponent implements OnInit, OnChanges {
 
   displayedColumns: string[] = ['username', 'firstName', 'lastName', 'email', 'actions'];
 
-  constructor(private formBuilder: FormBuilder, private userManagementService: UserManagementService) {}
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-    this.dataSource = new UserTableDataSource(this.userManagementService);
+    this.dataSource = new UserTableDataSource();
     this.dataSource.update(this.users);
     this.userSearchResult = of([]);
     this.formControlUserSearch = this.formBuilder.control('');

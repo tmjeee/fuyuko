@@ -1,0 +1,22 @@
+<div class="category-tree-component">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+            <button mat-icon-button disabled></button>
+            <mat-icon *ngIf="node.type == 'item'">view_stream</mat-icon>
+            <mat-icon *ngIf="node.type == 'category'">category</mat-icon>
+            <div class="label"
+                 [ngClass]="{selected: isTreeNodeSelected(node)}"
+                 (click)="onTreeNodeClicked($event, node)">{{node.name}}</div>
+        </mat-tree-node>
+        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+            <button mat-icon-button matTreeNodeToggle (click)="onTreeExpandIconClicked(node)">
+                <mat-icon class="mat-icon-trl-mirror">{{node.isCurrentlyInExpandedState ? 'expand_more' : 'chevron_right'}}</mat-icon>
+            </button>
+            <mat-icon *ngIf="node.type == 'item'">view_stream</mat-icon>
+            <mat-icon *ngIf="node.type == 'category'">category</mat-icon>
+            <div class="label"
+                 [ngClass]="{selected: isTreeNodeSelected(node)}"
+                 (click)="onTreeNodeClicked($event, node)">{{node.name}}</div>
+        </mat-tree-node>
+    </mat-tree>
+</div>

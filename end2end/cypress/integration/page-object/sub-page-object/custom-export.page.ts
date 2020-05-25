@@ -2,26 +2,32 @@ import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {CustomImportPageStep1, CustomImportPageStep5} from "./custom-import.page";
 
-
+const PAGE_NAME = 'custom-export';
 export class CustomExportPage implements ActualPage<CustomExportPage> {
 
     validateTitle(): CustomExportPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'custom-export');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
     verifyErrorMessageExists(): CustomExportPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): CustomExportPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
     visit(): CustomExportPage {
         cy.visit(`/import-export-gen-layout/(custom-export//help:export-help)`);
+        this.waitForReady();
+        return this;
+    }
+
+    waitForReady(): CustomExportPage {
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
@@ -35,7 +41,7 @@ export class CustomExportPage implements ActualPage<CustomExportPage> {
 export class CustomExportPageStep1 {
 
     verifyInStep(): CustomExportPageStep1 {
-        cy.get(`mat-step-header[aria-posinset='1'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='1'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -74,17 +80,19 @@ export class CustomExportPageStep1 {
 export class CustomExportPageStep2 {
 
     verifyInStep(): CustomExportPageStep2 {
-        cy.get(`mat-step-header[aria-posinset='2'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='2'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
 
     selectView(viewName: string): CustomExportPageStep2 {
-        cy.get(`[test-step='step2']`)
-            .find(`[test-mat-select-view] div`)
-            .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-view='${viewName}']`)
-            .click({force: true});
+        cy.waitUntil(() => cy.get(`[test-view-selector-component-ready='true']`)).then((_) => {
+            cy.get(`[test-step='step2']`)
+                .find(`[test-mat-select-view]`).first()
+                .click({force: true});
+            cy.waitUntil(() => cy.get(`[test-mat-select-option-view='${viewName}']`))
+                .click({force: true});
+        });
         return this;
     }
 
@@ -105,7 +113,7 @@ export class CustomExportPageStep2 {
 
 export class CustomExportPageStep3 {
     verifyInStep(): CustomExportPageStep3 {
-        cy.get(`mat-step-header[aria-posinset='3'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='3'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -159,9 +167,9 @@ export class CustomExportPageStep3 {
         cy.get(`[test-step='step3']`).then((_) => {
             const length = _.find(`[test-input-type='date'][test-input-name='${inputName}'].mat-checkbox-checked`).length;
             if (length <= 0 && value) { // not already checked and we want to check it
-                cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
+                return cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
             } else if (length > 0 && !value) { // already checked and we want to uncheck it
-                cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
+                return cy.get(`[test-input-type='checkbox'][test-input-name='${inputName}'] label`).click({force: true});
             }
         });
         return this;
@@ -177,8 +185,8 @@ export class CustomExportPageStep3 {
 
     editSelectValue(inputName: string, key: string): CustomExportPageStep3 {
         cy.get(`[test-step='step3']`)
-            .find(`[test-input-type='select'][test-mat-select-input-name='${inputName}'] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-input-type='select'][test-mat-select-input-name='${inputName}']`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-input-key=${key}]`)
             .click({force: true});
         return this;
@@ -195,7 +203,7 @@ export class CustomExportPageStep3 {
 
     editFileValue(inputName: string, fileName: string, mimeType: string): CustomExportPageStep3 {
         cy.fixture(fileName).then(fileContent => {
-            cy.get(`[test-input-type='file'][test-input-name='${inputName}']`).upload({ fileContent, fileName, mimeType });
+            return cy.get(`[test-input-type='file'][test-input-name='${inputName}']`).upload({ fileContent, fileName, mimeType });
         });
         return this;
     }
@@ -230,7 +238,7 @@ export class CustomExportPageStep3 {
 
 export class CustomExportPageStep4 {
     verifyInStep(): CustomExportPageStep4 {
-        cy.get(`mat-step-header[aria-posinset='4'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='4'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
@@ -259,7 +267,7 @@ export class CustomExportPageStep4 {
 
 export class CustomExportPageStep5 {
     verifyInStep(): CustomExportPageStep5 {
-        cy.get(`mat-step-header[aria-posinset='5'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='5'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }

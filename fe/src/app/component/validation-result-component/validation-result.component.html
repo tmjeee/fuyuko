@@ -5,40 +5,43 @@
             <ng-template mat-tab-label>
                 <span [attr.test-mat-tab]="'results'">Results</span>
             </ng-template>
-            <div fxLayout="column" class="content left mat-elevation-z10" [attr.test-mat-tab-content]="'results'">
-                <div fxFlex>
-                    <div fxLayout="row">
-                        <div fxFlex="0 0 40%" class="left">
-                            <div class="">
-                               <app-validation-result-tree
-                                       (event)="onValidationResultTreeEvent($event)"
-                                       [observable]="treeItemChangeEvents"
-                                       [items]="items"
-                                       [rules]="rules"
-                                       [validationResult]="validationResult">
-                               </app-validation-result-tree>
+            <div class="content">
+                <div class="no-errors" *ngIf="!items || !items.length">No Errors</div>
+                <div fxLayout="column" *ngIf="items && items.length" class="results left mat-elevation-z10" [attr.test-mat-tab-content]="'results'">
+                    <div fxFlex>
+                        <div fxLayout="row">
+                            <div fxFlex="0 0 40%" class="left">
+                                <div class="">
+                                    <app-validation-result-tree
+                                            (event)="onValidationResultTreeEvent($event)"
+                                            [observable]="treeItemChangeEvents"
+                                            [items]="items"
+                                            [rules]="rules"
+                                            [validationResult]="validationResult">
+                                    </app-validation-result-tree>
+                                </div>
                             </div>
-                        </div>
-                        <div fxFlex="0 0 58%" class="right">
-                            <div class="">
-                                <app-validation-result-console
-                                        [itemObservable]="tableItemChangeEvents"
-                                        [validationErrorObservable]="validationErrorChangeEvents.asObservable()"
-                                        [validationResult]="validationResult">
-                                </app-validation-result-console>
+                            <div fxFlex="0 0 58%" class="right">
+                                <div class="">
+                                    <app-validation-result-console
+                                            [itemObservable]="tableItemChangeEvents"
+                                            [validationErrorObservable]="validationErrorChangeEvents.asObservable()"
+                                            [validationResult]="validationResult">
+                                    </app-validation-result-console>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div fxFlex class="bottom">
-                    <app-validation-result-table
-                        [attr.test-validation-result-table]="''"
-                        (events)="onValidationResultTableEvent($event)"
-                        [observable]="tableItemChangeEvents"
-                        [rules]="rules"
-                        [validationResult]="validationResult"
-                        [itemAndAttributeSet]="itemAndAttributeSet">
-                    </app-validation-result-table>
+                    <div fxFlex class="bottom">
+                        <app-validation-result-table
+                                [attr.test-validation-result-table]="''"
+                                (events)="onValidationResultTableEvent($event)"
+                                [observable]="tableItemChangeEvents"
+                                [rules]="rules"
+                                [validationResult]="validationResult"
+                                [itemAndAttributeSet]="itemAndAttributeSet">
+                        </app-validation-result-table>
+                    </div>
                 </div>
             </div>
         </mat-tab>
@@ -46,7 +49,7 @@
             <ng-template mat-tab-label>
                 <span [attr.test-mat-tab]="'logs'">Logs</span>
             </ng-template>
-            <div class="mat-elevation-z10" [attr.test-mat-tab-content]="'logs'">
+            <div class="content" [attr.test-mat-tab-content]="'logs'">
                 <app-validation-result-log [validationResult]="validationResult">
                 </app-validation-result-log>
             </div>

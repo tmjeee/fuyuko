@@ -1,7 +1,7 @@
 import {doInDbConnection, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Level} from '../model/level.model';
-import {AuditCategory} from "../route/model/server-side.model";
+import {AuditCategory} from "../server-side-model/server-side.model";
 
 export type AuditCategory = AuditCategory;
 export type AuditLevel = Level;

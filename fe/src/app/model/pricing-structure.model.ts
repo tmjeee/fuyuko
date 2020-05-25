@@ -1,7 +1,11 @@
+import {PaginableApiResponse} from "./api-response.model";
+import {CountryCurrencyUnits} from "./unit.model";
+import {Group} from "./group.model";
 
 export interface PricingStructure {     // pricing structure
     id: number; // pricing structure id
     viewId: number;
+    viewName: string;
     name: string;
     description: string;
     creationDate: Date;
@@ -13,7 +17,7 @@ export interface PricingStructureWithItems { // pricing structure
     viewId: number;
     name: string;
     description: string;
-    items: PricingStructureItemWithPrice[];
+    items: PaginableApiResponse<PricingStructureItemWithPrice[]>;
     creationDate: Date;
     lastUpdate: Date;
 }
@@ -24,7 +28,7 @@ export interface PricingStructureItemWithPrice {  // pricing structure item
     itemName: string;
     itemDescription: string;
     price: number;
-    country: string;
+    country: CountryCurrencyUnits;
     creationDate: Date;
     lastUpdate: Date;
 
@@ -38,7 +42,7 @@ export interface TablePricingStructureItemWithPrice {  // pricing structure item
     itemName: string;
     itemDescription: string;
     price: number;
-    country: string;
+    country: CountryCurrencyUnits;
     creationDate: Date;
     lastUpdate: Date;
 
@@ -53,5 +57,11 @@ export interface PriceDataItem {
     viewId: number;
     viewName: string;
     item: PricingStructureItemWithPrice;
+}
+
+
+export interface PricingStructureGroupAssociation {
+   pricingStructure: PricingStructure,
+   groups: Group[]
 }
 

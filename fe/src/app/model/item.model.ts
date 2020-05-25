@@ -19,6 +19,7 @@ export const DIMENSION_FORMAT = '0.00';
 export const WIDTH_FORMAT = '0.00';
 export const HEIGHT_FORMAT = '0.00';
 export const LENGTH_FORMAT = '0.00';
+export const SHOW_COUNTRY_CURRENCY = true;
 
 export const MAT_DATE_FORMAT = {
   parse: {

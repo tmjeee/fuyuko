@@ -9,10 +9,10 @@ import {
 } from "./common-middleware";
 import {body, param} from 'express-validator';
 import {Item} from "../../model/item.model";
-import {Item2} from "../model/server-side.model";
-import {revert as itemRevert} from "../../service/conversion-item.service";
+import {Item2} from "../../server-side-model/server-side.model";
+import {itemsRevert as itemRevert} from "../../service/conversion-item.service";
 import {ApiResponse} from "../../model/api-response.model";
-import {addItem, addOrUpdateItem, updateItem} from "../../service/item.service";
+import {addOrUpdateItem2} from "../../service/item.service";
 import {ROLE_EDIT} from "../../model/role.model";
 
 // CHECKED
@@ -35,14 +35,23 @@ const httpAction: any[] = [
         const items: Item[] = req.body.items;
         const item2s: Item2[]  = itemRevert(items);
 
+        const errors: string[] = [];
         for (const item2 of item2s) {
-            await addOrUpdateItem(viewId, item2);
+            const err: string[] = await addOrUpdateItem2(viewId, item2);
+            errors.push(...err);
         }
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `item(s) updated`
-        } as ApiResponse);
+        if (errors && errors.length) {
+            res.status(200).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `item(s) updated`
+            } as ApiResponse);
+        }
     }
 ];
 

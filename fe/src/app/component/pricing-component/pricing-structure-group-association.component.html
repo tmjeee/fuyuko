@@ -1,0 +1,25 @@
+<div class="pricing-structure-group-association">
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let pricingStructureGroupAssociation of pricingStructureGroupAssociations">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{pricingStructureGroupAssociation.pricingStructure.viewName}} - {{pricingStructureGroupAssociation.pricingStructure.name}}
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{pricingStructureGroupAssociation.pricingStructure.description}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="content">
+                <app-group-table [groups]="pricingStructureGroupAssociation.groups"
+                                 [actions]="actions"
+                                 [searchFieldHint]="'Search group'"
+                                 [searchFieldLabel]="'Search group to link to pricing structure'"
+                                 [searchFieldPlaceholder]="'Search group to link to pricing structure'"
+                                 [groupSearchFn]="groupSearchFnsMap.get(pricingStructureGroupAssociation.pricingStructure.id)"
+                                 (events)="onGroupTableEvent($event, pricingStructureGroupAssociation.pricingStructure)">
+                </app-group-table>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+</div>

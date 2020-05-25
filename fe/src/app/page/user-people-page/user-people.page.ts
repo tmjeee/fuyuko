@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
 import {UserSearchFn} from '../../component/user-table-component/user-table.component';
 import {User} from '../../model/user.model';
@@ -8,7 +8,7 @@ import {
   ActionType,
   UserSearchTableComponentEvent
 } from '../../component/user-search-table-component/user-search-table.component';
-import {map, tap} from 'rxjs/operators';
+import {combineAll, map, tap} from 'rxjs/operators';
 import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 
@@ -22,6 +22,7 @@ export class UserPeoplePageComponent implements OnInit {
   inactiveUserSearchFn: UserSearchFn;
   activeUserSearchFn: UserSearchFn;
 
+  ready: boolean;
   activeUsers: User[];
   inactiveUsers: User[];
   activeUsersActionTypes: ActionType[];
@@ -45,6 +46,19 @@ export class UserPeoplePageComponent implements OnInit {
   }
 
   reload() {
+    this.ready = false;
+    of(this.userManagementService.getAllActiveUsers(), this.userManagementService.getAllInactiveUsers()).pipe(
+        combineAll(),
+        tap((r: [User[], User[]]) => {
+            const activeUsers: User[] = r[0];
+            const inactiveUsers: User[] = r[1];
+            this.activeUsers = activeUsers;
+            this.inactiveUsers = inactiveUsers;
+            this.ready = true;
+        })
+    ).subscribe();
+
+    /*
     this.userManagementService.getAllActiveUsers().pipe(
         tap((u: User[]) => {
           this.activeUsers = u;
@@ -53,6 +67,7 @@ export class UserPeoplePageComponent implements OnInit {
     this.userManagementService.getAllInactiveUsers().pipe(
         map((u: User[]) => this.inactiveUsers = u)
     ).subscribe();
+     */
   }
 
 

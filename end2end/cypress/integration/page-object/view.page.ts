@@ -11,49 +11,50 @@ import {ViewViewPage} from "./sub-page-object/view-view.page";
 
 export class ViewPage  {
 
-    visit(): ViewRulePage {
-        cy.visit(`/view-gen-layout/(rules//help:view-help)`);
-        return new ViewRulePage();
+    visit(): ViewPage {
+        // cy.visit(`/view-gen-layout/(rules//help:view-help)`);
+        // new ViewRulePage().visit();
+        return this;
     }
 
     visitViewRule(): ViewRulePage {
-        cy.visit(`/view-gen-layout/(rules//help:view-help)`);
-        return new ViewRulePage();
+        // cy.visit(`/view-gen-layout/(rules//help:view-help)`);
+        return new ViewRulePage().visit();
     }
 
-    visitViewAttributes() {
-        cy.visit(`/view-gen-layout/(attributes//help:view-help)`);
-        return new ViewAttributePage();
+    visitViewAttributes(): ViewAttributePage {
+        // cy.visit(`/view-gen-layout/(attributes//help:view-help)`);
+        return new ViewAttributePage().visit();
     }
 
-    visitViewAttributeWithId(attributeId: number) {
-        cy.visit(`/view-gen-layout/(attribute/${attributeId}//help:view-help)`);
-        return new ViewAttributeDetailsPage(attributeId);
+    visitViewAttributeWithId(attributeId: number): ViewAttributeDetailsPage {
+        // cy.visit(`/view-gen-layout/(attribute/${attributeId}//help:view-help)`);
+        return new ViewAttributeDetailsPage(attributeId).visit();
     }
 
-    visitViewDataTable() {
-        cy.visit(`/view-gen-layout/(data-tabular//help:view-help)`);
-        return new ViewDataTablePage();
+    visitViewDataTable(): ViewDataTablePage {
+        // cy.visit(`/view-gen-layout/(data-tabular//help:view-help)`);
+        return new ViewDataTablePage().visit();
     }
 
-    visitViewDataThumbnail() {
-        cy.visit(`/view-gen-layout/(data-thumbnail//help:view-help)`);
-        return new ViewDataThumbnailPage();
+    visitViewDataThumbnail(): ViewDataThumbnailPage {
+        // cy.visit(`/view-gen-layout/(data-thumbnail//help:view-help)`);
+        return new ViewDataThumbnailPage().visit();
     }
 
-    visitViewDataList() {
-        cy.visit(`/view-gen-layout/(data-list//help:view-help)`);
-        return new ViewDataListPage();
+    visitViewDataList(): ViewDataListPage {
+        // cy.visit(`/view-gen-layout/(data-list//help:view-help)`);
+        return new ViewDataListPage().visit();
     }
 
-    visitViews() {
-        cy.visit(`/view-gen-layout/(views//help:view-help)`);
-        return new ViewViewPage();
+    visitViews(): ViewViewPage {
+        // cy.visit(`/view-gen-layout/(views//help:view-help)`);
+        return new ViewViewPage().visit();
     }
 
-    visitValidations() {
-        cy.visit(`/view-gen-layout/(validation//help:view-help)`);
-        return new ViewValidationPage();
+    visitValidations(): ViewValidationPage {
+        // cy.visit(`/view-gen-layout/(validation//help:view-help)`);
+        return new ViewValidationPage().visit();
     }
 
     visitValidationDetails(validationName: string): ViewValidationDetailsPage {

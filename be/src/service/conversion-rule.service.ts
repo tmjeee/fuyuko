@@ -5,7 +5,7 @@ import {
     ValidateClause2,
     ValidateClauseMetadata2, ValidateClauseMetadataEntry2, WhenClause2,
     WhenClauseMetadata2, WhenClauseMetadataEntry2
-} from "../route/model/server-side.model";
+} from "../server-side-model/server-side.model";
 import {
     AreaValue, CurrencyValue, DateValue,
     DimensionValue, DoubleSelectValue, HeightValue,
@@ -16,11 +16,11 @@ import {
     WidthValue
 } from "../model/item.model";
 
-export const convert = (rules2: Rule2[]): Rule[] => {
-    return rules2 ? rules2.map(_convert) : [];
+export const rulesConvert = (rules2: Rule2[]): Rule[] => {
+    return rules2 ? rules2.map(ruleConvert) : [];
 };
 
-export const _convert = (rule2: Rule2): Rule => {
+export const ruleConvert = (rule2: Rule2): Rule => {
     return {
         id: rule2.id,
         name: rule2.name,
@@ -45,11 +45,11 @@ export const _convert = (rule2: Rule2): Rule => {
     } as Rule;
 };
 
-export const revert = (rules: Rule[]): Rule2[] => {
-    return rules ? rules.map(_revert) : [];
+export const rulesRevert = (rules: Rule[]): Rule2[] => {
+    return rules ? rules.map(ruleRevert) : [];
 }
 
-export const _revert = (rule: Rule): Rule2 => {
+export const ruleRevert = (rule: Rule): Rule2 => {
     return {
         id: rule.id,
         name: rule.name,

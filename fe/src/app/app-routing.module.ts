@@ -20,7 +20,7 @@ import {UserPeoplePageComponent} from './page/user-people-page/user-people.page'
 import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
 import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
 import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
-import {PricingPageComponent} from './page/pricing-page/pricing.page';
+import {PricingStructurePageComponent} from './page/pricing-structure-page/pricing-structure.page';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
 import {DashboardPageComponent} from './page/dashboard-page/dashboard.page';
@@ -55,6 +55,14 @@ import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-
 import {NgModule} from "@angular/core";
 import {CustomImportPageComponent} from "./page/custom-import-page/custom-import.page";
 import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
+import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
+import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
+import {CategoryLayoutComponent} from "./layout/category-layout/category.layout";
+import {CategoryPageComponent} from "./page/category-page/category.page";
+import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
+import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
+import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
+import {ResetPasswordPageComponent} from "./page/reset-password-page/reset-password.page";
 
 const routes: Routes = [
 
@@ -64,17 +72,38 @@ const routes: Routes = [
     pathMatch: 'full',
     redirectTo: '/dashboard-layout/(dashboard//help:dashboard-help)',
   },
+  {
+    path: 'login',
+    pathMatch: 'full',
+    redirectTo: '/login-layout/login'
+  },
+  {
+    path: 'register',
+    pathMatch: 'full',
+    redirectTo: '/login-layout/register'
+  },
+  {
+    path: 'forgot-password',
+    pathMatch: 'full',
+    redirectTo: '/login-layout/forgot-password'
+  },
+  {
+    path: 'activate/:code',
+    pathMatch: 'full',
+    redirectTo: '/login-layout/activate/:code'
+  },
+  {
+    path: 'reset-password/:code',
+    pathMatch: 'full',
+    redirectTo: '/login-layout/reset-password/:code'
+  },
+
 
   // login-layout
  {
    path: 'login-layout',
    component: LoginLayoutComponent,
    children: [
-     {
-       path: '',
-       pathMatch: 'full',
-       redirectTo: '/login-layout/login',
-     } as Route,
      {
        path: 'login',
        component: LoginPageComponent,
@@ -84,9 +113,22 @@ const routes: Routes = [
        component: RegisterPageComponent,
      } as Route,
      {
+       path: 'forgot-password',
+       component: ForgotPasswordPageComponent,
+     } as Route,
+     {
        path: 'activate/:code',
        component: ActivatePageComponent,
-     } as Route
+     } as Route,
+     {
+       path: 'reset-password/:code',
+       component: ResetPasswordPageComponent,
+     } as Route,
+     {
+       path: '',
+       pathMatch: 'full',
+       redirectTo: '/login-layout/login',
+     } as Route,
    ]
  } as Route,
 
@@ -418,13 +460,91 @@ const routes: Routes = [
     ]
   } as Route,
 
+  // category-layout
+  {
+    path: 'category-layout',
+    canActivate: [AuthGuard],
+    component: CategoryLayoutComponent,
+    data: {
+      sideNav: 'category'
+    },
+    children: [
+      // category
+      {
+        path: 'category',
+        canActivate: [AuthGuard],
+        component: CategoryPageComponent,
+        data: {
+          subSideNav: 'category'
+        }
+      } as Route,
+
+      // category-management
+      {
+        path: 'category-management',
+        canActivate: [AuthGuard],
+        component: CategoryManagementPageComponent,
+        data: {
+          subSideNav: 'category-management'
+        }
+      } as Route,
+
+      // category-help
+      {
+        path: 'category-help',
+        canActivate: [AuthGuard],
+        component: CategoryHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+    ]
+  } as Route,
+
+
+  // price-layout
+  {
+    path: 'price-layout',
+    canActivate: [AuthGuard],
+    component: PriceLayoutComponent,
+    data: {
+      sideNav: 'pricing'
+    },
+    children: [
+      // pricing structure
+      {
+        path: 'pricing-structure',
+        canActivate: [AuthGuard],
+        component: PricingStructurePageComponent,
+        data: {
+          subSideNav: 'pricing-structure'
+        }
+      } as Route,
+
+      // pricing-structure-partner-association
+      {
+        path: 'pricing-structure-partner-association',
+        canActivate: [AuthGuard],
+        component: PricingStructurePartnerAssociationPageComponent,
+        data: {
+          subSideNav: 'pricing-structure-partner-association'
+        }
+      } as Route,
+
+      // help
+      {
+        path: 'pricing-help',
+        canActivate: [AuthGuard],
+        component: PricingHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+    ]
+  } as Route,
 
   // gen-layout
- {
-   path: 'gen-layout',
-   canActivate: [AuthGuard],
-   component: GenLayoutComponent,
-   children: [
+  {
+    path: 'gen-layout',
+    canActivate: [AuthGuard],
+    component: GenLayoutComponent,
+    children: [
      // profile
      {
        path: '',
@@ -494,27 +614,10 @@ const routes: Routes = [
        component: JobsHelpPageComponent,
        outlet: 'help',
      } as Route,
-
-
-     // pricing
-     {
-       path: 'pricing-structure',
-       canActivate: [AuthGuard],
-       component: PricingPageComponent,
-       data: {
-         sideNav: 'pricing'
-       }
-     } as Route,
-     {
-       path: 'pricing-help',
-       canActivate: [AuthGuard],
-       component: PricingHelpPageComponent,
-       outlet: 'help'
-     }
    ]
  } as Route,
-  {
-    path: 'error',
+ {
+   path: 'error',
    component: ErrorPageComponent
  } as Route,
  {

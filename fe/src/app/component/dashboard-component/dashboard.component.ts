@@ -20,6 +20,7 @@ import {
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import * as uuid from 'uuid/v1';
 import {WidgetContainerComponent} from './widget-container.component';
+import {User} from "../../model/user.model";
 
 
 
@@ -40,6 +41,8 @@ export interface DragAndDropData {
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+
+    @Input() currentUser: User;
 
     @Input() strategies: DashboardStrategy[];
     @Input() initialStrategy: DashboardStrategy;

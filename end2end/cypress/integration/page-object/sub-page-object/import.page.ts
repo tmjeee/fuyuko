@@ -3,31 +3,37 @@ import * as util from '../../util/util';
 import 'cypress-file-upload';
 import {AttributeType} from "../../model/attribute.model";
 
-
+const PAGE_NAME = 'import';
 export class ImportPage implements ActualPage<ImportPage> {
 
     visit(): ImportPage {
         cy.visit('/import-export-gen-layout/(import//help:import-help)');
+        this.waitForReady();
+        return this;
+    }
+
+    waitForReady(): ImportPage {
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     validateTitle(): ImportPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'import');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
     verifyErrorMessageExists(): ImportPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ImportPage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
     clickStep1(): ImportPageStep1 {
-        cy.get(`mat-step-header[aria-posinset='1']`).click({force: true});
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='1']`)).click({force: true});
         return new ImportPageStep1();
     }
 }
@@ -36,24 +42,25 @@ export class ImportPage implements ActualPage<ImportPage> {
 export class ImportPageStep1 {
 
     verifyInStep(): ImportPageStep1 {
-        cy.get(`mat-step-header[aria-posinset='1'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='1'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
 
     selectImportView(viewName: string): ImportPageStep1 {
-        cy.get(`[test-mat-select-step1-import-view] div:first-child`).click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-step1-import-view='${viewName}']`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-step1-import-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-step1-import-view='${viewName}']`)).click({force: true});
         return this;
     }
 
     verifyCanClickNext(b: boolean): ImportPageStep1 {
-        cy.get(`[test-button-step1-next]`).should(b ? 'be.enabled' : 'not.be.enabled');
+        cy.waitUntil(() => cy.get(`[test-button-step1-next]`))
+            .should(b ? 'be.enabled' : 'not.be.enabled');
         return this;
     }
 
     clickNext(): ImportPageStep2 {
-        cy.get(`[test-button-step1-next]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-step1-next]`)).click({force: true});
         return new ImportPageStep2();
     }
 }
@@ -61,31 +68,31 @@ export class ImportPageStep1 {
 export class ImportPageStep2 {
 
     verifyInStep(): ImportPageStep2 {
-        cy.get(`mat-step-header[aria-posinset='2'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='2'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
 
     clickBack(): ImportPageStep1 {
-        cy.get(`[test-button-step2-back]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-step2-back]`)).click({force: true});
         return new ImportPageStep1();
     }
 
     clickNext(): ImportPageStep3 {
-        cy.get(`[test-button-step2-next]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-step2-next]`)).click({force: true});
         return new ImportPageStep3();
     }
 
 
     selectImportType(type: 'ATTRIBUTE' | 'ITEM' | 'PRICE'): ImportPageStep2 {
-        cy.get(`[test-mat-select-step2-import-type] div:first-child`).click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-step2-import-type='${type}']`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-step2-import-type]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-step2-import-type='${type}']`)).click({force: true});
         return this;
     }
 
     uploadFile(fileName: string): ImportPageStep2 {
         cy.fixture(fileName).then(fileContent => {
-            cy.get(`[test-fileupload-step2]`).upload({ fileContent, fileName, mimeType: 'text/csv' });
+            return cy.waitUntil(() => cy.get(`[test-fileupload-step2]`)).upload({ fileContent, fileName, mimeType: 'text/csv' });
         });
         return this;
     }
@@ -93,18 +100,18 @@ export class ImportPageStep2 {
 
 export class ImportPageStep3 {
     verifyInStep(): ImportPageStep3 {
-        cy.get(`mat-step-header[aria-posinset='3'`)
+        cy.waitUntil(() => cy.get(`mat-step-header[aria-posinset='3'`))
             .should('have.attr', 'tabindex', '0');
         return this;
     }
 
     clickNext(): ImportPageStep4 {
-        cy.get(`[test-button-step3-next]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-step3-next]`)).click({force: true});
         return new ImportPageStep4();
     }
 
     clickBack(): ImportPageStep2 {
-        cy.get(`[test-button-step3-back]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-step3-back]`)).click({force: true});
         return new ImportPageStep2();
     }
 
@@ -125,40 +132,42 @@ export class ImportPageStep3 {
     }
 
     expandItem(itemName: string): ImportPageStep3 {
-        cy.get(`[test-table-step3-item]`)
+        cy.waitUntil(() => cy.get(`[test-table-step3-item]`))
             .find(`[test-table-row='${itemName}']`).then((_) => {
                 const l = _.find(`[test-row-isExpanded='false']`).length;
                 if (l > 0) {
-                    cy.get(`[test-table-step3-item]`)
-                        .find(`[test-table-row='${itemName}']`)
-                        .find(`[test-row-isExpanded]`)
+                    cy.waitUntil(() => cy.get(`[test-table-step3-item]
+                        [test-table-row='${itemName}']
+                        [test-row-isExpanded]`))
                         .click({force: true});
                 }
+                return cy.wait(1000);
         });
         return this;
     }
 
     verifyItemImport_itemAttributeValue(itemName: string, attributeName: string, values: string[]): ImportPageStep3 {
         cy.wrap(values).each((e, i, a) => {
-            return cy.get(`[test-table-step3-item]`)
-                .find(`[test-table-row='${itemName}']`)
-                .find(`[test-table-column-attribute='${attributeName}']`)
+            return cy.waitUntil(() => cy.get(`[test-table-step3-item]
+                [test-table-row='${itemName}']
+                [test-table-column-attribute='${attributeName}']`))
                 .should('contain.text', values[i]);
         });
         return this;
     }
 
     verifyItemImport_itemVisible(itemName: string, b: boolean): ImportPageStep3 {
-        cy.get(`[test-table-step3-item]`)
-            .find(`[test-table-row='${itemName}']`).should(b ? 'be.visible' : 'not.be.visible');
+        cy.waitUntil(() => cy.get(`[test-table-step3-item]
+            [test-table-row='${itemName}']`))
+            .should(b ? 'be.visible' : 'not.be.visible');
         return this;
     }
 
     verifyPriceImport_price(itemName: string, values: string[]): ImportPageStep3 {
         cy.wrap(values).each((e, i, a) => {
-            return cy.get(`[test-table-step3-price]`)
-                .find(`[test-table-row='${itemName}']`)
-                .find(`[test-table-column-price]`)
+            return cy.waitUntil(() => cy.get(`[test-table-step3-price]
+                [test-table-row='${itemName}']
+                [test-table-column-price]`))
                 .should('contain.text', values[i]);
         });
         return this;
@@ -166,9 +175,9 @@ export class ImportPageStep3 {
 
     verifyPriceImport_priceUnit(itemName: string, values: string[]): ImportPageStep3 {
         cy.wrap(values).each((e, i, a) => {
-            return cy.get(`[test-table-step3-price]`)
-                .find(`[test-table-row='${itemName}']`)
-                .find(`[test-table-column-price-unit]`)
+            return cy.waitUntil(() => cy.get(`[test-table-step3-price]
+                [test-table-row='${itemName}']
+                [test-table-column-price-unit]`))
                 .should('contain.text', values[i]);
         });
         return this;
@@ -183,7 +192,7 @@ export class ImportPageStep4 {
     }
 
     clickDone(): ImportPageStep1 {
-        cy.get(`[test-button-step4-done]`).click({force: true});
+        cy.waitUntil(() => cy.get(`[test-button-step4-done]`)).click({force: true});
         return new ImportPageStep1();
     }
 

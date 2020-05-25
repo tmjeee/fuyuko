@@ -9,6 +9,7 @@ import {map, tap} from 'rxjs/operators';
     styleUrls: ['./jobs.page.scss']
 })
 export class JobsPageComponent implements OnInit {
+    ready: boolean;
     jobs: Job[];
     fetchFn: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
 
@@ -16,11 +17,13 @@ export class JobsPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.ready = false;
         this.fetchFn = this.f.bind(this);
         this.jobService.allJobs()
             .pipe(
                 map((jobs: Job[]) => {
                     this.jobs = jobs;
+                    this.ready = true;
                 })
             ).subscribe();
     }

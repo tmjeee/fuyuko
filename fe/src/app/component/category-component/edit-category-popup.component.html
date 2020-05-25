@@ -1,0 +1,20 @@
+<div class="edit-dialog-popup-component">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput type="text" [formControl]="formControlName">
+            <mat-hint>Enter Category Name</mat-hint>
+            <mat-error *ngIf="formControlName?.errors?.required">Category Name is required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <textarea matInput [formControl]="formControlDescription"></textarea>
+            <mat-hint>Enter Category Description</mat-hint>
+            <mat-error *ngIf="formControlDescription?.errors?.required">Category description is required</mat-error>
+        </mat-form-field>
+        <div class="controls">
+            <button type="submit" mat-flat-button color="primary" [disabled]="formGroup.invalid">Ok</button>
+            <button type="button" mat-flat-button color="primary" (click)="onCancel($event)">Cancel</button>
+        </div>
+    </form>
+</div>

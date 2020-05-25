@@ -1,14 +1,15 @@
 import {Item, ItemValTypes, PricedItem, Value} from "../model/item.model";
-import {Item2, ItemValue2, PricedItem2} from "../route/model/server-side.model";
+import {Item2, ItemValue2, PricedItem2} from "../server-side-model/server-side.model";
 
-import {revert as itemValueRevert } from './conversion-item-value.service';
-import {convert as itemValueTypesConvert} from './conversion-item-value-types.service';
+import {itemValueRevert as itemValueRevert } from './conversion-item-value.service';
+import {itemValTypesConvert as itemValueTypesConvert} from './conversion-item-value-types.service';
+import * as util from "util";
 
-export const convert = (item2s: Item2[] | PricedItem2[] ): Item[] | PricedItem[] => {
-   return (item2s ? (item2s as []).map(_convert): []);
+export const itemsConvert = (item2s: Item2[] | PricedItem2[] ): Item[] | PricedItem[] => {
+   return (item2s ? (item2s as []).map(itemConvert): []);
 }
 
-export const _convert = (item2: Item2 | PricedItem2): Item | PricedItem => {
+export const itemConvert = (item2: Item2 | PricedItem2): Item | PricedItem => {
     const item: Item | PricedItem = {
         id: item2.id,
         parentId: item2.parentId,
@@ -17,7 +18,7 @@ export const _convert = (item2: Item2 | PricedItem2): Item | PricedItem => {
         name: item2.name,
         creationDate: item2.creationDate,
         lastUpdate: item2.lastUpdate,
-        children: convert(item2.children),
+        children: itemsConvert(item2.children),
         price: (item2 as PricedItem2).price ? (item2 as PricedItem2).price : undefined,
         country: (item2 as PricedItem2).country ? (item2 as PricedItem2).country : undefined,
 
@@ -34,11 +35,11 @@ export const _convert = (item2: Item2 | PricedItem2): Item | PricedItem => {
     return item;
 }
 
-export const revert = (items: Item[] | PricedItem[]): Item2[] | PricedItem2[] => {
-    return (items ? (items as []).map(_revert) : []);
+export const itemsRevert = (items: Item[] | PricedItem[]): Item2[] | PricedItem2[] => {
+    return (items ? (items as []).map(itemRevert) : []);
 }
 
-export const _revert = (item: Item | PricedItem): Item2 | PricedItem2 => {
+export const itemRevert = (item: Item | PricedItem): Item2 | PricedItem2 => {
     const item2: Item2 | PricedItem2 = {
         id: item.id,
         name: item.name,
@@ -48,7 +49,7 @@ export const _revert = (item: Item | PricedItem): Item2 | PricedItem2 => {
         creationDate: item.creationDate,
         lastUpdate: item.lastUpdate,
         values: [],
-        children: revert(item.children),
+        children: itemsRevert(item.children),
         price: (item as PricedItem).price ? (item as PricedItem).price : undefined,
         country: (item as PricedItem).country ? (item as PricedItem).country : undefined
     } as Item2 | PricedItem2;

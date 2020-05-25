@@ -4,25 +4,32 @@ import * as util from "../../../util/util";
 interface AcutalPage {
 }
 
+const PAGE_NAME = 'view-rules';
 export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
 
     validateTitle(): ViewCustomRulePage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-rules');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
     verifyErrorMessageExists(): ViewCustomRulePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewCustomRulePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
     visit(): ViewCustomRulePage {
         cy.visit(`/view-gen-layout/(rules//help:view-help)`);
+        this.waitForReady();
+        return this;
+    }
+
+    waitForReady(): ViewCustomRulePage {
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
@@ -54,9 +61,10 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
         cy.get(`[test-checkbox-custom-rule='${customRuleName}']`).then((elem) => {
             const isChecked = elem.hasClass('mat-checkbox-checked');
             if (!isChecked) {
-                cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
+                return cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
                     .find(`input`).click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }
@@ -65,9 +73,10 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
         cy.get(`[test-checkbox-custom-rule='${customRuleName}']`).then((elem) => {
             const isChecked = elem.hasClass('mat-checkbox-checked');
             if (isChecked) {
-                cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
+                return cy.get(`[test-checkbox-custom-rule='${customRuleName}']`)
                     .find(`input`).click({force: true});
             }
+            return cy.wait(1000);
         });
         return this;
     }

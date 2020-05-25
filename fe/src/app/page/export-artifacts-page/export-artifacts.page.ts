@@ -14,6 +14,7 @@ import {ApiResponse} from "../../model/api-response.model";
 })
 export class ExportArtifactsPageComponent implements OnInit {
 
+    ready: boolean;
     dataExportArtifacts: DataExportArtifact[];
 
     constructor(private exportArtifactService: ExportArtifactService,
@@ -24,9 +25,11 @@ export class ExportArtifactsPageComponent implements OnInit {
     }
 
     reload() {
+        this.ready = false;
         this.exportArtifactService.allDataExportArtifacts().pipe(
             tap((dataExportArtifacts: DataExportArtifact[]) => {
                 this.dataExportArtifacts = dataExportArtifacts;
+                this.ready = true;
             })
         ).subscribe();
     }

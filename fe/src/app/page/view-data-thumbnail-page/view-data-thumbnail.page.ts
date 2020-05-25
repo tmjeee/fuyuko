@@ -13,9 +13,11 @@ import {
   DataThumbnailComponentEvent,
   DataThumbnailSearchComponentEvent
 } from '../../component/data-thumbnail-component/data-thumbnail.component';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
+import {Pagination} from "../../utils/pagination.utils";
+import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
 
 
 @Component({
@@ -34,10 +36,13 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
   currentView: View;
   subscription: Subscription;
 
+  pagination: Pagination;
+
   constructor(private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private viewService: ViewService,
               private itemService: ItemService) {
+      this.pagination = new Pagination();
   }
 
   ngOnInit(): void {
@@ -63,14 +68,16 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
     this.done = false;
     const viewId = this.currentView.id;
     combineLatest([
-      this.attributeService.getAllAttributesByView(viewId),
+      this.attributeService.getAllAttributesByView(viewId)
+          .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
       (this.search && this.searchType) ?
           this.itemService.searchForItems(viewId, this.searchType, this.search) :
-          this.itemService.getAllItems(viewId)
+          this.itemService.getAllItems(viewId, this.pagination.limitOffset())
     ]).pipe(
-      map( (r: [Attribute[], Item[]]) => {
+      map( (r: [Attribute[], PaginableApiResponse<Item[]>]) => {
         const attributes: Attribute[] = r[0];
-        const items: Item[] = r[1];
+        const items: Item[] = r[1].payload;
+        this.pagination.update(r[1]);
         this.itemAndAttributeSet = {
           attributes,
           items,
@@ -139,5 +146,10 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
         break;
       }
     }
+  }
+
+  onPaginationEvent($event: PaginationComponentEvent) {
+    this.pagination.updateFromPageEvent($event.pageEvent);
+    this.reload();
   }
 }

@@ -1,9 +1,9 @@
 import {ItemImage, PricedItem} from "../model/item.model";
-import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2, PricedItem2} from "../route/model/server-side.model";
+import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2, PricedItem2} from "../server-side-model/server-side.model";
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
-import {findChildrenItems} from "./item.service";
-import {convert} from "./conversion-item-value.service";
+import {findChildrenItem2s} from "./item.service";
+import {itemValueConvert} from "./conversion-item-value.service";
 
 export const toPricedItems = (p: PricedItem2[]): PricedItem[] => {
     return p.map(toPricedItem);
@@ -23,7 +23,7 @@ export const toPricedItem = (p2: PricedItem2): PricedItem => {
         children: toPricedItems(p2.children)
     };
     p2.values.reduce((p: PricedItem, i: ItemValue2) => {
-        p[i.attributeId] = convert(i);
+        p[i.attributeId] = itemValueConvert(i);
         return p;
     }, p);
     return p;
@@ -63,10 +63,10 @@ export const getPricedItems = async (pricingStructureId: number): Promise<Priced
                     PSI.COUNTRY AS PSI_COUNTRY,
                     PSI.PRICE AS PSI_PRICE
                 FROM TBL_ITEM AS I
-                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID
+                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.ID = PSI.PRICING_STRUCTURE_ID
@@ -122,10 +122,10 @@ export const getChildrenPricedItems = async (pricingStructureId: number, parentI
                     PSI.COUNTRY AS PSI_COUNTRY,
                     PSI.PRICE AS PSI_PRICE
                 FROM TBL_ITEM AS I
-                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID
+                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
                 LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
-                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = V.VIEW_ATTRIBUTE_ID
                 LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
                 LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
                 LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.ID = PSI.PRICING_STRUCTURE_ID

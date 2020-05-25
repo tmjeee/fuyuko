@@ -12,6 +12,8 @@ import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
+import {changeAttributeStatus} from "../../service/attribute.service";
+import {Status} from "../../model/status.model";
 
 // CHECKED
 
@@ -27,13 +29,18 @@ const httpAction: any[] = [
         const attributeId: number = Number(req.params.attributeId);
         const state: string = req.params.state;
 
-        await doInDbConnection(async (conn: Connection) => {
-            await conn.query(`UPDATE TBL_VIEW_ATTRIBUTE SET STATUS = ? WHERE ID = ? `, [state, attributeId]);
+        const r: boolean = await changeAttributeStatus(attributeId, state as Status);
+        if (r) {
             res.status(200).json({
                 status: 'SUCCESS',
-                message: `Attribute ${attributeId} deleted`
+                message: `Attribute ${attributeId} status changed`
             } as ApiResponse);
-        });
+        } else {
+            res.status(400).json({
+                status: 'ERROR',
+                message: `Attribute ${attributeId} status failed to be changed`
+            } as ApiResponse);
+        }
     }
 ];
 

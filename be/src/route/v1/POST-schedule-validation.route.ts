@@ -2,10 +2,8 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_EDIT} from "../../model/role.model";
-import {doInDbConnection, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
 import { param, body } from "express-validator";
-import {runValidation} from "../../service/run-validation.service";
+import {scheduleValidation} from "../../service/run-validation.service";
 import {ScheduleValidationResponse} from "../../model/api-response.model";
 
 
@@ -26,25 +24,26 @@ const httpAction: any[] = [
         const name = req.body.name;
         const description = req.body.description;
 
-        const id: number = await doInDbConnection(async (conn: Connection) => {
-            const q: QueryResponse = await conn.query(`
-            
-                INSERT INTO TBL_VIEW_VALIDATION (VIEW_ID, NAME, DESCRIPTION, PROGRESS) VALUES (?,?,?,?)
-            `, [viewId, name, description, 'SCHEDULED']);
+        const r: {validationId: number, errors: string[]} = await scheduleValidation(viewId, name, description);
 
-            const validationId: number = q.insertId;
-            return validationId;
-        });
+        if (r.errors && r.errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: r.errors.join(', '),
+                payload: {
+                    validationId: r.validationId
+                }
+            } as ScheduleValidationResponse);
 
-        runValidation(viewId, id);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Validation with id ${id} scheduled`,
-            payload: {
-                validationId: id
-            }
-        } as ScheduleValidationResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Validation with id ${r.validationId} scheduled`,
+                payload: {
+                    validationId: r.validationId
+                }
+            } as ScheduleValidationResponse);
+        }
     }
 ];
 

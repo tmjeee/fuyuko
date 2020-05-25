@@ -4,9 +4,9 @@ import {check} from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
 import {getRule2} from "../../service/rule.service";
-import {Rule2} from "../model/server-side.model";
+import {Rule2} from "../../server-side-model/server-side.model";
 import {Rule} from "../../model/rule.model";
-import {convert} from "../../service/conversion-rule.service";
+import {rulesConvert} from "../../service/conversion-rule.service";
 import {ApiResponse} from "../../model/api-response.model";
 
 
@@ -26,7 +26,7 @@ const httpAction: any[] = [
         const ruleId: number = Number(req.params.ruleId);
 
         const r2: Rule2 = await getRule2(viewId, ruleId);
-        const [r]: Rule[] = convert([r2]);
+        const [r]: Rule[] = rulesConvert([r2]);
 
         res.status(200).json({
             status: 'SUCCESS',

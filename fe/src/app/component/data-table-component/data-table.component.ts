@@ -70,13 +70,14 @@ const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImage
 export class DataTableComponent implements OnInit, OnChanges {
 
 
-  negativeCounter = -1;
-  positiveCounter = 1;
+  static negativeCounter = -1;
+  static positiveCounter = 1;
 
   @Output() events: EventEmitter<DataTableComponentEvent>;
   @Output() searchEvents: EventEmitter<ItemSearchComponentEvent>;
   @Output() carouselEvent: EventEmitter<CarouselComponentEvent>;
   @Input() itemAndAttributeSet: TableItemAndAttributeSet;
+  @Input() enableSearch: boolean;
 
   pendingSavingItems: Map<number, TableItem>;
   pendingDeletionItems: Map<number, TableItem>;
@@ -93,7 +94,10 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   filterOptionsVisible: boolean;
 
+  loading: boolean;
+
   constructor(private matDialog: MatDialog) {
+    this.enableSearch = true;
     this.filterOptionsVisible = false;
     this.events = new EventEmitter();
     this.searchEvents = new EventEmitter();
@@ -107,6 +111,12 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+      this.reload();
+  }
+
+  reload() {
+    this.pendingSavingItems.clear();
+    this.pendingDeletionItems.clear();
     this.itemAndAttributeSet.tableItems.forEach((i: TableItem, index: number) => {
       this.rowInfoMap.set(i.id, {
         tableItem: i,
@@ -211,9 +221,9 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onAddItem($event: MouseEvent) {
-    const nextId = this.negativeCounter--;
+    const nextId = DataTableComponent.negativeCounter--;
     const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes);
-    newItem.name = `New-Item-${this.positiveCounter++}`;
+    newItem.name = `New-Item-${DataTableComponent.positiveCounter++}`;
     newItem.depth = 0;
     this.pendingSavingItems.set(nextId, newItem);
     this.itemAndAttributeSet.tableItems.push(newItem);
@@ -222,11 +232,10 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onAddChildrenItem(parentItem: TableItem) {
-    console.log('****** addChildrenItem', parentItem.name, parentItem.depth);
-    const nextId = this.negativeCounter--;
+    const nextId = DataTableComponent.negativeCounter--;
     const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes,
         parentItem.id, parentItem.rootParentId ? parentItem.rootParentId : parentItem.id);
-    newItem.name = `New-Item-${this.positiveCounter++}`;
+    newItem.name = `New-Item-${DataTableComponent.positiveCounter++}`;
     newItem.description = ``;
     newItem.depth = parentItem.depth + 1;
 
@@ -246,7 +255,6 @@ export class DataTableComponent implements OnInit, OnChanges {
     // this.pendingSavingItems.set(parentItem.id, parentItem);
     f(parentItem);
     this.pendingSavingItems.set(nextId, newItem);
-    console.log('*********************** on add children item', this.pendingSavingItems);
 
 
 
@@ -271,7 +279,6 @@ export class DataTableComponent implements OnInit, OnChanges {
         const r = ( // filter out the item and all of it's children
             !(b1 || b2 || b3)
         );
-        // console.log(` exixting id ${existingItem.id} rootParentId ${existingItem.rootParentId} parentId ${existingItem.parentId} vs selected item id ${selectedItem.id} ==> ${b1} || ${b2} || ${b3} = ${r}`);
         return r;
       });
       if (selectedItem.id > 0) { // if it is newly added item that have not been saved before deleting it doesn't need savings
@@ -281,7 +288,6 @@ export class DataTableComponent implements OnInit, OnChanges {
     });
     this.itemAndAttributeSet.tableItems = existingItems;
     this.datasource.update(existingItems);
-    console.log(this.pendingSavingItems, this.pendingDeletionItems);
   }
 
   onSave($event: MouseEvent) {
@@ -293,19 +299,19 @@ export class DataTableComponent implements OnInit, OnChanges {
     this.events.emit(e);
     this.pendingSavingItems.clear();
     this.pendingDeletionItems.clear();
-    console.log('****** onSave', e, this.pendingSavingItems, this.pendingDeletionItems);
   }
 
   onReload($event: MouseEvent) {
-    this.events.emit({type: 'reload'} as DataTableComponentEvent);
     this.pendingSavingItems.clear();
     this.pendingDeletionItems.clear();
+    this.events.emit({type: 'reload'} as DataTableComponentEvent);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.itemAndAttributeSet) {
-      const change: SimpleChange = changes.itemAndAttributeSet;
-      this.datasource.update((change.currentValue as TableItemAndAttributeSet).tableItems);
+      // const change: SimpleChange = changes.itemAndAttributeSet;
+      // this.datasource.update((change.currentValue as TableItemAndAttributeSet).tableItems);
+      this.reload();
     }
   }
 

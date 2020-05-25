@@ -43,9 +43,11 @@ export class DataThumbnailComponent implements OnInit {
   pendingSaving: Item[];
   pendingDeletion: Item[];
 
+  @Input() enableSearch: boolean;
   @Input() itemAndAttributeSet: ItemAndAttributeSet;
 
   constructor(private matDialog: MatDialog) {
+    this.enableSearch = true
     this.showMoreMap = new Map();
     this.selectionModel = new SelectionModel(true);
     this.pendingSaving = [];
@@ -99,8 +101,8 @@ export class DataThumbnailComponent implements OnInit {
       i[$event.attribute.id] = $event.itemValue;
     }
     const i2: Item = this.itemAndAttributeSet.items.find((tmpI: Item) => tmpI.id === item.id);
-    if (i) {
-      i[$event.attribute.id] = $event.itemValue;
+    if (i2) {
+      i2[$event.attribute.id] = $event.itemValue;
     }
   }
 
@@ -220,7 +222,6 @@ export class DataThumbnailComponent implements OnInit {
   }
 
   onCarouselEvent($event: CarouselComponentEvent) {
-      console.log('******* onCarouselEvent', $event);
       this.carouselEvents.emit($event);
   }
 }

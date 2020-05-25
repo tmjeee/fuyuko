@@ -22,20 +22,21 @@ export class AppComponent implements OnInit, OnDestroy {
               private overlayContainer: OverlayContainer) { }
 
   ngOnInit(): void {
-    reload(this.httpClient);
-    this.themeSubscription = this.themeService.observer()
-      .pipe(
-        map((theme: Theme) => {
-          this.theme = theme;
+     reload(this.httpClient, () => {
+         this.themeSubscription = this.themeService.observer()
+             .pipe(
+                 map((theme: Theme) => {
+                     this.theme = theme;
 
-          // add theme class to overlay container (eg. dialog);
-          const overlayContainerHTMLElement: HTMLElement = this.overlayContainer.getContainerElement();
-          ALL_THEMES.forEach((t: Theme) => {
-            overlayContainerHTMLElement.classList.remove(t.cssClassName);
-          });
-          overlayContainerHTMLElement.classList.add(theme.cssClassName);
-        })
-      ).subscribe();
+                     // add theme class to overlay container (eg. dialog);
+                     const overlayContainerHTMLElement: HTMLElement = this.overlayContainer.getContainerElement();
+                     ALL_THEMES.forEach((t: Theme) => {
+                         overlayContainerHTMLElement.classList.remove(t.cssClassName);
+                     });
+                     overlayContainerHTMLElement.classList.add(theme.cssClassName);
+                 })
+             ).subscribe();
+     });
   }
 
   ngOnDestroy(): void {

@@ -1,13 +1,22 @@
 {
   "baseUrl": "http://localhost:4200",
   "testFiles": "**/*.spec.js",
+  "defaultCommandTimeout": 100000,
   "pageLoadTimeout": 70000,
   "requestTimeout": 50000,
   "responseTimeout": 50000,
+  "waitForAnimations": true,
+  "integrationFolder": "cypress/integration",
   "env": {
     "apiBaseUrl": "http://localhost:8888/api/v1",
     "username": "cypress",
-    "password": "test"
+    "password": "test",
+    "RETRIES": 0,
+    "RETRIES_HIDDEN": 1,
+    "RETRIES_NO_LOG": 1
   },
+  "video": false,
+  "videoUploadOnPasses": false,
+  "trashAssetsBeforeRuns": true,
   "projectId": "ozp71m"
 }

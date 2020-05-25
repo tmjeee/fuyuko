@@ -13,6 +13,7 @@ import {Connection} from "mariadb";
 import {Job, JobAndLogs, JobLog} from "../../model/job.model";
 import {ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {getJobDetailsById, getJobyById} from "../../service/job.service";
 
 // CHECKED
 
@@ -48,43 +49,10 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
-        const jobAndLogs: JobAndLogs = await doInDbConnection(async (conn: Connection) => {
-            const jobId = req.params.jobId;
-            const lastLogId = req.params.lastLogId;
+        const jobId = Number(req.params.jobId);
+        const lastLogId = req.params.lastLogId ? Number(req.params.lastLogId) : null;
+        const jobAndLogs: JobAndLogs = await getJobDetailsById(jobId, lastLogId);
 
-            const sql = (lastLogId) ? SQL_2 : SQL;
-            const params = (lastLogId) ? [jobId, lastLogId] : [jobId];
-
-            const q: QueryA = await conn.query(sql, params);
-
-            const jobAndLogs: JobAndLogs = q.reduce((acc: JobAndLogs, i: QueryI) => {
-
-                if (!acc.job) {
-                    acc.job = {
-                        id: i.J_ID,
-                        name: i.J_NAME,
-                        description: i.J_DESCRIPTION,
-                        status: i.J_STATUS,
-                        creationDate: i.J_CREATION_DATE,
-                        progress: i.J_PROGRESS,
-                        lastUpdate: i.J_LAST_UPDATE
-                    } as Job
-                }
-
-                const log: JobLog = {
-                    id: i.L_ID,
-                    level: i.L_LEVEL,
-                    message: i.L_LOG,
-                    creationDate: i.L_CREATION_DATE,
-                    lastUpdate: i.L_LAST_UPDATE
-                } as JobLog;
-                acc.logs.push(log);
-
-                return acc;
-            }, { job: null, logs: []} as JobAndLogs);
-
-            return jobAndLogs;
-        });
         res.status(200).json({
             status: 'SUCCESS',
             message: `Job and logs retrieved`,

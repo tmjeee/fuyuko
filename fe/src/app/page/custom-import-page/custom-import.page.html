@@ -1,4 +1,4 @@
-<div class="custom-import-page" [attr.test-page-title]="'custom-import'">
+<div class="custom-import-page" [attr.test-page-title]="'custom-import'" [attr.test-page-ready]="''+(ready)">
     <mat-card class="mat-elevation-z-20">
         <mat-card-header>
             <mat-card-title>Custom Import</mat-card-title>
@@ -7,9 +7,10 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div *ngIf="!ready">Loading ...</div>
+            <app-loading [show]="!ready"></app-loading>
             <app-custom-import-wizard
                     *ngIf="ready"
+                    [attr.test-custom-import-wizard]="''"
                     [customImportPreviewFn]="customImportPreviewFn"
                     [customImportSubmitFn]="customImportSubmitFn"
                     [customInputFormValidateFn]="customImportValidateFn"

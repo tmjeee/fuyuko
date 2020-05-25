@@ -1,14 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
 
 @Injectable()
 export class GlobalCommunicationService {
 
+    private subject = new Subject<string>();
     private avatarReloadSubject: Subject<number>; // emit when avatar needs updating
 
     constructor() {
         this.avatarReloadSubject = new Subject<number>();
+        this.subject = new Subject<string>();
     }
 
     avatarReloadObservable() {
@@ -17,5 +19,14 @@ export class GlobalCommunicationService {
 
     reloadAvatar() {
         this.avatarReloadSubject.next(Math.random());
+    }
+
+
+    asGlobalErrorObservable(): Observable<string> {
+        return this.subject.asObservable();
+    }
+
+    publishGlobalError(err: string) {
+        this.subject.next(err);
     }
 }

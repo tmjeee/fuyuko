@@ -1,13 +1,16 @@
-<div class="view-validation-page" [attr.test-page-title]="'view-validation-details'">
+<div class="view-validation-page" [attr.test-page-title]="'view-validation-details'" [attr.test-page-ready]="''+(!loading)">
     <mat-card>
         <mat-card-header>
             <mat-card-title>Validation Details</mat-card-title>
             <mat-card-subtitle>Validation details of view (errors, logs etc.)</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div *ngIf="loading">Loading ...</div>
-            <app-validation-result *ngIf="!loading"
-                                   (events)="onValidationResultEvent($event)"
+            <app-loading [show]="loading"></app-loading>
+            <div *ngIf="!loading && !validationResult">No validation results.</div>
+            <app-validation-result
+                           *ngIf="!loading && validationResult"
+                           (events)="onValidationResultEvent($event)"
+                           [attr.test-validation-result-page]="''"
                            [validationResult]="validationResult"
                            [view]="view"
                            [items]="items"

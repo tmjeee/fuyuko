@@ -5,7 +5,7 @@
             <mat-expansion-panel-header [attr.test-panel-header]="validation.name"
                                         [attr.test-panel-validation-id]="validation.id">
                 <mat-panel-title>
-                    <a href="#" (click)="details($event, validation)">{{validation.name}}</a>
+                    <a href="#" (click)="details($event, validation)" [attr.test-link-validation-details]="validation.name">{{validation.name}}</a>
                 </mat-panel-title>
                 <mat-panel-description>
                     {{validation.description}}

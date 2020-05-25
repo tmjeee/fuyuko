@@ -6,6 +6,8 @@ import {Connection} from "mariadb";
 import {param} from "express-validator";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {changeCustomRuleStatus} from "../../service/custom-rule.service";
+import {Status} from "../../model/status.model";
 
 // CHECKED
 
@@ -24,16 +26,19 @@ const httpAction: any[] = [
         const customRuleId: number = Number(req.params.customRuleId);
         const status: string = req.params.status;
 
-        await doInDbConnection(async (conn: Connection) => {
-            await conn.query(`
-                UPDATE TBL_CUSTOM_RULE_VIEW SET STATUS=? WHERE CUSTOM_RULE_ID=? AND VIEW_ID=?
-            `, [status, customRuleId, viewId]);
-        });
+        const r: boolean = await changeCustomRuleStatus(viewId, customRuleId, status as Status);
 
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `Custom rule with id ${customRuleId} for view ${viewId} updated`
-        } as ApiResponse);
+        if (r) {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Custom rule with id ${customRuleId} for view ${viewId} updated`
+            } as ApiResponse);
+        } else {
+            res.status(400).json({
+                status: 'ERROR',
+                message: `Custom rule with id ${customRuleId} for view ${viewId} FAILED to be updated`
+            } as ApiResponse);
+        }
     }
 ];
 

@@ -91,7 +91,7 @@ const createNode = (i: Item, vr: ValidationResult, rules: Rule[]): Node => {
 
 const merge = (items: Item[], vr: ValidationResult, rules: Rule[]): Node[] => {
     const a = [];
-    for (const item of items) {
+    for (const item of (items ? items : [])) {
         const n: Node = mergeRecursively(item, vr, rules);
         a.push(n);
     }
@@ -193,9 +193,7 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
     }
 
     handleExternalItemChange(i: Item) {
-        console.log('******* handleExternalItemChange (tree)');
         const f: Flattened = this.returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(this.treeControl.dataNodes, i.id);
-        console.log('*** f', f);
         if (f && this.selected !== f) {
             this.selected = f;
             this.treeControl.expand(f);

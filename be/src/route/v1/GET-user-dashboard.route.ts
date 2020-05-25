@@ -12,6 +12,7 @@ import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
+import {getUserDashboardSerializedData} from "../../service/dashboard.service";
 
 // CHECKED
 
@@ -22,16 +23,7 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
-        const f: string = await doInDbConnection(async (conn: Connection) => {
-             const q: QueryA = await conn.query(`SELECT ID, USER_ID, SERIALIZED_DATA FROM TBL_USER_DASHBOARD WHERE USER_ID = ?`, [userId]);
-
-             if (q.length > 0) {
-                 const data: string = q[0].SERIALIZED_DATA;
-                 return data;
-             } else {
-                 return null;
-             }
-        });
+        const f: string = await  getUserDashboardSerializedData(userId);
         res.status(200).json({
             status: 'SUCCESS',
             message: `Dashboard retrieved`,

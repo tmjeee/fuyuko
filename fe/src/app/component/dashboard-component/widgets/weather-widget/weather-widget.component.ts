@@ -4,12 +4,18 @@ import {DashboardWidgetService} from '../../../../service/dashboard-service/dash
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {MatSelectChange} from "@angular/material/select";
 import uuid from "uuid";
+import {AuthService} from "../../../../service/auth-service/auth.service";
 
 export interface Location {
     displayName: string;
     internalName: string;
     internalUrl: string
 }
+
+/**
+ * weather widget
+ * https://weatherwidget.io/
+ */
 
 @Component({
     templateUrl: './weather-widget.component.html',
@@ -69,9 +75,12 @@ export class WeatherWidgetComponent extends DashboardWidget implements OnInit, O
         this.currentLocation = this.locations[0];
     }
 
-    ngOnDestroy(): void {
+    ngAfterViewInit(): void {
+        this.f(document, 'script', this.uid);
     }
 
+    ngOnDestroy(): void {
+    }
 
     f(d, s, id) {
         let js, fjs = d.getElementsByTagName(s)[0];
@@ -79,10 +88,6 @@ export class WeatherWidgetComponent extends DashboardWidget implements OnInit, O
         js.id = id;
         js.src = 'https://weatherwidget.io/js/widget.min.js';
         fjs.parentNode.insertBefore(js, fjs);
-    }
-
-    ngAfterViewInit(): void {
-        this.f(document, 'script', this.uid);
     }
 
     onLocationChange($event: MatSelectChange) {

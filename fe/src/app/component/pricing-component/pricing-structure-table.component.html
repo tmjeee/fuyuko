@@ -8,7 +8,8 @@
         <mat-label>Pricing Structure </mat-label>
         <mat-select [attr.test-mat-select-pricing-structure]="''" (selectionChange)="onPricingStructureSelectionChanged($event)" [(value)]="pricingStructure">
             <mat-option [value]="undefined">--- Select one ---</mat-option>
-            <mat-option [attr.test-mat-select-option-pricing-structure]="ps.name" *ngFor="let ps of pricingStructureInput.pricingStructures" [value]="ps">
+            <mat-option [attr.test-mat-select-option-pricing-structure]="ps.viewName+'-'+ps.name"
+                        *ngFor="let ps of pricingStructureInput.pricingStructures" [value]="ps">
                 {{ps.id}} - {{ps.name}} in view {{viewForPricingStructure(ps)?.name}}
             </mat-option>
         </mat-select>
@@ -41,8 +42,8 @@
                     <ng-container matColumnDef="expansion" sticky>
                         <th mat-header-cell class="expansion-header" *matHeaderCellDef></th>
                         <td mat-cell class="expansion" *matCellDef="let pricingStructureItem">
-                            <mat-icon class="selectable" [attr.test-table-row-expand]="pricingStructureItem.name" *ngIf="!isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">chevron_right</mat-icon>
-                            <mat-icon class="selectable" [attr.test-table-row-collapse]="pricingStructureItem.name" *ngIf="isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">expand_more</mat-icon>
+                            <mat-icon class="selectable" [attr.test-table-row-expand]="pricingStructureItem.itemName" *ngIf="!isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">chevron_right</mat-icon>
+                            <mat-icon class="selectable" [attr.test-table-row-collapse]="pricingStructureItem.itemName" *ngIf="isRowExpanded(pricingStructureItem)" (click)="rowClicked(pricingStructureItem)">expand_more</mat-icon>
                         </td>
                     </ng-container>
 
@@ -97,6 +98,8 @@
                     <tr mat-row class="item" [attr.test-table-row-item]="tableItem.itemName" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'creationDate', 'lastUpdate', 'pricing', 'country', 'actions']; when: isChildRow"
                              [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></tr>
                 </table>
+
+                <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
             </div>
         </div>
     </ng-container>

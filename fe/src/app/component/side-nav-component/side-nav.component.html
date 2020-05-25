@@ -45,13 +45,24 @@
     </mat-icon>
   </div>
 
+  <!-- category management -->
+  <div [class.selected]="routeSideNavData === 'category'">
+    <mat-icon class="action"
+              [attr.test-sidenav]="'category'"
+              matTooltipPosition="after"
+              matTooltip="Category Management"
+              [routerLink]="['/category-layout', {outlets: {primary: ['category'], help: ['category-help']}}]">
+      category
+    </mat-icon>
+  </div>
+
   <!-- pricing management -->
   <div [class.selected]="routeSideNavData === 'pricing'">
     <mat-icon class="action"
               [attr.test-sidenav]="'pricing'"
               matTooltipPosition="after"
               matTooltip="Pricing Management"
-              [routerLink]="['/gen-layout', {outlets:{primary:['pricing-structure'], help: ['pricing-help'] }}]">
+              [routerLink]="['/price-layout', {outlets:{primary:['pricing-structure'], help: ['pricing-help'] }}]">
       attach_money
     </mat-icon>
   </div>

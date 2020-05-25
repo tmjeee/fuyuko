@@ -1,7 +1,7 @@
 <div class="data-list-component">
 
     <!-- search -->
-    <div class="search-container">
+    <div class="search-container" *ngIf="enableSearch">
         <app-item-search (events)="onItemSearchEvent($event)"></app-item-search>
     </div>
 
@@ -31,7 +31,7 @@
                    </mat-panel-title>
                    <mat-panel-description>
                        <span [attr.test-item-description]="item.name">{{item.description}}</span>
-                       &nbsp; <span>(last updated at {{item.lastUpdate | date}})</span>
+                       &nbsp; <span>(last update: {{item.lastUpdate ? (item.lastUpdate | date) : 'unkown' }})</span>
                    </mat-panel-description>
                </mat-expansion-panel-header>
                 <div>

@@ -2,12 +2,14 @@ import {param} from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
 import {NextFunction, Request, Response, Router} from "express";
-import {Item2} from "../model/server-side.model";
-import {getAllItemsInView, searchForItemsInView} from "../../service/item.service";
+import {Item2} from "../../server-side-model/server-side.model";
+import {getAllItem2sInView, searchForItem2sInView} from "../../service/item.service";
 import {Item, ItemSearchType} from "../../model/item.model";
-import {convert} from "../../service/conversion-item.service";
+import {itemsConvert} from "../../service/conversion-item.service";
 import {Registry} from "../../registry";
 import {ApiResponse} from "../../model/api-response.model";
+import {LimitOffset} from "../../model/limit-offset.model";
+import {toLimitOffset} from "../../util/utils";
 
 
 // CHECKED
@@ -24,14 +26,16 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const searchType: ItemSearchType = req.params.searchType as ItemSearchType;
         const search: string = req.params.search;
+        const limitOffset: LimitOffset = toLimitOffset(req.query.limit, req.query.offset);
+
 
         let allItem2s: Item2[] = [];
         if (search) {
-            allItem2s = await searchForItemsInView(viewId, searchType, search);
+            allItem2s = await searchForItem2sInView(viewId, searchType, search, limitOffset);
         } else {
-            allItem2s = await getAllItemsInView(viewId);
+            allItem2s = await getAllItem2sInView(viewId, true, limitOffset);
         }
-        const allItems: Item[] = convert(allItem2s);
+        const allItems: Item[] = itemsConvert(allItem2s);
         res.status(200).json({
             status: 'SUCCESS',
             message: `Items retrieved`,

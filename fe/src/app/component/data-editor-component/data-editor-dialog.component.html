@@ -287,7 +287,8 @@
         <mat-select [formControl]="formControlDoubleSelectKey1" [attr.test-mat-select-doubleselect-key1]="''">
           <mat-option *ngFor="let pair1 of data.attribute.pair1"
                       [attr.test-mat-select-option-doubleselect-key1]="pair1.key"
-                      [value]="pair1.key" (onSelectionChange)="onDoubleSelectPair1Change($event)">
+                      [value]="pair1.key"
+                      (onSelectionChange)="onDoubleSelectPair1Change($event)">
             {{pair1.value}}
           </mat-option>
         </mat-select>

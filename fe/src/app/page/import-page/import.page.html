@@ -1,5 +1,5 @@
 
-<div class="import-page" [attr.test-page-title]="'import'">
+<div class="import-page" [attr.test-page-title]="'import'" [attr.test-page-ready]="''+(ready)">
   <mat-card class="mat-elevation-z-20">
     <mat-card-header>
       <mat-card-title>Import data</mat-card-title>
@@ -8,7 +8,10 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
+      <app-loading [show]="!ready"></app-loading>
       <app-import-data
+              *ngIf="ready"
+              [attr.test-import-data-wizard]="''"
               [views]="allViews"
               [showPreview]="showPreviewFn"
               [submitDataImport]="submitDataImportFn">

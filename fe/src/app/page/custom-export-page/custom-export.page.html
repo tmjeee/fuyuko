@@ -1,4 +1,4 @@
-<div class="custom-export-page" [attr.test-page-title]="'custom-export'">
+<div class="custom-export-page" [attr.test-page-title]="'custom-export'" [attr.test-page-ready]="''+(ready)">
     <mat-card class="mat-elevation-z-20">
         <mat-card-header>
             <mat-card-title>Custom Export</mat-card-title>
@@ -7,8 +7,10 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
+            <app-loading [show]="!ready"></app-loading>
             <app-custom-export-wizard
                     *ngIf="ready"
+                    [attr.test-custom-export-wizard]="''"
                     [customExportPreviewFn]="customExportPreviewFn"
                     [customExportSubmitFn]="customExportSubmitFn"
                     [customExportFormValidateFn]="customExportValidateFn"

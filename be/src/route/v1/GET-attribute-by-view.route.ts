@@ -3,10 +3,10 @@ import {Registry} from "../../registry";
 import {check} from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
-import {Attribute2} from "../model/server-side.model";
-import {getAttributesInView} from "../../service/attribute.service";
+import {Attribute2} from "../../server-side-model/server-side.model";
+import {getAttribute2sInView} from "../../service/attribute.service";
 import {Attribute} from "../../model/attribute.model";
-import {convert} from "../../service/conversion-attribute.service";
+import {attributesConvert} from "../../service/conversion-attribute.service";
 import {ApiResponse} from "../../model/api-response.model";
 
 
@@ -24,9 +24,9 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const attributeId: number = Number(req.params.attributeId);
 
-        const ats: Attribute2[] = await getAttributesInView(viewId, [attributeId]);
+        const ats: Attribute2[] = await getAttribute2sInView(viewId, [attributeId]);
 
-        const attr: Attribute[] = convert(ats);
+        const attr: Attribute[] = attributesConvert(ats);
 
         res.status(200).json({
             status: 'SUCCESS',

@@ -1,4 +1,4 @@
-<div class="activate-page">
+<div class="activate-page" [attr.test-page-title]="'activate-page'" [attr.test-page-ready]="'true'">
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit();" class="page-form">
         <mat-card class="container">
             <mat-card-header>

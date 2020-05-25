@@ -15,6 +15,7 @@ import config from '../../config';
 import {Registry} from "../../registry";
 import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
 import {RegistrationResponse} from "../../model/api-response.model";
+import {approveSelfRegistration} from "../../service/self-registration.service";
 
 // CHECKED
 
@@ -32,67 +33,29 @@ const httpAction = [
 
         const selfRegistrationId: number = Number(req.params.selfRegistrationId);
 
-        doInDbConnection(async (conn: Connection) => {
+        const r: {username: string, email: string, errors: string[]} = await approveSelfRegistration(selfRegistrationId);
 
-            const q1: QueryA = await conn.query(`
-                SELECT ID, USERNAME, EMAIL, CREATION_DATE, ACTIVATED, FIRSTNAME, LASTNAME, PASSWORD FROM TBL_SELF_REGISTRATION WHERE ID = ? AND ACTIVATED = ?
-            `, [selfRegistrationId, false]);
-
-            if (q1.length < 0) { // is not valid anymore (maybe already activated?)
-                return res.status(400).json(makeApiErrorObj(
-                    makeApiError(`Self registration id ${selfRegistrationId} is no longer active anymore`, 'registrationId', selfRegistrationId.toString(), 'api')
-                ));
-            }
-
-            const username: string = q1[0].USERNAME;
-            const email: string = q1[0].EMAIL;
-            const firstName: string = q1[0].FIRSTNAME;
-            const lastName: string = q1[0].LASTNAME;
-            const password: string = q1[0].PASSWORD;
-
-            const qUserExists: QueryA = await conn.query(`
-                SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE USERNAME = ? OR EMAIL = ?
-            `, [username, email]);
-            if (qUserExists[0].COUNT > 0) { // user already exists
-                return res.status(400).json(makeApiErrorObj(
-                    makeApiError(`User with username ${username} or email ${email} already exists`, 'username,email', `${username},${email}`, 'api')
-                ));
-            }
-
-            const qNewUser: QueryResponse = await conn.query(`
-                INSERT INTO TBL_USER (USERNAME, EMAIL, FIRSTNAME, LASTNAME, STATUS, PASSWORD, CREATION_DATE, LAST_UPDATE) VALUES (?,?,?,?,?,?,?,?)
-            `,[username, email, firstName, lastName, 'ENABLED', password, new Date(), new Date()]);
-
-            const newUserId: number = qNewUser.insertId;
-
-            await conn.query(`
-                INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?,?)
-            `, [newUserId, config["default-theme"]]);
-
-            await conn.query(`UPDATE TBL_SELF_REGISTRATION SET ACTIVATED = true WHERE ID = ?`, q1[0].ID);
-
-            sendEmail(email,
-                `Registration Success`,
-                `
-                    Hi ${firstName} ${lastName},
-                    
-                    Your self registration with username ${username} (${email}) has been approved.
-                    
-                    Log on and check it out at ${config["fe-url-base"]}
-                    
-                    Welcome aboard and Enjoy !!!
-                `);
-
+        if (r.errors && r.errors.length) {
+            res.status(400).json({
+                message: r.errors.join(', '),
+                status: 'ERROR',
+                payload: {
+                    registrationId: selfRegistrationId,
+                    email: r.email,
+                    username: r.username
+                }
+            } as RegistrationResponse);
+        } else {
             res.status(200).json({
-                message: `Self registration approval for ${username} (${email}) success`,
+                message: `Self registration approval for ${r.username} (${r.email}) success`,
                 status: 'SUCCESS',
                 payload: {
                     registrationId: selfRegistrationId,
-                    email,
-                    username
+                    email: r.email,
+                    username: r.username
                 }
             } as RegistrationResponse);
-        });
+        }
     }
 ]
 

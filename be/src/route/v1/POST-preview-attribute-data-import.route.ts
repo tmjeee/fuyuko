@@ -38,43 +38,23 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
-        const name: string = `attribute-data-import-${uuid()}`;
         const {fields, files} = await multipartParse(req);
 
-        await doInDbConnection(async (conn: Connection) => {
+        const r: {errors: string[], attributeDataImport: AttributeDataImport} = await preview(viewId, files.attributeDataCsvFile);
+        if (r.errors && r.errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: r.errors.join(', '),
+                payload: r.attributeDataImport
+            } as ApiResponse<AttributeDataImport>);
 
-            const q: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_IMPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,'ATTRIBUTE')`, [viewId, name]);
-            const dataImportId: number = q.insertId;
-
-            const attributeDataCsvFile: File = files.attributeDataCsvFile;
-
-            const content: Buffer  = await util.promisify(fs.readFile)(attributeDataCsvFile.path);
-
-            let mimeType = undefined;
-            if (detectCsv(content)) {
-                mimeType = 'text/csv';
-            } else {
-                res.status(200).json(
-                    makeApiErrorObj(
-                        makeApiError(`Only support csv import`, `attributeDataCsvFile`, ``, `API`)
-                    )
-                );
-                return;
-            }
-
-
-            await conn.query(`INSERT INTO TBL_DATA_IMPORT_FILE (DATA_IMPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)`,
-                [dataImportId, attributeDataCsvFile.name, mimeType, content.length, content]);
-
-            const attributeDataImport: AttributeDataImport = await preview(viewId, dataImportId, content);
-
+        } else {
             res.status(200).json({
                 status: 'SUCCESS',
                 message: `Attribute Data Import preview ready`,
-                payload: attributeDataImport
+                payload: r.attributeDataImport
             } as ApiResponse<AttributeDataImport>);
-        });
-
+        }
     }
 ];
 

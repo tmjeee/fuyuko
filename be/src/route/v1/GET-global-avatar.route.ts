@@ -4,6 +4,8 @@ import {check} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {Registry} from "../../registry";
+import {BinaryContent} from "../../model/binary-content.model";
+import {getGlobalAvatarContentByName} from "../../service/avatar.service";
 
 // CHECKED
 const httpAction: any[] = [
@@ -14,15 +16,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const avatarName: string  = req.params.avatarName;
+        const binaryContent: BinaryContent = await getGlobalAvatarContentByName(avatarName);
 
         await doInDbConnection(async (conn: Connection) => {
-            const q1: QueryA  = await conn.query(`SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_AVATAR WHERE NAME = ?`,
-                [avatarName]);
-            if (q1.length > 0) { // have a global avatar
-                res.setHeader('Content-Length', q1[0].SIZE)
+            if (binaryContent) {
+                res.setHeader('Content-Length', binaryContent.size)
                 res.status(200)
-                    .contentType(q1[0].MIME_TYPE)
-                    .end(q1[0].CONTENT);
+                    .contentType(binaryContent.mimeType)
+                    .end(binaryContent.content);
             } else {
                 res.end();
             }

@@ -1,5 +1,5 @@
 <simple-notifications></simple-notifications>
-<div *ngIf="loading">Loading ...</div>
+<app-loading [show]="loading"></app-loading>
 <div class="dashboard-layout"
   *ngIf="!loading"
   [attr.test-side-nav-state-open]="''+sideNavOpened"

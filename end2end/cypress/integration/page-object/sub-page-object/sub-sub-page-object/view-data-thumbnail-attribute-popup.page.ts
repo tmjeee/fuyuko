@@ -1,14 +1,5 @@
 import {ViewDataThumbnailPage} from "../view-data-thumbnail.page";
 import {ViewDataThumbnailEditPopupPage} from "./view-data-thumbnail-edit-popup.page";
-import {
-    AreaUnits,
-    CountryCurrencyUnits,
-    DimensionUnits, HeightUnits,
-    LengthUnits,
-    VolumeUnits,
-    WidthUnits
-} from "../../../model/unit.model";
-import {ViewDataListPage} from "../view-data-list.page";
 import {AbstractViewDataAttributePopupPage} from "./abstract-view-data-attribute-popup.page";
 
 
@@ -17,16 +8,16 @@ export class ViewDataThumbnailAttributePopupPage extends AbstractViewDataAttribu
     ///////////////////////////////////////////////////////////////////
 
     clickOk<T extends ViewDataThumbnailPage | ViewDataThumbnailEditPopupPage>(rootPage: T): T {
-        cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-button-popup-done]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']
+            [test-button-popup-done]`))
             .click({force: true});
         cy.wait(100);
         return rootPage;
     }
 
     clickCancel<T extends ViewDataThumbnailPage | ViewDataThumbnailEditPopupPage>(rootPage: T): T {
-        cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
-            .find(`[test-button-popup-cancel]`)
+        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']
+            [test-button-popup-cancel]`))
             .click({force: true});
         cy.wait(100);
         return rootPage;

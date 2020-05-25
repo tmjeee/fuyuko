@@ -71,7 +71,6 @@ import registerPostPreviewPriceDataExportRoute from './POST-preview-price-data-e
 import registerPostScheduleAttributeDataExportRoute from './POST-schedule-attribute-data-export.route';
 import registerPostScheduleItemDataExportRoute from './POST-schedule-item-data-export.route';
 import registerPostSchedulePriceDataExportRoute from './POST-schedule-pricing-data-export.route';
-import registerGetExportedFileByIdRoute from './GET-export-file-by-id.route';
 import registerPostSaveUserDashboardRoute from './POST-save-user-dashboard.route';
 import registerGetUserDashboardRoute from './GET-user-dashboard.route';
 import registerPostUserDashboardWidgetDataRoute from './POST-user-dashboard-widget-data.route';
@@ -100,7 +99,6 @@ import registerPostUserNotificationRoute from './POST-user-notification.route';
 import registerPostAddAttributeRoute from './POST-add-attributes.route';
 import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
-// import registerGetAllPricingStructureByViewRoute from './GET-all-pricing-structures-by-view.route';
 import registerGetDataExportContentByIdRoute from './GET-data-export-content-by-id.route';
 import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
 import registerGetAllDataExportArtifactsRoute from './GET-all-data-export-artifacts.route';
@@ -117,7 +115,27 @@ import registerGetAllCustomExportRoute from './GET-all-custom-export.route';
 import registerPostCustomExportValidateInputRoute from './POST-custom-export-validate-input.route';
 import registerPostCustomExportPreviewRoute from './POST-custom-export-preview.route';
 import registerPostCustomExportSubmitJobRoute from './POST-custom-export-submit-job.route';
-
+import registerGetPricingStructuresByViewRoute from './GET-pricing-structures-by-view.route';
+import registerPostUpdateGroupRoute from './POST-update-group.route';
+import registerDeleteGroupsRoute from './DELETE-groups.route';
+import registerGetPricingStructureGroupAssociationsRoute from './GET-pricing-structure-group-associations.route';
+import registerGetGroupsNotAssociatedWithPricingStructureRoute from './GET-groups-not-associated-with-pricing-structure.route';
+import registerPostLinkPricingStructureGroupRoute from './POST-link-pricing-structure-group.route';
+import registerPostUnlinkPricingStructureGroupRoute from './POST-unlink-pricing-structure-group.route'
+import registerGetGroupsAssociatedWithPricingStructureRoute from './GET-groups-associated-with-pricing-structure.route';
+import registerGetViewCategoryItemsRoute from './GET-view-category-items.route';
+import registerPostAddItemToCategoryRoute from './POST-add-item-to-category.route';
+import registerDeleteRemoveItemFromCategoryRoute from './DELETE-remove-item-from-category.route';
+import registryGetViewCategoriesRoute from './GET-view-categories.route';
+import registryGetViewCategoriesWithItemsRoute from './GET-view-categories-with-items.route';
+import registerPostAddCategoryRoute from './POST-add-category.route';
+import registerPostUpdateCategoryRoute from './POST-update-category.route';
+import registerDeleteCategoryRoute from './DELETE-category.route';
+import registerGetCategorySimpleItemsInCategoryRoute from './GET-category-simple-items-in-category.route';
+import registerGetCategorySimpleItemsNotInCategoryRoute from './GET-category-simple-items-not-in-category.route';
+import registerPostForgotPasswordRoute from './POST-forgot-password.route';
+import registerPostResetForgottenPasswordRoute from './POST-reset-forgotten-password.route';
+import registerPostCheckForgotPasswordCodeRoute from './POST-check-forgot-password-code.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -195,7 +213,6 @@ const reg = (router: Router, regi: Registry) => {
     registerPostScheduleAttributeDataExportRoute(v1AppRouter, registry);
     registerPostScheduleItemDataExportRoute(v1AppRouter, registry);
     registerPostSchedulePriceDataExportRoute(v1AppRouter, registry);
-    registerGetExportedFileByIdRoute(v1AppRouter, registry);
     registerPostSaveUserDashboardRoute(v1AppRouter, registry);
     registerGetUserDashboardRoute(v1AppRouter, registry);
     registerPostUserDashboardWidgetDataRoute(v1AppRouter, registry);
@@ -224,7 +241,6 @@ const reg = (router: Router, regi: Registry) => {
     registerPostAddAttributeRoute(v1AppRouter, registry);
     registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
-    // registerGetAllPricingStructureByViewRoute(v1AppRouter, registry);
     registerGetDataExportContentByIdRoute(v1AppRouter, registry);
     registerGetPricingStructureByIdRoute(v1AppRouter, registry);
     registerGetAllDataExportArtifactsRoute(v1AppRouter, registry);
@@ -233,7 +249,6 @@ const reg = (router: Router, regi: Registry) => {
     registerDeleteItemImageRoute(v1AppRouter, registry);
     registerPostMarkItemImageAsPrimaryRoute(v1AppRouter, registry);
     registerGetHelpRoute(v1AppRouter, registry);
-
     registerGetAllCustomImportRoute(v1AppRouter, registry);
     registerPostCustomImportValidateInputRoute(v1AppRouter, registry);
     registerPostCustomImportPreviewRoute(v1AppRouter, registry);
@@ -242,6 +257,28 @@ const reg = (router: Router, regi: Registry) => {
     registerPostCustomExportValidateInputRoute(v1AppRouter, registry);
     registerPostCustomExportPreviewRoute(v1AppRouter, registry);
     registerPostCustomExportSubmitJobRoute(v1AppRouter, registry);
+    registerGetPricingStructuresByViewRoute(v1AppRouter, registry);
+    registerPostUpdateGroupRoute(v1AppRouter, registry);
+    registerDeleteGroupsRoute(v1AppRouter, registry);
+    registerGetPricingStructureGroupAssociationsRoute(v1AppRouter, registry);
+    registerGetGroupsNotAssociatedWithPricingStructureRoute(v1AppRouter, registry);
+    registerPostLinkPricingStructureGroupRoute(v1AppRouter, registry);
+    registerPostUnlinkPricingStructureGroupRoute(v1AppRouter, registry);
+    registerGetGroupsAssociatedWithPricingStructureRoute(v1AppRouter, registry);
+    registryGetViewCategoriesRoute (v1AppRouter, registry);
+    registerDeleteCategoryRoute(v1AppRouter, registry);
+    registryGetViewCategoriesWithItemsRoute(v1AppRouter, registry);
+    registerGetViewCategoryItemsRoute(v1AppRouter, registry);
+    registerPostAddCategoryRoute (v1AppRouter, registry);
+    registerPostUpdateCategoryRoute(v1AppRouter, registry);
+    registerPostAddItemToCategoryRoute(v1AppRouter, registry);
+    registerDeleteRemoveItemFromCategoryRoute(v1AppRouter, registry);
+    registerGetCategorySimpleItemsInCategoryRoute(v1AppRouter, registry);
+    registerGetCategorySimpleItemsNotInCategoryRoute(v1AppRouter, registry);
+
+    registerPostCheckForgotPasswordCodeRoute(v1AppRouter, registry);
+    registerPostResetForgottenPasswordRoute(v1AppRouter, registry);
+    registerPostForgotPasswordRoute(v1AppRouter, registry);
 };
 
 

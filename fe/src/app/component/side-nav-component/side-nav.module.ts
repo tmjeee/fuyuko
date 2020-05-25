@@ -6,6 +6,7 @@ import {AppMaterialsModule} from '../../app-materials.module';
 import {SideNavComponent} from './side-nav.component';
 import {PartnerSideNavComponent} from './partner-side-nav.component';
 import {RouterModule} from '@angular/router';
+import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import {RouterModule} from '@angular/router';
         ReactiveFormsModule,
         AppMaterialsModule,
         RouterModule,
+        SharedComponentUtilsModule,
     ],
     declarations: [
         SideNavComponent,

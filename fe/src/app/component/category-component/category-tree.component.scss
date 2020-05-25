@@ -1,0 +1,19 @@
+.category-tree-component {
+  height: 100%;
+  ::ng-deep {
+    .mat-tree {
+      height: 100%;
+      .mat-tree-node {
+        .label {
+          cursor: pointer;
+          padding: 5px;
+          border-radius: 2px;
+          &.selected {
+            background-color: var(--my-app-primary-lighter);
+            color: var(--my-app-primary-lighter-contrast) !important;
+          }
+        }
+      }
+    }
+  }
+}

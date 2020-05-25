@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 
 
@@ -23,12 +23,13 @@ export interface PasswordComponentEvent {
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent {
+export class PasswordComponent implements OnChanges{
 
   formGroup: FormGroup;
   formControlPassword: FormControl;
   formControlConfirmPassword: FormControl;
 
+  @Input() disable: boolean;
   @Output() events: EventEmitter<PasswordComponentEvent>;
 
   constructor(private formBuilder: FormBuilder) {
@@ -45,6 +46,19 @@ export class PasswordComponent {
     this.events.emit({
       password: this.formControlPassword.value
     } as PasswordComponentEvent);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+      const change: SimpleChange = changes.disable;
+      if (change !== null && change !== undefined) {
+        if (change.currentValue) { // disable
+          this.formControlPassword.disable();
+          this.formControlConfirmPassword.disable();
+        } else { // enable
+          this.formControlPassword.enable();
+          this.formControlConfirmPassword.enable();
+        }
+      }
   }
 
 

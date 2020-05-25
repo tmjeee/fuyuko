@@ -4,7 +4,7 @@ import { param } from "express-validator";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
-import {DEFAULT_SETTINGS} from "../../service/user-settings.service";
+import {DEFAULT_SETTINGS, updateUserSettings} from "../../service/user-settings.service";
 import {ApiResponse} from "../../model/api-response.model";
 
 // CHECKED
@@ -19,24 +19,20 @@ const httpAction: any[] = [
 
         const userId: number = Number(req.params.userId);
 
-        for (const bodyParam in req.body) {
-            const k = bodyParam;
-            const v = req.body[bodyParam];
+        const errors: string[] = await updateUserSettings(userId, req.body);
 
-            // @ts-ignore
-            const dv = DEFAULT_SETTINGS[k];
-            const tv = (dv !== null && dv !== undefined) ? typeof dv : 'string';
+        if (errors && errors.length) {
+            res.status(200).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse);
 
-            await doInDbConnection(async (conn: Connection) => {
-               conn.query(`INSERT INTO TBL_USER_SETTING (USER_ID, SETTING, VALUE, TYPE) VALUES (?,?,?,?)`,
-                   [userId, k, v, tv]);
-            });
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Settings updated`
+            } as ApiResponse);
         }
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Settings updated`
-        } as ApiResponse);
     }
 ];
 

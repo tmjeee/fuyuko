@@ -1,15 +1,17 @@
 import {Component, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ViewService} from '../../service/view-service/view.service';
-import {map} from 'rxjs/operators';
+import {finalize, map} from 'rxjs/operators';
 import {View} from '../../model/view.model';
 import {Subscription} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {AttributeTableComponentEvent} from '../../component/attribute-table-component/attribute-table.component';
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {Router} from "@angular/router";
+import {Pagination} from "../../utils/pagination.utils";
+import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
 
 @Injectable()
 export class Prov {
@@ -23,7 +25,12 @@ export class Prov {
 })
 export class ViewAttributesPageComponent implements OnInit, OnDestroy {
 
+  pagination: Pagination;
+
   subscription: Subscription;
+
+  viewReady: boolean;
+  attributesReady: boolean;
 
   currentView: View;
   attributes: Attribute[];
@@ -31,16 +38,20 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
   constructor(private attributeService: AttributeService,
               private router: Router,
               private notificationsService: NotificationsService,
-              private viewService: ViewService) {}
+              private viewService: ViewService) {
+      this.pagination = new Pagination();
+  }
 
   ngOnInit(): void {
+    this.viewReady = false;
     this.subscription = this.viewService
       .asObserver()
       .pipe(
         map((v: View) => {
           if (v) {
             this.currentView = v;
-            this.reloadAttributes();
+            this.reload();
+            this.viewReady = true;
           }
         })
       ).subscribe();
@@ -52,12 +63,17 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  reloadAttributes() {
+  reload() {
     if (this.currentView) {
-      this.attributeService.getAllAttributesByView(this.currentView.id)
+      this.attributesReady = false;
+      this.attributeService.getAllAttributesByView(this.currentView.id, this.pagination.limitOffset())
         .pipe(
-          map((a: Attribute[]) => {
-            this.attributes = a;
+          map((r: PaginableApiResponse<Attribute[]>) => {
+            this.attributes = r.payload;
+            this.pagination.update(r);
+          }),
+          finalize(() => {
+              this.attributesReady = true;
           })
         ).subscribe();
     }
@@ -71,7 +87,7 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
           .pipe(
             map((a: ApiResponse) => {
               toNotifications(this.notificationsService, a);
-              this.reloadAttributes();
+              this.reload();
             })
           ).subscribe();
         break;
@@ -93,4 +109,9 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
+    onPaginationEvent($event: PaginationComponentEvent) {
+      this.pagination.updateFromPageEvent($event.pageEvent);
+      this.reload();
+    }
 }

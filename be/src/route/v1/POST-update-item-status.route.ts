@@ -12,6 +12,8 @@ import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
+import {updateItemsStatus} from "../../service/item.service";
+import {Status} from "../../model/status.model";
 
 
 // CHECKED
@@ -32,16 +34,18 @@ const httpAction: any[] = [
         const status: string = req.params.status;
         const itemIds: number[] = req.body.itemIds;
 
-        await doInDbConnection(async (conn: Connection) => {
-            for (const itemId of itemIds) {
-                // await conn.query(`UPDATE TBL_ITEM SET STATUS = ? WHERE ID=?`, [status,itemId]);
-                await f(conn, itemId, status);
-            }
-        });
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `Items ${status.toLowerCase()}`
-        } as ApiResponse)
+        const errors: string[] = await updateItemsStatus(itemIds, status as Status);
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse)
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Items ${status.toLowerCase()}`
+            } as ApiResponse)
+        }
     }
 ];
 

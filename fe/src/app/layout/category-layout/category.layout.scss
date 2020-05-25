@@ -1,0 +1,25 @@
+@import '../abstract-gen.layout';
+@import '../abstract-gen-sub.layout';
+
+.category-layout {
+  @include abstract-gen-layout-style();
+  @include abstract-gen-sub-layout-style();
+
+  .main-side-nav-container {
+    .main-content {
+      .sub-side-nav-container {
+        .content-2 {
+          // height: 100vh;
+          .secondary-toolbar {
+            .view-selection {
+              margin-left: 20px;
+            }
+          }
+          .primary-outlet {
+            overflow: hidden; // to remove horizontal scrollbar
+          }
+        }
+      }
+    }
+  }
+}

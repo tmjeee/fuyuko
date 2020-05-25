@@ -5,25 +5,32 @@ import {ViewPredefinedRuleAddPage} from "./view-predefined-rule-add.page";
 import {OperatorType} from "../../../model/operator.model";
 
 
+const PAGE_NAME = 'view-rules';
 export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage>{
 
     validateTitle(): ViewPredefinedRulePage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-rules');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
+        return this;
+    }
+
+    waitForReady(): ViewPredefinedRulePage {
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     verifyErrorMessageExists(): ViewPredefinedRulePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): ViewPredefinedRulePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
     visit(): ViewPredefinedRulePage {
         cy.visit(`/view-gen-layout/(rules//help:view-help)`);
+        this.waitForReady();
         return this;
     }
 
@@ -101,7 +108,7 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
             .find(`[test-panel-when-clause-attribute='${attributeName}']`)
             .should('contain.text',operator);
         cy.wrap(vals).each((e, i, a) => {
-            cy.get(`[test-panel-content-rule='${ruleName}']`)
+            return cy.get(`[test-panel-content-rule='${ruleName}']`)
                 .find(`[test-panel-when-clause-attribute='${attributeName}']`)
                 .should('contain.text', vals[i]);
         });
@@ -117,7 +124,7 @@ export class ViewPredefinedRulePage implements ActualPage<ViewPredefinedRulePage
             .find(`[test-panel-validate-clause-attribute='${attributeName}']`)
             .should('contain.text',operator);
         cy.wrap(vals).each((e, i, a) => {
-            cy.get(`[test-panel-content-rule='${ruleName}']`)
+            return cy.get(`[test-panel-content-rule='${ruleName}']`)
                 .find(`[test-panel-validate-clause-attribute='${attributeName}']`)
                 .should('contain.text', vals[i]);
         });

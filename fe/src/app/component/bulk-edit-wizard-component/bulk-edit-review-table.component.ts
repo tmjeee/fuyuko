@@ -4,6 +4,7 @@ import {Attribute} from '../../model/attribute.model';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
+import uuid from "uuid";
 
 export class BulkEditReviewTableDataSource extends DataSource<BulkEditTableItem> {
     private subject: BehaviorSubject<BulkEditTableItem[]> = new BehaviorSubject([]);
@@ -45,28 +46,28 @@ export class BulkEditReviewTableComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.whenAttributes.forEach((a: Attribute) => a['uid'] = uuid());
+        this.changeAttributes.forEach((a: Attribute) => a['uid'] = uuid());
+
         this.attributeHeaderColumns = [
             'item-number-header',
             'item-info-header',
-            ...this.whenAttributes.map((wa: Attribute) => `when-attributes-header-${wa.id}`),
-            ...this.changeAttributes.map((ca: Attribute) => `change-attributes-header-${ca.id}`)
+            ...this.whenAttributes.map((wa: Attribute) => `when-attributes-header-${wa['uid']}-${wa.id}`),
+            ...this.changeAttributes.map((ca: Attribute) => `change-attributes-header-${ca['uid']}-${ca.id}`),
         ];
         this.changeAttributes.forEach((ca: Attribute) => {
-            this.changeOldNewValuesHeaderColumns.push(`change-old-values-header-${ca.id}`);
-            this.changeOldNewValuesHeaderColumns.push(`change-new-values-header-${ca.id}`);
+            this.changeOldNewValuesHeaderColumns.push(`change-old-values-header-${ca['uid']}-${ca.id}`);
+            this.changeOldNewValuesHeaderColumns.push(`change-new-values-header-${ca['uid']}-${ca.id}`);
         });
         this.displayedColumns = [
             `item-number-cell`,
             `item-info-cell`,
-            ...this.whenAttributes.map((wa: Attribute) => '' + wa.id),
+            ...this.whenAttributes.map((wa: Attribute) => `${wa['uid']}-${wa.id}`),
         ];
         this.changeAttributes.forEach((ca: Attribute) => {
-            this.displayedColumns.push(`old-${ca.id}`);
-            this.displayedColumns.push(`new-${ca.id}`);
+            this.displayedColumns.push(`old-${ca['uid']}-${ca.id}`);
+            this.displayedColumns.push(`new-${ca['uid']}-${ca.id}`);
         });
         this.dataSource.update(this.bulkEditTableItem);
     }
-
-
-
 }

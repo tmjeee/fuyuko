@@ -1,4 +1,4 @@
-import {ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../route/model/server-side.model";
+import {ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../server-side-model/server-side.model";
 import {
     AreaValue, CurrencyValue, DateValue,
     DimensionValue, DoubleSelectValue, HeightValue,
@@ -9,30 +9,35 @@ import {
     WidthValue
 } from "../model/item.model";
 
-export const convert = (metadatas: ItemMetadata2[]): ItemValTypes => {
-    const o: any = {};
+export const itemValTypesConvert = (metadatas: ItemMetadata2[]): ItemValTypes => {
+    let o: any = null;
     for (const metadata of metadatas) {
         for (const entry of metadata.entries) {
             const k: string = entry.key;
             const t: string = entry.dataType;
             const v: string = entry.value;
             let _v: string | number = null;
-            switch (t) {
-                case 'string':
-                    _v = String(v);
-                    break;
-                case 'number':
-                    _v = Number(v);
-                    break;
+            if (k) {
+                switch (t) {
+                    case 'string':
+                        _v = String(v);
+                        break;
+                    case 'number':
+                        _v = Number(v);
+                        break;
+                }
+                if (!o) {
+                    o = {};
+                }
+                o[k] = _v;
             }
-            o[k] = _v;
         }
     }
     return o;
 }
 
 // todo: tmjeee: make sure undefined doesn't get printed out as string
-export const revert = (itemValTypes: ItemValTypes, attributeId: number): ItemMetadata2[] => {
+export const itemValTypesRevert = (itemValTypes: ItemValTypes, attributeId: number): ItemMetadata2[] => {
     switch (itemValTypes.type) {
         case 'string': {
             const v: StringValue = itemValTypes as StringValue;

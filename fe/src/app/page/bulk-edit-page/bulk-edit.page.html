@@ -1,4 +1,4 @@
-<div class="bulk-edit-page" [attr.test-page-title]="'bulk-edit'">
+<div class="bulk-edit-page" [attr.test-page-title]="'bulk-edit'" [attr.test-page-ready]="''+(!!allViews && !!attributes)">
    <mat-card class="mat-elevation-z-20">
        <mat-card-header>
            <mat-card-title>Bulk Edit</mat-card-title>
@@ -17,8 +17,11 @@
                <mat-hint>Select a view for bulk editing</mat-hint>
            </mat-form-field>
 
-           <ng-container *ngIf="attributes">
-               <app-bulk-edit-wizard [attr.test-bulk-edit-wizard]="currentView.name" [view]="currentView" [attributes]="attributes"></app-bulk-edit-wizard>
+           <ng-container *ngIf="attributes && attributes.length">
+               <app-bulk-edit-wizard [attr.test-bulk-edit-wizard]="currentView.name"
+                                     [view]="currentView"
+                                     [attributes]="attributes">
+               </app-bulk-edit-wizard>
            </ng-container>
        </mat-card-content>
    </mat-card>

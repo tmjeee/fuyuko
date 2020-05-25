@@ -1,0 +1,24 @@
+<div class="pricing-structure-partner-association-page" [attr.test-page-title]="'pricing-structure-partner-association'" [attr.test-page-ready]="''+(!loading)">
+    <mat-card class="mat-elevation-z-20">
+        <mat-card-header>
+            <mat-card-title>Pricing Structure Partner Association</mat-card-title>
+            <mat-card-subtitle>
+                Manage which partner group(s) gets to see which Pricing Structure
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-loading [show]="loading"></app-loading>
+            <div class="controls">
+                <button mat-flat-button type="button" color="primary" (click)="reloadClicked($event)">Reload</button>
+            </div>
+            <div *ngIf="!loading && pricingStructureGroupAssociations && (!pricingStructureGroupAssociations.length)">
+                No entries
+            </div>
+            <app-pricing-structure-group-association *ngIf="!loading && pricingStructureGroupAssociations && pricingStructureGroupAssociations.length"
+                                                     (events)="onPricingStructureGroupAssociationEvent($event)"
+                                                     [pricingStructureGroupAssociations]="pricingStructureGroupAssociations"
+                                                     [groupSearchFnsMap]="groupSearchFnsMap">
+            </app-pricing-structure-group-association>
+        </mat-card-content>
+    </mat-card>
+</div>

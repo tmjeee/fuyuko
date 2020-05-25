@@ -1,16 +1,16 @@
-<div class="view-rules-page" [attr.test-page-title]="'view-rules'">
+<div class="view-rules-page" [attr.test-page-title]="'view-rules'" [attr.test-page-ready]="''+(viewReady && rulesReady)">
   <mat-card>
     <mat-card-header>
       <mat-card-title>Rules</mat-card-title>
       <mat-card-subtitle>Configuration of rules related the current view</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div *ngIf="!ready">Loading ... </div>
-      <mat-tab-group *ngIf="ready" [dynamicHeight]="true">
+      <app-loading [show]="!(viewReady && rulesReady)"></app-loading>
+      <mat-tab-group *ngIf="viewReady" [dynamicHeight]="true">
         <mat-tab>
           <ng-template mat-tab-label><span [attr.test-tab]="'predefined'">Build In</span></ng-template>
-          <div *ngIf="ready && !rules">No rules.</div>
-          <app-rules-table *ngIf="ready && rules"
+          <div *ngIf="viewReady && !rules">No rules.</div>
+          <app-rules-table *ngIf="viewReady && rules"
                            [rules]="rules"
                            [attributes]="attributes"
                            (events)="onRulesTableEvent($event)">
@@ -18,7 +18,8 @@
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label><span [attr.test-tab]="'custom'">Custom</span></ng-template>
-          <app-custom-rule-table *ngIf="ready && customRules"
+          <div *ngIf="viewReady && !customRules">No Custom Rules.</div>
+          <app-custom-rule-table *ngIf="viewReady && customRules"
                                  [allCustomRules]="customRules"
                                  (events)="onCustomRuleTableEvent($event)"
                                  [customRulesInView]="customRulesForView">

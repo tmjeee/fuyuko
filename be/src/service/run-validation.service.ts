@@ -1,13 +1,13 @@
 import {Level} from "../model/level.model";
 import {doInDbConnection, QueryResponse} from "../db";
 import {Connection} from "mariadb";
-import {getAllItemsInView} from "./item.service";
-import {getValidationByViewIdAndValidationId, getValidationsByViewId} from "./validation.service";
+import {getAllItem2sInView} from "./item.service";
+import {getValidationByViewIdAndValidationId} from "./validation.service";
 import {Validation} from "../model/validation.model";
-import {Attribute2, Item2, ItemMetadata2, Rule2} from "../route/model/server-side.model";
+import {Attribute2, Item2, ItemMetadata2, Rule2} from "../server-side-model/server-side.model";
 import {
     AreaValue,
-    CurrencyValue,
+    CurrencyValue, DATE_FORMAT,
     DateValue, DimensionValue, DoubleSelectValue, HeightValue,
     Item,
     ItemValTypes,
@@ -22,8 +22,8 @@ import * as attributeConverter from "./conversion-attribute.service";
 import {getRule2s} from "./rule.service";
 import {Rule, WhenClause} from "../model/rule.model";
 import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from "../model/operator.model";
-import {getAttributesInView} from "./attribute.service";
-import {Attribute, DEFAULT_DATE_FORMAT} from "../model/attribute.model";
+import {getAttribute2sInView} from "./attribute.service";
+import {Attribute} from "../model/attribute.model";
 import moment from 'moment';
 import * as logger from '../logger';
 import {convertToDebugString, convertToDebugStrings} from "../shared-utils/ui-item-value-converters.util";
@@ -40,6 +40,7 @@ import {
     compareString,
     compareVolume, compareWidth
 } from "./compare-attribute-values.service";
+import {createNewItemValue} from "../shared-utils/ui-item-value-creator.utils";
 
 interface Context {
    validationId: number;
@@ -103,7 +104,7 @@ const match = (context: Context, attribute: Attribute, actualItemAttributeValueT
         case 'date': {
             const a1 = actualItemAttributeValueType as DateValue;
             const a2 = conditionValueType as DateValue;
-            const format: string = attribute.format ? attribute.format : DEFAULT_DATE_FORMAT;
+            const format: string = attribute.format ? attribute.format : DATE_FORMAT;
             const m1: moment.Moment = moment(a1.value, format);
             const m2: moment.Moment = a2 ? moment(a2.value, format) : null;
 
@@ -225,10 +226,32 @@ const match = (context: Context, attribute: Attribute, actualItemAttributeValueT
     return false;
 };
 
+export const scheduleValidation = async (viewId: number, name: string, description: string):Promise<{validationId: number, errors: string[]}> => {
+    const r: {validationId: number, errors: string[]} = await doInDbConnection(async (conn: Connection) => {
+        let validationId: number = null;
+        const errors: string[] = [];
+        const q: QueryResponse = await conn.query(`
+            
+                INSERT INTO TBL_VIEW_VALIDATION (VIEW_ID, NAME, DESCRIPTION, PROGRESS) VALUES (?,?,?,?)
+            `, [viewId, name, description, 'SCHEDULED']);
+
+        if (q.affectedRows <= 0) {
+           errors.push(`Failed to insert view validation`);
+        } else {
+            validationId = q.insertId;
+        }
+        return  {
+            errors, validationId
+        };
+    });
+    if (r.validationId && (!r.errors || !r.errors.length)) {
+        runValidation(viewId, r.validationId);
+    }
+    return r;
+};
 
 export const runValidation = async (viewId: number, validationId: number) => {
     try {
-
        await doInDbConnection(async (conn: Connection) => {
             await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['IN_PROGRESS', validationId]);
        });
@@ -263,19 +286,19 @@ const _runCustomRulesValidation = async (viewId: number, validationId: number) =
     const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
     await i(currentContext, `Successfully retrieved validation for validationId ${validationId}`);
 
-    const a2s: Attribute2[] = await getAttributesInView(viewId);
-    const as: Attribute[] = await attributeConverter.convert(a2s);
+    const a2s: Attribute2[] = await getAttribute2sInView(viewId);
+    const as: Attribute[] = await attributeConverter.attributesConvert(a2s);
     await i(currentContext,`Successfully retrieved attributes for viewId ${viewId}`);
 
-    const item2s: Item2[] = await getAllItemsInView(viewId);
-    const items: Item[] = itemConverter.convert(item2s);
+    const item2s: Item2[] = await getAllItem2sInView(viewId);
+    const items: Item[] = itemConverter.itemsConvert(item2s);
     await i(currentContext, `Successfully retrieved all items for viewId ${viewId}`);
 
     const customRules: CustomRuleForView[] = await getAllCustomRulesForView(viewId);
     await i(currentContext, `Successfully retrieved all custom rules for viewId ${viewId}`);
 
     const rule2s: Rule2[] = await getRule2s(viewId);
-    const rules: Rule[] = ruleConverter.convert(rule2s);
+    const rules: Rule[] = ruleConverter.rulesConvert(rule2s);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
 
     const l = async (msg: string) => {
@@ -314,16 +337,16 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
     const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
     await i(currentContext, `Successfully retrieved validation for validationId ${validationId}`);
 
-    const a2s: Attribute2[] = await getAttributesInView(viewId);
-    const as: Attribute[] = await attributeConverter.convert(a2s);
+    const a2s: Attribute2[] = await getAttribute2sInView(viewId);
+    const as: Attribute[] = await attributeConverter.attributesConvert(a2s);
     await i(currentContext,`Successfully retrieved attributes for viewId ${viewId}`);
 
-    const item2s: Item2[] = await getAllItemsInView(viewId);
-    const items: Item[] = itemConverter.convert(item2s);
+    const item2s: Item2[] = await getAllItem2sInView(viewId);
+    const items: Item[] = itemConverter.itemsConvert(item2s);
     await i(currentContext, `Successfully retrieved all items for viewId ${viewId}`);
 
     const rule2s: Rule2[] = await getRule2s(viewId);
-    const rules: Rule[] = ruleConverter.convert(rule2s);
+    const rules: Rule[] = ruleConverter.rulesConvert(rule2s);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
 
 
@@ -337,7 +360,7 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
             for (const whenClause of rule.whenClauses) {
                 const att: Attribute = as.find((a: Attribute) => a.id === whenClause.attributeId);
                 const value: Value = item[whenClause.attributeId];
-                const i1: ItemValTypes = value.val;
+                const i1: ItemValTypes = value ? value.val : createNewItemValue(att).val;
                 const i2: ItemValTypes[] = whenClause.condition;
                 const op: OperatorType = whenClause.operator;
                 currentContext.attribute = att;
@@ -372,7 +395,7 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
                 for (const validateClause of rule.validateClauses) {
                     const att: Attribute = as.find((a: Attribute) => a.id === validateClause.attributeId);
                     const value: Value = item[validateClause.attributeId];
-                    const i1: ItemValTypes = value.val;
+                    const i1: ItemValTypes = value ? value.val : createNewItemValue(att).val;
                     const i2: ItemValTypes[] = validateClause.condition;
                     const op: OperatorType = validateClause.operator;
                     currentContext.attribute = att;

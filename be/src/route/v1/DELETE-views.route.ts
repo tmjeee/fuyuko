@@ -13,6 +13,7 @@ import {Connection} from "mariadb";
 import {View} from "../../model/view.model";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
+import {deleteView} from "../../service/view.service";
 
 
 const httpAction: any[] = [
@@ -26,16 +27,25 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const views: View[] =  req.body;
 
+        const errors: string[] = [];
         for (const view of views) {
-            await doInDbConnection(async (conn: Connection) => {
-                await conn.query(`UPDATE TBL_VIEW SET STATUS='DELETED' WHERE ID=?`,[view.id]);
-            });
+            const r: boolean = await deleteView(view.id);
+            if (!r) {
+                errors.push(`Failed to delete view id ${view.id}`);
+            }
         }
 
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `Views deleted`
-        } as ApiResponse);
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Views deleted`
+            } as ApiResponse);
+        }
     }
 ];
 

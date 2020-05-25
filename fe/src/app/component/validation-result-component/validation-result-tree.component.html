@@ -1,7 +1,5 @@
 <div class="validation-result-tree-component">
    <mat-tree [dataSource]="datasource" [treeControl]="treeControl" [attr.test-mat-tree]="''">
-
-
       <!-- tree node leaf -->
       <mat-tree-node *matTreeNodeDef="let n" matTreeNodePadding
                      [attr.test-tree-node-item-name]="n.node.i.name"
@@ -39,8 +37,5 @@
          </button>
          <span class="icon-text" (click)="onNodeClicked($event, n)">{{n.node.name}}</span>
       </mat-tree-node>
-
-
-
    </mat-tree>
 </div>

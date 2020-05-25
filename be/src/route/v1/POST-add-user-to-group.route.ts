@@ -13,6 +13,7 @@ import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_ADMIN} from "../../model/role.model";
+import {addUserToGroup} from "../../service/user.service";
 
 // CHECKED
 
@@ -29,21 +30,18 @@ const httpAction: any[] = [
         const groupId: number = Number(req.params.groupId);
         const userId: number = Number(req.params.userId);
 
-        await doInDbConnection(async (conn: Connection) => {
-           const q1: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_USER_GROUP WHERE GROUP_ID = ? AND USER_ID = ?`, [groupId, userId]);
-           if (q1.length > 0 && q1[0].COUNT > 0) {
-               res.status(400).json(makeApiErrorObj(
-                   makeApiError(`User ${userId} already in group ${groupId}`, 'userId', String(userId), 'System')
-               ));
-               return;
-           }
-
-           await conn.query(`INSERT INTO TBL_LOOKUP_USER_GROUP (GROUP_ID, USER_ID) VALUES (?, ?)`, [groupId, userId]);
-           res.status(200).json({
-               status: "SUCCESS",
-               message: `User ${userId} added to group ${groupId}`
-           } as ApiResponse);
-        });
+        const errors: string[] = await addUserToGroup(userId, groupId);
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: "ERROR",
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: "SUCCESS",
+                message: `User ${userId} added to group ${groupId}`
+            } as ApiResponse);
+        }
     }
 ];
 

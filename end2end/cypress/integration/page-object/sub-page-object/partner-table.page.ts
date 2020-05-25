@@ -1,106 +1,131 @@
 import {ActualPage} from "../actual.page";
 import * as util from '../../util/util';
 
+const PAGE_NAME = 'partner-table';
 export class PartnerTablePage implements ActualPage<PartnerTablePage> {
 
     validateTitle(): PartnerTablePage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'partner-table');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
     visit(): PartnerTablePage {
         cy.visit('/partner-layout/(table//help:partner-help)');
+        this.waitForReady();
+        return this;
+    }
+
+    waitForReady(): PartnerTablePage {
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     verifyErrorMessageExists(): PartnerTablePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): PartnerTablePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
     /////////////////
 
-    selectPricingStructure(pricingStructureName: string): PartnerTablePage {
-        cy.get(`[test-mat-select-pricing-structure] div`)
-            .click({force: true, multiple: true});
-        cy.get(`[test-mat-select-option-pricing-structure='${pricingStructureName}']`)
+    selectPricingStructure(viewName: string, pricingStructureName: string): PartnerTablePage {
+        cy.waitUntil(() => cy.get(`[test-mat-select-pricing-structure]`)).first()
             .click({force: true});
-        cy.wait(100);
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-pricing-structure='${viewName}-${pricingStructureName}']`)).as('testMatOption');
+        cy.get('@testMatOption').then((_) => {
+            cy.wrap(_).click({force: true})
+        });
+        cy.waitUntil(() => cy.get(`[test-partner-data-table]`)).then((_) => {
+            return new Cypress.Promise((res, rej) => {
+                res(_);
+            });
+        });
         return this;
     }
 
     expandItem(itemName: string): PartnerTablePage {
-        cy.get(`[test-page-title]`).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-page-title]`)).then((_) => {
             const length = _.find(`[test-table-partner-item] [test-icon-expand-item='${itemName}']`).length
-            console.log('**** length', length);
-            if (length > 0) { // not already expanded
-                return cy.get(`[test-table-partner-item]`)
-                    .find(`[test-icon-expand-item='${itemName}']`)
+            cy.log(`test-icon-expand-item=${itemName} length = ${length}`);
+            if (length > 0) { // can be expanded
+                cy.waitUntil(() => cy.get(`[test-table-partner-item]
+                    [test-icon-expand-item='${itemName}']`))
                     .click({force: true});
             }
+            return cy.waitUntil(() => cy.get(`[test-table-partner-item] [test-icon-collapse-item='${itemName}`)).then((_) => {
+                return new Cypress.Promise((res, rej) => res(_));
+            });
         });
         return this;
     }
 
     collapseItem(itemName: string): PartnerTablePage {
-        cy.get(`[test-page-title]`).then((_) => {
+        cy.waitUntil(() => cy.get(`[test-page-title]`)).then((_) => {
             const length = _.find(`[test-table-partner-item] [test-icon-collapse-item='${itemName}']`).length
-            if (length > 0) { // already expanded
-                cy.get(`[test-table-partner-item]`)
-                    .find(`[test-icon-collapse-item='${itemName}']`)
+            if (length > 0) { // can be collapsed
+                cy.waitUntil(() => cy.get(`[test-table-partner-item]
+                    [test-icon-collapse-item='${itemName}']`))
                     .click({force: true});
             }
+            return cy.waitUntil(() => cy.get(`[test-table-partner-item] [test-icon-expand-item='${itemName}`)).then((_) => {
+                return new Cypress.Promise((res, rej) => res(_));
+            });
         });
         return this;
     }
 
     verifyItemVisible(itemName: string): PartnerTablePage {
-        cy.get(`[test-table-partner-item]`)
-            .find(`[test-row-item='${itemName}']`)
+        cy.waitUntil(() => cy.get(`[test-table-partner-item]
+            [test-row-item='${itemName}']`))
             .should('be.visible');
         return this;
     }
 
     verifyItemNotVisible(itemName: string): PartnerTablePage {
-        cy.get(`[test-table-partner-item]`)
-            .find(`[test-row-item='${itemName}']`)
+        cy.get(`[test-table-partner-item]
+            [test-row-item='${itemName}']`)
             .should('not.be.visible');
         return this;
     }
 
     clickOnShowAttributeIcon(itemName: string): PartnerTablePage {
-        cy.get(`[test-table-partner-item]`)
-            .find(`[test-icon-more-attributes='${itemName}']`)
-            .click({force: true})
+        cy.waitUntil(() => cy.get(`[test-table-partner-item]
+            [test-icon-more-attributes='${itemName}']`))
+            .click({force: true});
+        cy.waitUntil(() => cy.get(`[test-side-nav] div.partner-item-info-table`)).then((_) => {
+            return new Cypress.Promise((res, rej) => {
+                res(_);
+            });
+        });
         return this;
     }
 
     verifyAttributeSideMenuVisible(): PartnerTablePage {
-        cy.get(`[test-partner-data-table]`) //
-            .find(`[test-side-nav]`)
+        cy.waitUntil(() => cy.get(`[test-partner-data-table] 
+            [test-side-nav] div.partner-item-info-table`))
+            .scrollIntoView()
             .should('be.visible');
         return this;
     }
 
     verifyAttributeSideMenuItemName(itemName: string): PartnerTablePage {
-        cy.get(`[test-partner-data-table]`) //
-            .find(`[test-side-nav]`)
-            .find(`[test-table-partner-item-info]`)
-            .find(`[test-info-name='Name']`)
+        cy.waitUntil(() => cy.get(`[test-partner-data-table] 
+            [test-side-nav]
+            [test-table-partner-item-info]
+            [test-info-name='Name']`))
             .should('contains.text', itemName);
         return this;
     }
 
     verifyAttributeSideNenuItemPrice(price: string): PartnerTablePage {
-        cy.get(`[test-partner-data-table]`) //
-            .find(`[test-side-nav]`)
-            .find(`[test-table-partner-item-info]`)
-            .find(`[test-info-name='Price']`)
+        cy.waitUntil(() => cy.get(`[test-partner-data-table]
+            [test-side-nav]
+            [test-table-partner-item-info]
+            [test-info-name='Price']`))
             .should('contains.text', price);
         return this;
 
@@ -108,38 +133,38 @@ export class PartnerTablePage implements ActualPage<PartnerTablePage> {
 
     verifyAttributeSideMenuAttributeValue(attributeName: string, values: string[]): PartnerTablePage {
         cy.wrap(values).each((e, i, a) => {
-            cy.get(`[test-partner-data-table]`) //
-                .find(`[test-side-nav]`)
-                .find(`[test-table-partner-attributes]`)
-                .find(`[test-cell-attribute='${attributeName}']`)
+            return cy.waitUntil(() => cy.get(`[test-partner-data-table]
+                [test-side-nav]
+                [test-table-partner-attributes]
+                [test-cell-attribute='${attributeName}']`))
                 .then((_) => {
-                    cy.wrap(_).should('contain.text', values[i]);
+                    return cy.wrap(_).should('contain.text', values[i]);
                 })
         })
         return this;
     }
 
     verifyItemName(itemName: string, name: string): PartnerTablePage {
-        cy.get(`[test-partner-data-table]`) //
-            .find(`[test-row-item='${itemName}']`)
-            .find(`[test-table-cell='name']`)
+        cy.waitUntil(() => cy.get(`[test-partner-data-table]
+            [test-row-item='${itemName}']
+            [test-table-cell='name']`))
             .should('contain.text', name);
         return this;
     }
 
     verifyItemPrice(itemName: string, price: string): PartnerTablePage {
-        cy.get(`[test-partner-data-table]`) //
-            .find(`[test-row-item='${itemName}']`)
-            .find(`[test-table-cell='price']`)
+        cy.waitUntil(() => cy.get(`[test-partner-data-table]
+            [test-row-item='${itemName}']
+            [test-table-cell='price']`))
             .should('contain.text', price);
         return this;
     }
 
     verifyItemAttributeValue(itemName: string, attributeName: string, values: string[]): PartnerTablePage {
         cy.wrap(values).each((e, i, a) => {
-            cy.get(`[test-partner-data-table]`) //
-                .find(`[test-row-item='${itemName}']`)
-                .find(`[test-table-cell='${attributeName}']`)
+            return cy.waitUntil(() => cy.get(`[test-partner-data-table]
+                [test-row-item='${itemName}']
+                [test-table-cell='${attributeName}']`))
                 .should('contain.text', values[i]);
         });
         return this;

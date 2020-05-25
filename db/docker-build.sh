@@ -2,9 +2,9 @@
 
 cd $(dirname $0)
 
-docker stop tmjee-fuyuko-db
-docker rm -f tmjee-fuyuko-db
-docker rmi -f tmjee/fuyuko-db
-docker build -t tmjee/fuyuko-db -f docker/dockerfile .
+docker container stop tmjee-fuyuko-db
+docker container rm -f tmjee-fuyuko-db
+docker image rmi -f tmjee/fuyuko-db
+docker image build -t tmjee/fuyuko-db -f docker/dockerfile .
 
 

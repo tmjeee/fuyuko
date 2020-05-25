@@ -19,6 +19,7 @@
     "build": "npm run tsc",
     "postbuild": ""
   },
+  "private": false,
   "author": "tmjeee",
   "license": "LGPL",
   "dependencies": {

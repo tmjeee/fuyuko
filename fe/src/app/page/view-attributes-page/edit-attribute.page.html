@@ -1,5 +1,16 @@
-<div *ngIf="viewLoading || attributeLoading">Loading ...</div>
-<div *ngIf="!viewLoading && !attributeLoading" class="edit-attribute-page" [attr.test-page-title]="'view-edit-attribute'">
-    <app-edit-attribute [attribute]="attribute" (events)="onEditAttributeEvent($event)">
-    </app-edit-attribute>
+
+<div class="edit-attributes-page" [attr.test-page-title]="'view-edit-attribute'" [attr.test-page-ready]="'' + (!viewLoading && !attributeLoading)">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Edit Attributes</mat-card-title>
+            <mat-card-subtitle>Edit attribute related to current active view.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-loading [show]="viewLoading || attributeLoading"></app-loading>
+            <div *ngIf="!viewLoading && !attributeLoading">
+                <app-edit-attribute [attribute]="attribute" (events)="onEditAttributeEvent($event)">
+                </app-edit-attribute>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>

@@ -50,7 +50,9 @@
                         <div class="widget-drag-placeholder" *cdkDragPlaceholder>
                             Drag Placeholder
                         </div>
-                        <app-widget-container #widgetContainer [dashboardWidgetInstance]="widgetInstance">
+                        <app-widget-container #widgetContainer
+                                              [currentUser]="currentUser"
+                                              [dashboardWidgetInstance]="widgetInstance">
                         </app-widget-container>
                     </div>
                 </ng-container>

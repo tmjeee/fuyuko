@@ -7,33 +7,35 @@ import {CustomExportPage} from "./sub-page-object/custom-export.page";
 
 export class ImportExportPage {
 
-    visit(): ImportPage {
-        cy.visit('/import-export-gen-layout/(import//help:import-help)');
-        return new ImportPage();
+    visit(): ImportExportPage {
+        // cy.visit('/import-export-gen-layout/(import//help:import-help)');
+        new ImportPage().visit();
+        return this;
     }
 
     visitImportPage(): ImportPage {
-        cy.visit('/import-export-gen-layout/(import//help:import-help)');
-        return new ImportPage();
+        // cy.visit('/import-export-gen-layout/(import//help:import-help)');
+        // cy.wait(1000);
+        return new ImportPage().visit();
     }
 
     visitExportPage(): ExportPage {
-        cy.visit('/import-export-gen-layout/(export//help:import-help)');
-        return new ExportPage();
+        // cy.visit('/import-export-gen-layout/(export//help:import-help)');
+        return new ExportPage().visit();
     }
 
     visitExportArtifactsPage(): ExportArtifactsPage {
-        cy.visit(`/import-export-gen-layout/export-artifacts//help:import-help`);
-        return new ExportArtifactsPage();
+        // cy.visit(`/import-export-gen-layout/export-artifacts//help:import-help`);
+        return new ExportArtifactsPage().visit();
     }
 
     visitCustomImportPage(): CustomImportPage {
-        cy.visit(`/import-export-gen-layout/(custom-import//help:import-help)`);
-        return new CustomImportPage();
+        // cy.visit(`/import-export-gen-layout/(custom-import//help:import-help)`);
+        return new CustomImportPage().visit();
     }
 
     visitCustomExportPage(): CustomExportPage {
-        cy.visit(`/import-export-gen-layout/(custom-export//help:export-help)`);
-        return new CustomExportPage();
+        // cy.visit(`/import-export-gen-layout/(custom-export//help:export-help)`);
+        return new CustomExportPage().visit();
     }
 }

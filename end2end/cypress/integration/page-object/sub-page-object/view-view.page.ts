@@ -3,25 +3,40 @@ import {ActualPage} from "../actual.page";
 import * as util from "../../util/util";
 import {ViewViewEditPopupPage} from "./sub-sub-page-object/view-view-edit-popup.page";
 
+const PAGE_NAME = 'view-views';
 export class ViewViewPage implements ActualPage<ViewViewPage> {
 
+    selectGlobalView(viewName: string): ViewViewPage {
+        cy.waitUntil(() => cy.get(`[test-mat-select-global-view]`)).first().click({force: true});
+        cy.waitUntil(() => cy.get(`[test-mat-select-option-global-view='${viewName}']`)).click({force: true})
+            .wait(1000);
+        cy.waitUntil(() => cy.get(`[test-page-ready='true']`));
+        return this;
+    }
+
     validateTitle(): ViewViewPage {
-        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', 'view-views');
+        cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
     }
 
     visit(): ViewViewPage {
         cy.visit(`/view-gen-layout/(views//help:view-help)`);
+        this.waitForReady();
+        return this;
+    }
+
+    waitForReady(): ViewViewPage {
+        util.waitUntilTestPageReady(PAGE_NAME);
         return this;
     }
 
     verifyErrorMessageExists(): ViewViewPage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(callbackFn?: () => void): ViewViewPage {
-        util.clickOnSuccessMessageToasts(callbackFn);
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
@@ -32,11 +47,12 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
 
     clickDelete(viewNames: string[]): ViewViewPage {
         cy.wrap(viewNames).each((e, i, a) => {
-            cy.get(`[test-page-title]`).then((_) => {
+            return cy.get(`[test-page-title]`).then((_) => {
                 const length = _.find(`[test-mat-checkbox='${viewNames[i]}'].mat-checkbox-checked`).length;
                 if (length <= 0) { // not already checked
-                    cy.get(`[test-mat-checkbox='${viewNames[i]}'] label`).click({force: true});
+                    return cy.get(`[test-mat-checkbox='${viewNames[i]}'] label`).click({force: true});
                 }
+                return cy.wait(1000);
             })
         });
         cy.get(`[test-button-delete-view]`).click({force: true});

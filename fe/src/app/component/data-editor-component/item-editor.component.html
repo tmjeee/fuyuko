@@ -1,10 +1,10 @@
 <div class="item-editor-component" fxLayout="column">
   <ng-container *ngIf="type === 'name'">
     <!--input type="text" [disabled]="false" [readOnly]="true" (click)="onEdit($event, 'name')" value="{{item.name}}"-->
-    <span [attr.test-item-editor-value]="type" fxFlex="1 1 20px" (click)="onEdit($event, 'name')">{{item.name}}</span>
+    <span [attr.test-item-editor-value]="type" fxFlex="1 1 auto" (click)="onEdit($event, 'name')">&nbsp;{{item.name}}</span>
   </ng-container>
   <ng-container *ngIf="type === 'description'">
     <!--input type="text" [disabled]="false" [readOnly]="true" (click)="onEdit($event, 'description')" value="{{item.description}}"-->
-    <span [attr.test-item-editor-value]="type" fxFlex="1 1 20px" (click)="onEdit($event, 'description')">{{item.description}}</span>
+    <span [attr.test-item-editor-value]="type" fxFlex="1 1 auto" (click)="onEdit($event, 'description')">&nbsp;{{item.description}}</span>
   </ng-container>
 </div>

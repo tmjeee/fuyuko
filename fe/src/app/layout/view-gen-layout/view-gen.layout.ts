@@ -6,7 +6,7 @@ import {AppNotificationService} from '../../service/app-notification-service/app
 import {ViewService} from '../../service/view-service/view.service';
 import {Subscription} from 'rxjs';
 import {View} from '../../model/view.model';
-import {map} from 'rxjs/operators';
+import {finalize, map} from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 import {SettingsService} from '../../service/settings-service/settings.service';
 
@@ -44,10 +44,6 @@ export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implement
       .pipe(
         map((v: View[]) => {
           this.allViews = v;
-          if (!this.currentView && this.allViews.length) {
-            this.viewService.setCurrentView(v[0]);
-          }
-          this.ready = true;
         }),
         map(() => {
             this.subscription = this.viewService
@@ -56,10 +52,13 @@ export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implement
                     map((v: View) => {
                         if (v) {
                             this.currentView = this.allViews ? this.allViews.find((vv: View) => vv.id === v.id) : undefined;
+                        } else if (!this.currentView && this.allViews.length) {
+                            this.viewService.setCurrentView(this.allViews[0]);
                         }
-                    })
+                    }),
+                    finalize(() => this.ready = true)
                 ).subscribe();
-        })
+        }),
       ).subscribe();
 
   }

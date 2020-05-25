@@ -12,6 +12,7 @@ import {Connection} from "mariadb";
 import {check} from 'express-validator';
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_ADMIN} from "../../model/role.model";
+import {deleteUserFromGroup} from "../../service/user.service";
 
 // CHECKED
 const httpAction: any[] = [
@@ -23,23 +24,22 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_ADMIN])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
-        await doInDbConnection(async (conn: Connection) => {
 
-            const userId: number = Number(req.params.userId);
-            const groupId: number = Number(req.params.groupId);
+        const userId: number = Number(req.params.userId);
+        const groupId: number = Number(req.params.groupId);
 
-            const qCount: QueryA = await conn.query(`SELECT COUNT(*) FROM TBL_LOOKUP_USER_GROUP WHERE USER_ID = ? AND GROUP_ID = ? `, [userId, groupId]);
-            if (!qCount.length && !Number(qCount[0].COUNT)) { // aleady exists
-                throw new ClientError(`User ${userId} not in group ${groupId}`);
-            }
-
-            const q: QueryA = await conn.query(`DELETE FROM TBL_LOOKUP_USER_GROUP WHERE USER_ID=? AND GROUP_ID=?`, [userId, groupId]);
+        const errors: string[] = await deleteUserFromGroup(userId, groupId);
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: `User ${userId} failed to be deleted from group ${groupId}`
+            } as ApiResponse);
+        } else {
             res.status(200).json({
                 status: 'SUCCESS',
                 message: `User ${userId} deleted from group ${groupId}`
             } as ApiResponse);
-            return;
-        });
+        }
     }
 ];
 

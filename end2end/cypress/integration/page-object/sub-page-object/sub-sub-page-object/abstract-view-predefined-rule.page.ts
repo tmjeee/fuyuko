@@ -15,12 +15,12 @@ import validate = WebAssembly.validate;
 export class AbstractViewPredefinedRulePage {
 
     verifyErrorMessageExists(): AbstractViewPredefinedRulePage {
-        util.clickOnErrorMessageToasts(() => {});
+        util.clickOnErrorMessageToasts();
         return this;
     }
 
     verifySuccessMessageExists(): AbstractViewPredefinedRulePage {
-        util.clickOnSuccessMessageToasts(() => {});
+        util.clickOnSuccessMessageToasts();
         return this;
     }
 
@@ -361,9 +361,11 @@ export class AbstractViewPredefinedRulePage {
         this.selectWhenClauseOperator(whenClauseIndex, op)
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(val).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -372,6 +374,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -380,9 +383,11 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(val).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -391,6 +396,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -399,9 +405,11 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(key.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(key).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, key[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -410,6 +418,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(key).each((e, i, a) => {
             this.verifyValidateClauseText1(whenClauseIndex, i, key[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -418,10 +427,12 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, v[i].key1)
-                .fillInWhenClauseText2(whenClauseIndex, i, v[i].key2)
+                .fillInWhenClauseText2(whenClauseIndex, i, v[i].key2);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -431,6 +442,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyValidateClauseText1(whenClauseIndex, i, v[i].key1)
                 .verifyValidateClauseText2(whenClauseIndex, i, v[i].key2);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -439,9 +451,11 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(val).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, String(val[i]));
+            return cy.wait(1000);
         });
         return this;
     }
@@ -450,6 +464,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, String(val[i]));
+            return cy.wait(1000);
         });
         return this;
     }
@@ -458,9 +473,11 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(val).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -469,6 +486,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyWhenClauseOperatorSelected(whenClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -477,10 +495,12 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, v[i].val)
                 .fillInWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -490,6 +510,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, v[i].val)
                 .verifyWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -498,10 +519,12 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, String(v[i].val))
                 .fillInWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -511,6 +534,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, String(v[i].val))
                 .verifyWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -519,10 +543,12 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, String(v[i].val))
-                .fillInWhenClauseText2(whenClauseIndex, i, v[i].unit)
+                .fillInWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -532,6 +558,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, String(v[i].val))
                 .verifyWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -540,12 +567,14 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op)
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, String(v[i].val1))
                 .fillInWhenClauseText2(whenClauseIndex, i, String(v[i].val2))
                 .fillInWhenClauseText3(whenClauseIndex, i, String(v[i].val3))
-                .fillInWhenClauseText4(whenClauseIndex, i, v[i].unit)
+                .fillInWhenClauseText4(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -557,6 +586,7 @@ export class AbstractViewPredefinedRulePage {
                 .verifyWhenClauseText2(whenClauseIndex, i, String(v[i].val2))
                 .verifyWhenClauseText3(whenClauseIndex, i, String(v[i].val3))
                 .verifyWhenClauseText4(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -565,10 +595,12 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, String(v[i].val))
-                .fillInWhenClauseText2(whenClauseIndex, i, v[i].unit)
+                .fillInWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -578,6 +610,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, String(v[i].val))
                 .verifyWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -586,10 +619,12 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, String(v[i].val))
                 .fillInWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -599,6 +634,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, String(v[i].val))
                 .verifyWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -607,10 +643,12 @@ export class AbstractViewPredefinedRulePage {
             .selectWhenClauseOperator(whenClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(whenClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInWhenClauseText1(whenClauseIndex, i, String(v[i].val))
                 .fillInWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -620,6 +658,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyWhenClauseText1(whenClauseIndex, i, String(v[i].val))
                 .verifyWhenClauseText2(whenClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -630,9 +669,11 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(val).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -641,6 +682,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -649,9 +691,11 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(val).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -660,6 +704,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -668,9 +713,11 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(key.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(key).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, key[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -679,6 +726,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(key).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, key[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -687,10 +735,12 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, v[i].key1)
                 .fillInValidateClauseText2(validateClauseIndex, i, v[i].key2);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -700,6 +750,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, v[i].key1)
                 .verifyValidateClauseText2(validateClauseIndex, i, v[i].key2);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -708,9 +759,11 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(val).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, String(val[i]));
+            return cy.wait(1000);
         });
         return this;
     }
@@ -719,6 +772,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, String(val[i]));
+            return cy.wait(1000);
         });
         return this;
     }
@@ -727,9 +781,11 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(val.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(val).each((e, i, a) => {
-            this.fillInValidateClauseText1(validateClauseIndex, i, val[i])
+            this.fillInValidateClauseText1(validateClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -738,6 +794,7 @@ export class AbstractViewPredefinedRulePage {
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(val).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, val[i]);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -746,10 +803,12 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, v[i].val)
-                .fillInValidateClauseText2(validateClauseIndex, i, v[i].unit)
+                .fillInValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -759,6 +818,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, v[i].val)
                 .verifyValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -767,10 +827,12 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .fillInValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -780,6 +842,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .verifyValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -788,10 +851,12 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .fillInValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -801,6 +866,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .verifyValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -809,12 +875,14 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, String(v[i].val1))
                 .fillInValidateClauseText2(validateClauseIndex, i, String(v[i].val2))
                 .fillInValidateClauseText3(validateClauseIndex, i, String(v[i].val2))
                 .fillInValidateClauseText4(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -826,6 +894,7 @@ export class AbstractViewPredefinedRulePage {
                 .verifyValidateClauseText2(validateClauseIndex, i, String(v[i].val2))
                 .verifyValidateClauseText3(validateClauseIndex, i, String(v[i].val3))
                 .verifyValidateClauseText4(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -834,10 +903,12 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .fillInValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -847,6 +918,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .verifyValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -855,10 +927,12 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .fillInValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -868,6 +942,7 @@ export class AbstractViewPredefinedRulePage {
         cy.wrap(v).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .verifyValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -876,10 +951,12 @@ export class AbstractViewPredefinedRulePage {
             .selectValidateClauseOperator(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddValidateClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.fillInValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .fillInValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }
@@ -888,10 +965,12 @@ export class AbstractViewPredefinedRulePage {
             .verifyValidateClauseOperatorSelected(validateClauseIndex, op);
         cy.wrap(v.filter((v, i) => i !== 0)).each((e, i, a) => {
             this.clickAddWhenClauseCondition(validateClauseIndex);
+            return cy.wait(1000);
         });
         cy.wrap(v).each((e, i, a) => {
             this.verifyValidateClauseText1(validateClauseIndex, i, String(v[i].val))
                 .verifyValidateClauseText2(validateClauseIndex, i, v[i].unit);
+            return cy.wait(1000);
         });
         return this;
     }

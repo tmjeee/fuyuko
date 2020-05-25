@@ -1,4 +1,5 @@
 import {PricingPage} from "../pricing.page";
+import {PricingStructurePage} from "./pricing-structure.page";
 
 export class EditPricingStructurePopupPage {
 
@@ -27,25 +28,25 @@ export class EditPricingStructurePopupPage {
 
     selectView(viewName: string): EditPricingStructurePopupPage {
         cy.get(`[test-popup-dialog-title='pricing-structure-dialog-popup']`)
-            .find(`[test-mat-select-pricing-structure-view] div`)
-            .click({force: true, multiple: true});
+            .find(`[test-mat-select-pricing-structure-view]`).first()
+            .click({force: true});
         cy.get(`[test-mat-select-option-pricing-structure-view='${viewName}']`)
             .click({force: true});
         return this;
     }
 
-    clickOk(): PricingPage {
+    clickOk(): PricingStructurePage {
         cy.get(`[test-popup-dialog-title='pricing-structure-dialog-popup']`)
             .find(`[test-button-ok]`)
             .click({force: true});
-        return new PricingPage();
+        return new PricingStructurePage().waitForReady();
     }
 
-    clickCancel(): PricingPage {
+    clickCancel(): PricingStructurePage {
         cy.get(`[test-popup-dialog-title='pricing-structure-dialog-popup']`)
             .find(`[test-button-cancel]`)
             .click({force: true});
-        return new PricingPage();
+        return new PricingStructurePage().waitForReady();
     }
 
 }

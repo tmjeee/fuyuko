@@ -2,10 +2,11 @@ import {Connection} from "mariadb";
 import {PriceDataItem, PricingStructureItemWithPrice} from "../model/pricing-structure.model";
 import {doInDbConnection, QueryA, QueryResponse} from "../db";
 import {LoggingCallback, newLoggingCallback} from "./job-log.service";
-import {i} from "../logger";
+import {CountryCurrencyUnits} from "../model/unit.model";
 
-export const setPrices = async (priceDataItems: PriceDataItem[], loggingCallback: LoggingCallback = newLoggingCallback()) => {
-    let totalUpdates = 0;
+export const setPrices = async (priceDataItems: {pricingStructureId: number, item: {itemId: number, price: number, country: CountryCurrencyUnits}}[],
+                                loggingCallback: LoggingCallback = newLoggingCallback()): Promise<string[]> => {
+    const errors: string[] = [];
     for (const priceDataItem of priceDataItems) {
         const pricingStructureId: number = priceDataItem.pricingStructureId;
         const itemId: number = priceDataItem.item.itemId;
@@ -13,28 +14,28 @@ export const setPrices = async (priceDataItems: PriceDataItem[], loggingCallback
         const country: string = priceDataItem.item.country;
 
         const q: QueryResponse =  await _setPrice(pricingStructureId, itemId, price, country);
-        if (q && q.affectedRows > 0) {
-            totalUpdates++;
+        if (q && q.affectedRows <= 0) {
+            errors.push(`Failed to set price for item id ${itemId} in pricing structure id ${pricingStructureId} with price ${price}${country}`);
         }
     }
-    return totalUpdates;
+    return errors;
 }
 
 
-export const setPrices2 = async (pricingStructureId: number, pricingStructureItems: PricingStructureItemWithPrice[], loggingCallback: LoggingCallback = newLoggingCallback()): Promise<number> => {
-    let totalUpdates = 0;
+export const setPrices2 = async (pricingStructureId: number, pricingStructureItems: {itemId: number, price: number,
+    country: CountryCurrencyUnits}[], loggingCallback: LoggingCallback = newLoggingCallback()): Promise<string[]> => {
+    const errors: string[] = [];
     for (const pricingStructureItem of pricingStructureItems) {
-
         const itemId: number = pricingStructureItem.itemId;
         const price: number = pricingStructureItem.price;
         const country: string = pricingStructureItem.country;
 
         const q: QueryResponse = await _setPrice(pricingStructureId, itemId, price, country);
-        if (q && q.affectedRows > 0) {
-            totalUpdates++;
+        if (q && q.affectedRows <= 0) {
+            errors.push(`Failed to set price for item id ${itemId} in pricing structure id ${pricingStructureId} with price ${price}${country}`);
         }
     }
-    return totalUpdates;
+    return errors;
 }
 
 

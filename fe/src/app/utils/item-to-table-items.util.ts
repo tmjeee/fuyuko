@@ -20,7 +20,7 @@ export function copyAttrProperties(from: any, to: any) {
 ////////  item <-> tableItem
 function internalToTableItem(items: Item[], depth: number, rootParentId?: number): TableItem[] {
   const nextDepth = ++depth;
-  return items.reduce((tableItems: TableItem[], item: Item) => {
+  return (items ? items : []).reduce((tableItems: TableItem[], item: Item) => {
     const childrenRootParentId = (rootParentId ? rootParentId : item.id);
     // item itself
     const tableItem: TableItem = {

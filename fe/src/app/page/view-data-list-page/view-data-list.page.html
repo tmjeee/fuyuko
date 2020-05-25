@@ -1,4 +1,4 @@
-<div class="view-data-list-page" [attr.test-page-title]="'view-data-list'">
+<div class="view-data-list-page" [attr.test-page-title]="'view-data-list'" [attr.test-page-ready]="''+(done)">
     <mat-card class="mat-elevation-z20">
         <mat-card-header>
             <mat-card-title>Data - List perspective</mat-card-title>
@@ -7,13 +7,14 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div *ngIf="!done"> Loading ... </div>
+            <app-loading [show]="!done"></app-loading>
             <div *ngIf="done && !itemAndAttributeSet">No Items</div>
             <ng-container *ngIf="itemAndAttributeSet">
                 <app-data-list [itemAndAttributeSet]="itemAndAttributeSet"
                                (searchEvents)="onDataListSearchEvent($event)"
                                (events)="onDataListEvent($event)">
                 </app-data-list>
+                <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
             </ng-container>
         </mat-card-content>
     </mat-card>

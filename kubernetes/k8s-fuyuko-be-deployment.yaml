@@ -1,0 +1,38 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-deployment-fuyuko-be
+  labels:
+    app: kubernetes-deployment-fuyuko-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetes-pod-fuyuko-be
+  template:
+    metadata:
+      labels:
+        app: kubernetes-pod-fuyuko-be
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: kubernetes-fuyuko-be
+          image: tmjee/fuyuko-be:v1.0.0-beta
+          imagePullPolicy: Always
+          #command: ["/bin/bash", "-c"]
+          #args: ["node src/app.js --db-host=\"\"fuyuko-do-user-7502297-0.a.db.ondigitalocean.com\"\" --db-port=25060  --db-user=\"\"admin\"\" --db-password=\"\"bdeooevyqbi0ltj7\"\""]
+          ports:
+            - containerPort: 8888
+              name: fuyuko-be-port
+          volumeMounts:
+            - name: fuyuko-be-config
+              mountPath: /usr/src/fuyuko/src/config/config.json
+              subPath: config.json
+      volumes:
+        - name: fuyuko-be-config
+          configMap:
+            name: fuyuko-be-config
+
+

@@ -1,0 +1,9 @@
+
+.edit-dialog-popup-component {
+  .controls {
+    margin-top: 20px;
+    button:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+}

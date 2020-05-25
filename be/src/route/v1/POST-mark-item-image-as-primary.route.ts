@@ -1,10 +1,9 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import { param } from "express-validator";
-import {ClientError, validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import {ApiResponse} from "../../model/api-response.model";
+import {markItemImageAsPrimary} from "../../service/item-image.service";
 
 // CHECKED
 
@@ -20,22 +19,18 @@ const httpAction: any[] = [
         const itemId: number = Number(req.params.itemId);
         const itemImageId: number = Number(req.params.itemImageId);
 
-        await doInDbConnection(async (conn: Connection) => {
-
-            const q: QueryA = await conn.query(`
-                SELECT COUNT(*) AS COUNT FROM TBL_ITEM_IMAGE WHERE ID=? AND ITEM_ID=?
-            `, [itemImageId, itemId]);
-            if (q[0].COUNT > 0) { // make sure such image actually exists
-                await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\`=false WHERE ITEM_ID=? `, [itemId]);
-                await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\`=true WHERE ITEM_ID=? AND ID=?`, [itemId, itemImageId]);
-                res.status(200).json({
-                   status: 'SUCCESS',
-                   message: `Image updated as primary`
-                } as ApiResponse);
-            } else {
-                throw new ClientError(`Item Image with id ${itemImageId} and itemId ${itemId} do not exists`);
-            }
-        });
+        const errors: string[] = await markItemImageAsPrimary(itemId, itemImageId);
+        if (errors && errors.length) {
+            res.status(400).json({
+                status: 'ERROR',
+                message: errors.join(', ')
+            } as ApiResponse);
+        } else {
+            res.status(200).json({
+                status: 'SUCCESS',
+                message: `Image updated as primary`
+            } as ApiResponse);
+        }
     }
 ];
 

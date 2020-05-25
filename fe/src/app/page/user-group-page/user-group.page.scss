@@ -3,4 +3,11 @@
 .user-group-page {
   margin: 0 10px;
   @include fix-mat-accordion-description-panel();
+
+  .controls {
+    margin-bottom: 20px;
+    button:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
 }

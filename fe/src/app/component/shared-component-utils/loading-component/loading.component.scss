@@ -1,0 +1,11 @@
+.loading-component {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--my-app-warn-default);
+  color: var(--my-app-warn-default-contrast);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 9999999;
+}

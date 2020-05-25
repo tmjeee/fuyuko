@@ -99,17 +99,14 @@ export  class ValidationResultComponent implements OnInit {
     }
 
     fireTableItemChangeEvent(i: Item) {
-        console.log('****** validation-result-comp table item change', i);
         this.tableItemChangeEvents.next(i);
     }
 
     fireTreeItemChangeEvent(i: Item) {
-        console.log('****** validation-result-comp tree item change', i);
         this.treeItemChangeEvents.next(i);
     }
 
     fireValidationErrorEvent(e: ValidationError[]) {
-        console.log('****** validation-result-comp error change', e);
         this.validationErrorChangeEvents.next(e);
     }
 }

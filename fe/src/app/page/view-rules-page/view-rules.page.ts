@@ -7,9 +7,9 @@ import {RuleService} from '../../service/rule-service/rule.service';
 import {Rule} from '../../model/rule.model';
 import {RulesTableComponentEvent} from '../../component/rules-component/rules-table.component';
 import {CounterService} from '../../service/counter-service/counter.service';
-import {combineAll, map, tap} from 'rxjs/operators';
+import {combineAll, finalize, flatMap, map, tap} from 'rxjs/operators';
 import {combineLatest, of, Subscription} from 'rxjs';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
@@ -36,8 +36,8 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
 
     subscription: Subscription;
 
-
-    ready: boolean;
+    viewReady: boolean;
+    rulesReady: boolean;
 
     constructor(private viewService: ViewService,
                 private router: Router,
@@ -49,6 +49,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
+        this.viewReady = false;
         this.subscription = this.viewService
             .asObserver()
             .pipe(
@@ -56,8 +57,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                     if (currentView) {
                         this.currentView = currentView;
                         this.w();
-                    } else {
-                        this.ready = true;
+                        this.viewReady = true;
                     }
                 }),
             ).subscribe();
@@ -70,8 +70,10 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
     }
 
     private w() {
+        this.rulesReady = false;
         combineLatest([
-            this.attributeService.getAllAttributesByView(this.currentView.id),
+            this.attributeService.getAllAttributesByView(this.currentView.id)
+                .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
             this.ruleService.getAllRulesByView(this.currentView.id),
             this.customRuleService.getAllCustomRules(),
             this.customRuleService.getCustomRulesByView(this.currentView.id),
@@ -81,13 +83,15 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                 this.rules = r[1];
                 this.customRules = r[2];
                 this.customRulesForView = r[3];
-                this.ready = true;
+            }),
+            finalize(() => {
+                this.rulesReady = true;
             })
         ).subscribe();
     }
 
     reload() {
-        this.ready = false;
+        this.rulesReady = false;
         setTimeout(() => {
             this.w();
         });
@@ -148,9 +152,9 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                 let apiResponse: ApiResponse = null;
                 this.customRuleService.addCustomRuleToView(this.currentView.id, rules)
                     .pipe(
-                        map((_: ApiResponse) => {
+                        flatMap((_: ApiResponse) => {
                             apiResponse = _;
-                            return this.customRuleService.getCustomRulesByView(this.currentView.id);
+                            return [this.customRuleService.getCustomRulesByView(this.currentView.id)];
                         }),
                         combineAll(),
                         tap((r: [CustomRuleForView[]]) => {

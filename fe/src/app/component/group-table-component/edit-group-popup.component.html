@@ -1,0 +1,18 @@
+<div class="edit-group-popup">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input type="text" matInput [formControl]="formControlName">
+            <mat-hint>Enter group name</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <textarea matInput [formControl]="formControlDescription"></textarea>
+            <mat-hint>Enter description</mat-hint>
+        </mat-form-field>
+        <div class="controls">
+            <button type="submit" mat-flat-button color="primary">Ok</button>
+            <button type="button" mat-flat-button color="primary" (click)="onCancel($event)">Cancel</button>
+        </div>
+    </form>
+</div>
