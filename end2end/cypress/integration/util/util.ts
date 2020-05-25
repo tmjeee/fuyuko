@@ -37,7 +37,8 @@ export const clickOnSuccessMessageToasts = () => {
         Cypress.dom.isAttached(n) && cy.wrap(n).click({force: true});
     });
      */
-    cy.waitUntil(() => cy.get('simple-notifications .simple-notification.success')).first().click({force: true});
+    // cy.waitUntil(() => cy.get('simple-notifications .simple-notification.success')).first().click({force: true});
+    cy.get('simple-notifications .simple-notification.success').first().click({force: true});
 }
 
 export const clickOnErrorMessageToasts = () => {
