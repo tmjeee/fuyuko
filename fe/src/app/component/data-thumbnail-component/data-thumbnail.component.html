@@ -24,12 +24,12 @@
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Name</mat-label>
-        <app-item-editor [attr.test-item-editor]="'name'" [item]="item" [type]="'name'" (events)="onItemEditorEvent($event)"></app-item-editor>
+        <app-item-editor [attr.test-item-editor]="'name'" [item]="item" [type]="'name'" (events)="onItemEditorEvent($event, item)"></app-item-editor>
         <mat-hint class="mat-small mat-hint">Item name</mat-hint>
       </div>
       <div>
         <mat-label class="mat-small mat-hint">Description</mat-label>
-        <app-item-editor [attr.test-item-editor]="'description'" [item]="item" [type]="'description'" (events)="onItemEditorEvent($event)"></app-item-editor>
+        <app-item-editor [attr.test-item-editor]="'description'" [item]="item" [type]="'description'" (events)="onItemEditorEvent($event, item)"></app-item-editor>
         <mat-hint class="mat-small mat-hint">Item description</mat-hint>
       </div>
       <div>

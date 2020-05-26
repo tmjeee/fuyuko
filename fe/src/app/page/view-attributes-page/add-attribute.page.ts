@@ -52,7 +52,6 @@ export class AddAttributePageComponent implements OnInit {
     async onEditAttributeEvent($event: EditAttributeComponentEvent) {
         switch ($event.type) {
             case 'update':
-                console.log('****** edit attribute update', $event);
                 this.attributeService.addAttribute(this.currentView, $event.attribute).pipe(
                     tap((_: ApiResponse) => {
                         toNotifications(this.notificationService, _);

@@ -396,6 +396,7 @@ export class DataEditorDialogComponent {
         break;
       case 'weight':
         setItemWeightValue(attribute, value, this.formControlWeightAttributeValue.value, this.formControlWeightAttributeUnit.value);
+        break;
       case 'select':
         setItemSelectValue(attribute, value, this.formControlSelectAttributeKey.value);
         break;

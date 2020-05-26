@@ -39,7 +39,6 @@ abstract class AbstractItemValueConverter implements ItemValueConverters {
   private _check(a: Attribute, i: ItemValTypes, callback: (a: Attribute, i: ItemValTypes) => string) {
     if (i) {
       if (a.type !== i.type) {
-        console.log('*****', a, i);
         throw new Error(`incompatible types attribute type ${a.type} item value type ${i.type}`);
       }
       return callback(a, i);

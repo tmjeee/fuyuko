@@ -261,7 +261,6 @@
 
   <!-- weight attribute type -->
   <ng-container *ngIf="data.attribute.type === 'weight'">
-      {{data | json}}
     <form [formGroup]="formGroupWeightAttribute" (ngSubmit)="onEditDone()">
       <mat-form-field>
         <mat-label>Value</mat-label>

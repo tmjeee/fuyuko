@@ -189,23 +189,21 @@ export class DataTableComponent implements OnInit, OnChanges {
     return this.selectionModel.isSelected(item);
   }
 
-  onDataEditEvent($event: ItemValueAndAttribute, tableItem: TableItem) {
-    console.log('********************************* onDataEditEvet', $event, tableItem);
-     const val: Value = $event.itemValue;
-     const value: ItemValTypes = val.val;
-     const att: Attribute = $event.attribute;
-
-     tableItem[att.id] = val;
-     if (!this.pendingSavingItems.has(tableItem.id)) {
-       this.pendingSavingItems.set(tableItem.id, {...tableItem});
-     }
-     this.pendingSavingItems.get(tableItem.id)[$event.attribute.id] = val;
-  }
 
   onItemEditEvent($event: ItemEditorComponentEvent, tableItem: TableItem) {
     const eventTableItem: TableItem = $event.item as TableItem;
     if (!this.pendingSavingItems.has(tableItem.id)) {
-      this.pendingSavingItems.set(tableItem.id, {...tableItem});
+      this.pendingSavingItems.set(tableItem.id, {
+        id: tableItem.id,
+        name: tableItem.name,
+        description: tableItem.description,
+        parentId: tableItem.parentId,
+        rootParentId: tableItem.rootParentId,
+        depth: tableItem.depth,
+        images: tableItem.images,
+        lastUpdate: tableItem.lastUpdate,
+        creationDate: tableItem.creationDate,
+      } as TableItem);
     }
     switch ($event.type) {
       case 'name':
@@ -218,6 +216,29 @@ export class DataTableComponent implements OnInit, OnChanges {
         break;
     }
   }
+
+  onDataEditEvent($event: ItemValueAndAttribute, tableItem: TableItem) {
+    const val: Value = $event.itemValue;
+     const value: ItemValTypes = val.val;
+     const att: Attribute = $event.attribute;
+
+     tableItem[att.id] = val;
+     if (!this.pendingSavingItems.has(tableItem.id)) {
+       this.pendingSavingItems.set(tableItem.id, {
+         id: tableItem.id,
+         name: tableItem.name,
+         description: tableItem.description,
+         parentId: tableItem.parentId,
+         rootParentId: tableItem.rootParentId,
+         depth: tableItem.depth,
+         images: tableItem.images,
+         lastUpdate: tableItem.lastUpdate,
+         creationDate: tableItem.creationDate,
+       } as TableItem);
+     }
+     this.pendingSavingItems.get(tableItem.id)[$event.attribute.id] = val;
+  }
+
 
   onAddItem($event: MouseEvent) {
     const nextId = DataTableComponent.negativeCounter--;
