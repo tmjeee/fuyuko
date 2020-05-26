@@ -17,6 +17,10 @@ export type LengthUnits = 'mm' | 'cm' | 'm';
 export const HEIGHT_UNITS: HeightUnits[] = ['mm', 'cm', 'm'];
 export type HeightUnits = 'mm' | 'cm' | 'm';
 
+export const WEIGHT_UNITS: WeightUnits[] = ['kg', 'g'];
+export type WeightUnits = 'kg' | 'g';
+
+
 export const COUNTRY_CURRENCY_UNITS: CountryCurrencyUnits[] = [
   'AED' ,
   'AFN' ,

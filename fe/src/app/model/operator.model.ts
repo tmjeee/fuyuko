@@ -66,6 +66,11 @@ export type LengthOperatorType = 'eq'| 'not eq'| 'empty'| 'not empty'| 'lt'| 'no
 export const LENGTH_OPERATOR_TYPES: OperatorType[] = ['eq', 'not eq', 'empty', 'not empty', 'lt', 'not lt', 'gt', 'not gt', 'lte',
     'not lte', 'gte', 'not gte'];
 
+// weight
+export type WeightOperatorType = 'eq'| 'not eq'| 'empty'| 'not empty'| 'lt'| 'not lt'| 'gt'| 'not gt'| 'lte'| 'not lte'| 'gte'| 'not gte';
+export const WEIGHT_OPERATOR_TYPES: OperatorType[] = ['eq', 'not eq', 'empty', 'not empty', 'lt', 'not lt', 'gt', 'not gt', 'lte',
+    'not lte', 'gte', 'not gte'];
+
 
 // ==== misc
 export const OPERATORS_WITHOUT_CONFIGURATBLE_VALUES: OperatorType[] = ['empty', 'not empty'];

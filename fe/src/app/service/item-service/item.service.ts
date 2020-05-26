@@ -59,9 +59,9 @@ export class ItemService {
   }
 
   saveTableItems(viewId: number, tableItems: TableItem[]): Observable<ApiResponse> {
-    const items: Item[] = toItem(tableItems);
+    // const items: Item[] = toItem(tableItems);
     return this.httpClient.post<ApiResponse>(URL_UPDATE_ITEMS().replace(':viewId', String(viewId)), {
-      items
+      items : tableItems
     });
   }
 

@@ -4,7 +4,7 @@ import {
   DimensionUnits,
   HeightUnits,
   LengthUnits,
-  VolumeUnits,
+  VolumeUnits, WeightUnits,
   WidthUnits
 } from './unit.model';
 
@@ -18,6 +18,7 @@ export const VOLUME_FORMAT = '0.00';
 export const DIMENSION_FORMAT = '0.00';
 export const WIDTH_FORMAT = '0.00';
 export const HEIGHT_FORMAT = '0.00';
+export const WEIGHT_FORMAT = '0.00';
 export const LENGTH_FORMAT = '0.00';
 export const SHOW_COUNTRY_CURRENCY = true;
 
@@ -109,7 +110,7 @@ export interface Value {
 
 export type ItemValTypes = StringValue | TextValue | NumberValue | DateValue |
   CurrencyValue | VolumeValue | DimensionValue | AreaValue | WidthValue | LengthValue | HeightValue |
-  SelectValue | DoubleSelectValue;
+  SelectValue | DoubleSelectValue | WeightValue;
 
 export interface StringValue {
   type: 'string';
@@ -175,10 +176,17 @@ export interface HeightValue {
   unit: HeightUnits;
 }
 
+export interface WeightValue {
+  type: 'weight';
+  value: number;
+  unit: WeightUnits;
+}
+
 export interface SelectValue {
   type: 'select';
   key: string;
 }
+
 
 export interface DoubleSelectValue {
   type: 'doubleselect';

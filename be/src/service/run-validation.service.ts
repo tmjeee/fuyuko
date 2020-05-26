@@ -14,7 +14,7 @@ import {
     NumberValue, SelectValue,
     StringValue,
     TextValue,
-    Value, VolumeValue, WidthValue
+    Value, VolumeValue, WeightValue, WidthValue
 } from "../model/item.model";
 import * as itemConverter from "./conversion-item.service";
 import * as ruleConverter from "./conversion-rule.service";
@@ -38,7 +38,7 @@ import {
     compareDate, compareDimension, compareDoubleselect, compareHeight,
     compareNumber, compareSelect,
     compareString,
-    compareVolume, compareWidth
+    compareVolume, compareWeight, compareWidth
 } from "./compare-attribute-values.service";
 import {createNewItemValue} from "../shared-utils/ui-item-value-creator.utils";
 
@@ -195,6 +195,21 @@ const match = (context: Context, attribute: Attribute, actualItemAttributeValueT
             }
             try {
                 return compareHeight(a2.value, a2.unit, a1.value, a1.unit, op);
+            } catch (e) {
+                e(context,`operator of type ${op} is not defined`);
+                return false;
+            }
+        }
+        case 'weight': {
+            const a1 = actualItemAttributeValueType as WeightValue;
+            const a2 = conditionValueType as WeightValue;
+
+
+            if (a2 && a1.unit !== a2.unit) {
+                return false;
+            }
+            try {
+                return compareWeight(a2.value, a2.unit, a1.value, a1.unit, op);
             } catch (e) {
                 e(context,`operator of type ${op} is not defined`);
                 return false;

@@ -4,7 +4,7 @@ import {
     DIMENSION_FORMAT,
     HEIGHT_FORMAT,
     LENGTH_FORMAT, NUMBER_FORMAT,
-    VOLUME_FORMAT,
+    VOLUME_FORMAT, WEIGHT_FORMAT,
     WIDTH_FORMAT
 } from "../model/item.model";
 
@@ -100,6 +100,15 @@ export const createHeightAttribute = (name: string, description: string, format:
     return {
         id: -1,
         type: 'height',
+        name,
+        description,
+        format
+    } as Attribute;
+};
+export const createWeightAttribute = (name: string, description: string, format: string = WEIGHT_FORMAT): Attribute => {
+    return {
+        id: -1,
+        type: 'weight',
         name,
         description,
         format

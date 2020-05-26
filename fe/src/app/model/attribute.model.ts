@@ -1,12 +1,12 @@
 
 export const ATTRIBUTE_TYPES = [
   'string', 'text', 'number', 'date', 'currency', 'volume',
-  'dimension', 'area', 'width', 'length', 'height', 'select', 'doubleselect'];
+  'dimension', 'area', 'width', 'length', 'height', 'select', 'doubleselect', 'weight'];
 
 export type AttributeType = 'string' | 'text' | 'number' | 'date' |
                             'currency' | 'volume' |
                             'dimension' | 'area' | 'width' | 'length' | 'height' |
-                            'select' | 'doubleselect';
+                            'select' | 'doubleselect' | 'weight';
 
 export interface Pair1 {
   id: number;
@@ -29,7 +29,7 @@ export interface Attribute {
   description: string;
   creationDate: Date;
   lastUpdate: Date;
-  format?: string; // applicable to: number, date, time, datetime, currency, volume, dimension, area,width, length, height
+  format?: string; // applicable to: number, date, time, datetime, currency, volume, dimension, area,width, length, height, weight
   showCurrencyCountry?: boolean; // applicable to: currency
   pair1?: Pair1[]; // for single select & double select
   pair2?: Pair2[]; // for double select

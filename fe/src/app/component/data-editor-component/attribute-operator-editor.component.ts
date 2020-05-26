@@ -11,7 +11,7 @@ import {
     LengthValue, SelectValue,
     Value,
     VolumeValue,
-    WidthValue
+    WidthValue, WeightValue
 } from '../../model/item.model';
 import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -22,7 +22,7 @@ import {
     setItemDateValue, setItemDimensionValue, setItemDoubleSelectValue, setItemHeightValue, setItemLengthValue,
     setItemNumberValue, setItemSelectValue,
     setItemStringValue,
-    setItemTextValue, setItemVolumeValue, setItemWidthValue
+    setItemTextValue, setItemVolumeValue, setItemWeightValue, setItemWidthValue
 } from '../../shared-utils/ui-item-value-setter.util';
 import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
 import {operatorNeedsItemValue, operatorsForAttribute} from '../../utils/attribute-operators.util';
@@ -33,8 +33,8 @@ import {
     CountryCurrencyUnits, DIMENSION_UNITS,
     DimensionUnits, HEIGHT_UNITS, HeightUnits, LENGTH_UNITS,
     LengthUnits, VOLUME_UNITS,
-    VolumeUnits, WIDTH_UNITS,
-    WidthUnits
+    VolumeUnits, WeightUnits, WIDTH_UNITS,
+    WidthUnits, WEIGHT_UNITS,
 } from "../../model/unit.model";
 import moment from "moment";
 
@@ -64,6 +64,7 @@ export class AttributeOperatorEditorComponent implements OnInit {
     widthUnits: WidthUnits[];
     lengthUnits: LengthUnits[];
     heightUnits: HeightUnits[];
+    weightUnits: WeightUnits[];
 
     formGroup: FormGroup;
     formControlAttribute: FormControl;
@@ -85,6 +86,7 @@ export class AttributeOperatorEditorComponent implements OnInit {
         this.widthUnits = [...WIDTH_UNITS];
         this.lengthUnits = [...LENGTH_UNITS];
         this.heightUnits = [...HEIGHT_UNITS];
+        this.weightUnits = [...WEIGHT_UNITS];
     }
 
     ngOnInit(): void {
@@ -159,11 +161,12 @@ export class AttributeOperatorEditorComponent implements OnInit {
                     case 'volume':
                     case 'width':
                     case 'length':
-                    case 'height': {
+                    case 'height':
+                    case 'weight':    {
                         let v = ``;
                         let u = ``;
                         if (this.itemValue && this.itemValue.val) {
-                            const itemValueType: AreaValue | VolumeValue | WidthValue | LengthValue | HeightValue =
+                            const itemValueType: AreaValue | VolumeValue | WidthValue | LengthValue | HeightValue | WeightValue =
                                 this.itemValue.val as any;
                             v = String(itemValueType.value);
                             u = itemValueType.unit;
@@ -287,6 +290,10 @@ export class AttributeOperatorEditorComponent implements OnInit {
                     setItemHeightValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
                     break;
                 }
+                case 'weight': {
+                    setItemWeightValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                    break;
+                }
                 case 'dimension': {
                     setItemDimensionValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value,
                         this.formControl3.value, this.formControl4.value);
@@ -340,6 +347,10 @@ export class AttributeOperatorEditorComponent implements OnInit {
                     break;
                 case 'height': {
                     setItemHeightValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
+                    break;
+                }
+                case 'weight': {
+                    setItemWeightValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
                     break;
                 }
                 case 'dimension': {

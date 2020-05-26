@@ -6,7 +6,7 @@ import {
     NumberValue, SelectValue,
     StringValue,
     TextValue,
-    Value, VolumeValue, WidthValue
+    Value, VolumeValue, WeightValue, WidthValue
 } from "../model/item.model";
 import {
     Attribute2,
@@ -26,7 +26,7 @@ import {
     compareCurrency,
     compareDate, compareDimension, compareDoubleselect, compareHeight, compareLength,
     compareNumber, compareSelect,
-    compareString, compareVolume, compareWidth
+    compareString, compareVolume, compareWeight, compareWidth
 } from "./compare-attribute-values.service";
 import {
     AreaUnits,
@@ -34,7 +34,7 @@ import {
     DimensionUnits,
     HeightUnits,
     LengthUnits,
-    VolumeUnits, WidthUnits
+    VolumeUnits, WeightUnits, WidthUnits
 } from "../model/unit.model";
 import moment from "moment";
 import {itemValueConvert} from "./conversion-item-value.service";
@@ -376,6 +376,15 @@ const getBulkEditItem2s = async (conn: Connection,
 
                         return compareWidth(v1, u1, v2, u2, operator);
                     }
+                    case 'weight': {
+                        const v1: number = (value ? (value.val as WeightValue).value : null);
+                        const u1: WeightUnits = (value ? (value.val as WeightValue).unit : null);
+
+                        const v2: number = undefined;
+                        const u2: WeightUnits = undefined;
+
+                        return compareWeight(v1, u1, v2, u2, operator);
+                    }
                     case "select": {
                         const k1: string = (value ? (value.val as SelectValue).key : null);
                         const k2: string = undefined;
@@ -520,6 +529,18 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const u2: WidthUnits = eU ? eU.value as WidthUnits : undefined;
 
                                 return compareWidth(v1, u1, v2, u2, operator);
+                            }
+                            case "weight": {
+                                const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
+
+                                const v1: number = (value ? (value.val as WeightValue).value : null);
+                                const u1: WeightUnits = (value ? (value.val as WeightValue).unit : null);
+
+                                const v2: number = eV ? Number(eV.value) : undefined;
+                                const u2: WeightUnits = eU ? eU.value as WeightUnits : undefined;
+
+                                return compareWeight(v1, u1, v2, u2, operator);
                             }
                             case "select": {
 

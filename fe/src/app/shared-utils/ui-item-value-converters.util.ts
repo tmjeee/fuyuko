@@ -7,7 +7,7 @@ import {
   ItemValTypes, LENGTH_FORMAT, LengthValue, NUMBER_FORMAT, NumberValue, SelectValue,
   StringValue,
   TextValue, Value, VOLUME_FORMAT,
-  VolumeValue, WIDTH_FORMAT, WidthValue
+  VolumeValue, WEIGHT_FORMAT, WeightValue, WIDTH_FORMAT, WidthValue
 } from '../model/item.model';
 import {Attribute, ATTRIBUTE_TYPES, Pair1, Pair2} from '../model/attribute.model';
 import moment from 'moment';
@@ -39,7 +39,7 @@ abstract class AbstractItemValueConverter implements ItemValueConverters {
   private _check(a: Attribute, i: ItemValTypes, callback: (a: Attribute, i: ItemValTypes) => string) {
     if (i) {
       if (a.type !== i.type) {
-        throw new Error('incompatible types');
+        throw new Error(`incompatible types attribute type ${a.type} item value type ${i.type}`);
       }
       return callback(a, i);
     }
@@ -296,6 +296,29 @@ class HeightItemValueConverter extends AbstractItemValueConverter {
   }
 }
 
+
+class WeightItemValueConverter extends AbstractItemValueConverter {
+  convertToDebugString(i: HeightValue): string {
+    return `{type: ${i.type} value: ${i.value} unit: ${i.unit}}`;
+  }
+  protected _convertToString(a: Attribute, i: WeightValue): string {
+    const f: string = a.format ? a.format : WEIGHT_FORMAT;
+    return `${numeral(i.value).format(f)} ${i.unit}`;
+  }
+  protected _convertToCsv(a: Attribute, i: WeightValue): string {
+    const f: string = a.format ? a.format : WEIGHT_FORMAT;
+    return `${numeral(i.value).format(f)}|${i.unit}`;
+  }
+  protected convertFromCsv(csv: string): WeightValue {
+    const p: string[] = csv.split('|');
+    return {
+      type: 'weight',
+      value: Number(p[0]),
+      unit: p[1]
+    } as WeightValue;
+  }
+}
+
 class SelectItemValueConverter extends AbstractItemValueConverter {
   convertToDebugString(i: SelectValue): string {
     return `{type: ${i.type} key: ${i.key}}`;
@@ -347,6 +370,7 @@ const DIMENSION_ITEM_CONVERTER = new DimensionItemValueConverter();
 const AREA_ITEM_CONVERTER = new AreaItemValueConverter();
 const WIDTH_ITEM_CONVERTER = new WidthItemValueConverter();
 const HEIGHT_ITEM_CONVERTER = new HeightItemValueConverter();
+const WEIGHT_ITEM_CONVERTER = new WeightItemValueConverter();
 const LENGTH_ITEM_CONVERTER = new LengthItemValueConverter();
 const SELECT_ITEM_CONVERTER = new SelectItemValueConverter();
 const DOUBLESELECT_ITEM_CONVERTER = new DoubleSelectItemValueConverter();
@@ -390,6 +414,9 @@ export const itemConverterByType = (t: string): AbstractItemValueConverter => {
       break;
     case 'height':
       typeConverter = HEIGHT_ITEM_CONVERTER;
+      break;
+    case 'weight':
+      typeConverter = WEIGHT_ITEM_CONVERTER;
       break;
     case 'select':
       typeConverter = SELECT_ITEM_CONVERTER;

@@ -129,7 +129,8 @@ export function toItem(tableItems: TableItem[]): Item[] {
     }
     return acc;
   }, new Map());
-  return Array.from(m.values()).filter((i: Item) => !!!i.parentId);
+  const r: Item[] =  Array.from(m.values()).filter((i: Item) => !!!i.parentId);
+  return r;
 }
 
 
