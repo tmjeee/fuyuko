@@ -88,8 +88,11 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
   onDataTableEvent($event: DataTableComponentEvent) {
     const o: Observable<ApiResponse>[] = [];
+    if ($event.newItems && $event.newItems.length) {
+        o.push(this.itemService.saveTableItems(this.currentView.id, $event.newItems));
+    }
     if ($event.modifiedItems && $event.modifiedItems.length) {
-        o.push(this.itemService.saveTableItems(this.currentView.id, $event.modifiedItems));
+        o.push(this.itemService.saveItems(this.currentView.id, $event.modifiedItems as any));
     }
     if ($event.deletedItems && $event.deletedItems.length) {
         o.push(this.itemService.deleteTableItems(this.currentView.id, $event.deletedItems));

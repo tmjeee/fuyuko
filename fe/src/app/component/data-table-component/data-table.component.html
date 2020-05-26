@@ -5,7 +5,7 @@
   <div class="main-controls">
     <button type="button" [attr.test-button-add-item]="''" mat-flat-button color="primary" (click)="onAddItem($event)">Add</button>
     <button type="button" [attr.test-button-delete-items]="''" mat-flat-button color="primary" [disabled]="!selectionModel.hasValue()" (click)="onDeleteItem($event)">Delete</button>
-    <button type="button" [attr.test-button-save-items]="''" mat-flat-button color="primary" [disabled]="!hasItemModification()" (click)="onSave($event)">Save</button>
+    <button type="button" [attr.test-button-save-items]="''" mat-flat-button color="primary" [disabled]="!hasItemChanges()" (click)="onSave($event)">Save</button>
     <button type="button" [attr.test-button-reload-items]="''" mat-flat-button color="primary" (click)="onReload($event)">Reload</button>
     <button type="button" [attr.test-button-filter-items]="''" mat-flat-button color="primary" (click)="onFilter($event)">Filter</button>
   </div>

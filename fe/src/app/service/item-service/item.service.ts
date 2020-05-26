@@ -41,11 +41,6 @@ export class ItemService {
             .replace(':search', search));
   }
 
-  saveItems(viewId: number, items: Item[]): Observable<ApiResponse> {
-      return this.httpClient.post<ApiResponse>(URL_UPDATE_ITEMS().replace(':viewId', String(viewId)), {
-      items
-    });
-  }
 
   deleteItems(viewId: number, items: Item[]): Observable<ApiResponse> {
       return this.httpClient.post<ApiResponse>(
@@ -58,10 +53,17 @@ export class ItemService {
       );
   }
 
+
+  saveItems(viewId: number, items: Item[]): Observable<ApiResponse> {
+      return this.httpClient.post<ApiResponse>(URL_UPDATE_ITEMS().replace(':viewId', String(viewId)), {
+          items
+      });
+  }
+
   saveTableItems(viewId: number, tableItems: TableItem[]): Observable<ApiResponse> {
-    // const items: Item[] = toItem(tableItems);
+    const items: Item[] = toItem(tableItems);
     return this.httpClient.post<ApiResponse>(URL_UPDATE_ITEMS().replace(':viewId', String(viewId)), {
-      items : tableItems
+      items
     });
   }
 
