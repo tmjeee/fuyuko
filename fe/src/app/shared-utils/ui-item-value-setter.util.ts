@@ -8,9 +8,18 @@ import {
   NumberValue, SelectValue,
   StringValue,
   TextValue,
-  Value, VolumeValue, WidthValue, Item, DATE_FORMAT
+  Value, VolumeValue, WidthValue, Item, DATE_FORMAT, WeightValue
 } from '../model/item.model';
-import {AreaUnits, CountryCurrencyUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from '../model/unit.model';
+import {
+  AreaUnits,
+  CountryCurrencyUnits,
+  DimensionUnits,
+  HeightUnits,
+  LengthUnits,
+  VolumeUnits,
+  WeightUnits,
+  WidthUnits
+} from '../model/unit.model';
 import numeral from 'numeral';
 import moment from "moment";
 
@@ -45,6 +54,9 @@ export function setItemValue(a: Attribute, val: Value) {
       break;
     case 'height':
       setItemHeightValue(a, val, 0, 'm');
+      break;
+    case 'weight':
+      setItemWeightValue(a, val, 0, 'g');
       break;
     case 'length':
       setItemLengthValue(a, val, 0, 'm');
@@ -149,6 +161,14 @@ export function setItemHeightValue(attribute: Attribute, value: Value, val: numb
     value: val,
     unit
   } as HeightValue);
+}
+
+export function setItemWeightValue(attribute: Attribute, value: Value, val: number, unit: WeightUnits) {
+  _setItemValue(attribute, value, {
+    type: 'weight',
+    value: val,
+    unit
+  } as WeightValue);
 }
 
 export function setItemLengthValue(attribute: Attribute, value: Value, val: number, unit: LengthUnits) {

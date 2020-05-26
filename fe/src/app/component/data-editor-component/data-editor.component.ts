@@ -35,7 +35,8 @@ export class DataEditorComponent {
       .pipe(
         map((itemAndAttribute: TableItemAndAttribute) => {
           if (itemAndAttribute) { // 'ok' is clicked when closing dialog
-            this.events.emit(this.itemValueAndAttribute);
+            // this.events.emit(this.itemValueAndAttribute);
+            console.log('*********************************************', itemAndAttribute);
           }
         })
       ).subscribe();

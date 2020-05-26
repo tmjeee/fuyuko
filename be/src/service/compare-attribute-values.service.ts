@@ -4,7 +4,7 @@ import {
     DimensionUnits,
     HeightUnits,
     LengthUnits,
-    VolumeUnits,
+    VolumeUnits, WeightUnits,
     WidthUnits
 } from "../model/unit.model";
 import moment from "moment";
@@ -21,6 +21,20 @@ export const convertToCm = (v: number, u: DimensionUnits | WidthUnits | LengthUn
             return (v *10);
         case "m":
             return (v / 100);
+        default:
+            return v;
+    }
+}
+
+export const convertToG = (v: number, u: WeightUnits): number => {
+    if (v == null || v == undefined) {
+        return v;
+    }
+    switch(u) {
+        case 'g':
+            return v;
+        case 'kg':
+            return (v * 1000);
         default:
             return v;
     }
@@ -401,6 +415,51 @@ export const compareWidth = (_condition: number /* from REST Api */,
             return actual && (!!String(actual).match(String(condition)));
         default:
             throw new Error(`unrecognised operator ${operator} for width ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
+    }
+}
+// weight
+export const compareWeight = (_condition: number /* from REST Api */,
+                             _conditionUnit: WeightUnits,
+                             _actual: number /* from actual item attribute value */,
+                             _actualUnit: WeightUnits,
+                             operator: OperatorType): boolean => {
+    const condition = convertToG(_condition, _conditionUnit);
+    const actual = convertToG(_actual, _actualUnit);
+
+    /////////////////////////////////////
+    switch (operator) {
+        case "empty":
+            return (!!!actual);
+        case "eq":
+            return (actual == condition);
+        case "gt":
+            return (actual > condition);
+        case "gte":
+            return (actual >= condition);
+        case "lt":
+            return (actual < condition);
+        case "lte":
+            return (actual <= condition);
+        case "not empty":
+            return (!!actual)
+        case "not eq":
+            return (actual != condition);
+        case "not gt":
+            return (!(actual > condition));
+        case "not gte":
+            return (!(actual >= condition));
+        case "not lt":
+            return (!(actual < condition));
+        case "not lte":
+            return (!(actual <= condition));
+        case 'contain':
+            return actual && (String(actual).indexOf(String(condition)) >= 0);
+        case 'not contain':
+            return actual && (String(actual).indexOf(String(condition)) < 0);
+        case 'regexp':
+            return actual && (!!String(actual).match(String(condition)));
+        default:
+            throw new Error(`unrecognised operator ${operator} for weight ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
 }
 // height

@@ -49,6 +49,9 @@ export class EditAttributeComponent implements OnChanges {
     formGroupWidthAttribute: FormGroup;
     formControlWidthAttributeFormat: FormControl;
 
+    formGroupWeightAttribute: FormGroup;
+    formControlWeightAttributeFormat: FormControl;
+
     formGroupHeightAttribute: FormGroup;
     formControlHeightAttributeFormat: FormControl;
 
@@ -109,6 +112,11 @@ export class EditAttributeComponent implements OnChanges {
             format: this.formControlWidthAttributeFormat,
         });
 
+        this.formControlWeightAttributeFormat = this.formBuilder.control('', [numberFormatValidator]);
+        this.formGroupWeightAttribute = this.formBuilder.group({
+            format: this.formControlWeightAttributeFormat,
+        });
+
         this.formControlHeightAttributeFormat = this.formBuilder.control('', [numberFormatValidator]);
         this.formGroupHeightAttribute =  this.formBuilder.group({
             format: this.formControlHeightAttributeFormat,
@@ -148,6 +156,9 @@ export class EditAttributeComponent implements OnChanges {
                 break;
             case 'height':
                 this.formGroupCommon.setControl('misc', this.formGroupHeightAttribute);
+                break;
+            case 'weight':
+                this.formGroupCommon.setControl('misc', this.formGroupWeightAttribute);
                 break;
             case 'length':
                 this.formGroupCommon.setControl('misc', this.formGroupLengthAttribtue);
@@ -196,6 +207,9 @@ export class EditAttributeComponent implements OnChanges {
                 break;
             case 'width':
                 att.format = this.formControlWidthAttributeFormat.value;
+                break;
+            case 'weight':
+                att.format = this.formControlWeightAttributeFormat.value;
                 break;
             case 'height':
                 att.format = this.formControlHeightAttributeFormat.value;
@@ -258,6 +272,10 @@ export class EditAttributeComponent implements OnChanges {
 
         if (attribute.type === 'height') {
             this.formControlHeightAttributeFormat.setValue(attribute.format);
+        }
+
+        if (attribute.type === 'weight') {
+            this.formControlWeightAttributeFormat.setValue(attribute.format);
         }
 
         if (attribute.type === 'length') {

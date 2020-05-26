@@ -98,6 +98,11 @@
         <ng-container *ngIf="attribute.type === 'length'">
           format: {{attribute?.format}}
         </ng-container>
+
+        <!-- weight -->
+        <ng-container *ngIf="attribute.type === 'weight'">
+          format: {{attribute?.format}}
+        </ng-container>
       </td>
     </ng-container>
     <ng-container matColumnDef="actions">

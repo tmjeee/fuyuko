@@ -258,6 +258,34 @@
     </form>
   </ng-container>
 
+
+  <!-- weight attribute type -->
+  <ng-container *ngIf="data.attribute.type === 'weight'">
+      {{data | json}}
+    <form [formGroup]="formGroupWeightAttribute" (ngSubmit)="onEditDone()">
+      <mat-form-field>
+        <mat-label>Value</mat-label>
+        <input type="text" matInput placeholder="Enter a weight" [formControl]="formControlWeightAttributeValue" [attr.test-field-weight]="''">
+        <mat-hint>Enter a Weight value</mat-hint>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Unit</mat-label>
+        <input hidden matInput [formControl]="formControlWeightAttributeUnit">
+        <mat-select [formControl]="formControlWeightAttributeUnit" [attr.test-mat-select-weight]="''">
+          <mat-option *ngFor="let weightUnit of weightUnits" [value]="weightUnit" [attr.test-mat-select-option-weight]="weightUnit">
+            {{weightUnit}}
+          </mat-option>
+        </mat-select>
+        <mat-hint>Enter a weight</mat-hint>
+      </mat-form-field>
+      <div class="controls">
+        <button type="submit" mat-flat-button  [attr.test-button-popup-done]="''" color="primary" [disabled]="formGroupWeightAttribute.invalid">Done</button>
+        <button type="button" mat-flat-button  [attr.test-button-popup-cancel]="''" (click)="onEditCancel($event)">Cancel</button>
+      </div>
+    </form>
+  </ng-container>
+
+
   <!-- select attribute type -->
   <ng-container *ngIf="data.attribute.type === 'select'">
     <form [formGroup]="formGroupSelectAttribute" (ngSubmit)="onEditDone()">

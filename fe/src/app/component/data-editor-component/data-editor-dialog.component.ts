@@ -8,7 +8,7 @@ import {
   DIMENSION_UNITS,
   HEIGHT_UNITS,
   LENGTH_UNITS,
-  VOLUME_UNITS,
+  VOLUME_UNITS, WEIGHT_UNITS,
   WIDTH_UNITS
 } from '../../model/unit.model';
 import {Attribute, Pair2} from '../../model/attribute.model';
@@ -20,7 +20,7 @@ import {
   StringValue,
   TextValue,
   Value,
-  VolumeValue, WidthValue, ItemValTypes, DATE_FORMAT
+  VolumeValue, WidthValue, ItemValTypes, DATE_FORMAT, WeightValue
 } from '../../model/item.model';
 import {ItemValueAndAttribute, TableItemAndAttribute} from '../../model/item-attribute.model';
 import {
@@ -30,7 +30,7 @@ import {
   setItemNumberValue, setItemSelectValue,
   setItemStringValue,
   setItemTextValue,
-  setItemVolumeValue, setItemWidthValue
+  setItemVolumeValue, setItemWeightValue, setItemWidthValue
 } from '../../shared-utils/ui-item-value-setter.util';
 import {Pair2Map, doubleSelectToObjectMap} from '../../utils/doubleselect-helper.util';
 import * as moment from 'moment';
@@ -85,6 +85,10 @@ export class DataEditorDialogComponent {
   formControlLengthAttributeValue: FormControl;
   formControlLengthAttribtueUnit: FormControl;
 
+  formGroupWeightAttribute: FormGroup;
+  formControlWeightAttributeValue: FormControl;
+  formControlWeightAttributeUnit: FormControl;
+
   formGroupSelectAttribute: FormGroup;
   formControlSelectAttributeKey: FormControl;
 
@@ -99,6 +103,7 @@ export class DataEditorDialogComponent {
   readonly widthUnits: string[] = WIDTH_UNITS;
   readonly lengthUnits: string[] = LENGTH_UNITS;
   readonly heightUnits: string[] = HEIGHT_UNITS;
+  readonly weightUnits: string[] = WEIGHT_UNITS;
 
   pair2Map: Pair2Map;
   pairs2: {key: string, value: string}[];
@@ -179,6 +184,13 @@ export class DataEditorDialogComponent {
     this.formGroupLengthAttribute = formBuilder.group({
       value: this.formControlLengthAttributeValue,
       unit: this.formControlLengthAttribtueUnit
+    });
+
+    this.formControlWeightAttributeValue = formBuilder.control('', [Validators.required]);
+    this.formControlWeightAttributeUnit = formBuilder.control('', [Validators.required]);
+    this.formGroupWeightAttribute = formBuilder.group({
+      value: this.formControlWeightAttributeValue,
+      unit: this.formControlWeightAttributeUnit
     });
 
     this.formControlSelectAttributeKey = formBuilder.control('', [Validators.required]);
@@ -296,6 +308,15 @@ export class DataEditorDialogComponent {
         this.formControlHeightAttributeValue.setValue(heightVal.value);
         this.formControlHeightAttributeUnit.setValue(heightVal.unit);
         break;
+      case 'weight':
+        let weightVal: WeightValue = itemValue.val as WeightValue;
+        if (!weightVal) {
+          weightVal = { type: 'weight', value: undefined, unit: undefined };
+          itemValue.val = weightVal;
+        }
+        this.formControlWeightAttributeValue.setValue(weightVal.value);
+        this.formControlWeightAttributeUnit.setValue(weightVal.unit);
+        break;
       case 'select':
         let selectVal: SelectValue = itemValue.val as SelectValue;
         if (!selectVal) {
@@ -373,6 +394,8 @@ export class DataEditorDialogComponent {
       case 'height':
         setItemHeightValue(attribute, value, this.formControlHeightAttributeValue.value, this.formControlHeightAttributeUnit.value);
         break;
+      case 'weight':
+        setItemWeightValue(attribute, value, this.formControlWeightAttributeValue.value, this.formControlWeightAttributeUnit.value);
       case 'select':
         setItemSelectValue(attribute, value, this.formControlSelectAttributeKey.value);
         break;

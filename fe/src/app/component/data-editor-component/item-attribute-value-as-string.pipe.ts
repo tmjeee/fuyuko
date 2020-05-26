@@ -31,6 +31,7 @@ export class ItemAttributeValueAsStringPipe implements PipeTransform {
     if (!value) {
       throw new Error(`expect either Value or ItemValType as input not ${value}`);
     }
+    console.log('*********** pipe', attribute.type, value);
     return convertToString(attribute, value);
   }
 }

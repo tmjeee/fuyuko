@@ -140,6 +140,16 @@
                     </mat-select>
                     <mat-hint>Enter Height Unit</mat-hint>
                 </mat-form-field>
+                <mat-form-field *ngSwitchCase="'weight'">
+                    <mat-label>Weight Unit</mat-label>
+                    <input matInput type="text" [ngStyle]="{display: 'none', visibility: 'hidden'}">
+                    <mat-select [attr.test-mat-select-field-weight-unit]="''" [formControl]="formControl2" (selectionChange)="onValueChange()">
+                        <mat-option *ngFor="let weightUnit of weightUnits" [value]="weightUnit" [attr.test-mat-select-option-field-weight-unit]="weightUnit">
+                            {{weightUnit}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-hint>Enter Weight Unit</mat-hint>
+                </mat-form-field>
             </ng-container>
         </ng-container>
 

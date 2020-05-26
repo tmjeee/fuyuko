@@ -17,18 +17,26 @@ import {
     NumberValue, SelectValue,
     StringValue,
     TextValue,
-    Value, VolumeValue, WidthValue
+    Value, VolumeValue, WeightValue, WidthValue
 } from "../model/item.model";
 import {attributeConvert} from "./conversion-attribute.service";
 import {OperatorType} from "../model/operator.model";
-import {AreaUnits, DimensionUnits, HeightUnits, LengthUnits, VolumeUnits, WidthUnits} from "../model/unit.model";
+import {
+    AreaUnits,
+    DimensionUnits,
+    HeightUnits,
+    LengthUnits,
+    VolumeUnits,
+    WeightUnits,
+    WidthUnits
+} from "../model/unit.model";
 import moment from "moment";
 import {
     compareDate,
     compareNumber,
     compareString,
     convertToCm,
-    convertToCm2,
+    convertToCm2, convertToG,
     convertToMl
 } from "./compare-attribute-values.service";
 
@@ -373,6 +381,21 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
 
                                 const vv1: number = convertToCm(v1, u1);
                                 const vv2: number = convertToCm(v2, u2);
+
+                                return compareNumber(vv1, vv2, operator);
+                            }
+                            case "weight": {
+                                const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
+
+                                const v1: number = (value ? (value.val as WeightValue).value : null);
+                                const u1: WeightUnits = (value ? (value.val as WeightValue).unit : null);
+
+                                const v2: number = Number(eV.value);
+                                const u2: WeightUnits = eU.value as WeightUnits;
+
+                                const vv1: number = convertToG(v1, u1);
+                                const vv2: number = convertToG(v2, u2);
 
                                 return compareNumber(vv1, vv2, operator);
                             }

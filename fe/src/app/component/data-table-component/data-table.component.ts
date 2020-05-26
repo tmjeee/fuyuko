@@ -190,6 +190,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onDataEditEvent($event: ItemValueAndAttribute, tableItem: TableItem) {
+    console.log('********************************* onDataEditEvet', $event, tableItem);
      const val: Value = $event.itemValue;
      const value: ItemValTypes = val.val;
      const att: Attribute = $event.attribute;
