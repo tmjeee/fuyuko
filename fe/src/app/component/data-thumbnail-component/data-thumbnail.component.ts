@@ -146,6 +146,8 @@ export class DataThumbnailComponent implements OnInit {
   }
 
   reload($event: MouseEvent) {
+    this.pendingDeletion = [];
+    this.pendingSaving = [];
     this.events.emit({ type: 'reload'} as DataThumbnailComponentEvent);
   }
 
@@ -162,13 +164,16 @@ export class DataThumbnailComponent implements OnInit {
 
   delete($event: MouseEvent) {
     const i: Item[] = this.selectionModel.selected;
-    this.pendingDeletion.push(...this.selectionModel.selected);
-    this.selectionModel.selected.forEach((selectedItem: Item) => {
-      const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === selectedItem.id);
+    for (const _i of i) {
+      if (_i.id > 0) { // delete of persisted item only
+        this.pendingDeletion.push(_i);
+      }
+      this.pendingSaving = this.pendingSaving.filter((i: Item) => i.id != _i.id);
+      const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === _i.id);
       if (index !== -1) {
         this.itemAndAttributeSet.items.splice(index, 1);
       }
-    });
+    }
     this.selectionModel.clear();
   }
 
