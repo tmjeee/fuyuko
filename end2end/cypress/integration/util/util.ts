@@ -38,6 +38,11 @@ export const clickOnSuccessMessageToasts = () => {
     });
      */
     // cy.waitUntil(() => cy.get('simple-notifications .simple-notification.success')).first().click({force: true});
+    cy.waitUntil(() => {
+        return cy.get('simple-notifications .simple-notification.success').then((_) => {
+            return (_.length > 0)
+        })
+    });
     cy.get('simple-notifications .simple-notification.success').first().click({force: true});
 }
 
