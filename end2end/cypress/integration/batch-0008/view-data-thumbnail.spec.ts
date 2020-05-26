@@ -57,6 +57,7 @@ describe('view-data-thumbnail spec', () => {
     });
 
     it('should add / delete thumbnail', () => {
+        Cypress.currentTest.retries(1);
         const itemName = `Test-Item-${Math.random()}`;
         viewDataThumbnailPage
             .clickAddThumbnail(itemName)
@@ -450,6 +451,7 @@ describe('view-data-thumbnail spec', () => {
 
     //////////// set 2
     it(`[string attribute] should allow editing of attributes through edit icon`, () => {
+        Cypress.currentTest.retries(1);
 
         const itemName = `Test-Item-${Math.random()}`;
 
