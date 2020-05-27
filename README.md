@@ -7,7 +7,8 @@
 Fuyuko is an Open Source Master Data Management (MDM) / Product Information Management (PIM) software.
 
 # Features
-* simple, 
+* simple
+* build off popular, proven tech (typescript, nodejs, angular9+)
 * plays well with Kubernetes
 * dockerizable 
 * open source
