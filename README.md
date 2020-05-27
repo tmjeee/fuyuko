@@ -4,6 +4,15 @@
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-be&subject=BE%20Build%20Status)](https://jenkins.fuyuko.org/job/fuyuko-be/)
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-wf&subject=WF%20Build%20Status)](https://jenkins.fuyuko.org/job/fuyuko-wf/)
 
+Fuyuko is an Open Source Master Data Management (MDM) / Product Information Management (PIM) software.
+
+# Features
+* simple, 
+* plays well with Kubernetes
+* dockerizable 
+* open source
+* no breaking the bank while managing your product data effectively
+
 # Documentation
 Documentations are [here](https://docs.fuyuko.org)
 
