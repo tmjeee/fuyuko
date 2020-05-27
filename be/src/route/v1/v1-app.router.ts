@@ -97,7 +97,7 @@ import registerPostRemoveCustomRuleFromViewRoute from './DELETE-remove-custom-ru
 import registerGetUserNotificationsRoute from './GET-user-notification.route';
 import registerPostUserNotificationRoute from './POST-user-notification.route';
 import registerPostAddAttributeRoute from './POST-add-attributes.route';
-import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
+import registerGetSearchForItemsInViewRoute from './GET-search-for-items-in-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
 import registerGetDataExportContentByIdRoute from './GET-data-export-content-by-id.route';
 import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
@@ -239,7 +239,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetUserNotificationsRoute(v1AppRouter, registry);
     registerPostUserNotificationRoute(v1AppRouter, registry);
     registerPostAddAttributeRoute(v1AppRouter, registry);
-    registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
+    registerGetSearchForItemsInViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
     registerGetDataExportContentByIdRoute(v1AppRouter, registry);
     registerGetPricingStructureByIdRoute(v1AppRouter, registry);

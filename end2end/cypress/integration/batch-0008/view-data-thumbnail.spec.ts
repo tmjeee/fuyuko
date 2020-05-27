@@ -110,7 +110,6 @@ describe('view-data-thumbnail spec', () => {
             .verifyPopupTitle()
             .editItemDescription(description)
             .clickOk()
-            .verifyThumbnailItemHasDescription(newItemName, description)
             .clickSave()
             .verifySuccessMessageExists()
             .verifyThumbnailItemHasDescription(newItemName, description)

@@ -61,7 +61,10 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
 
     verifyThumbnailItemHasDescription(itemName: string, description: string): ViewDataThumbnailPage {
         cy.waitUntil(() => {
-            return cy.get(`[test-thumbnail-item-name='${itemName}']`).then((_) => (_.length > 0))
+            return cy.get(`[test-thumbnail-item-name='${itemName}']
+                           [test-item-editor='description']
+                           [test-item-editor-value='description']
+            `).then((_) => (_.length > 0))
         });
         cy.get(`[test-thumbnail-item-name='${itemName}']
                 [test-item-editor='description']
