@@ -10,7 +10,7 @@ export class ViewDataListAttributePopupPage extends AbstractViewDataAttributePop
             [test-button-popup-done]`))
             .click({force: true});
         cy.wait(100);
-        return new ViewDataListEditPopupPage();
+        return new ViewDataListEditPopupPage(this.PAGE_NAME);
     }
 
     clickCancel2(): ViewDataListEditPopupPage {
@@ -18,7 +18,7 @@ export class ViewDataListAttributePopupPage extends AbstractViewDataAttributePop
             [test-button-popup-cancel]`))
             .click({force: true});
         cy.wait(100);
-        return new ViewDataListEditPopupPage();
+        return new ViewDataListEditPopupPage(this.PAGE_NAME);
     }
 
     clickOk(): ViewDataListPage {

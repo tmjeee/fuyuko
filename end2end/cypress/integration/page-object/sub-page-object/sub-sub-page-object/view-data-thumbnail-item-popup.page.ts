@@ -1,25 +1,38 @@
 import {ViewDataThumbnailPage} from "../view-data-thumbnail.page";
 import {ViewDataThumbnailEditPopupPage} from "./view-data-thumbnail-edit-popup.page";
 import {AbstractViewDataItemPopupPage} from "./abstract-view-data-item-popup.page";
+import * as util from "../../../util/util";
 
 
 export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPage {
 
     //////////////////////////////////////////////////////////////////////
+    constructor(public PAGE_NAME: string){
+        super(PAGE_NAME);
+    }
+
+    /*
+    waitForReady(): ViewDataThumbnailItemPopupPage {
+        util.waitUntilTestPageReady(this.PAGE_NAME);
+        return this;
+    }
+     */
 
     clickOk(): ViewDataThumbnailPage {
-        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
-            [test-button-item-editor-popup-ok]`))
+        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-ok]`)
             .click({force: true})
             .wait(1000);
+        this.waitForReady();
         return new ViewDataThumbnailPage();
     }
 
     clickCancel(): ViewDataThumbnailPage {
-        cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
-            [test-button-item-editor-popup-cancel]`))
+        cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
+            [test-button-item-editor-popup-cancel]`)
             .click({force: true})
             .wait(1000);
+        this.waitForReady();
         return new ViewDataThumbnailPage();
     }
 
@@ -29,7 +42,8 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
             [test-button-item-editor-popup-cancel]`))
             .click({force: true})
             .wait(1000);
-        return new ViewDataThumbnailEditPopupPage();
+        this.waitForReady();
+        return new ViewDataThumbnailEditPopupPage(this.PAGE_NAME);
     }
 
 
@@ -38,6 +52,7 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
             [test-button-item-editor-popup-ok]`))
             .click({force: true})
             .wait(1000);
-        return new ViewDataThumbnailEditPopupPage();
+        this.waitForReady();
+        return new ViewDataThumbnailEditPopupPage(this.PAGE_NAME);
     }
 }

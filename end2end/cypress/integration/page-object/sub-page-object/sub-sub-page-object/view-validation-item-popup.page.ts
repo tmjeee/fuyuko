@@ -4,8 +4,8 @@ import {ViewValidationDetailsPage} from "../view-validation-details.page";
 
 export class ViewValidationItemPopupPage extends AbstractViewDataItemPopupPage {
 
-    constructor(private validationName: string) {
-        super();
+    constructor(private validationName: string, public PAGE_NAME: string) {
+        super(PAGE_NAME);
     }
 
     clickOk(): ViewValidationDetailsPage {

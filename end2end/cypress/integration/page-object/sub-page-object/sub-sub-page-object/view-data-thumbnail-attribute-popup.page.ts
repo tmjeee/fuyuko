@@ -24,10 +24,10 @@ export class ViewDataThumbnailAttributePopupPage extends AbstractViewDataAttribu
     }
 
     clickCancel1(): ViewDataThumbnailEditPopupPage {
-        return this.clickCancel(new ViewDataThumbnailEditPopupPage());
+        return this.clickCancel(new ViewDataThumbnailEditPopupPage(this.PAGE_NAME));
     }
 
     clickOk1(): ViewDataThumbnailEditPopupPage {
-        return this.clickOk(new ViewDataThumbnailEditPopupPage());
+        return this.clickOk(new ViewDataThumbnailEditPopupPage(this.PAGE_NAME));
     }
 }

@@ -143,7 +143,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
     clickEditThumbnailIcon(itemName: string): ViewDataThumbnailEditPopupPage {
         cy.get(`[test-icon-thumbnail-edit-item='${itemName}']`)
             .click({force: true});
-        return new ViewDataThumbnailEditPopupPage();
+        return new ViewDataThumbnailEditPopupPage(PAGE_NAME);
     }
 
     clickThumbnailItemName(itemName: string): ViewDataThumbnailItemPopupPage {
@@ -151,7 +151,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             [test-item-editor='name']
             [test-item-editor-value='name']`)
             .click({force: true});
-        return new ViewDataThumbnailItemPopupPage();
+        return new ViewDataThumbnailItemPopupPage(PAGE_NAME);
     }
 
     clickItemShowMore(itemName: string): ViewDataThumbnailPage {
@@ -195,7 +195,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             [test-item-editor='description']
             [test-item-editor-value='description']`)
             .click({force: true});
-        return new ViewDataThumbnailItemPopupPage();
+        return new ViewDataThumbnailItemPopupPage(PAGE_NAME);
     }
 
     clickThumbnailItemAttribute(itemName: string, attributeName: string): ViewDataThumbnailAttributePopupPage {
@@ -203,7 +203,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             [test-data-editor='${attributeName}']
             [test-data-editor-value='${attributeName}']`)
             .click({force: true});
-        return new ViewDataThumbnailAttributePopupPage();
+        return new ViewDataThumbnailAttributePopupPage(PAGE_NAME);
     }
 
     clickSave(): ViewDataThumbnailPage {

@@ -8,12 +8,21 @@ import {
 } from "../../../model/unit.model";
 import {AbstractViewDataAttributePopupPage} from "./abstract-view-data-attribute-popup.page";
 import {AbstractViewDataItemPopupPage} from "./abstract-view-data-item-popup.page";
+import * as util from "../../../util/util";
 
 
 export abstract class AbstractViewDataEditPopupPage<I extends AbstractViewDataItemPopupPage, A extends AbstractViewDataAttributePopupPage> {
 
+    constructor(public PAGE_NAME: string) { }
+
     abstract createAbstractViewDataAttributePopupPage(): A;
     abstract createAbstractViewDataItemPopupPage(): I;
+
+
+    waitForReady(): AbstractViewDataItemPopupPage {
+        util.waitUntilTestPageReady(this.PAGE_NAME);
+        return this;
+    }
 
     verifyPopupTitle(): this {
         cy.get(`[test-popup-dialog-title='item-data-editor-dialog-popup']`)
