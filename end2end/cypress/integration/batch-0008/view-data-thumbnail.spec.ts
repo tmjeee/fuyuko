@@ -56,7 +56,7 @@ describe('view-data-thumbnail spec', () => {
         ;
     });
 
-    it.only('should add / delete thumbnail', () => {
+    it('should add / delete thumbnail', () => {
         // Cypress.currentTest.retries(1);
         const itemName = `Test-Item-${Math.random()}`;
         viewDataThumbnailPage
