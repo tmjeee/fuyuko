@@ -56,16 +56,18 @@ describe('view-data-thumbnail spec', () => {
         ;
     });
 
-    it('should add / delete thumbnail', () => {
-        Cypress.currentTest.retries(1);
+    it.only('should add / delete thumbnail', () => {
+        // Cypress.currentTest.retries(1);
         const itemName = `Test-Item-${Math.random()}`;
         viewDataThumbnailPage
             .clickAddThumbnail(itemName)
             .verifyThumbnailsHasItem(itemName, true)
             .clickSave()
-            .verifySuccessMessageExists()
+            .clickReload()
             .clickDeleteThumbnail([itemName])
+            .verifySuccessMessageExists()
             .clickSave()
+            .clickReload()
             .verifySuccessMessageExists()
             .verifyThumbnailsHasItem(itemName, false)
         ;
