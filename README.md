@@ -27,8 +27,8 @@ Demo app running [here](https://demo.fuyuko.org)
 | -------- | -------- |
 | admin1 | test |
 
-# Bugs and Issues
-Bug, Issues and features trackings are [here](https://github.com/tmjeee/fuyuko/issues)
+# Bugs, Issues, Enhancements, Features Requests etc.
+Bug, Issues, features requests, enhancements etc. trackings are [here](https://github.com/tmjeee/fuyuko/issues)
 
 # Docker Images
 Docker images can be found [here](https://hub.docker.com/repositories/tmjee)
