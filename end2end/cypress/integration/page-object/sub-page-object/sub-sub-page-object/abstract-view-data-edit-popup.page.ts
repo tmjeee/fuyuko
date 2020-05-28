@@ -19,7 +19,7 @@ export abstract class AbstractViewDataEditPopupPage<I extends AbstractViewDataIt
     abstract createAbstractViewDataItemPopupPage(): I;
 
 
-    waitForReady(): AbstractViewDataItemPopupPage {
+    waitForReady(): AbstractViewDataEditPopupPage<I,A> {
         util.waitUntilTestPageReady(this.PAGE_NAME);
         return this;
     }

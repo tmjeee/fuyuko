@@ -121,10 +121,30 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
                 [test-button-item-data-editor-popup-ok]`))
             .click({force: true})
             .wait(1000);
+        this.waitForReady();
         return this;
     }
 
     clickDeleteThumbnail(itemNames: string[]): ViewDataThumbnailPage {
+        cy.wrap(itemNames).each((e, i, a) => {
+            cy.waitUntil(() => {
+                return cy.get(`[test-checkbox-thumbnail-item='${itemNames[i]}']`).then((n) => n.length > 0)
+            });
+
+            cy.get('[test-page-title]').then((_) => {
+                const l = _.find(`[test-checkbox-thumbnail-item='${itemNames[i]}'].mat-checkbox-checked`).length;
+                if (!l) { // not already checked
+                    cy.waitUntil(() => cy.get(`[test-checkbox-thumbnail-item='${itemNames[i]}'] label`))
+                        .click({force: true});
+                }
+                return cy.wait(1000);
+            }).then((_) => {
+                return cy.waitUntil(() => cy.get(`[test-button-delete-items]`)).click({force: true});
+            });
+        });
+        return this;
+
+        /*
         cy.wrap(itemNames).each((e, i, a) => {
             return cy.get('[test-page-title]').then((_) => {
                 const l = _.find(`[test-checkbox-thumbnail-item='${itemNames[i]}'].mat-checkbox-checked`).length;
@@ -138,6 +158,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             return cy.waitUntil(() => cy.get(`[test-button-delete-items]`)).click({force: true});
         });
         return this;
+         */
     }
 
     clickEditThumbnailIcon(itemName: string): ViewDataThumbnailEditPopupPage {
@@ -151,6 +172,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             [test-item-editor='name']
             [test-item-editor-value='name']`)
             .click({force: true});
+        this.waitForReady();
         return new ViewDataThumbnailItemPopupPage(PAGE_NAME);
     }
 
@@ -195,6 +217,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             [test-item-editor='description']
             [test-item-editor-value='description']`)
             .click({force: true});
+        this.waitForReady();
         return new ViewDataThumbnailItemPopupPage(PAGE_NAME);
     }
 

@@ -11,6 +11,11 @@ export class AbstractViewDataItemPopupPage {
         return this;
     }
 
+    waitForPopupGone(): AbstractViewDataItemPopupPage {
+        util.waitUntilPopupGone('item-editor-dialog-popup');
+        return this;
+    }
+
     verifyPopupTitle(): this {
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']`)
             .should('exist');

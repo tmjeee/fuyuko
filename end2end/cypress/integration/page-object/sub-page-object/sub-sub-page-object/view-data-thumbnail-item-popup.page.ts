@@ -11,19 +11,11 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
         super(PAGE_NAME);
     }
 
-    /*
-    waitForReady(): ViewDataThumbnailItemPopupPage {
-        util.waitUntilTestPageReady(this.PAGE_NAME);
-        return this;
-    }
-     */
-
     clickOk(): ViewDataThumbnailPage {
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
             [test-button-item-editor-popup-ok]`)
             .click({force: true})
-            .wait(1000);
-        this.waitForReady();
+        this.waitForPopupGone();
         return new ViewDataThumbnailPage();
     }
 
@@ -31,8 +23,7 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
         cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
             [test-button-item-editor-popup-cancel]`)
             .click({force: true})
-            .wait(1000);
-        this.waitForReady();
+        this.waitForPopupGone();
         return new ViewDataThumbnailPage();
     }
 
@@ -41,8 +32,7 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
         cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
             [test-button-item-editor-popup-cancel]`))
             .click({force: true})
-            .wait(1000);
-        this.waitForReady();
+        this.waitForPopupGone();
         return new ViewDataThumbnailEditPopupPage(this.PAGE_NAME);
     }
 
@@ -51,8 +41,7 @@ export class ViewDataThumbnailItemPopupPage extends AbstractViewDataItemPopupPag
         cy.waitUntil(() => cy.get(`[test-popup-dialog-title='item-editor-dialog-popup']
             [test-button-item-editor-popup-ok]`))
             .click({force: true})
-            .wait(1000);
-        this.waitForReady();
+        this.waitForPopupGone();
         return new ViewDataThumbnailEditPopupPage(this.PAGE_NAME);
     }
 }
