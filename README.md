@@ -6,6 +6,12 @@
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-wf&subject=WF%20Build%20Status%20v1.0.0-beta)](https://jenkins.fuyuko.org/job/fuyuko-wf/)
 
 Fuyuko is an Open Source Master Data Management (MDM) / Product Information Management (PIM) software.
+It allows management of product (name, description, attributes, pricing etc.) in a bussiness. 
+
+# Goals
+* Provides an open-source alternative on a highly comercial oriented PIM / MDM software market
+* Foster open corporation and standadization from bodies eg. GS1Net, 1WorldSync, GHX etc. for product information supply and consumption.
+* A PIM / MDM product with plugable extensions allowing supply and consumtion of data from various centerlized global data synchronization network (GDSN)
 
 # Features
 * simple
