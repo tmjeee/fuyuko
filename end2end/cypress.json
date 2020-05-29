@@ -2,9 +2,9 @@
   "baseUrl": "http://localhost:4200",
   "testFiles": "**/*.spec.js",
   "defaultCommandTimeout": 100000,
-  "pageLoadTimeout": 70000,
-  "requestTimeout": 50000,
-  "responseTimeout": 50000,
+  "pageLoadTimeout": 100000,
+  "requestTimeout": 70000,
+  "responseTimeout": 70000,
   "waitForAnimations": true,
   "integrationFolder": "cypress/integration",
   "env": {
