@@ -41,8 +41,8 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                     if (currentView) {
                         this.currentView = currentView;
                         this.reload();
-                        this.viewReady = true;
                     }
+                    this.viewReady = true;
                 }),
             ).subscribe();
     }
