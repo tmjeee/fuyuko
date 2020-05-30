@@ -95,8 +95,8 @@ export const w = (viewRulePage: ViewRulePage, opts: {
 
     // delete rule
     viewRulePage
-        .visit()
-        .selectGlobalView(opts.viewName)
+        // .visit()
+        // .selectGlobalView(opts.viewName)
         .selectPredefinedTab()
         .clickDeleteRule(ruleName)
         .verifySuccessMessageExists()
