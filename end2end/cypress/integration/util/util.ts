@@ -23,6 +23,14 @@ export const waitUntilTestPageReady = (pageName: string) => {
     });
 };
 
+export const waitUntilPopupReady = (popupName: string) => {
+    cy.waitUntil(() => {
+        return cy.get(`body`).then((n) => {
+            return (n.find(`[test-popup-dialog-title='${popupName}']`).length > 0);
+        });
+    })
+}
+
 export const waitUntilPopupGone = (popupName: string) => {
     cy.waitUntil(() => {
         return cy.get(`body`).then((n) => {

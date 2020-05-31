@@ -123,7 +123,7 @@ describe('view-data-thumbnail spec', () => {
     });
 
     /////////////// set 1
-    it(`[string attribute] should change attributes of thumbnail`, () => {
+    it.only(`[string attribute] should change attributes of thumbnail`, () => {
 
         Cypress.currentTest.retries(2);
         const itemName = `Test-Item-${Math.random()}`;
@@ -137,7 +137,7 @@ describe('view-data-thumbnail spec', () => {
         const text_v = `${text_attributeValue}`;
 
         const number_attributeName = `number attribute`;
-        const number_attributeValue = ((Math.random() + 1).toFixed(1));
+        const number_attributeValue = ((Math.random() + 1).toFixed(2));
         const number_v = `${number_attributeValue}`;
 
         const date_attributeName = `date attribute`;
@@ -150,14 +150,14 @@ describe('view-data-thumbnail spec', () => {
         const currency_v = `$${currency_attributeValue} ${currency_attributeUnit}`;
 
         const volume_attributeName = `volume attribute`;
-        const volume_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const volume_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const volume_attributeUnit = 'ml';
         const volume_v = `${volume_attributeValue} ${volume_attributeUnit}`;
 
         const dimension_attributeName = `dimension attribute`;
-        const dimension_attributeLengthValue = ((Math.random() * 10 + 1).toFixed(1));
-        const dimension_attributeWidthValue = ((Math.random() * 10 + 1).toFixed(1));
-        const dimension_attributeHeightValue = ((Math.random() * 10 + 1).toFixed(1));
+        const dimension_attributeLengthValue = ((Math.random() * 10 + 1).toFixed(2));
+        const dimension_attributeWidthValue = ((Math.random() * 10 + 1).toFixed(2));
+        const dimension_attributeHeightValue = ((Math.random() * 10 + 1).toFixed(2));
         const dimension_attributeUnit = 'cm';
         const dimension_v = [
             `w:${dimension_attributeWidthValue} ${dimension_attributeUnit}`,
@@ -167,22 +167,22 @@ describe('view-data-thumbnail spec', () => {
 
 
         const area_attributeName = `area attribute`;
-        const area_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const area_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const area_attributeUnit = 'm2';
         const area_v = `${area_attributeValue} ${area_attributeUnit}`;
 
         const length_attributeName = `length attribute`;
-        const length_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const length_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const length_attributeUnit = 'cm';
         const length_v = `${length_attributeValue} ${length_attributeUnit}`;
 
         const width_attributeName = `width attribute`;
-        const width_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const width_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const width_attributeUnit = 'cm';
         const width_v = `${width_attributeValue} ${width_attributeUnit}`;
 
         const height_attributeName = `height attribute`;
-        const height_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const height_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const height_attributeUnit = 'cm';
         const height_v = `${height_attributeValue} ${height_attributeUnit}`;
 
@@ -468,7 +468,7 @@ describe('view-data-thumbnail spec', () => {
         const text_v = `${text_attributeValue}`;
 
         const number_attributeName = `number attribute`;
-        const number_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const number_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const number_v = `${number_attributeValue}`;
 
         const date_attributeName = `date attribute`;
@@ -481,14 +481,14 @@ describe('view-data-thumbnail spec', () => {
         const currency_v = `$${currency_attributeValue} ${currency_attributeUnit}`;
 
         const volume_attributeName = `volume attribute`;
-        const volume_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const volume_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const volume_attributeUnit = 'ml';
         const volume_v = `${volume_attributeValue} ${volume_attributeUnit}`;
 
         const dimension_attributeName = `dimension attribute`;
-        const dimension_attributeLengthValue = ((Math.random() * 10 + 1).toFixed(1));
-        const dimension_attributeWidthValue = ((Math.random() * 10 + 1).toFixed(1));
-        const dimension_attributeHeightValue = ((Math.random() * 10 + 1).toFixed(1));
+        const dimension_attributeLengthValue = ((Math.random() * 10 + 1).toFixed(2));
+        const dimension_attributeWidthValue = ((Math.random() * 10 + 1).toFixed(2));
+        const dimension_attributeHeightValue = ((Math.random() * 10 + 1).toFixed(2));
         const dimension_attributeUnit = 'cm';
         const dimension_v = [
             `w:${dimension_attributeWidthValue} ${dimension_attributeUnit}`,
@@ -498,22 +498,22 @@ describe('view-data-thumbnail spec', () => {
 
 
         const area_attributeName = `area attribute`;
-        const area_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const area_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const area_attributeUnit: AreaUnits = 'mm2';
         const area_v = `${area_attributeValue} ${area_attributeUnit}`;
 
         const length_attributeName = `length attribute`;
-        const length_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const length_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const length_attributeUnit = 'cm';
         const length_v = `${length_attributeValue} ${length_attributeUnit}`;
 
         const width_attributeName = `width attribute`;
-        const width_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const width_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const width_attributeUnit = 'cm';
         const width_v = `${width_attributeValue} ${width_attributeUnit}`;
 
         const height_attributeName = `height attribute`;
-        const height_attributeValue = ((Math.random() * 10 + 1).toFixed(1));
+        const height_attributeValue = ((Math.random() * 10 + 1).toFixed(2));
         const height_attributeUnit = 'cm';
         const height_v = `${height_attributeValue} ${height_attributeUnit}`;
 

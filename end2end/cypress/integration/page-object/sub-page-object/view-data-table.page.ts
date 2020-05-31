@@ -25,8 +25,18 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
         return this;
     }
 
+    waitForItemEditPopupReady(): ViewDataTablePage {
+        util.waitUntilPopupReady(`item-editor-dialog-popup`);
+        return this;
+    }
+
     waitForItemEditPopupGone(): ViewDataTablePage {
         util.waitUntilPopupGone(`item-editor-dialog-popup`);
+        return this;
+    }
+
+    waitForAttributeEditPopupReady(): ViewDataTablePage {
+        util.waitUntilPopupReady(`data-editor-dialog-popup`);
         return this;
     }
 
@@ -172,6 +182,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             .last()
             .find(`[test-item-editor-value='name']`)
             .click({force: true});
+        this.waitForItemEditPopupReady();
         cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
         cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
         this.waitForItemEditPopupGone();
@@ -184,6 +195,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             .last()
             .find(`[test-item-editor-value='name']`)
             .click({force: true});
+        this.waitForItemEditPopupReady();
         cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
         cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
         this.waitForItemEditPopupGone();
@@ -260,7 +272,10 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
 
     verifySaveEnable(b: boolean): ViewDataTablePage {
         this.waitForReady();
-        cy.get(`[test-button-save-items]`).should(b ? 'be.enabled' : 'be.disabled');
+        cy.waitUntil(() => cy.get(`[test-page-title]
+            [test-button-save-items]`))
+            .should(b ? 'be.enabled' : 'be.disabled');
+        // cy.get(`[test-button-save-items]`).should(b ? 'be.enabled' : 'be.disabled');
         return this;
     }
 }

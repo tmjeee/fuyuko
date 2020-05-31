@@ -173,15 +173,19 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             [test-item-editor-value='name']`)
             .click({force: true});
         this.waitForReady();
-        return new ViewDataThumbnailItemPopupPage(PAGE_NAME);
+        return new ViewDataThumbnailItemPopupPage(PAGE_NAME).waitForPopupReady();
     }
 
     clickItemShowMore(itemName: string): ViewDataThumbnailPage {
         cy.get(`[test-thumbnail-item-name='${itemName}']`).then((_) => {
             const l = _.find(`[test-link-show-more]`).length;
             if (l) { // exists
-               cy.waitUntil(() => cy.get(`[test-thumbnail-item-name='${itemName}']
-                   [test-link-show-more]`)).click({force: true})
+               cy.waitUntil(() => cy.get( `
+                    [test-thumbnail-item-name='${itemName}']
+                    [test-link-show-more]`).then((_)=> {
+                        return (_.length > 0);
+               }));
+               cy.get(`[test-thumbnail-item-name='${itemName}'] [test-link-show-more]`).click({force: true})
             }
             return cy.wait(1000);
         });
@@ -192,8 +196,13 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
         cy.get(`[test-thumbnail-item-name='${itemName}']`).then((_) => {
             const l = _.find(`[test-link-show-less]`).length;
             if (l) { // exists
-                cy.waitUntil(() => cy.get(`[test-thumbnail-item-name='${itemName}']
-                    [test-link-show-less]`)).click({force: true})
+                cy.waitUntil(() => cy.get(`
+                    [test-thumbnail-item-name='${itemName}']
+                    [test-link-show-less]`).then((_) => {
+                        return (_.length > 0);
+                }));
+                cy.get(`[test-thumbnail-item-name='${itemName}']
+                        [test-link-show-less]`).click({force: true})
             }
             return cy.wait(1000);
         });
@@ -218,7 +227,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             [test-item-editor-value='description']`)
             .click({force: true});
         this.waitForReady();
-        return new ViewDataThumbnailItemPopupPage(PAGE_NAME);
+        return new ViewDataThumbnailItemPopupPage(PAGE_NAME).waitForPopupReady();
     }
 
     clickThumbnailItemAttribute(itemName: string, attributeName: string): ViewDataThumbnailAttributePopupPage {
@@ -226,7 +235,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
             [test-data-editor='${attributeName}']
             [test-data-editor-value='${attributeName}']`)
             .click({force: true});
-        return new ViewDataThumbnailAttributePopupPage(PAGE_NAME);
+        return new ViewDataThumbnailAttributePopupPage(PAGE_NAME).waitForPopupReady();
     }
 
     clickSave(): ViewDataThumbnailPage {

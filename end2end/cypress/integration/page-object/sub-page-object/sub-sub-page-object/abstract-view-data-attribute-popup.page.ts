@@ -19,6 +19,16 @@ export class AbstractViewDataAttributePopupPage {
         return this;
     }
 
+    waitForPopupReady(): this {
+        util.waitUntilPopupReady(`data-editor-dialog-popup`);
+        return this;
+    }
+
+    waitForPopupGone(): this {
+        util.waitUntilPopupGone(`data-editor-dialog-popup`);
+        return this;
+    }
+
     verifyPopupTitle(): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .should('exist');

@@ -11,6 +11,11 @@ export class AbstractViewDataItemPopupPage {
         return this;
     }
 
+    waitForPopupReady(): this {
+        util.waitUntilPopupReady(`item-editor-dialog-popup`);
+        return this;
+    }
+
     waitForPopupGone(): AbstractViewDataItemPopupPage {
         util.waitUntilPopupGone('item-editor-dialog-popup');
         return this;
