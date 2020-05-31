@@ -86,6 +86,11 @@ export class BulkEditPageStep1 {
     }
 
     verifyStep(): BulkEditPageStep1 {
+        cy.waitUntil(() => {
+            return cy.get(`mat-step-header[ng-reflect-index='0']`).then((_) => {
+                return (_.length > 0);
+            })
+        });
         cy.get(`mat-step-header[ng-reflect-index='0']`)
             .should('have.attr', 'ng-reflect-selected', 'true');
         return this;

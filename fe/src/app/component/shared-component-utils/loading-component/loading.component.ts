@@ -23,7 +23,10 @@ export class LoadingComponent implements OnChanges, OnInit {
     }
 
     ngOnInit(): void {
-        (this.e.nativeElement as HTMLElement).parentElement.removeChild(this.e.nativeElement)
+        const _e: HTMLElement = this.e.nativeElement as HTMLElement;
+        if (_e.parentElement) {
+            _e.parentElement.removeChild(this.e.nativeElement)
+        }
         document.querySelector(`.app`).appendChild(this.e.nativeElement);
     }
 

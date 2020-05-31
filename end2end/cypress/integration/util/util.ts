@@ -26,8 +26,6 @@ export const waitUntilTestPageReady = (pageName: string) => {
 export const waitUntilPopupGone = (popupName: string) => {
     cy.waitUntil(() => {
         return cy.get(`body`).then((n) => {
-            console.log('****************', n.find(`[test-popup-dialog-title='${popupName}']`));
-            console.log('****************', n.find(`[test-popup-dialog-title='${popupName}']`).length);
             return (n.find(`[test-popup-dialog-title='${popupName}']`).length <= 0);
         });
     })

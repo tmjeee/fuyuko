@@ -28,7 +28,6 @@ export class AbstractViewDataItemPopupPage {
                                    [test-field-name]`)
             .clear({force: true})
             .type(`${itemName}`, {force: true});
-        this.waitForReady();
         return this;
     }
 
@@ -37,7 +36,6 @@ export class AbstractViewDataItemPopupPage {
                                    [test-field-description]`)
             .clear({force: true})
             .type(itemDescription, {force: true});
-        this.waitForReady();
         return this;
     }
 }

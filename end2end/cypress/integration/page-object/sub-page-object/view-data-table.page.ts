@@ -13,6 +13,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
         return this;
     }
 
+
     validateTitle(): ViewDataTablePage {
         cy.get(`[test-page-title]`).should('have.attr', 'test-page-title', PAGE_NAME);
         return this;
@@ -21,6 +22,16 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     visit(): ViewDataTablePage {
         cy.visit(`/view-gen-layout/(data-tabular//help:view-help)`);
         this.waitForReady();
+        return this;
+    }
+
+    waitForItemEditPopupGone(): ViewDataTablePage {
+        util.waitUntilPopupGone(`item-editor-dialog-popup`);
+        return this;
+    }
+
+    waitForAttributeEditPopupGone(): ViewDataTablePage {
+        util.waitUntilPopupGone(`data-editor-dialog-popup`);
         return this;
     }
 
@@ -163,6 +174,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             .click({force: true});
         cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
         cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
+        this.waitForItemEditPopupGone();
         return this;
     }
 
@@ -174,6 +186,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
             .click({force: true});
         cy.get(`[test-field-name]`).clear({force: true}).type(newItemName, {force: true});
         cy.get(`[test-button-item-editor-popup-ok]`).click({force: true});
+        this.waitForItemEditPopupGone();
         return this;
     }
 
