@@ -85,12 +85,16 @@ export class BulkEditPageStep1 {
         return this;
     }
 
-    verifyStep(): BulkEditPageStep1 {
+    waitForStepReady(): BulkEditPageStep1 {
         cy.waitUntil(() => {
             return cy.get(`mat-step-header[ng-reflect-index='0']`).then((_) => {
                 return (_.length > 0);
             })
         });
+        return this;
+    }
+
+    verifyStep(): BulkEditPageStep1 {
         cy.get(`mat-step-header[ng-reflect-index='0']`)
             .should('have.attr', 'ng-reflect-selected', 'true');
         return this;
@@ -829,7 +833,7 @@ export class BulkEditPageStep1 {
     clickNext(): BulkEditPageStep2 {
         cy.get(`[test-step1-next]`)
             .click({force: true});
-        return new BulkEditPageStep2();
+        return new BulkEditPageStep2().waitForStepReady();
     }
 }
 
@@ -841,13 +845,22 @@ export class BulkEditPageStep2 {
         return this;
     }
 
+    waitForStepReady(): BulkEditPageStep2 {
+        cy.waitUntil(() => {
+            return cy.get(`mat-step-header[ng-reflect-index='1']`).then((_) => {
+                return (_.length > 0);
+            })
+        });
+        return this;
+    }
+
     clickPrevious(): BulkEditPageStep1 {
         cy.get(`[test-button-step2-prev]`).click({force: true});
-        return new BulkEditPageStep1();
+        return new BulkEditPageStep1().waitForStepReady();
     }
     clickNext(): BulkEditPageStep3 {
         cy.get(`[test-button-step2-next]`).click({force: true});
-        return new BulkEditPageStep3();
+        return new BulkEditPageStep3().waitForStepReady();
     }
 
     verifyItemOldValue(itemName: string, attributeName: string, value: string[]): BulkEditPageStep2 {
@@ -886,6 +899,15 @@ export class BulkEditPageStep3 {
     verifyStep(): BulkEditPageStep3 {
         cy.get(`mat-step-header[ng-reflect-index='2']`)
             .should('have.attr', 'ng-reflect-selected', 'true');
+        return this;
+    }
+
+    waitForStepReady(): BulkEditPageStep3 {
+        cy.waitUntil(() => {
+            return cy.get(`mat-step-header[ng-reflect-index='2']`).then((_) => {
+                return (_.length > 0);
+            })
+        });
         return this;
     }
 
