@@ -273,8 +273,8 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     verifySaveEnable(b: boolean): ViewDataTablePage {
         this.waitForReady();
         cy.waitUntil(() => cy.get(`[test-page-title]
-            [test-button-save-items]`))
-            .should(b ? 'be.enabled' : 'be.disabled');
+            [test-button-save-items]`)
+            .should(b ? 'be.enabled' : 'be.disabled'));
         // cy.get(`[test-button-save-items]`).should(b ? 'be.enabled' : 'be.disabled');
         return this;
     }
