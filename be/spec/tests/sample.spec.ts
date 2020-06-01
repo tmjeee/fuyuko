@@ -1,4 +1,12 @@
+import {testBeforeAll} from "../helpers/test-helper";
+
 describe("Player", function() {
+
+
+  beforeAll(async () => {
+      await testBeforeAll();
+  });
+
   beforeEach(function() {
   });
 

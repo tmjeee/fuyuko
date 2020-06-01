@@ -49,7 +49,7 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
                 entries:[{
                     id: -1,
                     key: 'format',
-                    value: (attribute.format ? attribute.format : NUMBER_FORMAT)
+                    value: (attribute.format ? attribute.format : DATE_FORMAT)
                 } as AttributeMetadataEntry2]
             } as AttributeMetadata2);
             break;
@@ -69,7 +69,7 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
             // att.pair1 = getMetadataPair1Entry(attribute2);
             att.metadatas.push({
                 id: -1,
-                name: `pair1`,
+                name: `${attribute.type} pair1 metadata`,
                 entries: attribute.pair1 ? attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
                     acc.push({
                        id: -1,
@@ -85,7 +85,7 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
             // att.pair2 = getMetadataPair2Entry(attribute2);
             att.metadatas.push({
                 id: -1,
-                name: `pair1`,
+                name: `${attribute.type} pair1 metadata`,
                 entries: attribute.pair1 ? attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
                     acc.push({
                         id: -1,
@@ -97,13 +97,13 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
             } as AttributeMetadata2);
             att.metadatas.push({
                 id: -1,
-                name: `pair2`,
+                name: `${attribute.type} pair2 metadata`,
                 entries: attribute.pair2 ? attribute.pair2.reduce((acc: AttributeMetadataEntry2[], c: Pair2) => {
                     acc.push({
                         id: -1,
                         key: c.key1,
                         value: `${c.key2}=${c.value}`
-                    } as AttributeMetadataEntry2)
+                    } as AttributeMetadataEntry2);
                     return acc;
                 }, []) : []
             } as AttributeMetadata2);
