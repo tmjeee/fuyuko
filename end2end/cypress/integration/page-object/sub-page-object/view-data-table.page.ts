@@ -235,7 +235,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     clickOnDeleteChildItem(itemName: string): ViewDataTablePage {
-        cy.waitUntil(() => cy.get(`[test-button-data-table-delete-item='${itemName}']`))
+        cy.get(`[test-button-data-table-delete-item='${itemName}']`)
             .click({force: true});
         return this;
     }

@@ -206,8 +206,8 @@ describe('view-data-tabular spec', () => {
             .verifyDataTableHasItem('Item-6', true)
 
 
-            // .clickOnDeleteChildItem(itemName)
-            // .verifySaveEnable(true)
+            .clickOnDeleteChildItem(itemName)
+            .verifySaveEnable(true)
             // .clickOnSaveItem()
             // .verifySuccessMessageExists()
             // .verifyDataTableHasItem(itemName, false)
