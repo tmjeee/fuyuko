@@ -53,6 +53,7 @@ describe(`data export artifacts spec`, () => {
 
 
     it(`should be able to delete artifact`, () => {
+        Cypress.currentTest.retries(2);
 
         const viewName = `Test View 1`;
 

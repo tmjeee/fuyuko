@@ -123,7 +123,7 @@ describe(`data export spec`, () => {
 
 
     it(`should export items`, () => {
-
+        Cypress.currentTest.retries(2);
         const viewName = `Test View 1`;
         const itemName = `Item-1`;
 
