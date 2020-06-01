@@ -5,7 +5,7 @@ import {
    ImportScriptPreview,
 } from "../../model/custom-import.model";
 import {CustomImportService} from "../../service/custom-import-service/custom-import.service";
-import {tap} from "rxjs/operators";
+import {finalize, tap} from "rxjs/operators";
 import {
    CustomImportPreviewFn, CustomImportSubmitFn,
    CustomImportValidateFn
@@ -43,7 +43,8 @@ export class CustomImportPageComponent implements OnInit, OnDestroy{
           tap((c: CustomDataImport[]) => {
              this.customDataImports = c;
              this.ready = true;
-          })
+          }),
+          finalize(() => this.ready = true)
       ).subscribe();
    }
 

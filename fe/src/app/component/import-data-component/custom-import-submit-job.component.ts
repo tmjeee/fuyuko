@@ -7,7 +7,7 @@ import {
 } from "../../model/custom-import.model";
 import {Observable} from "rxjs";
 import {CustomImportSubmitFn} from "./custom-import-wizard.component";
-import {tap} from "rxjs/operators";
+import {finalize, tap} from "rxjs/operators";
 import {View} from "../../model/view.model";
 
 
@@ -41,7 +41,8 @@ export class CustomImportSubmitJobComponent implements OnInit {
             tap((r: ImportScriptJobSubmissionResult) => {
                 this.result = r;
                 this.ready = true;
-            })
+            }),
+            finalize(() => this.ready = true)
         ).subscribe();
     }
 

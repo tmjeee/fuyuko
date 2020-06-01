@@ -6,7 +6,7 @@ import {NotificationsService} from "angular2-notifications";
 import {AttributeService} from "../../service/attribute-service/attribute.service";
 import {CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
 import {View} from "../../model/view.model";
-import {tap} from "rxjs/operators";
+import {finalize, tap} from "rxjs/operators";
 import {
     AddCategoryFn, AddItemsToCategoryFn, DeleteCategoryFn, EditCategoryFn,
     GetCategoriesWithItemsFn,
@@ -103,7 +103,8 @@ export class CategoryManagementPageComponent implements OnInit {
          tap((v: View) => {
             this.view = v;
             this.loading = false;
-         })
+         }),
+         finalize(() => this.loading = false)
       ).subscribe();
    }
 }

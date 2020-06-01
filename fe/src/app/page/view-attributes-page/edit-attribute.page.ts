@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Attribute} from '../../model/attribute.model';
 import {FormBuilder} from '@angular/forms';
-import {map, tap} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 import {View} from '../../model/view.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -44,9 +44,10 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
                     if (v) {
                         this.currentView = v;
                         this.reload();
-                        this.viewLoading = false;
                     }
-                })
+                    this.viewLoading = false;
+                }),
+                finalize(() => this.viewLoading = false)
             ).subscribe();
     }
 
@@ -80,7 +81,8 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
             tap((a: Attribute) => {
                 this.attribute = a;
                 this.attributeLoading = false;
-            })
+            }),
+            finalize(() => this.attributeLoading = false)
         ).subscribe();
     }
 }

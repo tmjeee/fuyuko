@@ -4,7 +4,7 @@ import {Settings} from '../../model/settings.model';
 import {SettingsComponentEvent} from '../../component/settings-component/settings.component';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {SettingsService} from '../../service/settings-service/settings.service';
-import {tap} from 'rxjs/operators';
+import {finalize, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
 
 
@@ -36,7 +36,8 @@ export class SettingsPageComponent implements OnInit {
             tap((s: Settings) => {
               this.settings = s;
               this.ready = true;
-            })
+            }),
+            finalize(() => this.ready = true)
         ).subscribe();
   }
 

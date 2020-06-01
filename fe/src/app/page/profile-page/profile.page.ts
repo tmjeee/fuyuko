@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 import {GlobalAvatar} from '../../model/avatar.model';
 import {AvatarService} from '../../service/avatar-service/avatar.service';
 import {AvatarComponentEvent} from '../../component/avatar-component/avatar.component';
@@ -24,6 +24,7 @@ import {toNotifications} from "../../service/common.service";
 export class ProfilePageComponent implements OnInit, OnDestroy {
 
   ready: boolean;
+  avatarsReady: boolean;
   allPredefinedAvatars: GlobalAvatar[];
   myself: User;
   allThemes: Theme[];
@@ -46,7 +47,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.avatarService.allPredefinedAvatars().pipe(
         tap((globalAvatars: GlobalAvatar[]) => {
             this.allPredefinedAvatars = globalAvatars;
-        })
+            this.avatarsReady = true;
+        }),
+        finalize(() => this.avatarsReady = true)
     ).subscribe();
     this.subscription = this.authService.asObservable()
       .pipe(
@@ -60,7 +63,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
               this.formControlTheme.setValue(theme);
           }
           this.ready = true;
-        })
+        }),
+        finalize(() => this.ready = true)
       ).subscribe();
   }
 

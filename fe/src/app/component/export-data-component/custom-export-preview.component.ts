@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {View} from "../../model/view.model";
-import {tap} from "rxjs/operators";
+import {finalize, tap} from "rxjs/operators";
 import {CustomDataExport, ExportScriptInputValue, ExportScriptPreview} from "../../model/custom-export.model";
 import {CustomExportPreviewFn} from "./custom-export-wizard.component";
 
@@ -52,7 +52,8 @@ export class CustomExportPreviewComponent {
                     preview: this.preview
                 });
                 this.ready = true;
-            })
+            }),
+            finalize(() => this.ready = true)
         ).subscribe();
     }
 }

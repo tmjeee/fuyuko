@@ -2,7 +2,7 @@ import {OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AppNotificationService} from '../service/app-notification-service/app-notification.service';
 import {ActivatedRoute, ActivatedRouteSnapshot, Router, Event as RouterEvent, NavigationEnd} from '@angular/router';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter, finalize, map, tap} from 'rxjs/operators';
 import {AppNotification} from '../model/notification.model';
 import {AuthService} from '../service/auth-service/auth.service';
 import {User} from '../model/user.model';
@@ -46,7 +46,8 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
           this.sideNavOpened = this.settings.openSideNav;
           this.subSideBarOpened = this.settings.openSubSideNav;
           this.loading = false;
-        })
+        }),
+        finalize(() => this.loading = false)
     ).subscribe();
     this.routeSubSideNavData = this.findSubSideNavData([this.route.snapshot]);
     this.routerEventSubscription = this.router.events

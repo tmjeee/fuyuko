@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ItemService} from '../../service/item-service/item.service';
 import {combineLatest, forkJoin, Subscription, concat, Observable} from 'rxjs';
-import {concatAll, concatMap, map, tap} from 'rxjs/operators';
+import {concatAll, concatMap, finalize, map, tap} from 'rxjs/operators';
 import {Item, ItemSearchType, TableItem} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';
 import {TableItemAndAttributeSet} from '../../model/item-attribute.model';
@@ -81,7 +81,8 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
          tableItems,
        };
        this.done = true;
-      })
+      }),
+      finalize(() => this.done = true)
     ).subscribe();
   }
 

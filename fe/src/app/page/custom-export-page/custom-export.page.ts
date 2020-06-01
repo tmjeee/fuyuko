@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {View} from "../../model/view.model";
-import {tap} from "rxjs/operators";
+import {finalize, tap} from "rxjs/operators";
 import {
     CustomExportPreviewFn,
     CustomExportSubmitFn, CustomExportValidateFn
@@ -40,7 +40,8 @@ export class CustomExportPageComponent implements OnInit, OnDestroy {
             tap((c: CustomDataImport[]) => {
                 this.customDataExports = c;
                 this.ready = true;
-            })
+            }),
+            finalize(() => this.ready = true)
         ).subscribe();
     }
 

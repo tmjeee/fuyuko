@@ -7,7 +7,7 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {ViewService} from '../../service/view-service/view.service';
 import {ItemService} from '../../service/item-service/item.service';
 import {Item, ItemSearchType} from '../../model/item.model';
-import {map} from 'rxjs/operators';
+import {finalize, map} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
 import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
@@ -78,7 +78,8 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
             items,
           };
           this.done = true;
-        })
+        }),
+        finalize(() => this.done = true)
     ).subscribe();
   }
 

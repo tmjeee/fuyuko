@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {Group} from '../../model/group.model';
-import {combineAll, flatMap, map, mergeAll, tap} from 'rxjs/operators';
+import {combineAll, finalize, flatMap, map, mergeAll, tap} from 'rxjs/operators';
 import {User} from '../../model/user.model';
 import {Action, UserSearchFn, UserTableComponentEvent} from '../../component/user-table-component/user-table.component';
 import {forkJoin, Observable, of} from 'rxjs';
@@ -70,7 +70,8 @@ export class UserGroupPageComponent implements OnInit {
                   }, this.allGroupsUsers);
                   this.reloadGroupUsers();
                   this.groupsReady = true;
-              })
+              }),
+              finalize(() => this.groupsReady = true)
           ).subscribe();
   }
 
@@ -86,7 +87,8 @@ export class UserGroupPageComponent implements OnInit {
                 this.allGroupsUsers.set(group, usersInGroup);
             }
             this.groupsUsersReady = true;
-        })
+        }),
+        finalize(() => this.groupsUsersReady = true)
     ).subscribe();
   }
 

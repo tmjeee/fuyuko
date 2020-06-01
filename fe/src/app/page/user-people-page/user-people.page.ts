@@ -8,7 +8,7 @@ import {
   ActionType,
   UserSearchTableComponentEvent
 } from '../../component/user-search-table-component/user-search-table.component';
-import {combineAll, map, tap} from 'rxjs/operators';
+import {combineAll, finalize, map, tap} from 'rxjs/operators';
 import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 
@@ -55,7 +55,8 @@ export class UserPeoplePageComponent implements OnInit {
             this.activeUsers = activeUsers;
             this.inactiveUsers = inactiveUsers;
             this.ready = true;
-        })
+        }),
+        finalize(() => this.ready = true)
     ).subscribe();
 
     /*

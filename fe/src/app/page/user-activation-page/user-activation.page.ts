@@ -8,7 +8,7 @@ import {
 import {NotificationsService} from 'angular2-notifications';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {Observable} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 import {SelfRegistration} from '../../model/self-registration.model';
 import {ApiResponse, RegistrationResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
@@ -49,7 +49,8 @@ export class UserActivationPageComponent implements OnInit {
             map((u: SelfRegistration[]) => {
                 this.pendingUsers = u;
                 this.ready = true;
-            })
+            }),
+            finalize(() => this.ready = true)
         ).subscribe();
     }
 

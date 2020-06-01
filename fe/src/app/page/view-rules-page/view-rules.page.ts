@@ -57,9 +57,10 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                     if (currentView) {
                         this.currentView = currentView;
                         this.w();
-                        this.viewReady = true;
                     }
+                    this.viewReady = true;
                 }),
+                finalize(() => this.viewReady = true)
             ).subscribe();
     }
 

@@ -11,7 +11,7 @@ import {View} from '../../model/view.model';
 import {operatorNeedsItemValue, operatorsForAttribute} from '../../utils/attribute-operators.util';
 import {OperatorType} from '../../model/operator.model';
 import {BulkEditItem, BulkEditPackage, BulkEditTableItem} from '../../model/bulk-edit.model';
-import {tap} from 'rxjs/operators';
+import {finalize, tap} from 'rxjs/operators';
 import {toBulkEditTableItem} from '../../utils/item-to-table-items.util';
 import {StepperSelectionEvent} from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
@@ -190,9 +190,10 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
                    if (this.bulkEditPackage) {
                        const bulkEditItems: BulkEditItem[] = this.bulkEditPackage.bulkEditItems;
                        this.bulkEditTableItems  = toBulkEditTableItem(bulkEditItems);
-                       this.secondStepReady = true;
                    }
-                })
+                   this.secondStepReady = true;
+                }),
+                finalize(() => this.secondStepReady = true)
             ).subscribe();
     }
 

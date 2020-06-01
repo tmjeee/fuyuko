@@ -7,7 +7,7 @@ import {
 import {AuthService} from '../../service/auth-service/auth.service';
 import {User} from '../../model/user.model';
 import {DashboardComponentEvent} from '../../component/dashboard-component/dashboard.component';
-import {tap} from 'rxjs/operators';
+import {finalize, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
 import {SerializedDashboardFormat} from '../../model/dashboard-serialzable.model';
 import {ApiResponse} from "../../model/api-response.model";
@@ -54,7 +54,8 @@ export class DashboardPageComponent implements OnInit {
                         this.data = d;
                     }
                     this.loading = false;
-                })
+                }),
+                finalize(() => this.loading = false)
             ).subscribe();
     }
 

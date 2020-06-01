@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Job, JobAndLogs, JobLog} from '../../model/job.model';
 import {Observable} from 'rxjs';
 import {JobsService} from '../../service/jobs-service/jobs.service';
-import {map, tap} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 
 @Component({
     templateUrl: './jobs.page.html',
@@ -24,7 +24,8 @@ export class JobsPageComponent implements OnInit {
                 map((jobs: Job[]) => {
                     this.jobs = jobs;
                     this.ready = true;
-                })
+                }),
+                finalize(() => this.ready = false)
             ).subscribe();
     }
 

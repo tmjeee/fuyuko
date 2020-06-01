@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {View} from '../../model/view.model';
 import {ViewService} from '../../service/view-service/view.service';
 import {ExportDataService} from '../../service/export-data-service/export-data.service';
-import {map, tap} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 import {
     PreviewExportFn, SubmitExportJobFn,
     ViewAttributeFn, ViewPricingStructureFn,
@@ -59,7 +59,8 @@ export class ExportPageComponent implements OnInit {
             tap((v: View[]) => {
                 this.allViews = v;
                 this.ready = true;
-            })
+            }),
+            finalize(() => this.ready = true)
         ).subscribe();
 
     }

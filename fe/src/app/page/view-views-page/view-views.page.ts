@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ViewService} from '../../service/view-service/view.service';
-import {tap} from 'rxjs/operators';
+import {finalize, tap} from 'rxjs/operators';
 import {View} from '../../model/view.model';
 import {ViewTableComponentEvent} from '../../component/view-component/view-table.component';
 import {combineLatest, forkJoin} from 'rxjs';
@@ -35,7 +35,8 @@ export class ViewViewsPageComponent implements OnInit {
                 tap((v: View[]) => {
                     this.views = v;
                     this.done = true;
-                })
+                }),
+                finalize(() => this.done = true)
             ).subscribe();
     }
 

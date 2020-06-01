@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {CategoryService} from "../../service/category-service/category.service";
 import {ViewService} from "../../service/view-service/view.service";
-import {combineAll, map, tap} from "rxjs/operators";
+import {combineAll, finalize, map, tap} from "rxjs/operators";
 import {View} from "../../model/view.model";
 import {CategoryWithItems} from "../../model/category.model";
 import {
@@ -117,7 +117,8 @@ export class CategoryPageComponent implements OnInit {
                         tap((r: CategoryWithItems[]) => {
                             this.categoriesWithItems = r;
                             this.treeLoading = false;
-                        })
+                        }),
+                        finalize(() => this.treeLoading = false)
                     ).subscribe();
                 }
             })

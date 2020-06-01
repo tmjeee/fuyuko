@@ -6,7 +6,7 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {NotificationsService} from 'angular2-notifications';
 import {ViewService} from '../../service/view-service/view.service';
 import {Attribute} from '../../model/attribute.model';
-import {map, tap} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 import {Item, ItemSearchType, TableItem} from '../../model/item.model';
 import {ItemService} from '../../service/item-service/item.service';
 import {
@@ -83,7 +83,8 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
           items,
         };
         this.done = true;
-      })
+      }),
+      finalize(() => this.done = true)
     ).subscribe();
   }
 

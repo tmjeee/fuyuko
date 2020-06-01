@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ImportDataService} from '../../service/import-data-service/import-data.service';
 import {ViewService} from '../../service/view-service/view.service';
-import {tap} from 'rxjs/operators';
+import {finalize, tap} from 'rxjs/operators';
 import {View} from '../../model/view.model';
 import {
     ShowPreviewFn,
@@ -41,7 +41,8 @@ export class ImportPageComponent implements OnInit {
               tap((v: View[]) => {
                   this.allViews = v;
                   this.ready = true;
-              })
+              }),
+              finalize(() => this.ready = true)
           ).subscribe();
   }
 }

@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ViewService} from "../../service/view-service/view.service";
 import {NotificationsService} from "angular2-notifications";
 import {AttributeService} from "../../service/attribute-service/attribute.service";
-import {map, tap} from "rxjs/operators";
+import {finalize, map, tap} from "rxjs/operators";
 import {View} from "../../model/view.model";
 import {Subscription} from "rxjs";
 import {Attribute} from "../../model/attribute.model";
@@ -42,9 +42,10 @@ export class AddAttributePageComponent implements OnInit {
                     if (v) {
                         this.currentView = v;
                         this.reload();
-                        this.viewLoading = false;
                     }
-                })
+                    this.viewLoading = false;
+                }),
+                finalize(() => this.viewLoading = false)
             ).subscribe();
     }
 

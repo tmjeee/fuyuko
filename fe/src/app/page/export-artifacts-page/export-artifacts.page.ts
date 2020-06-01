@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {DataExportArtifact} from "../../model/data-export.model";
-import {tap} from "rxjs/operators";
+import {finalize, tap} from "rxjs/operators";
 import {ExportArtifactsComponentEvent} from "../../component/export-data-component/export-artifacts.component";
 import {NotificationsService} from "angular2-notifications";
 import {ExportArtifactService} from "../../service/export-artifact-service/export-artifact.service";
@@ -30,7 +30,8 @@ export class ExportArtifactsPageComponent implements OnInit {
             tap((dataExportArtifacts: DataExportArtifact[]) => {
                 this.dataExportArtifacts = dataExportArtifacts;
                 this.ready = true;
-            })
+            }),
+            finalize(() => this.ready = true)
         ).subscribe();
     }
 
