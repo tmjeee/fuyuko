@@ -1,5 +1,5 @@
 
-<img src="https://raw.githubusercontent.com/tmjeee/fuyuko/v1.0.0-beta/fe/src/assets/images/logo/fuyuko-logo-with-side-wordings.png" width="600">
+<img src="https://raw.githubusercontent.com/tmjeee/fuyuko/v1.0.0-beta/fe/src/assets/images/logo/fuyuko-logo-with-side-wordings.png" width="400">
 
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-fe&subject=FE%20Build%20Status%20v1.0.0-beta)](https://jenkins.fuyuko.org/job/fuyuko-fe/)
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-be&subject=BE%20Build%20Status%20v1.0.0-beta)](https://jenkins.fuyuko.org/job/fuyuko-be/)
