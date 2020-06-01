@@ -25,7 +25,7 @@ export class JobsPageComponent implements OnInit {
                     this.jobs = jobs;
                     this.ready = true;
                 }),
-                finalize(() => this.ready = false)
+                finalize(() => this.ready = true)
             ).subscribe();
     }
 
