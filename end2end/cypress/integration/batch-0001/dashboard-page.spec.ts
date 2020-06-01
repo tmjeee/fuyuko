@@ -31,11 +31,13 @@ describe('dashboard', () => {
     });
 
     it ('should load', () => {
+        Cypress.currentTest.retries(1);
         dashboardPage
             .validateTitle();
     });
 
     it ('should be able to switch dashboard strategies', () => {
+        Cypress.currentTest.retries(1);
         dashboardPage
             .changeDashboardStrategy('1x')
             .validateDashboardStrategyIs('1x')
@@ -45,18 +47,21 @@ describe('dashboard', () => {
 
 
     it ('should be able to navigate to profile page', () => {
+        Cypress.currentTest.retries(1);
         dashboardPage
             .visitProfilePage()
             .validateTitle();
     });
 
     it ('should be able to navigate to dashboard page', () => {
+        Cypress.currentTest.retries(1);
         dashboardPage
             .visitDashboardPage()
             .validateTitle();
     });
 
     it ('should be able to navigate to user role page', () => {
+        Cypress.currentTest.retries(1);
         dashboardPage
             .visitUserPage()
             .visitUserRolePage()
@@ -64,6 +69,7 @@ describe('dashboard', () => {
     });
 
     it('should be able to navigate to user group page', () => {
+        Cypress.currentTest.retries(1);
         dashboardPage
             .visitUserPage()
             .visitUserGroupPage()
@@ -71,6 +77,7 @@ describe('dashboard', () => {
     });
 
     it ('should be able to navigate to user people page', () => {
+        Cypress.currentTest.retries(1);
         dashboardPage
             .visitUserPage()
             .visitUserPeoplePage()
@@ -78,6 +85,7 @@ describe('dashboard', () => {
     });
 
     it ('should be able to navigate to user invitation page', () => {
+        Cypress.currentTest.retries(1);
         dashboardPage
             .visitUserPage()
             .visitUserInvitationPage()
@@ -85,6 +93,7 @@ describe('dashboard', () => {
     });
 
     it ('should be able to navigate to user activation page', () => {
+        Cypress.currentTest.retries(1);
         dashboardPage
             .visitUserPage()
             .visitUserActivationPage()
