@@ -12,7 +12,7 @@ export class LoginPage implements ActualPage<LoginPage> {
     }
 
     waitForReady(): LoginPage {
-        util.waitUntilTestPageReady(PAGE_NAME);
+        // util.waitUntilTestPageReady(PAGE_NAME);
         cy.wait(2000);
         return this;
     }

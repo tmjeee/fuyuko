@@ -208,17 +208,17 @@ describe('view-data-tabular spec', () => {
 
             .clickOnDeleteChildItem(itemName)
             .verifySaveEnable(true)
-            // .clickOnSaveItem()
-            // .verifySuccessMessageExists()
-            // .verifyDataTableHasItem(itemName, false)
-            // .verifyDataTableHasItem(itemName2, false)
-            // .verifyDataTableHasItem(itemName3, false)
-            // .verifyDataTableHasItem('Item-1', true)
-            // .verifyDataTableHasItem('Item-2', true)
-            // .verifyDataTableHasItem('Item-3', true)
-            // .verifyDataTableHasItem('Item-4', true)
-            // .verifyDataTableHasItem('Item-5', true)
-            // .verifyDataTableHasItem('Item-6', true)
+            .clickOnSaveItem()
+            .verifySuccessMessageExists()
+            .verifyDataTableHasItem(itemName, false)
+            .verifyDataTableHasItem(itemName2, false)
+            .verifyDataTableHasItem(itemName3, false)
+            .verifyDataTableHasItem('Item-1', true)
+            .verifyDataTableHasItem('Item-2', true)
+            .verifyDataTableHasItem('Item-3', true)
+            .verifyDataTableHasItem('Item-4', true)
+            .verifyDataTableHasItem('Item-5', true)
+            .verifyDataTableHasItem('Item-6', true)
         ;
     });
 

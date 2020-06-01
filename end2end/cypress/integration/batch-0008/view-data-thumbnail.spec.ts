@@ -123,7 +123,7 @@ describe('view-data-thumbnail spec', () => {
     });
 
     /////////////// set 1
-    it.only(`[string attribute] should change attributes of thumbnail`, () => {
+    it(`[string attribute] should change attributes of thumbnail`, () => {
 
         Cypress.currentTest.retries(2);
         const itemName = `Test-Item-${Math.random()}`;
