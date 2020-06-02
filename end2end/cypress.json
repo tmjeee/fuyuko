@@ -15,7 +15,7 @@
     "RETRIES_HIDDEN": 1,
     "RETRIES_NO_LOG": 1
   },
-  "video": false,
+  "video": true,
   "videoUploadOnPasses": false,
   "trashAssetsBeforeRuns": true,
   "projectId": "ozp71m"

@@ -86,7 +86,7 @@ describe('view-data-thumbnail spec', () => {
 
 
     it('should change name / description of thumbnail', ()=> {
-        Cypress.currentTest.retries(2);
+        Cypress.currentTest.retries(1);
 
         const itemName = `Test-Item-${Math.random()}`;
         const newItemName = `New-Test-Item-${Math.random()}`;

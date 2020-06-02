@@ -166,7 +166,7 @@ describe('view-data-tabular spec', () => {
 
 
     it(`should add and delete hierarchical item (with saving)`, () => {
-        Cypress.currentTest.retries(2);
+        Cypress.currentTest.retries(1);
         const itemName = `ParentItem-${Math.random()}`;
         const itemName2 = `ChildItem-${Math.random()}`;
         const itemName3 = `ChildChildItem-${Math.random()}`;

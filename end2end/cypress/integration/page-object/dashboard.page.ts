@@ -83,7 +83,7 @@ export class DashboardPage implements ActualPage<DashboardPage> {
 
     visitImportExportPage(): ImportExportPage {
         // cy.get(`[test-sidenav='import-export']`).click({force: true});
-        return new ImportExportPage().visit();
+        return new ImportExportPage();
     }
 
     visitJobsPage() {
