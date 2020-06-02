@@ -24,6 +24,9 @@ It allows management of product (name, description, attributes, pricing etc.) in
 # Documentation
 Documentations are [here](https://docs.fuyuko.org)
 
+# Slack channel
+Want to drop a message or chat? We have Slack channel [here](https://fuyuko.slack.com)
+
 # Demo
 Demo app running [here](https://demo.fuyuko.org)
 
@@ -42,6 +45,3 @@ Docker images can be found [here](https://hub.docker.com/repositories/tmjee)
 
 # Build & Integration 
 Integration build available [here](https://jenkins.fuyuko.org)
-
-# Tests
-Cypress tests runs results are available [here](https://dashboard.cypress.io/projects/ozp71m)
