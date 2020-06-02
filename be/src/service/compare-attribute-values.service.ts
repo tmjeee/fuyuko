@@ -18,9 +18,9 @@ export const convertToCm = (v: number, u: DimensionUnits | WidthUnits | LengthUn
         case "cm":
             return v;
         case "mm":
-            return (v *10);
+            return (v / 10);
         case "m":
-            return (v / 100);
+            return (v * 100);
         default:
             return v;
     }

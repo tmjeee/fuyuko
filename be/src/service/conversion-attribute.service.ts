@@ -69,7 +69,7 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
             // att.pair1 = getMetadataPair1Entry(attribute2);
             att.metadatas.push({
                 id: -1,
-                name: `${attribute.type} pair1 metadata`,
+                name: `pair1`,
                 entries: attribute.pair1 ? attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
                     acc.push({
                        id: -1,
@@ -85,7 +85,7 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
             // att.pair2 = getMetadataPair2Entry(attribute2);
             att.metadatas.push({
                 id: -1,
-                name: `${attribute.type} pair1 metadata`,
+                name: `pair1`,
                 entries: attribute.pair1 ? attribute.pair1.reduce((acc: AttributeMetadataEntry2[], c: Pair1) => {
                     acc.push({
                         id: -1,
@@ -97,7 +97,7 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
             } as AttributeMetadata2);
             att.metadatas.push({
                 id: -1,
-                name: `${attribute.type} pair2 metadata`,
+                name: `pair2`,
                 entries: attribute.pair2 ? attribute.pair2.reduce((acc: AttributeMetadataEntry2[], c: Pair2) => {
                     acc.push({
                         id: -1,

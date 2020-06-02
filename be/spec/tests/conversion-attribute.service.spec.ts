@@ -1,26 +1,430 @@
-import {attributeRevert} from "../../src/service/conversion-attribute.service";
+import {attributeConvert, attributeRevert} from "../../src/service/conversion-attribute.service";
 import {Attribute, AttributeType, Pair1} from "../../src/model/attribute.model";
-import {Attribute2} from "../../src/server-side-model/server-side.model";
+import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../../src/server-side-model/server-side.model";
+import {Metadata} from "showdown";
 
 describe(`conversion-attribute.service.spec`, () => {
 
     // 'string' | 'text' | 'number' | 'date' | 'currency' | 'volume' | 'dimension' | 'area' | 'width' | 'length' | 'height' | 'select' | 'doubleselect' | 'weight';
-    it(`[string] convert work`, () => { });
-    it(`[text] convert work`, () => { });
-    it(`[number] convert work`, () => { });
-    it(`[date] convert work`, () => { });
-    it(`[currency] convert work`, () => { });
-    it(`[volume] convert work`, () => { });
-    it(`[dimension] convert work`, () => { });
-    it(`[area] convert work`, () => { });
-    it(`[width] convert work`, () => { });
-    it(`[length] convert work`, () => { });
-    it(`[height] convert work`, () => { });
-    it(`[select] convert work`, () => { });
-    it(`[doubleselect] convert work`, () => { });
-    it(`[weight] convert work`, () => { });
-    it(`[string] convert work`, () => { });
-    it(`[string] convert work`, () => { });
+    it(`[string] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'string',
+            name: 'string attribute',
+            description: 'string attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('string attribute');
+        expect(attribute.type).toBe('string');
+        expect(attribute.description).toBe('string attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBeFalsy();
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[text] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'text',
+            name: 'text attribute',
+            description: 'text attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('text attribute');
+        expect(attribute.type).toBe('text');
+        expect(attribute.description).toBe('text attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBeFalsy();
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[number] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'number',
+            name: 'number attribute',
+            description: 'number attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'number metadata', entries: [
+                    { id: 1, key: 'format', value: '0.00'} as AttributeMetadataEntry2
+                ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('number attribute');
+        expect(attribute.type).toBe('number');
+        expect(attribute.description).toBe('number attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBe('0.00')
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[date] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'date',
+            name: 'date attribute',
+            description: 'date attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'date metadata', entries: [
+                        { id: 1, key: 'format', value: 'DD-MM-YYYY'} as AttributeMetadataEntry2
+                    ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('date attribute');
+        expect(attribute.type).toBe('date');
+        expect(attribute.description).toBe('date attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBe('DD-MM-YYYY')
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[currency] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'currency',
+            name: 'currency attribute',
+            description: 'currency attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'currency metadata', entries: [
+                        { id: 1, key: 'showCurrencyCountry', value: 'true'} as AttributeMetadataEntry2
+                    ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('currency attribute');
+        expect(attribute.type).toBe('currency');
+        expect(attribute.description).toBe('currency attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBeFalsy();
+        expect(attribute.showCurrencyCountry).toBeTrue();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[volume] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'volume',
+            name: 'volume attribute',
+            description: 'volume attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'volume metadata', entries: [
+                        { id: 1, key: 'format', value: '0.00'} as AttributeMetadataEntry2
+                    ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('volume attribute');
+        expect(attribute.type).toBe('volume');
+        expect(attribute.description).toBe('volume attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBe('0.00')
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[dimension] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'dimension',
+            name: 'dimension attribute',
+            description: 'dimension attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'dimension metadata', entries: [
+                        { id: 1, key: 'format', value: '0.00'} as AttributeMetadataEntry2
+                    ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('dimension attribute');
+        expect(attribute.type).toBe('dimension');
+        expect(attribute.description).toBe('dimension attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBe('0.00')
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[area] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'area',
+            name: 'area attribute',
+            description: 'area attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'area metadata', entries: [
+                        { id: 1, key: 'format', value: '0.00'} as AttributeMetadataEntry2
+                    ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('area attribute');
+        expect(attribute.type).toBe('area');
+        expect(attribute.description).toBe('area attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBe('0.00')
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+    it(`[width] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'width',
+            name: 'width attribute',
+            description: 'width attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'width metadata', entries: [
+                        { id: 1, key: 'format', value: '0.00'} as AttributeMetadataEntry2
+                    ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('width attribute');
+        expect(attribute.type).toBe('width');
+        expect(attribute.description).toBe('width attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBe('0.00')
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[length] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'length',
+            name: 'length attribute',
+            description: 'length attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'length metadata', entries: [
+                        { id: 1, key: 'format', value: '0.00'} as AttributeMetadataEntry2
+                    ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('length attribute');
+        expect(attribute.type).toBe('length');
+        expect(attribute.description).toBe('length attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBe('0.00')
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[height] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'height',
+            name: 'height attribute',
+            description: 'height attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'height metadata', entries: [
+                        { id: 1, key: 'format', value: '0.00'} as AttributeMetadataEntry2
+                    ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('height attribute');
+        expect(attribute.type).toBe('height');
+        expect(attribute.description).toBe('height attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBe('0.00')
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[weight] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'weight',
+            name: 'weight attribute',
+            description: 'weight attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'weight metadata', entries: [
+                        { id: 1, key: 'format', value: '0.00'} as AttributeMetadataEntry2
+                    ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('weight attribute');
+        expect(attribute.type).toBe('weight');
+        expect(attribute.description).toBe('weight attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBe('0.00')
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeFalsy();
+        expect(attribute.pair2).toBeFalsy()
+    });
+
+    it(`[select] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'select',
+            name: 'select attribute',
+            description: 'select attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'pair1', entries: [
+                    { id: 1, key: 'key1', value: 'value1'} as AttributeMetadataEntry2,
+                    { id: 2, key: 'key2', value: 'value2'} as AttributeMetadataEntry2,
+                    { id: 3, key: 'key3', value: 'value3'} as AttributeMetadataEntry2,
+                    { id: 4, key: 'key4', value: 'value4'} as AttributeMetadataEntry2
+                ]} as AttributeMetadata2
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('select attribute');
+        expect(attribute.type).toBe('select');
+        expect(attribute.description).toBe('select attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBeFalsy();
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeDefined();
+        expect(attribute.pair1.length).toBe(4);
+        expect(attribute.pair1[0].key).toBe('key1');
+        expect(attribute.pair1[0].value).toBe('value1');
+        expect(attribute.pair1[1].key).toBe('key2');
+        expect(attribute.pair1[1].value).toBe('value2');
+        expect(attribute.pair1[2].key).toBe('key3');
+        expect(attribute.pair1[2].value).toBe('value3');
+        expect(attribute.pair1[3].key).toBe('key4');
+        expect(attribute.pair1[3].value).toBe('value4');
+        expect(attribute.pair2).toBeFalsy()
+
+    });
+    it(`[doubleselect] convert work`, () => {
+        const date = new Date();
+        const attribute: Attribute = attributeConvert({
+            id: 1,
+            type: 'doubleselect',
+            name: 'doubleselect attribute',
+            description: 'doubleselect attribute description',
+            creationDate: date,
+            lastUpdate: date,
+            metadatas:[
+                { id: 1, name: 'pair1', entries: [
+                        { id: 1, key: 'key1', value: 'value1'} as AttributeMetadataEntry2,
+                        { id: 2, key: 'key2', value: 'value2'} as AttributeMetadataEntry2,
+                ]} as AttributeMetadata2,
+                { id: 1, name: 'pair2', entries: [
+                        { id: 1, key: 'key1', value: 'kkey1=vvalue1'} as AttributeMetadataEntry2,
+                        { id: 2, key: 'key1', value: 'kkey2=vvalue2'} as AttributeMetadataEntry2,
+                        { id: 3, key: 'key2', value: 'kkey3=vvalue3'} as AttributeMetadataEntry2,
+                        { id: 4, key: 'key2', value: 'kkey4=vvalue4'} as AttributeMetadataEntry2,
+                ]} as AttributeMetadata2,
+            ]
+        } as Attribute2);
+
+        expect(attribute.id).toBe(1);
+        expect(attribute.name).toBe('doubleselect attribute');
+        expect(attribute.type).toBe('doubleselect');
+        expect(attribute.description).toBe('doubleselect attribute description');
+        expect(attribute.creationDate).toBe(date);
+        expect(attribute.lastUpdate).toBe(date);
+        expect(attribute.format).toBeFalsy();
+        expect(attribute.showCurrencyCountry).toBeFalsy();
+        expect(attribute.pair1).toBeDefined();
+        expect(attribute.pair1.length).toBe(2);
+        expect(attribute.pair1[0].key).toBe('key1');
+        expect(attribute.pair1[0].value).toBe('value1');
+        expect(attribute.pair1[1].key).toBe('key2');
+        expect(attribute.pair1[1].value).toBe('value2');
+        expect(attribute.pair2).toBeDefined();
+        expect(attribute.pair2.length).toBe(4);
+        expect(attribute.pair2[0].key1).toBe('key1');
+        expect(attribute.pair2[0].key2).toBe('kkey1');
+        expect(attribute.pair2[0].value).toBe('vvalue1');
+        expect(attribute.pair2[1].key1).toBe('key1');
+        expect(attribute.pair2[1].key2).toBe('kkey2');
+        expect(attribute.pair2[1].value).toBe('vvalue2');
+        expect(attribute.pair2[2].key1).toBe('key2');
+        expect(attribute.pair2[2].key2).toBe('kkey3');
+        expect(attribute.pair2[2].value).toBe('vvalue3');
+        expect(attribute.pair2[3].key1).toBe('key2');
+        expect(attribute.pair2[3].key2).toBe('kkey4');
+        expect(attribute.pair2[3].value).toBe('vvalue4');
+    });
 
     it (`[string] revert works`, () => {
         const date = new Date();
@@ -339,7 +743,7 @@ describe(`conversion-attribute.service.spec`, () => {
         expect(attribute2.metadatas).toBeDefined();
         expect(attribute2.metadatas.length).toBe(1);
         expect(attribute2.metadatas[0].id).toBe(-1);
-        expect(attribute2.metadatas[0].name).toBe(`select pair1 metadata`);
+        expect(attribute2.metadatas[0].name).toBe(`pair1`);
         expect(attribute2.metadatas[0].entries).toBeDefined();
         expect(attribute2.metadatas[0].entries.length).toBe(2);
         expect(attribute2.metadatas[0].entries[0].id).toBe(-1);
@@ -382,7 +786,7 @@ describe(`conversion-attribute.service.spec`, () => {
         expect(attribute2.metadatas).toBeDefined();
         expect(attribute2.metadatas.length).toBe(2);
         expect(attribute2.metadatas[0].id).toBe(-1);
-        expect(attribute2.metadatas[0].name).toBe(`doubleselect pair1 metadata`);
+        expect(attribute2.metadatas[0].name).toBe(`pair1`);
         expect(attribute2.metadatas[0].entries).toBeDefined();
         expect(attribute2.metadatas[0].entries.length).toBe(2);
         expect(attribute2.metadatas[0].entries[0].id).toBe(-1);
@@ -393,7 +797,7 @@ describe(`conversion-attribute.service.spec`, () => {
         expect(attribute2.metadatas[0].entries[1].value).toBe('value2');
 
         expect(attribute2.metadatas[1].id).toBe(-1);
-        expect(attribute2.metadatas[1].name).toBe(`doubleselect pair2 metadata`);
+        expect(attribute2.metadatas[1].name).toBe(`pair2`);
         expect(attribute2.metadatas[1].entries).toBeDefined();
         expect(attribute2.metadatas[1].entries.length).toBe(6);
 
