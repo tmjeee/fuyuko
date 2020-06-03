@@ -2,9 +2,17 @@ import {NextFunction, Request, Response} from "express";
 import {validationResult} from 'express-validator';
 import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
-import {verifyJwtToken } from "../../service";
+import {auditLog, verifyJwtToken} from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
 import {hasAllUserRoles, hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
+import {
+    getThreadLocalStore,
+    setThreadLocalStore,
+    threadLocalInit,
+    ThreadLocalStore
+} from "../../service/thread-local.service";
+import uuid = require("uuid");
+import {auditLogInfo} from "../../service/audit.service";
 
 
 
@@ -123,6 +131,39 @@ export const v = (vFns: ValidateFn[], aFn: AggregationFn) => {
 export const getJwtPayload = (res: Response): JwtPayload => {
    return res.locals.jwtPayload;
 }
+
+export const threadLocalMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
+    threadLocalInit((ns) => {
+        const reqUuid = uuid();
+        const jwtToken: string = req.headers['x-auth-jwt'] as string;
+        if (jwtToken) {
+            try {
+                const jwtPayload: JwtPayload = verifyJwtToken(jwtToken);
+                setThreadLocalStore({
+                    reqUuid,
+                    jwtPayload
+                } as ThreadLocalStore);
+            } catch (err) {
+            }
+        } else {
+            setThreadLocalStore({
+                reqUuid,
+                jwtPayload: undefined
+            });
+        }
+        const threadLocalStore: ThreadLocalStore = getThreadLocalStore();
+        next();
+    });
+};
+
+
+export const auditMiddlewareFn = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await auditLogInfo(`${req.method}-${req.originalUrl}`, 'HTTP');
+    } finally {
+        next();
+    }
+};
 
 export const timingLogMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
     const startTime = process.hrtime();

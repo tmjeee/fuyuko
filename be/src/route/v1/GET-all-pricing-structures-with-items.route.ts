@@ -37,7 +37,7 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const pricingStructureId: number = Number(req.params.pricingStructureId);
-        const limitOffset: LimitOffset = toLimitOffset(req.query.limit, req.query.offset);
+        const limitOffset: LimitOffset = toLimitOffset(req);
 
         const ps: PricingStructure = await getPricingStructureById(pricingStructureId);
         const total: number = await getAllPricingStructureItemsWithPriceCount(pricingStructureId);

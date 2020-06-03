@@ -7,7 +7,13 @@ import {i} from './logger';
 import {runUpdater} from './updater';
 import {runBanner} from './banner';
 import config from './config';
-import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from "./route/v1/common-middleware";
+import {
+    auditMiddlewareFn,
+    catchErrorMiddlewareFn,
+    httpLogMiddlewareFn,
+    threadLocalMiddlewareFn,
+    timingLogMiddlewareFn
+} from "./route/v1/common-middleware";
 import {Registry} from "./registry";
 import {runCustomRuleSync} from "./custom-rule";
 import {Options} from "body-parser";
@@ -25,6 +31,7 @@ const options: Options = {
    limit: config['request-payload-limit']
 };
 
+app.all('*', threadLocalMiddlewareFn);
 app.use(timingLogMiddlewareFn);
 app.use(express.urlencoded(options));
 app.use(express.json(options));
@@ -32,16 +39,16 @@ app.use(express.text(options))
 app.use(express.raw(options))
 app.use(cookieParser());
 app.use(httpLogMiddlewareFn);
+app.use(catchErrorMiddlewareFn);
 
 app.all('*', cors());
-
+app.all('*',  auditMiddlewareFn);
 
 const registry: Registry = Registry.newRegistry('api');
 const apiRouter: Router = express.Router();
 app.use('/api', apiRouter);
 registerV1AppRouter(apiRouter, registry);
 i('URL Mappings :-\n' + registry.print({indent: 2, text: ''}).text);
-app.use(catchErrorMiddlewareFn);
 
 export type PromiseFn = () => Promise<any>;
 

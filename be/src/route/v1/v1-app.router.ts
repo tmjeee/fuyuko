@@ -136,6 +136,7 @@ import registerGetCategorySimpleItemsNotInCategoryRoute from './GET-category-sim
 import registerPostForgotPasswordRoute from './POST-forgot-password.route';
 import registerPostResetForgottenPasswordRoute from './POST-reset-forgotten-password.route';
 import registerPostCheckForgotPasswordCodeRoute from './POST-check-forgot-password-code.route';
+import registerGetAuditLogsRoute from './GET-audit-log.route';
 
 const v1AppRouter:Router  = express.Router();
 
@@ -275,10 +276,11 @@ const reg = (router: Router, regi: Registry) => {
     registerDeleteRemoveItemFromCategoryRoute(v1AppRouter, registry);
     registerGetCategorySimpleItemsInCategoryRoute(v1AppRouter, registry);
     registerGetCategorySimpleItemsNotInCategoryRoute(v1AppRouter, registry);
-
     registerPostCheckForgotPasswordCodeRoute(v1AppRouter, registry);
     registerPostResetForgottenPasswordRoute(v1AppRouter, registry);
     registerPostForgotPasswordRoute(v1AppRouter, registry);
+
+    registerGetAuditLogsRoute(v1AppRouter, registry);
 };
 
 

@@ -28,7 +28,7 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
-        const limitOffset: LimitOffset = toLimitOffset(req.query.limit, req.query.offset);
+        const limitOffset: LimitOffset = toLimitOffset(req);
 
         const total: number = await getTotalAttributesInView(viewId);
         const ats: Attribute2[] = await getAttribute2sInView(viewId, null, limitOffset);

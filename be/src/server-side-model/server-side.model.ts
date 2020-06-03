@@ -4,8 +4,6 @@ import {AttributeType} from "../model/attribute.model";
 import {OperatorType} from "../model/operator.model";
 
 
-export type AuditCategory = "SYSTEM" | "APP" | "USER";
-
 
 // csv parsed models
 export interface CsvAttribute {

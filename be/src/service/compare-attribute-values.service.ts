@@ -48,9 +48,9 @@ export const convertToCm2 = (v: number, u: AreaUnits): number => {
         case "cm2":
             return v;
         case "m2":
-            return (v / (100 * 100));
+            return (v * (100 * 100));
         case "mm2":
-            return (v * 10 * 10);
+            return (v  * (10 * 10));
         default:
             return v;
     }
@@ -62,7 +62,7 @@ export const convertToMl = (v: number, u: VolumeUnits): number => {
     }
     switch(u) {
         case "l":
-            return (v / 1000);
+            return (v * 1000);
         case "ml":
             return v;
         default:

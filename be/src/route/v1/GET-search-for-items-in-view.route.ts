@@ -26,7 +26,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const searchType: ItemSearchType = req.params.searchType as ItemSearchType;
         const search: string = req.params.search;
-        const limitOffset: LimitOffset = toLimitOffset(req.query.limit, req.query.offset);
+        const limitOffset: LimitOffset = toLimitOffset(req);
 
 
         let allItem2s: Item2[] = [];

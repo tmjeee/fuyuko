@@ -25,6 +25,7 @@
   "dependencies": {
     "@types/showdown": "^1.9.3",
     "body-parser": "^1.19.0",
+    "continuation-local-storage": "^3.2.1",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "cowsay": "^1.4.0",
