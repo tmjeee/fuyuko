@@ -55,7 +55,7 @@ export class LoginPageComponent implements AfterViewInit {
               this.router.navigate(['/dashboard-layout', {outlets: {primary: ['dashboard'], help: ['dashboard-help']}}]);
             }
           } else {
-            this.notificationService.error('Error', 'Unable to login with given username and password');
+            this.notificationService.error('Error', u.message);
           }
           return u;
         }),
