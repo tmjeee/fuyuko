@@ -14,10 +14,10 @@ It allows management of product (name, description, attributes, pricing etc.) in
 * A PIM / MDM product with plugable extensions allowing supply and consumtion of data from various centerlized global data synchronization network (GDSN)
 
 # Features
-* simple
+* simple & intuitive
 * build off popular, proven tech (typescript, nodejs, angular9+)
-* plays well with Kubernetes
-* dockerizable 
+* plays well with [Kubernetes](https://k8s.io)
+* [dockerizable](https://docker.com) 
 * open source (LGPL v3)
 * no breaking the bank while managing your product data effectively
 
