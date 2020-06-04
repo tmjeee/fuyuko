@@ -15,7 +15,7 @@ It allows management of product (name, description, attributes, pricing etc.) in
 
 # Features
 * simple & intuitive
-* build off popular, proven tech (typescript, nodejs, angular9+)
+* build off popular, proven tech ((typescript)[https://typescriptlang.com), (nodejs)[https://nodejs.org], (angular9+)[https://angular.io])
 * plays well with [Kubernetes](https://k8s.io)
 * [dockerizable](https://docker.com) 
 * open source (LGPL v3)
