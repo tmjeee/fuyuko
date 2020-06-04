@@ -25,7 +25,7 @@ It allows management of product (name, description, attributes, pricing etc.) in
 Documentations are [here](https://docs.fuyuko.org)
 
 # Slack channel
-Want to drop a message or chat? We have Slack channel [here](https://fuyuko.slack.com/channels/#fuyuko)
+Want to drop a message or chat? We have Slack channel [here](https://fuyuko.slack.com/channels/#fuyuko). Feel free to drop by and say Hi.
 
 # Demo
 Demo app running [here](https://demo.fuyuko.org)
