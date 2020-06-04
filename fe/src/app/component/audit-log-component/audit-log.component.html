@@ -1,0 +1,103 @@
+<div class="audit-log-component">
+    <form (ngSubmit)="onSearchSubmit()">
+        <div fxLayout="column">
+            <!-- search section -->
+            <div fxFlex="1 1 auto"> <!-- row 1 of search section -->
+                <div fxLayout="row" fxLayoutGap="10px">
+                    <div fxFlex="1 1 auto">
+                        <mat-form-field>
+                            <mat-label>Audit Category</mat-label>
+                            <mat-select [formControl]="formControlAuditCategorySearch">
+                                <mat-option [value]="undefined">-- Any --</mat-option>
+                                <mat-option *ngFor="let auditCategory of AUDIT_CATEGORIES" [value]="auditCategory">
+                                    {{auditCategory}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-hint>Audit Category to search</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="1 1 auto">
+                        <mat-form-field>
+                            <mat-label>Level</mat-label>
+                            <mat-select [formControl]="formControlLevelSearch">
+                                <mat-option [value]="undefined">-- Any --</mat-option>
+                                <mat-option *ngFor="let level of LEVELS" [value]="level">
+                                    {{level}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-hint>Level to search</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="1 1 auto">
+                        <mat-form-field>
+                           <mat-label>Username</mat-label>
+                           <input type="text"
+                                  placeholder="Username"
+                                  matInput
+                                  [formControl]="formControlUsernameSearch"
+                                  [matAutocomplete]="auto">
+                           <mat-autocomplete #auto="matAutocomplete" [displayWith]="usernameDisplayWith">
+                               <mat-option [value]="{id: -1}">-- Unknown --</mat-option>
+                               <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                                   {{user.username}}
+                               </mat-option>
+                           </mat-autocomplete>
+                           <mat-hint>Username to search</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div fxFlex="1 1 auto"> <!-- row 2 of search section -->
+                <div fxLayout="row" fxLayoutGap="10px">
+                    <div fxFlex="1 1 auto">
+                        <mat-form-field>
+                            <mat-label>Log message</mat-label>
+                            <input type="text"
+                                   placeholde="Log message"
+                                   matInput
+                                   [formControl]="formControlLogSearch">
+                            <mat-hint>Log message to search</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="0 0 auto">
+                       <button mat-flat-button color="primary" type="submit">Filter Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="content">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>#</th>
+                <td mat-cell *matCellDef="let auditLog">{{auditLog.id}}</td>
+            </ng-container>
+            <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef>Category</th>
+                <td mat-cell *matCellDef="let auditLog">{{auditLog.category}}</td>
+            </ng-container>
+            <ng-container matColumnDef="level">
+                <th mat-header-cell *matHeaderCellDef>Level</th>
+                <td mat-cell *matCellDef="let auditLog">{{auditLog.level}}</td>
+            </ng-container>
+            <ng-container matColumnDef="username">
+                <th mat-header-cell *matHeaderCellDef>Username</th>
+                <td mat-cell *matCellDef="let auditLog">{{auditLog.userName}}</td>
+            </ng-container>
+            <ng-container matColumnDef="creationDate">
+                <th mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let auditLog">{{auditLog.creationDate | date: 'medium'}}</td>
+            </ng-container>
+            <ng-container matColumnDef="log">
+                <th mat-header-cell *matHeaderCellDef>Log</th>
+                <td mat-cell *matCellDef="let auditLog">{{auditLog.log}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let auditLog; columns: displayedColumns;"></tr>
+        </table>
+
+        <app-pagination class="paginator" [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
+    </div>
+</div>

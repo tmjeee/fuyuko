@@ -1,0 +1,13 @@
+<div class="audit-log-page">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Audit logs</mat-card-title>
+            <mat-card-subtitle>Audit trails and logs</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-audit-log [findAuditLogsFn]="findAuditLogsFn"
+                           [findUsersFn]="findUsersFn">
+            </app-audit-log>
+        </mat-card-content>
+    </mat-card>
+</div>

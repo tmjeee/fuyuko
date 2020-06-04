@@ -34,6 +34,17 @@
     </mat-icon>
   </div>
 
+  <!-- administration -->
+  <div [class.selected]="routeSideNavData === 'administration'">
+    <mat-icon class="action"
+              [attr.test-sidenav]="'administration'"
+              matTooltipPosition="after"
+              matTooltip="Administration"
+              [routerLink]="['/administration-layout', {outlet: {primary: ['administration'], help: ['administration-help'] }}]">
+      admin_panel_settings
+    </mat-icon>
+  </div>
+
   <!-- view management -->
   <div [class.selected]="routeSideNavData === 'view'">
     <mat-icon class="action"

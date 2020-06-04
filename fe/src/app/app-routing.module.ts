@@ -63,6 +63,9 @@ import {CategoryHelpPageComponent} from "./page/category-help-page/category-help
 import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
 import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
 import {ResetPasswordPageComponent} from "./page/reset-password-page/reset-password.page";
+import {AdministrationLayoutComponent} from "./layout/administration-layout/administration.layout";
+import {AuditLogPageComponent} from "./page/audit-log-page/audit-log.page";
+import {AdministrationHelpPageComponent} from "./page/administration-help-page/administration-help.page";
 
 const routes: Routes = [
 
@@ -206,9 +209,39 @@ const routes: Routes = [
     ]
   } as Route,
 
+  // administration-layout
+  {
+    path: `administration-layout`,
+    component: AdministrationLayoutComponent,
+    canActivate: [AuthGuard],
+    data: {
+      sideNav: 'administration'
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/administration-layout/(audit-log//help:administration-help)'
+      } as Route,
+      {
+        path: 'audit-log',
+        canActivate: [AuthGuard],
+        component: AuditLogPageComponent,
+        data: {
+          subSideNav: 'audit-log'
+        }
+      } as Route,
+      {
+        path: 'administration-help',
+        canActivate: [AuthGuard],
+        component: AdministrationHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+    ]
+  } as Route,
 
   // user-gen-layout
- {
+  {
    path: 'user-gen-layout',
    component: UserLayoutComponent,
    canActivate: [AuthGuard],

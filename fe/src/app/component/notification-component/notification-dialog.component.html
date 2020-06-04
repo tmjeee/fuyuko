@@ -4,6 +4,7 @@
   </div>
   <div mat-dialog-title>Notifications</div>
   <div mat-dialog-content>
+    <div *ngIf="!data || !data.length">No notifications</div>
     <ng-container *ngFor="let notification of data">
       <div class="notification">
         <div class="header">

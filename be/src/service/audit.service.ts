@@ -3,6 +3,8 @@ import {Connection} from "mariadb";
 import {Level} from '../model/level.model';
 import {getThreadLocalStore, ThreadLocalStore} from "./thread-local.service";
 import {AuditCategory, AuditLog} from "../model/audit-log.model";
+import {LimitOffset} from "../model/limit-offset.model";
+import {LIMIT_OFFSET} from "../util/utils";
 
 
 export const auditLogDebug = async (message: string, category: AuditCategory = "APP") => {
@@ -35,8 +37,8 @@ export const getAuditLogsCount = async (filterByUserId: number = null, filterByC
                                         filterByLevel: Level = null, filterByLogs: string = null): Promise<number> => {
     const sqlParams: any[] = [];
 
-    const sqlFilterByUserId = filterByUserId ? ` AND USER_ID=? ` : ``;
-    if (filterByUserId) { sqlParams.push(filterByUserId)};
+    const sqlFilterByUserId = filterByUserId ? filterByUserId == -1 ? ` AND USER_ID IS NULL` : ` AND USER_ID=? ` : ``;
+    if (filterByUserId && filterByUserId != -1) { sqlParams.push(filterByUserId)};
 
     const sqlFilterByCategory = filterByCategory ? ` AND CATEGORY=? `: ``;
     if (filterByCategory) { sqlParams.push(filterByCategory)}
@@ -65,11 +67,11 @@ export const getAuditLogsCount = async (filterByUserId: number = null, filterByC
 };
 
 export const getAuditLogs = async (filterByUserId: number = null, filterByCategory: AuditCategory = null,
-                                   filterByLevel: Level = null, filterByLogs: string = null): Promise<AuditLog[]> => {
+                                   filterByLevel: Level = null, filterByLogs: string = null, limitOffset: LimitOffset): Promise<AuditLog[]> => {
     const sqlParams: any[] = [];
 
-    const sqlFilterByUserId = filterByUserId ? ` AND U.ID=? ` : ``;
-    if (filterByUserId) { sqlParams.push(filterByUserId)};
+    const sqlFilterByUserId = filterByUserId ? filterByUserId == -1 ? ` AND AL.USER_ID IS NULL` : ` AND U.ID=? ` : ``;
+    if (filterByUserId && filterByUserId != -1) { sqlParams.push(filterByUserId)};
 
     const sqlFilterByCategory = filterByCategory ? ` AND AL.CATEGORY=? `: ``;
     if (filterByCategory) { sqlParams.push(filterByCategory)}
@@ -83,7 +85,7 @@ export const getAuditLogs = async (filterByUserId: number = null, filterByCatego
     const sql = `
             SELECT
                 AL.ID AS AL_ID, 
-                AL.CATEGORY AS AL_CATEGORY_ID, 
+                AL.CATEGORY AS AL_CATEGORY, 
                 AL.LEVEL AS AL_LEVEL, 
                 AL.CREATION_DATE AS AL_CREATION_DATE, 
                 AL.LAST_UPDATE AS AL_LAST_UPDATE, 
@@ -99,6 +101,8 @@ export const getAuditLogs = async (filterByUserId: number = null, filterByCatego
             ${sqlFilterByCategory}
             ${sqlFilterByLevel}
             ${sqlFilterByLogs}
+            ORDER BY AL.CREATION_DATE DESC
+            ${LIMIT_OFFSET(limitOffset)}
     `;
     const q: QueryA = await doInDbConnection(async (conn: Connection) => {
         return await conn.query(sql, sqlParams);
@@ -107,6 +111,7 @@ export const getAuditLogs = async (filterByUserId: number = null, filterByCatego
         acc.push({
            id: i.AL_ID,
            category: i.AL_CATEGORY,
+           level: i.AL_LEVEL,
            creationDate: i.AL_CREATION_DATE,
            lastUpdate: i.AL_LAST_UPDATE,
            requestUuid: i.AL_REQUEST_UUID,

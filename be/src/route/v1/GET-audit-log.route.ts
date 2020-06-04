@@ -23,7 +23,7 @@ const httpAction: any[] = [
         const filterByLogs: string = req.query.logs ? req.query.logs : null;
 
         const total: number = await getAuditLogsCount(filterByUserId, filterByCategory, filterByLevel, filterByLogs);
-        const auditLogs: AuditLog[] = await getAuditLogs(filterByUserId, filterByCategory, filterByLevel, filterByLogs);
+        const auditLogs: AuditLog[] = await getAuditLogs(filterByUserId, filterByCategory, filterByLevel, filterByLogs, limitOffset);
 
         res.status(200).json({
            status: 'SUCCESS',

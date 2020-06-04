@@ -146,6 +146,11 @@ import {CategoryManagementPageComponent} from "./page/category-management-page/c
 import {reload} from "./utils/config.util";
 import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
 import {ResetPasswordPageComponent} from "./page/reset-password-page/reset-password.page";
+import {AdministrationLayoutComponent} from "./layout/administration-layout/administration.layout";
+import {AuditLogPageComponent} from "./page/audit-log-page/audit-log.page";
+import {AdministrationHelpPageComponent} from "./page/administration-help-page/administration-help.page";
+import {AuditLogModule} from "./component/audit-log-component/audit-log.module";
+import {AuditLogService} from "./service/audit-log-service/audit-log.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -189,6 +194,7 @@ const appInitializer = (settingsService: SettingsService,
     PartnerLayoutComponent,
     PriceLayoutComponent,
     CategoryLayoutComponent,
+    AdministrationLayoutComponent,
 
     // pages
     LoginPageComponent,
@@ -244,6 +250,8 @@ const appInitializer = (settingsService: SettingsService,
     CategoryManagementPageComponent,
     ForgotPasswordPageComponent,
     ResetPasswordPageComponent,
+    AuditLogPageComponent,
+    AdministrationHelpPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -302,6 +310,7 @@ const appInitializer = (settingsService: SettingsService,
     SecurityModule,
     SharedComponentUtilsModule,
     CategoryModule,
+    AuditLogModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -337,6 +346,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: CustomExportService, useClass: CustomExportService} as Provider,
     {provide: ExportArtifactService, useClass: ExportArtifactService} as Provider,
     {provide: CategoryService, useClass: CategoryService} as Provider,
+    {provide: AuditLogService, useClass: AuditLogService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
