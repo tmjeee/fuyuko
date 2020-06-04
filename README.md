@@ -9,9 +9,10 @@ Fuyuko is an Open Source Master Data Management (MDM) / Product Information Mana
 It allows management of product (name, description, attributes, pricing etc.) in a bussiness. 
 
 # Goals
-* Provides an open-source alternative on a highly comercial oriented PIM / MDM software market
-* Foster open corporation and standadization from bodies eg. GS1Net, 1WorldSync, GHX etc. for product information supply and consumption.
-* A PIM / MDM product with plugable extensions allowing supply and consumtion of data from various centerlized global data synchronization network (GDSN)
+* Provides an open-source alternative in a highly commercial oriented PIM / MDM software market
+* Foster open corporation and standardization from bodies eg. GS1Net, 1WorldSync, GHX etc. for product information supply and consumption.
+* A PIM / MDM product with plugable extensions allowing supply and consumption of data from various centerlised global data synchronization network (GDSN)
+* Foster a healty and sharing community for all MDM / PIM enthusiasts to collaborate and create something free and amazing.
 
 # Features
 * simple & intuitive
