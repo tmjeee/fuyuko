@@ -4,6 +4,7 @@ import {Registry} from "../../registry";
 import {validateMiddlewareFn} from "./common-middleware";
 import {ApiResponse} from "../../model/api-response.model";
 import moment from 'moment';
+import {heartbeat} from "../../service/heartbeat.service";
 
 // CHECKED
 
@@ -14,10 +15,10 @@ const httpAction: any[] = [
     [],
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
-        const date = moment().format(`DD-MM-YYYY hh:mm:ss a`);
+        const h: {date: string} = await heartbeat();
         res.status(200).json({
            status: 'SUCCESS',
-           message: `${date}`
+           message: `${h.date}`
         } as ApiResponse);
     }
 ];
