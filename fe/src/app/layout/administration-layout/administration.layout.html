@@ -42,6 +42,26 @@
                 <mat-sidenav-container class="sub-side-nav-container">
                     <mat-sidenav [opened]="subSideBarOpened" mode="side" [fixedInViewport]="true" [fixedTopGap]="65" position="start">
                         <mat-list>
+                            <mat-list-item [class.selected]="routeSubSideNavData === 'role'">
+                                <mat-icon>transfer_within_a_station</mat-icon>
+                                <a href="#" [routerLink]="['/administration-layout', {outlets: {primary:['role'], help:['user-help']}}]">Roles</a>
+                            </mat-list-item>
+                            <mat-list-item [class.selected]="routeSubSideNavData === 'group'">
+                                <mat-icon>group</mat-icon>
+                                <a href="#" [routerLink]="['/administration-layout', {outlets: {primary:['group'], help: ['user-help']}}]">Groups</a>
+                            </mat-list-item>
+                            <mat-list-item [class.selected]="routeSubSideNavData === 'people'">
+                                <mat-icon>person</mat-icon>
+                                <a href="#" [routerLink]="['/administration-layout', {outlets: {primary:['people'], help: ['user-help']}}]">Users</a>
+                            </mat-list-item>
+                            <mat-list-item [class.selected]="routeSubSideNavData === 'invitation'">
+                                <mat-icon>insert_invitation</mat-icon>
+                                <a href="#" [routerLink]="['/administration-layout', {outlets: {primary:['invitation'], help: ['user-help']}}]">Invitation</a>
+                            </mat-list-item>
+                            <mat-list-item [class.selected]="routeSubSideNavData === 'activation'">
+                                <mat-icon>whatshot</mat-icon>
+                                <a href="#" [routerLink]="['/administration-layout', {outlets: {primary:['activation'], help: ['user-help']}}]">Activation</a>
+                            </mat-list-item>
                             <mat-list-item [class.selected]="routeSubSideNavData === 'audit-log'">
                                 <mat-icon>art_track</mat-icon>
                                 <a href="#" [routerLink]="['/administration-layout', {outlets: {primary:['audit-log'], help:['administration-help']}}]">Audit Logs</a>

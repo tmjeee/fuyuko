@@ -1,10 +1,10 @@
 <simple-notifications></simple-notifications>
 <app-loading [show]="loading"></app-loading>
-<div class="gen-layout"
+<div class="settings-layout"
      *ngIf="!loading"
      [attr.test-side-nav-state-open]="''+sideNavOpened"
      [attr.test-help-nav-state-open]="''+helpNavOpened">
-  <mat-toolbar color="primary" class="primary-toolbar">
+  <mat-toolbar color="primary" class="primary-toolbar mat-elevation-z24">
     <mat-toolbar-row>
       <mat-icon class="action"
                 [attr.test-side-nav-toggle-icon]="''"
@@ -41,7 +41,32 @@
     </mat-sidenav>
     <mat-sidenav-content>
       <div class="main-content">
-        <router-outlet name="primary"></router-outlet>
+        <!-- user sub-side-nav -->
+        <mat-sidenav-container class="sub-side-nav-container">
+          <mat-sidenav [opened]="subSideBarOpened" mode="side" [fixedInViewport]="true" [fixedTopGap]="65" position="start">
+            <mat-list>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'profile'">
+                <mat-icon>face</mat-icon>
+                <a href="#" [routerLink]="['/settings-layout', {outlets: {primary:['profile'], help:['profile-help']}}]">Profile</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'settings'">
+                <mat-icon>settings_applications</mat-icon>
+                <a href="#" [routerLink]="['/settings-layout', {outlets: {primary: ['settings'], help:['settings-help']}}]">Settings</a>
+              </mat-list-item>
+            </mat-list>
+          </mat-sidenav>
+          <mat-sidenav-content>
+            <mat-toolbar class="secondary-toolbar" color="primary">
+              <mat-toolbar-row>
+                <mat-icon class="sub-sidebar-button" (click)="onSubSidebarButtonClicked($event)">menu</mat-icon>
+                <span class="spacer"></span>
+              </mat-toolbar-row>
+            </mat-toolbar>
+            <div class="primary-outlet">
+              <router-outlet name="primary"></router-outlet>
+            </div>
+          </mat-sidenav-content>
+        </mat-sidenav-container>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>

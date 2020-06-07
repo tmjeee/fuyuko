@@ -11,7 +11,7 @@ import {LoginLayoutComponent} from './layout/login-layout/login.layout';
 import {AppMaterialsModule} from './app-materials.module';
 import {BackgroundImageService} from './service/background-image-service/background-image.service';
 import {RegisterPageComponent} from './page/register-page/register.page';
-import {GenLayoutComponent} from './layout/gen-layout/gen.layout';
+import {SettingsLayoutComponent} from './layout/settings-layout/settings.layout';
 import {BulkEditPageComponent} from './page/bulk-edit-page/bulk-edit.page';
 import {ProfilePageComponent} from './page/profile-page/profile.page';
 import {SettingsPageComponent} from './page/settings-page/settings.page';
@@ -30,9 +30,8 @@ import {NotificationAnimationType, Options, SimpleNotificationsModule} from 'ang
 import {UserRolePageComponent} from './page/user-role-page/user-role.page';
 import {UserGroupPageComponent} from './page/user-group-page/user-group.page';
 import {UserPeoplePageComponent} from './page/user-people-page/user-people.page';
-import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
-import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
-import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
+import {ProcessLayoutComponent} from './layout/process-layout/process.layout';
+import {ViewLayoutComponent} from './layout/view-layout/view.layout';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
 import {PricingStructurePageComponent} from './page/pricing-structure-page/pricing-structure.page';
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
@@ -137,7 +136,6 @@ import {SecurityModule} from "./component/security-directive/security.module";
 import {SharedComponentUtilsModule} from "./component/shared-component-utils/shared-component-utils.module";
 import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
 import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
-import {CategoryLayoutComponent} from "./layout/category-layout/category.layout";
 import {CategoryPageComponent} from "./page/category-page/category.page";
 import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
 import {CategoryModule} from "./component/category-component/category.module";
@@ -187,13 +185,11 @@ const appInitializer = (settingsService: SettingsService,
     // layouts
     LoginLayoutComponent,
     DashboardLayoutComponent,
-    GenLayoutComponent,
-    UserLayoutComponent,
-    ImportExportLayoutComponent,
+    SettingsLayoutComponent,
+    ProcessLayoutComponent,
     ViewLayoutComponent,
     PartnerLayoutComponent,
     PriceLayoutComponent,
-    CategoryLayoutComponent,
     AdministrationLayoutComponent,
 
     // pages

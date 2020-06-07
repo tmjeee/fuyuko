@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {AppNotificationService} from '../../service/app-notification-service/app-notification.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AbstractGenLayoutComponent} from '../abstract-gen.layout';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {SettingsService} from '../../service/settings-service/settings.service';
+import {AbstractGenSubLayoutComponent} from "../abstract-gen-sub.layout";
 
 
 @Component({
-  templateUrl: './gen.layout.html',
-  styleUrls: ['./gen.layout.scss']
+  templateUrl: './settings.layout.html',
+  styleUrls: ['./settings.layout.scss']
 })
-export class GenLayoutComponent extends AbstractGenLayoutComponent implements OnInit, OnDestroy {
+export class SettingsLayoutComponent extends AbstractGenSubLayoutComponent {
 
 
   constructor(notificationService: AppNotificationService,
@@ -18,7 +18,7 @@ export class GenLayoutComponent extends AbstractGenLayoutComponent implements On
               settingsService: SettingsService,
               router: Router,
               route: ActivatedRoute) {
-    super(notificationService, authService, settingsService, router, route);
+    super(notificationService, authService, settingsService, route, router);
   }
 
 

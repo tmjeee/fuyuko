@@ -8,7 +8,7 @@ export class ViewPredefinedRuleEditPage extends AbstractViewPredefinedRulePage {
     }
 
     visit(ruleId: number): ViewPredefinedRuleEditPage {
-        cy.visit(`/view-gen-layout/(edit-rule/${ruleId}//help:view-help)`);
+        cy.visit(`/view-layout/(edit-rule/${ruleId}//help:view-help)`);
         return this;
     }
 

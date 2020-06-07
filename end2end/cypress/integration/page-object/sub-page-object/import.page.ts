@@ -7,7 +7,7 @@ const PAGE_NAME = 'import';
 export class ImportPage implements ActualPage<ImportPage> {
 
     visit(): ImportPage {
-        cy.visit('/import-export-gen-layout/(import//help:import-help)');
+        cy.visit('/process-layout/(import//help:import-help)');
         this.waitForReady();
         return this;
     }

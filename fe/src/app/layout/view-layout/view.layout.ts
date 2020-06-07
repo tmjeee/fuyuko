@@ -12,8 +12,8 @@ import {SettingsService} from '../../service/settings-service/settings.service';
 
 
 @Component({
-  templateUrl: './view-gen.layout.html',
-  styleUrls: ['./view-gen.layout.scss']
+  templateUrl: './view.layout.html',
+  styleUrls: ['./view.layout.scss']
 })
 export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implements  OnInit, OnDestroy {
 

@@ -17,7 +17,7 @@ const PAGE_NAME = 'export';
 export class ExportPage implements ActualPage<ExportPage> {
 
     visit(): ExportPage {
-        cy.visit('/import-export-gen-layout/(export//help:import-help)');
+        cy.visit('/process-layout/(export//help:import-help)');
         this.waitForReady();
         return this;
     }

@@ -1,15 +1,4 @@
 <div class="side-nav-component">
-  <!-- profile -->
-  <div [class.selected]="routeSideNavData === 'profile'">
-    <mat-icon class="action"
-              [attr.test-sidenav]="'profile'"
-              matTooltipPosition="after"
-              matTooltip="Profile"
-              [routerLink]="['/gen-layout', {outlets: {primary:['profile'], help:['profile-help'] }}]">
-      face
-    </mat-icon>
-  </div>
-
 
   <!-- dashboard -->
   <div [class.selected]="routeSideNavData === 'dashboard'">
@@ -22,17 +11,18 @@
     </mat-icon>
   </div>
 
-
-  <!-- user management -->
-  <div [class.selected]="routeSideNavData === 'user'">
+  <!-- profile -->
+  <div [class.selected]="routeSideNavData === 'settings'">
     <mat-icon class="action"
-              [attr.test-sidenav]="'user'"
+              [attr.test-sidenav]="'settings'"
               matTooltipPosition="after"
-              matTooltip="User Management"
-              [routerLink]="['/user-gen-layout', {outlets: {primary:['role'], help: ['user-help'] }}]">
-      supervised_user_circle
+              matTooltip="Settings & Profile Management"
+              [routerLink]="['/settings-layout', {outlets: {primary:['profile'], help:['profile-help'] }}]">
+      settings
     </mat-icon>
   </div>
+
+
 
   <!-- administration -->
   <div [class.selected]="routeSideNavData === 'administration'">
@@ -51,19 +41,8 @@
               [attr.test-sidenav]="'view'"
               matTooltipPosition="after"
               matTooltip="View Management"
-              [routerLink]="['/view-gen-layout', {outlets:{primary:['rules'], help: ['view-help'] }}]">
+              [routerLink]="['/view-layout', {outlets:{primary:['rules'], help: ['view-help'] }}]">
       perm_media
-    </mat-icon>
-  </div>
-
-  <!-- category management -->
-  <div [class.selected]="routeSideNavData === 'category'">
-    <mat-icon class="action"
-              [attr.test-sidenav]="'category'"
-              matTooltipPosition="after"
-              matTooltip="Category Management"
-              [routerLink]="['/category-layout', {outlets: {primary: ['category'], help: ['category-help']}}]">
-      category
     </mat-icon>
   </div>
 
@@ -78,56 +57,24 @@
     </mat-icon>
   </div>
 
-  <!-- bulk edit -->
-  <div [class.selected]="routeSideNavData === 'bulk-edit'">
+  <!-- process -->
+  <div [class.selected]="routeSideNavData === 'process'">
     <mat-icon class="action"
-              [attr.test-sidenav]="'bulk-edit'"
+              [attr.test-sidenav]="'process'"
               matTooltipPosition="after"
-              matTooltip="Bulk Edit Data"
-              [routerLink]="['/gen-layout', {outlets:{primary:['bulk-edit'], help:['bulk-edit-help'] }}]">
-      shop_two
+              matTooltip="Process & Infrastructure Management"
+              [routerLink]="['/process-layout', {outlets:{primary:['import'], help:['import-help'] }}]">
+      psychology
     </mat-icon>
   </div>
 
-  <!-- settings -->
-  <div [class.selected]="routeSideNavData === 'settings'">
-    <mat-icon class="action"
-              [attr.test-sidenav]="'settings'"
-              matTooltipPosition="after"
-              matTooltip="Settings"
-              [routerLink]="['/gen-layout', {outlets:{primary:['settings'], help:['settings-help'] }}]" >
-      settings
-    </mat-icon>
-  </div>
-
-  <!-- import / Export -->
-  <div [class.selected]="routeSideNavData === 'import-export'">
-    <mat-icon class="action"
-              [attr.test-sidenav]="'import-export'"
-              matTooltipPosition="after"
-              matTooltip="Import / Export"
-              [routerLink]="['/import-export-gen-layout', {outlets:{primary:['import'], help:['import-help'] }}]">
-      import_export
-    </mat-icon>
-  </div>
-
-  <!-- jobs -->
-  <div [class.selected]="routeSideNavData === 'jobs'">
-    <mat-icon class="action"
-              [attr.test-sidenav]="'jobs'"
-              matTooltipPosition="after"
-              matTooltip="Jobs"
-              [routerLink]="['/gen-layout', {outlets:{primary:['jobs'], help:['jobs-help']}}]">
-        schedule
-    </mat-icon>
-  </div>
 
   <!-- partner -->
   <div>
     <mat-icon class="action"
               [attr.test-sidenav]="'partner'"
               matTooltipPostion="after"
-              matTooltip="Partner"
+              matTooltip="Partner Site"
               [routerLink]="['/partner-layout', {outlets:{primary: ['table'], help: ['partner-help']}}]">
       wc
     </mat-icon>
@@ -138,7 +85,7 @@
     <mat-icon class="action "
               [attr.test-sidenav]="'exit'"
               matTooltipPosition="after"
-              matTooltip="Exit"
+              matTooltip="Logout"
               (click)="logout($event)">
       exit_to_app
     </mat-icon>

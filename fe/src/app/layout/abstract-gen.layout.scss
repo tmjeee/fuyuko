@@ -1,7 +1,7 @@
 
 
 @mixin abstract-gen-layout-style() {
-  min-height: 100vh;
+  min-height: calc(100vh - 65px);
   ::ng-deep {
     .mat-toolbar {
       &.primary-toolbar {

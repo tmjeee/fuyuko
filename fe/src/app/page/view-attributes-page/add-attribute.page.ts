@@ -61,7 +61,7 @@ export class AddAttributePageComponent implements OnInit {
                 ).subscribe();
                 break;
             case 'cancel':
-                await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['attributes'], help: ['view-help'] }}]);
+                await this.router.navigate(['/view-layout', {outlets: {primary: ['attributes'], help: ['view-help'] }}]);
                 break;
         }
     }

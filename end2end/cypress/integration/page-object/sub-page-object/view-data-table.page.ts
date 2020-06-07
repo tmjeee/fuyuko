@@ -20,7 +20,7 @@ export class ViewDataTablePage implements ActualPage<ViewDataTablePage> {
     }
 
     visit(): ViewDataTablePage {
-        cy.visit(`/view-gen-layout/(data-tabular//help:view-help)`);
+        cy.visit(`/view-layout/(data-tabular//help:view-help)`);
         this.waitForReady();
         return this;
     }

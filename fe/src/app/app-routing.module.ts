@@ -2,7 +2,7 @@ import {Routes, RouterModule, Route} from '@angular/router';
 import {LoginPageComponent} from './page/login-page/login.page';
 import {LoginLayoutComponent} from './layout/login-layout/login.layout';
 import {RegisterPageComponent} from './page/register-page/register.page';
-import {GenLayoutComponent} from './layout/gen-layout/gen.layout';
+import {SettingsLayoutComponent} from './layout/settings-layout/settings.layout';
 import {FileNotFoundPageComponent} from './page/file-not-found-page/file-not-found.page';
 import {ProfilePageComponent} from './page/profile-page/profile.page';
 import {SettingsPageComponent} from './page/settings-page/settings.page';
@@ -17,9 +17,8 @@ import {ImportPageComponent} from './page/import-page/import.page';
 import {UserRolePageComponent} from './page/user-role-page/user-role.page';
 import {UserGroupPageComponent} from './page/user-group-page/user-group.page';
 import {UserPeoplePageComponent} from './page/user-people-page/user-people.page';
-import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
-import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
-import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
+import {ProcessLayoutComponent} from './layout/process-layout/process.layout';
+import {ViewLayoutComponent} from './layout/view-layout/view.layout';
 import {PricingStructurePageComponent} from './page/pricing-structure-page/pricing-structure.page';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
@@ -57,7 +56,6 @@ import {CustomImportPageComponent} from "./page/custom-import-page/custom-import
 import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
 import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
 import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
-import {CategoryLayoutComponent} from "./layout/category-layout/category.layout";
 import {CategoryPageComponent} from "./page/category-page/category.page";
 import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
 import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
@@ -221,7 +219,53 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/administration-layout/(audit-log//help:administration-help)'
+        redirectTo: '/administration-layout/(role//help:user-help)',
+      } as Route,
+      {
+        path: 'role',
+        canActivate: [AuthGuard],
+        component: UserRolePageComponent,
+        data: {
+          subSideNav: 'role'
+        }
+      } as Route,
+      {
+        path: 'group',
+        canActivate: [AuthGuard],
+        component: UserGroupPageComponent,
+        data: {
+          subSideNav: 'group'
+        }
+      } as Route,
+      {
+        path: 'people',
+        canActivate: [AuthGuard],
+        component: UserPeoplePageComponent,
+        data: {
+          subSideNav: 'people'
+        }
+      } as Route,
+      {
+        path: 'invitation',
+        canActivate: [AuthGuard],
+        component: UserInvitationPageComponent,
+        data: {
+          subSideNav: 'invitation'
+        }
+      } as Route,
+      {
+        path: 'activation',
+        canActivate: [AuthGuard],
+        component: UserActivationPageComponent,
+        data: {
+          subSideNav: 'activation'
+        }
+      } as Route,
+      {
+        path: 'user-help',
+        canActivate: [AuthGuard],
+        component: UserHelpPageComponent,
+        outlet: 'help'
       } as Route,
       {
         path: 'audit-log',
@@ -240,83 +284,21 @@ const routes: Routes = [
     ]
   } as Route,
 
-  // user-gen-layout
-  {
-   path: 'user-gen-layout',
-   component: UserLayoutComponent,
-   canActivate: [AuthGuard],
-   data: {
-     sideNav: 'user'
-   },
-   children: [
-     {
-       path: '',
-       pathMatch: 'full',
-       redirectTo: '/user-gen-layout/(role//help:user-help)',
-     } as Route,
-     {
-       path: 'role',
-       canActivate: [AuthGuard],
-       component: UserRolePageComponent,
-       data: {
-         subSideNav: 'role'
-       }
-     } as Route,
-     {
-       path: 'group',
-       canActivate: [AuthGuard],
-       component: UserGroupPageComponent,
-       data: {
-         subSideNav: 'group'
-       }
-     } as Route,
-     {
-       path: 'people',
-       canActivate: [AuthGuard],
-       component: UserPeoplePageComponent,
-       data: {
-         subSideNav: 'people'
-       }
-     } as Route,
-     {
-       path: 'invitation',
-       canActivate: [AuthGuard],
-       component: UserInvitationPageComponent,
-       data: {
-         subSideNav: 'invitation'
-       }
-     } as Route,
-     {
-       path: 'activation',
-       canActivate: [AuthGuard],
-       component: UserActivationPageComponent,
-       data: {
-         subSideNav: 'activation'
-       }
-     } as Route,
-     {
-       path: 'user-help',
-       canActivate: [AuthGuard],
-       component: UserHelpPageComponent,
-       outlet: 'help'
-     } as Route,
-   ]
- } as Route,
 
 
   // import-export layout
   {
-    path: 'import-export-gen-layout',
+    path: 'process-layout',
     canActivate: [AuthGuard],
-    component: ImportExportLayoutComponent,
+    component: ProcessLayoutComponent,
     data: {
-      sideNav: 'import-export'
+      sideNav: 'process'
     },
     children: [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/import-export-gen-layout/(import//help:import-help)',
+        redirectTo: '/process-layout/(import//help:import-help)',
       } as Route,
       {
         path: 'import',
@@ -370,13 +352,42 @@ const routes: Routes = [
         component: ExportHelpPageComponent,
         outlet: 'help'
       } as Route,
+      {
+        path: 'bulk-edit',
+        canActivate: [AuthGuard],
+        component: BulkEditPageComponent,
+        data: {
+          sideNav: 'bulk-edit'
+        }
+      } as Route,
+      {
+        path: 'bulk-edit-help',
+        canActivate: [AuthGuard],
+        component: BulkEditHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+
+      {
+        path: 'jobs',
+        canActivate: [AuthGuard],
+        component: JobsPageComponent,
+        data: {
+          sideNav: 'jobs',
+        } as Route
+      },
+      {
+        path: 'jobs-help',
+        canActivate: [AuthGuard],
+        component: JobsHelpPageComponent,
+        outlet: 'help',
+      } as Route,
     ]
   } as Route,
 
 
-  // view-gen-layout
+  // view-layout
   {
-    path: 'view-gen-layout',
+    path: 'view-layout',
     canActivate: [AuthGuard],
     component: ViewLayoutComponent,
     data: {
@@ -386,7 +397,7 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/view-gen-layout/(rules//help:view-help)',
+        redirectTo: '/view-layout/(rules//help:view-help)',
       } as Route,
       {
         path: 'rules',
@@ -485,25 +496,6 @@ const routes: Routes = [
         }
       } as Route,
       {
-        path: 'view-help',
-        canActivate: [AuthGuard],
-        component: ViewHelpPageComponent,
-        outlet: 'help'
-      } as Route,
-    ]
-  } as Route,
-
-  // category-layout
-  {
-    path: 'category-layout',
-    canActivate: [AuthGuard],
-    component: CategoryLayoutComponent,
-    data: {
-      sideNav: 'category'
-    },
-    children: [
-      // category
-      {
         path: 'category',
         canActivate: [AuthGuard],
         component: CategoryPageComponent,
@@ -511,8 +503,6 @@ const routes: Routes = [
           subSideNav: 'category'
         }
       } as Route,
-
-      // category-management
       {
         path: 'category-management',
         canActivate: [AuthGuard],
@@ -521,12 +511,16 @@ const routes: Routes = [
           subSideNav: 'category-management'
         }
       } as Route,
-
-      // category-help
       {
         path: 'category-help',
         canActivate: [AuthGuard],
         component: CategoryHelpPageComponent,
+        outlet: 'help'
+      } as Route,
+      {
+        path: 'view-help',
+        canActivate: [AuthGuard],
+        component: ViewHelpPageComponent,
         outlet: 'help'
       } as Route,
     ]
@@ -572,24 +566,27 @@ const routes: Routes = [
     ]
   } as Route,
 
-  // gen-layout
+  // settings-layout
   {
-    path: 'gen-layout',
+    path: 'settings-layout',
     canActivate: [AuthGuard],
-    component: GenLayoutComponent,
+    component: SettingsLayoutComponent,
+    data: {
+      sideNav: 'settings'
+    },
     children: [
      // profile
      {
        path: '',
        pathMatch: 'full',
-       redirectTo: '/gen-layout/(profile//help:profile-help)'
+       redirectTo: '/settings-layout/(profile//help:profile-help)'
      } as Route,
      {
        path: 'profile',
        canActivate: [AuthGuard],
        component: ProfilePageComponent,
        data: {
-         sideNav: 'profile'
+         subSideNav: 'profile'
        }
      } as Route,
      {
@@ -599,14 +596,13 @@ const routes: Routes = [
        outlet: 'help'
      } as Route,
 
-
      // settings
      {
        path: 'settings',
        canActivate: [AuthGuard],
        component: SettingsPageComponent,
        data: {
-         sideNav: 'settings'
+         subSideNav: 'settings'
        }
      } as Route,
      {
@@ -614,38 +610,6 @@ const routes: Routes = [
        canActivate: [AuthGuard],
        component: SettingsHelpPageComponent,
        outlet: 'help'
-     } as Route,
-
-     // bulk-edit
-     {
-       path: 'bulk-edit',
-       canActivate: [AuthGuard],
-       component: BulkEditPageComponent,
-       data: {
-         sideNav: 'bulk-edit'
-       }
-     } as Route,
-     {
-       path: 'bulk-edit-help',
-       canActivate: [AuthGuard],
-       component: BulkEditHelpPageComponent,
-       outlet: 'help'
-     } as Route,
-
-     // jobs
-     {
-       path: 'jobs',
-       canActivate: [AuthGuard],
-       component: JobsPageComponent,
-       data: {
-         sideNav: 'jobs',
-       } as Route
-     },
-     {
-       path: 'jobs-help',
-       canActivate: [AuthGuard],
-       component: JobsHelpPageComponent,
-       outlet: 'help',
      } as Route,
    ]
  } as Route,

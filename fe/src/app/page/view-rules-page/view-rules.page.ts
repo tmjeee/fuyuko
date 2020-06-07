@@ -101,7 +101,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
     async onRulesTableEvent($event: RulesTableComponentEvent) {
         switch ($event.type) {
             case 'add':
-                await this.router.navigate(['/view-gen-layout', {
+                await this.router.navigate(['/view-layout', {
                     outlets: {
                         primary: ['add-rule'],
                         help: ['view-help']
@@ -109,7 +109,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                 }]);
                 break;
             case 'edit':
-                await this.router.navigate(['/view-gen-layout', {
+                await this.router.navigate(['/view-layout', {
                     outlets: {
                         primary: ['edit-rule', `${$event.rule.id}`],
                         help: ['view-help']

@@ -8,7 +8,7 @@ export class SettingsPage implements ActualPage<SettingsPage> {
     constructor() { }
 
     visit(): SettingsPage {
-        cy.visit(`/gen-layout/(settings//help:settings-help)`);
+        cy.visit(`/settings-layout/(settings//help:settings-help)`);
         this.waitForReady();
         return this;
     }

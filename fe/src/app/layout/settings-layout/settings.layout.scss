@@ -1,10 +1,8 @@
+
 @import '../abstract-gen.layout';
 @import '../abstract-gen-sub.layout';
 
-.user-layout {
+.settings-layout {
   @include abstract-gen-layout-style();
   @include abstract-gen-sub-layout-style();
-
-  .main-content {
-  }
 }

@@ -38,7 +38,7 @@ export class ValidationResultListingComponent {
     async details($event: MouseEvent, validation: Validation) {
         $event.preventDefault();
         $event.stopImmediatePropagation();
-        await this.router.navigate(['/view-gen-layout', {outlets: {
+        await this.router.navigate(['/view-layout', {outlets: {
             primary: ['validation-details', 'view', this.view.id, 'validation', validation.id],
             help: ['view-help']
         }}]);

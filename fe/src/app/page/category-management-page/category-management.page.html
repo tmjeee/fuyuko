@@ -1,15 +1,23 @@
 <div class="category-management-page">
-    <app-loading [show]="loading"></app-loading>
-    <div *ngIf="!loading && !view">No view selected</div>
-    <app-category-management *ngIf="!loading && view"
-                             [viewId]="view.id"
-                             [getCategorySimpleItemsInCategoryFn]="getCategorySimpleItemsInCatgoryFn"
-                             [getCategorySimpleItemsNotInCategoryFn]="getCategorySimpleItemsNotInCategoryFn"
-                             [getCategoriesWithItemsFn]="getCategoriesWithItemsFn"
-                             [addCategoryFn]="addCategoryFn"
-                             [editCategoryFn]="editCategoryFn"
-                             [deleteCategoryFn]="deleteCategoryFn"
-                             [addItemsToCategoryFn]="addItemsToCategoryFn"
-                             [removeItemsFromCategoryFn]="removeItemsFromCategoryFn">
-    </app-category-management>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Category</mat-card-title>
+            <mat-card-subtitle>Manage and organise categories in view</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-loading [show]="loading"></app-loading>
+            <div *ngIf="!loading && !view">No view selected</div>
+            <app-category-management *ngIf="!loading && view"
+                                     [viewId]="view.id"
+                                     [getCategorySimpleItemsInCategoryFn]="getCategorySimpleItemsInCatgoryFn"
+                                     [getCategorySimpleItemsNotInCategoryFn]="getCategorySimpleItemsNotInCategoryFn"
+                                     [getCategoriesWithItemsFn]="getCategoriesWithItemsFn"
+                                     [addCategoryFn]="addCategoryFn"
+                                     [editCategoryFn]="editCategoryFn"
+                                     [deleteCategoryFn]="deleteCategoryFn"
+                                     [addItemsToCategoryFn]="addItemsToCategoryFn"
+                                     [removeItemsFromCategoryFn]="removeItemsFromCategoryFn">
+            </app-category-management>
+        </mat-card-content>
+    </mat-card>
 </div>

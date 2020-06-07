@@ -21,7 +21,7 @@ export class ViewDataThumbnailPage implements ActualPage<ViewDataThumbnailPage> 
     }
 
     visit(): ViewDataThumbnailPage {
-        cy.visit(`/view-gen-layout/(data-thumbnail//help:view-help)`);
+        cy.visit(`/view-layout/(data-thumbnail//help:view-help)`);
         this.waitForReady();
         return this;
     }

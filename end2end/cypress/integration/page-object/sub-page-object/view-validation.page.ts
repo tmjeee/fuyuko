@@ -22,7 +22,7 @@ export class ViewValidationPage implements ActualPage<ViewValidationPage> {
     }
 
     visit(): ViewValidationPage {
-        cy.visit(`/view-gen-layout/(validation//help:view-help)`);
+        cy.visit(`/view-layout/(validation//help:view-help)`);
         this.waitForReady();
         return this;
     }

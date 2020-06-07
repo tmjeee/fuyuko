@@ -21,7 +21,7 @@ export class CustomImportPage implements ActualPage<CustomImportPage> {
     }
 
     visit(): CustomImportPage {
-        cy.visit(`/import-export-gen-layout/(custom-import//help:import-help)`);
+        cy.visit(`/process-layout/(custom-import//help:import-help)`);
         this.waitForReady();
         return this;
     }

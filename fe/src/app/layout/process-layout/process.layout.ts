@@ -7,10 +7,10 @@ import {SettingsService} from '../../service/settings-service/settings.service';
 
 
 @Component({
-  templateUrl: './import-export-gen.layout.html',
-  styleUrls: ['./import-export-gen.layout.scss']
+  templateUrl: './process.layout.html',
+  styleUrls: ['./process.layout.scss']
 })
-export class ImportExportLayoutComponent extends AbstractGenSubLayoutComponent {
+export class ProcessLayoutComponent extends AbstractGenSubLayoutComponent {
 
   constructor(notificationService: AppNotificationService,
               authService: AuthService,

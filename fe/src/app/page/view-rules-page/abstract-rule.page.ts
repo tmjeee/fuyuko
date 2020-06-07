@@ -107,7 +107,7 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
     async onRuleEditorEvent($event: RuleEditorComponentEvent) {
         switch ($event.type) {
             case 'cancel':
-                await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['rules'], help: ['view-help'] }}]);
+                await this.router.navigate(['/view-layout', {outlets: {primary: ['rules'], help: ['view-help'] }}]);
                 break;
             case 'update':
                 if ($event.rule.id) { // existing

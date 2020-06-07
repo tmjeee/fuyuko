@@ -23,7 +23,7 @@ const PAGE_NAME = 'bulk-edit';
 export class BulkEditPage implements ActualPage<BulkEditPage> {
 
     visit(): BulkEditPage {
-        cy.visit('/gen-layout/(bulk-edit//help:bulk-edit-help)');
+        cy.visit('/process-layout/(bulk-edit//help:bulk-edit-help)');
         this.waitForReady();
         return this;
     }
