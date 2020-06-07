@@ -149,6 +149,7 @@ import {AuditLogPageComponent} from "./page/audit-log-page/audit-log.page";
 import {AdministrationHelpPageComponent} from "./page/administration-help-page/administration-help.page";
 import {AuditLogModule} from "./component/audit-log-component/audit-log.module";
 import {AuditLogService} from "./service/audit-log-service/audit-log.service";
+import {LoadingService} from "./service/loading-service/loading.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -343,6 +344,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: ExportArtifactService, useClass: ExportArtifactService} as Provider,
     {provide: CategoryService, useClass: CategoryService} as Provider,
     {provide: AuditLogService, useClass: AuditLogService} as Provider,
+    {provide: LoadingService, useClass: LoadingService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,

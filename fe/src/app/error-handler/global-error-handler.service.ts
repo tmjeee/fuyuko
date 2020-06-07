@@ -7,6 +7,7 @@ import {ApiErrorContext} from "../model/api-error.model";
 import {GlobalCommunicationService} from "../service/global-communication-service/global-communication.service";
 import {ApiResponse} from "../model/api-response.model";
 import {AuthService, isUnauthorizationFailedRedirectable} from "../service/auth-service/auth.service";
+import {LoadingService} from "../service/loading-service/loading.service";
 
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {
@@ -14,6 +15,7 @@ export class GlobalErrorHandler extends ErrorHandler {
     notificationService: NotificationsService;
     globalCommunicationService: GlobalCommunicationService;
     authService: AuthService;
+    loadingService: LoadingService;
 
     constructor(@Inject(Injector) private injector: Injector,
                 private locationHistoryService: BrowserLocationHistoryService) {
@@ -21,6 +23,7 @@ export class GlobalErrorHandler extends ErrorHandler {
         this.notificationService = this.injector.get(NotificationsService);
         this.globalCommunicationService = this.injector.get(GlobalCommunicationService);
         this.authService = this.injector.get(AuthService);
+        this.loadingService = this.injector.get(LoadingService);
     }
 
 
@@ -42,6 +45,7 @@ export class GlobalErrorHandler extends ErrorHandler {
                     // unauthorized 401
                     this.authService.destroyToken();
                     this.locationHistoryService.storeLastUrlKey(location.href);
+                    this.loadingService.stopLoading();
                     if (isUnauthorizationFailedRedirectable(location.href)) {
                         this.getNgZone().run(() => {
                             this.notificationService.error('Unauthorized', httpErrorResponse.error.errors.map((e) => e.msg).join(', '));
@@ -53,18 +57,22 @@ export class GlobalErrorHandler extends ErrorHandler {
                     const msg = `Not allowed access to  ${httpErrorResponse.url}`
                     this.notificationService.error('Forbidden', msg);
                     this.globalCommunicationService.publishGlobalError(msg);
+                    this.loadingService.stopLoading();
                 } else if (httpErrorResponse.status === 404) { // api service not found??
                     const msg = `Unable to find API service ${httpErrorResponse.url}`;
                     this.notificationService.error('API Service', msg);
                     this.globalCommunicationService.publishGlobalError(msg);
+                    this.loadingService.stopLoading();
                 } else if (httpErrorResponse.status === 400) { // bad request (client error)
                     const msg = `${this.getErrorMessages(httpErrorResponse)}`;
                     this.notificationService.error('Client Error', msg);
                     this.globalCommunicationService.publishGlobalError(msg);
+                    this.loadingService.stopLoading();
                 } else {
                     const msg = `${error.message}`;
                     this.notificationService.error('API Service', msg);
                     this.globalCommunicationService.publishGlobalError(msg);
+                    this.loadingService.stopLoading();
                 }
             }
         } else { // client error

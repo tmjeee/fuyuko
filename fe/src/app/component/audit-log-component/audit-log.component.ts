@@ -42,6 +42,7 @@ export class AuditLogComponent implements OnInit {
    @Input() findAuditLogsFn: FindAuditLogsFn;
    @Input() findUsersFn: FindUsersFn;
 
+
    AUDIT_CATEGORIES: AuditCategory[] = [...AUDIT_CATEGORIES];
    LEVELS: Level[] = [...LEVELS];
 

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {map, tap} from 'rxjs/operators';
@@ -7,6 +7,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {SettingsService} from '../../service/settings-service/settings.service';
 import {BrowserLocationHistoryService} from '../../service/browser-location-history-service/browser-location-history.service';
 import {LoginResponse} from "../../model/api-response.model";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -14,7 +15,7 @@ import {LoginResponse} from "../../model/api-response.model";
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })
-export class LoginPageComponent implements AfterViewInit {
+export class LoginPageComponent implements OnInit, AfterViewInit {
 
   ready: boolean;
 
@@ -61,5 +62,8 @@ export class LoginPageComponent implements AfterViewInit {
         }),
       ).subscribe();
     return false;
+  }
+
+  ngOnInit(): void {
   }
 }
