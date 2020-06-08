@@ -20,6 +20,7 @@ import {LoadingService} from "../../service/loading-service/loading.service";
 })
 export class PartnerDataTablePageComponent implements OnInit {
 
+    loading: boolean; // loading the data table
     attributes: Attribute[];
     pricedItems: PricedItem[];
     tablePricedItems: TablePricedItem[];
@@ -30,6 +31,7 @@ export class PartnerDataTablePageComponent implements OnInit {
                 private authService: AuthService,
                 private attributeService: AttributeService,
                 private loadingService: LoadingService) {
+        this.loading = false;
         this.pricingStructures = [];
     }
 
@@ -51,6 +53,7 @@ export class PartnerDataTablePageComponent implements OnInit {
     onPricingStructureSelectionChanged($event: MatSelectChange) {
         const pricingStructure: PricingStructure = $event.value;
         if (pricingStructure) {
+            this.loading = true;
             this.loadingService.startLoading();
             this.partnerService.getPartnerPriceItems(pricingStructure.id).pipe(
                 tap((i: PricedItem[]) => {
@@ -65,6 +68,7 @@ export class PartnerDataTablePageComponent implements OnInit {
                     this.attributes = a;
                 }),
                 finalize(() => {
+                    this.loading = false;
                     this.loadingService.stopLoading();
                 })
             ).subscribe();
