@@ -10,6 +10,7 @@ import {PricingStructureGroupAssociationComponentEvent} from "../../component/pr
 import {ApiResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
 import {NotificationsService} from "angular2-notifications";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -24,7 +25,8 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
 
     constructor(private userManagementService: UserManagementService,
                 private notificationsService: NotificationsService,
-                private pricingStructureService: PricingStructureService) {}
+                private pricingStructureService: PricingStructureService,
+                private loadingService: LoadingService) {}
 
     ngOnInit(): void {
         this.reload();
@@ -32,6 +34,7 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
 
     reload() {
         this.loading = true;
+        this.loadingService.startLoading();
         this.groupSearchFnsMap = new Map();
         this.pricingStructureService.getPricingStructureGroupAssociation()
             .pipe(
@@ -44,7 +47,10 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
                     }
                     this.loading = false;
                 }),
-                finalize(() => this.loading = false)
+                finalize(() => {
+                    this.loading = false;
+                    this.loadingService.stopLoading();
+                })
             ).subscribe();
     }
 

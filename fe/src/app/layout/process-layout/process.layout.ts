@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractGenSubLayoutComponent} from '../abstract-gen-sub.layout';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {SettingsService} from '../../service/settings-service/settings.service';
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -16,7 +17,8 @@ export class ProcessLayoutComponent extends AbstractGenSubLayoutComponent {
               authService: AuthService,
               settingsService: SettingsService,
               router: Router,
-              route: ActivatedRoute) {
-    super(notificationService, authService, settingsService, route, router);
+              route: ActivatedRoute,
+              loadingService: LoadingService) {
+    super(notificationService, authService, settingsService, route, router, loadingService);
   }
 }

@@ -13,6 +13,7 @@ import {EditGroupPopupComponent} from "../../component/group-table-component/edi
 import {SUCCESS} from "../../model/api-response-status.model";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {SelectionModel} from "@angular/cdk/collections";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -38,7 +39,8 @@ export class UserGroupPageComponent implements OnInit {
 
   constructor(private userManagementService: UserManagementService,
               private matDialog: MatDialog,
-              private notificationsService: NotificationsService) {
+              private notificationsService: NotificationsService,
+              private loadingService: LoadingService) {
       this.groupsSelectionModel = new SelectionModel<Group>();
   }
 
@@ -52,6 +54,7 @@ export class UserGroupPageComponent implements OnInit {
   }
 
   reload() {
+      this.loadingService.startLoading();
       const selectedGroups: Group[] = this.groupsSelectionModel.selected;
       this.groupsSelectionModel.clear();
       this.groupsReady = false;
@@ -71,11 +74,15 @@ export class UserGroupPageComponent implements OnInit {
                   this.reloadGroupUsers();
                   this.groupsReady = true;
               }),
-              finalize(() => this.groupsReady = true)
+              finalize(() => {
+                  this.groupsReady = true;
+                  this.loadingService.stopLoading();
+              })
           ).subscribe();
   }
 
   reloadGroupUsers(fn?: ()=>void) {
+    this.loadingService.startLoading();
     this.groupsUsersReady = false;
     const allGroups: Group[] = Array.from(this.allGroupsUsers.keys());
     of(...allGroups.map((g: Group) => this.userManagementService.findUsersInGroup(g))).pipe(
@@ -88,18 +95,25 @@ export class UserGroupPageComponent implements OnInit {
             }
             this.groupsUsersReady = true;
         }),
-        finalize(() => this.groupsUsersReady = true)
+        finalize(() => {
+            this.groupsUsersReady = true;
+            this.loadingService.stopLoading();
+        })
     ).subscribe();
   }
 
 
   private _reloadGroupUser(grp: Group) {
+      this.loadingService.startLoading();
       this.groupsUsersReady = false;
       this.userManagementService.findUsersInGroup(grp)
           .pipe(
               map((users: User[]) => {
                   this.allGroupsUsers.set(grp, users);
                   this.groupsUsersReady = true;
+              }),
+              finalize(() => {
+                  this.loadingService.stopLoading();
               })
           ).subscribe();
   }

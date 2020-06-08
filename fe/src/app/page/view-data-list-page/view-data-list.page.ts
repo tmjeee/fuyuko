@@ -14,6 +14,7 @@ import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Pagination} from "../../utils/pagination.utils";
 import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -35,7 +36,8 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   constructor(private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private viewService: ViewService,
-              private itemService: ItemService) {
+              private itemService: ItemService,
+              private loadingService: LoadingService) {
       this.pagination = new Pagination();
   }
 
@@ -61,6 +63,7 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
 
   reload() {
     this.done = false;
+    this.loadingService.startLoading();
     const viewId = this.currentView.id;
     combineLatest([
         this.attributeService.getAllAttributesByView(viewId)
@@ -79,7 +82,10 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
           };
           this.done = true;
         }),
-        finalize(() => this.done = true)
+        finalize(() => {
+          this.done = true;
+          this.loadingService.stopLoading();
+        })
     ).subscribe();
   }
 

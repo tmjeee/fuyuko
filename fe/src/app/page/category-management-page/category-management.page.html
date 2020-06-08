@@ -5,7 +5,6 @@
             <mat-card-subtitle>Manage and organise categories in view</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-loading [show]="loading"></app-loading>
             <div *ngIf="!loading && !view">No view selected</div>
             <app-category-management *ngIf="!loading && view"
                                      [viewId]="view.id"

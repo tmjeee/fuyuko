@@ -16,6 +16,7 @@ import {Observable} from "rxjs";
 import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
 import {LimitOffset} from "../../model/limit-offset.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
    templateUrl: './category-management.page.html',
@@ -41,33 +42,29 @@ export class CategoryManagementPageComponent implements OnInit {
                private categoryService: CategoryService,
                private itemService: ItemService,
                private notificationsService: NotificationsService,
+               private loadingService: LoadingService,
                private attributeService: AttributeService) {
       this.categoriesWithItems = [];
    }
 
    ngOnInit(): void {
-      this.loading = true;
 
       this.getCategoriesWithItemsFn = (viewId: number): Observable<CategoryWithItems[]> => {
+          this.loadingService.startLoading();
           return this.categoryService.getCategoriesWithItems(viewId).pipe(
               tap((r: CategoryWithItems[]) => {
                   this.categoriesWithItems = r;
+                  this.loadingService.stopLoading();
               })
           );
       };
 
       this.addItemsToCategoryFn = (categoryId: number, items: CategorySimpleItem[]): Observable<ApiResponse> => {
-          return this.categoryService.addItemsToCategory(this.view.id, categoryId, items)
-              .pipe(
-                  tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
-              );
+          return this.categoryService.addItemsToCategory(this.view.id, categoryId, items);
       };
       
       this.removeItemsFromCategoryFn = (categoryId: number, items: CategorySimpleItem[]): Observable<ApiResponse> => {
-          return this.categoryService.removeItemsFromCategory(this.view.id, categoryId, items)
-              .pipe(
-                  tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
-              );
+          return this.categoryService.removeItemsFromCategory(this.view.id, categoryId, items);
       };
 
       this.addCategoryFn = (parentCategoryId: number, name: string, description: string): Observable<ApiResponse> => {
@@ -99,12 +96,17 @@ export class CategoryManagementPageComponent implements OnInit {
           return this.categoryService.getCategorySimpleItemsNotInCategory(viewId, categoryId, limitOffset);
       };
 
+      this.loading = true;
+      this.loadingService.startLoading();
       this.viewService.asObserver().pipe(
          tap((v: View) => {
             this.view = v;
             this.loading = false;
          }),
-         finalize(() => this.loading = false)
+         finalize(() => {
+             this.loading = false;
+             this.loadingService.stopLoading();
+         })
       ).subscribe();
    }
 }

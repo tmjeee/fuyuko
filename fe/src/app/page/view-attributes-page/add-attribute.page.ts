@@ -11,6 +11,7 @@ import {Attribute} from "../../model/attribute.model";
 import {EditAttributeComponentEvent} from "../../component/attribute-table-component/edit-attribute.component";
 import {ApiResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -30,11 +31,13 @@ export class AddAttributePageComponent implements OnInit {
                 private router: Router,
                 private viewService: ViewService,
                 private notificationService: NotificationsService,
-                private attributeService: AttributeService) {
+                private attributeService: AttributeService,
+                private loadingService: LoadingService) {
     }
 
     ngOnInit(): void {
         this.viewLoading = true;
+        this.loadingService.startLoading();
         this.subscription = this.viewService
             .asObserver()
             .pipe(
@@ -45,7 +48,10 @@ export class AddAttributePageComponent implements OnInit {
                     }
                     this.viewLoading = false;
                 }),
-                finalize(() => this.viewLoading = false)
+                finalize(() => {
+                    this.viewLoading = false;
+                    this.loadingService.stopLoading();
+                })
             ).subscribe();
     }
 

@@ -5,7 +5,6 @@
             <mat-card-subtitle>Navigate organised categories in view</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-loading [show]="treeLoading"></app-loading>
             <div *ngIf="(!treeLoading && (!categoriesWithItems || !!!categoriesWithItems.length))">No Categories</div>
             <app-category *ngIf="!treeLoading && view && categoriesWithItems && !!categoriesWithItems.length"
                           [viewId]="view.id"

@@ -81,7 +81,6 @@
             <!-- 2] Second Step -->
             <mat-step [stepControl]="formGroupSecondStep" [editable]="editable">
                 <ng-template matStepLabel>Review bulk edit</ng-template>
-                <app-loading [show]="!secondStepReady"></app-loading>
                 <ng-container *ngIf="secondStepReady">
                     <app-bulk-edit-review-table
                             [attr.test-bulk-edit-review-table]="''"
@@ -105,6 +104,7 @@
                 <form [formGroup]="formGroupThirdStep" (ngSubmit)="onThirdStepSubmit()">
                     <app-job-details *ngIf="job" [job]="job" [fetchFn]="fetchFn" [fetch]="true" [attr.test-job-details]="''">
                     </app-job-details>
+                    {{job | json}}
                     <div class="wizard-controls">
                         <button type="submit" mat-flat-button matStepperPrevious color="primary" [attr.test-button-step3-done]="''">Done</button>
                     </div>

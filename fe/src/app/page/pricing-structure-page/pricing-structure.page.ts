@@ -11,6 +11,7 @@ import {Router} from '@angular/router';
 import {View} from '../../model/view.model';
 import {ViewService} from '../../service/view-service/view.service';
 import {LimitOffset} from "../../model/limit-offset.model";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -27,6 +28,7 @@ export class PricingStructurePageComponent implements OnInit  {
     constructor(private pricingStructureService: PricingStructureService,
                 private router: Router,
                 private viewService: ViewService,
+                private loadingService: LoadingService,
                 private notificationService: NotificationsService) {
         this.pricingStructureInput = {
             pricingStructures: [],
@@ -37,12 +39,16 @@ export class PricingStructurePageComponent implements OnInit  {
     ngOnInit(): void {
         this.reload(null);
         this.fetchFn = (pricingStructureId: number, limitOffset?: LimitOffset): Observable<PricingStructureWithItems> => {
-            return this.pricingStructureService.pricingStructureWithItems(pricingStructureId, limitOffset);
+            this.loadingService.startLoading();
+            return this.pricingStructureService.pricingStructureWithItems(pricingStructureId, limitOffset).pipe(
+                finalize(() => this.loadingService.stopLoading())
+            );
         };
     }
 
     reload(pricingStructure: PricingStructure) {
         this.loading = true;
+        this.loadingService.startLoading();
         forkJoin([
             this.viewService.getAllViews(),
             this.pricingStructureService.allPricingStructures()
@@ -60,6 +66,7 @@ export class PricingStructurePageComponent implements OnInit  {
             }),
             finalize(() => {
                this.loading = false;
+               this.loadingService.stopLoading();
             })
         ).subscribe();
     }

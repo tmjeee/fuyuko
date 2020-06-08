@@ -3,6 +3,19 @@ import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
 import {ApiResponse} from "../model/api-response.model";
 
+const J_SQL = `
+                SELECT 
+                    J.ID AS J_ID,
+                    J.NAME AS J_NAME,
+                    J.DESCRIPTION AS J_DESCRIPTION,
+                    J.CREATION_DATE AS J_CREATION_DATE,
+                    J.LAST_UPDATE AS J_LAST_UPDATE,
+                    J.STATUS AS J_STATUS,
+                    J.PROGRESS AS J_PROGRESS
+                FROM TBL_JOB AS J
+                WHERE J.ID = ?
+`;
+
 const SQL = `
                 SELECT 
                     J.ID AS J_ID,
@@ -36,31 +49,48 @@ export const getJobDetailsById = async (jobId: number, lastLogId?: number): Prom
 
         const q: QueryA = await conn.query(sql, params);
 
-        const jobAndLogs: JobAndLogs = q.reduce((acc: JobAndLogs, i: QueryI) => {
+        let jobAndLogs: JobAndLogs = null;
+        if (q.length > 0) {
+            jobAndLogs = q.reduce((acc: JobAndLogs, i: QueryI) => {
 
-            if (!acc.job) {
-                acc.job = {
-                    id: i.J_ID,
-                    name: i.J_NAME,
-                    description: i.J_DESCRIPTION,
-                    status: i.J_STATUS,
-                    creationDate: i.J_CREATION_DATE,
-                    progress: i.J_PROGRESS,
-                    lastUpdate: i.J_LAST_UPDATE
-                } as Job
-            }
+                if (!acc.job) {
+                    acc.job = {
+                        id: i.J_ID,
+                        name: i.J_NAME,
+                        description: i.J_DESCRIPTION,
+                        status: i.J_STATUS,
+                        creationDate: i.J_CREATION_DATE,
+                        progress: i.J_PROGRESS,
+                        lastUpdate: i.J_LAST_UPDATE
+                    } as Job
+                }
 
-            const log: JobLog = {
-                id: i.L_ID,
-                level: i.L_LEVEL,
-                message: i.L_LOG,
-                creationDate: i.L_CREATION_DATE,
-                lastUpdate: i.L_LAST_UPDATE
-            } as JobLog;
-            acc.logs.push(log);
+                const log: JobLog = {
+                    id: i.L_ID,
+                    level: i.L_LEVEL,
+                    message: i.L_LOG,
+                    creationDate: i.L_CREATION_DATE,
+                    lastUpdate: i.L_LAST_UPDATE
+                } as JobLog;
+                acc.logs.push(log);
 
-            return acc;
-        }, { job: null, logs: []} as JobAndLogs);
+                return acc;
+            }, { job: null, logs: []} as JobAndLogs);
+        } else {
+            const q: QueryA = await conn.query(J_SQL, jobId);
+            jobAndLogs = {
+                job: q.length > 0 ? {
+                    id: q[0].J_ID,
+                    name: q[0].J_NAME,
+                    description: q[0].J_DESCRIPTION,
+                    status: q[0].J_STATUS,
+                    creationDate: q[0].J_CREATION_DATE,
+                    progress: q[0].J_PROGRESS,
+                    lastUpdate: q[0].J_LAST_UPDATE
+                } as Job : null,
+                logs: []
+            };
+        }
 
         return jobAndLogs;
     });

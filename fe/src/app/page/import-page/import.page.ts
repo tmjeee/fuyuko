@@ -12,6 +12,7 @@ import {
     ItemDataImport,
     PriceDataImport,
 } from '../../model/data-import.model';
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -24,11 +25,14 @@ export class ImportPageComponent implements OnInit {
   showPreviewFn: ShowPreviewFn;
   submitDataImportFn: SubmitDataImportFn;
 
-  constructor(private importDataService: ImportDataService, private viewService: ViewService) {
+  constructor(private importDataService: ImportDataService,
+              private viewService: ViewService,
+              private loadingService: LoadingService) {
   }
 
   ngOnInit(): void {
       this.ready = false;
+      this.loadingService.startLoading();
       this.showPreviewFn = (viewId: number, uploadType: DataImportType, file: File) => {
           return this.importDataService.showPreview(viewId, uploadType, file);
       };
@@ -42,7 +46,10 @@ export class ImportPageComponent implements OnInit {
                   this.allViews = v;
                   this.ready = true;
               }),
-              finalize(() => this.ready = true)
+              finalize(() => {
+                  this.ready = true;
+                  this.loadingService.stopLoading();
+              })
           ).subscribe();
   }
 }

@@ -9,6 +9,7 @@ import {View} from '../../model/view.model';
 import {finalize, map} from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 import {SettingsService} from '../../service/settings-service/settings.service';
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -30,8 +31,9 @@ export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implement
               settingsService: SettingsService,
               router: Router,
               route: ActivatedRoute,
-              protected viewService: ViewService) {
-    super(appNotificationService, authService, settingsService, route, router);
+              protected viewService: ViewService,
+              loadingService: LoadingService) {
+    super(appNotificationService, authService, settingsService, route, router, loadingService);
   }
 
 

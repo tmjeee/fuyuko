@@ -17,6 +17,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
 import {Pagination} from "../../utils/pagination.utils";
 import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -38,7 +39,8 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   constructor(private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private viewService: ViewService,
-              private itemService: ItemService) {
+              private itemService: ItemService,
+              private loadingService: LoadingService) {
       this.pagination = new Pagination();
   }
 
@@ -63,6 +65,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
   reload() {
     this.done = false;
+    this.loadingService.startLoading();
     const viewId = this.currentView.id;
     forkJoin([
       this.attributeService.getAllAttributesByView(viewId)
@@ -82,7 +85,10 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
        };
        this.done = true;
       }),
-      finalize(() => this.done = true)
+      finalize(() => {
+          this.done = true;
+          this.loadingService.stopLoading();
+      })
     ).subscribe();
   }
 

@@ -11,6 +11,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {EditAttributeComponentEvent} from '../../component/attribute-table-component/edit-attribute.component';
 import {ApiResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
     templateUrl: './edit-attribute.page.html',
@@ -30,13 +31,15 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private viewService: ViewService,
                 private notificationService: NotificationsService,
-                private attributeService: AttributeService) {
+                private attributeService: AttributeService,
+                private loadingService: LoadingService) {
     }
 
 
 
     ngOnInit(): void {
         this.viewLoading = true;
+        this.loadingService.startLoading();
         this.subscription = this.viewService
             .asObserver()
             .pipe(
@@ -47,7 +50,10 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
                     }
                     this.viewLoading = false;
                 }),
-                finalize(() => this.viewLoading = false)
+                finalize(() => {
+                    this.viewLoading = false;
+                    this.loadingService.stopLoading();
+                })
             ).subscribe();
     }
 
@@ -77,12 +83,16 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
     reload() {
         const attributeId: string = this.route.snapshot.paramMap.get('attributeId');
         this.attributeLoading = true;
+        this.loadingService.startLoading();
         this.attributeService.getAttributeByView(this.currentView.id, Number(attributeId)).pipe(
             tap((a: Attribute) => {
                 this.attribute = a;
                 this.attributeLoading = false;
             }),
-            finalize(() => this.attributeLoading = false)
+            finalize(() => {
+                this.attributeLoading = false;
+                this.loadingService.stopLoading();
+            })
         ).subscribe();
     }
 }

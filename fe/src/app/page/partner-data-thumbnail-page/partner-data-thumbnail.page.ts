@@ -9,6 +9,7 @@ import {User} from '../../model/user.model';
 import {concatMap, finalize, map, tap} from 'rxjs/operators';
 import {MatSelectChange} from '@angular/material/select';
 import {PaginableApiResponse} from "../../model/api-response.model";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -25,7 +26,8 @@ export class PartnerDataThumbnailPageComponent implements OnInit {
 
    constructor(private partnerService: PartnerService,
                private authService: AuthService,
-               private attributeService: AttributeService) {
+               private attributeService: AttributeService,
+               private loadingService: LoadingService) {
       this.loading = false;
       this.pricingStructures = [];
    }
@@ -45,6 +47,7 @@ export class PartnerDataThumbnailPageComponent implements OnInit {
       const pricingStructure: PricingStructure = $event.value;
       if (pricingStructure) {
           this.loading = true;
+          this.loadingService.startLoading();
           this.partnerService.getPartnerPriceItems(pricingStructure.id).pipe(
               tap((i: PricedItem[]) => {
                   this.pricedItems = i;
@@ -58,6 +61,7 @@ export class PartnerDataThumbnailPageComponent implements OnInit {
               }),
               finalize(() => {
                   this.loading = false;
+                  this.loadingService.stopLoading();
               })
           ).subscribe();
       }

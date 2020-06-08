@@ -15,6 +15,7 @@ import {PricingStructure} from '../../model/pricing-structure.model';
 import {Observable} from "rxjs";
 import {PricingStructureService} from "../../service/pricing-structure-service/pricing-structure.service";
 import {PaginableApiResponse} from "../../model/api-response.model";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
     templateUrl: './export.page.html',
@@ -32,10 +33,12 @@ export class ExportPageComponent implements OnInit {
     constructor(private viewService: ViewService,
                 private pricingStrutureService: PricingStructureService,
                 private attributeService: AttributeService,
-                private exportDataService: ExportDataService) { }
+                private exportDataService: ExportDataService,
+                private loadingService: LoadingService) { }
 
     ngOnInit(): void {
         this.ready = false;
+        this.loadingService.startLoading();
         this.viewAttributeFn = (viewId: number) => {
            return this.attributeService.getAllAttributesByView(viewId)
                .pipe( map((r: PaginableApiResponse<Attribute[]>) => r.payload));
@@ -60,7 +63,10 @@ export class ExportPageComponent implements OnInit {
                 this.allViews = v;
                 this.ready = true;
             }),
-            finalize(() => this.ready = true)
+            finalize(() => {
+                this.ready = true;
+                this.loadingService.stopLoading();
+            })
         ).subscribe();
 
     }

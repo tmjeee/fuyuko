@@ -10,7 +10,6 @@
     </mat-card-header>
     <mat-card-content>
       <span *ngIf="done" [attr.test-view-tabular-page]="''"></span>
-      <app-loading [show]="!done"></app-loading>
       <div *ngIf="done && !itemAndAttributeSet">No Items</div>
       <app-data-table *ngIf="itemAndAttributeSet"
                       (searchEvents)="onDataTableSearchEvent($event)"

@@ -10,6 +10,7 @@ import {ValidationRunComponentEvent} from '../../component/validation-result-com
 import {ValidationResultListingComponentEvent} from '../../component/validation-result-component/validation-result-listing.component';
 import {ApiResponse, ScheduleValidationResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
     templateUrl: './view-validation.page.html',
@@ -25,11 +26,13 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
 
     constructor(private viewService: ViewService,
                 private notificationsService: NotificationsService,
-                private validationService: ValidationService) {
+                private validationService: ValidationService,
+                private loadingService: LoadingService) {
     }
 
     ngOnInit(): void {
         this.loading = true;
+        this.loadingService.startLoading();
         this.subscription = this.viewService.asObserver()
             .pipe(
                 tap((v: View) => {
@@ -43,6 +46,7 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
                 }),
                 finalize(() => {
                     this.loading = false;
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
     }
@@ -73,12 +77,14 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
     _reload() {
         if (this.view) {
             this.loading = true;
+            this.loadingService.startLoading();
             this.validationService.getAllValidations(this.view.id).pipe(
                 tap((vals: Validation[]) => {
                     this.validations = vals;
                 }),
                 finalize(() => {
                     this.loading = false;
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
         }

@@ -1,12 +1,20 @@
-import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges, ViewChild} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChange,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors} from '@angular/forms';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
-import {NotificationsService} from 'angular2-notifications';
 import {Value} from '../../model/item.model';
 import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
-import {getItemAreaValue, hasItemValue} from '../../utils/ui-item-value-getter.util';
-import {BulkEditService} from '../../service/bulk-edit-service/bulk-edit.service';
+import {hasItemValue} from '../../utils/ui-item-value-getter.util';
 import {View} from '../../model/view.model';
 import {operatorNeedsItemValue, operatorsForAttribute} from '../../utils/attribute-operators.util';
 import {OperatorType} from '../../model/operator.model';
@@ -15,9 +23,16 @@ import {finalize, tap} from 'rxjs/operators';
 import {toBulkEditTableItem} from '../../utils/item-to-table-items.util';
 import {StepperSelectionEvent} from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
-import {JobsService} from '../../service/jobs-service/jobs.service';
 import {Job, JobAndLogs} from '../../model/job.model';
 import {Observable} from 'rxjs';
+
+export interface BulkEditWizardComponentEvent {
+    type: 'error',
+    message?: string,                   // when type is 'error'
+};
+export type GetPreviewFn = (view: View, changeClauses: ItemValueAndAttribute[], whereClauses: ItemValueOperatorAndAttribute[]) => Observable<BulkEditPackage>;
+export type GetJobLogsFn = (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
+export type ScheduleBulkEditJobFn = (view: View, bulkEditPage: BulkEditPackage) => Observable<Job>;
 
 @Component({
    selector: 'app-bulk-edit-wizard',
@@ -35,9 +50,6 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     changeClauses: ItemValueAndAttribute[];
     whereClauses: ItemValueOperatorAndAttribute[];
 
-    // first step (custom condition)
-    // todo:
-
     // second step
     formGroupSecondStep: FormGroup;
     secondStepReady: boolean;
@@ -51,11 +63,13 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     @Input() view: View;
     @Input() attributes: Attribute[];
+    @Input() getPreviewFn: GetPreviewFn;
+    @Input() getJobLogsFn: GetJobLogsFn;
+    @Input() scheduleBulkEditJobFn: ScheduleBulkEditJobFn;
+    @Output() events: EventEmitter<BulkEditWizardComponentEvent>;
 
-    constructor(private formBuilder: FormBuilder,
-                private notificationsService: NotificationsService,
-                private bulkEditService: BulkEditService,
-                private jobsService: JobsService) {
+    constructor(private formBuilder: FormBuilder) {
+        this.events = new EventEmitter<BulkEditWizardComponentEvent>();
         this.secondStepReady = false;
         this.editable = true;
     }
@@ -66,7 +80,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
     }
 
     f(jobId: number, lastLogId: number): Observable<JobAndLogs> {
-        return this.jobsService.jobLogs(jobId, lastLogId);
+        return this.getJobLogsFn(jobId, lastLogId);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -90,7 +104,10 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     addChangeClause() {
         if (this.attributes.length <= 0) {
-            this.notificationsService.error('Error', 'No attribute(s)');
+            this.events.emit({
+                type: 'error',
+                message: 'No attribute(s)'
+            });
             return;
         }
         const attribute: Attribute = this.attributes[0];
@@ -114,7 +131,10 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     addWhereClause() {
         if (this.attributes.length <= 0) {
-            this.notificationsService.error('Error', 'No attribute(s)');
+            this.events.emit({
+                type: 'error',
+                message: 'No attribute(s)'
+            });
             return;
         }
         const attribute: Attribute = this.attributes[0];
@@ -182,8 +202,7 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     onFirstStepSubmit() {
         this.secondStepReady = false;
-        this.bulkEditService
-            .previewBuilEdit(this.view.id, this.changeClauses, this.whereClauses)
+        this.getPreviewFn(this.view, this.changeClauses, this.whereClauses)
             .pipe(
                 tap((b: BulkEditPackage) => {
                    this.bulkEditPackage = b;
@@ -202,11 +221,10 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     onSecondStepSubmit() {
         this.editable = false;
-        // todo:
-        this.jobsService
-            .scheduleBulkEditJob(this.view.id, this.bulkEditPackage)
+        this.scheduleBulkEditJobFn(this.view, this.bulkEditPackage)
             .pipe(
                 tap((j: Job) => {
+                    console.log('****************************** onSecondStepSubmit ', j);
                     this.job = j;
                 })
             ).subscribe();

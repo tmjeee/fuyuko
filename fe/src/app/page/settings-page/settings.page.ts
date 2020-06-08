@@ -6,6 +6,7 @@ import {AuthService} from '../../service/auth-service/auth.service';
 import {SettingsService} from '../../service/settings-service/settings.service';
 import {finalize, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -21,7 +22,8 @@ export class SettingsPageComponent implements OnInit {
 
   constructor(private authService: AuthService,
               private notificationService: NotificationsService,
-              private settingsService: SettingsService) {
+              private settingsService: SettingsService,
+              private loadingService: LoadingService) {
   }
 
   ngOnInit(): void {
@@ -30,6 +32,7 @@ export class SettingsPageComponent implements OnInit {
 
   reload() {
     this.ready = false;
+    this.loadingService.startLoading();
     this.currentUser = this.authService.myself();
     this.settingsService.getSettings(this.currentUser)
         .pipe(
@@ -37,7 +40,10 @@ export class SettingsPageComponent implements OnInit {
               this.settings = s;
               this.ready = true;
             }),
-            finalize(() => this.ready = true)
+            finalize(() => {
+                this.ready = true;
+                this.loadingService.stopLoading();
+            })
         ).subscribe();
   }
 

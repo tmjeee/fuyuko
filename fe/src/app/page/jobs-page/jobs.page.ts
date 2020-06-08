@@ -3,6 +3,7 @@ import {Job, JobAndLogs, JobLog} from '../../model/job.model';
 import {Observable} from 'rxjs';
 import {JobsService} from '../../service/jobs-service/jobs.service';
 import {finalize, map, tap} from 'rxjs/operators';
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
     templateUrl: './jobs.page.html',
@@ -13,11 +14,13 @@ export class JobsPageComponent implements OnInit {
     jobs: Job[];
     fetchFn: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
 
-    constructor(private jobService: JobsService) {
+    constructor(private jobService: JobsService,
+                private loadingService: LoadingService) {
     }
 
     ngOnInit(): void {
         this.ready = false;
+        this.loadingService.startLoading();
         this.fetchFn = this.f.bind(this);
         this.jobService.allJobs()
             .pipe(
@@ -25,7 +28,10 @@ export class JobsPageComponent implements OnInit {
                     this.jobs = jobs;
                     this.ready = true;
                 }),
-                finalize(() => this.ready = true)
+                finalize(() => {
+                    this.ready = true;
+                    this.loadingService.stopLoading();
+                })
             ).subscribe();
     }
 

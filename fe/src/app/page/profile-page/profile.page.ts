@@ -15,6 +15,7 @@ import {GlobalCommunicationService} from '../../service/global-communication-ser
 import {FormBuilder, FormControl} from '@angular/forms';
 import {UserAvatarResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -38,18 +39,23 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private globalCommunicationService: GlobalCommunicationService,
               private formBuilder: FormBuilder,
-              private notificationsService: NotificationsService) {
+              private notificationsService: NotificationsService,
+              private loadingService: LoadingService) {
       this.formControlTheme =  formBuilder.control('');
   }
 
   ngOnInit(): void {
+    this.loadingService.startLoading();
     this.allThemes = this.themeService.allThemes();
     this.avatarService.allPredefinedAvatars().pipe(
         tap((globalAvatars: GlobalAvatar[]) => {
             this.allPredefinedAvatars = globalAvatars;
             this.avatarsReady = true;
         }),
-        finalize(() => this.avatarsReady = true)
+        finalize(() => {
+            this.avatarsReady = true;
+            this.loadingService.stopLoading();
+        })
     ).subscribe();
     this.subscription = this.authService.asObservable()
       .pipe(
@@ -64,7 +70,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
           }
           this.ready = true;
         }),
-        finalize(() => this.ready = true)
+        finalize(() => {
+            this.ready = true;
+            this.loadingService.stopLoading();
+        })
       ).subscribe();
   }
 

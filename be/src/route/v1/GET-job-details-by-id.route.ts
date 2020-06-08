@@ -17,30 +17,6 @@ import {getJobDetailsById, getJobyById} from "../../service/job.service";
 
 // CHECKED
 
-const SQL = `
-                SELECT 
-                    J.ID AS J_ID,
-                    J.NAME AS J_NAME,
-                    J.DESCRIPTION AS J_DESCRIPTION,
-                    J.CREATION_DATE AS J_CREATION_DATE,
-                    J.LAST_UPDATE AS J_LAST_UPDATE,
-                    J.STATUS AS J_STATUS,
-                    J.PROGRESS AS J_PROGRESS,
-                    
-                    L.ID AS L_ID,
-                    L.JOB_ID AS L_JOB_ID,
-                    L.CREATION_DATE AS L_CREATION_DATE,
-                    L.LAST_UPDATE AS L_LAST_UPDATE,
-                    L.LEVEL AS L_LEVEL,
-                    L.LOG AS L_LOG
-                    
-                FROM TBL_JOB AS J
-                LEFT JOIN TBL_JOB_LOG AS L ON L.JOB_ID = J.ID
-                WHERE J.ID=?
-`;
-
-const SQL_2 = `${SQL} AND L.ID > ?`
-
 const httpAction: any[] = [
     [
         param('jobId').exists().isNumeric()
