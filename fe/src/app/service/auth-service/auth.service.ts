@@ -53,12 +53,12 @@ export class AuthService {
    return this.subject.asObservable();
  }
 
-  login(username: string, password: string): Observable<LoginResponse> {
+  login(username: string, password: string, rememberMe: boolean = true): Observable<LoginResponse> {
         return this.httpClient.post<LoginResponse>(URL_LOGIN(), {
             username, password
         }).pipe(
             tap((r: LoginResponse) => {
-                this.storeToken({
+                this.storeToken(rememberMe, {
                     token: r.payload.jwtToken,
                     myself: r.payload.user
                 } as StorageToken);
@@ -110,14 +110,37 @@ export class AuthService {
       );
   }
   private afterSaveCallback(u: User) {
-      const token: StorageToken = JSON.parse(localStorage.getItem(KEY));
+      const token: StorageToken = this.getToken();
       token.myself = u;
-      this.storeToken(token);
+      this.updateToken(token);
       this.subject.next(u);
   }
 
-  private storeToken(token: StorageToken) {
-    localStorage.setItem(KEY, JSON.stringify(token));
+  private storeToken(rememberMe: boolean, token: StorageToken) {
+     if (rememberMe) {
+         localStorage.setItem(KEY, JSON.stringify(token));
+         sessionStorage.removeItem(KEY);
+     } else {
+         sessionStorage.setItem(KEY, JSON.stringify(token));
+         localStorage.removeItem(KEY);
+     }
+  }
+
+  private getToken(): StorageToken {
+      const storageToken: string = sessionStorage.getItem(KEY) ? sessionStorage.getItem(KEY) : localStorage.getItem(KEY);
+      if (storageToken) {
+          const token: StorageToken =  JSON.parse(storageToken);
+          return token;
+      }
+      return null;
+  }
+
+  private updateToken(token: StorageToken) {
+     if (localStorage.getItem(KEY)) {
+         localStorage.setItem(KEY, JSON.stringify(token));
+     } else if (sessionStorage.getItem(KEY)) {
+         sessionStorage.setItem(KEY, JSON.stringify(token));
+     }
   }
 
   destroyToken() {
@@ -125,19 +148,17 @@ export class AuthService {
   }
 
   jwtToken(): string {
-      const storageToken: string = localStorage.getItem(KEY);
+      const storageToken: StorageToken = this.getToken();
       if (storageToken) {
-          const token: StorageToken =  JSON.parse(storageToken);
-          return token.token;
+          return storageToken.token;
       }
       return null;
   }
 
   myself(): User {
-    const storageToken: string = localStorage.getItem(KEY);
+    const storageToken: StorageToken = this.getToken();
     if (storageToken) {
-      const token: StorageToken =  JSON.parse(storageToken);
-      return token.myself;
+      return storageToken.myself;
     }
     return null;
   }
@@ -158,5 +179,4 @@ export class AuthService {
   forgotPasswordCheck(code: string): Observable<ApiResponse<boolean>> {
      return this.httpClient.post<ApiResponse<boolean>>(URL_POST_FORGOT_PASSWORD_CHECK_CODE().replace(':code', code), {});
   }
-
 }

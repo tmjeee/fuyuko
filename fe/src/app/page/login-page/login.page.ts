@@ -22,6 +22,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
   formGroup: FormGroup;
   formControlUsername: FormControl;
   formControlPassword: FormControl;
+  formControlRememberMe: FormControl;
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
@@ -31,9 +32,11 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
               private router: Router) {
     this.formControlUsername = formBuilder.control('', [Validators.required]);
     this.formControlPassword = formBuilder.control('', [Validators.required]);
+    this.formControlRememberMe = formBuilder.control('', []);
     this.formGroup = this.formBuilder.group({
       username: this.formControlUsername,
-      password: this.formControlPassword
+      password: this.formControlPassword,
+      rememberMe: this.formControlRememberMe
     });
   }
 
@@ -44,7 +47,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
   onSubmit() {
     this.notificationService.remove();
     this.authService
-      .login(this.formControlUsername.value, this.formControlPassword.value)
+      .login(this.formControlUsername.value, this.formControlPassword.value, this.formControlRememberMe.value)
       .pipe(
         map((u: LoginResponse) => {
           if (u && u.status === 'SUCCESS') {
