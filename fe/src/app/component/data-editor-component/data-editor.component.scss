@@ -1,23 +1,20 @@
 :host {
   width:100%;
-  // display: flex;
-  // align-items: stretch;
 }
 .data-editor-component {
+  padding: 5px;
+  border-radius: 5px;
+  border: solid transparent;
+  height:100%;
   width: 100%;
-  // display: flex;
-  // align-items: stretch;
+  &:hover {
+    border: solid var(--my-app-primary-default) ;
+    transition: border-color 1s;
+  }
   span {
     width: 100%;
     display: flex;
     align-items: center;
     cursor: pointer;
-
-    // input {
-    //   outline: none;
-    //   background-color: transparent;
-    //   color: var(--my-app-foreground-text);
-    //   border: none;
-    // }
   }
 }

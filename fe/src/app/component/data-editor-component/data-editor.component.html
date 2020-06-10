@@ -1,15 +1,7 @@
 
-<div class="data-editor-component" fxLayout="column" (click)="onItemAttributeValueClicked($event)">
+<div class="data-editor-component" fxLayout="row" (click)="onItemAttributeValueClicked($event)">
   <span [attr.test-data-editor-value]="itemValueAndAttribute.attribute.name" fxFlex="1 0 100%" >
       &nbsp;{{itemValueAndAttribute?.itemValue | itemAttributeValueAsString:itemValueAndAttribute.attribute}}
   </span>
 </div>
 
-<!--
-<div class="data-editor-component"
-     (click)="onItemAttributeValueClicked($event)">
-  <span [attr.test-data-editor-value]="itemValueAndAttribute.attribute.name">
-      &nbsp;{{itemValueAndAttribute?.itemValue | itemAttributeValueAsString:itemValueAndAttribute.attribute}}
-  </span>
-</div>
--->

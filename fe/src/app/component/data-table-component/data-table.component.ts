@@ -211,6 +211,8 @@ export class DataTableComponent implements OnInit, OnChanges {
         creationDate: tableItem.creationDate,
       } as TableItem);
       this.pendingSavingModifiedItems.set(tableItem.id, ti);
+    } else if (!ti && this.pendingSavingModifiedItems.has(tableItem.id)) {
+      ti = this.pendingSavingModifiedItems.get(tableItem.id);
     }
     switch ($event.type) {
       case 'name':
@@ -243,6 +245,8 @@ export class DataTableComponent implements OnInit, OnChanges {
          creationDate: tableItem.creationDate,
        } as TableItem);
        this.pendingSavingModifiedItems.set(tableItem.id, ti);
+     } else if (!ti && this.pendingSavingModifiedItems.has(tableItem.id)) {
+       ti = this.pendingSavingModifiedItems.get(tableItem.id);
      }
      ti[$event.attribute.id] = val;
      tableItem[att.id] = val;

@@ -27,6 +27,7 @@
     "@angular/router": "~9.0.0",
     "angular-google-charts": "^1.1.4",
     "angular2-notifications": "^9.0.0",
+    "animate.css": "^4.1.0",
     "bson": "^4.0.2",
     "buffer": "^5.4.3",
     "core-js": "^2.5.4",
