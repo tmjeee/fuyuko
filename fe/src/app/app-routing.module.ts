@@ -358,7 +358,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: BulkEditPageComponent,
         data: {
-          sideNav: 'bulk-edit'
+          subSideNav: 'bulk-edit'
         }
       } as Route,
       {
@@ -366,7 +366,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: CustomBulkEditPageComponent,
         data: {
-          sideNav: 'custom-bulk-edit'
+          subSideNav: 'custom-bulk-edit'
         }
       } as Route,
       {
@@ -380,7 +380,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: JobsPageComponent,
         data: {
-          sideNav: 'jobs',
+          subSideNav: 'jobs',
         } as Route
       },
       {
