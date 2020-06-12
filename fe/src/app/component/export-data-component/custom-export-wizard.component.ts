@@ -71,7 +71,7 @@ export class CustomExportWizardComponent {
       this.step3Ready = false;
       this.formControlCustomExportInputValues = formBuilder.control('', [Validators.required]);
       this.thirdStepFormGroup = formBuilder.group({
-         'customImportExportValues':  this.formControlCustomExportInputValues
+         'customExportInputValues':  this.formControlCustomExportInputValues
       });
 
       // fourth step
@@ -129,7 +129,7 @@ export class CustomExportWizardComponent {
       this.formControlCustomDataExport.setValue(d); // restore to whatever it is before we go back to step 1
    }
 
-   onCustomImportPreviewEvent($event: CustomImportPreviewComponentEvent) {
+   onCustomExportPreviewEvent($event: CustomImportPreviewComponentEvent) {
       this.formControlCustomExportPreview.setValue($event.preview);
    }
 }

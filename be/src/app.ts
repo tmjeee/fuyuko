@@ -20,6 +20,7 @@ import {Options} from "body-parser";
 import {runCustomImportSync} from "./custom-import";
 import {runCustomExportSync} from "./custom-export/custom-export-executor";
 import {runTimezoner} from "./timezoner";
+import {runCustomBulkEditSync} from "./custom-bulk-edit/custom-bulk-edit-executor";
 
 i(`Run Timezoner`);
 runTimezoner(config.timezone);
@@ -62,7 +63,7 @@ const fns: PromiseFn[] = [
             });
     },
 
-    // custom rule sync
+    // custom rule / validation sync
     () => {
         i(`running custom rule sync`)
         return runCustomRuleSync()
@@ -86,6 +87,14 @@ const fns: PromiseFn[] = [
         return runCustomExportSync()
             .then((_: any) => {
                 i(`done with custom export sync`);
+            });
+    },
+
+    () => {
+        i(`running custom bulk edit sync`);
+        return runCustomBulkEditSync()
+            .then((_: any) => {
+                i(`done with custom bulk edit sync`);
             });
     },
 

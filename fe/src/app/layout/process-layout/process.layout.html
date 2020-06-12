@@ -61,6 +61,10 @@
                 <mat-icon>card_travel</mat-icon>
                 <a href="#" [routerLink]="['/process-layout', {outlets: {primary: ['bulk-edit'], help: ['bulk-edit-help']}}]">Bulk Edit</a>
               </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'custom-bulk-edit'">
+                <mat-icon>card_giftcard</mat-icon>
+                <a href="#" [routerLink]="['/process-layout', {outlets: {primary: ['custom-bulk-edit'], help: ['bulk-edit-help']}}]">Custom Bulk Edit</a>
+              </mat-list-item>
               <mat-list-item [class.selected]="routeSubSideNavData === 'jobs'">
                 <mat-icon>schedule</mat-icon>
                 <a href="#" [routerLink]="['/process-layout', {outlets: {primary: ['jobs'], help: ['jobs-help']}}]">Jobs</a>

@@ -150,6 +150,8 @@ import {AdministrationHelpPageComponent} from "./page/administration-help-page/a
 import {AuditLogModule} from "./component/audit-log-component/audit-log.module";
 import {AuditLogService} from "./service/audit-log-service/audit-log.service";
 import {LoadingService} from "./service/loading-service/loading.service";
+import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-bulk-edit.page";
+import {CustomBulkEditService} from "./service/custom-bulk-edit-service/custom-bulk-edit.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -249,6 +251,7 @@ const appInitializer = (settingsService: SettingsService,
     ResetPasswordPageComponent,
     AuditLogPageComponent,
     AdministrationHelpPageComponent,
+    CustomBulkEditPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -345,6 +348,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: CategoryService, useClass: CategoryService} as Provider,
     {provide: AuditLogService, useClass: AuditLogService} as Provider,
     {provide: LoadingService, useClass: LoadingService} as Provider,
+    {provide: CustomBulkEditService, useClass: CustomBulkEditService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,

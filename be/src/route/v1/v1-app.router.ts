@@ -137,6 +137,11 @@ import registerPostForgotPasswordRoute from './POST-forgot-password.route';
 import registerPostResetForgottenPasswordRoute from './POST-reset-forgotten-password.route';
 import registerPostCheckForgotPasswordCodeRoute from './POST-check-forgot-password-code.route';
 import registerGetAuditLogsRoute from './GET-audit-log.route';
+import registerGetCustomBulkEditRoute from './GET-all-custom-bulk-edit.route';
+import registerPostCustomBulkEditPreviewRoute from './POST-custom-bulk-edit-preview.route';
+import registerPostCustomBulkEditSubmitJobRoute from './POST-custom-bulk-edit-submit-job.route';
+import registerPostCustomBulkEditValidateInputRoute from './POST-custom-bulk-edit-validate-input.route';
+
 
 const v1AppRouter:Router  = express.Router();
 
@@ -279,6 +284,11 @@ const reg = (router: Router, regi: Registry) => {
     registerPostCheckForgotPasswordCodeRoute(v1AppRouter, registry);
     registerPostResetForgottenPasswordRoute(v1AppRouter, registry);
     registerPostForgotPasswordRoute(v1AppRouter, registry);
+
+    registerGetCustomBulkEditRoute(v1AppRouter, registry);
+    registerPostCustomBulkEditPreviewRoute(v1AppRouter, registry);
+    registerPostCustomBulkEditSubmitJobRoute(v1AppRouter, registry);
+    registerPostCustomBulkEditValidateInputRoute(v1AppRouter, registry);
 
     registerGetAuditLogsRoute(v1AppRouter, registry);
 };

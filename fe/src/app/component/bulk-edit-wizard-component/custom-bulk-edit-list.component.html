@@ -1,0 +1,50 @@
+<div class="custom-bulk-edit-list">
+    <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="select">
+            <th mat-header-cell class="select" *matHeaderCellDef></th>
+            <td mat-cell class="select" *matCellDef="let customBulkEdit">
+                <mat-radio-button [value]="customBulkEdit" [attr.test-radio-custom-bulk-edit]="customBulkEdit.name"
+                                  (change)="onRadioChange($event)" name="dataBulkEditRadioGroup" [checked]="false">
+                </mat-radio-button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell class="action" *matHeaderCellDef></th>
+            <td mat-cell class="action" *matCellDef="let customBulkEdit">
+                <mat-icon *ngIf="!isRowExpanded(customBulkEdit)" (click)="masterRowClicked(customBulkEdit)" [attr.test-expand-row]="customBulkEdit.name">chevron_right</mat-icon>
+                <mat-icon *ngIf="isRowExpanded(customBulkEdit)" (click)="masterRowClicked(customBulkEdit)" [attr.test-collapse-row]="customBulkEdit.name">expand_more</mat-icon>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell class="name" *matHeaderCellDef>Name</th>
+            <td mat-cell class="name" *matCellDef="let customBulkEdit">{{customBulkEdit.name}}</td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell class="description" *matHeaderCellDef>Description</th>
+            <td mat-cell class="description" *matCellDef="let customBulkEdit">{{customBulkEdit.description}}</td>
+        </ng-container>
+        <ng-container matColumnDef="expanded">
+            <td mat-cell class="expanded" *matCellDef="let customBulkEdit" [attr.colspan]="columnsToDisplay.length">
+                <div>
+                    Last Update: {{customBulkEdit.lastUpdate | date}}
+                    <div fxLayoutGap="column" *ngFor="let input of customBulkEdit.inputs">
+                        <div fxFlex="1 1 auto" [attr.test-input]="''">{{input.name}} - {{input.type}}</div>
+                        <div fxFlex="1 1 auto" [attr.test-input-option]="''">
+                            {{input.description}}
+                            <ul *ngIf="input.options && input.options.length">
+                                <li *ngFor="let option of input.options">{{option.key}} - {{option.value}}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let customBulkEdit; columns: columnsToDisplay" [attr.test-row]="customBulkEdit.name"></tr>
+        <tr mat-row *matRowDef="let customBulkEdit; columns: expandedColumnsToDisplay; when: isChildRow"
+            [attr.test-row-details]="customBulkEdit.name"
+            [@detailExpand]="isRowExpanded(customBulkEdit) ? 'expanded' : 'collapsed'"></tr>
+    </table>
+</div>

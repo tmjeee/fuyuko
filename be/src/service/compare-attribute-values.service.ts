@@ -103,7 +103,7 @@ export const compareDate = (condition: moment.Moment,  /* from REST Api */
         case 'not contain':
             return (actual && String(actual).indexOf(String(condition)) < 0);
         case 'regexp':
-            return (actual && (!!String(actual).match(String(condition))));
+            throw new Error(`Unsupported operation on ${operator} for value of type date`);
         default:
             throw new Error(`unrecognised operator ${operator} for date ${actual} and condition ${condition} comparison`);
     }

@@ -1,10 +1,10 @@
-import {Level} from "../model/level.model";
-import {doInDbConnection, QueryResponse} from "../db";
+import {Level} from "../../model/level.model";
+import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
-import {getAllItem2sInView} from "./item.service";
+import {getAllItem2sInView} from "../item.service";
 import {getValidationByViewIdAndValidationId} from "./validation.service";
-import {Validation} from "../model/validation.model";
-import {Attribute2, Item2, ItemMetadata2, Rule2} from "../server-side-model/server-side.model";
+import {Validation} from "../../model/validation.model";
+import {Attribute2, Item2, ItemMetadata2, Rule2} from "../../server-side-model/server-side.model";
 import {
     AreaValue,
     CurrencyValue, DATE_FORMAT,
@@ -15,23 +15,23 @@ import {
     StringValue,
     TextValue,
     Value, VolumeValue, WeightValue, WidthValue
-} from "../model/item.model";
-import * as itemConverter from "./conversion-item.service";
-import * as ruleConverter from "./conversion-rule.service";
-import * as attributeConverter from "./conversion-attribute.service";
-import {getRule2s} from "./rule.service";
-import {Rule, WhenClause} from "../model/rule.model";
-import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from "../model/operator.model";
-import {getAttribute2sInView} from "./attribute.service";
-import {Attribute} from "../model/attribute.model";
+} from "../../model/item.model";
+import * as itemConverter from "../conversion-item.service";
+import * as ruleConverter from "../conversion-rule.service";
+import * as attributeConverter from "../conversion-attribute.service";
+import {getRule2s} from "../rule.service";
+import {Rule, WhenClause} from "../../model/rule.model";
+import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from "../../model/operator.model";
+import {getAttribute2sInView} from "../attribute.service";
+import {Attribute} from "../../model/attribute.model";
 import moment from 'moment';
-import * as logger from '../logger';
-import {convertToDebugString, convertToDebugStrings} from "../shared-utils/ui-item-value-converters.util";
-import {getViewById} from "./view.service";
-import {View} from "../model/view.model";
-import {CustomRule, CustomRuleForView} from "../model/custom-rule.model";
-import {getAllCustomRulesForView} from "./custom-rule.service";
-import {runCustomRule} from "../custom-rule";
+import * as logger from '../../logger';
+import {convertToDebugString, convertToDebugStrings} from "../../shared-utils/ui-item-value-converters.util";
+import {getViewById} from "../view.service";
+import {View} from "../../model/view.model";
+import {CustomRule, CustomRuleForView} from "../../model/custom-rule.model";
+import {getAllCustomRulesForView} from "../custom-rule.service";
+import {runCustomRule} from "../../custom-rule";
 import {
     compareArea,
     compareCurrency,
@@ -39,8 +39,8 @@ import {
     compareNumber, compareSelect,
     compareString,
     compareVolume, compareWeight, compareWidth
-} from "./compare-attribute-values.service";
-import {createNewItemValue} from "../shared-utils/ui-item-value-creator.utils";
+} from "../compare-attribute-values.service";
+import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
 
 interface Context {
    validationId: number;

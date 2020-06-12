@@ -12,7 +12,6 @@ import {
     ExportScriptPreview, ExportScriptValidateResult
 } from "../../model/custom-export.model";
 import {CustomExportService} from "../../service/custom-export-service/custom-export.service";
-import {CustomDataImport} from "../../model/custom-import.model";
 import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
@@ -60,7 +59,7 @@ export class CustomExportPageComponent implements OnInit, OnDestroy {
         this.ready = false;
         this.loadingService.startLoading()
         this.customExportService.getAllCustomExports().pipe(
-            tap((c: CustomDataImport[]) => {
+            tap((c: CustomDataExport[]) => {
                 this.customDataExports = c;
                 this.ready = true;
             }),

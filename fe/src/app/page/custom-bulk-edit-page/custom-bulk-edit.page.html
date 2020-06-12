@@ -1,0 +1,20 @@
+<div class="custom-bulk-edit-page" [attr.test-page-title]="'custom-bulk-edit'" [attr.test-page-ready]="''+(ready)">
+  <mat-card class="mat-elevation-z-20">
+      <mat-card-header>
+          <mat-card-title>Custom Bulk Edit</mat-card-title>
+          <mat-card-subtitle>
+              Perform custom bulk edit on data through a wizard
+          </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+          <app-custom-bulk-edit-wizard
+                  *ngIf="ready"
+                  [attr.test-custom-bulk-edit-wizard]="''"
+                  [customBulkEditPreviewFn]="customBulkEditPreviewFn"
+                  [customBulkEditSubmitFn]="customBulkEditSubmitFn"
+                  [customBulkEditFormValidateFn]="customBulkEditValidateFn"
+                  [customBulkEdits]="customBulkEdits">
+          </app-custom-bulk-edit-wizard>
+      </mat-card-content>
+  </mat-card>
+</div>

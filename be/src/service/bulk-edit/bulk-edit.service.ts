@@ -7,27 +7,27 @@ import {
     StringValue,
     TextValue,
     Value, VolumeValue, WeightValue, WidthValue
-} from "../model/item.model";
+} from "../../model/item.model";
 import {
     Attribute2,
     AttributeMetadata2, AttributeMetadataEntry2,
     ItemMetadata2,
     ItemMetadataEntry2, ItemValue2
-} from "../server-side-model/server-side.model";
-import {BulkEditItem, BulkEditPackage} from "../model/bulk-edit.model";
-import {doInDbConnection, QueryA} from "../db";
+} from "../../server-side-model/server-side.model";
+import {BulkEditItem, BulkEditPackage} from "../../model/bulk-edit.model";
+import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
-import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../model/item-attribute.model";
-import {Attribute} from "../model/attribute.model";
-import {attributeConvert} from "./conversion-attribute.service";
-import {OperatorType} from "../model/operator.model";
+import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
+import {Attribute} from "../../model/attribute.model";
+import {attributeConvert} from "../conversion-attribute.service";
+import {OperatorType} from "../../model/operator.model";
 import {
     compareArea,
     compareCurrency,
     compareDate, compareDimension, compareDoubleselect, compareHeight, compareLength,
     compareNumber, compareSelect,
     compareString, compareVolume, compareWeight, compareWidth
-} from "./compare-attribute-values.service";
+} from "../compare-attribute-values.service";
 import {
     AreaUnits,
     CountryCurrencyUnits,
@@ -35,9 +35,9 @@ import {
     HeightUnits,
     LengthUnits,
     VolumeUnits, WeightUnits, WidthUnits
-} from "../model/unit.model";
+} from "../../model/unit.model";
 import moment from "moment";
-import {itemValueConvert} from "./conversion-item-value.service";
+import {itemValueConvert} from "../conversion-item-value.service";
 import * as util from 'util';
 
 const SQL: string = `

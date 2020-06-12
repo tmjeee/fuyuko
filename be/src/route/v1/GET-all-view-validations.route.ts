@@ -3,11 +3,9 @@ import {NextFunction, Router, Request, Response} from "express";
 import {param} from 'express-validator';
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
 import {Validation} from "../../model/validation.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {getALlViewValidations} from "../../service/validation.service";
+import {getALlViewValidations} from "../../service/validation/validation.service";
 
 // CHECKED
 const httpAction: any[] = [

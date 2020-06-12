@@ -64,6 +64,7 @@ import {ResetPasswordPageComponent} from "./page/reset-password-page/reset-passw
 import {AdministrationLayoutComponent} from "./layout/administration-layout/administration.layout";
 import {AuditLogPageComponent} from "./page/audit-log-page/audit-log.page";
 import {AdministrationHelpPageComponent} from "./page/administration-help-page/administration-help.page";
+import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-bulk-edit.page";
 
 const routes: Routes = [
 
@@ -361,12 +362,19 @@ const routes: Routes = [
         }
       } as Route,
       {
+        path: 'custom-bulk-edit',
+        canActivate: [AuthGuard],
+        component: CustomBulkEditPageComponent,
+        data: {
+          sideNav: 'custom-bulk-edit'
+        }
+      } as Route,
+      {
         path: 'bulk-edit-help',
         canActivate: [AuthGuard],
         component: BulkEditHelpPageComponent,
         outlet: 'help'
       } as Route,
-
       {
         path: 'jobs',
         canActivate: [AuthGuard],

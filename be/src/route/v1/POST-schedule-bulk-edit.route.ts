@@ -9,7 +9,7 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {BulkEditPackage} from "../../model/bulk-edit.model";
-import {runJob} from "../../service/job-do-bulk-edit.service";
+import {runJob} from "../../service/bulk-edit/job-do-bulk-edit.service";
 import {Job} from "../../model/job.model";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";

@@ -1,5 +1,5 @@
-import {Validation, ValidationError, ValidationLog, ValidationResult} from "../model/validation.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
+import {Validation, ValidationError, ValidationLog, ValidationResult} from "../../model/validation.model";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 
 const SQL_1 = `

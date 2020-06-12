@@ -4,7 +4,7 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import { param } from "express-validator";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {deleteValidationResult} from "../../service/validation.service";
+import {deleteValidationResult} from "../../service/validation/validation.service";
 
 // CHECKED
 const httpAction: any[] = [

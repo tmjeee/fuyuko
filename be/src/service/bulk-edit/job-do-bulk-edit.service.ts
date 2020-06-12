@@ -1,12 +1,13 @@
-import {BulkEditItem, BulkEditPackage} from "../model/bulk-edit.model";
-import {Job} from "../model/job.model";
-import {doInDbConnection, QueryA} from "../db";
+import {BulkEditItem, BulkEditPackage} from "../../model/bulk-edit.model";
+import {Job} from "../../model/job.model";
+import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
-import {JobLogger, newJobLogger} from "./job-log.service";
-import {Value} from "../model/item.model";
-import {ItemValue2} from "../server-side-model/server-side.model";
-import {itemValueRevert} from "./conversion-item-value.service";
-import {updateItemValue2} from "./item.service";
+import {JobLogger, newJobLogger} from "../job-log.service";
+import {Value} from "../../model/item.model";
+import {ItemValue2} from "../../server-side-model/server-side.model";
+import {itemValueRevert} from "../conversion-item-value.service";
+import {updateItemValue2} from "../item.service";
+import {convertToDebugString} from "../../shared-utils/ui-item-value-converters.util";
 const uuid = require('uuid');
 
 
@@ -60,7 +61,7 @@ const u = async (conn: Connection, jobLogger: JobLogger, viewId: number, bulkEdi
         for (const v of vs) {
             const itemValue: ItemValue2 = itemValueRevert(v);
             await updateItemValue2(viewId, itemId, itemValue);
-            jobLogger.logInfo(`Changed attribute ${v.attributeId} for item ${itemId} to ${v.val}`)
+            jobLogger.logInfo(`Changed attribute ${v.attributeId} value for item ${itemId} to ${convertToDebugString(v.val)}`)
         }
 
         const children: BulkEditItem[] = bulkEditItem.children;
