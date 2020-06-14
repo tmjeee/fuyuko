@@ -18,9 +18,9 @@ export const convertToCm = (v: number, u: DimensionUnits | WidthUnits | LengthUn
         case "cm":
             return v;
         case "mm":
-            return (v / 10);
+            return parseFloat((v / 10).toFixed(3));
         case "m":
-            return (v * 100);
+            return parseFloat((v * 100).toFixed(2));
         default:
             return v;
     }
@@ -34,7 +34,7 @@ export const convertToG = (v: number, u: WeightUnits): number => {
         case 'g':
             return v;
         case 'kg':
-            return (v * 1000);
+            return parseFloat((v * 1000).toFixed(2));
         default:
             return v;
     }
@@ -48,9 +48,9 @@ export const convertToCm2 = (v: number, u: AreaUnits): number => {
         case "cm2":
             return v;
         case "m2":
-            return (v * (100 * 100));
+            return parseFloat((v * (100 * 100)).toFixed(10));
         case "mm2":
-            return (v  * (10 * 10));
+            return parseFloat((v  * (10 * 10)).toFixed(2));
         default:
             return v;
     }
@@ -62,7 +62,7 @@ export const convertToMl = (v: number, u: VolumeUnits): number => {
     }
     switch(u) {
         case "l":
-            return (v * 1000);
+            return parseFloat((v * 1000).toFixed(2));
         case "ml":
             return v;
         default:
@@ -99,9 +99,9 @@ export const compareDate = (condition: moment.Moment,  /* from REST Api */
         case "not lte":
             return (actual && (!actual.isSameOrBefore(condition)));
         case 'contain':
-            return (actual && String(actual).indexOf(String(condition)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type date`);
         case 'not contain':
-            return (actual && String(actual).indexOf(String(condition)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type date`);
         case 'regexp':
             throw new Error(`Unsupported operation on ${operator} for value of type date`);
         default:
@@ -138,11 +138,11 @@ export const compareNumber = (condition: number, /* from REST api */
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (actual && String(actual).indexOf(String(condition)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type number`);
         case 'not contain':
-            return (actual && String(actual).indexOf(String(condition)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type number`);
         case 'regexp':
-            return (actual && (!!String(actual).match(String(condition))));
+            throw new Error(`Unsupported operation on ${operator} for value of type number`);
         default:
             throw new Error(`unrecognised operator ${operator} for number ${actual} and condition ${condition} comparison`);
     }
@@ -157,31 +157,31 @@ export const compareString = (condition: string /* from REST Api */,
         case "eq":
             return (actual == condition);
         case "gt":
-            return (actual > condition);
+            throw new Error(`Unsupported operation on ${operator} for value of type string`);
         case "gte":
-            return (actual >= condition);
+            throw new Error(`Unsupported operation on ${operator} for value of type string`);
         case "lt":
-            return (actual <= condition);
+            throw new Error(`Unsupported operation on ${operator} for value of type string`);
         case "lte":
-            return (actual <= condition);
+            throw new Error(`Unsupported operation on ${operator} for value of type string`);
         case "not empty":
             return (!!actual);
         case "not eq":
             return ( actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            throw new Error(`Unsupported operation on ${operator} for value of type string`);
         case "not gte":
-            return (!(actual >= condition));
+            throw new Error(`Unsupported operation on ${operator} for value of type string`);
         case "not lt":
-            return (!(actual < condition));
+            throw new Error(`Unsupported operation on ${operator} for value of type string`);
         case "not lte":
-            return (!(actual <= condition));
+            throw new Error(`Unsupported operation on ${operator} for value of type string`);
         case 'contain':
-            return (actual && actual.indexOf(condition) >= 0);
+            return !!(actual && actual.indexOf(condition) >= 0);
         case 'not contain':
-            return (actual && actual.indexOf(condition) < 0);
+            return !!(actual && actual.indexOf(condition) < 0);
         case 'regexp':
-            return (actual && (!!actual.match(condition)));
+            return !!(actual && (!!actual.match(condition)));
         default:
             throw new Error(`unrecognised operator ${operator} for string ${actual} and condition ${condition} comparison`);
     }
@@ -222,11 +222,11 @@ export const compareCurrency = (condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (actual && String(actual).indexOf(String(condition)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type currency`);
         case 'not contain':
-            return (actual && String(actual).indexOf(String(condition)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type currency`);
         case 'regexp':
-            return (actual &&  (!!String(actual).match(String(condition))));
+            throw new Error(`Unsupported operation on ${operator} for value of type currency`);
         default:
             throw new Error(`unrecognised operator ${operator} for currency ${actual} ${actualUnit} and condition ${condition} ${conditionUnit} comparison`);
     }
@@ -266,11 +266,11 @@ export const compareVolume = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return (actual && String(actual).indexOf(String(condition)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type volume`);
         case 'not contain':
-            return (actual && String(actual).indexOf(String(condition)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type volume`);
         case 'regexp':
-            return (actual && (!!String(actual).match(String(condition))));
+            throw new Error(`Unsupported operation on ${operator} for value of type volume`);
         default:
             throw new Error(`unrecognised operator ${operator} for volume ${_actual} ${_actualUnit} and condition ${_condition} ${_conditionUnit} comparison`);
     }
@@ -297,33 +297,33 @@ export const compareDimension = (_conditionLength: number /* from REST Api */,
         case 'eq':
             return (actualLength == conditionLength && actualWidth == conditionWidth && actualHeight == conditionHeight);
         case 'not eq':
-            return (actualLength !== conditionLength && actualWidth !== conditionWidth && actualHeight !== conditionHeight);
+            return (!(actualLength == conditionLength && actualWidth == conditionWidth && actualHeight == conditionHeight));
         case 'lt':
             return (actualLength < conditionLength && actualWidth < conditionWidth && actualHeight < conditionHeight);
         case 'not lt':
-            return !(actualLength < conditionLength && actualWidth < conditionWidth && actualHeight < conditionHeight);
+            return (!(actualLength < conditionLength && actualWidth < conditionWidth && actualHeight < conditionHeight));
         case 'gt':
             return (actualLength > conditionLength && actualWidth > conditionWidth && actualHeight > conditionHeight);
         case 'not gt':
-            return !(actualLength > conditionLength && actualWidth > conditionWidth && actualHeight > conditionHeight);
+            return (!(actualLength > conditionLength && actualWidth > conditionWidth && actualHeight > conditionHeight));
         case 'gte':
             return (actualLength >= conditionLength && actualWidth >= conditionWidth && actualHeight >= conditionHeight);
         case 'not gte':
-            return !(actualLength >= conditionLength && actualWidth >= conditionWidth && actualHeight >= conditionHeight);
+            return (!(actualLength >= conditionLength && actualWidth >= conditionWidth && actualHeight >= conditionHeight));
         case 'lte':
             return (actualLength <= conditionLength && actualWidth <= conditionWidth && actualHeight<= conditionHeight);
         case 'not lte':
-            return !(actualLength <= conditionLength && actualWidth <= conditionWidth && actualHeight<= conditionHeight);
+            return (!(actualLength <= conditionLength && actualWidth <= conditionWidth && actualHeight<= conditionHeight));
         case 'empty':
             return (!!!actualLength) && (!!!actualWidth) && (!!!actualHeight);
         case 'not empty':
             return (!!actualLength) && (!!actualWidth) && (!!actualHeight);
         case 'contain':
-            return (actualLength && String(actualLength).indexOf(String(conditionLength)) >= 0) && actualWidth && (String(actualWidth).indexOf(String(conditionWidth)) >= 0) && actualHeight && (String(actualHeight).indexOf(String(conditionHeight)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type dimension`);
         case 'not contain':
-            return (actualLength && String(actualLength).indexOf(String(conditionLength)) < 0) && actualWidth && (String(actualWidth).indexOf(String(conditionWidth)) < 0) && actualHeight && (String(actualHeight).indexOf(String(conditionHeight)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type dimension`);
         case 'regexp':
-            return (actualLength  && (!!String(actualLength).match(String(conditionLength)))) && actualWidth && (!!String(actualWidth).match(String(conditionWidth))) && actualHeight && (!!String(actualHeight).match(String(conditionHeight)));
+            throw new Error(`Unsupported operation on ${operator} for value of type dimension`);
         default:
             throw new Error(`unrecognised operator ${operator} for dimension length ${actualLength} width ${actualWidth} height ${actualHeight} unit ${_actualUnit} and condition length ${conditionLength} width ${conditionWidth} height ${conditionHeight} unit ${_conditionUnit} comparison`);
     }
@@ -363,11 +363,11 @@ export const compareArea = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return actual && (String(actual).indexOf(String(condition)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type area`);
         case 'not contain':
-            return actual && (String(actual).indexOf(String(condition)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type area`);
         case 'regexp':
-            return actual && (!!String(actual).match(String(condition)));
+            throw new Error(`Unsupported operation on ${operator} for value of type area`);
         default:
             throw new Error(`unrecognised operator ${operator} for area ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
@@ -408,11 +408,11 @@ export const compareWidth = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return actual && (String(actual).indexOf(String(condition)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type width`);
         case 'not contain':
-            return actual && (String(actual).indexOf(String(condition)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type width`);
         case 'regexp':
-            return actual && (!!String(actual).match(String(condition)));
+            throw new Error(`Unsupported operation on ${operator} for value of type width`);
         default:
             throw new Error(`unrecognised operator ${operator} for width ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
@@ -453,11 +453,11 @@ export const compareWeight = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return actual && (String(actual).indexOf(String(condition)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type weight`);
         case 'not contain':
-            return actual && (String(actual).indexOf(String(condition)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type weight`);
         case 'regexp':
-            return actual && (!!String(actual).match(String(condition)));
+            throw new Error(`Unsupported operation on ${operator} for value of type weight`);
         default:
             throw new Error(`unrecognised operator ${operator} for weight ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
@@ -497,11 +497,11 @@ export const compareHeight = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return actual && (String(actual).indexOf(String(condition)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type height`);
         case 'not contain':
-            return actual && (String(actual).indexOf(String(condition)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type height`);
         case 'regexp':
-            return actual && (!!String(actual).match(String(condition)));
+            throw new Error(`Unsupported operation on ${operator} for value of type height`);
         default:
             throw new Error(`unrecognised operator ${operator} for height ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
@@ -541,11 +541,11 @@ export const compareLength = (_condition: number /* from REST Api */,
         case "not lte":
             return (!(actual <= condition));
         case 'contain':
-            return actual && (String(actual).indexOf(String(condition)) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type length`);
         case 'not contain':
-            return actual && (String(actual).indexOf(String(condition)) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type length`);
         case 'regexp':
-            return actual && (!!String(actual).match(String(condition)));
+            throw new Error(`Unsupported operation on ${operator} for value of type length`);
         default:
             throw new Error(`unrecognised operator ${operator} for length ${actual} ${_actualUnit} and condition ${condition} ${_conditionUnit} comparison`);
     }
@@ -560,31 +560,31 @@ export const compareSelect = (condition: string /* from REST Api */,
         case "eq":
             return (actual == condition);
         case "gt":
-            return (actual > condition);
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "gte":
-            return (actual >= condition);
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "lt":
-            return (actual <= condition);
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "lte":
-            return (actual <= condition);
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "not empty":
             return (!!actual);
         case "not eq":
             return ( actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "not gte":
-            return (!(actual >= condition));
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "not lt":
-            return (!(actual < condition));
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "not lte":
-            return (!(actual <= condition));
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case 'contain':
-            return actual && (actual.indexOf(condition) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case 'not contain':
-            return actual && (actual.indexOf(condition) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case 'regexp':
-            return actual && (!!actual.match(condition));
+            throw new Error(`Unsupported operation on ${operator} for value of type select`);
         default:
             throw new Error(`unrecognised operator ${operator} for select ${actual} and condition ${condition} comparison`);
     }
@@ -601,31 +601,31 @@ export const compareDoubleselect = (_conditionkey1: string /* from REST Api */,
         case 'not eq':
             return (_actualkey1 !== _conditionkey1 && _actualkey2 !== _conditionkey2);
         case 'lt':
-            return (_actualkey1 == _conditionkey1 && _actualkey2 < _conditionkey2);
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'not lt':
-            return (_actualkey1 == _conditionkey1 && !(_actualkey2 < _conditionkey2));
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'gt':
-            return (_actualkey1 == _conditionkey1 && _actualkey2 > _conditionkey2);
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'not gt':
-            return (_actualkey1 == _conditionkey1 && !(_actualkey2 > _conditionkey2));
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'gte':
-            return (_actualkey1 == _conditionkey1 && _actualkey2 >= _conditionkey2);
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'not gte':
-            return (_actualkey1 == _conditionkey1 && !(_actualkey2 >= _conditionkey2));
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'lte':
-            return (_actualkey1 == _conditionkey1 && _actualkey2 <= _conditionkey2);
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'not lte':
-            return (_actualkey1 == _conditionkey1 && !(_actualkey2 <= _conditionkey2));
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'empty':
             return (!!!_actualkey1 && !!!_actualkey2);
         case 'not empty':
             return (!!_actualkey1 && !!_actualkey2);
         case 'contain':
-            return _actualkey1 && (_actualkey1.indexOf(_conditionkey1) >= 0) && (_actualkey2.indexOf(_conditionkey2) >= 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'not contain':
-            return _actualkey1 && (_actualkey1.indexOf(_conditionkey1) < 0) && (_actualkey2.indexOf(_conditionkey2) < 0);
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'regexp':
-            return _actualkey1 && (!!_actualkey1.match(_conditionkey1)) && (!!_actualkey2.match(_conditionkey2));
+            throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         default:
             throw new Error(`unrecognised operator ${operator} for doubleselect key1 ${_actualkey1} key2 ${_actualkey2} and condition key1 ${_conditionkey1} key2 ${_conditionkey2} comparison`);
     }
