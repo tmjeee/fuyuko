@@ -39,6 +39,7 @@ import {
 import moment from "moment";
 import {itemValueConvert} from "../conversion-item-value.service";
 import * as util from 'util';
+import {getAttributeInView, getAttributesInView} from "../attribute.service";
 
 const SQL: string = `
            SELECT 
@@ -113,7 +114,12 @@ interface BulkEditItem2 {
 }
 
 
-export const preview = async (viewId: number, changeClauses: ItemValueAndAttribute[], whenClauses: ItemValueOperatorAndAttribute[]): Promise<BulkEditPackage> => {
+export type PreviewItemValueAndAttribute = { itemValue: Value, attribute: {id: number}};
+export type PreviewItemValueOperatorAndAttribute = { itemValue: Value, attribute: {id: number}, operator: OperatorType };
+export const preview = async (viewId: number,
+                              changeClauses: PreviewItemValueAndAttribute[],
+                              whenClauses: PreviewItemValueOperatorAndAttribute[]):
+    Promise<BulkEditPackage> => {
 
     const bulkEditPackage: BulkEditPackage = await doInDbConnection(async (conn: Connection) => {
 
@@ -122,15 +128,15 @@ export const preview = async (viewId: number, changeClauses: ItemValueAndAttribu
         });
 
         const bulkEditItems: BulkEditItem[] = convertToBulkEditItems(matchedBulkEditItem2s, changeClauses,
-            whenClauses.map((wc: ItemValueOperatorAndAttribute) => {
+            whenClauses.map((wc: PreviewItemValueOperatorAndAttribute) => {
                 return {
                     operator: wc.operator,
                     itemValue: wc.itemValue,
                     attribute: attributeMap.get(`${wc.attribute.id}`)
                 } as ItemValueOperatorAndAttribute;
             }));
-        const changeAttributes: Attribute[] = changeClauses.map((c: ItemValueAndAttribute) => attributeMap.get(`${c.attribute.id}`));
-        const whenAttributes: Attribute[] = whenClauses.map((w: ItemValueOperatorAndAttribute) => attributeMap.get(`${w.attribute.id}`));
+        const changeAttributes: Attribute[] = changeClauses.map((c: PreviewItemValueAndAttribute) => attributeMap.get(`${c.attribute.id}`));
+        const whenAttributes: Attribute[] = whenClauses.map((w: PreviewItemValueOperatorAndAttribute) => attributeMap.get(`${w.attribute.id}`));
         const r = {
             changeAttributes,
             whenAttributes,
@@ -144,7 +150,7 @@ export const preview = async (viewId: number, changeClauses: ItemValueAndAttribu
 const getBulkEditItem2s = async (conn: Connection,
                                  viewId: number,
                                  parentItemId: number,
-                                 whenClauses: ItemValueOperatorAndAttribute[]):
+                                 whenClauses: PreviewItemValueOperatorAndAttribute[]):
     Promise<{b: BulkEditItem2[], m: Map<string /* attributeId */, Attribute>}> => {
 
     const q: QueryA = !!parentItemId ?
@@ -271,12 +277,17 @@ const getBulkEditItem2s = async (conn: Connection,
             }, new Map()
         );
 
-    const matchedBulkEditItem2s: BulkEditItem2[] = bulkEditItem2s.filter((b: BulkEditItem2) => {
+    const matchedBulkEditItem2s: BulkEditItem2[] = [];
+    for (const b of bulkEditItem2s) {
         let r: boolean = false;
+
+        L2:
         for (const itemValueOperatorAndAttribute of whenClauses) {
             const value: Value = itemValueOperatorAndAttribute.itemValue;
-            const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
+            const attributeId: number = itemValueOperatorAndAttribute.attribute.id;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;
+            const attribute: Attribute = await getAttributeInView(viewId, attributeId);
+
 
             if (!b.metadatas || !b.metadatas.length) { // no metadatas which means there is no value for the item attribute
                 // return true;
@@ -286,19 +297,22 @@ const getBulkEditItem2s = async (conn: Connection,
                         const v2: string = undefined; // from actual item attribute value
 
                         const b: boolean =  compareString(v1, v2, operator);
-                        return b;
+                        r = b;
+                        break L2;
                     }
                     case "text": {
                         const v1: string = (value ? (value.val as TextValue).value : null); // from rest api
                         const v2: string =  undefined; // from actual item attribute value
 
-                        return compareString(v1, v2, operator);
+                        r = compareString(v1, v2, operator);
+                        break L2;
                     }
                     case "number": {
                         const v1: number = (value ? (value.val as NumberValue).value : null);
                         const v2: number = undefined;  // from actual item attribute value
 
-                        return compareNumber(v1, v2, operator);
+                        r = compareNumber(v1, v2, operator);
+                        break L2;
                     }
                     case "area": {
                         // from REST api
@@ -309,7 +323,8 @@ const getBulkEditItem2s = async (conn: Connection,
                         const v2: number = undefined;
                         const u2: AreaUnits = undefined;
 
-                        return compareArea(v1, u1, v2, u2, operator);
+                        r = compareArea(v1, u1, v2, u2, operator);
+                        break L2;
                     }
                     case "currency": {
                         const v1: number = (value ? (value.val as CurrencyValue).value : null);
@@ -318,14 +333,15 @@ const getBulkEditItem2s = async (conn: Connection,
                         const v2: number = undefined;
                         const u2: CountryCurrencyUnits = undefined;
 
-                        return compareCurrency(v1, u1, v2, u2, operator);
+                        r = compareCurrency(v1, u1, v2, u2, operator);
                     }
                     case "date": {
                         const format = attribute.format ? attribute.format : DATE_FORMAT;
                         const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
                         const v2: moment.Moment = undefined;
 
-                        return compareDate(v1, v2, operator);
+                        r = compareDate(v1, v2, operator);
+                        break L2;
                     }
                     case "dimension": {
                         const h1: number = (value ? ((value.val) as DimensionValue).height: null);
@@ -338,7 +354,8 @@ const getBulkEditItem2s = async (conn: Connection,
                         const l2: number = undefined;
                         const u2: DimensionUnits =  undefined;
 
-                        return compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
+                        r = compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
+                        break L2;
                     }
                     case "height": {
                         const v1: number = (value ? (value.val as HeightValue).value : null);
@@ -347,7 +364,8 @@ const getBulkEditItem2s = async (conn: Connection,
                         const v2: number = undefined;
                         const u2: HeightUnits = undefined;
 
-                        return compareHeight(v1, u1, v2, u2, operator);
+                        r = compareHeight(v1, u1, v2, u2, operator);
+                        break L2;
                     }
                     case "length": {
                         const v1: number = (value ? (value.val as LengthValue).value : null);
@@ -356,7 +374,8 @@ const getBulkEditItem2s = async (conn: Connection,
                         const v2: number = undefined;
                         const u2: LengthUnits = undefined;
 
-                        return compareLength(v1, u1, v2, u2, operator);
+                        r = compareLength(v1, u1, v2, u2, operator);
+                        break L2;
                     }
                     case "volume": {
                         const v1: number = (value ? (value.val as VolumeValue).value : null);
@@ -365,7 +384,8 @@ const getBulkEditItem2s = async (conn: Connection,
                         const v2: number = undefined;
                         const u2: VolumeUnits = undefined;
 
-                        return compareVolume(v1, u1, v2, u2, operator);
+                        r = compareVolume(v1, u1, v2, u2, operator);
+                        break L2;
                     }
                     case "width": {
                         const v1: number = (value ? (value.val as WidthValue).value : null);
@@ -374,7 +394,8 @@ const getBulkEditItem2s = async (conn: Connection,
                         const v2: number = undefined;
                         const u2: WidthUnits = undefined;
 
-                        return compareWidth(v1, u1, v2, u2, operator);
+                        r = compareWidth(v1, u1, v2, u2, operator);
+                        break L2;
                     }
                     case 'weight': {
                         const v1: number = (value ? (value.val as WeightValue).value : null);
@@ -383,13 +404,15 @@ const getBulkEditItem2s = async (conn: Connection,
                         const v2: number = undefined;
                         const u2: WeightUnits = undefined;
 
-                        return compareWeight(v1, u1, v2, u2, operator);
+                        r = compareWeight(v1, u1, v2, u2, operator);
+                        break L2;
                     }
                     case "select": {
                         const k1: string = (value ? (value.val as SelectValue).key : null);
                         const k2: string = undefined;
 
-                        return compareSelect(k1, k2, operator);
+                        r = compareSelect(k1, k2, operator);
+                        break L2;
                     }
                     case "doubleselect": {
                         const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null);
@@ -398,7 +421,8 @@ const getBulkEditItem2s = async (conn: Connection,
                         const kOne2: string = undefined;
                         const kTwo2: string = undefined;
 
-                        return compareDoubleselect(kOne1, kTwo1, kOne1, kOne2, operator);
+                        r = compareDoubleselect(kOne1, kTwo1, kOne1, kOne2, operator);
+                        break L2;
                     }
                 }
             } else {
@@ -573,18 +597,20 @@ const getBulkEditItem2s = async (conn: Connection,
                 }
             }
         }
-        return r; // this bulkEditItem2 do not match the 'when' criteria
-    });
+        if (r) {    // this bulkEditItem2 do not match the 'when' criteria
+            matchedBulkEditItem2s.push(b)
+        }
+    };
     return { b: matchedBulkEditItem2s, m: attMap};
 }
 
-const convertToBulkEditItems = (b2s: BulkEditItem2[], changes: ItemValueAndAttribute[], whens: ItemValueOperatorAndAttribute[]): BulkEditItem[] => {
+const convertToBulkEditItems = (b2s: BulkEditItem2[], changes: PreviewItemValueAndAttribute[], whens: ItemValueOperatorAndAttribute[]): BulkEditItem[] => {
     return b2s.map((b2: BulkEditItem2) => convertToBulkEditItem(b2, changes, whens));
 }
 
 
-const convertToBulkEditItem = (b2: BulkEditItem2, changes: ItemValueAndAttribute[], whens: ItemValueOperatorAndAttribute[]): BulkEditItem => {
-    const c = changes.reduce((acc: any, change: ItemValueAndAttribute) => {
+const convertToBulkEditItem = (b2: BulkEditItem2, changes: PreviewItemValueAndAttribute[], whens: ItemValueOperatorAndAttribute[]): BulkEditItem => {
+    const c = changes.reduce((acc: any, change: PreviewItemValueAndAttribute) => {
         const met: ItemMetadata2 = b2.metadatas.find((m: ItemMetadata2) => m.attributeId === change.attribute.id);
         const attributeId: number = met ? met.attributeId: change.attribute.id;
         const _c = {

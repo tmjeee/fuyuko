@@ -3,7 +3,7 @@ import {ViewPage} from "../page-object/view.page";
 
 
 export const getMyself = (): any => {
-    const s: string = (localStorage.getItem('MY_APP_MYSELF'));
+    const s: string = (sessionStorage.getItem('MY_APP_MYSELF'));
     if (s) {
         return JSON.parse(s);
     }

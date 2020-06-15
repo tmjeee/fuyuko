@@ -124,15 +124,15 @@ export const itemValTypesRevert = (itemValTypes: ItemValTypes, attributeId: numb
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
-                        key: 'unit',
-                        value: v.unit,
-                        dataType: 'string'
-                    } as ItemMetadataEntry2,
-                    {
-                        id: -1,
                         key: 'value',
                         value: `${v.value ? v.value : ''}`,
                         dataType: 'number'
+                    } as ItemMetadataEntry2,
+                    {
+                        id: -1,
+                        key: 'unit',
+                        value: v.unit,
+                        dataType: 'string'
                     } as ItemMetadataEntry2,
                 ]
             } as ItemMetadata2];
@@ -153,6 +153,12 @@ export const itemValTypesRevert = (itemValTypes: ItemValTypes, attributeId: numb
                     } as ItemMetadataEntry2,
                     {
                         id: -1,
+                        key: 'length',
+                        value: `${v.length ? v.length : ''}`,
+                        dataType: 'number'
+                    } as ItemMetadataEntry2,
+                    {
+                        id: -1,
                         key: 'width',
                         value: `${v.width ? v.width : ''}`,
                         dataType: 'number'
@@ -161,12 +167,6 @@ export const itemValTypesRevert = (itemValTypes: ItemValTypes, attributeId: numb
                         id: -1,
                         key: 'height',
                         value: `${v.height ? v.height : ''}`,
-                        dataType: 'number'
-                    } as ItemMetadataEntry2,
-                    {
-                        id: -1,
-                        key: 'length',
-                        value: `${v.length ? v.length : ''}`,
                         dataType: 'number'
                     } as ItemMetadataEntry2,
                     {

@@ -599,7 +599,7 @@ export const compareDoubleselect = (_conditionkey1: string /* from REST Api */,
         case 'eq':
             return (_actualkey1 == _conditionkey1 && _actualkey2 == _conditionkey2);
         case 'not eq':
-            return (_actualkey1 !== _conditionkey1 && _actualkey2 !== _conditionkey2);
+            return (!(_actualkey1 == _conditionkey1 && _actualkey2 == _conditionkey2));
         case 'lt':
             throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'not lt':
@@ -619,7 +619,7 @@ export const compareDoubleselect = (_conditionkey1: string /* from REST Api */,
         case 'empty':
             return (!!!_actualkey1 && !!!_actualkey2);
         case 'not empty':
-            return (!!_actualkey1 && !!_actualkey2);
+            return (!(!!!_actualkey1 && !!!_actualkey2));
         case 'contain':
             throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'not contain':

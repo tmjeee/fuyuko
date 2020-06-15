@@ -102,7 +102,7 @@ export interface ItemMetadataEntry2 {
     id: number;
     key: string;
     value: string;
-    dataType: string;
+    dataType: 'string' | 'number';
 }
 
 // ======== Rule2

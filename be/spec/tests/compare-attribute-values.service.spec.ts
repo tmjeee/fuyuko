@@ -1,13 +1,21 @@
 import {
     compareArea,
     compareCurrency,
-    compareDate, compareDimension, compareNumber, compareString, compareVolume, compareWidth,
+    compareDate,
+    compareDimension, compareDoubleselect,
+    compareHeight,
+    compareLength,
+    compareNumber, compareSelect,
+    compareString,
+    compareVolume, compareWeight,
+    compareWidth,
     convertToCm,
     convertToCm2,
     convertToG,
     convertToMl
 } from "../../src/service/compare-attribute-values.service";
 import moment = require("moment");
+import {compare} from "semver";
 
 
 describe(`compare-attribute-values.service.spec`, () => {
@@ -698,60 +706,352 @@ describe(`compare-attribute-values.service.spec`, () => {
     // =================
     // === Height    ===
     // =================
-    it(`compareVolume empty`, () => { });
-    it(`compareVolume not empty`, () => { });
-    it(`compareVolume eq`, () => { });
-    it(`compareVolume not eq`, () => { });
-    it(`compareVolume gt`, () => { });
-    it(`compareVolume not gt`, () => { });
-    it(`compareVolume gte`, () => { });
-    it(`compareVolume not gte`, () => { });
-    it(`compareVolume lt`, () => { });
-    it(`compareVolume not lt`, () => { });
-    it(`compareVolume lte`, () => { });
-    it(`compareVolume not lte`, () => { });
+    it(`compareHeight empty`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'empty')).toBe(false);
+        expect(compareHeight(1.1, 'cm', undefined, 'cm', 'empty')).toBe(true);
+        expect(compareHeight(1.1, 'cm', null, 'cm', 'empty')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'empty')).toBe(false);
+        expect(compareHeight(undefined, 'cm', undefined, 'cm', 'empty')).toBe(true);
+        expect(compareHeight(null, 'cm', null, 'cm', 'empty')).toBe(true);
+    });
+    it(`compareHeight not empty`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'not empty')).toBe(true);
+        expect(compareHeight(1.1, 'cm', undefined, 'cm', 'not empty')).toBe(false);
+        expect(compareHeight(1.1, 'cm', null, 'cm', 'not empty')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'not empty')).toBe(true);
+        expect(compareHeight(undefined, 'cm', undefined, 'cm', 'not empty')).toBe(false);
+        expect(compareHeight(null, 'cm', null, 'cm', 'not empty')).toBe(false);
+    });
+    it(`compareHeight eq`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'eq')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'eq')).toBe(false);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'eq')).toBe(true);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'eq')).toBe(false);
+    });
+    it(`compareHeight not eq`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'not eq')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'not eq')).toBe(true);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'not eq')).toBe(false);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'not eq')).toBe(true);
+    });
+    it(`compareHeight gt`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'gt')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'gt')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.0, 'cm', 'gt')).toBe(false);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'gt')).toBe(false);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'gt')).toBe(true);
+        expect(compareHeight(1.1, 'm', 100, 'cm', 'gt')).toBe(false);
+    });
+    it(`compareHeight not gt`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'not gt')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'not gt')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.0, 'cm', 'not gt')).toBe(true);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'not gt')).toBe(true);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'not gt')).toBe(false);
+        expect(compareHeight(1.1, 'm', 100, 'cm', 'not gt')).toBe(true);
+    });
+    it(`compareHeight gte`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'gte')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'gte')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.0, 'cm', 'gte')).toBe(false);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'gte')).toBe(true);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'gte')).toBe(true);
+        expect(compareHeight(1.1, 'm', 100, 'cm', 'gte')).toBe(false);
+    });
+    it(`comapreHeight not gte`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'not gte')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'not gte')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.0, 'cm', 'not gte')).toBe(true);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'not gte')).toBe(false);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'not gte')).toBe(false);
+        expect(compareHeight(1.1, 'm', 100, 'cm', 'not gte')).toBe(true);
+    });
+    it(`compareHeight lt`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'lt')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'lt')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.0, 'cm', 'lt')).toBe(true);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'lt')).toBe(false);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'lt')).toBe(false);
+        expect(compareHeight(1.1, 'm', 100, 'cm', 'lt')).toBe(true);
+    });
+    it(`comapreHeight not lt`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'not lt')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'not lt')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.0, 'cm', 'not lt')).toBe(false);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'not lt')).toBe(true);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'not lt')).toBe(true);
+        expect(compareHeight(1.1, 'm', 100, 'cm', 'not lt')).toBe(false);
+    });
+    it(`compareHeight lte`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'lte')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'lte')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.0, 'cm', 'lte')).toBe(true);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'lte')).toBe(true);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'lte')).toBe(false);
+        expect(compareHeight(1.1, 'm', 100, 'cm', 'lte')).toBe(true);
+    });
+    it(`compareHeight not lte`, () => {
+        expect(compareHeight(1.1, 'cm', 1.1, 'cm', 'not lte')).toBe(false);
+        expect(compareHeight(1.1, 'cm', 1.2, 'cm', 'not lte')).toBe(true);
+        expect(compareHeight(1.1, 'cm', 1.0, 'cm', 'not lte')).toBe(false);
+        expect(compareHeight(1.1, 'm', 110, 'cm', 'not lte')).toBe(false);
+        expect(compareHeight(1.1, 'm', 210, 'cm', 'not lte')).toBe(true);
+        expect(compareHeight(1.1, 'm', 100, 'cm', 'not lte')).toBe(false);
+    });
     // =================
     // === Length    ===
     // =================
-    it(`compareVolume empty`, () => { });
-    it(`compareVolume not empty`, () => { });
-    it(`compareVolume eq`, () => { });
-    it(`compareVolume not eq`, () => { });
-    it(`compareVolume gt`, () => { });
-    it(`compareVolume not gt`, () => { });
-    it(`compareVolume gte`, () => { });
-    it(`compareVolume not gte`, () => { });
-    it(`compareVolume lt`, () => { });
-    it(`compareVolume not lt`, () => { });
-    it(`compareVolume lte`, () => { });
-    it(`compareVolume not lte`, () => { });
+    it(`compareLength empty`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'empty')).toBe(false);
+        expect(compareLength(1.1, 'cm', undefined, 'cm', 'empty')).toBe(true);
+        expect(compareLength(1.1, 'cm', null, 'cm', 'empty')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'empty')).toBe(false);
+        expect(compareLength(undefined, 'cm', undefined, 'cm', 'empty')).toBe(true);
+        expect(compareLength(null, 'cm', null, 'cm', 'empty')).toBe(true);
+    });
+    it(`compareLength not empty`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'not empty')).toBe(true);
+        expect(compareLength(1.1, 'cm', undefined, 'cm', 'not empty')).toBe(false);
+        expect(compareLength(1.1, 'cm', null, 'cm', 'not empty')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'not empty')).toBe(true);
+        expect(compareLength(undefined, 'cm', undefined, 'cm', 'not empty')).toBe(false);
+        expect(compareLength(null, 'cm', null, 'cm', 'not empty')).toBe(false);
+    });
+    it(`compareLength eq`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'eq')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'eq')).toBe(false);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'eq')).toBe(true);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'eq')).toBe(false);
+    });
+    it(`compareLength not eq`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'not eq')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'not eq')).toBe(true);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'not eq')).toBe(false);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'not eq')).toBe(true);
+    });
+    it(`compareLength gt`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'gt')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'gt')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.0, 'cm', 'gt')).toBe(false);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'gt')).toBe(false);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'gt')).toBe(true);
+        expect(compareLength(1.1, 'm', 100, 'cm', 'gt')).toBe(false);
+    });
+    it(`compareLength not gt`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'not gt')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'not gt')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.0, 'cm', 'not gt')).toBe(true);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'not gt')).toBe(true);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'not gt')).toBe(false);
+        expect(compareLength(1.1, 'm', 100, 'cm', 'not gt')).toBe(true);
+    });
+    it(`compareLength gte`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'gte')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'gte')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.0, 'cm', 'gte')).toBe(false);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'gte')).toBe(true);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'gte')).toBe(true);
+        expect(compareLength(1.1, 'm', 100, 'cm', 'gte')).toBe(false);
+    });
+    it(`comapreLength not gte`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'not gte')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'not gte')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.0, 'cm', 'not gte')).toBe(true);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'not gte')).toBe(false);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'not gte')).toBe(false);
+        expect(compareLength(1.1, 'm', 100, 'cm', 'not gte')).toBe(true);
+    });
+    it(`compareLength lt`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'lt')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'lt')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.0, 'cm', 'lt')).toBe(true);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'lt')).toBe(false);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'lt')).toBe(false);
+        expect(compareLength(1.1, 'm', 100, 'cm', 'lt')).toBe(true);
+    });
+    it(`compareLength not lt`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'not lt')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'not lt')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.0, 'cm', 'not lt')).toBe(false);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'not lt')).toBe(true);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'not lt')).toBe(true);
+        expect(compareLength(1.1, 'm', 100, 'cm', 'not lt')).toBe(false);
+    });
+    it(`compareLength lte`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'lte')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'lte')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.0, 'cm', 'lte')).toBe(true);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'lte')).toBe(true);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'lte')).toBe(false);
+        expect(compareLength(1.1, 'm', 100, 'cm', 'lte')).toBe(true);
+    });
+    it(`compareLength not lte`, () => {
+        expect(compareLength(1.1, 'cm', 1.1, 'cm', 'not lte')).toBe(false);
+        expect(compareLength(1.1, 'cm', 1.2, 'cm', 'not lte')).toBe(true);
+        expect(compareLength(1.1, 'cm', 1.0, 'cm', 'not lte')).toBe(false);
+        expect(compareLength(1.1, 'm', 110, 'cm', 'not lte')).toBe(false);
+        expect(compareLength(1.1, 'm', 210, 'cm', 'not lte')).toBe(true);
+        expect(compareLength(1.1, 'm', 100, 'cm', 'not lte')).toBe(false);
+    });
     // =================
     // === Weight    ===
     // =================
-    it(`compareVolume empty`, () => { });
-    it(`compareVolume not empty`, () => { });
-    it(`compareVolume eq`, () => { });
-    it(`compareVolume not eq`, () => { });
-    it(`compareVolume gt`, () => { });
-    it(`compareVolume not gt`, () => { });
-    it(`compareVolume gte`, () => { });
-    it(`compareVolume not gte`, () => { });
-    it(`compareVolume lt`, () => { });
-    it(`compareVolume not lt`, () => { });
-    it(`compareVolume lte`, () => { });
-    it(`compareVolume not lte`, () => { });
+    it(`compareWeight empty`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'empty')).toBe(false);
+        expect(compareWeight(1.1, 'g', undefined, 'g', 'empty')).toBe(true);
+        expect(compareWeight(1.1, 'g', null, 'g', 'empty')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'empty')).toBe(false);
+        expect(compareWeight(undefined, 'g', undefined, 'g', 'empty')).toBe(true);
+        expect(compareWeight(null, 'g', null, 'g', 'empty')).toBe(true);
+    });
+    it(`compareWeight not empty`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'not empty')).toBe(true);
+        expect(compareWeight(1.1, 'g', undefined, 'g', 'not empty')).toBe(false);
+        expect(compareWeight(1.1, 'g', null, 'g', 'not empty')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'not empty')).toBe(true);
+        expect(compareWeight(undefined, 'g', undefined, 'g', 'not empty')).toBe(false);
+        expect(compareWeight(null, 'g', null, 'g', 'not empty')).toBe(false);
+    });
+    it(`compareWeight eq`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'eq')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'eq')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'eq')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'eq')).toBe(false);
+    });
+    it(`compareWeight not eq`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'not eq')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'not eq')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'not eq')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'not eq')).toBe(true);
+    });
+    it(`compareWeight gt`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'gt')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'gt')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.0, 'g', 'gt')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'gt')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'gt')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 1000, 'g', 'gt')).toBe(false);
+    });
+    it(`compareWeight not gt`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'not gt')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'not gt')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.0, 'g', 'not gt')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'not gt')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'not gt')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 1000, 'g', 'not gt')).toBe(true);
+    });
+    it(`compareWeight gte`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'gte')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'gte')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.0, 'g', 'gte')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'gte')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'gte')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 1000, 'g', 'gte')).toBe(false);
+    });
+    it(`compareWeight not gte`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'not gte')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'not gte')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.0, 'g', 'not gte')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'not gte')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'not gte')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 1000, 'g', 'not gte')).toBe(true);
+    });
+    it(`compareWeight lt`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'lt')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'lt')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.0, 'g', 'lt')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'lt')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'lt')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 1000, 'g', 'lt')).toBe(true);
+    });
+    it(`compareWeight not lt`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'not lt')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'not lt')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.0, 'g', 'not lt')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'not lt')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'not lt')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 1000, 'g', 'not lt')).toBe(false);
+    });
+    it(`compareWeight lte`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'lte')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'lte')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.0, 'g', 'lte')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'lte')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'lte')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 1000, 'g', 'lte')).toBe(true);
+    });
+    it(`compareWeight not lte`, () => {
+        expect(compareWeight(1.1, 'g', 1.1, 'g', 'not lte')).toBe(false);
+        expect(compareWeight(1.1, 'g', 1.2, 'g', 'not lte')).toBe(true);
+        expect(compareWeight(1.1, 'g', 1.0, 'g', 'not lte')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 1100, 'g', 'not lte')).toBe(false);
+        expect(compareWeight(1.1, 'kg', 2100, 'g', 'not lte')).toBe(true);
+        expect(compareWeight(1.1, 'kg', 1000, 'g', 'not lte')).toBe(false);
+    });
     // =================
     // === Select    ===
     // =================
-    it(`compareVolume empty`, () => { });
-    it(`compareVolume not empty`, () => { });
-    it(`compareVolume eq`, () => { });
-    it(`compareVolume not eq`, () => { });
+    it(`compareSelect empty`, () => {
+        expect(compareSelect('key1', 'key1', 'empty')).toBe(false);
+        expect(compareSelect('key1', null, 'empty')).toBe(true);
+        expect(compareSelect('key1', undefined, 'empty')).toBe(true);
+        expect(compareSelect('key1', '', 'empty')).toBe(true);
+        expect(compareSelect('', 'key1', 'empty')).toBe(false);
+        expect(compareSelect(null, null, 'empty')).toBe(true);
+        expect(compareSelect(undefined, undefined, 'empty')).toBe(true);
+        expect(compareSelect('key1', '', 'empty')).toBe(true);
+    });
+    it(`compareSelect not empty`, () => {
+        expect(compareSelect('key1', 'key1', 'not empty')).toBe(true);
+        expect(compareSelect('key1', null, 'not empty')).toBe(false);
+        expect(compareSelect('key1', undefined, 'not empty')).toBe(false);
+        expect(compareSelect('key1', '', 'not empty')).toBe(false);
+        expect(compareSelect('', 'key1', 'not empty')).toBe(true);
+        expect(compareSelect(null, null, 'not empty')).toBe(false);
+        expect(compareSelect(undefined, undefined, 'not empty')).toBe(false);
+        expect(compareSelect('key1', '', 'not empty')).toBe(false);
+    });
+    it(`compareSelect eq`, () => {
+        expect(compareSelect('key1', 'key1', 'eq')).toBe(true);
+        expect(compareSelect('key1', 'key12', 'eq')).toBe(false);
+        expect(compareSelect('', '', 'eq')).toBe(true);
+        expect(compareSelect(undefined, undefined, 'eq')).toBe(true);
+        expect(compareSelect(null, null, 'eq')).toBe(true);
+    });
+    it(`compareSelect not eq`, () => {
+        expect(compareSelect('key1', 'key1', 'not eq')).toBe(false);
+        expect(compareSelect('key1', 'key12', 'not eq')).toBe(true);
+        expect(compareSelect('', '', 'not eq')).toBe(false);
+        expect(compareSelect(undefined, undefined, 'not eq')).toBe(false);
+        expect(compareSelect(null, null, 'not eq')).toBe(false);
+    });
     // =====================
     // === Doubleselect  ===
     // =====================
-    it(`compareVolume empty`, () => { });
-    it(`compareVolume not empty`, () => { });
-    it(`compareVolume eq`, () => { });
-    it(`compareVolume not eq`, () => { });
+    it(`compareDoubleselect empty`, () => {
+        expect(compareDoubleselect('key1', 'kkey1', 'key1', 'kkey1', 'empty')).toBe(false);
+        expect(compareDoubleselect('key1', 'kkey1', 'key1', '', 'empty')).toBe(false);
+        expect(compareDoubleselect('key1', 'kkey1', '', 'kkey1', 'empty')).toBe(false);
+        expect(compareDoubleselect('key1', 'kkey1', '', '', 'empty')).toBe(true);
+        expect(compareDoubleselect('key1', 'kkey1', null, null, 'empty')).toBe(true);
+        expect(compareDoubleselect('key1', 'kkey1', undefined, undefined, 'empty')).toBe(true);
+    });
+    it(`compareDoubleselect not empty`, () => {
+        expect(compareDoubleselect('key1', 'kkey1', 'key1', 'kkey1', 'not empty')).toBe(true);
+        expect(compareDoubleselect('key1', 'kkey1', 'key1', '', 'not empty')).toBe(true);
+        expect(compareDoubleselect('key1', 'kkey1', '', 'kkey1', 'not empty')).toBe(true);
+        expect(compareDoubleselect('key1', 'kkey1', '', '', 'not empty')).toBe(false);
+        expect(compareDoubleselect('key1', 'kkey1', null, null, 'not empty')).toBe(false);
+        expect(compareDoubleselect('key1', 'kkey1', undefined, undefined, 'not empty')).toBe(false);
+    });
+    it(`compareDoubleselect eq`, () => {
+        expect(compareDoubleselect('key1', 'kkey1', 'key1', 'kkey1', 'eq')).toBe(true);
+        expect(compareDoubleselect('key1', 'kkey1', 'key1', 'kkey1x', 'eq')).toBe(false);
+        expect(compareDoubleselect('key1', 'kkey1', 'key1x', 'kkey1', 'eq')).toBe(false);
+    });
+    it(`compareDoubleselect not eq`, () => {
+        expect(compareDoubleselect('key1', 'kkey1', 'key1', 'kkey1', 'not eq')).toBe(false);
+        expect(compareDoubleselect('key1', 'kkey1', 'key1', 'kkey1x', 'not eq')).toBe(true);
+        expect(compareDoubleselect('key1', 'kkey1', 'key1x', 'kkey1', 'not eq')).toBe(true);
+    });
 });
