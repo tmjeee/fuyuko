@@ -579,12 +579,13 @@ const getBulkEditItem2s = async (conn: Connection,
                                 const eOne: ItemMetadataEntry2 = findEntry(m.entries, 'key1');
                                 const eTwo: ItemMetadataEntry2 = findEntry(m.entries, 'key2');
 
-                                const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null);
-                                const kTwo1: string = (value ? (value.val as DoubleSelectValue).key2 : null);
-                                const kOne2: string = eOne ? eOne.value : undefined;
-                                const kTwo2: string = eTwo ? eTwo.value : undefined;
+                                const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null); // condition
+                                const kTwo1: string = (value ? (value.val as DoubleSelectValue).key2 : null);  // condition
+                                const kOne2: string = eOne ? eOne.value : undefined;  // actual
+                                const kTwo2: string = eTwo ? eTwo.value : undefined;   // actual
 
-                                return compareDoubleselect(kOne1, kTwo1, kOne1, kOne2, operator);
+                                const r = compareDoubleselect(kOne1, kTwo1, kOne2, kTwo2, operator);
+                                return r;
                             }
                         }
                         return true;

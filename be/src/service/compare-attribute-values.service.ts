@@ -116,27 +116,27 @@ export const compareNumber = (condition: number, /* from REST api */
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual == condition);
+            return (actual && actual == condition);
         case "gt":
-            return (actual > condition);
+            return (actual && actual > condition);
         case "gte":
-            return (actual >= condition);
+            return (actual && actual >= condition);
         case "lt":
-            return (actual < condition);
+            return (actual && actual < condition);
         case "lte":
-            return (actual <= condition);
+            return (actual && actual <= condition);
         case "not empty":
             return (!!actual)
         case "not eq":
-            return (actual != condition);
+            return (actual && actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            return (actual && !(actual > condition));
         case "not gte":
-            return (!(actual >= condition));
+            return (actual && !(actual >= condition));
         case "not lt":
-            return (!(actual < condition));
+            return (actual && !(actual < condition));
         case "not lte":
-            return (!(actual <= condition));
+            return (actual && !(actual <= condition));
         case 'contain':
             throw new Error(`Unsupported operation on ${operator} for value of type number`);
         case 'not contain':
@@ -200,27 +200,27 @@ export const compareCurrency = (condition: number /* from REST Api */,
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual == condition);
+            return (actual && actual == condition);
         case "gt":
-            return (actual > condition);
+            return (actual && actual > condition);
         case "gte":
-            return (actual >= condition);
+            return (actual && actual >= condition);
         case "lt":
-            return (actual < condition);
+            return (actual && actual < condition);
         case "lte":
-            return (actual <= condition);
+            return (actual && actual <= condition);
         case "not empty":
             return (!!actual)
         case "not eq":
-            return (actual != condition);
+            return (actual && actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            return (actual && !(actual > condition));
         case "not gte":
-            return (!(actual >= condition));
+            return (actual && !(actual >= condition));
         case "not lt":
-            return (!(actual < condition));
+            return (actual && !(actual < condition));
         case "not lte":
-            return (!(actual <= condition));
+            return (actual && !(actual <= condition));
         case 'contain':
             throw new Error(`Unsupported operation on ${operator} for value of type currency`);
         case 'not contain':
@@ -244,27 +244,27 @@ export const compareVolume = (_condition: number /* from REST Api */,
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual == condition);
+            return (actual && actual == condition);
         case "gt":
-            return (actual > condition);
+            return (actual && actual > condition);
         case "gte":
-            return (actual >= condition);
+            return (actual && actual >= condition);
         case "lt":
-            return (actual < condition);
+            return (actual && actual < condition);
         case "lte":
-            return (actual <= condition);
+            return (actual && actual <= condition);
         case "not empty":
             return (!!actual)
         case "not eq":
-            return (actual != condition);
+            return (actual && actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            return (actual && !(actual > condition));
         case "not gte":
-            return (!(actual >= condition));
+            return (actual && !(actual >= condition));
         case "not lt":
-            return (!(actual < condition));
+            return (actual && !(actual < condition));
         case "not lte":
-            return (!(actual <= condition));
+            return (actual && !(actual <= condition));
         case 'contain':
             throw new Error(`Unsupported operation on ${operator} for value of type volume`);
         case 'not contain':
@@ -341,27 +341,27 @@ export const compareArea = (_condition: number /* from REST Api */,
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual == condition);
+            return (actual && actual == condition);
         case "gt":
-            return (actual > condition);
+            return (actual && actual > condition);
         case "gte":
-            return (actual >= condition);
+            return (actual && actual >= condition);
         case "lt":
-            return (actual < condition);
+            return (actual && actual < condition);
         case "lte":
-            return (actual <= condition);
+            return (actual && actual <= condition);
         case "not empty":
             return (!!actual)
         case "not eq":
-            return (actual != condition);
+            return (actual && actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            return (actual && !(actual > condition));
         case "not gte":
-            return (!(actual >= condition));
+            return (actual && !(actual >= condition));
         case "not lt":
-            return (!(actual < condition));
+            return (actual && !(actual < condition));
         case "not lte":
-            return (!(actual <= condition));
+            return (actual && !(actual <= condition));
         case 'contain':
             throw new Error(`Unsupported operation on ${operator} for value of type area`);
         case 'not contain':
@@ -386,27 +386,27 @@ export const compareWidth = (_condition: number /* from REST Api */,
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual == condition);
+            return (actual && actual == condition);
         case "gt":
-            return (actual > condition);
+            return (actual && actual > condition);
         case "gte":
-            return (actual >= condition);
+            return (actual && actual >= condition);
         case "lt":
-            return (actual < condition);
+            return (actual && actual < condition);
         case "lte":
-            return (actual <= condition);
+            return (actual && actual <= condition);
         case "not empty":
             return (!!actual)
         case "not eq":
-            return (actual != condition);
+            return (actual && actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            return (actual && !(actual > condition));
         case "not gte":
-            return (!(actual >= condition));
+            return (actual && !(actual >= condition));
         case "not lt":
-            return (!(actual < condition));
+            return (actual && !(actual < condition));
         case "not lte":
-            return (!(actual <= condition));
+            return (actual && !(actual <= condition));
         case 'contain':
             throw new Error(`Unsupported operation on ${operator} for value of type width`);
         case 'not contain':
@@ -431,27 +431,27 @@ export const compareWeight = (_condition: number /* from REST Api */,
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual == condition);
+            return (actual && actual == condition);
         case "gt":
-            return (actual > condition);
+            return (actual && actual > condition);
         case "gte":
-            return (actual >= condition);
+            return (actual && actual >= condition);
         case "lt":
-            return (actual < condition);
+            return (actual && actual < condition);
         case "lte":
-            return (actual <= condition);
+            return (actual && actual <= condition);
         case "not empty":
             return (!!actual)
         case "not eq":
-            return (actual != condition);
+            return (actual && actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            return (actual && !(actual > condition));
         case "not gte":
-            return (!(actual >= condition));
+            return (actual && !(actual >= condition));
         case "not lt":
-            return (!(actual < condition));
+            return (actual && !(actual < condition));
         case "not lte":
-            return (!(actual <= condition));
+            return (actual && !(actual <= condition));
         case 'contain':
             throw new Error(`Unsupported operation on ${operator} for value of type weight`);
         case 'not contain':
@@ -475,27 +475,27 @@ export const compareHeight = (_condition: number /* from REST Api */,
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual == condition);
+            return (actual && actual == condition);
         case "gt":
-            return (actual > condition);
+            return (actual && actual > condition);
         case "gte":
-            return (actual >= condition);
+            return (actual && actual >= condition);
         case "lt":
-            return (actual < condition);
+            return (actual && actual < condition);
         case "lte":
-            return (actual <= condition);
+            return (actual && actual <= condition);
         case "not empty":
             return (!!actual)
         case "not eq":
-            return (actual != condition);
+            return (actual && actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            return (actual && !(actual > condition));
         case "not gte":
-            return (!(actual >= condition));
+            return (actual && !(actual >= condition));
         case "not lt":
-            return (!(actual < condition));
+            return (actual && !(actual < condition));
         case "not lte":
-            return (!(actual <= condition));
+            return (actual && !(actual <= condition));
         case 'contain':
             throw new Error(`Unsupported operation on ${operator} for value of type height`);
         case 'not contain':
@@ -519,27 +519,27 @@ export const compareLength = (_condition: number /* from REST Api */,
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual == condition);
+            return (actual && actual == condition);
         case "gt":
-            return (actual > condition);
+            return (actual && actual > condition);
         case "gte":
-            return (actual >= condition);
+            return (actual && actual >= condition);
         case "lt":
-            return (actual < condition);
+            return (actual && actual < condition);
         case "lte":
-            return (actual <= condition);
+            return (actual && actual <= condition);
         case "not empty":
             return (!!actual)
         case "not eq":
-            return (actual != condition);
+            return (actual && actual != condition);
         case "not gt":
-            return (!(actual > condition));
+            return (actual && !(actual > condition));
         case "not gte":
-            return (!(actual >= condition));
+            return (actual && !(actual >= condition));
         case "not lt":
-            return (!(actual < condition));
+            return (actual && !(actual < condition));
         case "not lte":
-            return (!(actual <= condition));
+            return (actual && !(actual <= condition));
         case 'contain':
             throw new Error(`Unsupported operation on ${operator} for value of type length`);
         case 'not contain':
@@ -558,7 +558,7 @@ export const compareSelect = (condition: string /* from REST Api */,
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual == condition);
+            return (actual && actual == condition);
         case "gt":
             throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "gte":
@@ -570,7 +570,7 @@ export const compareSelect = (condition: string /* from REST Api */,
         case "not empty":
             return (!!actual);
         case "not eq":
-            return ( actual != condition);
+            return (actual && actual != condition);
         case "not gt":
             throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "not gte":
@@ -597,9 +597,9 @@ export const compareDoubleselect = (_conditionkey1: string /* from REST Api */,
                                     operator: OperatorType): boolean => {
     switch (operator) {
         case 'eq':
-            return (_actualkey1 == _conditionkey1 && _actualkey2 == _conditionkey2);
+            return (_actualkey1 && _actualkey2 && (_actualkey1 == _conditionkey1) && (_actualkey2 == _conditionkey2));
         case 'not eq':
-            return (!(_actualkey1 == _conditionkey1 && _actualkey2 == _conditionkey2));
+            return (_actualkey1 && _actualkey2 && !(_actualkey1 == _conditionkey1 && _actualkey2 == _conditionkey2));
         case 'lt':
             throw new Error(`Unsupported operation on ${operator} for value of type doubleselect`);
         case 'not lt':

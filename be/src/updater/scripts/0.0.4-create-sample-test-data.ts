@@ -523,7 +523,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
        attributeId: numberAttribute.id,
        val: {
            type: 'number',
-           value:99
+           value: 11
        } as NumberValue
     } as Value);
     await updateItemValue(viewId, item1.id, {
