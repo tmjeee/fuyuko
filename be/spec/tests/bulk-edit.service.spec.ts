@@ -3409,7 +3409,7 @@ describe('bulk-edit.service', () => {
               } as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
-      expect(bulkEditPackage.bulkEditItems.length).toBe(1);
+      expect(bulkEditPackage.bulkEditItems.length).toBe(7);
   });
   it(`preview when condition (select empty)`, async () => {
       const bulkEditPackage: BulkEditPackage = await preview(view.id,
