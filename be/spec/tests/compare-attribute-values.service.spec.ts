@@ -1018,7 +1018,6 @@ describe(`compare-attribute-values.service.spec`, () => {
         expect(compareSelect(undefined, undefined, 'eq')).toBe(true);
         expect(compareSelect(null, null, 'eq')).toBe(true);
     });
-    /*
     it(`compareSelect not eq`, () => {
         expect(compareSelect('key1', 'key1', 'not eq')).toBe(false);
         expect(compareSelect('key1', 'key12', 'not eq')).toBe(true);
@@ -1026,7 +1025,6 @@ describe(`compare-attribute-values.service.spec`, () => {
         expect(compareSelect(undefined, undefined, 'not eq')).toBe(false);
         expect(compareSelect(null, null, 'not eq')).toBe(false);
     });
-     */
     // =====================
     // === Doubleselect  ===
     // =====================

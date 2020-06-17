@@ -558,7 +558,7 @@ export const compareSelect = (condition: string /* from REST Api */,
         case "empty":
             return (!!!actual);
         case "eq":
-            return (actual && actual == condition);
+            return (actual == condition);
         case "gt":
             throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "gte":
@@ -570,7 +570,7 @@ export const compareSelect = (condition: string /* from REST Api */,
         case "not empty":
             return (!!actual);
         case "not eq":
-            return (actual && actual != condition);
+            return (actual != condition);
         case "not gt":
             throw new Error(`Unsupported operation on ${operator} for value of type select`);
         case "not gte":
