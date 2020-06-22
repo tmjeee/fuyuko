@@ -1,0 +1,6 @@
+@import "{{ site.theme }}";
+.page-header {
+  .project-name {
+    text-transform: capitalize;
+  }
+}
