@@ -27,7 +27,7 @@ export class BrowserLocationHistoryService {
     }
 
     clearStoredLastUrl() {
-        sessionStorage.setItem(LAST_URL_KEY, '');
+        sessionStorage.removeItem(LAST_URL_KEY);
     }
 
     retrieveLastUrl(): string {

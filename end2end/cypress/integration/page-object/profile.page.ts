@@ -8,7 +8,7 @@ export class ProfilePage  implements ActualPage<ProfilePage> {
     constructor() { }
 
     visit(): ProfilePage {
-        cy.visit(`/gen-layout/(profile//help:profile-help)`);
+        cy.visit(`/settings-layout/(profile//help:profile-help)`);
         this.waitForReady();
         return this;
     }

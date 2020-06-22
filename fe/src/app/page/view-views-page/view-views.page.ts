@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {ViewService} from '../../service/view-service/view.service';
-import {tap} from 'rxjs/operators';
+import {finalize, tap} from 'rxjs/operators';
 import {View} from '../../model/view.model';
 import {ViewTableComponentEvent} from '../../component/view-component/view-table.component';
 import {combineLatest, forkJoin} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
 import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -19,7 +20,9 @@ export class ViewViewsPageComponent implements OnInit {
 
     views: View[];
 
-    constructor(private viewService: ViewService, private notificationService: NotificationsService) {
+    constructor(private viewService: ViewService,
+                private notificationService: NotificationsService,
+                private loadingService: LoadingService) {
         this.done = false;
     }
 
@@ -29,12 +32,17 @@ export class ViewViewsPageComponent implements OnInit {
 
     reload() {
         this.done = false;
+        this.loadingService.startLoading();
         this.viewService
             .getAllViews()
             .pipe(
                 tap((v: View[]) => {
                     this.views = v;
                     this.done = true;
+                }),
+                finalize(() => {
+                    this.done = true;
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
     }

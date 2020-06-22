@@ -4,13 +4,14 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ViewService} from "../../service/view-service/view.service";
 import {NotificationsService} from "angular2-notifications";
 import {AttributeService} from "../../service/attribute-service/attribute.service";
-import {map, tap} from "rxjs/operators";
+import {finalize, map, tap} from "rxjs/operators";
 import {View} from "../../model/view.model";
 import {Subscription} from "rxjs";
 import {Attribute} from "../../model/attribute.model";
 import {EditAttributeComponentEvent} from "../../component/attribute-table-component/edit-attribute.component";
 import {ApiResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -30,11 +31,13 @@ export class AddAttributePageComponent implements OnInit {
                 private router: Router,
                 private viewService: ViewService,
                 private notificationService: NotificationsService,
-                private attributeService: AttributeService) {
+                private attributeService: AttributeService,
+                private loadingService: LoadingService) {
     }
 
     ngOnInit(): void {
         this.viewLoading = true;
+        this.loadingService.startLoading();
         this.subscription = this.viewService
             .asObserver()
             .pipe(
@@ -42,8 +45,12 @@ export class AddAttributePageComponent implements OnInit {
                     if (v) {
                         this.currentView = v;
                         this.reload();
-                        this.viewLoading = false;
                     }
+                    this.viewLoading = false;
+                }),
+                finalize(() => {
+                    this.viewLoading = false;
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
     }
@@ -60,7 +67,7 @@ export class AddAttributePageComponent implements OnInit {
                 ).subscribe();
                 break;
             case 'cancel':
-                await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['attributes'], help: ['view-help'] }}]);
+                await this.router.navigate(['/view-layout', {outlets: {primary: ['attributes'], help: ['view-help'] }}]);
                 break;
         }
     }

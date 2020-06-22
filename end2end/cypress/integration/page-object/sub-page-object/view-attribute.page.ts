@@ -21,7 +21,7 @@ export class ViewAttributePage implements ActualPage<ViewAttributePage> {
     }
 
     visit(): ViewAttributePage {
-        cy.visit('/view-gen-layout/(attributes//help:view-help)');
+        cy.visit('/view-layout/(attributes//help:view-help)');
         this.waitForReady();
         return this;
     }

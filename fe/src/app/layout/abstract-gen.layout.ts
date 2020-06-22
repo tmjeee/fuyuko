@@ -2,12 +2,13 @@ import {OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AppNotificationService} from '../service/app-notification-service/app-notification.service';
 import {ActivatedRoute, ActivatedRouteSnapshot, Router, Event as RouterEvent, NavigationEnd} from '@angular/router';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter, finalize, map, tap} from 'rxjs/operators';
 import {AppNotification} from '../model/notification.model';
 import {AuthService} from '../service/auth-service/auth.service';
 import {User} from '../model/user.model';
 import {SettingsService} from '../service/settings-service/settings.service';
 import {Settings} from '../model/settings.model';
+import {LoadingService} from "../service/loading-service/loading.service";
 
 export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
 
@@ -32,12 +33,14 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
               protected authService: AuthService,
               protected settingsService: SettingsService,
               protected router: Router,
-              protected route: ActivatedRoute) {
+              protected route: ActivatedRoute,
+              protected loadingService: LoadingService) {
   }
 
 
   ngOnInit(): void {
     this.loading = true;
+    this.loadingService.startLoading();
     const u: User = this.authService.myself();
     this.settingsService.getSettings(u).pipe(
         tap((s: Settings) => {
@@ -46,6 +49,10 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
           this.sideNavOpened = this.settings.openSideNav;
           this.subSideBarOpened = this.settings.openSubSideNav;
           this.loading = false;
+        }),
+        finalize(() => {
+            this.loading = false;
+            this.loadingService.stopLoading();
         })
     ).subscribe();
     this.routeSubSideNavData = this.findSubSideNavData([this.route.snapshot]);

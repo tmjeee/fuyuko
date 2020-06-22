@@ -49,8 +49,6 @@ export const update = async () => {
    await TBL_DATA_IMPORT_FILE();
    await TBL_DATA_EXPORT();
    await TBL_DATA_EXPORT_FILE();
-   await TBL_BULK_EDIT();
-   await TBL_BULK_EDIT_LOG();
    await TBL_JOB();
    await TBL_JOB_LOG();
    await TBL_VIEW_VALIDATION();
@@ -59,9 +57,8 @@ export const update = async () => {
    await TBL_USER_SETTING();
    await TBL_USER_NOTIFICATION();
    await TBL_CUSTOM_DATA_IMPORT();
-   await TBL_CUSTOM_DATA_IMPORT_FILE();
    await TBL_CUSTOM_DATA_EXPORT();
-   await TBL_CUSTOM_DATA_EXPORT_FILE();
+   await TBL_CUSTOM_BULK_EDIT();
    await TBL_VIEW_CATEGORY();
    await TBL_LOOKUP_VIEW_CATEGORY_ITEM();
    await TBL_FORGOT_PASSWORD();
@@ -131,19 +128,15 @@ const TBL_CUSTOM_DATA_EXPORT = async () => {
    });
 };
 
-const TBL_CUSTOM_DATA_EXPORT_FILE = async () => {
+const TBL_CUSTOM_BULK_EDIT = async () => {
    await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_CUSTOM_DATA_EXPORT_FILE (
+         CREATE TABLE IF NOT EXISTS TBL_CUSTOM_BULK_EDIT (
             ID INT PRIMARY KEY AUTO_INCREMENT,
-            CUSTOM_DATA_EXPORT_ID INT,
-            BATCH VARCHAR(200),
-            NAME VARCHAR(200),
-            MIME_TYPE VARCHAR(200),
-            SIZE INT,
-            CONTENT LONGBLOB,
+            NAME VARCHAR(200) NOT NULL,
+            DESCRIPTION VARCHAR(500),
             CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
          );
       `);
    });
@@ -162,25 +155,6 @@ const TBL_CUSTOM_DATA_IMPORT = async () => {
       `);
    });
 };
-
-const TBL_CUSTOM_DATA_IMPORT_FILE = async () => {
-   await doInDbConnection(async (conn: Connection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_CUSTOM_DATA_IMPORT_FILE (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            CUSTOM_DATA_IMPORT_ID INT,
-            BATCH VARCHAR(200),
-            NAME VARCHAR(200),
-            MIME_TYPE VARCHAR(200),
-            SIZE INT,
-            CONTENT LONGBLOB,
-            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-         );
-      `)
-   });
-};
-
 
 const TBL_USER_NOTIFICATION = async () => {
    await doInDbConnection(async (conn: Connection) => {
@@ -338,7 +312,10 @@ const TBL_AUDIT_LOG = async () => {
             CATEGORY VARCHAR(200) NOT NULL,
             LEVEL VARCHAR(200) NOT NULL,
             CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            LOG TEXT NOT NULL
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            REQUEST_UUID VARCHAR(200),
+            USER_ID INT,
+            LOG TEXT
          );
       `);
    })
@@ -892,35 +869,6 @@ const TBL_DATA_EXPORT_FILE = async () => {
    });
 }
 
-const TBL_BULK_EDIT = async () => {
-   await doInDbConnection(async (conn: Connection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_BULK_EDIT (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            NAME VARCHAR(200),
-            DESCRIPTION VARCHAR(500),
-            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-         );
-      `);
-   });
-};
-
-const TBL_BULK_EDIT_LOG = async () => {
-    await doInDbConnection(async (conn: Connection) => {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_BULK_EDIT_LOG (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            BULK_EDIT_ID INT,
-            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            LEVEL VARCHAR(200) NOT NULL,
-            LOG TEXT NOT NULL
-         );
-      `)
-    });
-};
-
 const TBL_JOB = async () => {
    await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
@@ -1013,8 +961,6 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_DATA_EXPORT ADD CONSTRAINT \`fk_tbl_data_export-1\` FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
       await conn.query(`ALTER TABLE TBL_DATA_EXPORT_FILE ADD CONSTRAINT \`fk_tbl_data_export_file-1\` FOREIGN KEY (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID) ON DELETE CASCADE`);
 
-      await conn.query(`ALTER TABLE TBL_BULK_EDIT_LOG ADD CONSTRAINT \`fk_tbl_bulk_edit_log-1\` FOREIGN KEY (BULK_EDIT_ID) REFERENCES TBL_BULK_EDIT(ID)`);
-
       await conn.query(`ALTER TABLE TBL_JOB_LOG ADD CONSTRAINT \`fk_tbl_job_log-1\` FOREIGN KEY (JOB_ID) REFERENCES TBL_JOB(ID) ON DELETE CASCADE`);
 
       await conn.query(`ALTER TABLE TBL_USER_SETTING ADD CONSTRAINT \`fk_tbl_user_setting-1\` FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE`);
@@ -1029,9 +975,6 @@ const ADD_FK_CONSTRAINT = async () => {
 
       await conn.query(`ALTER TABLE TBL_CUSTOM_RULE_VIEW ADD CONSTRAINT \`fk_tbl_custom_rule-1\` FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_CUSTOM_RULE_VIEW ADD CONSTRAINT \`fk_tbl_custom_rule-2\` FOREIGN KEY (CUSTOM_RULE_ID) REFERENCES TBL_CUSTOM_RULE(ID) ON DELETE CASCADE`);
-
-      await conn.query(`ALTER TABLE TBL_CUSTOM_DATA_IMPORT_FILE ADD CONSTRAINT \`fk_tbl_custom_data_import_file-1\` FOREIGN KEY (CUSTOM_DATA_IMPORT_ID) REFERENCES TBL_CUSTOM_DATA_IMPORT(ID) ON DELETE CASCADE`);
-      await conn.query(`ALTER TABLE TBL_CUSTOM_DATA_EXPORT_FILE ADD CONSTRAINT \`fk_tbl_custom_data_export_file-1\` FOREIGN KEY (CUSTOM_DATA_EXPORT_ID) REFERENCES TBL_CUSTOM_DATA_EXPORT(ID) ON DELETE CASCADE`);
 
       await conn.query(`ALTER TABLE TBL_VIEW_CATEGORY ADD CONSTRAINT \`fk_tbl_view_category-1\` FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_LOOKUP_VIEW_CATEGORY_ITEM ADD CONSTRAINT \`fk_tbl_lookup_view_category_item-1\` FOREIGN KEY (VIEW_CATEGORY_ID) REFERENCES TBL_VIEW_CATEGORY(ID) ON DELETE CASCADE`);

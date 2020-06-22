@@ -15,7 +15,7 @@ const URL_POST_ADD_CATEGORY = () => `${config().api_host_url}/view/:viewId/add-c
 const URL_DELETE_CATEGORY = () => `${config().api_host_url}/view/:viewId/category/:categoryId`;
 const URL_POST_UPDATE_CATEGORY = () => `${config().api_host_url}/view/:viewId/update-category`;
 const URL_POST_ADD_ITEM_TO_CATEGORY = () => `${config().api_host_url}/view/:viewId/category/:categoryId/item/:itemId`;
-const URL_POST_REMOVE_ITEM_FROM_CATEGORY = () => `${config().api_host_url}/view/:viewId/category/:categoryId/item:itemId`;
+const URL_POST_REMOVE_ITEM_FROM_CATEGORY = () => `${config().api_host_url}/view/:viewId/category/:categoryId/item/:itemId`;
 
 
 @Injectable()
@@ -99,7 +99,7 @@ export class CategoryService {
 
     removeItemsFromCategory(viewId: number, categoryId: number, items: CategorySimpleItem[]) {
         const q:Observable<ApiResponse>[] = items.map((i: CategorySimpleItem) =>
-            this.httpClient.delete<ApiResponse>(URL_POST_ADD_ITEM_TO_CATEGORY()
+            this.httpClient.delete<ApiResponse>(URL_POST_REMOVE_ITEM_FROM_CATEGORY()
                 .replace(':viewId', String(viewId))
                 .replace(':categoryId', String(categoryId))
                 .replace(':itemId', String(i.id))));

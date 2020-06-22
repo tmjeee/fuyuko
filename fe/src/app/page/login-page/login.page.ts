@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {map, tap} from 'rxjs/operators';
@@ -7,6 +7,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {SettingsService} from '../../service/settings-service/settings.service';
 import {BrowserLocationHistoryService} from '../../service/browser-location-history-service/browser-location-history.service';
 import {LoginResponse} from "../../model/api-response.model";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -14,13 +15,14 @@ import {LoginResponse} from "../../model/api-response.model";
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })
-export class LoginPageComponent implements AfterViewInit {
+export class LoginPageComponent implements OnInit, AfterViewInit {
 
   ready: boolean;
 
   formGroup: FormGroup;
   formControlUsername: FormControl;
   formControlPassword: FormControl;
+  formControlRememberMe: FormControl;
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
@@ -30,9 +32,11 @@ export class LoginPageComponent implements AfterViewInit {
               private router: Router) {
     this.formControlUsername = formBuilder.control('', [Validators.required]);
     this.formControlPassword = formBuilder.control('', [Validators.required]);
+    this.formControlRememberMe = formBuilder.control('', []);
     this.formGroup = this.formBuilder.group({
       username: this.formControlUsername,
-      password: this.formControlPassword
+      password: this.formControlPassword,
+      rememberMe: this.formControlRememberMe
     });
   }
 
@@ -43,7 +47,7 @@ export class LoginPageComponent implements AfterViewInit {
   onSubmit() {
     this.notificationService.remove();
     this.authService
-      .login(this.formControlUsername.value, this.formControlPassword.value)
+      .login(this.formControlUsername.value, this.formControlPassword.value, this.formControlRememberMe.value)
       .pipe(
         map((u: LoginResponse) => {
           if (u && u.status === 'SUCCESS') {
@@ -55,11 +59,14 @@ export class LoginPageComponent implements AfterViewInit {
               this.router.navigate(['/dashboard-layout', {outlets: {primary: ['dashboard'], help: ['dashboard-help']}}]);
             }
           } else {
-            this.notificationService.error('Error', 'Unexpected error logging in');
+            this.notificationService.error('Error', u.message);
           }
           return u;
         }),
       ).subscribe();
     return false;
+  }
+
+  ngOnInit(): void {
   }
 }

@@ -2,11 +2,10 @@
   <div class="search-container" *ngIf="enableSearch">
     <app-item-search (events)="onItemSearchEvent($event)"></app-item-search>
   </div>
-  <ng-container *ngIf="!loading">
   <div class="main-controls">
     <button type="button" [attr.test-button-add-item]="''" mat-flat-button color="primary" (click)="onAddItem($event)">Add</button>
     <button type="button" [attr.test-button-delete-items]="''" mat-flat-button color="primary" [disabled]="!selectionModel.hasValue()" (click)="onDeleteItem($event)">Delete</button>
-    <button type="button" [attr.test-button-save-items]="''" mat-flat-button color="primary" [disabled]="!hasItemModification()" (click)="onSave($event)">Save</button>
+    <button type="button" [attr.test-button-save-items]="''" mat-flat-button color="primary" [disabled]="!hasItemChanges()" (click)="onSave($event)">Save</button>
     <button type="button" [attr.test-button-reload-items]="''" mat-flat-button color="primary" (click)="onReload($event)">Reload</button>
     <button type="button" [attr.test-button-filter-items]="''" mat-flat-button color="primary" (click)="onFilter($event)">Filter</button>
   </div>
@@ -60,12 +59,24 @@
 
       <ng-container matColumnDef="creationDate">
         <mat-header-cell class="attribute-header" *matHeaderCellDef>Creation Date</mat-header-cell>
-        <mat-cell class="attribute" *matCellDef="let tableItem">{{tableItem.creationDate | date}}</mat-cell>
+        <mat-cell class="attribute read-only" *matCellDef="let tableItem">
+          <div fxLayout="row" fxLayoutAlign="stretch">
+            <div fxFlex="1 0 auto" fxFlexAlign="center">
+              {{tableItem.creationDate | date}}
+            </div>
+          </div>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="lastUpdate">
         <mat-header-cell class="attribute-header" *matHeaderCellDef>Last Update</mat-header-cell>
-        <mat-cell class="attribute" *matCellDef="let tableItem">{{tableItem.lastUpdate | date}}</mat-cell>
+        <mat-cell class="attribute read-only" *matCellDef="let tableItem">
+          <div fxLayout="row" fxLayoutAlign="stretch">
+            <div fxFlex="1 0 auto" fxFlexAlign="center">
+              {{tableItem.lastUpdate | date}}
+            </div>
+          </div>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="actions" sticky>
@@ -139,7 +150,6 @@
       <div>No Items</div>
     </div>
   </div>
-  </ng-container>
 </div>
 
 

@@ -8,7 +8,6 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-loading [show]="!ready"></app-loading>
             <app-jobs-listings
                     *ngIf="ready"
                     [jobs]="jobs"

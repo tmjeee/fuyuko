@@ -11,6 +11,7 @@ import {AuthService} from '../../service/auth-service/auth.service';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {User} from '../../model/user.model';
 import {PaginableApiResponse} from "../../model/api-response.model";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
     templateUrl: './partner-data-list.page.html',
@@ -28,7 +29,8 @@ export class PartnerDataListPageComponent implements OnInit {
 
     constructor(private partnerService: PartnerService,
                 private authService: AuthService,
-                private attributeService: AttributeService) {
+                private attributeService: AttributeService,
+                private loadingService: LoadingService) {
         this.loading = false;
     }
 
@@ -38,10 +40,14 @@ export class PartnerDataListPageComponent implements OnInit {
 
     ngOnInit(): void {
         const myself: User = this.authService.myself();
+        this.loadingService.startLoading();
         this.partnerService.getPartnerPricingStructures(myself.id)
             .pipe(
                 tap((ps: PricingStructure[]) => {
                     this.pricingStructures = ps;
+                }),
+                finalize(() => {
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
     }
@@ -51,6 +57,7 @@ export class PartnerDataListPageComponent implements OnInit {
         const pricingStructure: PricingStructure = $event.value;
         if (pricingStructure) {
             this.loading = true;
+            this.loadingService.startLoading();
             this.partnerService.getPartnerPriceItems(pricingStructure.id).pipe(
                 tap((i: PricedItem[]) => {
                     this.pricedItems = i;
@@ -64,6 +71,7 @@ export class PartnerDataListPageComponent implements OnInit {
                 }),
                 finalize(() => {
                     this.loading = false;
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
         }

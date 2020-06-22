@@ -28,13 +28,17 @@ export class DataEditorComponent {
     const matDialogRef: MatDialogRef<DataEditorDialogComponent> = this.matDialog.open(DataEditorDialogComponent, {
       height: '90vh',
       width: '90vw',
-      data: this.itemValueAndAttribute
+      data: {
+        itemValue: {...this.itemValueAndAttribute.itemValue},
+        attribute: {...this.itemValueAndAttribute.attribute}
+      } as ItemValueAndAttribute
     });
     matDialogRef
       .afterClosed()
       .pipe(
-        map((itemAndAttribute: TableItemAndAttribute) => {
+        map((itemAndAttribute: ItemValueAndAttribute) => {
           if (itemAndAttribute) { // 'ok' is clicked when closing dialog
+            this.itemValueAndAttribute.itemValue = itemAndAttribute.itemValue;
             this.events.emit(this.itemValueAndAttribute);
           }
         })

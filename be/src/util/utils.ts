@@ -1,4 +1,5 @@
 import {LimitOffset} from "../model/limit-offset.model";
+import {Request} from 'express';
 
 export function range(start: number, stop: number, step: number = 1) {
     if (typeof stop == 'undefined') {
@@ -32,7 +33,9 @@ export const isOffset = (offset: string): boolean => {
     return (!isNaN(Number(offset)) && Number.isInteger(Number(offset)) && Number(offset) >= 0) ? true : false;
 }
 
-export const toLimitOffset = (limit: string, offset: string): LimitOffset => {
+export const toLimitOffset = (req: Request): LimitOffset => {
+    const limit = req.query.limit;
+    const offset = req.query.offset;
     const _isLimit = isLimit(limit);
     const _isOffset = isOffset(offset);
     if (_isLimit && _isOffset) {

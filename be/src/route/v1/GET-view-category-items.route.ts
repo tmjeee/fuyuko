@@ -20,7 +20,7 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const categoryId: number = Number(req.params.categoryId);
-        const limitOffset: LimitOffset = toLimitOffset(req.query.limit, req.query.offset);
+        const limitOffset: LimitOffset = toLimitOffset(req);
 
         const total: number = await getViewCategoryItemsCount(viewId, categoryId);
         const items: Item[] = await getViewCategoryItems(viewId, categoryId, limitOffset);

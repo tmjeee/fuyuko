@@ -7,7 +7,6 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-loading [show]="!ready"></app-loading>
             <app-custom-export-wizard
                     *ngIf="ready"
                     [attr.test-custom-export-wizard]="''"

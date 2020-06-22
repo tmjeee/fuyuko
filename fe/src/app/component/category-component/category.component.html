@@ -1,13 +1,13 @@
 <div class="category-component">
-    <mat-sidenav-container [autosize]="true">
-        <mat-sidenav mode="side" [opened]="showCategorySidebar" [fixedInViewport]="true" [fixedTopGap]="130">
+    <!--app-loading [show]="loading"></app-loading-->
+    <div fxLayout="row" fxLayoutGap="15px">
+        <div fxFlex="0 0 20%">
             <app-category-tree [categoriesWithItems]="categoriesWithItems"
                                (events)="onCategoryTreeEvent($event)">
             </app-category-tree>
-        </mat-sidenav>
-        <mat-sidenav-content>
-            <app-loading [show]="loading"></app-loading>
-            <div *ngIf="!loading && displayType === 'category'">
+        </div>
+        <div fxFlex="0 0 80%">
+            <ng-container *ngIf="!loading && displayType === 'category'">
                 <div class="view-switch">
                     <mat-icon matTooltip="Toogle category sidebar" (click)="toggleCategorySideBar($event)">menu</mat-icon>
                     <mat-icon matTooltip="Tablular View" (click)="switchToTabularView($event)">view_quilt</mat-icon>     <!-- tabular -->
@@ -15,8 +15,9 @@
                     <mat-icon matTooltip="List View" (click)="switchToListView($event)">view_list</mat-icon>      <!-- list -->
                 </div>
                 <div>
-                    <div class="table-container" *ngIf="viewType === 'table'">
+                    <div class="table-container" *ngIf="viewType === 'table'" fxLayout="column">
                         <app-data-table [itemAndAttributeSet]="tableItemAndAttributeSet"
+                                        fxFlex="1 1 auto"
                                         [enableSearch]="false"
                                         (events)="onDataTableEvent($event)"
                                         (carouselEvent)="onDataTableCarouselEvent($event)"
@@ -36,13 +37,12 @@
                                        [enableSearch]="false"
                                        (events)="onListEvent($event)"
                                        (searchEvents)="onListSearchEvent($event)"
-                                       (carouselEvents)="onListCarouselEvent($event)"
-                                       >
+                                       (carouselEvents)="onListCarouselEvent($event)">
                         </app-data-list>
                     </div>
                     <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
                 </div>
-            </div>
+            </ng-container>
             <ng-container *ngIf="!loading && displayType === 'item'">
                 <div>
                     <app-item-info [attributes]="attributes"
@@ -53,6 +53,6 @@
                     </app-item-info>
                 </div>
             </ng-container>
-        </mat-sidenav-content>
-    </mat-sidenav-container>
+        </div>
+    </div>
 </div>

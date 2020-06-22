@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "start": "npx ng serve",
+    "build": "npx ng build",
+    "test": "npx ng test",
+    "lint": "npx ng lint",
+    "e2e": "npx ng e2e"
   },
   "private": false,
   "author": "tmjeee",
@@ -25,7 +25,9 @@
     "@angular/platform-browser": "~9.0.0",
     "@angular/platform-browser-dynamic": "~9.0.0",
     "@angular/router": "~9.0.0",
+    "angular-google-charts": "^1.1.4",
     "angular2-notifications": "^9.0.0",
+    "animate.css": "^4.1.0",
     "bson": "^4.0.2",
     "buffer": "^5.4.3",
     "core-js": "^2.5.4",

@@ -21,7 +21,7 @@ export class ViewRulePage implements ActualPage<ViewRulePage> {
     }
 
     visit(): ViewRulePage {
-        cy.visit(`/view-gen-layout/(rules//help:view-help)`);
+        cy.visit(`/view-layout/(rules//help:view-help)`);
         this.waitForReady();
         return this;
     }

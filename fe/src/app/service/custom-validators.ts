@@ -1,15 +1,44 @@
 import {AbstractControl, ValidationErrors, Validator} from '@angular/forms';
 import * as moment from 'moment';
 
+export const currencyValidator = (c: AbstractControl): ValidationErrors => {
+  if (c.value) {
+      const cVal = c.value.toString();
+      const r = cVal.match(/[0-9]+\.[0-9]{2}/);
+      if (!!!r) {
+        return {currency: true}
+      }
+  }
+  return null;
+};
+
+export const numberValidator = (c: AbstractControl): ValidationErrors => {
+  if (c.value) {
+    const r: number = Number(c.value);
+    if (Number.isNaN(r)) {
+      return { number: true};
+    }
+  }
+  return null;
+};
 
 export const intValidator = (c: AbstractControl): ValidationErrors => {
   if (c.value) {
     const r: number = parseInt(c.value, 10);
-    if (Number.isNaN(r)) {
+    if (Number.isNaN(r) || r !== Number(c.value)) {
       return {int: true};
     }
   }
   return null;
+};
+
+export const dateValidator = (c: AbstractControl): ValidationErrors => {
+  if (c.value) {
+    if (!moment(c.value).isValid()) {
+      return { date: true };
+    }
+  }
+  return null
 };
 
 export const numberFormatValidator = (c: AbstractControl): ValidationErrors => {

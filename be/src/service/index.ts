@@ -9,8 +9,8 @@ import {multipartParse} from './multipart.service';
 import {getUserById} from './user.service';
 import {updateItemValue, updateItem, addItem, addOrUpdateItem, searchForItemsInView, getAllItemsInViewCount,
     getAllItemInView, getItemsByIdsCount, getItemsByIds, getItemById, getItemByName} from './item.service';
-
 export {
+
     // send-email.service
     sendEmail,
 

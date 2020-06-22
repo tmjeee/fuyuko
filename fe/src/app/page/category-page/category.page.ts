@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {CategoryService} from "../../service/category-service/category.service";
 import {ViewService} from "../../service/view-service/view.service";
-import {combineAll, map, tap} from "rxjs/operators";
+import {combineAll, delay, finalize, map, tap} from "rxjs/operators";
 import {View} from "../../model/view.model";
 import {CategoryWithItems} from "../../model/category.model";
 import {
@@ -23,6 +23,7 @@ import {toNotifications} from "../../service/common.service";
 import {NotificationsService} from "angular2-notifications";
 import {Pagination} from "../../utils/pagination.utils";
 import {LimitOffset} from "../../model/limit-offset.model";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
     templateUrl: './category.page.html',
@@ -46,16 +47,28 @@ export class CategoryPageComponent implements OnInit {
                 private categoryService: CategoryService,
                 private itemService: ItemService,
                 private notificationsService: NotificationsService,
-                private attributeService: AttributeService) {
+                private attributeService: AttributeService,
+                private loadingService: LoadingService) {
         this.categoriesWithItems = [];
     }
 
     ngOnInit(): void {
         this.getAttributesFn = (viewId: number): Observable<Attribute[]> => {
-            return this.attributeService.getAllAttributesByView(viewId).pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
+            this.loadingService.startLoading();
+            return this.attributeService.getAllAttributesByView(viewId).pipe(
+                map((r: PaginableApiResponse<Attribute[]>) => r.payload),
+                finalize(() => {
+                    this.loadingService.stopLoading();
+                })
+            );
         };
         this.getItemsFn = (viewId: number, itemIds: number[], limitOffset: LimitOffset): Observable<PaginableApiResponse<Item[]>> => {
-            return this.itemService.getItemsByIds(viewId, itemIds, limitOffset);
+            this.loadingService.startLoading();
+            return this.itemService.getItemsByIds(viewId, itemIds, limitOffset).pipe(
+                finalize(() => {
+                    this.loadingService.stopLoading();
+                })
+            );
         };
         this.deleteItemImageFn = (itemId: number, image: CarouselItemImage) => {
             return this.itemService.deleteItemImage(itemId, image.id).pipe(
@@ -113,10 +126,15 @@ export class CategoryPageComponent implements OnInit {
                 this.view = v;
                 if (v) {
                     this.treeLoading = true;
+                    this.loadingService.startLoading();
                     this.categoryService.getCategoriesWithItems(v.id).pipe(
                         tap((r: CategoryWithItems[]) => {
                             this.categoriesWithItems = r;
                             this.treeLoading = false;
+                        }),
+                        finalize(() => {
+                            this.treeLoading = false;
+                            this.loadingService.stopLoading();
                         })
                     ).subscribe();
                 }

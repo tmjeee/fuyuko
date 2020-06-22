@@ -13,6 +13,7 @@ import {combineAll, finalize, flatMap, map, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
 import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 
@@ -33,6 +34,7 @@ export class UserRolePageComponent implements OnInit {
   actions: Action[];
 
   constructor(private userManagementService: UserManagementService,
+              private loadingService: LoadingService,
               private notificationsService: NotificationsService) {
       this.allRoles = [];
       this.allRoleGroups = new Map();
@@ -43,6 +45,7 @@ export class UserRolePageComponent implements OnInit {
 
   ngOnInit(): void {
       this.ready = false;
+      this.loadingService.startLoading();
       this.groupSearchByRole = (role: Role) => {
           return (group: string): Observable<Group[]> => {
               return this.userManagementService
@@ -69,6 +72,7 @@ export class UserRolePageComponent implements OnInit {
             }),
             finalize(() =>  {
                 this.ready = true;
+                this.loadingService.stopLoading();
             })
           ).subscribe();
   }

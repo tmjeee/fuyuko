@@ -23,7 +23,7 @@ export class ViewCustomRulePage implements ActualPage<ViewCustomRulePage> {
     }
 
     visit(): ViewCustomRulePage {
-        cy.visit(`/view-gen-layout/(rules//help:view-help)`);
+        cy.visit(`/view-layout/(rules//help:view-help)`);
         this.waitForReady();
         return this;
     }

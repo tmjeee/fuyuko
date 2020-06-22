@@ -4,7 +4,7 @@ import * as util from "../../util/util";
 export class ExportArtifactsPage {
 
     visit(): ExportArtifactsPage {
-        cy.visit('/import-export-gen-layout/(export-artifacts//help:import-help)');
+        cy.visit('/process-layout/(export-artifacts//help:import-help)');
         cy.waitUntil(() => cy.get(`[test-export-artifacts-component]`));
         return this;
     }

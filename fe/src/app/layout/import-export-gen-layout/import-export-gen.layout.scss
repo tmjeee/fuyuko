@@ -1,7 +1,0 @@
-@import '../abstract-gen.layout';
-@import '../abstract-gen-sub.layout';
-
-.import-export-layout {
-  @include abstract-gen-layout-style();
-  @include abstract-gen-sub-layout-style();
-}

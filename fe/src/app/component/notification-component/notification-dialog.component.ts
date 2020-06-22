@@ -10,7 +10,7 @@ import {AppNotification} from '../../model/notification.model';
 export class NotificationDialogComponent {
 
   constructor(private matDialogRef: MatDialogRef<NotificationDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Notification[]) {}
+              @Inject(MAT_DIALOG_DATA) public data: AppNotification[]) {}
 
   onClose(event: Event) {
     this.matDialogRef.close();

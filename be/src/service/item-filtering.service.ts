@@ -18,7 +18,7 @@ import {
     NumberValue, SelectValue,
     StringValue,
     TextValue,
-    Value, VolumeValue, WidthValue
+    Value, VolumeValue, WeightValue, WidthValue
 } from "../model/item.model";
 import {attributeConvert} from "./conversion-attribute.service";
 import {OperatorType} from "../model/operator.model";
@@ -28,7 +28,7 @@ import {
     DimensionUnits,
     HeightUnits,
     LengthUnits,
-    VolumeUnits,
+    VolumeUnits, WeightUnits,
     WidthUnits
 } from "../model/unit.model";
 import moment from "moment";
@@ -37,7 +37,7 @@ import {
     compareCurrency,
     compareDate, compareDimension, compareDoubleselect, compareHeight, compareLength,
     compareNumber, compareSelect,
-    compareString, compareVolume, compareWidth
+    compareString, compareVolume, compareWeight, compareWidth
 } from "./compare-attribute-values.service";
 
 const SQL: string = `
@@ -361,6 +361,20 @@ export const getItem2WithFiltering = async (conn: Connection,
                                 const u2: HeightUnits = eU.value as HeightUnits;
 
                                 return compareHeight(v1, u1, v2, u2, operator);
+                            }
+                            case "weight": {
+                                const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
+                                const eU: ItemMetadataEntry2 = findEntry(m.entries, 'unit');
+
+                                // condition
+                                const v1: number = (value ? (value.val as WeightValue).value : null);
+                                const u1: WeightUnits = (value ? (value.val as WeightValue).unit : null);
+
+                                // actuals
+                                const v2: number = Number(eV.value);
+                                const u2: WeightUnits = eU.value as WeightUnits;
+
+                                return compareWeight(v1, u1, v2, u2, operator);
                             }
                             case "length": {
                                 const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');

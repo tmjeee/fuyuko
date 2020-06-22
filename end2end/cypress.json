@@ -2,9 +2,9 @@
   "baseUrl": "http://localhost:4200",
   "testFiles": "**/*.spec.js",
   "defaultCommandTimeout": 100000,
-  "pageLoadTimeout": 70000,
-  "requestTimeout": 50000,
-  "responseTimeout": 50000,
+  "pageLoadTimeout": 100000,
+  "requestTimeout": 70000,
+  "responseTimeout": 70000,
   "waitForAnimations": true,
   "integrationFolder": "cypress/integration",
   "env": {
@@ -15,7 +15,7 @@
     "RETRIES_HIDDEN": 1,
     "RETRIES_NO_LOG": 1
   },
-  "video": false,
+  "video": true,
   "videoUploadOnPasses": false,
   "trashAssetsBeforeRuns": true,
   "projectId": "ozp71m"

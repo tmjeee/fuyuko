@@ -8,7 +8,6 @@
     <mat-card-content>
 
     <mat-accordion>
-      <app-loading [show]="!ready"></app-loading>
       <mat-expansion-panel *ngFor="let role of allRoles" [attr.test-expansion-panel]="role.name">
         <mat-expansion-panel-header [attr.test-expansion-panel-header]="role.name">
           <mat-panel-title>

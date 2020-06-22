@@ -38,6 +38,7 @@ export interface DataTableComponentEvent {
   type: 'reload' | 'modification';
   deletedItems?: TableItem[];
   modifiedItems?: TableItem[];
+  newItems?: TableItem[];
 }
 
 export interface RowInfo {
@@ -79,7 +80,8 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Input() itemAndAttributeSet: TableItemAndAttributeSet;
   @Input() enableSearch: boolean;
 
-  pendingSavingItems: Map<number, TableItem>;
+  pendingSavingModifiedItems: Map<number, TableItem>;
+  pendingSavingNewItems: Map<number, TableItem>;
   pendingDeletionItems: Map<number, TableItem>;
 
   datasource: DataTableDataSource;
@@ -94,8 +96,6 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   filterOptionsVisible: boolean;
 
-  loading: boolean;
-
   constructor(private matDialog: MatDialog) {
     this.enableSearch = true;
     this.filterOptionsVisible = false;
@@ -104,7 +104,9 @@ export class DataTableComponent implements OnInit, OnChanges {
     this.carouselEvent = new EventEmitter();
     this.selectionModel = new SelectionModel(true, []);
     this.datasource = new DataTableDataSource();
-    this.pendingSavingItems = new Map();
+
+    this.pendingSavingModifiedItems = new Map();
+    this.pendingSavingNewItems = new Map();
     this.pendingDeletionItems = new Map();
     this.rowInfoMap = new Map();
     this.attributeInfoMap = new Map();
@@ -115,7 +117,8 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   reload() {
-    this.pendingSavingItems.clear();
+    this.pendingSavingModifiedItems.clear();
+    this.pendingSavingNewItems.clear();
     this.pendingDeletionItems.clear();
     this.itemAndAttributeSet.tableItems.forEach((i: TableItem, index: number) => {
       this.rowInfoMap.set(i.id, {
@@ -164,8 +167,8 @@ export class DataTableComponent implements OnInit, OnChanges {
     }
   }
 
-  hasItemModification(): boolean {
-    return (this.pendingDeletionItems.size > 0 || this.pendingSavingItems.size > 0);
+  hasItemChanges(): boolean {
+    return (this.pendingDeletionItems.size > 0 || this.pendingSavingNewItems.size > 0 || this.pendingSavingModifiedItems.size > 0);
   }
 
   isMasterToggleChecked(): boolean {
@@ -191,41 +194,71 @@ export class DataTableComponent implements OnInit, OnChanges {
     return this.selectionModel.isSelected(item);
   }
 
+
+  onItemEditEvent($event: ItemEditorComponentEvent, tableItem: TableItem) {
+    const eventTableItem: TableItem = $event.item as TableItem;
+    let ti: TableItem = this.pendingSavingNewItems.has(tableItem.id) ? this.pendingSavingNewItems.get(tableItem.id) : null;
+    if (!ti && !this.pendingSavingModifiedItems.has(tableItem.id)) {
+      ti = (tableItem.id, {
+        id: tableItem.id,
+        name: tableItem.name,
+        description: tableItem.description,
+        parentId: tableItem.parentId,
+        rootParentId: tableItem.rootParentId,
+        depth: tableItem.depth,
+        images: tableItem.images,
+        lastUpdate: tableItem.lastUpdate,
+        creationDate: tableItem.creationDate,
+      } as TableItem);
+      this.pendingSavingModifiedItems.set(tableItem.id, ti);
+    } else if (!ti && this.pendingSavingModifiedItems.has(tableItem.id)) {
+      ti = this.pendingSavingModifiedItems.get(tableItem.id);
+    }
+    switch ($event.type) {
+      case 'name':
+        tableItem.name = eventTableItem.name;
+        ti.name = eventTableItem.name;
+        break;
+      case 'description':
+        tableItem.description = eventTableItem.description;
+        ti.description = eventTableItem.description;
+        break;
+    }
+  }
+
   onDataEditEvent($event: ItemValueAndAttribute, tableItem: TableItem) {
      const val: Value = $event.itemValue;
      const value: ItemValTypes = val.val;
      const att: Attribute = $event.attribute;
 
-     tableItem[att.id] = val;
-     if (!this.pendingSavingItems.has(tableItem.id)) {
-       this.pendingSavingItems.set(tableItem.id, {...tableItem});
+     let ti: TableItem = this.pendingSavingNewItems.has(tableItem.id) ? this.pendingSavingNewItems.get(tableItem.id) : null;
+     if (!ti && !this.pendingSavingModifiedItems.has(tableItem.id)) {
+       ti = (tableItem.id, {
+         id: tableItem.id,
+         name: tableItem.name,
+         description: tableItem.description,
+         parentId: tableItem.parentId,
+         rootParentId: tableItem.rootParentId,
+         depth: tableItem.depth,
+         images: tableItem.images,
+         lastUpdate: tableItem.lastUpdate,
+         creationDate: tableItem.creationDate,
+       } as TableItem);
+       this.pendingSavingModifiedItems.set(tableItem.id, ti);
+     } else if (!ti && this.pendingSavingModifiedItems.has(tableItem.id)) {
+       ti = this.pendingSavingModifiedItems.get(tableItem.id);
      }
-     this.pendingSavingItems.get(tableItem.id)[$event.attribute.id] = val;
+     ti[$event.attribute.id] = val;
+     tableItem[att.id] = val;
   }
 
-  onItemEditEvent($event: ItemEditorComponentEvent, tableItem: TableItem) {
-    const eventTableItem: TableItem = $event.item as TableItem;
-    if (!this.pendingSavingItems.has(tableItem.id)) {
-      this.pendingSavingItems.set(tableItem.id, {...tableItem});
-    }
-    switch ($event.type) {
-      case 'name':
-        tableItem.name = eventTableItem.name;
-        this.pendingSavingItems.get(tableItem.id).name = eventTableItem.name;
-        break;
-      case 'description':
-        tableItem.description = eventTableItem.description;
-        this.pendingSavingItems.get(tableItem.id).description = eventTableItem.description;
-        break;
-    }
-  }
 
   onAddItem($event: MouseEvent) {
     const nextId = DataTableComponent.negativeCounter--;
     const newItem: TableItem = createNewTableItem(nextId, this.itemAndAttributeSet.attributes);
     newItem.name = `New-Item-${DataTableComponent.positiveCounter++}`;
     newItem.depth = 0;
-    this.pendingSavingItems.set(nextId, newItem);
+    this.pendingSavingNewItems.set(nextId, newItem);
     this.itemAndAttributeSet.tableItems.push(newItem);
     this.rowInfoMap.set(newItem.id, { tableItem: newItem, expanded: false } as RowInfo);
     this.datasource.update(this.itemAndAttributeSet.tableItems);
@@ -245,7 +278,7 @@ export class DataTableComponent implements OnInit, OnChanges {
           const p = this.itemAndAttributeSet.tableItems.find((i: TableItem) => i.id === tableItem.parentId);
           f(p);
         }
-        this.pendingSavingItems.set(tableItem.id, tableItem);
+        this.pendingSavingNewItems.set(tableItem.id, tableItem);
       }
     };
 
@@ -254,7 +287,7 @@ export class DataTableComponent implements OnInit, OnChanges {
     // itemitem-to-table-items.util.ts#toItem(...) can construct the full parent child object for saving in the BE.
     // this.pendingSavingItems.set(parentItem.id, parentItem);
     f(parentItem);
-    this.pendingSavingItems.set(nextId, newItem);
+    this.pendingSavingNewItems.set(nextId, newItem);
 
 
 
@@ -284,7 +317,9 @@ export class DataTableComponent implements OnInit, OnChanges {
       if (selectedItem.id > 0) { // if it is newly added item that have not been saved before deleting it doesn't need savings
         this.pendingDeletionItems.set(selectedItem.id, selectedItem);
       }
-      this.pendingSavingItems.delete(selectedItem.id); // if it is deleted it doesn't need saving anymore.
+      // if it is deleted it doesn't need saving anymore.
+      this.pendingSavingNewItems.delete(selectedItem.id);
+      this.pendingSavingModifiedItems.delete(selectedItem.id);
     });
     this.itemAndAttributeSet.tableItems = existingItems;
     this.datasource.update(existingItems);
@@ -293,17 +328,20 @@ export class DataTableComponent implements OnInit, OnChanges {
   onSave($event: MouseEvent) {
     const e: DataTableComponentEvent = {
       type: 'modification',
-      modifiedItems: Array.from(this.pendingSavingItems.values()),
+      newItems: Array.from(this.pendingSavingNewItems.values()),
+      modifiedItems: Array.from(this.pendingSavingModifiedItems.values()),
       deletedItems: Array.from(this.pendingDeletionItems.values()).filter((i: TableItem) => i.id >= 0),
     } as DataTableComponentEvent;
     this.events.emit(e);
-    this.pendingSavingItems.clear();
+    this.pendingSavingNewItems.clear();
+    this.pendingSavingModifiedItems.clear();
     this.pendingDeletionItems.clear();
   }
 
   onReload($event: MouseEvent) {
-    this.pendingSavingItems.clear();
+    this.pendingSavingNewItems.clear();
     this.pendingDeletionItems.clear();
+    this.pendingSavingModifiedItems.clear();
     this.events.emit({type: 'reload'} as DataTableComponentEvent);
   }
 

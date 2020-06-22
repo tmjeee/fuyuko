@@ -12,6 +12,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {RuleEditorComponentEvent} from '../../component/rules-component/rule-editor.component';
 import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 export class AbstractRulePageComponent implements OnInit, OnDestroy {
 
@@ -29,11 +30,13 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                 protected attributeService: AttributeService,
                 protected notificationService: NotificationsService,
                 protected router: Router,
-                protected ruleService: RuleService) {
+                protected ruleService: RuleService,
+                protected loadingService: LoadingService) {
     }
 
     ngOnInit(): void {
         this.viewReady = false;
+        this.loadingService.startLoading();
         this.subscription = this.viewService
             .asObserver()
             .pipe(
@@ -41,9 +44,13 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                     if (currentView) {
                         this.currentView = currentView;
                         this.reload();
-                        this.viewReady = true;
                     }
+                    this.viewReady = true;
                 }),
+                finalize(() => {
+                    this.viewReady = true;
+                    this.loadingService.stopLoading();
+                })
             ).subscribe();
     }
 
@@ -57,6 +64,7 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
         this.ruleReady = false;
         const ruleId: string = this.route.snapshot.paramMap.get('ruleId');
         if (ruleId) {
+            this.loadingService.startLoading();
             zip(
                 this.attributeService.getAllAttributesByView(this.currentView.id)
                     .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
@@ -66,9 +74,13 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                     this.attributes = r[0];
                     this.rule = r[1];
                 }),
-                finalize(() => { this.ruleReady = true; })
+                finalize(() => {
+                    this.ruleReady = true;
+                    this.loadingService.stopLoading();
+                })
             ).subscribe();
         } else {
+            this.loadingService.startLoading();
             combineLatest([
                 this.attributeService.getAllAttributesByView(this.currentView.id)
                     .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
@@ -98,7 +110,10 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                         }]
                     };
                 }),
-                finalize(() => { this.ruleReady = true;})
+                finalize(() => {
+                    this.ruleReady = true;
+                    this.loadingService.stopLoading();
+                })
             ).subscribe();
         }
     }
@@ -106,7 +121,7 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
     async onRuleEditorEvent($event: RuleEditorComponentEvent) {
         switch ($event.type) {
             case 'cancel':
-                await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['rules'], help: ['view-help'] }}]);
+                await this.router.navigate(['/view-layout', {outlets: {primary: ['rules'], help: ['view-help'] }}]);
                 break;
             case 'update':
                 if ($event.rule.id) { // existing

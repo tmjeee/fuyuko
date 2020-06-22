@@ -23,7 +23,7 @@ const PAGE_NAME = 'bulk-edit';
 export class BulkEditPage implements ActualPage<BulkEditPage> {
 
     visit(): BulkEditPage {
-        cy.visit('/gen-layout/(bulk-edit//help:bulk-edit-help)');
+        cy.visit('/process-layout/(bulk-edit//help:bulk-edit-help)');
         this.waitForReady();
         return this;
     }
@@ -82,6 +82,15 @@ export class BulkEditPageStep1 {
 
     clickOnCustomTab(): BulkEditPageStep1 {
         cy.get(`[test-mat-tab-custom]`).click({force: true});
+        return this;
+    }
+
+    waitForStepReady(): BulkEditPageStep1 {
+        cy.waitUntil(() => {
+            return cy.get(`mat-step-header[ng-reflect-index='0']`).then((_) => {
+                return (_.length > 0);
+            })
+        });
         return this;
     }
 
@@ -824,7 +833,7 @@ export class BulkEditPageStep1 {
     clickNext(): BulkEditPageStep2 {
         cy.get(`[test-step1-next]`)
             .click({force: true});
-        return new BulkEditPageStep2();
+        return new BulkEditPageStep2().waitForStepReady();
     }
 }
 
@@ -836,13 +845,22 @@ export class BulkEditPageStep2 {
         return this;
     }
 
+    waitForStepReady(): BulkEditPageStep2 {
+        cy.waitUntil(() => {
+            return cy.get(`mat-step-header[ng-reflect-index='1']`).then((_) => {
+                return (_.length > 0);
+            })
+        });
+        return this;
+    }
+
     clickPrevious(): BulkEditPageStep1 {
         cy.get(`[test-button-step2-prev]`).click({force: true});
-        return new BulkEditPageStep1();
+        return new BulkEditPageStep1().waitForStepReady();
     }
     clickNext(): BulkEditPageStep3 {
         cy.get(`[test-button-step2-next]`).click({force: true});
-        return new BulkEditPageStep3();
+        return new BulkEditPageStep3().waitForStepReady();
     }
 
     verifyItemOldValue(itemName: string, attributeName: string, value: string[]): BulkEditPageStep2 {
@@ -881,6 +899,15 @@ export class BulkEditPageStep3 {
     verifyStep(): BulkEditPageStep3 {
         cy.get(`mat-step-header[ng-reflect-index='2']`)
             .should('have.attr', 'ng-reflect-selected', 'true');
+        return this;
+    }
+
+    waitForStepReady(): BulkEditPageStep3 {
+        cy.waitUntil(() => {
+            return cy.get(`mat-step-header[ng-reflect-index='2']`).then((_) => {
+                return (_.length > 0);
+            })
+        });
         return this;
     }
 

@@ -5,6 +5,7 @@ import {NotificationsService} from "angular2-notifications";
 import {RuleService} from "../../service/rule-service/rule.service";
 import {Component} from "@angular/core";
 import {AbstractRulePageComponent} from "./abstract-rule.page";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -17,8 +18,9 @@ export class AddRulePageComponent extends AbstractRulePageComponent {
                 protected attributeService: AttributeService,
                 protected notificationService: NotificationsService,
                 protected router: Router,
-                protected ruleService: RuleService) {
-        super(viewService, route, attributeService, notificationService, router, ruleService);
+                protected ruleService: RuleService,
+                protected loadingService: LoadingService) {
+        super(viewService, route, attributeService, notificationService, router, ruleService, loadingService);
     }
 
 }

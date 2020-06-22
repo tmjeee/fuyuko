@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Attribute} from '../../model/attribute.model';
 import {FormBuilder} from '@angular/forms';
-import {map, tap} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 import {View} from '../../model/view.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -11,6 +11,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {EditAttributeComponentEvent} from '../../component/attribute-table-component/edit-attribute.component';
 import {ApiResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
     templateUrl: './edit-attribute.page.html',
@@ -30,13 +31,15 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private viewService: ViewService,
                 private notificationService: NotificationsService,
-                private attributeService: AttributeService) {
+                private attributeService: AttributeService,
+                private loadingService: LoadingService) {
     }
 
 
 
     ngOnInit(): void {
         this.viewLoading = true;
+        this.loadingService.startLoading();
         this.subscription = this.viewService
             .asObserver()
             .pipe(
@@ -44,8 +47,12 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
                     if (v) {
                         this.currentView = v;
                         this.reload();
-                        this.viewLoading = false;
                     }
+                    this.viewLoading = false;
+                }),
+                finalize(() => {
+                    this.viewLoading = false;
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
     }
@@ -68,7 +75,7 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
                 ).subscribe();
                 break;
             case 'cancel':
-                await this.router.navigate(['/view-gen-layout', {outlets: {primary: ['attributes'], help: ['view-help'] }}]);
+                await this.router.navigate(['/view-layout', {outlets: {primary: ['attributes'], help: ['view-help'] }}]);
                 break;
         }
     }
@@ -76,10 +83,15 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
     reload() {
         const attributeId: string = this.route.snapshot.paramMap.get('attributeId');
         this.attributeLoading = true;
+        this.loadingService.startLoading();
         this.attributeService.getAttributeByView(this.currentView.id, Number(attributeId)).pipe(
             tap((a: Attribute) => {
                 this.attribute = a;
                 this.attributeLoading = false;
+            }),
+            finalize(() => {
+                this.attributeLoading = false;
+                this.loadingService.stopLoading();
             })
         ).subscribe();
     }

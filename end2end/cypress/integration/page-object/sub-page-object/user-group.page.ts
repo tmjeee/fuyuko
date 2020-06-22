@@ -11,7 +11,7 @@ export class UserGroupPage implements ActualPage<UserGroupPage> {
     }
 
     visit(): UserGroupPage {
-        cy.visit('/user-gen-layout/(group//help:user-help)');
+        cy.visit('/administration-layout/(group//help:user-help)');
         this.waitForReady();
         return this;
     }

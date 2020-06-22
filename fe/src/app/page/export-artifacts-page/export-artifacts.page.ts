@@ -1,11 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {DataExportArtifact} from "../../model/data-export.model";
-import {tap} from "rxjs/operators";
+import {finalize, tap} from "rxjs/operators";
 import {ExportArtifactsComponentEvent} from "../../component/export-data-component/export-artifacts.component";
 import {NotificationsService} from "angular2-notifications";
 import {ExportArtifactService} from "../../service/export-artifact-service/export-artifact.service";
 import {toNotifications} from "../../service/common.service";
 import {ApiResponse} from "../../model/api-response.model";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -18,7 +19,8 @@ export class ExportArtifactsPageComponent implements OnInit {
     dataExportArtifacts: DataExportArtifact[];
 
     constructor(private exportArtifactService: ExportArtifactService,
-                private notificationsService: NotificationsService) {}
+                private notificationsService: NotificationsService,
+                private loadingService: LoadingService) {}
 
     ngOnInit(): void {
         this.reload();
@@ -26,10 +28,15 @@ export class ExportArtifactsPageComponent implements OnInit {
 
     reload() {
         this.ready = false;
+        this.loadingService.startLoading();
         this.exportArtifactService.allDataExportArtifacts().pipe(
             tap((dataExportArtifacts: DataExportArtifact[]) => {
                 this.dataExportArtifacts = dataExportArtifacts;
                 this.ready = true;
+            }),
+            finalize(() => {
+                this.ready = true;
+                this.loadingService.stopLoading();
             })
         ).subscribe();
     }

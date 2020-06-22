@@ -23,7 +23,7 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const itemIds: number[] = req.params.itemIds.split(',').map((i: string) => Number(i));
-        const limitOffset: LimitOffset = toLimitOffset(req.query.limit, req.query.offset);
+        const limitOffset: LimitOffset = toLimitOffset(req);
 
         const item2s: Item2[] = await getItem2sByIds(viewId, itemIds, true, limitOffset);
         const items: Item[] = itemsConvert(item2s);

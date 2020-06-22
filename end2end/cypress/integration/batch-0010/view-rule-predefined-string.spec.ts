@@ -39,6 +39,7 @@ describe('view-rule-predefined-string', () => {
     });
 
     it(`(string, eq, not eq) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
+        Cypress.currentTest.retries(2);
         w(viewRulePage, {
             viewName: `Test View 1`,
             fillInWhenClauseFnName: `fillInWhenClauseStringAttribute`,
@@ -58,6 +59,7 @@ describe('view-rule-predefined-string', () => {
     });
 
     it(`(string, empty, not empty) should allow add / edit / delete with multiple 'when' / 'validate' clauses and multiple conditions on each clauses`, () => {
+        Cypress.currentTest.retries(2);
         w(viewRulePage, {
             viewName: `Test View 1`,
             fillInWhenClauseFnName: `fillInWhenClauseStringAttribute`,

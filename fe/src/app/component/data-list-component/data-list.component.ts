@@ -83,13 +83,16 @@ export class DataListComponent {
 
     delete($event: MouseEvent) {
         const i: Item[] = this.selectionModel.selected;
-        this.pendingDeletion.push(...this.selectionModel.selected);
-        this.selectionModel.selected.forEach((selectedItem: Item) => {
-            const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === selectedItem.id);
+        for (const _i of i) {
+            if (_i.id > 0) { // delete of persisted item only
+                this.pendingDeletion.push(_i);
+            }
+            this.pendingSaving = this.pendingSaving.filter((i: Item) => i.id != _i.id);
+            const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === _i.id);
             if (index !== -1) {
                 this.itemAndAttributeSet.items.splice(index, 1);
             }
-        });
+        }
         this.selectionModel.clear();
     }
 
@@ -116,6 +119,8 @@ export class DataListComponent {
 
 
     reload($event: MouseEvent) {
+        this.pendingDeletion = [];
+        this.pendingSaving = [];
         this.events.emit({ type: 'reload'} as DataListComponentEvent);
     }
 
@@ -127,18 +132,29 @@ export class DataListComponent {
         return (this.selectionModel.selected && this.selectionModel.selected.length > 0);
     }
 
-    onItemDataChange($event: ItemEditorComponentEvent) {
-       const item: Item = this.itemAndAttributeSet.items.find((i: Item) => i.id === $event.item.id);
-       const index = this.pendingSaving.findIndex((i: Item) => i.id === $event.item.id);
-       if (index === -1) {
-           this.pendingSaving.push(item);
+    onItemDataChange($event: ItemEditorComponentEvent, item: Item) {
+       let itm = this.pendingSaving.find((i: Item) => i.id === $event.item.id);
+       if (!itm) {
+           itm = {
+               id: item.id,
+               name: item.name,
+               description: item.description,
+               images: item.images,
+               parentId: item.parentId,
+               creationDate: item.creationDate,
+               lastUpdate: item.lastUpdate
+           } as Item;
+           this.pendingSaving.push(itm);
        }
+        // save in both the pendingSaving's copy and the original
        switch ($event.type) {
            case 'name':
                item.name = $event.item.name;
+               itm.name = $event.item.name;
                break;
            case 'description':
                item.description = $event.item.description;
+               itm.description = $event.item.description;
                break;
        }
     }
@@ -148,15 +164,17 @@ export class DataListComponent {
         if (!i) {
             this.pendingSaving.push({
                 id: item.id,
-                [$event.attribute.id]: $event.itemValue
+                name: item.name,
+                description: item.description,
+                images: item.images,
+                parentId: item.parentId,
+                creationDate: item.creationDate,
+                lastUpdate: item.lastUpdate
             } as Item);
-        } else {
-            i[$event.attribute.id] = $event.itemValue;
         }
-        const i2: Item = this.itemAndAttributeSet.items.find((tmpI: Item) => tmpI.id === item.id);
-        if (i) {
-            i[$event.attribute.id] = $event.itemValue;
-        }
+        // save in both the pendingSaving's copy and the original
+        i[$event.attribute.id] = $event.itemValue;
+        item[$event.attribute.id] = $event.itemValue;
     }
 
     onCheckboxStateChange($event: MatCheckboxChange, item: Item) {

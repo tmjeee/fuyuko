@@ -11,6 +11,7 @@ export class ViewDataThumbnailAttributePopupPage extends AbstractViewDataAttribu
         cy.waitUntil(() => cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']
             [test-button-popup-done]`))
             .click({force: true});
+        this.waitForPopupGone();
         cy.wait(100);
         return rootPage;
     }
@@ -19,15 +20,16 @@ export class ViewDataThumbnailAttributePopupPage extends AbstractViewDataAttribu
         cy.waitUntil(() => cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']
             [test-button-popup-cancel]`))
             .click({force: true});
+        this.waitForPopupGone();
         cy.wait(100);
         return rootPage;
     }
 
     clickCancel1(): ViewDataThumbnailEditPopupPage {
-        return this.clickCancel(new ViewDataThumbnailEditPopupPage());
+        return this.clickCancel(new ViewDataThumbnailEditPopupPage(this.PAGE_NAME));
     }
 
     clickOk1(): ViewDataThumbnailEditPopupPage {
-        return this.clickOk(new ViewDataThumbnailEditPopupPage());
+        return this.clickOk(new ViewDataThumbnailEditPopupPage(this.PAGE_NAME));
     }
 }

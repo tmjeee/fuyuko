@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {CustomDataImport, ImportScriptInputValue, ImportScriptPreview} from "../../model/custom-import.model";
 import {Observable} from "rxjs";
 import {CustomImportPreviewFn} from "./custom-import-wizard.component";
-import {tap} from "rxjs/operators";
+import {finalize, tap} from "rxjs/operators";
 import {View} from "../../model/view.model";
 
 
@@ -56,7 +56,8 @@ export class CustomImportPreviewComponent implements OnInit {
                    preview: this.preview
                });
                this.ready = true;
-           })
+           }),
+           finalize(() => this.ready = true)
        ).subscribe();
    }
 }

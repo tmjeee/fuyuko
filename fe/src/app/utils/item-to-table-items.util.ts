@@ -66,6 +66,7 @@ export function toItemIgnoreParent(tableItems: TableItem[]): Item[] {
       lastUpdate: tableItem.lastUpdate,
       children: []
     } as Item;
+    item['trashable'] = false;
 
     // item
     if (!acc.has(itemId)) {
@@ -79,9 +80,24 @@ export function toItemIgnoreParent(tableItems: TableItem[]): Item[] {
       copyAttrProperties(tableItem, i);
     }
 
+    // item's parent
+    if (itemParentId) {
+      if (!acc.has(itemParentId)) {
+        const pi: Item = {id: itemParentId, parentId: undefined, children: [item]} as Item;
+        pi['trashable']=true;
+        acc.set(itemParentId, pi);
+      } else {
+        const itemParent: Item = acc.get(itemParentId);
+        const itemIndexInExistingParent: number = itemParent.children.findIndex((i: Item) => i.id === item.id);
+        if (itemIndexInExistingParent === -1) { // doens't exists yet
+          itemParent.children.push(item);
+        }
+        itemParent['trashable'] = false;
+      }
+    }
     return acc;
   }, new Map());
-  return Array.from(m.values());
+  return Array.from(m.values()).filter((i: Item) => !i['trashable']);
 }
 
 // danger: without all of the TableItem[], Item[] returned will be incomplete
@@ -129,7 +145,8 @@ export function toItem(tableItems: TableItem[]): Item[] {
     }
     return acc;
   }, new Map());
-  return Array.from(m.values()).filter((i: Item) => !!!i.parentId);
+  const r: Item[] =  Array.from(m.values()).filter((i: Item) => !!!i.parentId);
+  return r;
 }
 
 

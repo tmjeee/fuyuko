@@ -5,6 +5,7 @@ import {
 } from "../model/attribute.model";
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../server-side-model/server-side.model';
 import {DATE_FORMAT, NUMBER_FORMAT, SHOW_COUNTRY_CURRENCY} from "../model/item.model";
+import * as util from "util";
 
 export const attributesRevert = (attributes: Attribute[]) : Attribute2[]=> {
    return (attributes ? attributes.map(attributeRevert) : []);
@@ -28,6 +29,7 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
         case 'width':
         case 'length':
         case 'height':
+        case 'weight':
         case "volume":
             att.metadatas.push({
                 id: -1,
@@ -47,7 +49,7 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
                 entries:[{
                     id: -1,
                     key: 'format',
-                    value: (attribute.format ? attribute.format : NUMBER_FORMAT)
+                    value: (attribute.format ? attribute.format : DATE_FORMAT)
                 } as AttributeMetadataEntry2]
             } as AttributeMetadata2);
             break;
@@ -101,7 +103,7 @@ export const attributeRevert = (attribute: Attribute) : Attribute2 => {
                         id: -1,
                         key: c.key1,
                         value: `${c.key2}=${c.value}`
-                    } as AttributeMetadataEntry2)
+                    } as AttributeMetadataEntry2);
                     return acc;
                 }, []) : []
             } as AttributeMetadata2);
@@ -136,6 +138,7 @@ export const attributeConvert = (attribute2: Attribute2): Attribute => {
         case 'width':
         case 'length':
         case 'height':
+        case 'weight':
         case "volume":
             att.format = getMetadataEntry('format', attribute2, NUMBER_FORMAT);
             break;

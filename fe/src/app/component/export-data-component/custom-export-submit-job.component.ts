@@ -1,6 +1,6 @@
 import {Component, Input} from "@angular/core";
 import {View} from "../../model/view.model";
-import {tap} from "rxjs/operators";
+import {finalize, tap} from "rxjs/operators";
 import {
     CustomDataExport,
     ExportScriptInputValue,
@@ -39,7 +39,8 @@ export class CustomExportSubmitJobComponent {
             tap((r: ExportScriptJobSubmissionResult) => {
                 this.result = r;
                 this.ready = true;
-            })
+            }),
+            finalize(() => this.ready = true)
         ).subscribe();
     }
 }

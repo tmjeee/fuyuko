@@ -7,11 +7,12 @@ import {
 import {AuthService} from '../../service/auth-service/auth.service';
 import {User} from '../../model/user.model';
 import {DashboardComponentEvent} from '../../component/dashboard-component/dashboard.component';
-import {tap} from 'rxjs/operators';
+import {finalize, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
 import {SerializedDashboardFormat} from '../../model/dashboard-serialzable.model';
 import {ApiResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
   templateUrl: './dashboard.page.html',
@@ -30,10 +31,12 @@ export class DashboardPageComponent implements OnInit {
 
     constructor(private dashboardService: DashboardService,
                 private authService: AuthService,
+                private loadingService: LoadingService,
                 private notificationsService: NotificationsService) {}
 
     ngOnInit(): void {
         this.loading = true;
+        this.loadingService.startLoading();
         this.strategies = this.dashboardService.getAllDashboardStrategies();
         this.selectedStrategy = this.strategies[1];
 
@@ -54,6 +57,10 @@ export class DashboardPageComponent implements OnInit {
                         this.data = d;
                     }
                     this.loading = false;
+                }),
+                finalize(() => {
+                    this.loading = false;
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
     }

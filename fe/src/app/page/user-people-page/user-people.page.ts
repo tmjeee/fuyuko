@@ -8,9 +8,10 @@ import {
   ActionType,
   UserSearchTableComponentEvent
 } from '../../component/user-search-table-component/user-search-table.component';
-import {combineAll, map, tap} from 'rxjs/operators';
+import {combineAll, finalize, map, tap} from 'rxjs/operators';
 import {ApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -29,7 +30,8 @@ export class UserPeoplePageComponent implements OnInit {
   inactiveUsersActionTypes: ActionType[];
 
   constructor(private userManagementService: UserManagementService,
-              private notificationService: NotificationsService) {
+              private notificationService: NotificationsService,
+              private loadingService: LoadingService) {
     this.inactiveUserSearchFn = (userName: string): Observable<User[]> => {
       return this.userManagementService.findInactiveUsers(userName);
     };
@@ -47,6 +49,7 @@ export class UserPeoplePageComponent implements OnInit {
 
   reload() {
     this.ready = false;
+    this.loadingService.startLoading();
     of(this.userManagementService.getAllActiveUsers(), this.userManagementService.getAllInactiveUsers()).pipe(
         combineAll(),
         tap((r: [User[], User[]]) => {
@@ -55,19 +58,12 @@ export class UserPeoplePageComponent implements OnInit {
             this.activeUsers = activeUsers;
             this.inactiveUsers = inactiveUsers;
             this.ready = true;
+        }),
+        finalize(() => {
+            this.ready = true;
+            this.loadingService.stopLoading();
         })
     ).subscribe();
-
-    /*
-    this.userManagementService.getAllActiveUsers().pipe(
-        tap((u: User[]) => {
-          this.activeUsers = u;
-        })
-    ).subscribe();
-    this.userManagementService.getAllInactiveUsers().pipe(
-        map((u: User[]) => this.inactiveUsers = u)
-    ).subscribe();
-     */
   }
 
 

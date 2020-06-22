@@ -19,6 +19,10 @@
 
            <ng-container *ngIf="attributes && attributes.length">
                <app-bulk-edit-wizard [attr.test-bulk-edit-wizard]="currentView.name"
+                                     [getJobLogsFn]="getJobLogsFn"
+                                     [getPreviewFn]="getPreviewFn"
+                                     [scheduleBulkEditJobFn]="scheduleBulkEditJobFn"
+                                     (events)="onBulkEditWizardEvent($event)"
                                      [view]="currentView"
                                      [attributes]="attributes">
                </app-bulk-edit-wizard>

@@ -17,6 +17,7 @@ import {CustomRuleService} from '../../service/custom-rule-service/custom-rule.s
 import {CustomRule, CustomRuleForView} from '../../model/custom-rule.model';
 import {CustomRuleTableComponentEvent} from '../../component/rules-component/custom-rule-table.component';
 import {not} from "rxjs/internal-compatibility";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -44,12 +45,14 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                 private attributeService: AttributeService,
                 private notificationService: NotificationsService,
                 private customRuleService: CustomRuleService,
-                private ruleService: RuleService) {
+                private ruleService: RuleService,
+                private loadingService: LoadingService) {
     }
 
 
     ngOnInit(): void {
         this.viewReady = false;
+        this.loadingService.startLoading();
         this.subscription = this.viewService
             .asObserver()
             .pipe(
@@ -57,9 +60,13 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                     if (currentView) {
                         this.currentView = currentView;
                         this.w();
-                        this.viewReady = true;
                     }
+                    this.viewReady = true;
                 }),
+                finalize(() => {
+                    this.viewReady = true;
+                    this.loadingService.stopLoading();
+                })
             ).subscribe();
     }
 
@@ -71,6 +78,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
 
     private w() {
         this.rulesReady = false;
+        this.loadingService.startLoading();
         combineLatest([
             this.attributeService.getAllAttributesByView(this.currentView.id)
                 .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
@@ -86,6 +94,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
             }),
             finalize(() => {
                 this.rulesReady = true;
+                this.loadingService.stopLoading();
             })
         ).subscribe();
     }
@@ -100,7 +109,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
     async onRulesTableEvent($event: RulesTableComponentEvent) {
         switch ($event.type) {
             case 'add':
-                await this.router.navigate(['/view-gen-layout', {
+                await this.router.navigate(['/view-layout', {
                     outlets: {
                         primary: ['add-rule'],
                         help: ['view-help']
@@ -108,7 +117,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                 }]);
                 break;
             case 'edit':
-                await this.router.navigate(['/view-gen-layout', {
+                await this.router.navigate(['/view-layout', {
                     outlets: {
                         primary: ['edit-rule', `${$event.rule.id}`],
                         help: ['view-help']

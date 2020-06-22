@@ -12,7 +12,7 @@ import {
     ItemValTypes, LengthValue,
     NumberValue, SelectValue,
     StringValue,
-    TextValue, VolumeValue,
+    TextValue, VolumeValue, WeightValue,
     WidthValue
 } from "../model/item.model";
 
@@ -287,6 +287,36 @@ const toMetadata = (attributeId: number, vals: ItemValTypes[]): WhenClauseMetada
                 }
                 case 'height': {
                     const v: HeightValue = val as HeightValue;
+                    i = {
+                        id: -1,
+                        attributeType: val.type,
+                        attributeId: attributeId,
+                        name: '',
+                        entries: [
+                            {
+                                id: -1,
+                                key: 'type',
+                                value: val.type,
+                                dataType: 'string'
+                            } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
+                            {
+                                id: -1,
+                                key: 'value',
+                                value: `${val.value}`,
+                                dataType: 'number'
+                            } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
+                            {
+                                id: -1,
+                                key: 'unit',
+                                value: `${val.unit}`,
+                                dataType: 'string'
+                            } as ValidateClauseMetadataEntry2 | WhenClauseMetadataEntry2,
+                        ]
+                    } as ValidateClauseMetadata2 | WhenClauseMetadata2;
+                    break;
+                }
+                case 'weight': {
+                    const v: WeightValue = val as WeightValue;
                     i = {
                         id: -1,
                         attributeType: val.type,

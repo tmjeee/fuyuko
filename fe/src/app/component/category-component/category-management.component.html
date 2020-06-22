@@ -9,7 +9,6 @@
     <div>
         <div fxLayout="row">
             <div fxFlex="1 0 auto">
-                <app-loading [show]="treeLoading"></app-loading>
                 <div *ngIf="!treeLoading && categoriesWithItems && !categoriesWithItems.length">No categories</div>
                 <app-category-tree *ngIf="categoriesWithItems"
                                    [includeItems]="false"

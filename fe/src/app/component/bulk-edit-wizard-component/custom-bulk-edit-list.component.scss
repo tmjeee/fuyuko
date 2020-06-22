@@ -1,0 +1,39 @@
+.custom-bulk-edit-list {
+  table {
+    tr {
+      th {
+        &.select {
+
+        }
+        &.name {
+
+        }
+        &.description {
+
+        }
+        &.action {
+
+        }
+      }
+      td {
+        &.select {
+
+        }
+        &.name {
+
+        }
+        &.description {
+
+        }
+        &.expanded {
+          padding: 20px;
+        }
+        &.action {
+          .mat-icon {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

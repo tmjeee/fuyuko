@@ -14,7 +14,7 @@ import {BulkEditPackage} from "../../model/bulk-edit.model";
 import { ItemMetadata2, } from "../../server-side-model/server-side.model";
 import {ROLE_EDIT} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {preview} from "../../service/bulk-edit.service";
+import {preview} from "../../service/bulk-edit/bulk-edit.service";
 
 
 // CHECKED

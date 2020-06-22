@@ -1,0 +1,11 @@
+.audit-log-component {
+  .content {
+    margin-top: 20px;
+
+    .paginator {
+      ::ng-deep .pagination-component {
+        margin-top: 30px;
+      }
+    }
+  }
+}

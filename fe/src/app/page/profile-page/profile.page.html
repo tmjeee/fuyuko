@@ -1,6 +1,5 @@
 <div class="profile-page" [attr.test-page-title]="'profile'" [attr.test-page-ready]="''+((!!allPredefinedAvatars) && (!!myself) && (!!allThemes))">
-  <app-loading [show]="!ready"></app-loading>
-  <mat-card *ngIf="ready" class="profile-page-card">
+  <mat-card *ngIf="ready && avatarsReady" class="profile-page-card">
     <mat-card-header>
       <mat-card-title>
         Profile
@@ -20,7 +19,6 @@
                   width="200px"
                   height="200px">
       </app-avatar>
-      <app-loading [show]="!allPredefinedAvatars"></app-loading>
     </div>
 
     <mat-divider></mat-divider>

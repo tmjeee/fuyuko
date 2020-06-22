@@ -9,7 +9,7 @@ export class ViewPredefinedRuleAddPage extends AbstractViewPredefinedRulePage {
     }
 
     visit(): ViewPredefinedRuleAddPage {
-        cy.visit(`/view-gen-layout/(add-rule//help:view-help)`);
+        cy.visit(`/view-layout/(add-rule//help:view-help)`);
         return this;
     }
 

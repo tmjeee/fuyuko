@@ -27,7 +27,7 @@ import {
     createSelectAttribute,
     createStringAttribute,
     createTextAttribute,
-    createVolumeAttribute,
+    createVolumeAttribute, createWeightAttribute,
     createWidthAttribute
 } from "../../shared-utils/attribute-creator.utils";
 import {
@@ -35,7 +35,17 @@ import {
     getPricingStructureByName, linkPricingStructureWithGroupId
 } from "../../service/pricing-structure.service";
 import {PricingStructure} from "../../model/pricing-structure.model";
-import {Item, StringValue, TextValue, Value} from "../../model/item.model";
+import {
+    AreaValue,
+    CurrencyValue,
+    DateValue, DimensionValue, DoubleSelectValue, HeightValue,
+    Item, LengthValue,
+    NumberValue, SelectValue,
+    StringValue,
+    TextValue,
+    Value,
+    VolumeValue, WeightValue, WidthValue
+} from "../../model/item.model";
 import {addItemImage} from "../../service/item-image.service";
 import {setPrices} from "../../service/pricing-structure-item.service";
 import {addOrUpdateRules} from "../../service/rule.service";
@@ -126,6 +136,7 @@ const INSERT_VIEW_DATA = async (viewId: number, viewGroupId: number, editGroupId
         createLengthAttribute(`length attribute`, `length attribute description`),
         createWidthAttribute(`width attribute`, `width attribute description`),
         createHeightAttribute(`height attribute`, `height attribute description`),
+        createWeightAttribute(`weight attribute`, `weight attribute description`),
         createSelectAttribute(`select attribute`, `select attribute description`, [
             { id:-1, key: 'key1', value: 'value1' } as Pair1,
             { id:-1, key: 'key2', value: 'value2' } as Pair1,
@@ -252,6 +263,7 @@ const INSERT_VIEW_DATA = async (viewId: number, viewGroupId: number, editGroupId
     const viewLengthAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `length attribute`);
     const viewWidthAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `width attribute`);
     const viewHeightAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `height attribute`);
+    const viewWeightAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `weight attribute`);
     const viewSelectAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `select attribute`);
     const viewDoubleselectAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `doubleselect attribute`);
 
@@ -287,8 +299,8 @@ const INSERT_VIEW_DATA = async (viewId: number, viewGroupId: number, editGroupId
 
     // items
     await createManyItems(conn, ps1.id, viewId, viewStringAttribute, viewTextAttribute, viewNumberAttribute, viewDateAttribute, viewCurrencyAttribute,
-        viewVolumeAttribute, viewDimensionAttribute, viewAreaAttribute, viewLengthAttribute, viewWidthAttribute, viewHeightAttribute, viewSelectAttribute,
-        viewDoubleselectAttribute);
+        viewVolumeAttribute, viewDimensionAttribute, viewAreaAttribute, viewLengthAttribute, viewWidthAttribute, viewHeightAttribute, viewWeightAttribute,
+        viewSelectAttribute, viewDoubleselectAttribute);
 
     // rules
     await createManyRules(conn, viewId, viewStringAttribute.id, viewTextAttribute.id);
@@ -346,7 +358,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
                                stringAttribute: Attribute, textAttribute: Attribute, numberAttribute: Attribute,
                                dateAttribute: Attribute, currencyAttribute: Attribute, volumeAttribute: Attribute, dimensionAttribute: Attribute,
                                areaAttribute: Attribute, lengthAttribute: Attribute, widthAttribute: Attribute, heightAttribute: Attribute,
-                               selectAttribute: Attribute, doubleSelectAttribute: Attribute) => {
+                               weightAttribute: Attribute, selectAttribute: Attribute, doubleSelectAttribute: Attribute) => {
     let _c = 0;
     const c = () => {
         return (((_c++)%351)+1);
@@ -507,8 +519,101 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
             value: 'some text'
         } as TextValue
     } as Value);
-
-
+    await updateItemValue(viewId, item1.id, {
+       attributeId: numberAttribute.id,
+       val: {
+           type: 'number',
+           value: 11
+       } as NumberValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+       attributeId: dateAttribute.id,
+       val: {
+           type: 'date',
+           value: '28-12-1988'
+       } as DateValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: currencyAttribute.id,
+        val: {
+            type: 'currency',
+            value: 10.10,
+            country: 'AUD'
+        } as CurrencyValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: volumeAttribute.id,
+        val: {
+            type: 'volume',
+            value: 11,
+            unit: 'ml'
+        } as VolumeValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: dimensionAttribute.id,
+        val: {
+            type: 'dimension',
+            length: 11,
+            width: 12,
+            height: 13,
+            unit: 'cm'
+        } as DimensionValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: areaAttribute.id,
+        val: {
+           type: 'area',
+           value: 11,
+           unit: 'm2'
+        } as AreaValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: lengthAttribute.id,
+        val: {
+            type: 'length',
+            value: 11,
+            unit: 'cm'
+        } as LengthValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: widthAttribute.id,
+        val: {
+            type: 'width',
+            value: 11,
+            unit: 'cm'
+        } as WidthValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: heightAttribute.id,
+        val: {
+            type: 'height',
+            value: 11,
+            unit: 'cm'
+        } as HeightValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: weightAttribute.id,
+        val: {
+            type: 'weight',
+            value: 11,
+            unit: 'kg'
+        } as WeightValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: selectAttribute.id,
+        val: {
+            type: 'select',
+            key: 'key3',
+        } as SelectValue
+    } as Value);
+    await updateItemValue(viewId, item1.id, {
+        attributeId: doubleSelectAttribute.id,
+        val: {
+            type: 'doubleselect',
+            key1: 'key3',
+            key2: 'key33'
+        } as DoubleSelectValue
+    } as Value);
 
 
     // setup item pricing

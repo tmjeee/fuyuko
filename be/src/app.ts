@@ -7,13 +7,20 @@ import {i} from './logger';
 import {runUpdater} from './updater';
 import {runBanner} from './banner';
 import config from './config';
-import {catchErrorMiddlewareFn, httpLogMiddlewareFn, timingLogMiddlewareFn} from "./route/v1/common-middleware";
+import {
+    auditMiddlewareFn,
+    catchErrorMiddlewareFn,
+    httpLogMiddlewareFn,
+    threadLocalMiddlewareFn,
+    timingLogMiddlewareFn
+} from "./route/v1/common-middleware";
 import {Registry} from "./registry";
 import {runCustomRuleSync} from "./custom-rule";
 import {Options} from "body-parser";
 import {runCustomImportSync} from "./custom-import";
 import {runCustomExportSync} from "./custom-export/custom-export-executor";
 import {runTimezoner} from "./timezoner";
+import {runCustomBulkEditSync} from "./custom-bulk-edit/custom-bulk-edit-executor";
 
 i(`Run Timezoner`);
 runTimezoner(config.timezone);
@@ -25,6 +32,7 @@ const options: Options = {
    limit: config['request-payload-limit']
 };
 
+app.all('*', threadLocalMiddlewareFn);
 app.use(timingLogMiddlewareFn);
 app.use(express.urlencoded(options));
 app.use(express.json(options));
@@ -32,16 +40,16 @@ app.use(express.text(options))
 app.use(express.raw(options))
 app.use(cookieParser());
 app.use(httpLogMiddlewareFn);
+app.use(catchErrorMiddlewareFn);
 
 app.all('*', cors());
-
+app.all('*',  auditMiddlewareFn);
 
 const registry: Registry = Registry.newRegistry('api');
 const apiRouter: Router = express.Router();
 app.use('/api', apiRouter);
 registerV1AppRouter(apiRouter, registry);
 i('URL Mappings :-\n' + registry.print({indent: 2, text: ''}).text);
-app.use(catchErrorMiddlewareFn);
 
 export type PromiseFn = () => Promise<any>;
 
@@ -55,7 +63,7 @@ const fns: PromiseFn[] = [
             });
     },
 
-    // custom rule sync
+    // custom rule / validation sync
     () => {
         i(`running custom rule sync`)
         return runCustomRuleSync()
@@ -79,6 +87,14 @@ const fns: PromiseFn[] = [
         return runCustomExportSync()
             .then((_: any) => {
                 i(`done with custom export sync`);
+            });
+    },
+
+    () => {
+        i(`running custom bulk edit sync`);
+        return runCustomBulkEditSync()
+            .then((_: any) => {
+                i(`done with custom bulk edit sync`);
             });
     },
 

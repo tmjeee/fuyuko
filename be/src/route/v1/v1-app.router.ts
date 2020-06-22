@@ -97,7 +97,7 @@ import registerPostRemoveCustomRuleFromViewRoute from './DELETE-remove-custom-ru
 import registerGetUserNotificationsRoute from './GET-user-notification.route';
 import registerPostUserNotificationRoute from './POST-user-notification.route';
 import registerPostAddAttributeRoute from './POST-add-attributes.route';
-import registerGetSearchForItemsByViewRoute from './GET-search-for-items-by-view.route';
+import registerGetSearchForItemsInViewRoute from './GET-search-for-items-in-view.route';
 import registerDeleteValidationResultByIdRoute from './DELETE-validation-result-by-id.route';
 import registerGetDataExportContentByIdRoute from './GET-data-export-content-by-id.route';
 import registerGetPricingStructureByIdRoute from './GET-pricing-structure-by-id.route';
@@ -136,6 +136,12 @@ import registerGetCategorySimpleItemsNotInCategoryRoute from './GET-category-sim
 import registerPostForgotPasswordRoute from './POST-forgot-password.route';
 import registerPostResetForgottenPasswordRoute from './POST-reset-forgotten-password.route';
 import registerPostCheckForgotPasswordCodeRoute from './POST-check-forgot-password-code.route';
+import registerGetAuditLogsRoute from './GET-audit-log.route';
+import registerGetCustomBulkEditRoute from './GET-all-custom-bulk-edit.route';
+import registerPostCustomBulkEditPreviewRoute from './POST-custom-bulk-edit-preview.route';
+import registerPostCustomBulkEditSubmitJobRoute from './POST-custom-bulk-edit-submit-job.route';
+import registerPostCustomBulkEditValidateInputRoute from './POST-custom-bulk-edit-validate-input.route';
+
 
 const v1AppRouter:Router  = express.Router();
 
@@ -239,7 +245,7 @@ const reg = (router: Router, regi: Registry) => {
     registerGetUserNotificationsRoute(v1AppRouter, registry);
     registerPostUserNotificationRoute(v1AppRouter, registry);
     registerPostAddAttributeRoute(v1AppRouter, registry);
-    registerGetSearchForItemsByViewRoute(v1AppRouter, registry);
+    registerGetSearchForItemsInViewRoute(v1AppRouter, registry);
     registerDeleteValidationResultByIdRoute(v1AppRouter, registry);
     registerGetDataExportContentByIdRoute(v1AppRouter, registry);
     registerGetPricingStructureByIdRoute(v1AppRouter, registry);
@@ -275,10 +281,16 @@ const reg = (router: Router, regi: Registry) => {
     registerDeleteRemoveItemFromCategoryRoute(v1AppRouter, registry);
     registerGetCategorySimpleItemsInCategoryRoute(v1AppRouter, registry);
     registerGetCategorySimpleItemsNotInCategoryRoute(v1AppRouter, registry);
-
     registerPostCheckForgotPasswordCodeRoute(v1AppRouter, registry);
     registerPostResetForgottenPasswordRoute(v1AppRouter, registry);
     registerPostForgotPasswordRoute(v1AppRouter, registry);
+
+    registerGetCustomBulkEditRoute(v1AppRouter, registry);
+    registerPostCustomBulkEditPreviewRoute(v1AppRouter, registry);
+    registerPostCustomBulkEditSubmitJobRoute(v1AppRouter, registry);
+    registerPostCustomBulkEditValidateInputRoute(v1AppRouter, registry);
+
+    registerGetAuditLogsRoute(v1AppRouter, registry);
 };
 
 

@@ -7,7 +7,6 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-loading [show]="!done"></app-loading>
             <ng-container *ngIf="done">
                 <app-view-table [attr.test-view-view-page]="''" [views]="views" (events)="onViewTableEvent($event)"></app-view-table>
             </ng-container>

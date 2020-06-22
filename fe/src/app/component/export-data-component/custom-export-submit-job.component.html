@@ -1,5 +1,4 @@
 <div class="custom-export-submit-job">
-    <app-loading [show]="!ready"></app-loading>
     <div *ngIf="ready">
         <div *ngIf="result.valid">Job submitted successfully</div>
         <app-notification-messages [messages]="result?.messages" [attr.test-notifications]="''">

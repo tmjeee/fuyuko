@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ItemService} from '../../service/item-service/item.service';
 import {combineLatest, forkJoin, Subscription, concat, Observable} from 'rxjs';
-import {concatAll, concatMap, map, tap} from 'rxjs/operators';
+import {concatAll, concatMap, finalize, map, tap} from 'rxjs/operators';
 import {Item, ItemSearchType, TableItem} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';
 import {TableItemAndAttributeSet} from '../../model/item-attribute.model';
@@ -17,6 +17,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
 import {Pagination} from "../../utils/pagination.utils";
 import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -38,7 +39,8 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   constructor(private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private viewService: ViewService,
-              private itemService: ItemService) {
+              private itemService: ItemService,
+              private loadingService: LoadingService) {
       this.pagination = new Pagination();
   }
 
@@ -63,6 +65,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
   reload() {
     this.done = false;
+    this.loadingService.startLoading();
     const viewId = this.currentView.id;
     forkJoin([
       this.attributeService.getAllAttributesByView(viewId)
@@ -81,6 +84,10 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
          tableItems,
        };
        this.done = true;
+      }),
+      finalize(() => {
+          this.done = true;
+          this.loadingService.stopLoading();
       })
     ).subscribe();
   }
@@ -88,8 +95,11 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
   onDataTableEvent($event: DataTableComponentEvent) {
     const o: Observable<ApiResponse>[] = [];
+    if ($event.newItems && $event.newItems.length) {
+        o.push(this.itemService.saveTableItems(this.currentView.id, $event.newItems));
+    }
     if ($event.modifiedItems && $event.modifiedItems.length) {
-        o.push(this.itemService.saveTableItems(this.currentView.id, $event.modifiedItems));
+        o.push(this.itemService.saveItems(this.currentView.id, $event.modifiedItems as any));
     }
     if ($event.deletedItems && $event.deletedItems.length) {
         o.push(this.itemService.deleteTableItems(this.currentView.id, $event.deletedItems));

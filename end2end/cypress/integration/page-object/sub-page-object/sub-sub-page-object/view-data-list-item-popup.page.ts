@@ -9,7 +9,7 @@ export class ViewDataListItemPopupPage extends AbstractViewDataItemPopupPage {
             [test-button-item-editor-popup-cancel]`))
             .click({force: true})
             .wait(100);
-        return new ViewDataListEditPopupPage();
+        return new ViewDataListEditPopupPage(this.PAGE_NAME);
     }
 
 
@@ -18,7 +18,7 @@ export class ViewDataListItemPopupPage extends AbstractViewDataItemPopupPage {
             [test-button-item-editor-popup-ok]`))
             .click({force: true})
             .wait(100);
-        return new ViewDataListEditPopupPage();
+        return new ViewDataListEditPopupPage(this.PAGE_NAME);
     }
 
     clickOk(): ViewDataListPage {

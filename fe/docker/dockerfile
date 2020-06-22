@@ -3,19 +3,12 @@ FROM nginx
 
 COPY dist/fuyuko /usr/share/nginx/html
 COPY docker/conf /etc/nginx
-# COPY update-config-json.sh /usr/share/nginx/
-COPY auto-update-config.sh .
-COPY update-config-json.sh .
 COPY docker-start-cmd.sh .
 
 RUN apt -y update && \
     apt -y install apt-utils && \
-    apt -y install jq && \
-    apt -y install moreutils && \
     apt -y install vim && \
-    chmod u+x update-config-json.sh && \
     chmod u+x docker-start-cmd.sh && \
-    chmod u+x auto-update-config.sh && \
     set -o vi
 
 VOLUME /usr/share/nginx/html

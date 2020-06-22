@@ -1,12 +1,12 @@
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../server-side-model/server-side.model";
 import {Attribute} from "../model/attribute.model";
-import {attributesConvert, attributesRevert} from "./conversion-attribute.service";
+import {attributeConvert, attributesConvert, attributesRevert} from "./conversion-attribute.service";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {LoggingCallback} from "./job-log.service";
 import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET} from "../util/utils";
-import {Status} from "../model/status.model";
+import {ENABLED, Status} from "../model/status.model";
 
 const q1_count: string = `
                 SELECT
@@ -38,6 +38,7 @@ const q2 = (limitOffset: LimitOffset) => `
                 ${LIMIT_OFFSET(limitOffset)}
 `;
 
+// no need to filter by status, cause we want a particular attribute by a specific id
 const q_ = () => `
                 SELECT
                     A.ID AS A_ID,
@@ -57,6 +58,26 @@ const q_ = () => `
                 LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS E ON E.VIEW_ATTRIBUTE_METADATA_ID = M.ID
                 WHERE A.ID IN ?
 `;
+
+const q_byName = () => `
+                SELECT
+                    A.ID AS A_ID,
+                    A.VIEW_ID AS A_VIEW_ID,
+                    A.TYPE AS A_TYPE,
+                    A.NAME AS A_NAME,
+                    A.DESCRIPTION AS A_DESCRIPTION,
+                    A.CREATION_DATE AS A_CREATION_DATE,
+                    A.LAST_UPDATE AS A_LAST_UPDATE,
+                    M.ID as M_ID,
+                    M.NAME AS M_NAME,
+                    E.ID as E_ID,
+                    E.KEY AS E_KEY,
+                    E.VALUE AS E_VALUE
+                FROM TBL_VIEW_ATTRIBUTE AS A
+                LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS M ON M.VIEW_ATTRIBUTE_ID = A.ID
+                LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS E ON E.VIEW_ATTRIBUTE_METADATA_ID = M.ID
+                WHERE A.VIEW_ID = ? AND A.NAME = ? AND A.STATUS = ?
+`
 
 // =====================
 // === updateAttribute ===
@@ -125,6 +146,48 @@ export const getTotalAttributesInView = async (viewId: number, attributeIds?: nu
             );
         return q[0].COUNT;
     });
+};
+
+
+// =================================
+// === getAttributeInViewByName ===
+// =================================
+export const getAttributeInViewByName = async (viewId: number, attributeName: string): Promise<Attribute> => {
+    const attribute2: Attribute2 = await getAttribute2InViewByName(viewId, attributeName);
+    if (attribute2) {
+        return attributeConvert(attribute2);
+    }
+    return null;
+}
+export const getAttribute2InViewByName = async (viewId: number, attributeName: string): Promise<Attribute2> => {
+   return doInDbConnection(async (conn: Connection) => {
+       const q: QueryA = await conn.query(q_byName(), [viewId, attributeName, ENABLED]);
+       if (q && q.length > 0) {
+           const att: Attribute2 = {
+               id: q[0].A_ID,
+               name: q[0].A_NAME,
+               description: q[0].A_DESCRIPTION,
+               type: q[0].A_TYPE,
+               creationDate: q[0].A_CREATION_DATE,
+               lastUpdate: q[0].A_LAST_UPDATE,
+               metadatas: []
+           } as Attribute2;
+           return att;
+       }
+       return null;
+   });
+}
+
+
+// ============================
+// === getAttributesInView ====
+// ============================
+export const getAttributeInView = async (viewId: number, attributeId: number): Promise<Attribute> => {
+    const attributes: Attribute[] = await getAttributesInView(viewId, [attributeId]);
+    if (attributes && attributes.length) {
+        return attributes[0];
+    }
+    return null;
 };
 
 

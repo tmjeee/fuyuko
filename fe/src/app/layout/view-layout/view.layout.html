@@ -1,0 +1,109 @@
+<simple-notifications></simple-notifications>
+<div class="view-layout"
+  *ngIf="!loading"
+  [attr.test-sub-side-nav-state-open]="''+subSideBarOpened"
+  [attr.test-side-nav-state-open]="''+sideNavOpened"
+  [attr.test-help-nav-state-open]="''+helpNavOpened">
+  <mat-toolbar class="primary-toolbar mat-elevation-z24" color="primary">
+    <mat-toolbar-row>
+      <mat-icon class="action"
+                [attr.test-side-nav-toggle-icon]="''"
+                (click)="onSideNavExpandCollapseButtonClicked($event)">more_horiz</mat-icon>
+      <!-- avatar -->
+      <div class="avatar-section">
+        <app-avatar [user]="myself"
+                    [editable]="false"
+                    width="45px"
+                    height="45px">
+        </app-avatar>
+      </div>
+      <div class="spacer"></div>
+      <app-notification [notifications]="notifications"></app-notification>
+      <mat-icon class="action"
+                [attr.test-help-nav-toggle-icon]="''"
+                (click)="onHelpNavExpandCollapseButtonClicked($event)">help</mat-icon>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-sidenav-container class="main-side-nav-container">
+    <mat-sidenav mode="side" [fixedInViewport]="true" [fixedTopGap]="65" [opened]="sideNavOpened" position="start">
+      <div class="side-nav">
+        <app-side-nav (logoutEvent)="logout()"></app-side-nav>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav mode="side" [opened]="helpNavOpened" [fixedInViewport]="true" [fixedTopGap]="65" position="end">
+      <div class="help-nav">
+        <router-outlet name="help"></router-outlet>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="main-content">
+        <!-- user sub-side-nav -->
+        <mat-sidenav-container class="sub-side-nav-container">
+          <mat-sidenav [opened]="subSideBarOpened" mode="side" [fixedInViewport]="true" [fixedTopGap]="65" position="start">
+            <mat-list>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'rules'">
+                <mat-icon>pan_tool</mat-icon>
+                <a href="#" [routerLink]="['/view-layout', {outlets: {primary:['rules'], help:['view-help']}}]">Rules</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'attributes'">
+                <mat-icon>toc</mat-icon>
+                <a href="#" [routerLink]="['/view-layout', {outlets: {primary:['attributes'], help:['view-help']}}]">Attributes</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'data-tabular'">
+                <mat-icon>view_quilt</mat-icon>
+                <a href="#" [routerLink]="['/view-layout', {outlets: {primary:['data-tabular'], help:['view-help']}}]">Data - Tabular</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'data-thumbnail'">
+                <mat-icon>view_module</mat-icon>
+                <a href="#" [routerLink]="['/view-layout', {outlets: {primary:['data-thumbnail'], help:['view-help']}}]">Data - Thumbnail</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'data-list'">
+                <mat-icon>view_list</mat-icon>
+                <a href="#" [routerLink]="['/view-layout', {outlets: {primary:['data-list'], help:['view-help']}}]">Data - List</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'views'">
+                <mat-icon>library_books</mat-icon>
+                <a href="#" [routerLink]="['/view-layout', {outlets: {primary:['views'], help:['view-help']}}]">Views</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'validation'">
+                <mat-icon>verified_user</mat-icon>
+                <a href="#" [routerLink]="['/view-layout', {outlets: {primary:['validation'], help:['view-help']}}]">Validation</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'category'">
+                <mat-icon>category</mat-icon>
+                <a href="#" [routerLink]="['/view-layout', {outlets: {primary:['category'], help:['category-help']}}]">Categories</a>
+              </mat-list-item>
+              <mat-list-item [class.selected]="routeSubSideNavData === 'category-management'">
+                <mat-icon>group_work</mat-icon>
+                <a href="#" [routerLink]="['/view-layout', {outlets: {primary:['category-management'], help:['category-help']}}]">Categories Management</a>
+              </mat-list-item>
+            </mat-list>
+          </mat-sidenav>
+          <mat-sidenav-content class="content-2">
+            <mat-toolbar class="secondary-toolbar" color="primary">
+              <mat-toolbar-row>
+                <mat-icon class="sub-sidebar-button"
+                          [attr.test-sub-side-nav-toggle-icon]="''"
+                          (click)="onSubSidebarButtonClicked($event)">menu</mat-icon>
+                <mat-form-field class="view-selection">
+                  <!--mat-label>View</mat-label -->
+                  <mat-select (selectionChange)="onViewSelectionChange($event)" [value]="currentView"
+                              [attr.test-mat-select-global-view]="''">
+                    <mat-option *ngFor="let view of allViews" [value]="view" [attr.test-mat-select-option-global-view]="view.name">
+                      {{view.name}}
+                    </mat-option>
+                  </mat-select>
+                  <!--mat-hint>Select your current view</mat-hint-->
+                </mat-form-field>
+                <span class="spacer"></span>
+              </mat-toolbar-row>
+            </mat-toolbar>
+            <div class="primary-outlet">
+              <router-outlet name="primary"></router-outlet>
+            </div>
+          </mat-sidenav-content>
+        </mat-sidenav-container>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

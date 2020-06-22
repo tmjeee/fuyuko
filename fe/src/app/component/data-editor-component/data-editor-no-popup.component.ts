@@ -8,7 +8,7 @@ import {
     CurrencyValue, DATE_FORMAT, DimensionValue, DoubleSelectValue, HEIGHT_FORMAT, HeightValue,
     LengthValue, SelectValue,
     Value,
-    VolumeValue,
+    VolumeValue, WeightValue,
     WidthValue
 } from '../../model/item.model';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -20,7 +20,7 @@ import {
     CountryCurrencyUnits, DIMENSION_UNITS,
     DimensionUnits, HEIGHT_UNITS,
     HeightUnits, LENGTH_UNITS, LengthUnits, VOLUME_UNITS,
-    VolumeUnits, WIDTH_UNITS,
+    VolumeUnits, WEIGHT_UNITS, WeightUnits, WIDTH_UNITS,
     WidthUnits
 } from '../../model/unit.model';
 import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
@@ -34,7 +34,7 @@ import {
     setItemNumberValue, setItemSelectValue,
     setItemStringValue,
     setItemTextValue,
-    setItemVolumeValue,
+    setItemVolumeValue, setItemWeightValue,
     setItemWidthValue
 } from '../../shared-utils/ui-item-value-setter.util';
 import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
@@ -61,6 +61,7 @@ export class DataEditorNoPopupComponent implements OnInit {
     widthUnits: WidthUnits[];
     heightUnits: HeightUnits[];
     lengthUnits: LengthUnits[];
+    weightUnits: WeightUnits[];
 
 
     formGroup: FormGroup;
@@ -79,6 +80,7 @@ export class DataEditorNoPopupComponent implements OnInit {
         this.widthUnits = [...WIDTH_UNITS];
         this.heightUnits = [...HEIGHT_UNITS];
         this.lengthUnits = [...LENGTH_UNITS];
+        this.weightUnits = [...WEIGHT_UNITS];
     }
 
     ngOnInit() {
@@ -142,11 +144,12 @@ export class DataEditorNoPopupComponent implements OnInit {
                case 'volume':
                case 'width':
                case 'length':
-               case 'height': {
+               case 'height':
+               case 'weight': {
                    let v = ``;
                    let u = ``;
                    if (this.itemValue && this.itemValue.val) {
-                       const itemValueType: AreaValue | VolumeValue | WidthValue | LengthValue | HeightValue =
+                       const itemValueType: AreaValue | VolumeValue | WidthValue | LengthValue | HeightValue | WeightValue =
                            this.itemValue.val as any;
                        v = String(itemValueType.value);
                        u = itemValueType.unit;
@@ -260,6 +263,9 @@ export class DataEditorNoPopupComponent implements OnInit {
                         break;
                     case 'height':
                         setItemHeightValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                        break;
+                    case 'weight':
+                        setItemWeightValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
                         break;
                     case 'dimension':
                         setItemDimensionValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value,

@@ -6,9 +6,28 @@ import {
     VolumeUnits,
     WidthUnits
 } from "../../../model/unit.model";
+import {AbstractViewDataItemPopupPage} from "./abstract-view-data-item-popup.page";
+import * as util from "../../../util/util";
 
 
 export class AbstractViewDataAttributePopupPage {
+
+    constructor(public PAGE_NAME: string) {}
+
+    waitForReady(): AbstractViewDataAttributePopupPage {
+        util.waitUntilTestPageReady(this.PAGE_NAME);
+        return this;
+    }
+
+    waitForPopupReady(): this {
+        util.waitUntilPopupReady(`data-editor-dialog-popup`);
+        return this;
+    }
+
+    waitForPopupGone(): this {
+        util.waitUntilPopupGone(`data-editor-dialog-popup`);
+        return this;
+    }
 
     verifyPopupTitle(): this {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
@@ -21,6 +40,7 @@ export class AbstractViewDataAttributePopupPage {
             .find(`[test-field-string]`)
             .clear({force: true})
             .type(v, {force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -29,6 +49,7 @@ export class AbstractViewDataAttributePopupPage {
             .find(`[test-field-text]`)
             .clear({force: true})
             .type(v, {force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -46,6 +67,7 @@ export class AbstractViewDataAttributePopupPage {
             .clear({force: true})
             .type(v, {force: true})
         ;
+        this.waitForReady();
         return this;
     }
 
@@ -57,6 +79,7 @@ export class AbstractViewDataAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-currency] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-currency='${unit}']`).click({force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -68,6 +91,7 @@ export class AbstractViewDataAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-area] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-area='${unit}']`).click({force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -79,6 +103,7 @@ export class AbstractViewDataAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-volume] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-volume='${unit}']`).click({force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -98,6 +123,7 @@ export class AbstractViewDataAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-dimension] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-dimension='${unit}']`).click({force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -109,6 +135,7 @@ export class AbstractViewDataAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-width] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-width='${unit}']`).click({force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -131,6 +158,7 @@ export class AbstractViewDataAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-height] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-height='${unit}']`).click({force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -138,6 +166,7 @@ export class AbstractViewDataAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-select-key] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-select-key='${key}']`).click({force: true});
+        this.waitForReady();
         return this;
     }
 
@@ -148,6 +177,7 @@ export class AbstractViewDataAttributePopupPage {
         cy.get(`[test-popup-dialog-title='data-editor-dialog-popup']`)
             .find(`[test-mat-select-doubleselect-key2] div`).first().click({force: true});
         cy.get(`[test-mat-select-option-doubleselect-key2='${key2}']`).click({force: true});
+        this.waitForReady();
         return this;
     }
 }

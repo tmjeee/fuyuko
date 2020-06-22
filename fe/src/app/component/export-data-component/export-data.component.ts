@@ -3,7 +3,7 @@ import {View} from '../../model/view.model';
 import {forkJoin, Observable, } from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
 import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {tap} from 'rxjs/operators';
 import {MatRadioChange} from '@angular/material/radio';
 import {MatHorizontalStepper} from '@angular/material/stepper';
@@ -19,6 +19,7 @@ import {MatCheckboxChange} from '@angular/material/checkbox';
 import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
 import {MatSelectChange} from '@angular/material/select';
 import {PricingStructure} from '../../model/pricing-structure.model';
+import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES} from "../../model/operator.model";
 
 export type ViewAttributeFn = (viewId: number) => Observable<Attribute[]>;
 export type ViewPricingStructureFn = (viewId: number) => Observable<PricingStructure[]>;
@@ -30,6 +31,7 @@ export type SubmitExportJobFn = (exportType: DataExportType, viewId: number,
                                  attributes: Attribute[],
                                  dataExport: AttributeDataExport | ItemDataExport | PriceDataExport,
                                  filter: ItemValueOperatorAndAttribute[]) => Observable<Job>;
+
 
 @Component({
    selector: 'app-export-data',
@@ -267,15 +269,18 @@ export class ExportDataComponent implements OnInit {
         const g: FormGroup = this.formBuilder.group({
             attribute: this.formBuilder.control(null, [Validators.required]),
             operator: this.formBuilder.control(null, [Validators.required]),
-            itemValue: this.formBuilder.control(null, [Validators.required])
+            itemValue: this.formBuilder.control(null, [])
         });
+        g.setValidators([this.validateFilterFormGroup.bind(this)]);
         this.thirdFormGroup.setControl('' + (i as any).id, g);
+        this.thirdFormGroup.updateValueAndValidity();
     }
 
     onDeleteItemFilter($event: MouseEvent, itemValueOperatorAndAttribute: ItemValueOperatorAndAttribute) {
         this.itemValueOperatorAndAttributeList =
             this.itemValueOperatorAndAttributeList.filter((i: ItemValueOperatorAndAttribute) => i !== itemValueOperatorAndAttribute);
         this.thirdFormGroup.removeControl('' + (itemValueOperatorAndAttribute as any).id);
+        this.thirdFormGroup.updateValueAndValidity();
     }
 
     onAttributeCheckboxChange($event: MatCheckboxChange) {
@@ -300,5 +305,24 @@ export class ExportDataComponent implements OnInit {
 
     onPricingStructureSelectionChanged($event: MatSelectChange) {
         this.selectedPricingStructure = $event.value;
+    }
+
+
+    // validate filter FormGroup, this only handles the case where operators must have an item value or not, rests are
+    // handled in the formControl level.
+    private validateFilterFormGroup(c: AbstractControl /* filter FormGroup */): ValidationErrors | null {
+        const fg: FormGroup  = c as FormGroup;
+        const fcAttribute: FormControl = fg.controls.attribute as FormControl;
+        const fcOperator: FormControl = fg.controls.operator as FormControl;
+        const fcItemValue: FormControl = fg.controls.itemValue as FormControl;
+
+        if (!OPERATORS_WITHOUT_CONFIGURATBLE_VALUES.includes(fcOperator.value)) {
+            if (fcItemValue.value == null || fcItemValue.value == undefined || fcItemValue.value.toString().trim() == '') {
+                return {
+                    filterInvalid: true
+                }
+            }
+        }
+        return null;
     }
 }

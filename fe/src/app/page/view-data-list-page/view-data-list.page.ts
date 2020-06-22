@@ -7,13 +7,14 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {ViewService} from '../../service/view-service/view.service';
 import {ItemService} from '../../service/item-service/item.service';
 import {Item, ItemSearchType} from '../../model/item.model';
-import {map} from 'rxjs/operators';
+import {finalize, map} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
 import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Pagination} from "../../utils/pagination.utils";
 import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -35,7 +36,8 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   constructor(private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private viewService: ViewService,
-              private itemService: ItemService) {
+              private itemService: ItemService,
+              private loadingService: LoadingService) {
       this.pagination = new Pagination();
   }
 
@@ -61,6 +63,7 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
 
   reload() {
     this.done = false;
+    this.loadingService.startLoading();
     const viewId = this.currentView.id;
     combineLatest([
         this.attributeService.getAllAttributesByView(viewId)
@@ -78,6 +81,10 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
             items,
           };
           this.done = true;
+        }),
+        finalize(() => {
+          this.done = true;
+          this.loadingService.stopLoading();
         })
     ).subscribe();
   }

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 import {GlobalAvatar} from '../../model/avatar.model';
 import {AvatarService} from '../../service/avatar-service/avatar.service';
 import {AvatarComponentEvent} from '../../component/avatar-component/avatar.component';
@@ -15,6 +15,7 @@ import {GlobalCommunicationService} from '../../service/global-communication-ser
 import {FormBuilder, FormControl} from '@angular/forms';
 import {UserAvatarResponse} from "../../model/api-response.model";
 import {toNotifications} from "../../service/common.service";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -24,6 +25,7 @@ import {toNotifications} from "../../service/common.service";
 export class ProfilePageComponent implements OnInit, OnDestroy {
 
   ready: boolean;
+  avatarsReady: boolean;
   allPredefinedAvatars: GlobalAvatar[];
   myself: User;
   allThemes: Theme[];
@@ -37,15 +39,22 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private globalCommunicationService: GlobalCommunicationService,
               private formBuilder: FormBuilder,
-              private notificationsService: NotificationsService) {
+              private notificationsService: NotificationsService,
+              private loadingService: LoadingService) {
       this.formControlTheme =  formBuilder.control('');
   }
 
   ngOnInit(): void {
+    this.loadingService.startLoading();
     this.allThemes = this.themeService.allThemes();
     this.avatarService.allPredefinedAvatars().pipe(
         tap((globalAvatars: GlobalAvatar[]) => {
             this.allPredefinedAvatars = globalAvatars;
+            this.avatarsReady = true;
+        }),
+        finalize(() => {
+            this.avatarsReady = true;
+            this.loadingService.stopLoading();
         })
     ).subscribe();
     this.subscription = this.authService.asObservable()
@@ -60,6 +69,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
               this.formControlTheme.setValue(theme);
           }
           this.ready = true;
+        }),
+        finalize(() => {
+            this.ready = true;
+            this.loadingService.stopLoading();
         })
       ).subscribe();
   }

@@ -100,11 +100,11 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
           ).subscribe();
         break;
       case 'add':
-          await this.router.navigate(['/view-gen-layout',
+          await this.router.navigate(['/view-layout',
               {outlets: {primary: ['add-attribute'], help: ['view-help']}}]);
         break;
       case 'edit':
-        await this.router.navigate(['/view-gen-layout',
+        await this.router.navigate(['/view-layout',
               {outlets: {primary: ['edit-attribute', `${$event.attribute.id}`], help: ['view-help']}}]);
         break;
     }

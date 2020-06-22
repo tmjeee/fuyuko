@@ -223,7 +223,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
             .find(`[test-data-editor='${attributeName}']`)
             .find(`[test-data-editor-value='${attributeName}']`)
             .click({force: true});
-        return new ViewValidationAttributePopupPage(this.validationName);
+        return new ViewValidationAttributePopupPage(this.validationName, PAGE_NAME);
     }
 
     clickTableItemName(itemName: string): ViewValidationItemPopupPage {
@@ -232,7 +232,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
             .find(`[test-item-editor='name']`)
             .find(`[test-item-editor-value='name']`)
             .click({force: true});
-        return new ViewValidationItemPopupPage(this.validationName);
+        return new ViewValidationItemPopupPage(this.validationName, PAGE_NAME);
     }
 
     clickTableItemDescription(itemName: string): ViewValidationItemPopupPage {
@@ -241,7 +241,7 @@ export class ViewValidationDetailsPage implements ActualPage<ViewValidationDetai
             .find(`[test-item-editor='description']`)
             .find(`[test-item-editor-value='description']`)
             .click({force: true});
-        return new ViewValidationItemPopupPage(this.validationName);
+        return new ViewValidationItemPopupPage(this.validationName, PAGE_NAME);
     }
 
     selectTableItem(itemName: string): ViewValidationDetailsPage {

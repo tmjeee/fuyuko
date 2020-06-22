@@ -6,7 +6,6 @@
             <mat-card-subtitle>Add attribute related to current active view.</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <app-loading [show]="viewLoading"></app-loading>
             <div *ngIf="!viewLoading">
                 <app-edit-attribute [attribute]="attribute" (events)="onEditAttributeEvent($event)">
                 </app-edit-attribute>

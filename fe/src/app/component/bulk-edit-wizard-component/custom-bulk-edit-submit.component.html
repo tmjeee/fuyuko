@@ -1,0 +1,7 @@
+<div class="custom-bulk-edit-submit">
+    <div *ngIf="ready">
+        <div *ngIf="result.valid">Job submitted successfully</div>
+        <app-notification-messages [messages]="result?.messages" [attr.test-notifications]="''">
+        </app-notification-messages>
+    </div>
+</div>

@@ -3,7 +3,7 @@ import {ViewPage} from "../page-object/view.page";
 
 
 export const getMyself = (): any => {
-    const s: string = (localStorage.getItem('MY_APP_MYSELF'));
+    const s: string = (sessionStorage.getItem('MY_APP_MYSELF'));
     if (s) {
         return JSON.parse(s);
     }
@@ -23,6 +23,22 @@ export const waitUntilTestPageReady = (pageName: string) => {
     });
 };
 
+export const waitUntilPopupReady = (popupName: string) => {
+    cy.waitUntil(() => {
+        return cy.get(`body`).then((n) => {
+            return (n.find(`[test-popup-dialog-title='${popupName}']`).length > 0);
+        });
+    })
+}
+
+export const waitUntilPopupGone = (popupName: string) => {
+    cy.waitUntil(() => {
+        return cy.get(`body`).then((n) => {
+            return (n.find(`[test-popup-dialog-title='${popupName}']`).length <= 0);
+        });
+    })
+};
+
 export const clearAllMessageToasts = () => {
     cy.waitUntil(() => cy.get('simple-notifications .simple-notification')).each((n, index, list) => {
         Cypress.dom.isAttached(n) && cy.wrap(n).click({force: true});
@@ -38,7 +54,17 @@ export const clickOnSuccessMessageToasts = () => {
     });
      */
     // cy.waitUntil(() => cy.get('simple-notifications .simple-notification.success')).first().click({force: true});
-    cy.get('simple-notifications .simple-notification.success').first().click({force: true});
+    cy.waitUntil(() => {
+        return cy.get('simple-notifications .simple-notification.success').then((_) => {
+            return (_.length > 0)
+        })
+    });
+    cy.get("body").then($body => {
+        if ($body.find("simple-notifications .simple-notification.success").length > 0) {   //evaluates as true
+            // cy.get("simple-notifications .simple-notification.success").click();
+            cy.get('simple-notifications .simple-notification.success').first().click({force: true});
+        }
+    });
 }
 
 export const clickOnErrorMessageToasts = () => {

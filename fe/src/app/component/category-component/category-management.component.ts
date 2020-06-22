@@ -1,4 +1,13 @@
-import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChange,
+    SimpleChanges
+} from "@angular/core";
 import {Category, CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
 import {Observable} from "rxjs";
 import {finalize, tap} from "rxjs/operators";
@@ -23,7 +32,7 @@ export type RemoveItemsFromCategoryFn = (categoryId: number, items: CategorySimp
 @Component({
     selector: 'app-category-management',
     templateUrl: './category-management.component.html',
-    styleUrls: ['./category-management.component.scss']
+    styleUrls: ['./category-management.component.scss'],
 })
 export class CategoryManagementComponent  implements  OnInit, OnChanges {
 
@@ -48,7 +57,8 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
     removableCategoryTableItemsPagination: Pagination;
     removeableCategoryTableActions: Action[];
 
-    constructor(private matDialog: MatDialog) {
+    constructor(private matDialog: MatDialog,
+                private changeDetectorRef: ChangeDetectorRef) {
         this.categoriesWithItems = [];
         this.addableCategoryTableItemsPagination = new Pagination();
         this.removableCategoryTableItemsPagination = new Pagination();
@@ -64,7 +74,10 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
         if (changes.viewId) {
             const simpleChange: SimpleChange = changes.viewId;
             const viewId: number = simpleChange.currentValue;
-            this.reloadTree(viewId);
+            const prevViewId: number = simpleChange.previousValue;
+            if (prevViewId !== viewId) {
+                this.reloadTree(viewId);
+            }
         }
     }
     

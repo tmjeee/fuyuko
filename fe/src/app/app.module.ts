@@ -11,7 +11,7 @@ import {LoginLayoutComponent} from './layout/login-layout/login.layout';
 import {AppMaterialsModule} from './app-materials.module';
 import {BackgroundImageService} from './service/background-image-service/background-image.service';
 import {RegisterPageComponent} from './page/register-page/register.page';
-import {GenLayoutComponent} from './layout/gen-layout/gen.layout';
+import {SettingsLayoutComponent} from './layout/settings-layout/settings.layout';
 import {BulkEditPageComponent} from './page/bulk-edit-page/bulk-edit.page';
 import {ProfilePageComponent} from './page/profile-page/profile.page';
 import {SettingsPageComponent} from './page/settings-page/settings.page';
@@ -30,9 +30,8 @@ import {NotificationAnimationType, Options, SimpleNotificationsModule} from 'ang
 import {UserRolePageComponent} from './page/user-role-page/user-role.page';
 import {UserGroupPageComponent} from './page/user-group-page/user-group.page';
 import {UserPeoplePageComponent} from './page/user-people-page/user-people.page';
-import {UserLayoutComponent} from './layout/user-gen-layout/user-gen.layout';
-import {ImportExportLayoutComponent} from './layout/import-export-gen-layout/import-export-gen.layout';
-import {ViewLayoutComponent} from './layout/view-gen-layout/view-gen.layout';
+import {ProcessLayoutComponent} from './layout/process-layout/process.layout';
+import {ViewLayoutComponent} from './layout/view-layout/view.layout';
 import {PricingHelpPageComponent} from './page/pricing-help-page/pricing-help.page';
 import {PricingStructurePageComponent} from './page/pricing-structure-page/pricing-structure.page';
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
@@ -137,7 +136,6 @@ import {SecurityModule} from "./component/security-directive/security.module";
 import {SharedComponentUtilsModule} from "./component/shared-component-utils/shared-component-utils.module";
 import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
 import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
-import {CategoryLayoutComponent} from "./layout/category-layout/category.layout";
 import {CategoryPageComponent} from "./page/category-page/category.page";
 import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
 import {CategoryModule} from "./component/category-component/category.module";
@@ -146,6 +144,14 @@ import {CategoryManagementPageComponent} from "./page/category-management-page/c
 import {reload} from "./utils/config.util";
 import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
 import {ResetPasswordPageComponent} from "./page/reset-password-page/reset-password.page";
+import {AdministrationLayoutComponent} from "./layout/administration-layout/administration.layout";
+import {AuditLogPageComponent} from "./page/audit-log-page/audit-log.page";
+import {AdministrationHelpPageComponent} from "./page/administration-help-page/administration-help.page";
+import {AuditLogModule} from "./component/audit-log-component/audit-log.module";
+import {AuditLogService} from "./service/audit-log-service/audit-log.service";
+import {LoadingService} from "./service/loading-service/loading.service";
+import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-bulk-edit.page";
+import {CustomBulkEditService} from "./service/custom-bulk-edit-service/custom-bulk-edit.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -182,13 +188,12 @@ const appInitializer = (settingsService: SettingsService,
     // layouts
     LoginLayoutComponent,
     DashboardLayoutComponent,
-    GenLayoutComponent,
-    UserLayoutComponent,
-    ImportExportLayoutComponent,
+    SettingsLayoutComponent,
+    ProcessLayoutComponent,
     ViewLayoutComponent,
     PartnerLayoutComponent,
     PriceLayoutComponent,
-    CategoryLayoutComponent,
+    AdministrationLayoutComponent,
 
     // pages
     LoginPageComponent,
@@ -244,6 +249,9 @@ const appInitializer = (settingsService: SettingsService,
     CategoryManagementPageComponent,
     ForgotPasswordPageComponent,
     ResetPasswordPageComponent,
+    AuditLogPageComponent,
+    AdministrationHelpPageComponent,
+    CustomBulkEditPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -302,6 +310,7 @@ const appInitializer = (settingsService: SettingsService,
     SecurityModule,
     SharedComponentUtilsModule,
     CategoryModule,
+    AuditLogModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -337,6 +346,9 @@ const appInitializer = (settingsService: SettingsService,
     {provide: CustomExportService, useClass: CustomExportService} as Provider,
     {provide: ExportArtifactService, useClass: ExportArtifactService} as Provider,
     {provide: CategoryService, useClass: CategoryService} as Provider,
+    {provide: AuditLogService, useClass: AuditLogService} as Provider,
+    {provide: LoadingService, useClass: LoadingService} as Provider,
+    {provide: CustomBulkEditService, useClass: CustomBulkEditService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,

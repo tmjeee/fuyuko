@@ -10,6 +10,7 @@ import {ViewOnlyDataTableComponent} from './view-only-data-table.component';
 import {ItemImageDialogComponent} from "./item-image-dialog.component";
 import {CarouselModule} from "../carousel-component/carousel.module";
 import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import {SharedComponentUtilsModule} from "../shared-component-utils/shared-compo
     DataEditorModule,
     ItemSearchModule,
     CarouselModule,
+    FlexLayoutModule,
     SharedComponentUtilsModule,
   ],
   declarations: [

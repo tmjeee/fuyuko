@@ -14,6 +14,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
 import {BrowserLocationHistoryService} from '../../service/browser-location-history-service/browser-location-history.service';
 import {of} from "rxjs";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 describe('DashboardLayoutComponent', () => {
@@ -26,7 +27,7 @@ describe('DashboardLayoutComponent', () => {
             imports: [AppMaterialsModule, RouterTestingModule, HttpClientTestingModule],
             declarations: [DashboardLayoutComponent, AvatarComponent, NotificationComponent, SideNavComponent],
             providers: [AppNotificationService, AuthService, ThemeService, SettingsService,
-                GlobalCommunicationService, BrowserLocationHistoryService]
+                GlobalCommunicationService, BrowserLocationHistoryService, LoadingService]
         }).compileComponents();
     }));
 

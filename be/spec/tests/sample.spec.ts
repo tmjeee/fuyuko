@@ -1,4 +1,12 @@
+import {recreateDatabase, setupTestDatabase} from "../helpers/test-helper";
+
 describe("Player", function() {
+
+
+  beforeAll(async () => {
+      await setupTestDatabase();
+  });
+
   beforeEach(function() {
   });
 

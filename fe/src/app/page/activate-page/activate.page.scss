@@ -14,6 +14,15 @@
     max-height: 90vh;
     overflow-y: auto;
     .container {
+
+      .header-image {
+        width: 85px;
+        img {
+          margin-left: 15px;
+          width: 70px;
+        }
+      }
+
       .message-box {
         padding: 10px;
         border-radius: 5px;

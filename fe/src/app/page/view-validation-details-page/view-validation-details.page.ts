@@ -16,6 +16,7 @@ import {ValidationResultTableComponentEvent} from '../../component/validation-re
 import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 @Component({
     templateUrl: './view-validation-details.page.html',
@@ -40,7 +41,8 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
                 private validationService: ValidationService,
                 private ruleService: RuleService,
                 private viewService: ViewService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private loadingService: LoadingService) {
         this.items = [];
         this.attributes = [];
         this.rules = [];
@@ -58,6 +60,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
 
     reload() {
         this.loading = true;
+        this.loadingService.startLoading();
         this.viewId = this.route.snapshot.params.viewId;
         this.validationId = this.route.snapshot.params.validationId;
         this.viewService.getViewById(this.viewId).pipe(
@@ -70,6 +73,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
                     validationResult: this.validationService.getValidationDetails(this.view.id, Number(this.validationId)),
                 }).pipe(
                     tap((r: {attributes: Attribute[], rules: Rule[], validationResult: ValidationResult}) => {
+                        this.loadingService.startLoading();
                         this.attributes = r.attributes;
                         this.rules = r.rules;
                         this.validationResult = r.validationResult;
@@ -82,12 +86,16 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
                                 }),
                                 finalize(() => {
                                     this.loading = false;
+                                    this.loadingService.stopLoading();
                                 })
                             ).subscribe();
                     }),
                     catchError((e: Error) => {
                         this.loading = false;
                         return throwError(e);
+                    }),
+                    finalize(() => {
+                        this.loadingService.stopLoading();
                     })
                 ).subscribe();
             })

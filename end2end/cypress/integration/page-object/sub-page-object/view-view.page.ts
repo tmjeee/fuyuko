@@ -20,7 +20,7 @@ export class ViewViewPage implements ActualPage<ViewViewPage> {
     }
 
     visit(): ViewViewPage {
-        cy.visit(`/view-gen-layout/(views//help:view-help)`);
+        cy.visit(`/view-layout/(views//help:view-help)`);
         this.waitForReady();
         return this;
     }

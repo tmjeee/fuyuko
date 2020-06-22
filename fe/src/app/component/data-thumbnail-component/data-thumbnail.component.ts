@@ -90,20 +90,50 @@ export class DataThumbnailComponent implements OnInit {
     this.showMoreMap.set(item.id, !showMore);
   }
 
-  onDataEditorEvent($event: ItemValueAndAttribute, item: Item) {
-    const i: Item = this.pendingSaving.find((tmpI: Item) => tmpI.id === item.id);
-    if (!i) {
-      this.pendingSaving.push({
+  onItemEditorEvent($event: ItemEditorComponentEvent, item: Item) {
+    let itm = this.pendingSaving.find((i: Item) => i.id === $event.item.id);
+    if (!itm) {
+      itm = {
         id: item.id,
-        [$event.attribute.id]: $event.itemValue
-      } as Item);
-    } else {
-      i[$event.attribute.id] = $event.itemValue;
+        name: item.name,
+        description: item.description,
+        images: item.images,
+        parentId: item.parentId,
+        creationDate: item.creationDate,
+        lastUpdate: item.lastUpdate
+      } as Item;
+      this.pendingSaving.push(itm);
     }
-    const i2: Item = this.itemAndAttributeSet.items.find((tmpI: Item) => tmpI.id === item.id);
-    if (i2) {
-      i2[$event.attribute.id] = $event.itemValue;
+    // save in both the pendingSaving's copy and the original
+    switch ($event.type) {
+      case 'name':
+        item.name = $event.item.name;
+        itm.name = $event.item.name;
+        break;
+      case 'description':
+        item.description = $event.item.description;
+        itm.description = $event.item.description;
+        break;
     }
+  }
+
+  onDataEditorEvent($event: ItemValueAndAttribute, item: Item) {
+    let i: Item = this.pendingSaving.find((tmpI: Item) => tmpI.id === item.id);
+    if (!i) {
+      i = {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        images: item.images,
+        parentId: item.parentId,
+        creationDate: item.creationDate,
+        lastUpdate: item.lastUpdate
+      } as Item;
+      this.pendingSaving.push(i);
+    }
+    // save in both the pendingSaving's copy and the original
+    i[$event.attribute.id] = $event.itemValue;
+    item[$event.attribute.id] = $event.itemValue;
   }
 
 
@@ -116,6 +146,8 @@ export class DataThumbnailComponent implements OnInit {
   }
 
   reload($event: MouseEvent) {
+    this.pendingDeletion = [];
+    this.pendingSaving = [];
     this.events.emit({ type: 'reload'} as DataThumbnailComponentEvent);
   }
 
@@ -132,13 +164,16 @@ export class DataThumbnailComponent implements OnInit {
 
   delete($event: MouseEvent) {
     const i: Item[] = this.selectionModel.selected;
-    this.pendingDeletion.push(...this.selectionModel.selected);
-    this.selectionModel.selected.forEach((selectedItem: Item) => {
-      const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === selectedItem.id);
+    for (const _i of i) {
+      if (_i.id > 0) { // delete of persisted item only
+        this.pendingDeletion.push(_i);
+      }
+      this.pendingSaving = this.pendingSaving.filter((i: Item) => i.id != _i.id);
+      const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === _i.id);
       if (index !== -1) {
         this.itemAndAttributeSet.items.splice(index, 1);
       }
-    });
+    }
     this.selectionModel.clear();
   }
 
@@ -197,21 +232,6 @@ export class DataThumbnailComponent implements OnInit {
     this.searchEvents.emit($event);
   }
 
-  onItemEditorEvent($event: ItemEditorComponentEvent) {
-      const item: Item = this.itemAndAttributeSet.items.find((i: Item) => i.id === $event.item.id);
-      switch ($event.type) {
-        case 'name':
-          item.name = $event.item.name;
-          break;
-        case 'description':
-          item.description = $event.item.description;
-          break;
-      }
-      const index = this.pendingSaving.findIndex((i: Item) => i.id === $event.item.id);
-      if (index === -1) {
-          this.pendingSaving.push(item);
-      }
-  }
 
   onCheckboxChangeEvent($event: MatCheckboxChange, item: Item) {
     if ($event.checked) {

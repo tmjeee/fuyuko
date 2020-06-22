@@ -7,11 +7,11 @@ import {ViewDataListPage} from "../view-data-list.page";
 export class ViewDataListEditPopupPage extends AbstractViewDataEditPopupPage<ViewDataListItemPopupPage, ViewDataListAttributePopupPage> {
 
     createAbstractViewDataAttributePopupPage(): ViewDataListAttributePopupPage {
-        return new ViewDataListAttributePopupPage();
+        return new ViewDataListAttributePopupPage(this.PAGE_NAME);
     }
 
     createAbstractViewDataItemPopupPage(): ViewDataListItemPopupPage {
-        return new ViewDataListItemPopupPage();
+        return new ViewDataListItemPopupPage(this.PAGE_NAME);
     }
 
     clickOk() {

@@ -11,6 +11,7 @@ import {PricedItem, TablePricedItem} from '../../model/item.model';
 import {toTablePricedItem} from "../../utils/item-to-table-items.util";
 import {PaginableApiResponse} from "../../model/api-response.model";
 import {View} from "../../model/view.model";
+import {LoadingService} from "../../service/loading-service/loading.service";
 
 
 @Component({
@@ -28,17 +29,22 @@ export class PartnerDataTablePageComponent implements OnInit {
 
     constructor(private partnerService: PartnerService,
                 private authService: AuthService,
-                private attributeService: AttributeService) {
+                private attributeService: AttributeService,
+                private loadingService: LoadingService) {
         this.loading = false;
         this.pricingStructures = [];
     }
 
     ngOnInit(): void {
         const myself: User = this.authService.myself();
+        this.loadingService.startLoading();
         this.partnerService.getPartnerPricingStructures(myself.id)
             .pipe(
                 tap((ps: PricingStructure[]) => {
                     this.pricingStructures = ps;
+                }),
+                finalize(() => {
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
     }
@@ -48,6 +54,7 @@ export class PartnerDataTablePageComponent implements OnInit {
         const pricingStructure: PricingStructure = $event.value;
         if (pricingStructure) {
             this.loading = true;
+            this.loadingService.startLoading();
             this.partnerService.getPartnerPriceItems(pricingStructure.id).pipe(
                 tap((i: PricedItem[]) => {
                     this.pricedItems = i;
@@ -62,6 +69,7 @@ export class PartnerDataTablePageComponent implements OnInit {
                 }),
                 finalize(() => {
                     this.loading = false;
+                    this.loadingService.stopLoading();
                 })
             ).subscribe();
         }
