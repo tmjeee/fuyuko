@@ -29,7 +29,7 @@ npx ng build --prod
 cd ..
 
 echo "ZIP BUILD"
-zip -r fuyuko-${VERSION}.zip \
+zip -9 -r fuyuko-${VERSION}.zip \
     LICENSE \
     README.md \
     be/src \
