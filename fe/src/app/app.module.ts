@@ -152,6 +152,7 @@ import {AuditLogService} from "./service/audit-log-service/audit-log.service";
 import {LoadingService} from "./service/loading-service/loading.service";
 import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-bulk-edit.page";
 import {CustomBulkEditService} from "./service/custom-bulk-edit-service/custom-bulk-edit.service";
+import config from './utils/config.util';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -175,7 +176,18 @@ const appInitializer = (settingsService: SettingsService,
                 })
             ).subscribe();
         res();
-        console.log(`** Fuyuko App initialize **`);
+        console.log(`
+         ______                 _                 
+        |  ____|               | |                
+        | |__ _   _ _   _ _   _| | _____          
+        |  __| | | | | | | | | | |/ / _ \\         
+ _ _ _  | |  | |_| | |_| | |_| |   < (_) |  _ _ _ 
+(_|_|_) |_|   \\__,_|\\__, |\\__,_|_|\\_\\___/  (_|_|_)
+                     __/ |                        
+                    |___/     ${config()['version']}                    
+    
+    `);
+        console.log(`*** Fuyuko App initialize ***`);
       });
     });
   };

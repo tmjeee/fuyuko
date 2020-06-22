@@ -140,7 +140,7 @@ export const getItemImageContent = async (itemImageId: number): Promise<BinaryCo
 
 export const addItemImage = async (itemId: number, fileName: string, image: Buffer, primaryImage?: boolean ): Promise<boolean> => {
 
-    const ft: fileType.FileTypeResult = fileType(image);
+    const ft: fileType.FileTypeResult = await fileType.fromBuffer(image);
 
     const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
         return await conn.query(`

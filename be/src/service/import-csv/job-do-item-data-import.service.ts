@@ -2,15 +2,16 @@ import {Job} from "../../model/job.model";
 import {JobLogger, newJobLogger} from "../job-log.service";
 import {getJobyById} from "../job.service";
 import {Item} from "../../model/item.model";
-import {addItem2} from "../item.service";
+import {addItem2, getItemByName} from "../item.service";
 import {itemsRevert} from "../conversion-item.service";
 import {Item2} from "../../server-side-model/server-side.model";
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
+import {addItemImage} from "../item-image.service";
 
 const uuid = require('uuid');
 
-export const runJob = async (viewId: number, attributeDataImportId: number, items: Item[]): Promise<Job> => {
+export const runJob = async (viewId: number, dataImportId: number, items: Item[]): Promise<Job> => {
     const uid = uuid();
     const name: string = `item-data-import-job-${uid}`;
     const description: string = `item-data-import-job-${uid} description`;
@@ -34,9 +35,31 @@ export const runJob = async (viewId: number, attributeDataImportId: number, item
                 });
             }
 
+            // issue #93: import zip with images
             for (const effectiveItem2 of effectiveItem2s) {
                 await jobLogger.logInfo(`add item ${effectiveItem2.name} to view with id ${viewId}`);
-                await addItem2(viewId, effectiveItem2);
+                const errors: string[] = await addItem2(viewId, effectiveItem2);
+                for (const error of errors) {
+                    await jobLogger.logError(`error from addItem service: ${error}`);
+                }
+                const i: Item = await getItemByName(viewId, effectiveItem2.name);
+
+                if (effectiveItem2.images) {
+                    for (const effectiveItem2Image of effectiveItem2.images) {
+
+                        await doInDbConnection(async (conn: Connection) => {
+                            const qA: QueryA = await conn.query(`
+                                SELECT 
+                                    ID, DATA_IMPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT, CREATION_DATE, LAST_UPDATE
+                                FROM TBL_DATA_IMPORT_FILE 
+                                WHERE DATA_IMPORT_ID=? AND (NAME LIKE ? OR NAME LIKE ?)`, [dataImportId, `%/${effectiveItem2Image.name}`, `${effectiveItem2Image.name}`]);
+                            // image exists in data import
+                            if (qA.length) {
+                               await addItemImage(i.id, qA[0].NAME, qA[0].CONTENT, false);
+                            }
+                        });
+                    }
+                }
             }
 
             await jobLogger.updateProgress("COMPLETED");

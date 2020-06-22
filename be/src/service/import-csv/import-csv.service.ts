@@ -4,7 +4,7 @@ import parse, {Parser} from "csv-parse";
 import {Pair1, Pair2} from "../../model/attribute.model";
 
 export const readKeyPairs = (b: string): string[] => {
-    return b.split('=')
+    return b.split('=').map((_: string) => _ && _.trim());
 }
 
 
@@ -31,7 +31,6 @@ export const readPair1Csv = async (b: string): Promise<Pair1[]> => {
                         } as Pair1);
                     }
                 }
-                parser.emit('x-done');
             }
         });
         parser.on("end", () => {
@@ -61,7 +60,7 @@ export const readPair2Csv = async (bb: string): Promise<Pair2[]> => {
             while(l = parser.read()) {
                 // l =  [ 'key1=xkey1=value1', 'key1=xkey2=value2', 'key1=xkey3=value3' ]
                 for (const _l of l) {
-                    const p: string[] = await readKeyPairs(_l);
+                    const p: string[] = readKeyPairs(_l);
                     if (p && p.length == 3) {
                         pairs.push({
                             id: -1,
@@ -72,6 +71,7 @@ export const readPair2Csv = async (bb: string): Promise<Pair2[]> => {
                     }
                 }
             }
+            parser.emit('x-done');
         });
         parser.on("end", () => {
             res(pairs);

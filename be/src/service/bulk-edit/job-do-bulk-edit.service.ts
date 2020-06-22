@@ -36,7 +36,7 @@ export const runJob = async (viewId: number, bulkEditPackage: BulkEditPackage): 
     return job;
 };
 
-const run = async (jobLogger: JobLogger, viewId: number, bulkEditPackage: BulkEditPackage) => {
+export const run = async (jobLogger: JobLogger, viewId: number, bulkEditPackage: BulkEditPackage) => {
     jobLogger.updateProgress('IN_PROGRESS');
     jobLogger.logInfo(`Start running bulk edit job (jobId: ${jobLogger.jobId})`);
     try {

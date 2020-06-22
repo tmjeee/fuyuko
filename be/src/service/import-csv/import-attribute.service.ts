@@ -65,18 +65,21 @@ const _preview = async (viewId: number, dataImportId: number, content: Buffer): 
 
     const attributes: Attribute[] = await
         Promise.all(
-            csvAttributes.map(async (c: CsvAttribute) => ({
-                id: -1,
-                name: c.name,
-                description: c.description,
-                format: c.format,
-                showCurrencyCountry: !!c.showCurrencyCountry,
-                type: c.type,
-                creationDate: new Date(),
-                lastUpdate: new Date(),
-                pair1: await toPair1(c.pair1),
-                pair2: await toPair2(c.pair2)
-            } as Attribute)));
+            csvAttributes.map(async (c: CsvAttribute) => {
+                return {
+                    id: -1,
+                    name: c.name,
+                    description: c.description,
+                    format: c.format,
+                    showCurrencyCountry: !!c.showCurrencyCountry,
+                    type: c.type,
+                    creationDate: new Date(),
+                    lastUpdate: new Date(),
+                    pair1: await toPair1(c.pair1),
+                    pair2: await toPair2(c.pair2)
+                } as Attribute;
+            })
+        );
 
     const result: Attribute[] = [];
 

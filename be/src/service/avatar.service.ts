@@ -15,7 +15,7 @@ export const addGlobalAvatar = async (fileName: string, buffer: Buffer): Promise
         if (qc[0].COUNT > 0) {
             errors.push(`Global avatar named ${fileName} already exists`);
         } else {
-            const mimeType: fileType.FileTypeResult = fileType(buffer);
+            const mimeType: fileType.FileTypeResult = await fileType.fromBuffer(buffer);
             const size = buffer.length;
 
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_AVATAR (NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?, ?, ?, ?)`,
@@ -35,7 +35,7 @@ export const addGlobalImage = async (fileName: string, tag: string, buffer: Buff
         if (q1[0].COUNT > 0) {
             errors.push(`Global image with name ${fileName} or tag ${tag} already exists`);
         } else {
-            const mimeType: fileType.FileTypeResult = fileType(buffer);
+            const mimeType: fileType.FileTypeResult = await fileType.fromBuffer(buffer);
             const size = buffer.length;
 
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_IMAGE (NAME, MIME_TYPE, SIZE, CONTENT, TAG) VALUES (?,?,?,?,?)`, [fileName, mimeType.mime, size, buffer, tag]);
@@ -78,7 +78,7 @@ export const saveUserAvatar = async (userId: number, avatar: { globalAvatarName?
         await doInDbConnection(async (conn: Connection) => {
             const name: string = avatar.customAvatarFile.name;
             const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(avatar.customAvatarFile.path));
-            const ft: fileType.FileTypeResult = fileType(buffer);
+            const ft: fileType.FileTypeResult = await fileType.fromBuffer(buffer);
             const qCount: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT, ID FROM TBL_USER_AVATAR WHERE USER_ID = ? GROUP BY ID`, [userId]);
             let q: QueryResponse;
             if (qCount.length && qCount[0].COUNT > 0) {

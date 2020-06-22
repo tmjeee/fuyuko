@@ -1,0 +1,3 @@
+addToPricingStructureIfItemNotAlreadyAdded,pricingStructureFormat,itemFormat,price,country
+true,id=2,id=15,20.50,AUD
+true,name=Pricing Structure #2,name=item 3,10.10,AUD
