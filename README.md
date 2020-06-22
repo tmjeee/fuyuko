@@ -1,4 +1,5 @@
 
+
 <img src="https://raw.githubusercontent.com/tmjeee/fuyuko/v1.0.0-beta/fe/src/assets/images/logo/fuyuko-logo-with-side-wordings.png" width="300" style="margin-bottom: 20px; display: block">
 
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-fe&subject=FE%20Build%20Status%20v1.0.0-beta)](https://jenkins.fuyuko.org/job/fuyuko-fe/)
