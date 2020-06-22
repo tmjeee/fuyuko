@@ -14,16 +14,16 @@ if [ -f $ZIP_FILE ] ; then
 fi
 
 
-echo "BUILD BE" && \ 
-cd be && \ 
-npm install && \
+echo "BUILD BE" 
+cd be 
+npm install 
 npm run build 
 
 cd ..
 
-echo "BUILD FE" && \
-cd fe && \
-npm install && \ 
+echo "BUILD FE" 
+cd fe 
+npm install  
 npx ng build --prod 
 
 cd ..
