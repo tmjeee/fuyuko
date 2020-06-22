@@ -1,6 +1,8 @@
 #!/bin/bash
 
-VERSION="1.0.0-beta"
+if [ -z $VERSION ] ; then
+  VERSION="1.0.0-beta"
+fi
 ZIP_FILE="fuyuko-${VERSION}.zip"
 
 echo "VERSION: $VERSION"
