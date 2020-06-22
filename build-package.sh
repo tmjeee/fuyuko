@@ -13,9 +13,13 @@ if [ -f $ZIP_FILE ] ; then
   rm -fr $ZIP_FILE
 fi
 
-(echo "BUILD BE"; cd be; npm run build)
+(
+   echo "BUILD BE" && cd be && npm install && npm run build
+)
 
-(echo "BUILD FE"; cd fe; npx ng build --prod)
+(
+  echo "BUILD FE" && cd fe && npm install npx ng build --prod
+)
 
 echo "ZIP BUILD"
 zip -r fuyuko-${VERSION}.zip \
