@@ -45,12 +45,14 @@ export class Pagination {
         };
     }
 
+    // used when we get back a PaginableApiResponse
     update(u: {limit: number, offset: number, total: number}) {
         this.limit = u.limit;
         this.offset = u.offset;
         this.total = u.total;
     }
 
+    // used when we got an event from Pagination component
     updateFromPageEvent(pageEvent: PageEvent) {
         const limit: number  = pageEvent.pageSize;
         const offset: number = (pageEvent.pageIndex * pageEvent.pageSize);

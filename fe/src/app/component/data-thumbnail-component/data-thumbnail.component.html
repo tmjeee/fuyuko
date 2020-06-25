@@ -18,6 +18,8 @@
       <div class="controls">
         <mat-checkbox [attr.test-checkbox-thumbnail-item]="item.name" (change)="onCheckboxChangeEvent($event, item)"></mat-checkbox>
         <mat-icon [attr.test-icon-thumbnail-edit-item]="item.name" color="primary" (click)="editItem(item)">edit</mat-icon>
+        <mat-icon matTooltip="Unfavourite Item" (click)="onUnfavouriteItem(item)" *ngIf="isFavouriteItem(item)">star</mat-icon>
+        <mat-icon matTooltip="Favourite Item" (click)="onFavouriteItem(item)" *ngIf="!isFavouriteItem(item)">star_border</mat-icon>
       </div>
       <div class="carousel">
         <app-carousel [itemId]="item.id" [images]="getCarouselImages(item)" (events)="onCarouselEvent($event)"></app-carousel>

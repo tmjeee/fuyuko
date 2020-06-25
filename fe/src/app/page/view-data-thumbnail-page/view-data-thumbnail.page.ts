@@ -19,7 +19,10 @@ import {CarouselComponentEvent} from "../../component/carousel-component/carouse
 import {Pagination} from "../../utils/pagination.utils";
 import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
 import {LoadingService} from "../../service/loading-service/loading.service";
+import {FormBuilder, FormControl} from "@angular/forms";
+import {AuthService} from "../../service/auth-service/auth.service";
 
+export type DataListTypes = 'ALL' | 'FAVOURITE';
 
 @Component({
   templateUrl: './view-data-thumbnail.page.html',
@@ -29,6 +32,7 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
 
 
   itemAndAttributeSet: ItemAndAttributeSet;
+  favouritedItemIds: number[];
   done: boolean;
 
 
@@ -38,13 +42,18 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   pagination: Pagination;
+  formControlDataListTypes: FormControl;
+
 
   constructor(private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private viewService: ViewService,
+              private authService: AuthService,
               private itemService: ItemService,
-              private loadingService: LoadingService) {
+              private loadingService: LoadingService,
+              private formBuilder: FormBuilder) {
       this.pagination = new Pagination();
+      this.formControlDataListTypes = formBuilder.control('ALL', []);
   }
 
   ngOnInit(): void {
@@ -58,6 +67,11 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
         this.done = true;
       }
     });
+    this.formControlDataListTypes.valueChanges.pipe(
+        tap((v: string) => {
+          this.reload();
+        })
+    ).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -70,14 +84,27 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
     this.done = false;
     this.loadingService.startLoading();
     const viewId = this.currentView.id;
+    const userId = this.authService.myself().id;
     combineLatest([
       this.attributeService.getAllAttributesByView(viewId)
           .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
       (this.search && this.searchType) ?
-          this.itemService.searchForItems(viewId, this.searchType, this.search) :
-          this.itemService.getAllItems(viewId, this.pagination.limitOffset())
+          // search
+          (this.formControlDataListTypes.value === 'ALL' ?
+              this.itemService.searchForItems(viewId, this.searchType, this.search, this.pagination.limitOffset()) :
+              this.itemService.searchForFavouriteItems(viewId, userId, this.searchType, this.search, this.pagination.limitOffset()))
+
+          :
+
+          // non-search
+          (this.formControlDataListTypes.value === 'ALL' ?
+            this.itemService.getAllItems(viewId, this.pagination.limitOffset()) :
+            this.itemService.getFavouriteItems(viewId, userId, this.pagination.limitOffset()))
+      ,
+      // favourite item ids
+      this.itemService.getFavouriteItemIds(viewId, userId)
     ]).pipe(
-      map( (r: [Attribute[], PaginableApiResponse<Item[]>]) => {
+      map( (r: [Attribute[], PaginableApiResponse<Item[]>, number[]]) => {
         const attributes: Attribute[] = r[0];
         const items: Item[] = r[1].payload;
         this.pagination.update(r[1]);
@@ -85,6 +112,7 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
           attributes,
           items,
         };
+        this.favouritedItemIds = r[2];
         this.done = true;
       }),
       finalize(() => {

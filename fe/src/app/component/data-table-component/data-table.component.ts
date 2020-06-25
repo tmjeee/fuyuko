@@ -35,10 +35,11 @@ export class DataTableDataSource extends DataSource<TableItem> {
 
 
 export interface DataTableComponentEvent {
-  type: 'reload' | 'modification';
-  deletedItems?: TableItem[];
-  modifiedItems?: TableItem[];
-  newItems?: TableItem[];
+  type: 'reload' | 'modification' | 'favourite' | 'unfavourite';
+  deletedItems?: TableItem[]        // on 'reload' or 'modification' events
+  modifiedItems?: TableItem[];      // on 'reload' or 'modification' events
+  newItems?: TableItem[];           // on 'reload' or 'modification' events
+  favouritedItems?: TableItem[];     // on 'favourite' | 'unfavourite' events
 }
 
 export interface RowInfo {
@@ -79,6 +80,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Output() carouselEvent: EventEmitter<CarouselComponentEvent>;
   @Input() itemAndAttributeSet: TableItemAndAttributeSet;
   @Input() enableSearch: boolean;
+  @Input() favouritedItemIds: number[];
 
   pendingSavingModifiedItems: Map<number, TableItem>;
   pendingSavingNewItems: Map<number, TableItem>;
@@ -97,6 +99,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   filterOptionsVisible: boolean;
 
   constructor(private matDialog: MatDialog) {
+    this.favouritedItemIds = [];
     this.enableSearch = true;
     this.filterOptionsVisible = false;
     this.events = new EventEmitter();
@@ -451,6 +454,24 @@ export class DataTableComponent implements OnInit, OnChanges {
               }
             })
         ).subscribe()
+  }
+
+  onFavouriteItem(tableItem: TableItem) {
+    this.events.emit({
+      type: 'favourite',
+      favouritedItems: [tableItem]
+    } as DataTableComponentEvent);
+  }
+
+  onUnfavouriteItem(tableItem: TableItem) {
+      this.events.emit({
+        type: 'unfavourite',
+        favouritedItems: [tableItem]
+      } as DataTableComponentEvent);
+  }
+
+  isFavouriteItem(tableItem: TableItem): boolean {
+    return (this.favouritedItemIds ? this.favouritedItemIds.includes(tableItem.id) : false);
   }
 }
 

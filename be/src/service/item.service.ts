@@ -12,7 +12,7 @@ import {LIMIT_OFFSET} from "../util/utils";
 import {itemValueRevert} from "./conversion-item-value.service";
 import {itemConvert, itemRevert, itemsConvert} from "./conversion-item.service";
 import {parseAsync} from "json2csv";
-import {Status} from "../model/status.model";
+import {ENABLED, Status} from "../model/status.model";
 import * as util from "util";
 
 //////////////////////// SQLs //////////////////////////////////////////////////////////////////
@@ -69,6 +69,23 @@ const SQL_COUNT = (ext: string) => `
    WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' ${ext ? ext : ''}
 `;
 
+const SQL_FAV_ITEMS_INNER = (ext: string, limitoffset?: LimitOffset) => `
+     SELECT 
+         I.ID AS ID
+     FROM TBL_ITEM AS I 
+     INNER JOIN TBL_FAVOURITE_ITEM AS F ON F.ITEM_ID = I.ID AND F.USER_ID = ?
+     WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' ${ext ? ext : ''}
+     ${LIMIT_OFFSET(limitoffset)}
+`;
+
+const SQL_FAV_ITEMS_INNER_COUNT = (ext: string) => `
+    SELECT
+        COUNT(I.ID) AS COUNT
+    FROM TBL_ITEM AS I
+    INNER JOIN TBL_FAVOURITE_ITEM AS F ON F.ITEM_ID = I.ID AND F.USER_ID = ?
+    WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' ${ext ? ext : ''}
+`;
+
 
 const SQL_1_A = (limitoffset: LimitOffset) => SQL_INNER('', limitoffset);
 const SQL_1_A_COUNT = () => SQL_COUNT('');
@@ -81,7 +98,6 @@ const SQL_2_A_COUNT = () => SQL_COUNT(`AND I.ID IN ?`);
 
 const SQL_2_B = (limitoffset: LimitOffset) => SQL_INNER(`AND I.ID IN ? AND I.PARENT_ID IS NULL`, limitoffset);
 const SQL_2_B_COUNT = () => SQL_COUNT(`AND I.ID IN ? AND I.PARENT_ID IS NULL`);
-
 
 const SQL_SEARCH = (limitOffset?: LimitOffset) => ` 
     SELECT DISTINCT
@@ -99,6 +115,60 @@ const SQL_SEARCH = (limitOffset?: LimitOffset) => `
          (E.KEY = 'value' AND E.VALUE LIKE ?)
     ) 
     ${LIMIT_OFFSET(limitOffset)}
+`;
+const SQL_SEARCH_COUNT = () => ` 
+    SELECT DISTINCT
+       COUNT(DISTINCT I.ID) AS COUNT 
+    FROM TBL_ITEM AS I
+    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
+    LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
+    LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
+    LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
+    LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
+    WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
+    AND I.PARENT_ID IS NULL
+    AND (I.NAME LIKE ? OR 
+         I.DESCRIPTION LIKE ? OR
+         (E.KEY = 'value' AND E.VALUE LIKE ?)
+    ) 
+`;
+
+const SQL_FAV_ITEMS = (limitoffset: LimitOffset) => SQL_FAV_ITEMS_INNER(`AND I.PARENT_ID IS NULL`, limitoffset);
+const SQL_FAV_ITEMS_COUNT = () => SQL_FAV_ITEMS_INNER_COUNT(``);
+const SQL_FAV_ITEMS_SEARCH = (limitOffset?: LimitOffset) => ` 
+    SELECT DISTINCT
+       I.ID AS I_ID
+    FROM TBL_ITEM AS I
+    INNER JOIN TBL_FAVOURITE_ITEM AS F ON F.ITEM_ID = I.ID AND F.USER_ID = ?
+    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
+    LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
+    LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
+    LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
+    LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
+    WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
+    AND I.PARENT_ID IS NULL
+    AND (I.NAME LIKE ? OR 
+         I.DESCRIPTION LIKE ? OR
+         (E.KEY = 'value' AND E.VALUE LIKE ?)
+    ) 
+    ${LIMIT_OFFSET(limitOffset)}
+`;
+const SQL_FAV_ITEMS_SEARCH_COUNT = () => ` 
+    SELECT DISTINCT
+       COUNT(DISTINCT I.ID) AS COUNT
+    FROM TBL_ITEM AS I
+    INNER JOIN TBL_FAVOURITE_ITEM AS F ON F.ITEM_ID = I.ID AND F.USER_ID = ?
+    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = ?
+    LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
+    LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
+    LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
+    LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
+    WHERE I.VIEW_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' 
+    AND I.PARENT_ID IS NULL
+    AND (I.NAME LIKE ? OR 
+         I.DESCRIPTION LIKE ? OR
+         (E.KEY = 'value' AND E.VALUE LIKE ?)
+    ) 
 `;
 
 
@@ -293,9 +363,57 @@ const _addOrUpdateItem2 = async (conn: Connection, viewId: number, item2: Item2)
     }
 }
 
+// ==========================================
+// === searchForFavouriteItemsInViewCount(...) ===
+// ==========================================
+export const searchForFavouriteItemsInViewCount = async (viewId: number, userId: number, searchType: ItemSearchType, search: string): Promise<number> => {
+    // todo: support advance search type
+    const iSearch = `%${search}%`;
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(SQL_FAV_ITEMS_SEARCH_COUNT(), [userId, viewId, viewId, iSearch, iSearch, iSearch]);
+        return q[0].COUNT;
+    });
+};
+
+// ==========================================
+// === searchForFavouriteItemsInView(...) ===
+// ==========================================
+export const searchForFavouriteItemsInView = async (viewId: number, userId: number, searchType: ItemSearchType, search: string, limitOffset?: LimitOffset): Promise<Item[]> => {
+    const item2s: Item2[] = await searchForFavouriteItem2sInView(viewId, userId, searchType, search, limitOffset);
+    return itemsConvert(item2s);
+};
+export const searchForFavouriteItem2sInView = async (viewId: number, userId: number, searchType: ItemSearchType, search: string, limitOffset?: LimitOffset): Promise<Item2[]> => {
+    // todo: support advance search type
+    const iSearch = `%${search}%`;
+    const itemIds: number[] = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(SQL_FAV_ITEMS_SEARCH(limitOffset), [userId, viewId, viewId, iSearch, iSearch, iSearch]);
+        return q.reduce((acc: number[], curr: QueryI) => {
+            acc.push(curr.I_ID)
+            return acc;
+        }, []);
+    });
+    if (itemIds.length) {
+        const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(SQL, [viewId, itemIds]);
+            return _doQ(q);
+        });
+        await w(viewId, item2s);
+        return item2s;
+    }
+    return [];
+};
 
 
-
+// ======================================
+// === searchForItemsInViewCount(...) ===
+// ======================================
+export const searchForItemsInViewCount = async (viewId: number, searchType: ItemSearchType, search: string): Promise<number> => {
+    const iSearch = `%${search}%`;
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(SQL_SEARCH_COUNT(), [viewId, viewId, iSearch, iSearch, iSearch])
+        return q[0].COUNT;
+    });
+}
 
 // =================================
 // === searchForItemsInView(...) ===
@@ -328,6 +446,112 @@ export const searchForItem2sInView = async (viewId: number, searchType: ItemSear
 
 
 
+// ================================
+// === addFavouriteItemIds(...) ===
+// ================================
+export const addFavouriteItemIds = async (userId: number, itemIds: number[]): Promise<string[]> => {
+    return await doInDbConnection(async(conn: Connection) => {
+       const errors: string[] = [];
+       for (const itemId of itemIds) {
+           const qc: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_FAVOURITE_ITEM WHERE USER_ID = ? AND ITEM_ID = ?
+           `, [userId, itemId]);
+           const count: number = qc[0].COUNT;
+           if (count <= 0) { // not yet added to favourite, we can now add it
+              const r: QueryResponse = await conn.query(`
+                INSERT INTO TBL_FAVOURITE_ITEM (USER_ID, ITEM_ID) VALUES (?,?)
+              `, [userId, itemId])
+              if(r.affectedRows <= 0) {
+                  errors.push(`Failed to add favourite items`);
+              }
+           }
+       }
+       return errors;
+    });
+}
+
+
+// ===================================
+// === removeFavouriteItemIds(...) ===
+// ===================================
+export const removeFavouriteItemIds = async (userId: number, itemIds: number[]): Promise<string[]> => {
+    return await doInDbConnection(async(conn: Connection) => {
+        const errors: string[] = [];
+        for (const itemId of itemIds) {
+            const qc: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_FAVOURITE_ITEM WHERE USER_ID = ? AND ITEM_ID = ?
+           `, [userId, itemId]);
+            const count: number = qc[0].COUNT;
+            if (count > 0) { // already added to favourite, we can now remove it
+                const r: QueryResponse = await conn.query(`
+                DELETE FROM TBL_FAVOURITE_ITEM WHERE USER_ID = ? AND ITEM_ID = ?
+              `, [userId, itemId])
+                if(r.affectedRows <= 0) {
+                    errors.push(`Failed to remove favourite items`);
+                }
+            }
+        }
+        return errors;
+    });
+}
+
+
+// ============================================
+// === getAllFavouriteItemIdsInView(...) ===
+// ============================================
+export const getAllFavouriteItemIdsInView = async (viewId: number, userId: number): Promise<number[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+            SELECT 
+                F.ID AS F_ID,
+                F.USER_ID AS F_USER_ID,
+                F.ITEM_ID AS F_ITEM_ID,
+                I.VIEW_ID AS I_VIEW_ID
+            FROM TBL_FAVOURITE_ITEM AS F
+            LEFT JOIN TBL_ITEM AS I ON I.ID = F.ITEM_ID
+            WHERE F.USER_ID = ? AND I.VIEW_ID = ? AND I.STATUS = ?
+        `, [userId, viewId, ENABLED]);
+        return q.reduce((acc: number[], i: QueryI) => {
+           acc.push(i.F_ITEM_ID)
+           return acc;
+        }, []);
+    });
+};
+
+
+
+
+// ============================================
+// === getAllFavouritedItemInViewCount(...) ===
+// ============================================
+export const getAllFavouriteItemsInViewCount = async (viewId: number, userId: number): Promise<number> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(SQL_FAV_ITEMS_COUNT(), [userId, viewId]);
+        return q[0].COUNT;
+    });
+};
+
+
+
+// =======================================
+// === getAllFavouritedItemInView(...) ===
+// =======================================
+export const getAllFavouriteItemsInView = async (viewId: number, userId: number, limitoffset?: LimitOffset): Promise<Item[]> => {
+    const item2s: Item2[] = await getAllFavouriteItem2sInView(viewId, userId, limitoffset);
+    return itemsConvert(item2s);
+};
+export const getAllFavouriteItem2sInView = async (viewId: number, userId: number, limitoffset?: LimitOffset): Promise<Item2[]> => {
+    const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
+        const qq: QueryA = await conn.query(SQL_FAV_ITEMS(limitoffset), [userId, viewId]);
+        const itemIds: number[] = qq.reduce((acc: number[], i: QueryI) => {
+            acc.push(i.ID);
+            return acc;
+        }, []);
+        const q: QueryA = await conn.query(SQL, [viewId, itemIds && itemIds.length ? itemIds : [-1]]);
+        return _doQ(q);
+    });
+    return item2s;
+};
 
 
 
@@ -346,7 +570,7 @@ export const getAllItemsInViewCount = async (viewId: number, parentOnly: boolean
 // =============================
 // === getAllItemInView(...) ===
 // =============================
-export const getAllItemInView = async (viewId: number, parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item[]> => {
+export const getAllItemsInView = async (viewId: number, parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item[]> => {
     const item2s: Item2[] = await getAllItem2sInView(viewId, parentOnly, limitoffset);
     return itemsConvert(item2s);
 };

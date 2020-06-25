@@ -5,10 +5,17 @@ import {combineAll, delay, finalize, map, tap} from "rxjs/operators";
 import {View} from "../../model/view.model";
 import {CategoryWithItems} from "../../model/category.model";
 import {
+    AddFavouriteItemsFn,
     DeleteItemImageFn,
     GetAttributesFn,
+    GetFavouriteItemIdsFn,
     GetItemsFn,
-    MarkItemImageAsPrimaryFn, SaveItemAttributeValueFn, SaveItemInfoFn, SaveOrUpdateTableItemsFn, UploadItemImageFn
+    MarkItemImageAsPrimaryFn,
+    RemoveFavouriteItemsFn,
+    SaveItemAttributeValueFn,
+    SaveItemInfoFn,
+    SaveOrUpdateTableItemsFn,
+    UploadItemImageFn
 } from "../../component/category-component/category.component";
 import {Attribute} from "../../model/attribute.model";
 import {forkJoin, Observable, of} from "rxjs";
@@ -24,6 +31,7 @@ import {NotificationsService} from "angular2-notifications";
 import {Pagination} from "../../utils/pagination.utils";
 import {LimitOffset} from "../../model/limit-offset.model";
 import {LoadingService} from "../../service/loading-service/loading.service";
+import {AuthService} from "../../service/auth-service/auth.service";
 
 @Component({
     templateUrl: './category.page.html',
@@ -42,17 +50,34 @@ export class CategoryPageComponent implements OnInit {
     saveItemInfoFn: SaveItemInfoFn;
     saveOrUpdateTableItemsFn: SaveOrUpdateTableItemsFn;
     uploadItemImageFn: UploadItemImageFn;
+    getFavouriteItemIdsFn: GetFavouriteItemIdsFn;
+    addFavouriteItemsFn: AddFavouriteItemsFn;
+    removeFavouriteItemsFn: RemoveFavouriteItemsFn;
 
     constructor(private viewService: ViewService,
                 private categoryService: CategoryService,
                 private itemService: ItemService,
                 private notificationsService: NotificationsService,
                 private attributeService: AttributeService,
-                private loadingService: LoadingService) {
+                private loadingService: LoadingService,
+                private authService: AuthService) {
         this.categoriesWithItems = [];
     }
 
     ngOnInit(): void {
+        this.addFavouriteItemsFn = (viewId: number, itemIds: number[]): Observable<ApiResponse> => {
+            return this.itemService.addFavouriteItems(viewId, this.authService.myself().id, itemIds).pipe(
+                tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
+            );
+        };
+        this.removeFavouriteItemsFn = (viewId: number, itemIds: number[]): Observable<ApiResponse> => {
+            return this.itemService.removeFavouriteItems(viewId, this.authService.myself().id, itemIds).pipe(
+                tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
+            );
+        };
+        this.getFavouriteItemIdsFn = (viewId: number): Observable<number[]> => {
+            return this.itemService.getFavouriteItemIds(viewId, this.authService.myself().id);
+        };
         this.getAttributesFn = (viewId: number): Observable<Attribute[]> => {
             this.loadingService.startLoading();
             return this.attributeService.getAllAttributesByView(viewId).pipe(

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ItemAndAttributeSet, ItemValueAndAttribute} from '../../model/item-attribute.model';
 import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
-import {Item, ItemImage, ItemSearchType} from '../../model/item.model';
+import {Item, ItemImage, ItemSearchType, TableItem} from '../../model/item.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ItemDataEditorDialogComponent} from '../data-thumbnail-component/item-data-editor-dialog.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -11,11 +11,13 @@ import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.com
 import {createNewItem} from '../../shared-utils/ui-item-value-creator.utils';
 import config from '../../utils/config.util';
 import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
+import {DataTableComponentEvent} from "../data-table-component/data-table.component";
 
 export interface DataListComponentEvent {
-    type: 'modification' | 'reload';
+    type: 'modification' | 'reload' | 'favourite' | 'unfavourite';
     modifiedItems: Item[]; // only available when type is modification
     deletedItems: Item[];  // only available when type is modification
+    favouritedItems: Item[] // onmly available when type is 'favourite' or 'unfavourite'
 }
 
 export interface DataListSearchComponentEvent {
@@ -35,6 +37,7 @@ export class DataListComponent {
 
     @Input() enableSearch: boolean;
     @Input() itemAndAttributeSet: ItemAndAttributeSet;
+    @Input() favouritedItemIds: number[];
 
     @Output() events: EventEmitter<DataListComponentEvent>;
     @Output() searchEvents: EventEmitter<DataListSearchComponentEvent>;
@@ -188,5 +191,23 @@ export class DataListComponent {
 
     onCarouselEvent($event: CarouselComponentEvent) {
         this.carouselEvents.emit($event);
+    }
+
+    onFavouriteItem(item: Item) {
+        this.events.emit({
+            type: 'favourite',
+            favouritedItems: [item]
+        } as DataListComponentEvent);
+    }
+
+    onUnfavouriteItem(item: Item) {
+        this.events.emit({
+            type: 'unfavourite',
+            favouritedItems: [item]
+        } as DataListComponentEvent);
+    }
+
+    isFavouriteItem(item: Item): boolean {
+        return (this.favouritedItemIds ? this.favouritedItemIds.includes(item.id) : false);
     }
 }

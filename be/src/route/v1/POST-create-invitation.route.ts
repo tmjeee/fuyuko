@@ -35,16 +35,16 @@ const httpAction = [
 
         const errors: string[] = await createInvitation(email, groupIds);
         if (errors && errors.length) {
-            return {
+            res.status(400).json({
                 status: 'ERROR',
                 message: errors.join(', ')
-            } as ApiResponse;
+            } as ApiResponse);
 
         } else {
-            return {
+            res.status(200).json({
                 status: 'SUCCESS',
                 message: 'Invitation Created'
-            } as ApiResponse;
+            } as ApiResponse);
         }
     }
 ];

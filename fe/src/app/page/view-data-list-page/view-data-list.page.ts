@@ -7,7 +7,7 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {ViewService} from '../../service/view-service/view.service';
 import {ItemService} from '../../service/item-service/item.service';
 import {Item, ItemSearchType} from '../../model/item.model';
-import {finalize, map} from 'rxjs/operators';
+import {finalize, map, tap} from 'rxjs/operators';
 import {Attribute} from '../../model/attribute.model';
 import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
@@ -15,7 +15,10 @@ import {NotificationsService} from 'angular2-notifications';
 import {Pagination} from "../../utils/pagination.utils";
 import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
 import {LoadingService} from "../../service/loading-service/loading.service";
+import {FormBuilder, FormControl} from "@angular/forms";
+import {AuthService} from "../../service/auth-service/auth.service";
 
+export type DataListTypes = 'ALL' | 'FAVOURITE';
 
 @Component({
   templateUrl: './view-data-list.page.html',
@@ -24,6 +27,7 @@ import {LoadingService} from "../../service/loading-service/loading.service";
 export class ViewDataListPageComponent implements OnInit, OnDestroy {
 
   itemAndAttributeSet: ItemAndAttributeSet;
+  favouritedItemIds: number[];
   done: boolean;
 
   search: string;
@@ -32,13 +36,17 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   pagination: Pagination;
+  formControlDataListTypes: FormControl;
 
   constructor(private attributeService: AttributeService,
               private notificationService: NotificationsService,
+              private authService: AuthService,
               private viewService: ViewService,
               private itemService: ItemService,
-              private loadingService: LoadingService) {
+              private loadingService: LoadingService,
+              private formBuilder: FormBuilder) {
       this.pagination = new Pagination();
+      this.formControlDataListTypes = formBuilder.control('ALL', []);
   }
 
 
@@ -53,6 +61,11 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
         this.done = true;
       }
     });
+    this.formControlDataListTypes.valueChanges.pipe(
+        tap((v: string) => {
+          this.reload();
+        })
+    ).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -65,14 +78,28 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
     this.done = false;
     this.loadingService.startLoading();
     const viewId = this.currentView.id;
+    const userId = this.authService.myself().id;
     combineLatest([
         this.attributeService.getAllAttributesByView(viewId)
             .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
         (this.search && this.searchType) ?
-            this.itemService.searchForItems(viewId, this.searchType, this.search) :
-            this.itemService.getAllItems(viewId, this.pagination.limitOffset())
+            // search
+            (this.formControlDataListTypes.value === 'ALL' ?
+              this.itemService.searchForItems(viewId, this.searchType, this.search, this.pagination.limitOffset()) :    // search for all items
+              this.itemService.searchForFavouriteItems(viewId, userId, this.searchType,           // search for favourite items
+                  this.search, this.pagination.limitOffset()))
+
+            :
+
+            // non-search
+            (this.formControlDataListTypes.value === 'ALL' ?
+              this.itemService.getAllItems(viewId, this.pagination.limitOffset()) :                                     // get all items
+              this.itemService.getFavouriteItems(viewId, userId, this.pagination.limitOffset()))  // get favourite items
+        ,
+        // favourite item ids
+        this.itemService.getFavouriteItemIds(viewId, userId)
     ]).pipe(
-        map( (r: [Attribute[], PaginableApiResponse<Item[]>]) => {
+        map( (r: [Attribute[], PaginableApiResponse<Item[]>, number[]]) => {
           const attributes: Attribute[] = r[0];
           const items: Item[] = r[1].payload;
           this.pagination.update(r[1]);
@@ -80,6 +107,7 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
             attributes,
             items,
           };
+          this.favouritedItemIds = r[2];
           this.done = true;
         }),
         finalize(() => {

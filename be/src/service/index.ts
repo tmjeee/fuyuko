@@ -8,7 +8,7 @@ import {auditLog, AuditCategory, AuditLevel} from "./audit.service";
 import {multipartParse} from './multipart.service';
 import {getUserById} from './user.service';
 import {updateItemValue, updateItem, addItem, addOrUpdateItem, searchForItemsInView, getAllItemsInViewCount,
-    getAllItemInView, getItemsByIdsCount, getItemsByIds, getItemById, getItemByName} from './item.service';
+    getAllItemsInView, getItemsByIdsCount, getItemsByIds, getItemById, getItemByName} from './item.service';
 export {
 
     // send-email.service
@@ -39,7 +39,7 @@ export {
     addOrUpdateItem,
     searchForItemsInView,
     getAllItemsInViewCount,
-    getAllItemInView,
+    getAllItemsInView,
     getItemsByIdsCount,
     getItemsByIds,
     getItemById,

@@ -17,6 +17,7 @@
                 <div>
                     <div class="table-container" *ngIf="viewType === 'table'" fxLayout="column">
                         <app-data-table [itemAndAttributeSet]="tableItemAndAttributeSet"
+                                        [favouritedItemIds]="favouritedItemIds"
                                         fxFlex="1 1 auto"
                                         [enableSearch]="false"
                                         (events)="onDataTableEvent($event)"

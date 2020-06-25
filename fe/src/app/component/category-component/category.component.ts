@@ -21,6 +21,7 @@ import {DataListComponentEvent, DataListSearchComponentEvent} from "../data-list
 import {Pagination} from "../../utils/pagination.utils";
 import {PaginationComponentEvent} from "../pagination-component/pagination.component";
 import {LimitOffset} from "../../model/limit-offset.model";
+import {toNotifications} from "../../service/common.service";
 
 export type GetItemsFn = (viewId: number, itemIds: number[], limitOffset: LimitOffset)=> Observable<PaginableApiResponse<Item[]>>
 export type GetAttributesFn = (viewId: number) => Observable<Attribute[]>
@@ -31,6 +32,9 @@ export type UploadItemImageFn = (itemId: number, file: File) => Observable<ApiRe
 export type SaveItemInfoFn = (type: Type, item: Item) => Observable<ApiResponse>;
 export type SaveItemAttributeValueFn = (item: Item, itemValueAndAttribute: ItemValueAndAttribute) => Observable<ApiResponse>;
 export type SaveOrUpdateItemsFn = (modifiedItems: Item[], deletedItems: Item[]) => Observable<ApiResponse[]>;
+export type GetFavouriteItemIdsFn = (viewId: number) => Observable<number[]>;
+export type AddFavouriteItemsFn = (viewId: number, itemIds: number[]) => Observable<ApiResponse>;
+export type RemoveFavouriteItemsFn = (viewId: number, itemIds: number[]) => Observable<ApiResponse>;
 
 
 @Component({
@@ -51,6 +55,9 @@ export class CategoryComponent {
     @Input() saveItemInfoFn: SaveItemInfoFn;
     @Input() saveItemAttributeValueFn: SaveItemAttributeValueFn;
     @Input() saveOrUpdateItemsFn: SaveOrUpdateItemsFn;
+    @Input() getFavouriteItemIdsFn: GetFavouriteItemIdsFn;
+    @Input() addFavouriteItemsFn: AddFavouriteItemsFn;
+    @Input() removeFavouriteItemsFn: RemoveFavouriteItemsFn;
 
     @Input() viewId: number;
     @Input() categoriesWithItems: CategoryWithItems[];
@@ -60,13 +67,14 @@ export class CategoryComponent {
     viewType: 'table' | 'thumbnail' | 'list'; // when displayType is 'category'
 
     displayType: 'category' | 'item'
-    currentCategoryWithItems: CategoryWithItems;  // when displayType is 'category'
-    currentItem: CategorySimpleItem;              // when displayType is 'item'
+    currentCategoryWithItems: CategoryWithItems;        // when displayType is 'category'
+    currentItem: CategorySimpleItem;                    // when displayType is 'item'
     paginableApiResponse: PaginableApiResponse<Item[]>;
     attributes: Attribute[];
 
     tableItemAndAttributeSet: TableItemAndAttributeSet; // available when displayType is 'category'
-    itemAndAttributeSet: ItemAndAttributeSet;          // available when displayType is 'category'
+    favouritedItemIds: number[];                        // available when displayType is 'category'
+    itemAndAttributeSet: ItemAndAttributeSet;           // available when displayType is 'category'
     item: Item;
     pagination: Pagination;
 
@@ -81,10 +89,11 @@ export class CategoryComponent {
 
     onDataTableEvent($event: DataTableComponentEvent) {
         switch($event.type) {
-            case "reload":
+            case "reload": {
                 this.reload();
                 break;
-            case "modification":
+            }
+            case "modification": {
                 this.saveOrUpdateTableItemsFn($event.modifiedItems, $event.deletedItems)
                     .pipe(
                         tap((r: ApiResponse[]) => {
@@ -92,6 +101,44 @@ export class CategoryComponent {
                         })
                     ).subscribe();
                 break;
+            }
+            case "favourite": {
+                this.addFavouriteItemsFn(
+                    this.viewId,
+                    $event.favouritedItems.map((i: TableItem) => i.id)
+                ).pipe(
+                    tap((r: ApiResponse) => {
+                        const itemIds: number[] = ($event.favouritedItems.map((i: TableItem) => i.id));
+                        itemIds.reduce((favouritedItemIds: number[], itemId: number) => {
+                            if (favouritedItemIds.indexOf(itemId) < 0) {
+                                favouritedItemIds.push(itemId);
+                            }
+                            return favouritedItemIds;
+                        }, this.favouritedItemIds);
+                        // this.reload();
+                    })
+                ).subscribe();
+                break;
+            }
+            case "unfavourite": {
+                this.removeFavouriteItemsFn(
+                    this.viewId,
+                    $event.favouritedItems.map((i: TableItem) => i.id)
+                ).pipe(
+                    tap((r: ApiResponse) => {
+                        const itemIds: number[] = ($event.favouritedItems.map((i: TableItem) => i.id));
+                        itemIds.reduce((favouritedItemIds: number[], itemId: number) => {
+                            const i = favouritedItemIds.indexOf(itemId);
+                            if (i >= 0) {
+                                favouritedItemIds.splice(i, 1);
+                            }
+                            return favouritedItemIds;
+                        }, this.favouritedItemIds);
+                        // this.reload();
+                    })
+                ).subscribe();
+                break;
+            }
         }
     }
 
@@ -289,10 +336,11 @@ export class CategoryComponent {
                     }, []);
                     of(
                         this.getItemsFn(this.viewId, itemIds, this.pagination.limitOffset()),
-                        this.getAttributesFn(this.viewId)
+                        this.getAttributesFn(this.viewId),
+                        this.getFavouriteItemIdsFn(this.viewId),
                     ).pipe(
                         combineAll(),
-                        tap((r: [PaginableApiResponse<Item[]>, Attribute[]]) => {
+                        tap((r: [PaginableApiResponse<Item[]>, Attribute[], number[]]) => {
                             this.paginableApiResponse = r[0];
                             this.attributes = r[1];
                             this.pagination.update(r[0]);
@@ -304,6 +352,7 @@ export class CategoryComponent {
                                 attributes: this.attributes,
                                 items: this.paginableApiResponse.payload ? this.paginableApiResponse.payload : []
                             };
+                            this.favouritedItemIds = r[2];
                             this.loading = false;
                         }),
                         finalize(() => this.loading = false)

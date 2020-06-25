@@ -17,11 +17,17 @@
       .mat-expansion-panel {
         .mat-expansion-panel-header {
           .mat-expansion-panel-header-title {
-            & section:first-child {
-              height: 20px;
-            }
-            .mat-checkbox {
-              margin-right: 10px;
+            section {
+              line-height: 25px;
+              &.check-box {
+                margin: 10px;
+              }
+              &.favourite {
+                margin: 10px;
+              }
+              &.item-text {
+                margin: 10px;
+              }
             }
           }
         }

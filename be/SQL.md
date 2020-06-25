@@ -6,7 +6,23 @@ mysqldump -u root -v -p fuyuko | mariadb -u root -p -D fuyuko_temp
 mysqladmin -u root -p drop fuyuko
 ```
 
+#### Find all roles for a user
+```SQL
+SELECT DISTINCT
+    R.NAME 
+FROM TBL_USER AS U
+INNER JOIN TBL_LOOKUP_USER_GROUP AS LUG ON LUG.USER_ID = U.ID
+INNER JOIN TBL_LOOKUP_GROUP_ROLE AS LGR ON LGR.GROUP_ID = LUG.GROUP_ID
+INNER JOIN TBL_ROLE AS R ON R.ID = LGR.ROLE_ID 
+WHERE U.ID = ?
+```
 
+#### Find all items in a view
+```SQL
+SELECT * 
+FROM TBL_ITEM AS I
+LEFT JOIN TBL_VIEW AS V ON V.ID = I.VIEW_ID = ?
+```
 
 #### Find all items metadata entries in a view
 ```SQL

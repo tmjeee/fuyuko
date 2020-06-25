@@ -18,7 +18,11 @@ import {CarouselComponentEvent} from "../../component/carousel-component/carouse
 import {Pagination} from "../../utils/pagination.utils";
 import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
 import {LoadingService} from "../../service/loading-service/loading.service";
+import {AuthService} from "../../service/auth-service/auth.service";
+import {FormBuilder, FormControl} from "@angular/forms";
 
+
+export type DataListTypes = 'ALL' | 'FAVOURITE';
 
 @Component({
   templateUrl: './view-data-tabular.page.html',
@@ -27,6 +31,7 @@ import {LoadingService} from "../../service/loading-service/loading.service";
 export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
   itemAndAttributeSet: TableItemAndAttributeSet;
+  favouritedItemIds: number[];
   done: boolean;
 
 
@@ -35,13 +40,18 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   searchType: ItemSearchType;
   currentView: View;
   subscription: Subscription;
+  formControlDataListTypes: FormControl;
 
   constructor(private attributeService: AttributeService,
               private notificationService: NotificationsService,
               private viewService: ViewService,
               private itemService: ItemService,
-              private loadingService: LoadingService) {
+              private loadingService: LoadingService,
+              private authService: AuthService,
+              private formBuilder: FormBuilder) {
       this.pagination = new Pagination();
+      this.favouritedItemIds = [];
+      this.formControlDataListTypes = this.formBuilder.control('ALL', []);
   }
 
   ngOnInit(): void {
@@ -55,6 +65,11 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
         this.done = true;
       }
     });
+    this.formControlDataListTypes.valueChanges.pipe(
+        tap((v: string) => {
+            this.reload();
+        })
+    ).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -67,14 +82,33 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
     this.done = false;
     this.loadingService.startLoading();
     const viewId = this.currentView.id;
+    const userId = this.authService.myself().id;
     forkJoin([
+      // all attributes in view
       this.attributeService.getAllAttributesByView(viewId)
           .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
+
+
       (this.search && this.searchType) ?
-          this.itemService.searchForItems(viewId, this.searchType, this.search) :
-          this.itemService.getAllItems(viewId, this.pagination.limitOffset())
+          // search in view
+          (this.formControlDataListTypes.value === 'ALL' ?
+            this.itemService.searchForItems(viewId, this.searchType, this.search, this.pagination.limitOffset()) :          // search for all items
+            this.itemService.searchForFavouriteItems(viewId, userId,                                  // search for favourite items
+                this.searchType, this.search, this.pagination.limitOffset()))
+
+          :
+
+          // non - search in view
+          (this.formControlDataListTypes.value === 'ALL' ?
+            this.itemService.getAllItems(viewId, this.pagination.limitOffset()) :                                           // get all items
+            this.itemService.getFavouriteItems(viewId, userId, this.pagination.limitOffset()))       // get all favourite items
+      ,
+
+
+      // all favourite item ids of this user in view
+      this.itemService.getFavouriteItemIds(viewId, userId)
     ]).pipe(
-      map( (r: [Attribute[], PaginableApiResponse<Item[]>]) => {
+      map( (r: [Attribute[], PaginableApiResponse<Item[]>, number[]]) => {
        const attributes: Attribute[] = r[0];
        const items: Item[] = r[1].payload;
        this.pagination.update(r[1]);
@@ -83,6 +117,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
          attributes,
          tableItems,
        };
+       this.favouritedItemIds = r[2];
        this.done = true;
       }),
       finalize(() => {
@@ -105,17 +140,45 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
         o.push(this.itemService.deleteTableItems(this.currentView.id, $event.deletedItems));
     }
     switch ($event.type) {
-      case 'modification':
+      case 'modification': {
           concat(...o).pipe(
               tap((r: ApiResponse) => {
-                toNotifications(this.notificationService, r);
-                this.reload();
+                  toNotifications(this.notificationService, r);
+                  this.reload();
               })
           ).subscribe();
-        break;
-      case 'reload':
-        this.reload();
-        break;
+          break;
+      }
+      case 'reload': {
+          this.reload();
+          break;
+      }
+      case 'favourite': {
+          this.itemService.addFavouriteItems(
+              this.currentView.id,
+              this.authService.myself().id,
+              $event.favouritedItems.map((i: TableItem) => i.id))
+              .pipe(
+                  tap((r: ApiResponse) => {
+                     toNotifications(this.notificationService, r);
+                     this.reload();
+                  })
+              ).subscribe();
+          break;
+      }
+      case 'unfavourite': {
+          this.itemService.removeFavouriteItems(
+              this.currentView.id,
+              this.authService.myself().id,
+              $event.favouritedItems.map((i: TableItem) => i.id))
+              .pipe(
+                  tap((r: ApiResponse) => {
+                      toNotifications(this.notificationService, r);
+                      this.reload();
+                  })
+              ).subscribe();
+          break;
+      }
     }
   }
 

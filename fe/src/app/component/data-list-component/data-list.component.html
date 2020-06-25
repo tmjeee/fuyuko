@@ -20,12 +20,16 @@
             <mat-expansion-panel *ngFor="let item of itemAndAttributeSet.items; let i = index;" [attr.test-panel-item]="item.name">
                <mat-expansion-panel-header>
                    <mat-panel-title>
-                       <section>
+                       <section class="check-box">
                            <mat-checkbox (click)="$event.stopImmediatePropagation();"
                                          [attr.test-mat-checkbox-item]="item.name"
                                          (change)="onCheckboxStateChange($event, item)"></mat-checkbox>
                        </section>
-                       <section>
+                       <section class="favourite">
+                           <mat-icon matTooltip="Unfavourite Item" (click)="onUnfavouriteItem(item)" *ngIf="isFavouriteItem(item)">star</mat-icon>
+                           <mat-icon matTooltip="Favourite Item" (click)="onFavouriteItem(item)" *ngIf="!isFavouriteItem(item)">star_border</mat-icon>
+                       </section>
+                       <section class="item-text">
                            <span [attr.test-item-name]="item.name">{{item.name}}</span>
                        </section>
                    </mat-panel-title>

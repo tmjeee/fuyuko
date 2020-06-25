@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ItemAndAttributeSet, ItemValueAndAttribute} from '../../model/item-attribute.model';
-import {Item, ItemImage, ItemSearchType} from '../../model/item.model';
+import {Item, ItemImage, ItemSearchType, TableItem} from '../../model/item.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ItemDataEditorDialogComponent} from './item-data-editor-dialog.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -10,6 +10,7 @@ import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.com
 import {createNewItem} from '../../shared-utils/ui-item-value-creator.utils';
 import config from '../../utils/config.util';
 import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
+import {DataTableComponentEvent} from "../data-table-component/data-table.component";
 
 
 export interface DataThumbnailSearchComponentEvent {
@@ -18,9 +19,10 @@ export interface DataThumbnailSearchComponentEvent {
 }
 
 export interface DataThumbnailComponentEvent {
-  type: 'modification' | 'reload';
+  type: 'modification' | 'reload' | 'favourite' | 'unfavourite';
   modifiedItems: Item[]; // only available when type is modification
   deletedItems: Item[];  // only available when type is modification
+  favouritedItems: Item[] // onmly available when type is 'favourite' or 'unfavourite'
 }
 
 const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
@@ -45,8 +47,10 @@ export class DataThumbnailComponent implements OnInit {
 
   @Input() enableSearch: boolean;
   @Input() itemAndAttributeSet: ItemAndAttributeSet;
+  @Input() favouritedItemIds: number[];
 
   constructor(private matDialog: MatDialog) {
+    this.favouritedItemIds = [];
     this.enableSearch = true
     this.showMoreMap = new Map();
     this.selectionModel = new SelectionModel(true);
@@ -243,5 +247,23 @@ export class DataThumbnailComponent implements OnInit {
 
   onCarouselEvent($event: CarouselComponentEvent) {
       this.carouselEvents.emit($event);
+  }
+
+  onFavouriteItem(item: Item) {
+    this.events.emit({
+      type: 'favourite',
+      favouritedItems: [item]
+    } as DataThumbnailComponentEvent);
+  }
+
+  onUnfavouriteItem(item: Item) {
+    this.events.emit({
+      type: 'unfavourite',
+      favouritedItems: [item]
+    } as DataThumbnailComponentEvent);
+  }
+
+  isFavouriteItem(tableItem: TableItem): boolean {
+    return (this.favouritedItemIds ? this.favouritedItemIds.includes(tableItem.id) : false);
   }
 }

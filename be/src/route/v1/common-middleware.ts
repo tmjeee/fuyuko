@@ -27,7 +27,7 @@ export interface AggregationFn {
 }
 
 export const aFnAllTrue: AggregationFn = async (vFns: ValidateFn[], req: Request, res: Response, msg: string[]): Promise<boolean> => {
-    let r = false;
+    let r = true;
     for (const vFn of vFns) {
         r = r && await vFn(req, res, msg);
     }
@@ -65,9 +65,6 @@ export const aFnAnyFalse: AggregationFn = async (vFns: ValidateFn[], req: Reques
 export const vFnHasAnyUserRoles  = (roleNames: string[]): ValidateFn => {
     return async (req: Request, res: Response) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
-        /*if (!jwtPayload || !jwtPayload.user) {
-            return false;
-        }*/
         const userId: number = jwtPayload.user.id;
         const hasRole: boolean = await hasAnyUserRoles(userId, roleNames);
         if (!hasRole) {
@@ -78,7 +75,7 @@ export const vFnHasAnyUserRoles  = (roleNames: string[]): ValidateFn => {
 }
 
 export const vFnHasAllUserRoles = (roleNames: string[]): ValidateFn => {
-    return async (req: Request, res: Response) => {
+    return async (req: Request, res: Response, msg: string[]) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
         const hasAllRole: boolean = await hasAllUserRoles(userId, roleNames);
@@ -90,19 +87,16 @@ export const vFnHasNoneUserRoles = (roleNames: string[]): ValidateFn => {
     return async (req: Request, res: Response) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
-        const hasRole: boolean = await hasNoneUserRoles(userId, roleNames);
-        if (!hasRole) {
-            return true;
-        }
-        return false;
+        const hasNoneRole: boolean = await hasNoneUserRoles(userId, roleNames);
+        return hasNoneRole;
     }
 }
 
-export const vFnIsSelf = (userId: number): ValidateFn => {
-    return async (req: Request, res: Response) => {
+export const vFnIsSelf = (uId: number): ValidateFn => {
+    return async (req: Request, res: Response, msg: string[]) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
-        return (userId === userId);
+        return (userId === uId);
     }
 }
 

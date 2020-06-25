@@ -7,9 +7,17 @@
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
+
+            <mat-button-toggle-group name="data-list-types" aria-label="Data List Types" [formControl]="formControlDataListTypes">
+                <mat-button-toggle value="ALL">All Items</mat-button-toggle>
+                <mat-button-toggle value="FAVOURITE">Favourite Items Only</mat-button-toggle>
+            </mat-button-toggle-group>
+
+
             <div *ngIf="done && !itemAndAttributeSet">No Items</div>
             <ng-container *ngIf="itemAndAttributeSet">
                 <app-data-list [itemAndAttributeSet]="itemAndAttributeSet"
+                               [favouritedItemIds]="favouritedItemIds"
                                (searchEvents)="onDataListSearchEvent($event)"
                                (events)="onDataListEvent($event)">
                 </app-data-list>
