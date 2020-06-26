@@ -3,10 +3,11 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AppNotificationService} from '../service/app-notification-service/app-notification.service';
 import {AuthService} from '../service/auth-service/auth.service';
 import {SettingsService} from '../service/settings-service/settings.service';
-import {OnInit} from '@angular/core';
+import { OnInit, Directive } from '@angular/core';
 import {LoadingService} from "../service/loading-service/loading.service";
 
 
+@Directive()
 export class AbstractGenSubLayoutComponent extends AbstractGenLayoutComponent implements OnInit {
 
   constructor(notificationService: AppNotificationService,

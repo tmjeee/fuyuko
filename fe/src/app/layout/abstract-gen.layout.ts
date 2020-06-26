@@ -1,4 +1,4 @@
-import {OnDestroy, OnInit} from '@angular/core';
+import { OnDestroy, OnInit, Directive } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AppNotificationService} from '../service/app-notification-service/app-notification.service';
 import {ActivatedRoute, ActivatedRouteSnapshot, Router, Event as RouterEvent, NavigationEnd} from '@angular/router';
@@ -10,6 +10,7 @@ import {SettingsService} from '../service/settings-service/settings.service';
 import {Settings} from '../model/settings.model';
 import {LoadingService} from "../service/loading-service/loading.service";
 
+@Directive()
 export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
 
   loading: boolean;

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit, Directive } from '@angular/core';
 import {ViewService} from '../../service/view-service/view.service';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {NotificationsService} from 'angular2-notifications';
@@ -14,6 +14,7 @@ import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model"
 import {toNotifications} from "../../service/common.service";
 import {LoadingService} from "../../service/loading-service/loading.service";
 
+@Directive()
 export class AbstractRulePageComponent implements OnInit, OnDestroy {
 
     subscription: Subscription;

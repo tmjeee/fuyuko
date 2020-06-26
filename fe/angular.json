@@ -31,8 +31,7 @@
               "src/styles.scss",
               "node_modules/animate.css/animate.css"
             ],
-            "scripts": [],
-            "es5BrowserSupport": true
+            "scripts": []
           },
           "configurations": {
             "production": {

@@ -1,8 +1,9 @@
 import {filter, map} from 'rxjs/operators';
 import {ActivatedRoute, ActivatedRouteSnapshot, Event as RouterEvent, NavigationEnd, Router} from '@angular/router';
-import {EventEmitter, OnInit} from '@angular/core';
+import { EventEmitter, OnInit, Directive } from '@angular/core';
 
 
+@Directive()
 export abstract class AbstractSideNavComponent implements OnInit {
 
     routeSideNavData: string;

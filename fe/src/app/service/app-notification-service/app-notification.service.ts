@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Directive, Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AppNotification, NewNotification} from '../../model/notification.model';
 import {User} from '../../model/user.model';
