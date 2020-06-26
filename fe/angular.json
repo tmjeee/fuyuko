@@ -31,7 +31,11 @@
               "src/styles.scss",
               "node_modules/animate.css/animate.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "uuid",
+              "numeral"
+            ]
           },
           "configurations": {
             "production": {

@@ -3,9 +3,6 @@ import {Attribute} from "../../model/attribute.model";
 import {PriceDataItem} from "../../model/pricing-structure.model";
 import {CollectionViewer, DataSource} from "@angular/cdk/collections";
 import {BehaviorSubject, Observable} from "rxjs";
-import {serializeI18nMessageForGetMsg} from "@angular/compiler/src/render3/view/i18n/get_msg_utils";
-import {findHammerScriptImportElements} from "@angular/material/schematics/ng-update/upgrade-rules/hammer-gestures-v9/find-hammer-script-tags";
-
 
 export class InternalDataSource extends DataSource<PriceDataItem> {
 

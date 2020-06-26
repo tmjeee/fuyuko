@@ -4,8 +4,7 @@ import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {FormBuilder, FormControl} from '@angular/forms';
-import {switchMap} from 'rxjs/internal/operators/switchMap';
-import {debounceTime, filter, map, startWith} from 'rxjs/operators';
+import {debounceTime, filter, startWith, switchMap} from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 export type GroupSearchFn = (group: string) => Observable<Group[]>;

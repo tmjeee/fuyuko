@@ -2,11 +2,9 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} f
 import {Group} from '../../model/group.model';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipEvent, MatChipList, MatChipListChange } from '@angular/material/chips';
-import { MatInput } from '@angular/material/input';
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {filter, startWith} from 'rxjs/operators';
-import {switchMap} from 'rxjs/internal/operators/switchMap';
+import {filter, startWith, switchMap} from 'rxjs/operators';
 
 export type GroupSearchFn = (group: string) => Observable<Group[]>;
 

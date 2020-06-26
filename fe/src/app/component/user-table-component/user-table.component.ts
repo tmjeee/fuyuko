@@ -2,15 +2,10 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange,
 import {User} from '../../model/user.model';
 import {FormBuilder, FormControl} from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {UserManagementService} from '../../service/user-management-service/user-management.service';
-import {debounceTime, filter, map, startWith} from 'rxjs/operators';
-import {of} from 'rxjs/internal/observable/of';
-import {switchMap} from 'rxjs/internal/operators/switchMap';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {debounceTime, filter, startWith, switchMap} from 'rxjs/operators';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer} from '@angular/cdk/collections';
-import {SelfRegistration} from '../../model/self-registration.model';
-import {MatDialog} from "@angular/material/dialog";
 
 
 export type UserSearchFn = (user: string) => Observable<User[]>;

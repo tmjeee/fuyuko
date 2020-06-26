@@ -38,7 +38,7 @@ const httpAction = [
         } else {
             res.status(200).json({
                 status: 'SUCCESS',
-                message: `User ${username} (${email}) registered`,
+                message: `User ${username} (${email}) registered, activation is required before account is activated`,
                 payload: {
                     registrationId: r.registrationId,
                     email: r.email,
