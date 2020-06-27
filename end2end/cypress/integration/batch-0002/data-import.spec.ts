@@ -132,7 +132,7 @@ describe(`data import spec`, () => {
             .verifyItemImport_itemAttributeValue(`item 1`, `att01`, [`some string`])
             .verifyItemImport_itemAttributeValue(`item 1`, `att02`, ['some text'])
             .verifyItemImport_itemAttributeValue(`item 1`, `att03`, ['10.0'])
-            .verifyItemImport_itemAttributeValue(`item 1`, `att04`, ['10/09/2018'])
+            .verifyItemImport_itemAttributeValue(`item 1`, `att04`, ['10-09-2018'])
             .verifyItemImport_itemAttributeValue(`item 1`, `att05`, ['$23.50'])
             .verifyItemImport_itemAttributeValue(`item 1`, `att06`, ['11.1 l'])
             .verifyItemImport_itemAttributeValue(`item 1`, `att07`, ['w:13.0 m', 'h:14.0 m', 'l:12.0 m'])

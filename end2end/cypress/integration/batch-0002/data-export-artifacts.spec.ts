@@ -99,7 +99,7 @@ describe(`data export artifacts spec`, () => {
             .visit()
             .validateTitle()
             .verifyName(0, 'item-data-export')
-            .verifyViewMimeType(0, 'text/csv')
+            .verifyViewMimeType(0, 'application/zip')
             .verifyViewName(0, viewName)
             .clickDelete(0)
             .verifySuccessMessageExists()

@@ -5,7 +5,30 @@ import {getThreadLocalStore, ThreadLocalStore} from "./thread-local.service";
 import {AuditCategory, AuditLog} from "../model/audit-log.model";
 import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET} from "../util/utils";
+import JSZip from 'jszip'
 
+export interface HttpEntryAuditEventType {}
+export interface Aaa {}
+
+interface AuditEventType {
+   "httpEntry": HttpEntryAuditEventType;
+   "aaa": Aaa;
+}
+
+export interface AuditEvent<T extends keyof AuditEventType> {
+    type: T;
+    event: AuditEventType[T]
+}
+
+const s = {
+   type: 'httpEntry',
+   event: {
+   } as Aaa
+} as AuditEvent<'httpEntry'>;
+
+
+
+/////////////////////////////////////////////////////////
 
 export const auditLogDebug = async (message: string, category: AuditCategory = "APP") => {
     auditLog(message, category, 'DEBUG');

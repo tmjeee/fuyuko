@@ -108,7 +108,7 @@ describe("user-role", () => {
             .fillIn(email, username, firstname, lastname, password, password)
             .verifyFormSubmittable(true)
         ;
-        userActivationPage.visit();
+        // userActivationPage.visit();
     });
 
 
