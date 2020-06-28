@@ -29,8 +29,10 @@ Documentations are [here](https://docs.fuyuko.org)
 # Blog
 We have a blog [here](https://blog.fuyuko.org)
 
-# Slack channel
-Want to drop a message or chat? We have Slack channel [here](https://fuyuko.slack.com/channels/#fuyuko). Feel free to drop by and say Hi :) 
+# Queries
+Want to drop a message or chat? 
+* We have Slack channel [here](https://fuyuko.slack.com/channels/#fuyuko). Feel free to drop by and say Hi :) 
+* Email us at admin(at)fuyuko(dot)org
 
 # Demo
 Demo app running [here](https://demo.fuyuko.org)
