@@ -3,11 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npx ng serve",
-    "build": "npx ng build",
-    "test": "npx ng test",
-    "lint": "npx ng lint",
-    "e2e": "npx ng e2e"
+    "copy": "npm run copy-model && npm run copy-shared-utils",
+    "copy-model": "rm -fr ./src/app/model && cp -fr ../common-code/model ./src/app/",
+    "copy-shared-utils": "rm -fr ./src/app/shared-utils && cp -fr ../common-code/shared-utils ./src/app",
+    "serve": "npm run copy && npx ng serve",
+    "build": "npm run copy && npx ng build",
+    "build-prod": "npm run copy && npx ng build --prod",
+    "test": "npm run copy && npx ng test",
+    "lint": "npm run copy && npx ng lint",
+    "e2e": "npm run copy && npx ng e2e"
   },
   "private": false,
   "author": "tmjeee",
