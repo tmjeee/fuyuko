@@ -3,7 +3,7 @@ import {DashboardService} from '../../service/dashboard-service/dashboard.servic
 import {
     DashboardStrategy,
     DashboardWidgetInfo,
-} from '../../model/dashboard.model';
+} from '../../component/dashboard-component/dashboard.model';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {User} from '../../model/user.model';
 import {DashboardComponentEvent} from '../../component/dashboard-component/dashboard.component';

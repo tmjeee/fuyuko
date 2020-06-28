@@ -16,7 +16,7 @@ import {
     DashboardStrategy,
     DashboardWidgetInfo,
     DashboardWidgetInstance
-} from '../../model/dashboard.model';
+} from './dashboard.model';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import * as uuid from 'uuid/v1';
 import {WidgetContainerComponent} from './widget-container.component';

@@ -1,4 +1,4 @@
-import {DashboardWidget, DashboardWidgetInfo} from '../../../../model/dashboard.model';
+import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
 import {MatOptionSelectionChange} from "@angular/material/core";

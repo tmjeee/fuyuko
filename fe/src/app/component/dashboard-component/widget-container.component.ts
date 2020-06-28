@@ -9,7 +9,7 @@ import {
     Type,
     ViewChild, ViewContainerRef
 } from '@angular/core';
-import {DashboardWidget, DashboardWidgetInstance} from '../../model/dashboard.model';
+import {DashboardWidget, DashboardWidgetInstance} from './dashboard.model';
 import {DashboardWidgetService} from "../../service/dashboard-service/dashboard-widget.service";
 import {User} from "../../model/user.model";
 

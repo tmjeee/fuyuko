@@ -2,13 +2,9 @@ import {Injectable } from '@angular/core';
 import {
     DashboardStrategy,
     DashboardWidgetInfo,
-} from '../../model/dashboard.model';
+} from '../../component/dashboard-component/dashboard.model';
 import {User} from '../../model/user.model';
 import {Observable, of} from 'rxjs';
-import {
-    SerializedDashboardFormat,
-    SerializedDashboardWidgetInstanceFormat
-} from '../../model/dashboard-serialzable.model';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
 import {map} from 'rxjs/operators';

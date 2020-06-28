@@ -1,4 +1,4 @@
-import {DashboardStrategy, DashboardWidgetInfo, DashboardWidgetInstance} from '../../../model/dashboard.model';
+import {DashboardStrategy, DashboardWidgetInfo, DashboardWidgetInstance} from '../dashboard.model';
 import {
     SerializedDashboardFormat,
     SerializedDashboardWidgetInstanceFormat

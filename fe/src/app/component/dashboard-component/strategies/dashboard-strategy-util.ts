@@ -1,6 +1,6 @@
 // a must be array / multi-dimention array of SerializeInstanceFormat
 import {SerializedDashboardWidgetInstanceFormat} from '../../../model/dashboard-serialzable.model';
-import {DashboardWidgetInfo} from '../../../model/dashboard.model';
+import {DashboardWidgetInfo} from '../dashboard.model';
 import {DASHBOARD_WIDGET_INFOS} from '../widgets';
 
 export type StickInTypesArgs = SerializedDashboardWidgetInstanceFormat| SerializedDashboardWidgetInstanceFormat[] | SerializedDashboardWidgetInstanceFormat[][];

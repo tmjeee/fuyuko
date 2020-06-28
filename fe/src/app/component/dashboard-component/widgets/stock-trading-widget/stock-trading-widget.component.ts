@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from "@angular/core";
-import {DashboardWidget, DashboardWidgetInfo} from "../../../../model/dashboard.model";
+import {DashboardWidget, DashboardWidgetInfo} from "../../dashboard.model";
 import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
 import uuid from "uuid";
 import {AuthService} from "../../../../service/auth-service/auth.service";

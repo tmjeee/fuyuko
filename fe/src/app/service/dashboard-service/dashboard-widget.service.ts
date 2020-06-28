@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {DashboardWidgetInstance} from '../../model/dashboard.model';
+import {DashboardWidgetInstance} from '../../component/dashboard-component/dashboard.model';
 import {HttpClient} from '@angular/common/http';
 import {DataMap, SerializedDashboardWidgetInstanceDataFormat} from '../../model/dashboard-serialzable.model';
 import config from '../../utils/config.util';
