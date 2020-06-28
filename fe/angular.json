@@ -92,7 +92,7 @@
             "main": "projects/fuyuko/src/test.ts",
             "polyfills": "projects/fuyuko/src/polyfills.ts",
             "tsConfig": "projects/fuyuko/tsconfig.spec.json",
-            "karmaConfig": "projects/fuyuko/src/karma.conf.js",
+            "karmaConfig": "projects/fuyuko/karma.conf.js",
             "styles": [
               "projects/fuyuko/src/styles.scss"
             ],
