@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {PricingStructureGroupAssociation} from "../../model/pricing-structure.model";
-import { GroupSearchFn } from 'src/app/component/group-table-component/group-table.component';
+import { GroupSearchFn } from '../../component/group-table-component/group-table.component';
 import {UserManagementService} from "../../service/user-management-service/user-management.service";
 import {finalize, tap} from "rxjs/operators";
 import {Observable} from "rxjs";

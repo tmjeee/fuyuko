@@ -8,13 +8,13 @@
   "files": [],
   "references": [
     {
-      "path": "./src/tsconfig.app.json"
+      "path": "./projects/fuyuko/tsconfig.app.json"
     },
     {
-      "path": "./src/tsconfig.spec.json"
+      "path": "./projects/fuyuko/tsconfig.spec.json"
     },
     {
-      "path": "./e2e/tsconfig.e2e.json"
+      "path": "./projects/fuyuko/e2e/tsconfig.e2e.json"
     }
   ]
 }
