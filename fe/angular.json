@@ -91,7 +91,7 @@
           "options": {
             "main": "projects/fuyuko/src/test.ts",
             "polyfills": "projects/fuyuko/src/polyfills.ts",
-            "tsConfig": "projects/fuyuko/src/tsconfig.spec.json",
+            "tsConfig": "projects/fuyuko/tsconfig.spec.json",
             "karmaConfig": "projects/fuyuko/src/karma.conf.js",
             "styles": [
               "projects/fuyuko/src/styles.scss"
