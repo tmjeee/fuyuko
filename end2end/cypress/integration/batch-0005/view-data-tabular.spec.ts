@@ -72,7 +72,7 @@ describe('view-data-tabular spec', () => {
         ;
     });
 
-    it(`should do column filtering`, () => {
+    it.skip(`should do column filtering`, () => {
         viewDataTablePage
             .selectBasicSearch()
             .openFilterBox()
@@ -122,7 +122,7 @@ describe('view-data-tabular spec', () => {
         });
     });
 
-    it(`should add and delete hierachical item (without saving)`, () => {
+    it.skip(`should add and delete hierachical item (without saving)`, () => {
         const itemName = `ParentItem-${Math.random()}`;
         const itemName2 = `ChildItem-${Math.random()}`;
         const itemName3 = `ChildChildItem-${Math.random()}`;

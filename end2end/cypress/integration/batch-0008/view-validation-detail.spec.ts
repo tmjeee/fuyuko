@@ -109,7 +109,7 @@ describe(`view validation details spec`, () => {
     });
 
     // test ordering
-    it(`should allow ordering`, () => {
+    it.skip(`should allow ordering`, () => {
         viewValidationDetailsPage
             .openTableFilterPanel();
 
@@ -144,7 +144,7 @@ describe(`view validation details spec`, () => {
     });
 
     // test editing item name, description and attribute values
-    it(`should allow editing item name, description and attribute values`, () => {
+    it.skip(`should allow editing item name, description and attribute values`, () => {
         const itemName = `Item-3`;
 
         const string_attributeName = `string attribute`;

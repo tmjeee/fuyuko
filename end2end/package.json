@@ -32,8 +32,6 @@
     "cypress-run-batch-0007": "npm run copy && npm run tsc && npx cypress run --spec 'cypress/integration/batch-0007/**/*'",
     "cypress-run-batch-0008": "npm run copy && npm run tsc && npx cypress run --spec 'cypress/integration/batch-0008/**/*'",
     "cypress-run-batch-0009": "npm run copy && npm run tsc && npx cypress run --spec 'cypress/integration/batch-0009/**/*'",
-    "cypress-run-batch-0010": "npm run copy && npm run tsc && npx cypress run --spec 'cypress/integration/batch-0010/**/*'",
-    "cypress-run-batch-0011": "npm run copy && npm run tsc && npx cypress run --spec 'cypress/integration/batch-0011/**/*'",
     "cypress-run-record-batch-0001": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0001/**/*'",
     "cypress-run-record-batch-0002": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0002/**/*'",
     "cypress-run-record-batch-0003": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0003/**/*'",
@@ -42,9 +40,7 @@
     "cypress-run-record-batch-0006": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0006/**/*'",
     "cypress-run-record-batch-0007": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0007/**/*'",
     "cypress-run-record-batch-0008": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0008/**/*'",
-    "cypress-run-record-batch-0009": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0009/**/*'",
-    "cypress-run-record-batch-0010": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0010/**/*'",
-    "cypress-run-record-batch-0010": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0011/**/*'"
+    "cypress-run-record-batch-0009": "npm run copy && npm run tsc && npx cypress run --record --key a44ac433-f237-4407-bfdb-79c3ccc3a422 --spec 'cypress/integration/batch-0009/**/*'"
   },
   "author": "tmjeee",
   "license": "LGPL"

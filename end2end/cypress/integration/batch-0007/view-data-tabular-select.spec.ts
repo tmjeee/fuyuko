@@ -41,7 +41,7 @@ describe('view-data-tabular-select spec', () => {
 
 
 
-    it(`[select attribute] add item, edit attribute and delete item`, () => {
+    it.skip(`[select attribute] add item, edit attribute and delete item`, () => {
         const itemName = `Add-item-${Math.random()}`;
 
         Cypress.currentTest.retries(1);
