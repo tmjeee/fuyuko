@@ -93,7 +93,7 @@ describe('view-data-tabular spec', () => {
         });
     });
 
-    it(`should do column ordering`, () => {
+    it.skip(`should do column ordering`, () => {
         viewDataTablePage
             .selectBasicSearch()
             .openFilterBox()

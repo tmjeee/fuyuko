@@ -1,7 +1,7 @@
 import {ViewDataTablePage} from "../page-object/sub-page-object/view-data-table.page";
 import {LoginPage} from "../page-object/login.page";
 
-describe('view-data-tabular-currency spec', () => {
+describe.skip('view-data-tabular-currency spec', () => {
     const attrs = [
         'string attribute',
         'text attribute',
