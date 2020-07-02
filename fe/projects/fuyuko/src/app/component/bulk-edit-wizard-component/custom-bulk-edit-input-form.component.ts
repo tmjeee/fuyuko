@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges} from "@angular/core";
 import {View} from "../../model/view.model";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {tap} from "rxjs/operators";
 import {FileDataObject} from "../../model/file.model";
 import {fromFileToFileDataObject} from "../../shared-utils/buffer.util";
@@ -41,6 +41,11 @@ export class CustomBulkEditInputFormComponent {
    }
 
    ngOnInit(): void {
+   }
+
+
+   formControl(k: string): FormControl {
+      return this.formGroup.controls[k] as FormControl;
    }
 
    ngOnChanges(changes: SimpleChanges): void {

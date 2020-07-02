@@ -61,7 +61,7 @@
                                 <div *ngFor="let attribute of allAttributes">
                                     <mat-checkbox (change)="onAttributeCheckboxChange($event)"
                                                   [attr.test-checkbox-step2-export-attribute-select]="attribute.name"
-                                                  [formControl]="secondFormGroup.get('attributes').get('' + attribute.id)">{{attribute.name}}</mat-checkbox>
+                                                  [formControl]="formControlForAttribute(attribute)">{{attribute.name}}</mat-checkbox>
                                 </div>
                             </div>
                         </ng-container>

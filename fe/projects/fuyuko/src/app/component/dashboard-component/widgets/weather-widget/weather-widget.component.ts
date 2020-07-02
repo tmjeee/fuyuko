@@ -81,11 +81,11 @@ export class WeatherWidgetComponent extends DashboardWidget implements OnInit, O
     ngOnDestroy(): void {
     }
 
-    f(d, s, id) {
-        let js, fjs = d.getElementsByTagName(s)[0];
-        js = d.createElement(s);
+    f(d: Document, s: string, id: string) {
+        let js: HTMLScriptElement, fjs: HTMLElement = d.getElementsByTagName(s)[0] as HTMLElement;
+        js = d.createElement(s) as HTMLScriptElement;
         js.id = id;
-        js.src = 'https://weatherwidget.io/js/widget.min.js';
+        (js as HTMLScriptElement).src = 'https://weatherwidget.io/js/widget.min.js';
         fjs.parentNode.insertBefore(js, fjs);
     }
 

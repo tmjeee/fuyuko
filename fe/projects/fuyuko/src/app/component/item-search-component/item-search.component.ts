@@ -33,7 +33,7 @@ export class ItemSearchComponent {
     } as ItemSearchComponentEvent);
   }
 
-  onAdvanceSearch($event) {
+  onAdvanceSearch($event: KeyboardEvent) {
    if (this.formControlValue.invalid) {
      this.events.emit({
        type: 'advance',

@@ -11,7 +11,7 @@ export class JobsListingsComponent {
 
     @Input() jobs: Job[];
     @Input() fetchFn: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
-    fetchJobs = {};
+    fetchJobs: {[k: number]: boolean} = {};
 
     onExpansionPanelClosed(job: Job) {
         this.fetchJobs[job.id] = false;

@@ -57,7 +57,7 @@ export class GroupTableComponent implements OnInit, OnChanges {
       .valueChanges
       .pipe(
         startWith(''),
-        filter((groupSearch: Group | string) => (typeof groupSearch === 'string')),
+        filter<string>((groupSearch: Group | string) => (typeof groupSearch === 'string')),
         debounceTime(1000),
         switchMap((groupSearch: string) => {
           return (this.groupSearchFn(groupSearch));

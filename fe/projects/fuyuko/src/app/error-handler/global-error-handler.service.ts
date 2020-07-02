@@ -48,7 +48,7 @@ export class GlobalErrorHandler extends ErrorHandler {
                     this.loadingService.stopLoading();
                     if (isUnauthorizationFailedRedirectable(location.href)) {
                         this.getNgZone().run(() => {
-                            this.notificationService.error('Unauthorized', httpErrorResponse.error.errors.map((e) => e.msg).join(', '));
+                            this.notificationService.error('Unauthorized', httpErrorResponse.error.errors.map((e: {msg: string}) => e.msg).join(', '));
                             this.getRouter().navigate(['/login-layout', 'login']);
                         });
                     }

@@ -275,10 +275,10 @@ export class DataTableComponent implements OnInit, OnChanges {
     newItem.description = ``;
     newItem.depth = parentItem.depth + 1;
 
-    const f = (tableItem) => {
+    const f = (tableItem: TableItem) => {
       if (tableItem) {
         if (tableItem.parentId > 0) {
-          const p = this.itemAndAttributeSet.tableItems.find((i: TableItem) => i.id === tableItem.parentId);
+          const p: TableItem = this.itemAndAttributeSet.tableItems.find((i: TableItem) => i.id === tableItem.parentId);
           f(p);
         }
         this.pendingSavingNewItems.set(tableItem.id, tableItem);
@@ -291,8 +291,6 @@ export class DataTableComponent implements OnInit, OnChanges {
     // this.pendingSavingItems.set(parentItem.id, parentItem);
     f(parentItem);
     this.pendingSavingNewItems.set(nextId, newItem);
-
-
 
     const indexOfRootParentItem = this.itemAndAttributeSet.tableItems.findIndex((i: TableItem) => i.id === parentItem.id);
     this.itemAndAttributeSet.tableItems.splice(indexOfRootParentItem + 1, 0, newItem);

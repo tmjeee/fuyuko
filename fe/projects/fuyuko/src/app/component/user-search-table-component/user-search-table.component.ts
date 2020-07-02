@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  Self,
+  SimpleChange,
+  SimpleChanges
+} from '@angular/core';
 import {User} from '../../model/user.model';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer} from '@angular/cdk/collections';
@@ -9,21 +19,22 @@ import {SelfRegistration} from '../../model/self-registration.model';
 
 export type UserSearchFn = (username: string) => Observable<User[] | SelfRegistration[]>;
 
+export interface TableEntry { id: number, username: string, firstName: string, lastName: string };
 
 export interface UserSearchTableComponentEvent {
   type: string;
-  user: User | SelfRegistration;
+  user: TableEntry;
 }
 
-class UserSearchTableDataSource implements DataSource<User | SelfRegistration> {
+class UserSearchTableDataSource implements DataSource<TableEntry> {
 
-  subject: BehaviorSubject<User[] | SelfRegistration[]> = new BehaviorSubject([]);
+  subject: BehaviorSubject<TableEntry[]> = new BehaviorSubject([]);
 
-  update(users: User[] | SelfRegistration[]) {
+  update(users: TableEntry[]) {
     this.subject.next(users);
   }
 
-  connect(collectionViewer: CollectionViewer): Observable<User[] | ReadonlyArray<User> | SelfRegistration[] | ReadonlyArray<SelfRegistration>> {
+  connect(collectionViewer: CollectionViewer): Observable<TableEntry[] | ReadonlyArray<TableEntry>> {
     return this.subject.asObservable();
   }
 
@@ -77,7 +88,7 @@ export class UserSearchTableComponent implements OnInit, OnChanges {
   userSearch() {
     this.userSearchFn(this.formControlUserSearch.value)
         .pipe(
-            map((users: User[]) => {
+            map((users: User[] | SelfRegistration[]) => {
               this.dataSource.update(users);
             })
         ).subscribe();

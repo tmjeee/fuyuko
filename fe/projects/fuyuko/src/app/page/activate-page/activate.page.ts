@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {ActivationService} from '../../service/activation-service/activation.service';
 import {tap} from 'rxjs/operators';
@@ -50,9 +50,9 @@ export class ActivatePageComponent implements OnInit {
             lastName: this.formControlLastName,
             passwordGroup: this.formGroupPassword
         });
-        this.formGroupPassword.setValidators((fg: FormGroup) => {
-            const password1: string = fg.controls.password.value;
-            const password2: string = fg.controls.confirmPassword.value;
+        this.formGroupPassword.setValidators((fg: AbstractControl) => {
+            const password1: string = (fg as FormGroup).controls.password.value;
+            const password2: string = (fg as FormGroup).controls.confirmPassword.value;
             if (password1 !== password2) {
                 return { passwordMatch: true };
             }

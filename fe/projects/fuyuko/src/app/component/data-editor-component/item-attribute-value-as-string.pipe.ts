@@ -18,7 +18,7 @@ import {convertToString } from '../../shared-utils/ui-item-value-converters.util
   name: 'itemAttributeValueAsString'
 })
 export class ItemAttributeValueAsStringPipe implements PipeTransform {
-  transform(value: Value | ItemValTypes, ...args): string {
+  transform(value: Value | ItemValTypes, ...args: Attribute[]): string {
     if (!value) {
       return '';
     }

@@ -1,9 +1,8 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {PricedItem, TableItem, TablePricedItem, Value} from '../../model/item.model';
-import {CollectionViewer, DataSource, SelectionModel} from '@angular/cdk/collections';
+import {TableItem, TablePricedItem, Value} from '../../model/item.model';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Attribute} from '../../model/attribute.model';
-import {MatCheckboxChange} from '@angular/material/checkbox';
 import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
 import {MatSidenav} from '@angular/material/sidenav';
 import {animate, state, style, transition, trigger} from "@angular/animations";

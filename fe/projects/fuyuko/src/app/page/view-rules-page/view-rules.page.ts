@@ -166,7 +166,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                             return [this.customRuleService.getCustomRulesByView(this.currentView.id)];
                         }),
                         combineAll(),
-                        tap((r: [CustomRuleForView[]]) => {
+                        tap((r: CustomRuleForView[][]) => {
                             this.customRulesForView = r[0];
                             toNotifications(this.notificationService, apiResponse);
                         })
@@ -183,7 +183,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                             return this.customRuleService.getCustomRulesByView(this.currentView.id);
                         }),
                         combineAll(),
-                        tap((r: [CustomRuleForView[]]) => {
+                        tap((r: CustomRuleForView[][]) => {
                             this.customRulesForView = r[0];
                             toNotifications(this.notificationService, apiResponse);
                         })
@@ -198,7 +198,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                             return this.customRuleService.getCustomRulesByView(this.currentView.id);
                         }),
                         combineAll(),
-                        tap((r: [CustomRuleForView[]]) => {
+                        tap((r: CustomRuleForView[][]) => {
                             this.customRulesForView = r[0];
                             this.notificationService.success('Enabled', `Custom rule(s) enabled`);
                         })
@@ -213,7 +213,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                             return this.customRuleService.getCustomRulesByView(this.currentView.id);
                         }),
                         combineAll(),
-                        tap((r: [CustomRuleForView[]]) => {
+                        tap((r: CustomRuleForView[][]) => {
                             this.customRulesForView = r[0];
                             this.notificationService.success('Deleted', `Custom rule(s) disabled`);
                         })

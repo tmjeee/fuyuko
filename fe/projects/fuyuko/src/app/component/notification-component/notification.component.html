@@ -6,7 +6,7 @@
   </mat-icon>
   <mat-icon *ngIf="noOfNewNotifications > 0"
             class="notification-icon"
-            [matBadge]="noOfNewNotifications"
+            [matBadge]="''+noOfNewNotifications"
             matBadgeColor="accent"
             matBadgeDescription="Notifications"
             (click)="onNotificationIconClicked($event)">

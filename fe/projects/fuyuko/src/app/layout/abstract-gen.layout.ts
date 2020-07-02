@@ -1,7 +1,7 @@
 import { OnDestroy, OnInit, Directive } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AppNotificationService} from '../service/app-notification-service/app-notification.service';
-import {ActivatedRoute, ActivatedRouteSnapshot, Router, Event as RouterEvent, NavigationEnd} from '@angular/router';
+import {ActivatedRoute, ActivatedRouteSnapshot, Router, Event as REvent, NavigationEnd} from '@angular/router';
 import {filter, finalize, map, tap} from 'rxjs/operators';
 import {AppNotification} from '../model/notification.model';
 import {AuthService} from '../service/auth-service/auth.service';
@@ -59,8 +59,8 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
     this.routeSubSideNavData = this.findSubSideNavData([this.route.snapshot]);
     this.routerEventSubscription = this.router.events
       .pipe(
-        filter((e: RouterEvent) => e instanceof NavigationEnd),
-        map((e: NavigationEnd) => {
+        filter((e: REvent) => e instanceof NavigationEnd),
+        map((e: REvent) => {
           this.routeSubSideNavData = this.findSubSideNavData([this.route.snapshot]);
         })
       ).subscribe();

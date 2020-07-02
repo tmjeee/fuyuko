@@ -46,28 +46,32 @@ export class BulkEditReviewTableComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.whenAttributes.forEach((a: Attribute) => a['uid'] = uuid());
-        this.changeAttributes.forEach((a: Attribute) => a['uid'] = uuid());
+        this.whenAttributes.forEach((a: Attribute) => (a as any)['uid'] = uuid());
+        this.changeAttributes.forEach((a: Attribute) => (a as any)['uid'] = uuid());
 
         this.attributeHeaderColumns = [
             'item-number-header',
             'item-info-header',
-            ...this.whenAttributes.map((wa: Attribute) => `when-attributes-header-${wa['uid']}-${wa.id}`),
-            ...this.changeAttributes.map((ca: Attribute) => `change-attributes-header-${ca['uid']}-${ca.id}`),
+            ...this.whenAttributes.map((wa: Attribute) => `when-attributes-header-${(wa as any)['uid']}-${wa.id}`),
+            ...this.changeAttributes.map((ca: Attribute) => `change-attributes-header-${(ca as any)['uid']}-${ca.id}`),
         ];
         this.changeAttributes.forEach((ca: Attribute) => {
-            this.changeOldNewValuesHeaderColumns.push(`change-old-values-header-${ca['uid']}-${ca.id}`);
-            this.changeOldNewValuesHeaderColumns.push(`change-new-values-header-${ca['uid']}-${ca.id}`);
+            this.changeOldNewValuesHeaderColumns.push(`change-old-values-header-${(ca as any)['uid']}-${ca.id}`);
+            this.changeOldNewValuesHeaderColumns.push(`change-new-values-header-${(ca as any)['uid']}-${ca.id}`);
         });
         this.displayedColumns = [
             `item-number-cell`,
             `item-info-cell`,
-            ...this.whenAttributes.map((wa: Attribute) => `${wa['uid']}-${wa.id}`),
+            ...this.whenAttributes.map((wa: Attribute) => `${(wa as any)['uid']}-${wa.id}`),
         ];
         this.changeAttributes.forEach((ca: Attribute) => {
-            this.displayedColumns.push(`old-${ca['uid']}-${ca.id}`);
-            this.displayedColumns.push(`new-${ca['uid']}-${ca.id}`);
+            this.displayedColumns.push(`old-${(ca as any)['uid']}-${(ca as any).id}`);
+            this.displayedColumns.push(`new-${(ca as any)['uid']}-${(ca as any).id}`);
         });
         this.dataSource.update(this.bulkEditTableItem);
+    }
+    
+    propValueInAttribute(att: Attribute, propName: string): any {
+        return (att as any)[propName];
     }
 }

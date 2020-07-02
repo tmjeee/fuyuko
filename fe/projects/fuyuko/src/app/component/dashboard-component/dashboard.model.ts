@@ -9,11 +9,11 @@ export interface DashboardStrategy {
     id: string;
     name: string;
     columnIndexes(): number[];
-    addDashboardWidgetInstances(serializeInstanceFormats: SerializedDashboardWidgetInstanceFormat[]);
-    removeDashboardWidgetInstances(instanceIds: string[]);
+    addDashboardWidgetInstances(serializeInstanceFormats: SerializedDashboardWidgetInstanceFormat[]): void;
+    removeDashboardWidgetInstances(instanceIds: string[]): void;
     getDashboardWidgetInstancesForColumn(columnIndex: number): DashboardWidgetInstance[];
     serialize(): string;
-    deserialize(data: string);
+    deserialize(data: string): void;
     moveDashboardWidgetInstances(columnIndex: number, previousIndex: number, currentIndex: number): void;
     transferDashboardWidgetInstances(previousColumnIndex: number, currentColumnIndex: number,
                                      previousIndex: number, currentIndex: number): void;

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MyErrorStateMatcher} from '../../utils/my-error-state-matcher.util';
 import {RegistrationService} from '../../service/registration-service/registration.service';
@@ -45,9 +45,9 @@ export class RegisterPageComponent implements OnInit {
       lastName: this.formControlLastName,
       formGroupPassword: this.formGroupPassword
     });
-    this.formGroupPassword.setValidators((formGroupPassword: FormGroup) => {
-      const p1: string = formGroupPassword.controls.password.value;
-      const p2: string = formGroupPassword.controls.confirmPassword.value;
+    this.formGroupPassword.setValidators((formGroupPassword: AbstractControl) => {
+      const p1: string = (formGroupPassword as FormGroup).controls.password.value;
+      const p2: string = (formGroupPassword as FormGroup).controls.confirmPassword.value;
       if (p1 !== p2) {
         return { passwordMatch: true };
       }

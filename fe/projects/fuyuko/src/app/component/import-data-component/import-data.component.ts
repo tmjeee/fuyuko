@@ -70,7 +70,9 @@ export class ImportDataComponent {
         this.selectedUploadType = $event.value;
     }
 
-    onUploadDataFileChange(files: FileList) {
+    onUploadDataFileChange($event: Event) {
+        const inputElement: HTMLInputElement = $event.target as HTMLInputElement;
+        const files: FileList = inputElement.files;
         if (files && files.length) {
             this.fileUploadFormControl.setValue(files.item(0));
         } else {

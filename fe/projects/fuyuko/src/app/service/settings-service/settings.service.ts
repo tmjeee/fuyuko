@@ -22,7 +22,7 @@ export class SettingsService {
         return of(URL_POST_USER_SETTINGS().replace(':userId', String(user.id)))
             .pipe(
                concatMap((url: string) => {
-                   return this.httpClient.post(url, s);
+                   return this.httpClient.post<ApiResponse>(url, s);
                }),
                concatMap((_: ApiResponse) => {
                    return this.getSettings(user);

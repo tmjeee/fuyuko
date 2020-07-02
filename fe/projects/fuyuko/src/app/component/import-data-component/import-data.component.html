@@ -40,7 +40,7 @@
                   </mat-form-field>
                   <input type="file" #fileUploadInputElement
                          [attr.test-fileupload-step2]="''"
-                         (change)="onUploadDataFileChange($event.target.files)">
+                         (change)="onUploadDataFileChange($event)">
                 </div>
                 <div class="controls">
                     <button mat-flat-button matStepperPrevious [attr.test-button-step2-back]="''" color="primary" type="button">Back</button>
@@ -50,7 +50,7 @@
         </mat-step>
 
         <!-- thrid step: Review data file-->
-        <mat-step [state]="thirdFormGroup">
+        <mat-step [stepControl]="thirdFormGroup">
             <form [formGroup]="thirdFormGroup" (ngSubmit)="onThirdFormSubmit()">
                 <ng-template matStepLabel>Review</ng-template>
                 <div class="content">
@@ -87,7 +87,7 @@
 
 
         <!-- fourth step: Import data job -->
-        <mat-step [state]="fourthFormGroup">
+        <mat-step [stepControl]="fourthFormGroup">
             <form [formGroup]="fourthFormGroup" (ngSubmit)="onFourthFormSubmit(stepper)">
                 <ng-template matStepLabel>Import</ng-template>
                 <div class="content">

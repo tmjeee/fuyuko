@@ -14,7 +14,7 @@ import {toQuery} from "../../utils/pagination.utils";
 
 const URL_ALL_PRICING_STRUCTURES = () => `${config().api_host_url}/pricingStructures`;
 const URL_PRICING_STRUCTURE_BY_VIEW = () => `${config().api_host_url}/view/:viewId/pricingStructures`;
-const URL_ALL_ITEMS_WITH_PRICE = (limitOffset) => `${config().api_host_url}/pricingStructuresWithItems/:pricingStructureId?${toQuery(limitOffset)}`;
+const URL_ALL_ITEMS_WITH_PRICE = (limitOffset: LimitOffset) => `${config().api_host_url}/pricingStructuresWithItems/:pricingStructureId?${toQuery(limitOffset)}`;
 const URL_UPDATE_PRICING_STRUCTURE_STATUS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/status/:status`;
 const URL_UPDATE_PRICING_STRUCTURE = () => `${config().api_host_url}/pricingStructures`;
 const URL_UPDATE_PRICING_STRUCTURE_ITEM = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/item`;

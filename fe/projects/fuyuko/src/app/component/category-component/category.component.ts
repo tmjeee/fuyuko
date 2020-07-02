@@ -339,7 +339,7 @@ export class CategoryComponent {
                         this.getAttributesFn(this.viewId),
                         this.getFavouriteItemIdsFn(this.viewId),
                     ).pipe(
-                        combineAll(),
+                        <any>combineAll(),
                         tap((r: [PaginableApiResponse<Item[]>, Attribute[], number[]]) => {
                             this.paginableApiResponse = r[0];
                             this.attributes = r[1];
@@ -367,11 +367,12 @@ export class CategoryComponent {
                         this.getItemsFn(this.viewId, [this.currentItem.id], this.pagination.limitOffset()),
                         this.getAttributesFn(this.viewId)
                     ).pipe(
-                        combineAll(),
+                        <any>combineAll(),
                         tap((r:[PaginableApiResponse<Item[]>, Attribute[]]) => {
                             this.paginableApiResponse = r[0];
                             this.item = r[0].payload[0];
                             this.attributes = r[1];
+                            
                         }),
                         finalize(() => this.loading = false)
                     ).subscribe();

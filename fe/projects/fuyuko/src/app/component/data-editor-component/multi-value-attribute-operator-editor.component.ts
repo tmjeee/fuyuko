@@ -62,6 +62,10 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
     controlsInFormArray(): FormGroup[] {
         return this.formArray.controls as FormGroup[];
     }
+    
+    formControlInFormGroup(formGroup: FormGroup, k: string): FormControl {
+        return formGroup.controls[k] as FormControl;
+    }
 
     ngOnInit(): void {
         if (this.itemValueOperatorAndAttributeWithId) {

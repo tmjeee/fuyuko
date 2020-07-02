@@ -11,7 +11,7 @@ export class ValidationResultLogComponent {
 
     @Input() validationResult: ValidationResult;
 
-    printf(message: any, width): string {
+    printf(message: any, width: any): string {
         return sprintf(`%s${width}`, message);
     }
 }

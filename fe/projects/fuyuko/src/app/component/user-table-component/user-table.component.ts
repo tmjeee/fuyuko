@@ -76,7 +76,7 @@ export class UserTableComponent implements OnInit, OnChanges {
       .valueChanges
       .pipe(
         startWith(''),
-        filter((v: User | string) => typeof v === 'string'),
+        filter<string>((v: User | string) => typeof v === 'string'),
         debounceTime(500),
         switchMap((v: string) => {
           return this.userSearchFn(v);

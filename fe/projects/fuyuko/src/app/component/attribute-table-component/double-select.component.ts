@@ -161,4 +161,8 @@ export class DoubleSelectComponent implements OnInit {
     this.formGroup.removeControl(`p2-v-${pair2.id}`);
     this.pairs2 = this.pairs2.filter((p: Pair2) => p.id !== pair2.id);
   }
+  
+  formControl(k: string): FormControl {
+    return this.formGroup.get(k) as FormControl;
+  }
 }

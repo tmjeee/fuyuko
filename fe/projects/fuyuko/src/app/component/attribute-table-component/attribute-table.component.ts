@@ -39,9 +39,9 @@ export interface AttributeTableComponentEvent {
 })
 export class AttributeTableComponent implements OnChanges {
 
-  @Input() searchFieldLabel;
-  @Input() searchFieldHint;
-  @Input() searchFieldPlaceholder;
+  @Input() searchFieldLabel: string;
+  @Input() searchFieldHint: string;
+  @Input() searchFieldPlaceholder: string;
   @Input() view: View;
   @Input() attributes: Attribute[];
 

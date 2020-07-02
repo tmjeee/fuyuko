@@ -30,6 +30,10 @@ export class SingleSelectComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private changeDetectorRef: ChangeDetectorRef) {
   }
+  
+  formControl(k: string): FormControl {
+    return this.formGroup.get(k) as FormControl;
+  }
 
   ngOnInit(): void {
     this.pairs = this.pairs ? [...this.pairs] : [];

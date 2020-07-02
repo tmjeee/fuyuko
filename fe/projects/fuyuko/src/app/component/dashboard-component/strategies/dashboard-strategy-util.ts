@@ -3,18 +3,16 @@ import {SerializedDashboardWidgetInstanceFormat} from '../../../model/dashboard-
 import {DashboardWidgetInfo} from '../dashboard.model';
 import {DASHBOARD_WIDGET_INFOS} from '../widgets';
 
-export type StickInTypesArgs = SerializedDashboardWidgetInstanceFormat| SerializedDashboardWidgetInstanceFormat[] | SerializedDashboardWidgetInstanceFormat[][];
+export type StickInTypesArgs = SerializedDashboardWidgetInstanceFormat | 
+                               SerializedDashboardWidgetInstanceFormat[] | 
+                               SerializedDashboardWidgetInstanceFormat[][];
 
-export interface StickInTypes {
-    (a: StickInTypesArgs):StickInTypesArgs;
-}
-
-export const stickInTypes: StickInTypes = (a: StickInTypesArgs) => {
+export const stickInTypes = (a: StickInTypesArgs): StickInTypesArgs => {
     if (Array.isArray(a)) {
-        const arr = [];
+        const arr: any = [];
         const ar: SerializedDashboardWidgetInstanceFormat[] = a as SerializedDashboardWidgetInstanceFormat[];
         for (const ai of ar) {
-            var r: StickInTypesArgs = stickInTypes(ai);
+            var r: SerializedDashboardWidgetInstanceFormat[] = stickInTypes(ai) as SerializedDashboardWidgetInstanceFormat[]; 
             if (r) {
                 arr.push(r);
             }

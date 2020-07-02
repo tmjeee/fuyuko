@@ -10,7 +10,7 @@ export class LoginLayoutComponent implements OnInit, OnDestroy {
   backgroundImage: BackgroundImage;
   handler: any;
 
-  allCachedImages = [];
+  allCachedImages: HTMLImageElement[] = [];
 
   constructor(private backgroundImageService: BackgroundImageService,
               private ngZone: NgZone) {}
@@ -18,7 +18,7 @@ export class LoginLayoutComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // eagerly cache all background images for smooth transition
     for (const bgImage of this.backgroundImageService.allBackgroundImages()) {
-        const img = new Image();
+        const img: HTMLImageElement = new Image();
         img.src = bgImage.location;
         this.allCachedImages.push(img);
     }

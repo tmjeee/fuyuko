@@ -12,10 +12,10 @@
                type="text"
                [attr.test-select-key]="i"
                placeholder="Key"
-               [formControl]="formGroup.get('k-'+pair.id)">
+               [formControl]="formControl('k-'+pair.id)">
         <mat-hint>Enter a selection key, must be unique</mat-hint>
-        <mat-error *ngIf="formGroup.get('k-'+pair.id)?.errors?.required">Key is required</mat-error>
-        <mat-error *ngIf="formGroup.get('k-'+pair.id)?.errors?.uniqueKey">Key must be unique</mat-error>
+        <mat-error *ngIf="formControl('k-'+pair.id)?.errors?.required">Key is required</mat-error>
+        <mat-error *ngIf="formControl('k-'+pair.id)?.errors?.uniqueKey">Key must be unique</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Selection Value</mat-label>
@@ -23,9 +23,9 @@
                type="text"
                placeholder="Value"
                [attr.test-select-value]="i"
-               [formControl]="formGroup.get('v-'+pair.id)">
+               [formControl]="formControl('v-'+pair.id)">
         <mat-hint>Enter a selection value for the key</mat-hint>
-        <mat-error *ngIf="formGroup.get('v-'+pair.id)?.errors?.required">Value is required</mat-error>
+        <mat-error *ngIf="formControl('v-'+pair.id)?.errors?.required">Value is required</mat-error>
       </mat-form-field>
     </div>
   </div>

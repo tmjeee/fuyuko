@@ -46,7 +46,7 @@ export class CustomImportPreviewComponent implements OnInit {
            tap((r: ImportScriptPreview) => {
               this.preview = r;
                for (const row of this.preview.rows) {
-                   const o = this.preview.columns.reduce((o: {}, col: string) => {
+                   const o = this.preview.columns.reduce((o: {[k: string]: string}, col: string) => {
                        o[col] = row[col];
                        return o;
                    }, {});

@@ -263,7 +263,7 @@ export class DataThumbnailComponent implements OnInit {
     } as DataThumbnailComponentEvent);
   }
 
-  isFavouriteItem(tableItem: TableItem): boolean {
-    return (this.favouritedItemIds ? this.favouritedItemIds.includes(tableItem.id) : false);
+  isFavouriteItem(item: Item): boolean {
+    return (this.favouritedItemIds ? this.favouritedItemIds.includes(item.id) : false);
   }
 }

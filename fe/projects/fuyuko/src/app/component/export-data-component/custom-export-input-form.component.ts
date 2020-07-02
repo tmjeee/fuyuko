@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges} from "@angular/core";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {tap} from "rxjs/operators";
 import {FileDataObject} from "../../model/file.model";
 import {fromFileToFileDataObject} from "../../shared-utils/buffer.util";
@@ -38,6 +38,10 @@ export class CustomExportInputFormComponent {
     constructor(private formBuilder: FormBuilder) {
         this.formGroup = this.formBuilder.group({});
         this.events = new EventEmitter<CustomImportInputFormComponentEvent>()
+    }
+    
+    formControl(k: string): FormControl {
+        return this.formGroup.controls[k] as FormControl;
     }
 
     ngOnInit(): void {

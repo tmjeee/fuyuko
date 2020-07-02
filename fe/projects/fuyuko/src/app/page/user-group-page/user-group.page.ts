@@ -173,11 +173,11 @@ export class UserGroupPageComponent implements OnInit {
       return false;
     }
 
-    preventDefault($event: MouseEvent) {
+    preventDefault($event: KeyboardEvent | MouseEvent) {
       $event.stopPropagation();
     }
 
-    onDeleteGroup($event: MouseEvent, g: Group) {
+    onDeleteGroup($event: MouseEvent) {
       const groupIds: number[] = this.groupsSelectionModel.selected.map((g: Group) => g.id);
       this.userManagementService.deleteGroup(groupIds).pipe(
           tap((r: ApiResponse) => {

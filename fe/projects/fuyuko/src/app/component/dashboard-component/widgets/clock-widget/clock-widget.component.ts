@@ -3,6 +3,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
 import {MatOptionSelectionChange} from "@angular/material/core";
 import {AuthService} from "../../../../service/auth-service/auth.service";
+import {MatSelectChange} from "@angular/material/select";
 
 export interface Location {
     displayName: string;
@@ -63,7 +64,7 @@ export class ClockWidgetComponent extends DashboardWidget implements OnInit, Aft
     ngAfterViewInit(): void {
     }
 
-    onLocationChange($event: MatOptionSelectionChange) {
+    onLocationChange($event: MatSelectChange) {
         const location: Location = $event.source.value as Location;
         this.currentLocation = location;
     }

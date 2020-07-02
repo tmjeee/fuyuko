@@ -50,9 +50,10 @@ export class UserPeoplePageComponent implements OnInit {
   reload() {
     this.ready = false;
     this.loadingService.startLoading();
-    of(this.userManagementService.getAllActiveUsers(), this.userManagementService.getAllInactiveUsers()).pipe(
+    of(this.userManagementService.getAllActiveUsers(), this.userManagementService.getAllInactiveUsers())
+    .pipe(
         combineAll(),
-        tap((r: [User[], User[]]) => {
+        tap((r: User[][]) => {
             const activeUsers: User[] = r[0];
             const inactiveUsers: User[] = r[1];
             this.activeUsers = activeUsers;

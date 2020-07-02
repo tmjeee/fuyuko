@@ -5,7 +5,7 @@ import {
     ImportScriptInputValue,
     ImportScriptValidateResult
 } from "../../model/custom-import.model";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {CustomImportValidateFn} from "./custom-import-wizard.component";
 import {tap} from "rxjs/operators";
 import {fromFileToFileDataObject} from "../../shared-utils/buffer.util";
@@ -55,7 +55,10 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
           }
        }
    }
-
+   
+   formControl(key: string): FormControl {
+       return this.formGroup.controls[key] as FormControl;
+   }
 
    onSubmit() {
        const iv: ImportScriptInputValue[] = this.toImportScriptInputValue();

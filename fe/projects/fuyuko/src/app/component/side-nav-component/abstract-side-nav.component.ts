@@ -1,6 +1,6 @@
 import {filter, map} from 'rxjs/operators';
 import {ActivatedRoute, ActivatedRouteSnapshot, Event as RouterEvent, NavigationEnd, Router} from '@angular/router';
-import { EventEmitter, OnInit, Directive } from '@angular/core';
+import {OnInit, Directive } from '@angular/core';
 
 
 @Directive()
@@ -16,7 +16,7 @@ export abstract class AbstractSideNavComponent implements OnInit {
         this.router.events
             .pipe(
                 filter((e: RouterEvent) => e instanceof NavigationEnd),
-                map((e: NavigationEnd) => {
+                map((e: RouterEvent) => {
                     this.routeSideNavData = this.findSideNavData([this.route.snapshot]);
                 })
             ).subscribe();

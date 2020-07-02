@@ -87,7 +87,12 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
             },
             (n: TreeNode) => n.level,
             (n: TreeNode) => n.expandable,
-            (n: CategoryWithItems) => (n as CategoryWithItems).children ? (this.includeItems ? [...n.children, ...n.items] : [...n.children]) : null
+            (n: CategoryWithItems | CategorySimpleItem) => 
+                (n as CategoryWithItems).children ? 
+                    (this.includeItems ? 
+                        [...(n as CategoryWithItems).children, ...(n as CategoryWithItems).items] : 
+                        [...(n as CategoryWithItems).children]) : 
+                    null
         );
         this.dataSource = new MatTreeFlatDataSource<CategoryWithItems | CategorySimpleItem , TreeNode>(this.treeControl, this.treeFlatter);
     }

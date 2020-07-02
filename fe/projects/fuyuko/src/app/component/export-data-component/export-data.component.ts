@@ -306,6 +306,10 @@ export class ExportDataComponent implements OnInit {
     onPricingStructureSelectionChanged($event: MatSelectChange) {
         this.selectedPricingStructure = $event.value;
     }
+    
+    formControlForAttribute(attribute: Attribute): FormControl {
+        return this.secondFormGroup.get('attributes').get('' + attribute.id) as FormControl;
+    }
 
 
     // validate filter FormGroup, this only handles the case where operators must have an item value or not, rests are
