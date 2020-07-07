@@ -1,0 +1,4 @@
+parentName,name,description,attName=att01,attName=att02,attName=att03,attName=att04,attName=att05,attName=att06,attName=att07,attName=att08,attName=att09,attName=att10,attName=att11,attName=att12,attName=att13,attName=att14,image
+,item 4,item 4 description,some string,some text,10.0,10-09-2018,23.50,11.11|l,12.01|13.01|14.01|m,11|m2,33|m,44|m,55|m,key2,key3|xkey31,10|kg,images/img-01.jpeg
+,item 5,item 5 description,some string,some text,10.0,10-09-2018,23.50,11.11|l,12.01|13.01|14.01|m,11|m2,33|m,44|m,55|m,key2,key3|xkey31,10|kg,images/img-02.jpeg|images/img-03.jpeg
+,item 6,item 6 description,some string,some text,10.0,10-09-2018,23.50,11.11|l,12.01|13.01|14.01|m,11|m2,33|m,44|m,55|m,key2,key3|xkey31,10|kg,images2/image-01.jpeg|images2/image-02.jpeg|images2/image-03.jpeg
