@@ -1,6 +1,6 @@
 import {Job} from "../../model/job.model";
 import {JobLogger, newJobLogger} from "../job-log.service";
-import {getJobyById} from "../job.service";
+import {getJobById} from "../job.service";
 import {Item} from "../../model/item.model";
 import {addItem2, getItemByName} from "../item.service";
 import {itemsRevert} from "../conversion-item.service";
@@ -8,9 +8,15 @@ import {Item2} from "../../server-side-model/server-side.model";
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {addItemImage} from "../item-image.service";
+import {fireEvent, ImportAttributeJobEvent, ImportItemJobEvent} from "../event/event.service";
 
 const uuid = require('uuid');
 
+/**
+ * ================================
+ * === runJob ===
+ * ================================
+ */
 export const runJob = async (viewId: number, dataImportId: number, items: Item[]): Promise<Job> => {
     const uid = uuid();
     const name: string = `item-data-import-job-${uid}`;
@@ -18,6 +24,12 @@ export const runJob = async (viewId: number, dataImportId: number, items: Item[]
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
 
+    fireEvent({
+        type: "ImportItemJobEvent",
+        state: 'Scheduled',
+        jobId: jobLogger.jobId
+    } as ImportItemJobEvent);
+    
     (async ()=> {
        await jobLogger.logInfo(`starting job ${name}`);
        const item2s: Item2[] = itemsRevert(items);
@@ -64,14 +76,26 @@ export const runJob = async (viewId: number, dataImportId: number, items: Item[]
 
             await jobLogger.updateProgress("COMPLETED");
             await jobLogger.logInfo(`mark ${name} as completed`);
+
+           fireEvent({
+               type: "ImportItemJobEvent",
+               state: 'Completed',
+               jobId: jobLogger.jobId
+           } as ImportItemJobEvent);
        } catch(e) {
             await jobLogger.logError(`${e.toString()}`);
             await jobLogger.updateProgress('FAILED');
+
+           fireEvent({
+               type: "ImportItemJobEvent",
+               state: 'Completed',
+               jobId: jobLogger.jobId
+           } as ImportItemJobEvent);
        } finally {
            await jobLogger.logInfo(`Done with ${name}`);
        }
 
     })();
 
-    return await getJobyById(jobLogger.jobId);
+    return await getJobById(jobLogger.jobId);
 }

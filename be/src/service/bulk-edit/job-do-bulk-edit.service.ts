@@ -8,9 +8,14 @@ import {ItemValue2} from "../../server-side-model/server-side.model";
 import {itemValueRevert} from "../conversion-item-value.service";
 import {updateItemValue2} from "../item.service";
 import {convertToDebugString} from "../../shared-utils/ui-item-value-converters.util";
+import {BulkEditJobEvent, fireEvent} from "../event/event.service";
 const uuid = require('uuid');
 
-
+/**
+ *  ============================
+ *  === runJob ===
+ *  ============================
+ */
 export const runJob = async (viewId: number, bulkEditPackage: BulkEditPackage): Promise<Job> => {
     const uid = uuid();
     const jobLogger: JobLogger = await newJobLogger(`BulkEditJob-${uid}`, `Bulk Edit Job (${uid}) for viewId ${viewId}`);
@@ -29,6 +34,12 @@ export const runJob = async (viewId: number, bulkEditPackage: BulkEditPackage): 
           progress: q[0].PROGRESS
         } as Job;
     });
+    
+    fireEvent({
+       type: 'BulkEditJobEvent',
+       state: 'Scheduled',
+       jobId: job.id 
+    } as BulkEditJobEvent);
 
     // run asynchronusly
     run(jobLogger, viewId, bulkEditPackage);
@@ -36,6 +47,11 @@ export const runJob = async (viewId: number, bulkEditPackage: BulkEditPackage): 
     return job;
 };
 
+/**
+ *  ============================
+ *  === run ===
+ *  ============================
+ */
 export const run = async (jobLogger: JobLogger, viewId: number, bulkEditPackage: BulkEditPackage) => {
     jobLogger.updateProgress('IN_PROGRESS');
     jobLogger.logInfo(`Start running bulk edit job (jobId: ${jobLogger.jobId})`);
@@ -45,13 +61,25 @@ export const run = async (jobLogger: JobLogger, viewId: number, bulkEditPackage:
         });
         jobLogger.logInfo(`Done running bulk edit job (jobId: ${jobLogger.jobId})`);
         jobLogger.updateProgress('COMPLETED');
+
+        fireEvent({
+            type: 'BulkEditJobEvent',
+            state: 'Completed',
+            jobId: jobLogger.jobId
+        } as BulkEditJobEvent);
     } catch (e) {
         jobLogger.updateProgress('FAILED');
         jobLogger.logError(`Encounter error ${e}`);
+
+        fireEvent({
+            type: 'BulkEditJobEvent',
+            state: 'Failed',
+            jobId: jobLogger.jobId
+        } as BulkEditJobEvent);
     }
 }
 
-
+// ===== helper functions ===========
 const u = async (conn: Connection, jobLogger: JobLogger, viewId: number, bulkEditItems: BulkEditItem[]) => {
     for (const bulkEditItem of bulkEditItems) {
         jobLogger.logInfo(`Working on item ${bulkEditItem.id}`);

@@ -4,10 +4,23 @@ import {SelfRegistration} from "../model/self-registration.model";
 import config from "../config";
 import {sendEmail} from "./send-email.service";
 import {hashedPassword} from "./password.service";
+import {
+    ApproveSelfRegistrationEvent, DeleteSelfRegistrationEvent,
+    fireEvent,
+    GetAllSelfRegistrationsEvent, SearchSelfRegistrationByUsernameEvent,
+    SelfRegisterEvent
+} from "./event/event.service";
 
 
+
+/**
+ * =============================
+ * === selfRegister ===
+ * ==============================
+ */
+export interface SelfRegisterResult { errors: string[], registrationId: number, email: string, username: string};
 export const selfRegister = async (username: string, email: string, firstName: string, lastName: string, password: string):
-    Promise<{errors: string[], registrationId: number, email: string, username: string}> => {
+    Promise<SelfRegisterResult> => {
     return await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
@@ -44,18 +57,29 @@ export const selfRegister = async (username: string, email: string, firstName: s
             }
         }
         errors.push(`Unable to insert into DB ( Username ${username} or ${email} )`);
-        return {
+        const selfRegisterResult: SelfRegisterResult = {
             errors,
             registrationId: null,
             email,
             username,
         };
+        fireEvent({
+           type: "SelfRegisterEvent",
+           username, email, firstName, lastName, password, result: selfRegisterResult
+        } as SelfRegisterEvent);
+        return selfRegisterResult;
     });
 };
 
 
-export const approveSelfRegistration = async (selfRegistrationId: number): Promise<{username: string, email: string, errors: string[]}> => {
-    return await doInDbConnection(async (conn: Connection) => {
+/**
+ * =============================
+ * === approveSelfRegistration ===
+ * ==============================
+ */
+export interface ApproveSelfRegistrationResult {username: string, email: string, errors: string[]};
+export const approveSelfRegistration = async (selfRegistrationId: number): Promise<ApproveSelfRegistrationResult> => {
+    const approveSelfRegistrationResult: ApproveSelfRegistrationResult = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
         const q1: QueryA = await conn.query(`
@@ -116,11 +140,22 @@ export const approveSelfRegistration = async (selfRegistrationId: number): Promi
             username, email, errors
         };
     });
+    fireEvent({
+       type: "ApproveSelfRegistrationEvent",
+       selfRegistrationId, approveSelfRegistrationResult
+    } as ApproveSelfRegistrationEvent);
+    return approveSelfRegistrationResult;
 }
 
-export const getAllSelfRegistrations = async (): Promise<SelfRegistration[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
 
+
+/**
+ * =============================
+ * === getAllSelfRegistrations ===
+ * ==============================
+ */
+export const getAllSelfRegistrations = async (): Promise<SelfRegistration[]> => {
+    const selfRegistrations: SelfRegistration[] = await doInDbConnection(async (conn: Connection) => {
         const  q: QueryA = await conn.query(`
                 SELECT
                     ID,
@@ -149,8 +184,20 @@ export const getAllSelfRegistrations = async (): Promise<SelfRegistration[]> => 
 
         return selfRegistrations;
     });
+    fireEvent({
+       type: "GetAllSelfRegistrationsEvent",
+       selfRegistrations
+    } as GetAllSelfRegistrationsEvent);
+    return selfRegistrations;
 };
 
+
+
+/**
+ * =========================================
+ * === searchSelfRegistrationByUsername ===
+ * =========================================
+ */
 export const searchSelfRegistrationsByUsername = async (username: string): Promise<SelfRegistration[]> => {
     const selfRegistrations: SelfRegistration[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
@@ -181,13 +228,27 @@ export const searchSelfRegistrationsByUsername = async (username: string): Promi
             return a;
         }, []);
     });
+    fireEvent({
+       type: "SearchSelfRegistrationByUsernameEvent",
+       username, selfRegistrations
+    } as SearchSelfRegistrationByUsernameEvent);
     return selfRegistrations;
 };
 
 
+/**
+ * =============================
+ * === deleteSelfRegistration ===
+ * ==============================
+ */
 export const deleteSelfRegistration = async (selfRegistrationId: number): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`DELETE FROM TBL_SELF_REGISTRATION WHERE ID = ?`, [selfRegistrationId]);
         return (q.affectedRows)
     });
+    fireEvent({
+       type: "DeleteSelfRegistrationEvent",
+       selfRegistrationId, result
+    } as DeleteSelfRegistrationEvent);
+    return result;
 }

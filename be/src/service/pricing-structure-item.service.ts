@@ -1,9 +1,21 @@
 import {Connection} from "mariadb";
-import {PriceDataItem, PricingStructureItemWithPrice} from "../model/pricing-structure.model";
+import {PricingStructureItemWithPrice} from "../model/pricing-structure.model";
 import {doInDbConnection, QueryA, QueryResponse} from "../db";
 import {LoggingCallback, newLoggingCallback} from "./job-log.service";
 import {CountryCurrencyUnits} from "../model/unit.model";
+import {
+    AddItemToPricingStructureEvent,
+    fireEvent,
+    GetPricingStructureItemEvent,
+    SetPricesEvent
+} from "./event/event.service";
 
+
+/**
+ *  ====================================
+ *  === setPrices ===
+ *  ====================================
+ */
 export const setPrices = async (priceDataItems: {pricingStructureId: number, item: {itemId: number, price: number, country: CountryCurrencyUnits}}[],
                                 loggingCallback: LoggingCallback = newLoggingCallback()): Promise<string[]> => {
     const errors: string[] = [];
@@ -18,11 +30,13 @@ export const setPrices = async (priceDataItems: {pricingStructureId: number, ite
             errors.push(`Failed to set price for item id ${itemId} in pricing structure id ${pricingStructureId} with price ${price}${country}`);
         }
     }
+    fireEvent({
+       type: "SetPricesEvent",
+       priceDataItems: priceDataItems,
+    } as SetPricesEvent);
     return errors;
 }
-
-
-export const setPrices2 = async (pricingStructureId: number, pricingStructureItems: {itemId: number, price: number,
+export const setPricesB = async (pricingStructureId: number, pricingStructureItems: {itemId: number, price: number,
     country: CountryCurrencyUnits}[], loggingCallback: LoggingCallback = newLoggingCallback()): Promise<string[]> => {
     const errors: string[] = [];
     for (const pricingStructureItem of pricingStructureItems) {
@@ -35,6 +49,18 @@ export const setPrices2 = async (pricingStructureId: number, pricingStructureIte
             errors.push(`Failed to set price for item id ${itemId} in pricing structure id ${pricingStructureId} with price ${price}${country}`);
         }
     }
+    fireEvent({
+        type: "SetPricesEvent",
+        priceDataItems:
+            pricingStructureItems.map((p: {itemId: number, price: number, country: CountryCurrencyUnits}) => ({
+                pricingStructureId,
+                item: {
+                    itemId: p.itemId,
+                    price: p.price,
+                    country: p.country
+                }
+            }))
+    } as SetPricesEvent);
     return errors;
 }
 
@@ -73,8 +99,14 @@ const _setPrice = async (pricingStructureId: number, itemId: number, price: numb
     return q;
 }
 
+
+/**
+ * ===================================
+ * === addItemToPricingStructure ===
+ * ===================================
+ */
 export const addItemToPricingStructure = async (viewId: number, pricingStructureId: number, itemId: number): Promise<boolean> => {
-   return await doInDbConnection(async (conn: Connection) => {
+   const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(
             `SELECT COUNT(*) AS COUNT 
                     FROM TBL_PRICING_STRUCTURE_ITEM AS I 
@@ -89,11 +121,20 @@ export const addItemToPricingStructure = async (viewId: number, pricingStructure
             return true;
         }
    });
+   fireEvent({
+      type: "AddItemToPricingStructureEvent",
+      viewId, pricingStructureId, itemId, result
+   } as AddItemToPricingStructureEvent);
+   return result;
 }
 
-
+/**
+ *  ===============================
+ *  === getPricingStructureItem ===
+ *  ===============================
+ */
 export const getPricingStructureItem = async (viewId: number, pricingStructureId: number, itemId: number): Promise<PricingStructureItemWithPrice> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const pricingStructureItemWithPrice: PricingStructureItemWithPrice = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT
                     I.ID AS I_ID,
@@ -137,6 +178,11 @@ export const getPricingStructureItem = async (viewId: number, pricingStructureId
             children: await getChildrenWithConn(conn, pricingStructureId, itemId)
         } as PricingStructureItemWithPrice : null;
     });
+    fireEvent({
+       type: "GetPricingStructureItemEvent",
+       viewId, pricingStructureId, itemId, pricingStructureItemWithPrice
+    } as GetPricingStructureItemEvent);
+    return pricingStructureItemWithPrice;
 }
 
 export const getChildrenWithConn = async (conn: Connection, pricingStructureId: number, parentItemId: number): Promise<PricingStructureItemWithPrice[]> => {

@@ -1,21 +1,34 @@
 import {Attribute} from "../../model/attribute.model";
 import {doInDbConnection} from "../../db";
 import {Connection} from "mariadb";
-import {getItem2WithFiltering, Item2WithFilteringResult} from "../item-filtering.service";
+import {
+    getItemWithFiltering,
+    ItemWithFilteringResult
+} from "../item-filtering.service";
 import {Item} from "../../model/item.model";
-import {itemsConvert} from "../conversion-item.service";
 import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
+import {ExportItemPreviewEvent, fireEvent} from "../event/event.service";
 
+/**
+ * =============================
+ * === preview ===
+ * =============================
+ */
 export type PreviewResult = {i: Item[], m: Map<string /* attributeId */, Attribute>};
-
 export const preview = async (viewId: number, filter: ItemValueOperatorAndAttribute[]): Promise<PreviewResult> => {
-    const {b: item2s, m: attributesMap}: Item2WithFilteringResult = await doInDbConnection(async (conn: Connection) => {
-        return await getItem2WithFiltering(conn, viewId, null, filter);
+    const {b: items, m: attributesMap}: ItemWithFilteringResult = await doInDbConnection(async (conn: Connection) => {
+        return await getItemWithFiltering(conn, viewId, null, filter);
     });
 
-    const items: Item[] = itemsConvert(item2s);
-    return {
+    const r: PreviewResult =  {
         i: items,
         m: attributesMap
     } as PreviewResult;
+    
+    fireEvent({
+        type: "ExportItemPreviewEvent",
+        previewResult: r
+    } as ExportItemPreviewEvent);
+    
+    return r;
 }

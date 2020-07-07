@@ -6,20 +6,24 @@ import { Connection } from "mariadb";
 import {DELETED, ENABLED} from "../model/status.model";
 import {getItemsByIds, getItemsByIdsCount} from "./index";
 import {LIMIT_OFFSET} from "../util/utils";
+import {
+    AddCategoryEvent, AddItemToViewCategoryEvent,
+    CategorySimpleItemsInCategoryEvent,
+    CategorySimpleItemsNotInCategoryEvent,
+    DeleteCategoryEvent,
+    fireEvent,
+    GetViewCategoriesEvent,
+    GetViewCategoriesWithItemsEvent,
+    GetViewCategoryByNameEvent,
+    GetViewCategoryItemsEvent, RemoveItemFromViewCategoryEvent,
+    UpdateCategoryEvent
+} from "./event/event.service";
 
-export interface AddCategoryInput {
-    name: string;
-    description: string;
-    children: AddCategoryInput[]
-};
-
-export interface UpdateCategoryInput {
-    id: number;
-    name: string;
-    description: string;
-};
-
-
+/**
+ *  =======================================
+ *  === categorySimpleItemsInCategory() ===
+ *  =======================================
+ */
 export const categorySimpleItemsInCategoryCount = async (viewId: number, categoryId: number): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
@@ -28,9 +32,8 @@ export const categorySimpleItemsInCategoryCount = async (viewId: number, categor
         return q[0].COUNT;
     });
 };
-
 export const categorySimpleItemsInCategory = async (viewId: number, categoryId: number, limitOffset?: LimitOffset): Promise<CategorySimpleItem[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const categorySimpleItems: CategorySimpleItem[] = await doInDbConnection(async (conn: Connection) => {
         const q1: QueryA = await conn.query(`
                 SELECT ITEM_ID 
                 FROM TBL_LOOKUP_VIEW_CATEGORY_ITEM
@@ -63,8 +66,20 @@ export const categorySimpleItemsInCategory = async (viewId: number, categoryId: 
             return a;
         }, []);
     });
+    fireEvent({
+       type: 'CategorySimpleItemsInCategoryEvent',
+       viewId, categoryId, limitOffset,
+       items: categorySimpleItems 
+    } as CategorySimpleItemsInCategoryEvent);
+    return categorySimpleItems;
 };
 
+
+/**
+ *  ==========================================
+ *  === categorySimpleItemsNotInCategory() ===
+ *  ==========================================
+ */
 export const categorySimpleItemsNotInCategoryCount = async (viewId: number, categoryId: number): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
@@ -73,9 +88,8 @@ export const categorySimpleItemsNotInCategoryCount = async (viewId: number, cate
         return q[0].COUNT;
     });
 };
-
 export const categorySimpleItemsNotInCategory = async (viewId: number, categoryId: number, limitOffset?: LimitOffset): Promise<CategorySimpleItem[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const categorySimpleItems: CategorySimpleItem[] = await doInDbConnection(async (conn: Connection) => {
         const q1: QueryA = await conn.query(`
                 SELECT ITEM_ID 
                 FROM TBL_LOOKUP_VIEW_CATEGORY_ITEM
@@ -108,10 +122,24 @@ export const categorySimpleItemsNotInCategory = async (viewId: number, categoryI
             return a;
         }, []);
     });
+    
+    fireEvent({
+        type: 'CategorySimpleItemsNotInCategoryEvent',
+        viewId, categoryId, limitOffset, 
+        items: categorySimpleItems
+    } as CategorySimpleItemsNotInCategoryEvent);
+    
+    return categorySimpleItems;
 };
 
-export const updateCategory = async (viewId: number, parentId: number, c: UpdateCategoryInput): Promise<string[]> => {
-    return await doInDbConnection(async(conn: Connection) => {
+/**
+ *  ======================
+ *  === updateCategory ===
+ *  ======================
+ */
+export interface UpdateCategoryInput { id: number; name: string; description: string; };
+export const updateCategory = async (viewId: number, parentCategoryId: number, c: UpdateCategoryInput): Promise<string[]> => {
+    const errors: string[] = await doInDbConnection(async(conn: Connection) => {
         const errors: string[] = [];
         // make sure this category id is valid
         const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_VIEW_CATEGORY WHERE ID=? AND VIEW_ID=? AND STATUS=?`, [c.id, viewId, ENABLED]);
@@ -119,16 +147,16 @@ export const updateCategory = async (viewId: number, parentId: number, c: Update
             if (c.name) {
                 // make sure category name do not already exists
                 const qc1: QueryA = await conn.query(
-                    `SELECT COUNT(*) AS COUNT FROM TBL_VIEW_CATEGORY WHERE NAME=? AND VIEW_ID=? AND STATUS=? AND ${(parentId && parentId>0) ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}`,
-                    (parentId && parentId>0) ? [c.name, viewId, ENABLED, parentId] : [c.name, viewId, ENABLED]);
+                    `SELECT COUNT(*) AS COUNT FROM TBL_VIEW_CATEGORY WHERE NAME=? AND VIEW_ID=? AND STATUS=? AND ${(parentCategoryId && parentCategoryId>0) ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}`,
+                    (parentCategoryId && parentCategoryId>0) ? [c.name, viewId, ENABLED, parentCategoryId] : [c.name, viewId, ENABLED]);
                 if (qc1[0].COUNT <= 0) {
                     if (c.name) {
                         const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW_CATEGORY SET NAME=? WHERE VIEW_ID=? AND ID=?`, [c.name, viewId, c.id]);
                         if (q.affectedRows <= 0) {
                             errors.push(`Failed to update name of category id ${c.id} for view ${viewId}`);
                         }
-                        if (parentId && parentId > 0) {
-                            const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW_CATEGORY SET PARENT_ID=? WHERE VIEW_ID=? AND ID=?`, [parentId, viewId, c.id]);
+                        if (parentCategoryId && parentCategoryId > 0) {
+                            const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW_CATEGORY SET PARENT_ID=? WHERE VIEW_ID=? AND ID=?`, [parentCategoryId, viewId, c.id]);
                             if (q.affectedRows <= 0) {
                                 errors.push(`Failed to update parent of category id ${c.id} for view ${viewId}`);
                             }
@@ -144,11 +172,11 @@ export const updateCategory = async (viewId: number, parentId: number, c: Update
                     errors.push(`Failed to update description of category id ${c.id} for view ${viewId}`);
                 }
             }
-            if (parentId != null || parentId != undefined) {
+            if (parentCategoryId != null || parentCategoryId != undefined) {
                 const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW_CATEGORY SET PARENT_ID=? WHERE VIEW_ID=? AND ID=?`,
-                    [(parentId > 0 ? parentId : null), c.name, viewId, c.id]);
+                    [(parentCategoryId > 0 ? parentCategoryId : null), c.name, viewId, c.id]);
                 if (q.affectedRows <= 0) {
-                    errors.push(`Failed to move category id ${c.id} for view ${viewId} to new parent id ${parentId}`);
+                    errors.push(`Failed to move category id ${c.id} for view ${viewId} to new parent id ${parentCategoryId}`);
                 }
             }
 
@@ -156,17 +184,31 @@ export const updateCategory = async (viewId: number, parentId: number, c: Update
             errors.push(`Category with id ${c.id} for view ${viewId} do not exists`);
         }
     });
-}
+
+    fireEvent({
+       type: "UpdateCategoryEvent",
+       viewId, parentCategoryId,
+       input: c, errors
+    } as UpdateCategoryEvent);
+
+    return errors;
+};
 
 
-const _addCategory = async (conn: Connection, viewId: number, parentId: number, c: AddCategoryInput): Promise<string[]> => {
+/**
+ *  ===================
+ *  === addCategory ===
+ *  ===================
+ */
+export interface AddCategoryInput { name: string; description: string; children: AddCategoryInput[] };
+const _addCategory = async (conn: Connection, viewId: number, parentCategoryId: number, c: AddCategoryInput): Promise<string[]> => {
     const errors: string[] = [];
     const qc: QueryA = await conn.query(
-        `SELECT COUNT(*) AS COUNT FROM TBL_VIEW_CATEGORY WHERE NAME=? AND VIEW_ID=? AND STATUS=? AND ${parentId>0 ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}`,
-        parentId>0 ? [c.name, viewId, ENABLED, parentId] : [c.name, viewId, ENABLED]);
+        `SELECT COUNT(*) AS COUNT FROM TBL_VIEW_CATEGORY WHERE NAME=? AND VIEW_ID=? AND STATUS=? AND ${parentCategoryId>0 ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}`,
+        parentCategoryId>0 ? [c.name, viewId, ENABLED, parentCategoryId] : [c.name, viewId, ENABLED]);
     if (qc[0].COUNT <= 0) {
         const q: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_CATEGORY (NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID) VALUES (?,?,?,?,?)`,
-            [c.name, c.description, ENABLED, viewId, (parentId && parentId > 0 ? parentId : null)]);
+            [c.name, c.description, ENABLED, viewId, (parentCategoryId && parentCategoryId > 0 ? parentCategoryId : null)]);
         if (q.affectedRows <= 0) {
             errors.push(`Failed to add category ${c.name} with view ${viewId}`);
         } else {
@@ -178,17 +220,28 @@ const _addCategory = async (conn: Connection, viewId: number, parentId: number, 
     } else {
         errors.push(`Category with name ${c.name} for view ${viewId} already exists`);
     }
+    
+    fireEvent({
+       type: 'AddCategoryEvent',
+       viewId, parentCategoryId, input: c, errors 
+    } as AddCategoryEvent);
     return errors;
 };
-
 export const addCategory = async (viewId: number, parentId: number, c: AddCategoryInput): Promise<string[]> => {
     return await doInDbConnection(async(conn: Connection) => {
         await _addCategory(conn, viewId, parentId, c);
     });
 };
 
+
+
+/**
+ *  ======================
+ *  === deleteCategory ===
+ *  ======================
+ */
 export const deleteCategory = async (viewId: number, categoryId: number): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW_CATEGORY SET STATUS=? WHERE ID=? AND VIEW_ID=?`, [DELETED, categoryId, viewId]);
         if (q.affectedRows <= 0) {
@@ -196,10 +249,21 @@ export const deleteCategory = async (viewId: number, categoryId: number): Promis
         }
         return errors;
     });
+    fireEvent({
+       type: 'DeleteCategoryEvent',
+       viewId, categoryId, errors 
+    } as DeleteCategoryEvent);
+    return errors;
 };
 
+
+/**
+ *  ===============================
+ *  === getViewCategoryByName() ===
+ *  ===============================
+ */
 export const getViewCategoryByName = async (viewId: number, categoryName: string): Promise<Category> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const category: Category = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
                 ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
@@ -220,15 +284,26 @@ export const getViewCategoryByName = async (viewId: number, categoryName: string
         }
         return null;
     });
+    fireEvent({
+       type: "GetViewCategoryByNameEvent",
+       viewId, categoryName, category 
+    } as GetViewCategoryByNameEvent);
+    return category;
 }
 
-export const getViewCategories = async (viewId: number, parentId: number = null): Promise<Category[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+
+/**
+ *  ===========================
+ *  === getViewCategories() ===
+ *  ===========================
+ */
+export const getViewCategories = async (viewId: number, parentCategoryId: number = null): Promise<Category[]> => {
+    const categories: Category[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
                 ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
-            FROM TBL_VIEW_CATEGORY WHERE VIEW_ID=? AND ${parentId ? 'PARENT_ID=? AND STATUS=?' : 'PARENT_ID IS NULL AND STATUS = ?'}
-        `, parentId ? [viewId, parentId, ENABLED] : [viewId, ENABLED]);
+            FROM TBL_VIEW_CATEGORY WHERE VIEW_ID=? AND ${parentCategoryId ? 'PARENT_ID=? AND STATUS=?' : 'PARENT_ID IS NULL AND STATUS = ?'}
+        `, parentCategoryId ? [viewId, parentCategoryId, ENABLED] : [viewId, ENABLED]);
         return q.reduce(async (acc: Promise<Category[]>, i: QueryI) => {
             const c: Category = {
                 id: i.ID,
@@ -243,16 +318,26 @@ export const getViewCategories = async (viewId: number, parentId: number = null)
             return acc;
         }, Promise.resolve([]));
     });
+    fireEvent({
+       type: 'GetViewCategoriesEvent',
+       viewId, parentCategoryId, categories 
+    } as GetViewCategoriesEvent);
+    return categories;
 };
 
 
-export const getViewCategoriesWithItems = async (viewId: number, parentId: number = null): Promise<CategoryWithItems[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+/**
+ *  ====================================
+ *  === getViewCategoriesWithItems() ===
+ *  ====================================
+ */
+export const getViewCategoriesWithItems = async (viewId: number, parentCategoryId: number = null): Promise<CategoryWithItems[]> => {
+    const categoryWithItems: CategoryWithItems[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
                 ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
-            FROM TBL_VIEW_CATEGORY WHERE VIEW_ID=? AND ${parentId ? 'PARENT_ID=? AND STATUS=?' : 'PARENT_ID IS NULL AND STATUS=?'}
-        `, parentId ? [viewId, parentId, ENABLED] : [viewId, ENABLED]);
+            FROM TBL_VIEW_CATEGORY WHERE VIEW_ID=? AND ${parentCategoryId ? 'PARENT_ID=? AND STATUS=?' : 'PARENT_ID IS NULL AND STATUS=?'}
+        `, parentCategoryId ? [viewId, parentCategoryId, ENABLED] : [viewId, ENABLED]);
         return q.reduce(async (a: Promise<Category[]>, i: QueryI) => {
             const categoryId: number = i.ID;
             const c: CategoryWithItems = {
@@ -269,6 +354,13 @@ export const getViewCategoriesWithItems = async (viewId: number, parentId: numbe
             return a;
         }, Promise.resolve([]));
     });
+    
+    fireEvent({
+       type: 'GetViewCategoriesWithItemsEvent',
+       viewId, parentCategoryId, categories: categoryWithItems 
+    } as GetViewCategoriesWithItemsEvent);
+    
+    return categoryWithItems;
 };
 
 const _getCategoryItemSimple = async (viewId: number, categoryId: number): Promise<{id: number, name: string, description: string}[]> => {
@@ -297,6 +389,14 @@ const _getCategoryItemSimple = async (viewId: number, categoryId: number): Promi
     });
 };
 
+
+
+
+/**
+ *  ============================
+ *  === getViewCategoryItems ===
+ *  ============================
+ */
 export const getViewCategoryItemsCount = async (viewId: number, categoryId: number): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT COUNT(I.ID) AS COUNT 
@@ -306,7 +406,6 @@ export const getViewCategoryItemsCount = async (viewId: number, categoryId: numb
         return q[0].COUNT;
     });
 };
-
 export const getViewCategoryItems = async (viewId: number, categoryId: number, limitOffset?: LimitOffset): Promise<Item[]> => {
     const itemIds: number[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT I.ID AS I_ID 
@@ -318,11 +417,22 @@ export const getViewCategoryItems = async (viewId: number, categoryId: number, l
             return a;
         }, []);
     });
-    return await getItemsByIds(viewId, itemIds, true, limitOffset);
+    const items: Item[] = await getItemsByIds(viewId, itemIds, true, limitOffset);
+    fireEvent({
+       type: "GetViewCategoryItemsEvent",
+       viewId, categoryId, limitOffset, items 
+    } as GetViewCategoryItemsEvent);
+    return items;
 };
 
+
+/**
+ *  ===============================
+ *  === addItemToViewCategory() ===
+ *  ===============================
+ */
 export const addItemToViewCateogry = async (categoryId: number, itemId: number): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const q1: QueryA = await conn.query(`SELECT VIEW_ID FROM TBL_VIEW_CATEGORY WHERE ID=?`, [categoryId]);
         const q2: QueryA = await conn.query(`SELECT VIEW_ID FROM TBL_ITEM WHERE ID=?`, [itemId]);
@@ -348,10 +458,21 @@ export const addItemToViewCateogry = async (categoryId: number, itemId: number):
         }
         return errors;
     });
+    fireEvent({
+       type: "AddItemToViewCategoryEvent",
+       categoryId, itemId, errors 
+    } as AddItemToViewCategoryEvent);
+    return errors;
 };
 
+
+/**
+ *  ====================================
+ *  === removeItemFromViewCategory() ===
+ *  ====================================
+ */
 export const removeItemFromViewCategory = async (categoryId: number, itemId: number): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const q1: QueryA = await conn.query(`SELECT VIEW_ID FROM TBL_VIEW_CATEGORY WHERE ID=?`, [categoryId]);
         const q2: QueryA = await conn.query(`SELECT VIEW_ID FROM TBL_ITEM WHERE ID=?`, [itemId]);
@@ -377,5 +498,10 @@ export const removeItemFromViewCategory = async (categoryId: number, itemId: num
         }
         return errors;
     });
+    fireEvent({
+       type: "RemoveItemFromViewCategoryEvent",
+       categoryId, itemId, errors 
+    } as RemoveItemFromViewCategoryEvent);
+    return errors;
 };
 

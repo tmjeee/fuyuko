@@ -1,6 +1,13 @@
 import {View} from "../model/view.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
+import {
+    AddOrUpdateViewsEvent,
+    DeleteViewEvent,
+    fireEvent,
+    GetAllViewsEvent,
+    GetViewByIdEvent, GetViewByNameEvent
+} from "./event/event.service";
 
 const SQL_1 = `
    SELECT 
@@ -13,14 +20,32 @@ const SQL_2 = `${SQL_1} AND ID=?`;
 const SQL_3 = `${SQL_1} AND NAME=?`;
 
 
+
+/**
+ *  ==================================
+ *  === deleteView ===
+ *  ==================================
+ */
 export const deleteView = async (viewId: number): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW SET STATUS='DELETED' WHERE ID=?`,[viewId]);
         return q.affectedRows;
     });
+    fireEvent({
+       type: "DeleteViewEvent",
+       viewId, result
+    } as DeleteViewEvent);
+    return result;
 };
 
-export const addOrUpdateViews = async (views: {id: number, name: string, description: string}[]): Promise<string[]> => {
+/**
+ *  ==================================
+ *  === addOrUpdateViews ===
+ *  ==================================
+ */
+export type AddOrUpdateViewsInput = AddOrUpdateViewsInputView[];
+export interface AddOrUpdateViewsInputView { id: number, name: string, description: string};
+export const addOrUpdateViews = async (views: AddOrUpdateViewsInput): Promise<string[]> => {
     const badUpdates: string[] = [];
     for (const view of views) {
         await doInDbConnection(async (conn: Connection) => {
@@ -46,37 +71,71 @@ export const addOrUpdateViews = async (views: {id: number, name: string, descrip
             }
         });
     }
+    fireEvent({
+       type: "AddOrUpdateViewsEvent",
+       input: views, errors: badUpdates
+    } as AddOrUpdateViewsEvent)
     return badUpdates;
 }
 
+/**
+ *  ==================================
+ *  === getAllViews ===
+ *  ==================================
+ */
 export const getAllViews = async (): Promise<View[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const views: View[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_1);
         const views: View[] =  p(q);
         return views;
     });
+    fireEvent({
+       type: "GetAllViewsEvent",
+       views
+    } as GetAllViewsEvent);
+    return views;
 }
 
 
+/**
+ *  ==================================
+ *  === getViewById ===
+ *  ==================================
+ */
 export const getViewById = async (viewId: number): Promise<View> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const view: View = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_2, [viewId]);
         const views: View[] =  p(q);
         return (views && views.length ? views[0] : null);
     });
-
+    fireEvent({
+        type: "GetViewByIdEvent",
+        viewId, view
+    } as GetViewByIdEvent);
+    return view;
 };
 
+
+/**
+ *  ==================================
+ *  === getViewByName ===
+ *  ==================================
+ */
 export const getViewByName = async (viewName: string): Promise<View> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const view: View = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_3, [viewName]);
         const views: View[] = p(q);
         return (views && views.length ? views[0]: null);
     });
+    fireEvent({
+       type: "GetViewByNameEvent",
+       viewName, view
+    } as GetViewByNameEvent);
+    return view;
 };
 
 
-
+// ===== helper functions =====
 const p = (q: QueryA) => {
     const views: View[] = q.map((i: QueryI) => {
         return {

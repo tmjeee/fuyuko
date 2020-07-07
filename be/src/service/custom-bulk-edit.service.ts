@@ -3,9 +3,15 @@ import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
 import {CustomBulkEdit} from "../model/custom-bulk-edit.model";
 import {getCustomBulkEditScriptByName} from "../custom-bulk-edit/custom-bulk-edit-executor";
+import {fireEvent, GetAllCustomBulkEditsEvent, GetCustomBulkEditByIdEvent} from "./event/event.service";
 
+/**
+ *  ===============================
+ *  === getCustomBulkEditById() ===
+ *  ===============================
+ */
 export const getCustomBulkEditById = async (customBulkEditId: number): Promise<CustomDataExport> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const customDataExport: CustomDataExport = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE FROM TBL_CUSTOM_BULK_EDIT`, [customBulkEditId]);
         if (q.length > 0) {
             const a: CustomDataExport = await p(q[0]);
@@ -14,10 +20,20 @@ export const getCustomBulkEditById = async (customBulkEditId: number): Promise<C
             return null;
         }
     });
+    
+    fireEvent({
+       type: "GetCustomBulkEditByIdEvent",
+       customBulkEditId, customDataExport 
+    } as GetCustomBulkEditByIdEvent);
+    return customDataExport;
 };
 
 
-
+/**
+ * ===============================
+ * === getAllCustomBulkEdits() ===
+ * ===============================
+ */
 export const getAllCustomBulkEdits = async (): Promise<CustomBulkEdit[]> => {
     const r: CustomBulkEdit[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE FROM TBL_CUSTOM_BULK_EDIT`);
@@ -28,8 +44,17 @@ export const getAllCustomBulkEdits = async (): Promise<CustomBulkEdit[]> => {
         }
         return r;
     });
+   
+    fireEvent({
+       type: "GetAllCustomBulkEditsEvent",
+       customBulkEdits: r 
+    } as GetAllCustomBulkEditsEvent);
+    
     return r;
 }
+
+
+// == common functions ==
 
 const p = async (i: QueryI): Promise<CustomBulkEdit> => {
     const s: ExportScript = await getCustomBulkEditScriptByName(i.NAME);

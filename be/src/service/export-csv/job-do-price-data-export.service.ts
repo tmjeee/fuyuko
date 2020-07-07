@@ -1,19 +1,24 @@
 import {Attribute} from "../../model/attribute.model";
 import {Job} from "../../model/job.model";
 import {JobLogger, newJobLogger} from "../job-log.service";
-import {getJobyById} from "../job.service";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
+import {getJobById} from "../job.service";
+import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {PricedItem, Value} from "../../model/item.model";
-import {parse, Parser} from 'json2csv';
+import {Parser} from 'json2csv';
 import JSON2CSVParser from "json2csv/JSON2CSVParser";
 import {convertToCsv} from "../../shared-utils/ui-item-value-converters.util";
 import {e} from "../../logger";
+import {ExportPriceJobEvent, fireEvent} from "../event/event.service";
 
 
 const uuid = require('uuid');
 
-
+/**
+ *  =====================
+ *  === runJob ===
+ *  =====================
+ */
 export const runJob = async (viewId: number, pricingStructureId: number, attributes: Attribute[], pricedItems: PricedItem[]): Promise<Job> => {
 
     const uid = uuid();
@@ -21,6 +26,12 @@ export const runJob = async (viewId: number, pricingStructureId: number, attribu
     const description: string = `price-data-export-job-${uid} description`;
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
+
+    fireEvent({
+        type: "ExportPriceJobEvent",
+        state: "Scheduled",
+        jobId: jobLogger.jobId
+    } as ExportPriceJobEvent);
 
     (async ()=>{
 
@@ -73,14 +84,26 @@ export const runJob = async (viewId: number, pricingStructureId: number, attribu
 
             await jobLogger.updateProgress('COMPLETED');
 
+            fireEvent({
+                type: "ExportPriceJobEvent",
+                state: "Completed",
+                jobId: jobLogger.jobId
+            } as ExportPriceJobEvent);
+
         } catch(err) {
             e(err.toString(), err);
             await jobLogger.logError(`${err.toString()}`);
             await jobLogger.updateProgress("FAILED");
+
+            fireEvent({
+                type: "ExportPriceJobEvent",
+                state: "Failed",
+                jobId: jobLogger.jobId
+            } as ExportPriceJobEvent);
         } finally {
             await jobLogger.logInfo(`Done with ${name}`);
         }
     })();
 
-return await getJobyById(jobLogger.jobId);
+return await getJobById(jobLogger.jobId);
 }

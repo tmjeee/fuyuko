@@ -8,12 +8,11 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {param, body} from 'express-validator';
-import {attributesRevert} from "../../service/conversion-attribute.service";
-import {Attribute2} from "../../server-side-model/server-side.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {saveAttribute2s} from "../../service/attribute.service";
+import {saveAttributes} from "../../service/attribute.service";
 import {ROLE_EDIT} from "../../model/role.model";
 import {newConsoleLogger} from "../../service/job-log.service";
+import {Attribute} from "../../model/attribute.model";
 
 // CHECKED
 
@@ -32,9 +31,9 @@ const httpAction: any[] = [
 
 
         const viewId: number = Number(req.params.viewId);
-        const attrs2: Attribute2[] = attributesRevert(req.body.attributes);
+        const attrs: Attribute[] = req.body.attributes;
 
-        const errors: string [] = await saveAttribute2s(viewId, attrs2, newConsoleLogger);
+        const errors: string [] = await saveAttributes(viewId, attrs, newConsoleLogger);
 
         if (errors && errors.length) {
             res.status(400).json({

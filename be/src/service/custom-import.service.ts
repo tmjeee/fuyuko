@@ -2,10 +2,16 @@ import {CustomDataImport, ImportScript, ImportScriptInput} from "../model/custom
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
 import {getImportScriptByName} from "../custom-import/custom-import-executor";
+import {fireEvent, GetAllCustomImportsEvent, GetCustomImportByIdEvent} from "./event/event.service";
 
 
+/**
+ *  =======================================
+ *  === GetCustomImportById ===
+ *  =======================================
+ */
 export const getCustomImportById = async (customImportId: number): Promise<CustomDataImport> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const customDataImport: CustomDataImport = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE FROM TBL_CUSTOM_DATA_IMPORT`, [customImportId]);
         if (q.length > 0) {
             const a: CustomDataImport = await p(q[0]);
@@ -14,9 +20,21 @@ export const getCustomImportById = async (customImportId: number): Promise<Custo
            return null;
         }
     });
+    
+    fireEvent({
+       type: "GetCustomImportByIdEvent", 
+       customImportId, customDataImport 
+    } as GetCustomImportByIdEvent);
+    
+    return customDataImport;
 };
 
 
+/**
+ *  =======================================
+ *  === GetAllCustomImports ===
+ *  =======================================
+ */
 export const getAllCustomImports = async (): Promise<CustomDataImport[]> => {
     const r: CustomDataImport[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE FROM TBL_CUSTOM_DATA_IMPORT`);
@@ -27,9 +45,17 @@ export const getAllCustomImports = async (): Promise<CustomDataImport[]> => {
         }
         return r;
     });
+    
+    fireEvent({
+       type: 'GetAllCustomImportsEvent',
+       customDataImports: r 
+    } as GetAllCustomImportsEvent);
+    
     return r;
 }
 
+
+// === utils ===
 const p = async (i: QueryI): Promise<CustomDataImport> => {
     const s: ImportScript = await getImportScriptByName(i.NAME);
     const inputs: ImportScriptInput[] = s.inputs();

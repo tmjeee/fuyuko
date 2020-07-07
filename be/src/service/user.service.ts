@@ -7,10 +7,30 @@ import {BinaryContent} from "../model/binary-content.model";
 import {ENABLED, Status} from "../model/status.model";
 import {hashedPassword} from "./password.service";
 import { Themes } from "../model/theme.model";
+import {
+    AddUserEvent,
+    AddUserToGroupEvent,
+    ChangeUserStatusEvent, DeleteUserEvent, DeleteUserFromGroupEvent,
+    fireEvent,
+    GetNoAvatarContentEvent,
+    GetUserAvatarContentEvent, GetUserByIdEvent, GetUserByUsernameEvent,
+    GetUsersByStatusEvent,
+    GetUsersInGroupEvent, HasAllUserRolesEvent, HasAnyUserRolesEvent, HasNoneUserRolesEvent,
+    SearchForUserNotInGroupEvent, SearchUserByUsernameAndStatusEvent,
+    UpdateUserEvent
+} from "./event/event.service";
 
-export const addUser = async (u: {username: string, firstName: string, lastName: string, email: string, password: string, theme?: string, status?: Status}): Promise<string[]> => {
+
+
+/**
+ * ============================
+ * === addUser ===
+ * ============================
+ */
+export interface AddUserInput {username: string, firstName: string, lastName: string, email: string, password: string, theme?: string, status?: Status};
+export const addUser = async (u: AddUserInput): Promise<string[]> => {
     const _theme: string = u.theme ? u.theme : Themes[Themes.THEME_DEEPPURPLE_AMBER_LIGHT];
-    return doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE USERNAME=? OR EMAIL=?`, [u.username, u.email]);
         if (qc[0].COUNT > 0) {
@@ -25,10 +45,22 @@ export const addUser = async (u: {username: string, firstName: string, lastName:
         }
         return errors;
     });
+    fireEvent({
+       type: "AddUserEvent",
+       input: u,
+       errors
+    } as AddUserEvent);
+    return errors;
 }
 
-export const updateUser = async (u: {userId: number, firstName?: string, lastName?: string, email?: string, theme?: string, password?: string}): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+/**
+ * ============================
+ * === updateUser ===
+ * ============================
+ */
+export interface UpdateUserInput { userId: number, firstName?: string, lastName?: string, email?: string, theme?: string, password?: string};
+export const updateUser = async (u: UpdateUserInput): Promise<string[]> => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         if (u.firstName) {
             const q: QueryResponse = await conn.query(`UPDATE TBL_USER SET FIRSTNAME = ? WHERE ID = ?`, [u.firstName, u.userId]);
@@ -70,18 +102,38 @@ export const updateUser = async (u: {userId: number, firstName?: string, lastNam
         }
         return errors;
     });
+    fireEvent({
+       type: "UpdateUserEvent",
+       input: u, errors
+    } as UpdateUserEvent);
+    return errors;
 }
 
+/**
+ * ============================
+ * === changeUserStatus ===
+ * ============================
+ */
 export const changeUserStatus = async (userId: number, status: string): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse  = await conn.query(`UPDATE TBL_USER SET STATUS = ? WHERE ID = ? `, [status, userId]);
         return (q.affectedRows > 0);
     });
+    fireEvent({
+       type: "ChangeUserStatusEvent",
+        userId, status, result
+    } as ChangeUserStatusEvent);
+    return result;
 };
 
 
+/**
+ * ============================
+ * === addUserToGroup ===
+ * ============================
+ */
 export const addUserToGroup = async (userId: number, groupId: number): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const q1: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_USER_GROUP WHERE GROUP_ID = ? AND USER_ID = ?`, [groupId, userId]);
         if (q1.length > 0 && q1[0].COUNT > 0) {
@@ -92,12 +144,21 @@ export const addUserToGroup = async (userId: number, groupId: number): Promise<s
         await conn.query(`INSERT INTO TBL_LOOKUP_USER_GROUP (GROUP_ID, USER_ID) VALUES (?, ?)`, [groupId, userId]);
         return errors;
     });
+    fireEvent({
+       type: "AddUserToGroupEvent",
+       userId, groupId, errors
+    } as AddUserToGroupEvent);
+    return errors;
 }
 
 
+/**
+ * ============================
+ * === getUsersInGroup ===
+ * ============================
+ */
 export const getUsersInGroup = async (groupId: number): Promise<User[]> => {
     const u: User[] = await doInDbConnection(async (conn: Connection) => {
-
         const q: QueryA = await conn.query(`
                 SELECT 
                     U.ID AS U_ID,
@@ -189,12 +250,21 @@ export const getUsersInGroup = async (groupId: number): Promise<User[]> => {
             }, []
         );
     });
+    fireEvent({
+       type: "GetUsersInGroupEvent",
+       groupId, users: u
+    } as GetUsersInGroupEvent);
     return u;
 };
 
+
+/**
+ * ============================
+ * === getUsersByStatus ===
+ * ============================
+ */
 export const getUsersByStatus = async (status: Status): Promise<User[]> => {
     const u: User[] = await doInDbConnection(async (conn: Connection) => {
-
         const q: QueryA = await conn.query(`
                 SELECT 
                     U.ID AS U_ID,
@@ -278,15 +348,25 @@ export const getUsersByStatus = async (status: Status): Promise<User[]> => {
             }, []
         );
     });
+    fireEvent({
+       type: "GetUsersByStatusEvent",
+       status, users: u
+    } as GetUsersByStatusEvent);
     return u;
 };
 
 
+/**
+ * ============================
+ * === getNoAvatarContent ===
+ * ============================
+ */
 const getNoAvatarContent = async (conn: Connection): Promise<BinaryContent> => {
         const q: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_IMAGE WHERE TAG = ?',
             ['no-avatar']);
+        let binaryContent = null;
         if (q.length > 0) {
-            return {
+            binaryContent = {
                id: q[0].ID,
                name: q[0].NAME,
                mimeType: q[0].MIME_TYPE,
@@ -294,11 +374,22 @@ const getNoAvatarContent = async (conn: Connection): Promise<BinaryContent> => {
                content: q[0].CONTENT
             } as BinaryContent;
         }
-        return null;
+        fireEvent({
+           type: "GetNoAvatarContentEvent",
+           binaryContent
+        } as GetNoAvatarContentEvent);
+        return binaryContent;
 };
 
+
+
+/**
+ * ============================
+ * === getUserAvatarContent ===
+ * ============================
+ */
 export const getUserAvatarContent = async (userId: number): Promise<BinaryContent> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const binaryContent: BinaryContent = await doInDbConnection(async (conn: Connection) => {
         const q1: QueryA  = await conn.query(`SELECT ID, USER_ID, GLOBAL_AVATAR_ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_USER_AVATAR WHERE USER_ID = ?`,
             [userId]);
         if (q1.length > 0) { // have user avatar
@@ -331,8 +422,19 @@ export const getUserAvatarContent = async (userId: number): Promise<BinaryConten
             return await getNoAvatarContent(conn);
         }
     });
+    fireEvent({
+       type: "GetUserAvatarContentEvent",
+       userId, binaryContent
+    } as GetUserAvatarContentEvent);
+    return binaryContent;
 };
 
+
+/**
+ * ============================
+ * === searchForUserNotInGroup ===
+ * ============================
+ */
 export const searchForUserNotInGroup = async (groupId: number, username?: string): Promise<User[]> => {
     const u: User[] = await doInDbConnection(async (conn: Connection) => {
 
@@ -427,13 +529,21 @@ export const searchForUserNotInGroup = async (groupId: number, username?: string
             }, []
         );
     });
-
+    fireEvent({
+        type: "SearchForUserNotInGroupEvent",
+        groupId, username, users: u
+    } as SearchForUserNotInGroupEvent)
     return u;
 }
 
+
+/**
+ * ============================
+ * === searchUserByUsernameAndStatus ===
+ * ============================
+ */
 export const searchUserByUsernameAndStatus = async (status: string, username?: string): Promise<User[]> => {
     const u: User[] = await doInDbConnection(async (conn: Connection) => {
-
         const q: QueryA = await conn.query(`
                 SELECT 
                     U.ID AS U_ID,
@@ -517,10 +627,19 @@ export const searchUserByUsernameAndStatus = async (status: string, username?: s
             }, []
         );
     });
+    fireEvent({
+        type: "SearchUserByUsernameAndStatusEvent",
+        username, status, users: u
+    } as SearchUserByUsernameAndStatusEvent);
     return u;
 };
 
 
+/**
+ * ============================
+ * === deleteUserFromGroup ===
+ * ============================
+ */
 export const deleteUserFromGroup = async (userId: number, groupId: number): Promise<string[]> => {
     const errors: string[] = [];
     await doInDbConnection(async (conn: Connection) => {
@@ -535,20 +654,40 @@ export const deleteUserFromGroup = async (userId: number, groupId: number): Prom
             }
         }
     });
+    fireEvent({
+       type: "DeleteUserFromGroupEvent",
+       userId, groupId, errors
+    } as DeleteUserFromGroupEvent);
     return errors;
 }
 
+/**
+ * ============================
+ * === deleteUser ===
+ * ============================
+ */
 export const deleteUser = async (userId: number): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`
                 UPDATE TBL_USER SET STATUS = ? WHERE ID = ?
             `, ['DELETED', userId]);
         return (q.affectedRows);
     });
+    fireEvent({
+       type: "DeleteUserEvent",
+       userId, result
+    } as DeleteUserEvent);
+    return result;
 };
 
+
+/**
+ * ============================
+ * === hasAllUserRoles ===
+ * ============================
+ */
 export const hasAllUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         let r = true;
         for (const roleName of roleNames) {
             const q: QueryA = await conn.query(`
@@ -568,11 +707,21 @@ export const hasAllUserRoles = async (userId: number, roleNames: string[]): Prom
             }
         }
         return r;
-    })
+    });
+    fireEvent({
+        type: "HasAllUserRolesEvent",
+        userId, roleNames, result
+    } as HasAllUserRolesEvent);
+    return result;
 };
 
+/**
+ * ============================
+ * === hasAnyUserRoles ===
+ * ============================
+ */
 export const hasAnyUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT COUNT(*) AS COUNT 
             FROM TBL_USER AS U 
@@ -585,11 +734,21 @@ export const hasAnyUserRoles = async (userId: number, roleNames: string[]): Prom
 
         return !!(q.length && Number(q[0].COUNT));
     });
+    fireEvent({
+       type: "HasAnyUserRolesEvent",
+       userId, roleNames, result
+    } as HasAnyUserRolesEvent);
+    return result;
 }
 
 
+/**
+ * ============================
+ * === hasNoneUserRoles ===
+ * ============================
+ */
 export const hasNoneUserRoles = async (userId: number, roleNames: string[]): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         let r = true;
         for (const roleName of roleNames) {
             const q: QueryA = await conn.query(`
@@ -610,10 +769,20 @@ export const hasNoneUserRoles = async (userId: number, roleNames: string[]): Pro
         }
         return r;
     });
+    fireEvent({
+       type: "HasNoneUserRolesEvent",
+       userId, roleNames, result
+    } as HasNoneUserRolesEvent);
+    return result;
 }
 
+/**
+ * ============================
+ * === getUserByUsername ===
+ * ============================
+ */
 export const getUserByUsername = async (username: string): Promise<User> => {
-    return doInDbConnection(async (conn: Connection) => {
+    const user: User = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query( `
             SELECT 
                 U.ID AS U_ID,
@@ -689,10 +858,20 @@ export const getUserByUsername = async (username: string): Promise<User> => {
             groups: []
         } as User);
     });
+    fireEvent({
+        type: "GetUserByUsernameEvent",
+        username, user
+    } as GetUserByUsernameEvent);
+    return user;
 };
 
+/**
+ * ============================
+ * === getUserById ===
+ * ============================
+ */
 export const getUserById = async (userId: number): Promise<User>  => {
-    return doInDbConnection(async (conn: Connection) => {
+    const user: User = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(
             `SELECT 
                 U.ID AS U_ID,
@@ -771,4 +950,9 @@ export const getUserById = async (userId: number): Promise<User>  => {
             groups: []
         } as User);
     });
+    fireEvent({
+       type: "GetUserByIdEvent",
+       userId, user
+    } as GetUserByIdEvent);
+    return user;
 }

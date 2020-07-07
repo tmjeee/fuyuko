@@ -1,16 +1,21 @@
 import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
 import {Job} from "../../model/job.model";
 import {JobLogger, newJobLogger} from "../job-log.service";
-import {getJobyById} from "../job.service";
+import {getJobById} from "../job.service";
 import {doInDbConnection, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {Parser} from "json2csv";
 import JSON2CSVParser from "json2csv/JSON2CSVParser";
 import {e} from '../../logger';
+import {ExportAttributeJobEvent, fireEvent} from "../event/event.service";
 
 const uuid = require('uuid');
 
-
+/**
+ *  =================
+ *  === runJob =====
+ *  =================
+ */
 export const runJob = async (viewId: number, attributes: Attribute[]): Promise<Job> => {
 
     const uid = uuid();
@@ -18,6 +23,14 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
     const description: string = `attribute-data-export-job-${uid} description`;
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
+    
+    fireEvent({
+        type: "ExportAttributeJobEvent",
+        state: 'Scheduled',
+        jobId: jobLogger.jobId
+    } as ExportAttributeJobEvent);
+    
+    
     (async ()=>{
 
         await jobLogger.logInfo(`starting job ${name}`);
@@ -57,16 +70,28 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
             });
 
             await jobLogger.updateProgress('COMPLETED');
+
+            fireEvent({
+                type: "ExportAttributeJobEvent",
+                state: 'Completed',
+                jobId: jobLogger.jobId
+            } as ExportAttributeJobEvent);
         } catch(err) {
             e(err.toString(), err);
             await jobLogger.logError(`${err.toString()}`);
             await jobLogger.updateProgress("FAILED");
+
+            fireEvent({
+                type: "ExportAttributeJobEvent",
+                state: 'Failed',
+                jobId: jobLogger.jobId
+            } as ExportAttributeJobEvent);
         } finally {
             await jobLogger.logInfo(`Done with ${name}`);
         }
     })();
 
-    return await getJobyById(jobLogger.jobId);
+    return await getJobById(jobLogger.jobId);
 }
 
 

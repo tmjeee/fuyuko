@@ -8,12 +8,10 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {param} from 'express-validator';
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {Job, JobAndLogs, JobLog} from "../../model/job.model";
+import {JobAndLogs} from "../../model/job.model";
 import {ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {getJobDetailsById, getJobyById} from "../../service/job.service";
+import {getJobDetailsById} from "../../service/job.service";
 
 // CHECKED
 

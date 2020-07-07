@@ -39,6 +39,8 @@ import {
     compareNumber, compareSelect,
     compareString, compareVolume, compareWeight, compareWidth
 } from "./compare-attribute-values.service";
+import {itemsConvert} from "./conversion-item.service";
+import {fireEvent, GetItemWithFilteringEvent} from "./event/event.service";
 
 const SQL: string = `
            SELECT 
@@ -104,7 +106,32 @@ const SQL: string = `
 const SQL_WITH_NULL_PARENT = `${SQL} AND I.PARENT_ID IS NULL`;
 const SQL_WITH_PARAMETERIZED_PARENT = `${SQL} AND I.PARENT_ID = ? `;
 
+
+/**
+ * ==============================
+ * === getItemWithFiltering() ===
+ * ==============================
+ */
 export type Item2WithFilteringResult = {b: Item2[], m: Map<string /* attributeId */, Attribute>};
+export type ItemWithFilteringResult = {b: Item[], m: Map<string /* attributeId */, Attribute>};
+export const getItemWithFiltering = async (conn: Connection,
+                                            viewId: number,
+                                            parentItemId: number,
+                                            whenClauses: ItemValueOperatorAndAttribute[]):
+    Promise<ItemWithFilteringResult> => {
+    const item2WithFilteringResult: Item2WithFilteringResult = await getItem2WithFiltering(conn, viewId, parentItemId, whenClauses);
+    const itemWithFilteringResult: ItemWithFilteringResult = {
+        b: itemsConvert(item2WithFilteringResult.b),
+        m:  item2WithFilteringResult.m
+    };
+   
+    fireEvent({
+        type: 'GetItemWithFilteringEvent',
+        viewId, parentItemId, whenClauses, itemWithFilteringResult
+    } as GetItemWithFilteringEvent);   
+    
+    return itemWithFilteringResult;
+}
 export const getItem2WithFiltering = async (conn: Connection,
                                  viewId: number,
                                  parentItemId: number,

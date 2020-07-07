@@ -4,12 +4,16 @@ import {Item2, ItemValue2, PricedItem2} from "../server-side-model/server-side.m
 import {itemValueRevert as itemValueRevert } from './conversion-item-value.service';
 import {itemValTypesConvert as itemValueTypesConvert} from './conversion-item-value-types.service';
 
-export const itemsConvert = (item2s: Item2[] | PricedItem2[] ): Item[] | PricedItem[] => {
+/**
+ *  =======================
+ *  === itemsConvert ===
+ *  =======================
+ */
+export const itemsConvert = (item2s: Item2[]): Item[] => {
    return (item2s ? (item2s as []).map(itemConvert): []);
 }
-
-export const itemConvert =  (item2: Item2 | PricedItem2): Item | PricedItem => {
-    const item: Item | PricedItem = {
+export const itemConvert =  (item2: Item2): Item => {
+    const item: Item = {
         id: item2.id,
         parentId: item2.parentId,
         images: item2.images,
@@ -20,8 +24,7 @@ export const itemConvert =  (item2: Item2 | PricedItem2): Item | PricedItem => {
         children: itemsConvert(item2.children),
         price: (item2 as PricedItem2).price ? (item2 as PricedItem2).price : undefined,
         country: (item2 as PricedItem2).country ? (item2 as PricedItem2).country : undefined,
-
-    } as Item | PricedItem;
+    } as Item;
 
     for (const value2 of item2.values) {
         const value: Value = {
@@ -34,12 +37,16 @@ export const itemConvert =  (item2: Item2 | PricedItem2): Item | PricedItem => {
     return item;
 }
 
-export const itemsRevert = (items: Item[] | PricedItem[]): Item2[] | PricedItem2[] => {
+/**
+ * ========================
+ * === itemsRevert ===
+ * ========================
+ */
+export const itemsRevert = (items: Item[]): Item2[] => {
     return (items ? (items as []).map(itemRevert) : []);
 }
-
-export const itemRevert = (item: Item | PricedItem): Item2 | PricedItem2 => {
-    const item2: Item2 | PricedItem2 = {
+export const itemRevert = (item: Item): Item2 => {
+    const item2: Item2 = {
         id: item.id,
         name: item.name,
         description: item.description,
@@ -51,7 +58,7 @@ export const itemRevert = (item: Item | PricedItem): Item2 | PricedItem2 => {
         children: itemsRevert(item.children),
         price: (item as PricedItem).price ? (item as PricedItem).price : undefined,
         country: (item as PricedItem).country ? (item as PricedItem).country : undefined
-    } as Item2 | PricedItem2;
+    } as Item2;
 
     for (const i in item) {
         if (item.hasOwnProperty(i) && !isNaN(Number(i))) {

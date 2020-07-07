@@ -3,7 +3,7 @@ require('express-async-errors');
 import cookieParser from 'cookie-parser';
 import registerV1AppRouter from './route/v1/v1-app.router';
 import cors from 'cors';
-import {i} from './logger';
+import {i, w} from './logger';
 import {runUpdater} from './updater';
 import {runBanner} from './banner';
 import config from './config';
@@ -21,9 +21,15 @@ import {runCustomImportSync} from "./custom-import";
 import {runCustomExportSync} from "./custom-export/custom-export-executor";
 import {runTimezoner} from "./timezoner";
 import {runCustomBulkEditSync} from "./custom-bulk-edit/custom-bulk-edit-executor";
+import {
+    destroyEventsSubscription,
+    EventSubscriptionRegistry,
+    registerEventsSubscription
+} from "./service/event/event.service";
 
 i(`Run Timezoner`);
 runTimezoner(config.timezone);
+
 
 const port: number = Number(config.port);
 const app: Express = express();
@@ -98,6 +104,13 @@ const fns: PromiseFn[] = [
             });
     },
 
+    () => {
+        i(`registrying global event subscription`);
+        return registerEventsSubscription().then((_: any) => {
+            i(`done with global event subscription`);
+        });
+    },
+
     // ready message
     () => {
        return new Promise((res, rej) => {
@@ -114,4 +127,15 @@ const fns: PromiseFn[] = [
 fns.reduce((p: Promise<any>, fn: PromiseFn) => {
     return p.then(_ => fn())
 }, Promise.resolve());
+
+process.on('exit', () => {
+    destroyEventsSubscription();
+    i(`Fuyuko proces exit`);
+});
+process.on('uncaughtException', (e) => {
+   w(`uncaught exception (in process)`, e)
+});
+process.on('unhandledRejection', (e) => {
+   w(`unhandled rejection (in process)`, e)
+});
 

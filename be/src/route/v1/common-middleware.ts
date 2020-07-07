@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {validationResult} from 'express-validator';
 import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
-import {auditLog, verifyJwtToken} from "../../service";
+import {decodeJwtToken, verifyJwtToken} from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
 import {hasAllUserRoles, hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
 import {
@@ -12,7 +12,7 @@ import {
     ThreadLocalStore
 } from "../../service/thread-local.service";
 import uuid = require("uuid");
-import {auditLogInfo} from "../../service/audit.service";
+import {fireEvent, IncomingHttpEvent} from "../../service/event/event.service";
 
 
 
@@ -132,7 +132,7 @@ export const threadLocalMiddlewareFn = (req: Request, res: Response, next: NextF
         const jwtToken: string = req.headers['x-auth-jwt'] as string;
         if (jwtToken) {
             try {
-                const jwtPayload: JwtPayload = verifyJwtToken(jwtToken);
+                const jwtPayload: JwtPayload = decodeJwtToken(jwtToken);
                 setThreadLocalStore({
                     reqUuid,
                     jwtPayload
@@ -153,7 +153,10 @@ export const threadLocalMiddlewareFn = (req: Request, res: Response, next: NextF
 
 export const auditMiddlewareFn = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await auditLogInfo(`${req.method}-${req.originalUrl}`, 'HTTP');
+        fireEvent({
+            type: "IncomingHttpEvent",
+            req
+        } as IncomingHttpEvent);
     } finally {
         next();
     }

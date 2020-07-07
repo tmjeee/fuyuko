@@ -1,6 +1,12 @@
 import {Validation, ValidationError, ValidationLog, ValidationResult} from "../../model/validation.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
+import {
+    DeleteValidationResultEvent,
+    fireEvent,
+    GetAllViewValidationsEvent, GetValidationByViewIdAndValidationIdEvent, GetValidationsByViewIdEvent,
+    GetViewValidationResultEvent
+} from "../event/event.service";
 
 const SQL_1 = `
                 SELECT 
@@ -11,6 +17,13 @@ const SQL_1 = `
 const SQL_2 = `${SQL_1} AND ID=?`
 
 
+
+
+/**
+ *  ===============================
+ *  === getViewValidationResult ===
+ *  ===============================
+ */
 export const getViewValidationResult = async (viewId: number, validationId: number): Promise<ValidationResult> => {
 
     const m_validationResult: Map<string /* validationId */, ValidationResult> = new Map();
@@ -112,11 +125,19 @@ export const getViewValidationResult = async (viewId: number, validationId: numb
 
     const r: ValidationResult[] = validationResults;
     const _r: ValidationResult = (r && r.length ? r[0] : null);
+    fireEvent({
+       type: "GetViewValidationResultEvent",
+       viewId, validationId, result: _r
+    } as GetViewValidationResultEvent);
     return _r;
 };
 
-
-export const getALlViewValidations = async (viewId: number): Promise<Validation[]> => {
+/**
+ *  =============================
+ *  === getAllViewValidations ===
+ *  =============================
+ */
+export const getAllViewValidations = async (viewId: number): Promise<Validation[]> => {
     const v: Validation[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
@@ -138,37 +159,68 @@ export const getALlViewValidations = async (viewId: number): Promise<Validation[
             return acc;
         }, []);
     });
+    fireEvent({
+       type: "GetAllViewValidationsEvent",
+       viewId, result: v
+    } as GetAllViewValidationsEvent);
     return v;
 };
 
-
+/**
+ * ===============================
+ * === deleteValidationResult ===
+ * ===============================
+ */
 export const deleteValidationResult = async (viewId: number, validationId: number): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse =  await conn.query(`DELETE FROM TBL_VIEW_VALIDATION WHERE ID=? AND VIEW_ID=?`, [validationId, viewId])
         return (q.affectedRows);
     });
+    fireEvent({
+       type: "DeleteValidationResultEvent",
+       viewId, validationId, result
+    } as DeleteValidationResultEvent);
+    return result;
 };
 
+
+/**
+ * ===============================
+ * === getValidationsByViewId ===
+ * ===============================
+ */
 export const getValidationsByViewId = async (viewId: number): Promise<Validation[]> => {
     const v: Validation[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_1, [viewId]);
         const v: Validation[] = p(q);
         return v;
     });
+    fireEvent({
+       type: 'GetValidationsByViewIdEvent',
+       viewId, result: v
+    } as GetValidationsByViewIdEvent);
     return v;
 }
 
-// export const getCustomValidationByViewId = async (viewId: number, validationId: number): Promise<CustomRu>
-
+/**
+ * ============================================
+ * === getValidationByViewIdAndValidationId ===
+ * ============================================
+ */
 export const getValidationByViewIdAndValidationId = async (viewId: number, validationId: number): Promise<Validation> => {
    const v: Validation = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(SQL_2, [viewId, validationId]);
         const v: Validation[] = p(q);
         return v && v.length > 0 ? v[0] : null;
    });
+   fireEvent({
+      type: "GetValidationByViewIdAndValidationIdEvent",
+      viewId, validationId, result: v
+   } as GetValidationByViewIdAndValidationIdEvent);
    return v;
 }
 
+// ========== helpers ====
 
 const p = (q: QueryA): Validation[] => {
     return q.reduce((acc: Validation[], i: QueryI) => {

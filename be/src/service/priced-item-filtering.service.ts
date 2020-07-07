@@ -14,7 +14,7 @@ import {
     CurrencyValue, DATE_FORMAT,
     DateValue, DimensionValue, DoubleSelectValue, HeightValue, Item,
     ItemImage, LengthValue,
-    NumberValue, SelectValue,
+    NumberValue, PricedItem, SelectValue,
     StringValue,
     TextValue,
     Value, VolumeValue, WeightValue, WidthValue
@@ -39,6 +39,8 @@ import {
     convertToCm2, convertToG,
     convertToMl
 } from "./compare-attribute-values.service";
+import {pricedItemsConvert} from "./conversion-priced-item.service";
+import {fireEvent, GetPricedItemsWithFilteringEvent} from "./event/event.service";
 
 const SQL: string = `
            SELECT 
@@ -109,14 +111,38 @@ const SQL: string = `
 const SQL_WITH_NULL_PARENT = `${SQL} AND I.PARENT_ID IS NULL`;
 const SQL_WITH_PARAMETERIZED_PARENT = `${SQL} AND I.PARENT_ID = ? `;
 
-export type PricedItem2WithFilteringResult = {b: PricedItem2[], m: Map<string /* attributeId */, Attribute>};
 
-export const getPricedItem2WithFiltering = async (conn: Connection,
-                                            viewId: number,
-                                            pricingStructureId: number,
-                                            parentItemId: number,
-                                            whenClauses: ItemValueOperatorAndAttribute[]):
-    Promise<PricedItem2WithFilteringResult> => {
+/**
+ * ==================================
+ * === getPricedItemsWithFiltering ===
+ * ==================================
+ */
+export type PricedItem2sWithFilteringResult = {b: PricedItem2[], m: Map<string /* attributeId */, Attribute>};
+export type PricedItemsWithFilteringResult = {b: PricedItem[], m: Map<string /* attributeId */, Attribute>};
+export const getPricedItemsWithFiltering = async (conn: Connection,
+                                                  viewId: number,
+                                                  pricingStructureId: number,
+                                                  parentItemId: number,
+                                                  whenClauses: ItemValueOperatorAndAttribute[]):
+    Promise<PricedItemsWithFilteringResult> => {
+    const r2: PricedItem2sWithFilteringResult = await getPricedItem2sWithFiltering(conn, viewId, pricingStructureId, parentItemId, whenClauses);
+    const r: PricedItemsWithFilteringResult = {
+        b: pricedItemsConvert(r2.b),
+        m: r2.m
+    } as PricedItemsWithFilteringResult;
+    fireEvent({
+       type: 'GetPricedItemsWithFilteringEvent',
+       viewId, pricingStructureId, parentItemId, whenClauses,
+       result: r
+    } as GetPricedItemsWithFilteringEvent);
+    return r;
+}
+export const getPricedItem2sWithFiltering = async (conn: Connection,
+                                                   viewId: number,
+                                                   pricingStructureId: number,
+                                                   parentItemId: number,
+                                                   whenClauses: ItemValueOperatorAndAttribute[]):
+    Promise<PricedItem2sWithFilteringResult> => {
 
     const q: QueryA = !!parentItemId ?
         await conn.query( SQL_WITH_PARAMETERIZED_PARENT, [pricingStructureId, viewId, parentItemId]) :
@@ -171,7 +197,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
             iMap.set(iMapKey, item);
             bulkEditItem2s.push(item);
 
-            const { b /* BulkEditItem2[] */, } = await getPricedItem2WithFiltering(conn, viewId, pricingStructureId, itemId, whenClauses);
+            const { b /* BulkEditItem2[] */, } = await getPricedItem2sWithFiltering(conn, viewId, pricingStructureId, itemId, whenClauses);
             item.children = b;
         }
 
@@ -480,131 +506,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
     return { b: matchedBulkEditItem2s, m: attMap};
 }
 
-/*
-const convertToCm = (v: number, u: DimensionUnits | WidthUnits | LengthUnits | HeightUnits): number => {
-    switch (u) {
-        case "cm":
-            return v;
-        case "mm":
-            return (v *10);
-        case "m":
-            return (v / 100);
-    }
-};
 
-const convertToCm2 = (v: number, u: AreaUnits): number => {
-    switch(u) {
-        case "cm2":
-            return v;
-        case "m2":
-            return (v / (100 * 100));
-        case "mm2":
-            return (v * 10 * 10);
-    }
-}
-
-const convertToMl = (v: number, u: VolumeUnits): number => {
-    switch(u) {
-        case "l":
-            return (v / 1000);
-        case "ml":
-            return v;
-    }
-}
-
-const compareDate = (a: moment.Moment,  // from REST Api
-                     b: moment.Moment,  // from actual item attribute value
-                     operator: OperatorType): boolean => {
-    switch (operator) {
-        case "empty":
-            return (!!!b); // when a is falsy
-        case "eq":
-            return b.isSame(a);
-        case "gt":
-            return b.isAfter(a);
-        case "gte":
-            return b.isSameOrAfter(a);
-        case "lt":
-            return b.isBefore(a);
-        case "lte":
-            return b.isSameOrBefore(a);
-        case "not empty":
-            return (!!b);
-        case "not eq":
-            return (!b.isSame(a));
-        case "not gt":
-            return (!b.isAfter(a));
-        case "not gte":
-            return (!b.isSameOrAfter(a));;
-        case "not lt":
-            return (!b.isBefore(a));
-        case "not lte":
-            return (!b.isSameOrBefore(a));
-    }
-}
-
-const compareNumber = (a: number, // from REST api
-                       b: number, // from actual item attribute value
-                       operator: OperatorType): boolean => {
-    switch (operator) {
-        case "empty":
-            return (!!!b);
-        case "eq":
-            return (b == a);
-        case "gt":
-            return (b > a);
-        case "gte":
-            return (b >= a);
-        case "lt":
-            return (b < a);
-        case "lte":
-            return (b <= a);
-        case "not empty":
-            return (!!b)
-        case "not eq":
-            return (b != a);
-        case "not gt":
-            return (!(b > a));
-        case "not gte":
-            return (!(b >= a));
-        case "not lt":
-            return (!(b < a));
-        case "not lte":
-            return (!(b <= a));
-    }
-}
-
-const compareString = (a: string // from REST Api ,
-                       b: string // from actual item attribute value ,
-                       operator: OperatorType): boolean => {
-    switch (operator) {
-        case "empty":
-            return (!!!b);
-        case "eq":
-            return (b == a);
-        case "gt":
-            return (b > a);
-        case "gte":
-            return (b >= a);
-        case "lt":
-            return (b <= a);
-        case "lte":
-            return (b <= a);
-        case "not empty":
-            return (!!b);
-        case "not eq":
-            return ( b != a);
-        case "not gt":
-            return (!(b > a));
-        case "not gte":
-            return (!(b >= a));
-        case "not lt":
-            return (!(b < a));
-        case "not lte":
-            return (!(b <= a));
-    }
-}
- */
+// ==== helper functions ======================
 
 const findEntry = (entries: ItemMetadataEntry2[], key: string): ItemMetadataEntry2 => {
     return entries.find((e: ItemMetadataEntry2) => e.key === key);

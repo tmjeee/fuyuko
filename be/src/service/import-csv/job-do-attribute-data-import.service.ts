@@ -2,13 +2,18 @@ import {Job} from "../../model/job.model";
 import {Attribute} from "../../model/attribute.model";
 import {JobLogger, newJobLogger, newLoggingCallback} from "../job-log.service";
 import {saveAttributes} from "../attribute.service";
-import {getJobyById} from "../job.service";
+import {getJobById} from "../job.service";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
+import {fireEvent, ImportAttributeJobEvent} from "../event/event.service";
 
 const uuid = require('uuid');
 
-
+/**
+ * ============================
+ * === runJob ===
+ * ============================
+ */
 export const runJob = async (viewId: number, attributeDataImportId: number, attributes: Attribute[]): Promise<Job> => {
 
     const uid = uuid();
@@ -16,6 +21,12 @@ export const runJob = async (viewId: number, attributeDataImportId: number, attr
     const description: string = `attribute-data-import-job-${uid} description`;
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
+    
+    fireEvent({
+        type: "ImportAttributeJobEvent",
+        state: 'Scheduled',
+        jobId: jobLogger.jobId
+    } as ImportAttributeJobEvent);
 
     (async ()=> {
         await jobLogger.logInfo(`starting job ${name}`);
@@ -36,13 +47,25 @@ export const runJob = async (viewId: number, attributeDataImportId: number, attr
             await saveAttributes(viewId, effectiveAttributes, newLoggingCallback(jobLogger));
             await jobLogger.updateProgress("COMPLETED");
             await jobLogger.logInfo(`mark ${name} as completed`);
+
+            fireEvent({
+                type: "ImportAttributeJobEvent",
+                state: 'Completed',
+                jobId: jobLogger.jobId
+            } as ImportAttributeJobEvent);
         } catch(e) {
             await jobLogger.logError(`${e.toString()}`);
             await jobLogger.updateProgress("FAILED");
+            
+            fireEvent({
+                type: "ImportAttributeJobEvent",
+                state: 'Failed',
+                jobId: jobLogger.jobId
+            } as ImportAttributeJobEvent);
         } finally {
             await jobLogger.logInfo(`Done with ${name}`);
         }
     })();
 
-    return await getJobyById(jobLogger.jobId);
+    return await getJobById(jobLogger.jobId);
 }

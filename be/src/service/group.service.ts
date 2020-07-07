@@ -2,10 +2,27 @@ import {Group} from "../model/group.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Role} from "../model/role.model";
-import {DELETED, DISABLED, ENABLED} from "../model/status.model";
+import {DELETED, ENABLED} from "../model/status.model";
+import {
+    AddOrUpdateGroupEvent,
+    DeleteGroupEvent,
+    fireEvent,
+    GetAllGroupsEvent,
+    GetGroupByIdEvent,
+    GetGroupByNameEvent,
+    GetGroupsWithRoleEvent,
+    SearchForGroupByNameEvent,
+    SearchForGroupsWithNoSuchRoleEvent
+} from "./event/event.service";
 
+
+/**
+ *  ========================================
+ *  === deleteGroup ===
+ *  ========================================
+ */
 export const deleteGroup = async (groupIds: number[]): Promise<string[]> => {
-    return doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         for (const groupId of groupIds) {
             const q: QueryResponse = await conn.query(`UPDATE TBL_GROUP SET STATUS = ? WHERE ID=?`, [DELETED, groupId]);
@@ -15,10 +32,21 @@ export const deleteGroup = async (groupIds: number[]): Promise<string[]> => {
         }
         return errors;
     });
+    fireEvent({
+       type: "DeleteGroupEvent",
+       groupIds, errors 
+    } as DeleteGroupEvent);
+    return errors;
 };
 
-export const addOrUpdateGroup = async (g: {id: number, name: string, description: string, isSystem?: boolean}): Promise<string[]> => {
-    return doInDbConnection(async (conn: Connection) => {
+/**
+ *  ========================================
+ *  === addOrUpdateGroup ===
+ *  ========================================
+ */
+export interface AddOrUpdateGroupInput { id: number, name: string, description: string, isSystem?: boolean};
+export const addOrUpdateGroup = async (g: AddOrUpdateGroupInput): Promise<string[]> => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         if (g.id < 0) { // add
             const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_GROUP WHERE NAME=?`, [g.name]);
@@ -47,8 +75,19 @@ export const addOrUpdateGroup = async (g: {id: number, name: string, description
         }
         return errors;
     });
+    fireEvent({
+       type: "AddOrUpdateGroup",
+       input: g,
+       errors 
+    } as AddOrUpdateGroupEvent);
+    return errors;
 }
 
+/**
+ *  ========================================
+ *  === searchForGroupsWithNoSuchRole ===
+ *  ========================================
+ */
 export const searchForGroupsWithNoSuchRoleCount = async (roleName: string, groupName?: string): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
 
@@ -71,7 +110,7 @@ export const searchForGroupsWithNoSuchRoleCount = async (roleName: string, group
 };
 
 export const searchForGroupsWithNoSuchRole = async (roleName: string, groupName?: string): Promise<Group[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const groups: Group[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -127,10 +166,21 @@ export const searchForGroupsWithNoSuchRole = async (roleName: string, groupName?
         }, []);
         return groups;
     });
+    fireEvent({
+       type: "SearchForGroupsWithNoSuchRoleEvent",
+       roleName, groupName, groups 
+    } as SearchForGroupsWithNoSuchRoleEvent);
+    return groups;
 };
 
+
+/**
+ *  ========================================
+ *  === searchForGroupByName ===
+ *  ========================================
+ */
 export const searchForGroupByName = async (groupName: string): Promise<Group[]> => {
-        return await doInDbConnection(async (conn: Connection) => {
+    const groups: Group[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -178,8 +228,19 @@ export const searchForGroupByName = async (groupName: string): Promise<Group[]> 
         }, []);
         return groups;
     });
+    fireEvent({
+       type: "SearchForGroupByNameEvent",
+       groupName, groups  
+    } as SearchForGroupByNameEvent); 
+    return groups;
 };
 
+
+/**
+ *  ========================================
+ *  === getGroupsWithRole ===
+ *  ========================================
+ */
 export const getGroupsWithRoleCount = async (roleName: string): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
         const qTotal: QueryA = await conn.query(`
@@ -201,7 +262,7 @@ export const getGroupsWithRoleCount = async (roleName: string): Promise<number> 
 }
 
 export const getGroupsWithRole = async (roleName: string): Promise<Group[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const groups: Group[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -258,10 +319,22 @@ export const getGroupsWithRole = async (roleName: string): Promise<Group[]> => {
 
         return groups;
     });
+    fireEvent({
+        type: "GetGroupsWithRoleEvent",
+        roleName,
+        groups
+    } as GetGroupsWithRoleEvent);
+    return groups;
 }
 
+
+/**
+ *  ========================================
+ *  === getGroupByName ===
+ *  ========================================
+ */
 export const getGroupByName = async (groupName: string): Promise<Group> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const group: Group = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -307,10 +380,21 @@ export const getGroupByName = async (groupName: string): Promise<Group> => {
 
         return group;
     });
+    fireEvent({
+       type: "GetGroupByNameEvent",
+       groupName, group 
+    } as GetGroupByNameEvent);
+    return group;
 };
 
+
+/**
+ *  ========================================
+ *  === getGroupById ===
+ *  ========================================
+ */
 export const getGroupById = async (groupId: number): Promise<Group> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const group: Group = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -356,10 +440,20 @@ export const getGroupById = async (groupId: number): Promise<Group> => {
 
         return group;
     });
+    fireEvent({
+       type: "GetGroupByIdEvent",
+       groupId, group 
+    } as GetGroupByIdEvent);
+    return group;
 };
 
 
 
+/**
+ *  ========================================
+ *  === getAllGroups ===
+ *  ========================================
+ */
 export const getAllGroupsCount = async (): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
         const qTotal: QueryA = await conn.query(`
@@ -373,7 +467,7 @@ export const getAllGroupsCount = async (): Promise<number> => {
 };
 
 export const getAllGroups = async (): Promise<Group[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const groups: Group[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     G.ID AS G_ID,
@@ -421,4 +515,9 @@ export const getAllGroups = async (): Promise<Group[]> => {
         }, []);
         return groups;
     });
+    fireEvent({
+        type: "GetAllGroupsEvent",
+        groups
+    } as GetAllGroupsEvent);
+    return groups;
 }

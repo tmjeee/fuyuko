@@ -11,9 +11,20 @@ import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET} from "../util/utils";
 import {itemValueRevert} from "./conversion-item-value.service";
 import {itemConvert, itemRevert, itemsConvert} from "./conversion-item.service";
-import {parseAsync} from "json2csv";
 import {ENABLED, Status} from "../model/status.model";
-import * as util from "util";
+import {
+    AddFavouriteItemIdsEvent,
+    AddItemEvent,
+    AddOrUpdateItemEvent, FindChildrenItemsEvent,
+    fireEvent, GetAllFavouritedItemsInViewEvent,
+    GetAllFavouriteItemIdsInViewEvent, GetAllItemsInViewEvent, GetItemByIdEvent, GetItemByNameEvent, GetItemsByIdsEvent,
+    RemoveFavouriteItemIdsEvent,
+    SearchForFavouriteItemsInViewEvent,
+    SearchForItemsInViewEvent,
+    UpdateItemEvent,
+    UpdateItemsStatusEvent,
+    UpdateItemValueEvent
+} from "./event/event.service";
 
 //////////////////////// SQLs //////////////////////////////////////////////////////////////////
 
@@ -171,15 +182,16 @@ const SQL_FAV_ITEMS_SEARCH_COUNT = () => `
     ) 
 `;
 
+// updateItemsStatus  updateItemValue   updateItem   addItem  addOrUpdateItem  searchForFavouriteItemsInView   searchForItemsInView   addFavouriteItemIds  removeFavouriteItemIds  getAllFavouriteItemIdsInView   getAllFavouritedItemInView    getAllItemsInView    getItemsByIds    getItemById    getItemByName   findChildrenItems
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 // =============================
-// === updateItemStatus(...) ===
+// === updateItemsStatus(...) ===
 // =============================
 export const updateItemsStatus = async (itemIds: number[], status: Status): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         for (const itemId of itemIds) {
             // await conn.query(`UPDATE TBL_ITEM SET STATUS = ? WHERE ID=?`, [status,itemId]);
@@ -190,8 +202,17 @@ export const updateItemsStatus = async (itemIds: number[], status: Status): Prom
         }
         return errors;
     });
+    fireEvent({
+       type: "UpdateItemsStatusEvent", 
+       itemIds, status,
+       errors 
+    } as UpdateItemsStatusEvent);
+    return errors;
 };
 
+// =============================
+// === updateItemStatus(...) ===
+// =============================
 const updateItemStatus = async (conn: Connection, itemId: number, status: Status): Promise<string[]> => {
     const errors: string[] = [];
     if (itemId) {
@@ -216,6 +237,10 @@ const updateItemStatus = async (conn: Connection, itemId: number, status: Status
 export const updateItemValue = async (viewId: number, itemId: number, value: Value) => {
     const itemValue: ItemValue2 = itemValueRevert(value);
     await updateItemValue2(viewId, itemId, itemValue);
+    fireEvent({
+       type: "UpdateItemValueEvent",
+       viewId, itemId, value 
+    } as UpdateItemValueEvent);
 }
 export const updateItemValue2 = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
     await doInDbConnection(async (conn: Connection) => {
@@ -243,7 +268,14 @@ export const updateItemValue2 = async (viewId: number, itemId: number, itemValue
 // ============================
 export const updateItem = async (viewId: number, item: Item): Promise<string[]> => {
    const item2: Item2 = itemRevert(item);
-   return await updateItem2(viewId, item2);
+   const errors: string[] =  await updateItem2(viewId, item2);
+  
+   fireEvent({
+      type: "UpdateItemEvent",
+      viewId, item, errors 
+   } as UpdateItemEvent);
+   
+   return errors;
 }
 export const updateItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -296,7 +328,14 @@ const _updateItem2 = async (conn: Connection, viewId: number, item2: Item2): Pro
 // ============================
 export const addItem = async (viewId: number, item: Item): Promise<string[]> => {
     const item2: Item2 = itemRevert(item);
-    return await addItem2(viewId, item2);
+    const errors: string[] =  await addItem2(viewId, item2);
+   
+    fireEvent({
+       type: "AddItemEvent",
+       viewId, item, errors, 
+    } as AddItemEvent);
+    
+    return errors;
 }
 export const addItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -338,7 +377,7 @@ const _addItem2 = async (conn: Connection, viewId: number, item2: Item2): Promis
         }
     }
     return errors;
-}
+};
 
 
 
@@ -348,7 +387,14 @@ const _addItem2 = async (conn: Connection, viewId: number, item2: Item2): Promis
 
 export const addOrUpdateItem = async (viewId: number, item: Item): Promise<string[]> =>  {
     const item2: Item2 = itemRevert(item);
-    return await addOrUpdateItem2(viewId, item2);
+    const errors: string[] = await addOrUpdateItem2(viewId, item2);
+   
+    fireEvent({
+        type: 'AddOrUpdateItemEvent',
+        viewId, item, errors
+    } as AddOrUpdateItemEvent);
+    
+    return errors;
 }
 export const addOrUpdateItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -364,7 +410,7 @@ const _addOrUpdateItem2 = async (conn: Connection, viewId: number, item2: Item2)
 }
 
 // ==========================================
-// === searchForFavouriteItemsInViewCount(...) ===
+// === searchForFavouriteItemsInView(...) ===
 // ==========================================
 export const searchForFavouriteItemsInViewCount = async (viewId: number, userId: number, searchType: ItemSearchType, search: string): Promise<number> => {
     // todo: support advance search type
@@ -374,13 +420,14 @@ export const searchForFavouriteItemsInViewCount = async (viewId: number, userId:
         return q[0].COUNT;
     });
 };
-
-// ==========================================
-// === searchForFavouriteItemsInView(...) ===
-// ==========================================
 export const searchForFavouriteItemsInView = async (viewId: number, userId: number, searchType: ItemSearchType, search: string, limitOffset?: LimitOffset): Promise<Item[]> => {
     const item2s: Item2[] = await searchForFavouriteItem2sInView(viewId, userId, searchType, search, limitOffset);
-    return itemsConvert(item2s);
+    const items: Item[] =  itemsConvert(item2s);
+    fireEvent({
+       type: "SearchForFavouriteItemsInViewEvent",
+       viewId, userId, searchType, search, limitOffset, items 
+    } as SearchForFavouriteItemsInViewEvent);
+    return items;
 };
 export const searchForFavouriteItem2sInView = async (viewId: number, userId: number, searchType: ItemSearchType, search: string, limitOffset?: LimitOffset): Promise<Item2[]> => {
     // todo: support advance search type
@@ -405,7 +452,7 @@ export const searchForFavouriteItem2sInView = async (viewId: number, userId: num
 
 
 // ======================================
-// === searchForItemsInViewCount(...) ===
+// === searchForItemsInView(...) ===
 // ======================================
 export const searchForItemsInViewCount = async (viewId: number, searchType: ItemSearchType, search: string): Promise<number> => {
     const iSearch = `%${search}%`;
@@ -414,13 +461,15 @@ export const searchForItemsInViewCount = async (viewId: number, searchType: Item
         return q[0].COUNT;
     });
 }
-
-// =================================
-// === searchForItemsInView(...) ===
-// =================================
 export const searchForItemsInView = async (viewId: number, searchType: ItemSearchType, search: string, limitOffset?: LimitOffset): Promise<Item[]> => {
     const item2s: Item2[] = await searchForItem2sInView(viewId, searchType, search, limitOffset);
-    return itemsConvert(item2s);
+    const items: Item[] =  itemsConvert(item2s);
+    
+    fireEvent({
+       type: 'SearchForItemsInViewEvent',
+       viewId, searchType, search, limitOffset, items 
+    } as SearchForItemsInViewEvent);
+    return items;
 }
 export const searchForItem2sInView = async (viewId: number, searchType: ItemSearchType, search: string, limitOffset?: LimitOffset): Promise<Item2[]> => {
     // todo: support advance search type
@@ -450,7 +499,7 @@ export const searchForItem2sInView = async (viewId: number, searchType: ItemSear
 // === addFavouriteItemIds(...) ===
 // ================================
 export const addFavouriteItemIds = async (userId: number, itemIds: number[]): Promise<string[]> => {
-    return await doInDbConnection(async(conn: Connection) => {
+    const errors: string[] =  await doInDbConnection(async(conn: Connection) => {
        const errors: string[] = [];
        for (const itemId of itemIds) {
            const qc: QueryA = await conn.query(`
@@ -468,6 +517,13 @@ export const addFavouriteItemIds = async (userId: number, itemIds: number[]): Pr
        }
        return errors;
     });
+    
+    fireEvent({
+       type: "AddFavouriteItemIdsEvent",
+       userId, itemIds, errors 
+    } as AddFavouriteItemIdsEvent);
+    
+    return errors;
 }
 
 
@@ -475,7 +531,7 @@ export const addFavouriteItemIds = async (userId: number, itemIds: number[]): Pr
 // === removeFavouriteItemIds(...) ===
 // ===================================
 export const removeFavouriteItemIds = async (userId: number, itemIds: number[]): Promise<string[]> => {
-    return await doInDbConnection(async(conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async(conn: Connection) => {
         const errors: string[] = [];
         for (const itemId of itemIds) {
             const qc: QueryA = await conn.query(`
@@ -493,6 +549,13 @@ export const removeFavouriteItemIds = async (userId: number, itemIds: number[]):
         }
         return errors;
     });
+   
+    fireEvent({
+       type: "RemoveFavouriteItemIdsEvent",
+       userId, itemIds, errors 
+    } as RemoveFavouriteItemIdsEvent);
+    
+    return errors;
 }
 
 
@@ -500,7 +563,7 @@ export const removeFavouriteItemIds = async (userId: number, itemIds: number[]):
 // === getAllFavouriteItemIdsInView(...) ===
 // ============================================
 export const getAllFavouriteItemIdsInView = async (viewId: number, userId: number): Promise<number[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const itemIds: number[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
                 F.ID AS F_ID,
@@ -516,13 +579,20 @@ export const getAllFavouriteItemIdsInView = async (viewId: number, userId: numbe
            return acc;
         }, []);
     });
+   
+    fireEvent({
+       type: "GetAllFavouriteItemIdsInViewEvent",
+       viewId, userId, itemIds 
+    } as GetAllFavouriteItemIdsInViewEvent);
+    
+    return itemIds;
 };
 
 
 
 
 // ============================================
-// === getAllFavouritedItemInViewCount(...) ===
+// === getAllFavouritedItemInView(...) ===
 // ============================================
 export const getAllFavouriteItemsInViewCount = async (viewId: number, userId: number): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -530,15 +600,14 @@ export const getAllFavouriteItemsInViewCount = async (viewId: number, userId: nu
         return q[0].COUNT;
     });
 };
-
-
-
-// =======================================
-// === getAllFavouritedItemInView(...) ===
-// =======================================
-export const getAllFavouriteItemsInView = async (viewId: number, userId: number, limitoffset?: LimitOffset): Promise<Item[]> => {
-    const item2s: Item2[] = await getAllFavouriteItem2sInView(viewId, userId, limitoffset);
-    return itemsConvert(item2s);
+export const getAllFavouriteItemsInView = async (viewId: number, userId: number, limitOffset?: LimitOffset): Promise<Item[]> => {
+    const item2s: Item2[] = await getAllFavouriteItem2sInView(viewId, userId, limitOffset);
+    const items: Item[] =  itemsConvert(item2s);
+    fireEvent({
+        type: "GetAllFavouritedItemsInViewEvent",
+        viewId, userId, limitOffset, items
+    } as GetAllFavouritedItemsInViewEvent);
+    return items;
 };
 export const getAllFavouriteItem2sInView = async (viewId: number, userId: number, limitoffset?: LimitOffset): Promise<Item2[]> => {
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
@@ -556,7 +625,7 @@ export const getAllFavouriteItem2sInView = async (viewId: number, userId: number
 
 
 // ===================================
-// === getAllItemsInViewCount(...) ===
+// === getAllItemsInView(...) ===
 // ===================================
 export const getAllItemsInViewCount = async (viewId: number, parentOnly: boolean = true): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -564,15 +633,16 @@ export const getAllItemsInViewCount = async (viewId: number, parentOnly: boolean
         return q[0].COUNT;
     });
 };
-
-
-
-// =============================
-// === getAllItemInView(...) ===
-// =============================
-export const getAllItemsInView = async (viewId: number, parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item[]> => {
-    const item2s: Item2[] = await getAllItem2sInView(viewId, parentOnly, limitoffset);
-    return itemsConvert(item2s);
+export const getAllItemsInView = async (viewId: number, parentOnly: boolean = true, limitOffset?: LimitOffset): Promise<Item[]> => {
+    const item2s: Item2[] = await getAllItem2sInView(viewId, parentOnly, limitOffset);
+    const items: Item[] = itemsConvert(item2s);
+    
+    fireEvent({
+        type: "GetAllItemsInViewEvent",
+        viewId, parentOnly, limitOffset, items
+    } as GetAllItemsInViewEvent);
+    
+    return items;
 };
 export const getAllItem2sInView = async (viewId: number, parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item2[]> => {
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
@@ -594,23 +664,22 @@ export const getAllItem2sInView = async (viewId: number, parentOnly: boolean = t
 
 
 // ===============================
-// === getItemsByIdsCount(...) ===
+// === getItemsByIds(...) ===
 // ===============================
-
 export const getItemsByIdsCount = async (viewId: number, itemIds: number[], parentOnly: boolean = true): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(parentOnly ? SQL_2_B_COUNT() : SQL_2_A_COUNT(), [viewId, itemIds]);
         return q[0].COUNT;
     });
 };
-
-
-// ============================
-// === getItemsByIds(...) ===
-// ============================
-export const getItemsByIds = async (viewId: number, itemIds: number[], parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item[]> => {
-    const item2s: Item2[] = await getItem2sByIds(viewId, itemIds, parentOnly, limitoffset);
-    return itemsConvert(item2s);
+export const getItemsByIds = async (viewId: number, itemIds: number[], parentOnly: boolean = true, limitOffset?: LimitOffset): Promise<Item[]> => {
+    const item2s: Item2[] = await getItem2sByIds(viewId, itemIds, parentOnly, limitOffset);
+    const items: Item[] = itemsConvert(item2s);
+    fireEvent({
+       type: "GetItemsByIdsEvent",
+       viewId, itemIds, parentOnly, limitOffset, items 
+    } as GetItemsByIdsEvent);
+    return items;
 };
 export const getItem2sByIds = async (viewId: number, itemIds: number[], parentOnly: boolean = true, limitoffset?: LimitOffset): Promise<Item2[]> => {
     const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
@@ -634,7 +703,13 @@ export const getItem2sByIds = async (viewId: number, itemIds: number[], parentOn
 // ============================
 export const getItemById = async (viewId: number, itemId: number): Promise<Item> => {
     const item2: Item2 = await getItem2ById(viewId, itemId);
-    return itemConvert(item2);
+    const item: Item = itemConvert(item2);
+    
+    fireEvent({
+       type: "GetItemByIdEvent",
+       viewId, itemId, item 
+    } as GetItemByIdEvent);
+    return item;
 }
 export const getItem2ById = async (viewId: number, itemId: number): Promise<Item2> => {
 
@@ -686,7 +761,14 @@ export const getItem2ById = async (viewId: number, itemId: number): Promise<Item
 // ============================
 export const getItemByName = async (viewId: number, itemName: string): Promise<Item> => {
     const item2: Item2 = await getItem2ByName(viewId, itemName);
-    return (item2 ? itemConvert(item2) : undefined);
+    const item: Item = (item2 ? itemConvert(item2) : undefined);
+    
+    fireEvent({
+        type: "GetItemByNameEvent",
+        viewId, itemName, item
+    } as GetItemByNameEvent);
+    
+    return item;
 };
 export const getItem2ByName = async (viewId: number, itemName: string): Promise<Item2> => {
 
@@ -739,7 +821,12 @@ export const getItem2ByName = async (viewId: number, itemName: string): Promise<
 
 export const findChildrenItems = async (viewId: number, parentItemId: number): Promise<Item[]> => {
    const item2s: Item2[] = await findChildrenItem2s(viewId, parentItemId);
-   return itemsConvert(item2s);
+   const items: Item[] = itemsConvert(item2s);
+   fireEvent({
+      type: "FindChildrenItemsEvent",
+      viewId, parentItemId, items 
+   } as FindChildrenItemsEvent);
+   return items;
 }
 export const findChildrenItem2s = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
 

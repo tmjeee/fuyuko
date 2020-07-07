@@ -8,24 +8,21 @@ import {Connection} from "mariadb";
 import {File} from "formidable";
 import * as util from "util";
 import * as fs from "fs";
-import {makeApiError, makeApiErrorObj} from "../../util";
-import {ApiResponse} from "../../model/api-response.model";
 import uuid = require("uuid");
+import {fireEvent, ImportAttributePreviewEvent} from "../event/event.service";
 const detectCsv = require('detect-csv');
 
-const toPair1 = async (pair1: string): Promise<Pair1[]> => {
-    const o: Pair1[] = await readPair1Csv(pair1);
-    return o;
-}
 
-const toPair2 = async (pair2: string): Promise<Pair2[]> => {
-    return await readPair2Csv(pair2);
-}
-
-export const preview = async (viewId: number, attributeDataCsvFile: File): Promise<{ errors: string[], attributeDataImport: AttributeDataImport}> => {
+/**
+ * ===================
+ * === preview ===
+ * ===================
+ */
+export interface ImportAttributePreviewResult { errors: string[], attributeDataImport: AttributeDataImport };
+export const preview = async (viewId: number, attributeDataCsvFile: File): Promise<ImportAttributePreviewResult> => {
     return await doInDbConnection(async (conn: Connection) => {
+        
         const errors: string[] = [];
-
 
         const name: string = `attribute-data-import-${uuid()}`;
         const content: Buffer = await util.promisify(fs.readFile)(attributeDataCsvFile.path);
@@ -49,10 +46,17 @@ export const preview = async (viewId: number, attributeDataCsvFile: File): Promi
 
         const attributeDataImport: AttributeDataImport = await _preview(viewId, dataImportId, content);
 
-        return {
+        const r: ImportAttributePreviewResult  ={
             errors,
             attributeDataImport
         };
+        
+        fireEvent({
+           type: "ImportAttributePreviewEvent",
+           previewResult: r 
+        } as ImportAttributePreviewEvent);
+        
+        return r;
     });
 };
 
@@ -110,3 +114,13 @@ const _preview = async (viewId: number, dataImportId: number, content: Buffer): 
         attributes: result
     } as AttributeDataImport;
 }
+
+const toPair1 = async (pair1: string): Promise<Pair1[]> => {
+    const o: Pair1[] = await readPair1Csv(pair1);
+    return o;
+}
+
+const toPair2 = async (pair2: string): Promise<Pair2[]> => {
+    return await readPair2Csv(pair2);
+}
+

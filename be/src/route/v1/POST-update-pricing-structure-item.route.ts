@@ -10,7 +10,7 @@ import {
 import {param, body} from 'express-validator';
 import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {setPrices2} from "../../service/pricing-structure-item.service";
+import {setPricesB} from "../../service/pricing-structure-item.service";
 import {ROLE_EDIT} from "../../model/role.model";
 import {makeApiError, makeApiErrorObj} from "../../util";
 
@@ -34,7 +34,7 @@ const httpAction: any[] = [
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const pricingStructureItems: PricingStructureItemWithPrice[] =  req.body.pricingStructureItems;
 
-        const errors: string[] = await setPrices2(pricingStructureId, pricingStructureItems);
+        const errors: string[] = await setPricesB(pricingStructureId, pricingStructureItems);
 
         if (errors && errors.length) {
             res.status(400).json({

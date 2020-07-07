@@ -5,7 +5,7 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_VIEW} from "../../model/role.model";
 import {Validation} from "../../model/validation.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {getALlViewValidations} from "../../service/validation/validation.service";
+import {getAllViewValidations} from "../../service/validation/validation.service";
 
 // CHECKED
 const httpAction: any[] = [
@@ -17,7 +17,7 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
-        const v: Validation[] = await getALlViewValidations(viewId);
+        const v: Validation[] = await getAllViewValidations(viewId);
 
         res.status(200).json({
             status: 'SUCCESS',

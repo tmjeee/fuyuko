@@ -1,19 +1,19 @@
-import {itemConvert, itemRevert} from "../../src/service/conversion-item.service";
+import {ItemImage, PricedItem, StringValue, Value} from "../../src/model/item.model";
+import {pricedItemConvert, pricedItemRevert} from "../../src/service/conversion-priced-item.service";
 import {
-    Item2,
     ItemMetadata2,
     ItemMetadataEntry2,
     ItemValue2,
     PricedItem2
 } from "../../src/server-side-model/server-side.model";
-import {Item, ItemImage, PricedItem, StringValue, Value} from "../../src/model/item.model";
 
-describe('conversion-item.service.ts', () => {
-    it('itemConvert', () => {
+
+describe(`conversion-priced-item.service.ts`, () => {
+    it('pricedItemConvert', () => {
         const attributeId: number = 3;
         const d = new Date();
         const images: ItemImage[] = [];
-        const i: Item = itemConvert({
+        const i: PricedItem = pricedItemConvert({
             id: 1,
             parentId: 1,
             images,
@@ -21,11 +21,13 @@ describe('conversion-item.service.ts', () => {
             description: 'description',
             creationDate: d,
             lastUpdate: d,
+            price: 10.10,
+            country: 'AUD',
             values: [{
                 id: -1, attributeId, metadatas: [{
-                        id: -1, attributeId, attributeType: 'string', name: 'meta', entries: [
-                            { id: -1, key: 'type', value: 'string', dataType: 'string'} as ItemMetadataEntry2,
-                            { id: -1, key: 'value', value: 'test', dataType: 'string'} as ItemMetadataEntry2,
+                    id: -1, attributeId, attributeType: 'string', name: 'meta', entries: [
+                        { id: -1, key: 'type', value: 'string', dataType: 'string'} as ItemMetadataEntry2,
+                        { id: -1, key: 'value', value: 'test', dataType: 'string'} as ItemMetadataEntry2,
                     ]} as ItemMetadata2
                 ]
             } as ItemValue2],
@@ -46,10 +48,12 @@ describe('conversion-item.service.ts', () => {
                                 ]} as ItemMetadata2
                         ]
                     } as ItemValue2],
-                    children: []
-                } as Item2
+                    children: [],
+                    price: 11.10,
+                    country: 'AUD'
+                } as PricedItem2
             ]
-        } as Item2);
+        } as PricedItem2) as PricedItem;
 
         expect(i.id).toBe(1);
         expect(i.parentId).toBe(1);
@@ -58,12 +62,16 @@ describe('conversion-item.service.ts', () => {
         expect(i.description).toBe('description');
         expect(i.creationDate).toBe(d);
         expect(i.lastUpdate).toBe(d);
+        expect(i.price).toBe(10.10);
+        expect(i.country).toBe('AUD')
         expect(i[attributeId].attributeId).toBe(attributeId);
         expect(((i[attributeId].val) as StringValue).type).toBe('string');
         expect(((i[attributeId].val) as StringValue).value).toBe('test');
         expect(i.children.length).toBe(1);
         expect(i.children[0].name).toBe('name2');
         expect(i.children[0].description).toBe('description2');
+        expect(i.children[0].price).toBe(11.10);
+        expect(i.children[0].country).toBe('AUD');
         expect(((i.children[0][attributeId].val) as StringValue).type).toBe('string');
         expect(((i.children[0][attributeId].val) as StringValue).value).toBe('test2');
         expect(i.children[0].children.length).toBe(0);
@@ -71,11 +79,10 @@ describe('conversion-item.service.ts', () => {
 
 
 
-
-    it('itemRevert', () => {
+    it('pricedItemRevert', () => {
         const attributeId: number = 99;
         const d = new Date();
-        const i: Item2 = itemRevert({
+        const i: PricedItem2 = pricedItemRevert({
             id: 1,
             name: 'name',
             description: 'description',
@@ -83,6 +90,8 @@ describe('conversion-item.service.ts', () => {
             creationDate: d,
             images: [],
             parentId: 2,
+            price: 10.11,
+            country: 'AUD',
             children: [
                 {
                     id: 3,
@@ -93,6 +102,8 @@ describe('conversion-item.service.ts', () => {
                     images: [],
                     parentId: 1,
                     children: [],
+                    price: 11.11,
+                    country: 'AUD',
                     [attributeId]: {
                         attributeId,
                         val: {
@@ -100,7 +111,7 @@ describe('conversion-item.service.ts', () => {
                             value: 'test2'
                         } as StringValue
                     } as Value
-                } as Item
+                } as PricedItem
             ],
             [attributeId]: {
                 attributeId,
@@ -109,12 +120,14 @@ describe('conversion-item.service.ts', () => {
                     value: 'test'
                 } as StringValue
             } as Value,
-        } as Item);
+        } as PricedItem) as PricedItem2;
 
         expect(i.name).toBe('name');
         expect(i.description).toBe('description');
         expect(i.parentId).toBe(2);
         expect(i.values.length).toBe(1);
+        expect(i.price).toBe(10.11);
+        expect(i.country).toBe('AUD');
         expect(i.values[0].attributeId).toBe(attributeId);
         expect(i.values[0].metadatas.length).toBe(1);
         expect(i.values[0].metadatas[0].entries.length).toBe(2);
@@ -129,6 +142,8 @@ describe('conversion-item.service.ts', () => {
         expect(i.values[0].metadatas[0].entries[1].dataType).toBe('string');
         expect(i.children.length).toBe(1);
         expect(i.children[0].name).toBe('name2');
+        expect(i.children[0].price).toBe(11.11);
+        expect(i.children[0].country).toBe('AUD');
         expect(i.children[0].description).toBe('description2');
         expect(i.children[0].values[0].attributeId).toBe(attributeId);
         expect(i.children[0].values[0].metadatas.length).toBe(1);
@@ -143,6 +158,4 @@ describe('conversion-item.service.ts', () => {
         expect(i.children[0].values[0].metadatas[0].entries[1].value).toBe('test2');
         expect(i.children[0].values[0].metadatas[0].entries[1].dataType).toBe('string');
     });
-
-
 });

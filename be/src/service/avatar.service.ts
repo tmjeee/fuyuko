@@ -6,10 +6,22 @@ import util from "util";
 import fs from "fs";
 import fileType from "file-type";
 import {File} from "formidable";
+import {
+    AddGlobalAvatarEvent,
+    AddGlobalImageEvent,
+    fireEvent, GetAllGlobalAvatarsEvent,
+    GetGlobalAvatarContentByNameEvent,
+    SaveUserAvatarEvent
+} from "./event/event.service";
 
 
+/**
+ * =======================
+ * === addGlobalAvatar ===
+ * =======================
+ */
 export const addGlobalAvatar = async (fileName: string, buffer: Buffer): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_GLOBAL_AVATAR WHERE NAME = ?`, [fileName]);
         if (qc[0].COUNT > 0) {
@@ -26,10 +38,21 @@ export const addGlobalAvatar = async (fileName: string, buffer: Buffer): Promise
         }
         return errors;
     });
+    fireEvent({
+       type: 'AddGlobalAvatarEvent',
+       fileName, buffer, errors
+    } as AddGlobalAvatarEvent);
+    return errors;
 };
 
+
+/**
+ * ======================
+ * === addGlobalImage ===
+ * ======================
+ */
 export const addGlobalImage = async (fileName: string, tag: string, buffer: Buffer): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const q1: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_GLOBAL_IMAGE WHERE NAME=? OR TAG=?`, [fileName, tag]);
         if (q1[0].COUNT > 0) {
@@ -45,10 +68,22 @@ export const addGlobalImage = async (fileName: string, tag: string, buffer: Buff
         }
         return errors;
     });
+    fireEvent({
+       type: 'AddGlobalImageEvent',
+       fileName, tag, buffer, errors 
+    } as AddGlobalImageEvent);
+    return errors;
 };
 
 
-export const saveUserAvatar = async (userId: number, avatar: { globalAvatarName?: string, customAvatarFile?: File}): Promise<{userAvatarId: number, errors: string[]}> => {
+/**
+ * ======================
+ * === saveUserAvatar ===
+ * ======================
+ */
+export interface SaveUserAvatarResult { userAvatarId: number, errors: string[] };
+export interface AvatarInput { globalAvatarName?: string, customAvatarFile?: File };
+export const saveUserAvatar = async (userId: number, avatar: AvatarInput): Promise<SaveUserAvatarResult> => {
     const errors: string[] = [];
     let userAvatarId: number;
     if (avatar.globalAvatarName && avatar.customAvatarFile) {
@@ -100,11 +135,24 @@ export const saveUserAvatar = async (userId: number, avatar: { globalAvatarName?
     } else { // insufficient parameters
         errors.push(`globalAvatarName and customAvatarFile are both not given`);
     }
-    return { userAvatarId, errors};
+    const r: SaveUserAvatarResult = { userAvatarId, errors};
+    fireEvent({
+       type: "SaveUserAvatarEvent",
+       userId,
+       avatar,
+       result: r 
+    } as SaveUserAvatarEvent);
+    return r;
 };
 
+
+/**
+ * ====================================
+ * === getGlobalAvatarContentByName ===
+ * ====================================
+ */
 export const getGlobalAvatarContentByName = async (avatarName: string): Promise<BinaryContent> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const binaryContent: BinaryContent = await doInDbConnection(async (conn: Connection) => {
         const q1: QueryA  = await conn.query(`SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_AVATAR WHERE NAME = ?`,
             [avatarName]);
         if (q1.length > 0) { // have a global avatar
@@ -119,10 +167,22 @@ export const getGlobalAvatarContentByName = async (avatarName: string): Promise<
             return null;
         }
     });
+    fireEvent({
+       type: 'GetGlobalAvatarContentByNameEvent',
+       avatarName,
+       binaryContent 
+    } as GetGlobalAvatarContentByNameEvent);
+    return binaryContent;
 };
 
+
+/**
+ * ===========================
+ * === getAllGlobalAvatars ===
+ * ===========================
+ */
 export const getAllGlobalAvatars = async (): Promise<GlobalAvatar[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const globalAvatars: GlobalAvatar[] =  await doInDbConnection(async (conn: Connection) => {
 
         const q: QueryA = await conn.query(
             `SELECT ID, NAME, MIME_TYPE, SIZE FROM TBL_GLOBAL_AVATAR`);
@@ -139,4 +199,11 @@ export const getAllGlobalAvatars = async (): Promise<GlobalAvatar[]> => {
 
         return globalAvatar;
     });
+    
+    fireEvent({
+       type: 'GetAllGlobalAvatarsEvent',
+       globalAvatars 
+    } as GetAllGlobalAvatarsEvent);
+     
+    return globalAvatars;
 };

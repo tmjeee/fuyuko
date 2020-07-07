@@ -34,88 +34,17 @@ import {FileTypeResult} from "file-type";
 import {unzipFromBuffer, unzipFromPath} from "../../util/zip.util";
 import JSZip from "jszip";
 import {w} from "../../logger";
+import {fireEvent, ImportItemPreviewEvent} from "../event/event.service";
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
 
-
-const createNewItemValue = (a: Attribute, csvValueFormat: string) => {
-    const val: Value = { attributeId: a.id, val: undefined } as Value;
-    switch (a.type) {
-        case 'string': {
-            setItemStringValue(a, val, csvValueFormat);
-            break;
-        }
-        case 'text': {
-            setItemTextValue(a, val, csvValueFormat);
-            break;
-        }
-        case 'number': {
-            setItemNumberValue(a, val, Number(csvValueFormat));
-            break;
-        }
-        case 'date': {
-            setItemDateValue(a, val, csvValueFormat);
-            break;
-        }
-        case 'currency': {
-            setItemCurrencyValue(a, val, Number(csvValueFormat));
-            break;
-        }
-        case 'area': {
-            const s: string[] = csvValueFormat.split('|');
-            setItemAreaValue(a, val, Number(s[0]), s[1] as AreaUnits);
-            break;
-        }
-        case 'volume': {
-            const s: string[] = csvValueFormat.split('|');
-            setItemVolumeValue(a, val, Number(s[0]), s[1] as VolumeUnits);
-            break;
-        }
-        case 'dimension': {
-            const s: string[] = csvValueFormat.split('|');
-            setItemDimensionValue(a, val, Number(s[0]), Number(s[1]), Number(s[2]), s[3] as DimensionUnits);
-            break;
-        }
-        case 'width': {
-            const s: string[] = csvValueFormat.split('|');
-            setItemWidthValue(a, val, Number(s[0]), s[1] as WidthUnits);
-            break;
-        }
-        case 'height': {
-            const s: string[] = csvValueFormat.split('|');
-            setItemHeightValue(a, val, Number(s[0]), s[1] as HeightUnits);
-            break;
-        }
-        case 'length': {
-            const s: string[] = csvValueFormat.split('|');
-            setItemLengthValue(a, val, Number(s[0]), s[1] as LengthUnits);
-            break;
-        }
-        case 'weight': {
-            const s: string[] = csvValueFormat.split('|');
-            setItemWeightValue(a, val, Number(s[0]), s[1] as WeightUnits);
-            break;
-        }
-        case 'select': {
-            setItemSelectValue(a, val, csvValueFormat);
-            break;
-        }
-        case 'doubleselect': {
-            const s: string[] = csvValueFormat.split('|');
-            setItemDoubleSelectValue(a, val, s[0], s[1]);
-            break;
-        }
-    }
-    return val;
-}
-
-interface BufferInfo {
-    fileName: string;  // eg. file name of a csv or zip file
-    entryName: string; // eg. the path name in a zip file, else falsy
-    content: Buffer;   // the actual content
-}
-
-export const preview = async (viewId: number, itemDataCsvFile: File): Promise<{errors: string[], itemDataImport: ItemDataImport}> => {
+/**
+ * ==========================
+ * === preview ===
+ * ==========================
+ */
+export interface ImportItemPreviewResult { errors: string[], itemDataImport: ItemDataImport};
+export const preview = async (viewId: number, itemDataCsvFile: File): Promise<ImportItemPreviewResult> => {
     return await doInDbConnection(async (conn: Connection) => {
 
         const errors: string[] = [];
@@ -129,8 +58,6 @@ export const preview = async (viewId: number, itemDataCsvFile: File): Promise<{e
 
         let mimeType = undefined;
         let isZip = false;
-        console.log('***** itemDataCsvFile.path', itemDataCsvFile.path);
-        console.log('****** filetype', fileTypeResult);
         if (fileTypeResult && fileTypeResult.mime == 'application/zip') {
             mimeType = 'application/zip';
             isZip = true;
@@ -157,13 +84,10 @@ export const preview = async (viewId: number, itemDataCsvFile: File): Promise<{e
                 if (!file) { // file can be null
                     continue;
                 }
-                console.log('***** file', file);
                 const jszipObject: JSZip.JSZipObject = jszip.file(file);
                 if (jszipObject &&  !jszipObject.dir) {
-                    console.log('******** ', jszipObject);
                     const b: Buffer = await jszipObject.async('nodebuffer');
                     const ft: fileType.FileTypeResult = await fileType.fromBuffer(b);
-                    console.log('*** ft', ft);
                     if (ft && ft.mime.startsWith('image/')) { // image
                         // this is the image inside the zip
                         await conn.query(`INSERT INTO TBL_DATA_IMPORT_FILE (DATA_IMPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)`,
@@ -191,7 +115,14 @@ export const preview = async (viewId: number, itemDataCsvFile: File): Promise<{e
         }
 
         const itemDataImport: ItemDataImport = await _preview(viewId, dataImportId, csvBuffers);
-        return {errors, itemDataImport};
+        const r: ImportItemPreviewResult = {errors, itemDataImport};
+        
+        fireEvent({
+           type: "ImportItemPreviewEvent",
+           previewResult: r 
+        } as ImportItemPreviewEvent);
+        
+        return r;
     });
 }
 
@@ -346,4 +277,82 @@ const __preview = async (context: Context, bufferInfo: BufferInfo): Promise<Item
         }
     }
     return items;
+}
+
+const createNewItemValue = (a: Attribute, csvValueFormat: string) => {
+    const val: Value = { attributeId: a.id, val: undefined } as Value;
+    switch (a.type) {
+        case 'string': {
+            setItemStringValue(a, val, csvValueFormat);
+            break;
+        }
+        case 'text': {
+            setItemTextValue(a, val, csvValueFormat);
+            break;
+        }
+        case 'number': {
+            setItemNumberValue(a, val, Number(csvValueFormat));
+            break;
+        }
+        case 'date': {
+            setItemDateValue(a, val, csvValueFormat);
+            break;
+        }
+        case 'currency': {
+            setItemCurrencyValue(a, val, Number(csvValueFormat));
+            break;
+        }
+        case 'area': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemAreaValue(a, val, Number(s[0]), s[1] as AreaUnits);
+            break;
+        }
+        case 'volume': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemVolumeValue(a, val, Number(s[0]), s[1] as VolumeUnits);
+            break;
+        }
+        case 'dimension': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemDimensionValue(a, val, Number(s[0]), Number(s[1]), Number(s[2]), s[3] as DimensionUnits);
+            break;
+        }
+        case 'width': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemWidthValue(a, val, Number(s[0]), s[1] as WidthUnits);
+            break;
+        }
+        case 'height': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemHeightValue(a, val, Number(s[0]), s[1] as HeightUnits);
+            break;
+        }
+        case 'length': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemLengthValue(a, val, Number(s[0]), s[1] as LengthUnits);
+            break;
+        }
+        case 'weight': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemWeightValue(a, val, Number(s[0]), s[1] as WeightUnits);
+            break;
+        }
+        case 'select': {
+            setItemSelectValue(a, val, csvValueFormat);
+            break;
+        }
+        case 'doubleselect': {
+            const s: string[] = csvValueFormat.split('|');
+            setItemDoubleSelectValue(a, val, s[0], s[1]);
+            break;
+        }
+    }
+    return val;
+};
+
+
+interface BufferInfo {
+    fileName: string;  // eg. file name of a csv or zip file
+    entryName: string; // eg. the path name in a zip file, else falsy
+    content: Buffer;   // the actual content
 }

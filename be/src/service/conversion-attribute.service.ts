@@ -5,7 +5,8 @@ import {
 } from "../model/attribute.model";
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../server-side-model/server-side.model';
 import {DATE_FORMAT, NUMBER_FORMAT, SHOW_COUNTRY_CURRENCY} from "../model/item.model";
-import * as util from "util";
+
+
 
 export const attributesRevert = (attributes: Attribute[]) : Attribute2[]=> {
    return (attributes ? attributes.map(attributeRevert) : []);

@@ -1,7 +1,7 @@
 import {Attribute} from "../../model/attribute.model";
 import {Job} from "../../model/job.model";
 import {JobLogger, newJobLogger} from "../job-log.service";
-import {getJobyById} from "../job.service";
+import {getJobById} from "../job.service";
 import {Item, Value} from "../../model/item.model";
 import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
@@ -10,10 +10,15 @@ import JSON2CSVParser from "json2csv/JSON2CSVParser";
 import {convertToCsv} from "../../shared-utils/ui-item-value-converters.util";
 import {e} from '../../logger';
 import JSZip from 'jszip';
+import {ExportItemJobEvent, fireEvent} from "../event/event.service";
 
 const uuid = require('uuid');
 
-
+/**
+ * =========================
+ * === runJob ===
+ * =========================
+ */
 export const runJob = async (viewId: number, attributes: Attribute[], items: Item[]): Promise<Job> => {
 
     const uid = uuid();
@@ -23,6 +28,12 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
     const jobLogger: JobLogger = await newJobLogger(name, description);
 
     const zip = new JSZip();
+    
+    fireEvent({
+        type: "ExportItemJobEvent",
+        state: "Scheduled",
+        jobId: jobLogger.jobId
+    } as ExportItemJobEvent);
 
     (async ()=>{
         try {
@@ -90,15 +101,28 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
 
                 await jobLogger.logInfo(`Put entry into db (dataExportId = ${dataExportId}`);
             });
+
+            fireEvent({
+                type: "ExportItemJobEvent",
+                state: "Completed",
+                jobId: jobLogger.jobId
+            } as ExportItemJobEvent);
+            
             await jobLogger.updateProgress('COMPLETED');
         } catch(err) {
             e(err.toString(), err);
             await jobLogger.logError(`${err.toString()}`);
             await jobLogger.updateProgress("FAILED");
+
+            fireEvent({
+                type: "ExportItemJobEvent",
+                state: "Failed",
+                jobId: jobLogger.jobId
+            } as ExportItemJobEvent);
         } finally {
             await jobLogger.logInfo(`Done with ${name}`);
         }
     })();
 
-    return await getJobyById(jobLogger.jobId);
+    return await getJobById(jobLogger.jobId);
 }

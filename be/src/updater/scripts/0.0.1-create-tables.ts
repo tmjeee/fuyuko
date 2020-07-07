@@ -323,14 +323,14 @@ const TBL_AUDIT_LOG = async () => {
    await doInDbConnection(async (conn: Connection) => {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS TBL_AUDIT_LOG (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
+            ID BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
             CATEGORY VARCHAR(200) NOT NULL,
             LEVEL VARCHAR(200) NOT NULL,
             CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             REQUEST_UUID VARCHAR(200),
             USER_ID INT,
-            LOG TEXT
+            LOG LONGTEXT
          );
       `);
    })
