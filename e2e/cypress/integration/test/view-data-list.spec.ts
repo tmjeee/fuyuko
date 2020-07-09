@@ -2,7 +2,7 @@ import {LoginPage} from "../page-object/login.page";
 import {ViewDataListPage} from "../page-object/sub-page-object/view-data-list.page";
 
 
-describe.skip(`view-data-list spec`, () => {
+describe(`view-data-list spec`, () => {
 
     let viewDataListPage: ViewDataListPage;
 
@@ -39,13 +39,13 @@ describe.skip(`view-data-list spec`, () => {
         // cy.saveLocalStorage();
     });
 
-    it('should load', () => {
+    it.only('should load', () => {
         viewDataListPage
             .validateTitle()
         ;
     });
 
-    it('should expand and collapse panel', () => {
+    it.only('should expand and collapse panel', () => {
         const itemName  = `Item-2`;
         viewDataListPage
             .clickOnPanel(itemName)
@@ -69,7 +69,7 @@ describe.skip(`view-data-list spec`, () => {
 
     ///////////////////////////////////////
 
-    it('should not create item', () => {
+    it.skip('should not create item', () => {
         const itemName = `New-Item-${Math.random()}`;
         const itemDescription = `New-Item-Description-${Math.random()}`;
 
@@ -210,7 +210,7 @@ describe.skip(`view-data-list spec`, () => {
     });
 
 
-    it('should create item', () => {
+    it.skip('should create item', () => {
         const itemName = `New-Item-${Math.random()}`;
         const itemDescription = `New-Item-Description-${Math.random()}`;
 
@@ -355,7 +355,7 @@ describe.skip(`view-data-list spec`, () => {
     });
 
 
-    it('should edit item', () => {
+    it.skip('should edit item', () => {
 
         const itemName = `New-Item-${Math.random()}`;
         const newItemName=`New-New-Item-${Math.random()}`;
