@@ -2,7 +2,7 @@ import {LoginPage} from "../page-object/login.page";
 import {ViewDataListPage} from "../page-object/sub-page-object/view-data-list.page";
 
 
-describe(`view-data-list spec`, () => {
+describe.skip(`view-data-list spec`, () => {
 
     let viewDataListPage: ViewDataListPage;
 
