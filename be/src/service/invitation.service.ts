@@ -186,7 +186,7 @@ export const getInvitationByCode = async (code: string): Promise<Invitation> => 
         }
 
         const id: number = q1[0].ID;
-        const activated: boolean = q1[0].ACTIVATED;
+        const activated: boolean = !!q1[0].ACTIVATED;
         const email: string = q1[0].EMAIL;
         const creationDate: Date = q1[0].CREATION_DATE;
         const groupIds: number[] = q1.reduce((acc: number[], c: QueryI) => {

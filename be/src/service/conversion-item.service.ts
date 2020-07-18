@@ -13,6 +13,9 @@ export const itemsConvert = (item2s: Item2[]): Item[] => {
    return (item2s ? (item2s as []).map(itemConvert): []);
 }
 export const itemConvert =  (item2: Item2): Item => {
+    if (!!!item2) {
+        return null;
+    }
     const item: Item = {
         id: item2.id,
         parentId: item2.parentId,

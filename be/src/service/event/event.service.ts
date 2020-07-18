@@ -223,7 +223,6 @@ export type EventType =
     "GetItemsByIdsEvent" |
     "GetItemByIdEvent" |
     "GetItemByNameEvent" |
-    "FindChildrenItemsEvent" |
     "GetItemWithFilteringEvent" |
     "MarkItemImageAsPrimaryEvent" |
     "GetItemPrimaryImageEvent" |
@@ -389,7 +388,6 @@ export type AllEvents =
     GetItemsByIdsEvent |
     GetItemByIdEvent  |
     GetItemByNameEvent  |
-    FindChildrenItemsEvent  |
     GetItemWithFilteringEvent  |
     MarkItemImageAsPrimaryEvent  |
     GetItemPrimaryImageEvent  |
@@ -988,12 +986,6 @@ export interface GetItemByNameEvent extends Event {
     viewId: number, 
     itemName: string, 
     item: Item
-}
-export interface FindChildrenItemsEvent extends Event {
-    type: 'FindChildrenItemsEvent',
-    viewId: number, 
-    parentItemId: number, 
-    items: Item[]
 }
 export interface GetItemWithFilteringEvent extends Event {
     type: 'GetItemWithFilteringEvent',

@@ -15,7 +15,7 @@ import {ENABLED, Status} from "../model/status.model";
 import {
     AddFavouriteItemIdsEvent,
     AddItemEvent,
-    AddOrUpdateItemEvent, FindChildrenItemsEvent,
+    AddOrUpdateItemEvent, 
     fireEvent, GetAllFavouritedItemsInViewEvent,
     GetAllFavouriteItemIdsInViewEvent, GetAllItemsInViewEvent, GetItemByIdEvent, GetItemByNameEvent, GetItemsByIdsEvent,
     RemoveFavouriteItemIdsEvent,
@@ -242,7 +242,7 @@ export const updateItemValue = async (viewId: number, itemId: number, value: Val
        viewId, itemId, value 
     } as UpdateItemValueEvent);
 }
-export const updateItemValue2 = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
+const updateItemValue2 = async (viewId: number, itemId: number, itemValue: ItemValue2) => {
     await doInDbConnection(async (conn: Connection) => {
         const q0: QueryResponse = await conn.query(`DELETE FROM TBL_ITEM_VALUE WHERE ITEM_ID=? AND VIEW_ATTRIBUTE_ID=?`, [itemId, itemValue.attributeId]);
 
@@ -277,7 +277,7 @@ export const updateItem = async (viewId: number, item: Item): Promise<string[]> 
    
    return errors;
 }
-export const updateItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
+const updateItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
         return await _updateItem2(conn, viewId, item2);
     });
@@ -337,7 +337,7 @@ export const addItem = async (viewId: number, item: Item): Promise<string[]> => 
     
     return errors;
 }
-export const addItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
+const addItem2 = async (viewId: number, item2: Item2): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
         return await _addItem2(conn, viewId, item2);
     });
@@ -814,21 +814,14 @@ export const getItem2ByName = async (viewId: number, itemName: string): Promise<
     return (item2s && item2s.length > 0 ? item2s[0] : undefined);
 }
 
+////////////////////////////////////////////////////////////////////  ==== misc helpers ====
 
-// ===============================
-// === findChildrenItems(...) ===
-// ===============================
-
-export const findChildrenItems = async (viewId: number, parentItemId: number): Promise<Item[]> => {
+const findChildrenItems = async (viewId: number, parentItemId: number): Promise<Item[]> => {
    const item2s: Item2[] = await findChildrenItem2s(viewId, parentItemId);
    const items: Item[] = itemsConvert(item2s);
-   fireEvent({
-      type: "FindChildrenItemsEvent",
-      viewId, parentItemId, items 
-   } as FindChildrenItemsEvent);
    return items;
 }
-export const findChildrenItem2s = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
+const findChildrenItem2s = async (viewId: number, parentItemId: number): Promise<Item2[]> => {
 
     const item2s: Item2[] =  await doInDbConnection(async (conn: Connection) => {
 
@@ -883,7 +876,6 @@ export const findChildrenItem2s = async (viewId: number, parentItemId: number): 
 
 
 
-////////////////////////////////////////////////////////////////////  ==== misc helpers ====
 
 // work out the children in each item
 const w = async (viewId: number, item2s: Item2[]) => {

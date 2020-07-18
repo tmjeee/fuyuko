@@ -15,7 +15,7 @@ import {ExportPricePreviewEvent, fireEvent} from "../event/event.service";
 export type PreviewResult = { i: PricedItem[], m: Map<string /* attributeId */, Attribute>};
 export const preview = async (viewId: number, pricingStructureId: number, filter: ItemValueOperatorAndAttribute[]): Promise<PreviewResult> => {
     const {b: items, m: attributesMap}: {b: PricedItem[], m: Map<string /* attributeId */, Attribute> } = await doInDbConnection(async (conn: Connection) => {
-        return await getPricedItemsWithFiltering(conn, viewId, pricingStructureId, null, filter);
+        return await getPricedItemsWithFiltering(viewId, pricingStructureId, null, filter);
     });
 
     const r: PreviewResult = {

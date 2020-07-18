@@ -34,10 +34,21 @@ export const saveUserDashboardWidgetData = async (userId: number, d: SerializedD
             dashboardId = q[0].ID;
         }
         const serializedData: string = JSON.stringify(d.data);
-        const q3: QueryResponse = await conn.query(`INSERT INTO TBL_USER_DASHBOARD_WIDGET (USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA) VALUES(?,?,?,?)`,
-            [dashboardId, d.instanceId, d.typeId, serializedData]);
-        if (q3.affectedRows <= 0) {
-            errors.push(`Failed to insert dashboard widget data`)
+        const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER_DASHBOARD_WIDGET WHERE USER_DASHBOARD_ID = ? AND WIDGET_INSTANCE_ID =? AND WIDGET_TYPE_ID=?`,
+            [dashboardId, d.instanceId, d.typeId]);
+        const total = qq[0].COUNT;
+        if (total === 0) { // do not exists yet, do insert
+            const q3: QueryResponse = await conn.query(`INSERT INTO TBL_USER_DASHBOARD_WIDGET (USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA) VALUES(?,?,?,?)`,
+                [dashboardId, d.instanceId, d.typeId, serializedData]);
+            if (q3.affectedRows <= 0) {
+                errors.push(`Failed to insert dashboard widget data`)
+            }
+        } else { // already exists, do update
+            const r: QueryResponse = await conn.query(`UPDATE TBL_USER_DASHBOARD_WIDGET SET SERIALIZED_DATA = ? WHERE USER_DASHBOARD_ID=? AND WIDGET_INSTANCE_ID=? AND WIDGET_TYPE_ID=?`,
+                [serializedData, dashboardId, d.instanceId, d.typeId]);
+            if (r.affectedRows <= 0) {
+                errors.push(`Failed to update dashboard widget data`);
+            }
         }
         return errors;
     });

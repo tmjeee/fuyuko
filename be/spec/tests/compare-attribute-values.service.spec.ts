@@ -435,20 +435,20 @@ describe(`compare-attribute-values.service.spec`, () => {
         expect(compareDimension(1.1, 1.1, 1.1, 'm', 210, 110, 110, 'cm', 'not eq')).toBe(true);
     });
     it(`compareDimension gt`, () => {
-        expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.1, 'cm', 'gt')).toBe(false);
+        expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.0, 'cm', 'gt')).toBe(false);
         expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.2, 1.2, 1.2, 'cm', 'gt')).toBe(true);
-        expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.2, 'cm', 'gt')).toBe(false);
+        expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.2, 'cm', 'gt')).toBe(true);
         expect(compareDimension(1.1, 1.1, 1.1, 'm', 110, 110, 110, 'cm', 'gt')).toBe(false);
         expect(compareDimension(1.1, 1.1, 1.1, 'm', 210, 210, 210, 'cm', 'gt')).toBe(true);
-        expect(compareDimension(1.1, 1.1, 1.1, 'm', 210, 110, 110, 'cm', 'gt')).toBe(false);
+        expect(compareDimension(1.1, 1.1, 1.1, 'm', 210, 110, 110, 'cm', 'gt')).toBe(true);
     });
     it(`compareDimension not gt`, () => {
         expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.1, 'cm', 'not gt')).toBe(true);
         expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.2, 1.2, 1.2, 'cm', 'not gt')).toBe(false);
-        expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.2, 'cm', 'not gt')).toBe(true);
+        expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.2, 'cm', 'not gt')).toBe(false);
         expect(compareDimension(1.1, 1.1, 1.1, 'm', 110, 110, 110, 'cm', 'not gt')).toBe(true);
         expect(compareDimension(1.1, 1.1, 1.1, 'm', 210, 210, 210, 'cm', 'not gt')).toBe(false);
-        expect(compareDimension(1.1, 1.1, 1.1, 'm', 210, 110, 110, 'cm', 'not gt')).toBe(true);
+        expect(compareDimension(1.1, 1.1, 1.1, 'm', 210, 110, 110, 'cm', 'not gt')).toBe(false);
     });
     it(`compareDimension gte`, () => {
         expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.1, 'cm', 'gte')).toBe(true);
@@ -504,11 +504,11 @@ describe(`compare-attribute-values.service.spec`, () => {
         expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.1, 'cm', 'not lte')).toBe(false);
         expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.2, 1.2, 1.2, 'cm', 'not lte')).toBe(true);
         expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.1, 1.1, 1.2, 'cm', 'not lte')).toBe(true);
-        expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.0, 1.0, 1.0, 'cm', 'not lte')).toBe(false);
+        expect(compareDimension(1.1, 1.1, 1.1, 'cm', 1.0, 1.0, 1.0, 'cm', 'not lte')).toBe(true);
         expect(compareDimension(1.1, 1.1, 1.1, 'm', 110, 110, 110, 'cm', 'not lte')).toBe(false);
         expect(compareDimension(1.1, 1.1, 1.1, 'm', 210, 210, 210, 'cm', 'not lte')).toBe(true);
         expect(compareDimension(1.1, 1.1, 1.1, 'm', 210, 110, 110, 'cm', 'not lte')).toBe(true);
-        expect(compareDimension(1.1, 1.1, 1.1, 'm', 100, 100, 100, 'cm', 'not lte')).toBe(false);
+        expect(compareDimension(1.1, 1.1, 1.1, 'm', 100, 100, 100, 'cm', 'not lte')).toBe(true);
     });
 
 

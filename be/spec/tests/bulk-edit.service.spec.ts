@@ -42,7 +42,6 @@ describe('bulk-edit.service', () => {
   beforeAll(() => {
       setupTestDatabase();
   });
-
   beforeAll((done: DoneFn) => {
      setupBeforeAll(done);
   }, JASMINE_TIMEOUT);

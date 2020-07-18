@@ -1,7 +1,7 @@
 import {Connection} from "mariadb";
 import {ItemValueOperatorAndAttribute} from "../model/item-attribute.model";
 import {Attribute} from "../model/attribute.model";
-import {QueryA} from "../db";
+import {doInDbConnection, QueryA} from "../db";
 import {
     Attribute2,
     AttributeMetadata2,
@@ -97,10 +97,10 @@ const SQL: string = `
             PSI.PRICE AS PSI_PRICE
            
            FROM TBL_ITEM AS I
-           LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID
+           LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID 
+           LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID AND A.ID = V.VIEW_ATTRIBUTE_ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS AME ON AME.VIEW_ATTRIBUTE_METADATA_ID = AM.ID
-           LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA AS IM ON IM.ITEM_VALUE_ID = V.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
            LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
@@ -119,9 +119,17 @@ const SQL_WITH_PARAMETERIZED_PARENT = `${SQL} AND I.PARENT_ID = ? `;
  */
 export type PricedItem2sWithFilteringResult = {b: PricedItem2[], m: Map<string /* attributeId */, Attribute>};
 export type PricedItemsWithFilteringResult = {b: PricedItem[], m: Map<string /* attributeId */, Attribute>};
-export const getPricedItemsWithFiltering = async (conn: Connection,
-                                                  viewId: number,
-                                                  pricingStructureId: number,
+export const getPricedItemsWithFiltering = async ( viewId: number,
+                                                   pricingStructureId: number,
+                                                   parentItemId: number,
+                                                   whenClauses: ItemValueOperatorAndAttribute[]): Promise<PricedItemsWithFilteringResult> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        return _getPricedItemsWithFiltering(conn, viewId, pricingStructureId, parentItemId, whenClauses);
+    });
+}
+export const _getPricedItemsWithFiltering = async (conn: Connection,
+                                                   viewId: number,
+                                                   pricingStructureId: number,
                                                   parentItemId: number,
                                                   whenClauses: ItemValueOperatorAndAttribute[]):
     Promise<PricedItemsWithFilteringResult> => {
@@ -172,14 +180,14 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
         const pricingStructureItemId: number = i.PSI_ID;
 
         const iMapKey: string = `${itemId}`;
-        const itemValueMapKey: string = `${itemId}_${itemValueId}`;
-        const itemAttValueMetaMapKey: string = `${itemId}_${attributeId}_${metaId}`;
-        const itemAttValueMetaEntryMapKey: string = `${itemId}_${attributeId}_${metaId}_${entryId}`;
-        const itemImageMapKey: string = `${itemId}_${itemImageId}`;
-        const attributeMapKey: string = `${attributeId}`;
-        const attributeMetadataMapKey: string = `${attributeId}_${attributeMetadataId}`;
-        const attributeMetadataEntryMapKey: string = `${attributeId}_${attributeMetadataId}_${attributeMetadataEntryId}`;
-        const priceMapKey: string = `${pricingStructureItemId}_${itemId}`;
+        const itemValueMapKey: string = itemId && itemValueId ? `${itemId}_${itemValueId}` : undefined;
+        const itemAttValueMetaMapKey: string = metaId && itemValueId ? `${itemId}_${itemValueId}_${metaId}` : undefined;
+        const itemAttValueMetaEntryMapKey: string = entryId && itemValueId && metaId ? `${itemId}_${attributeId}_${metaId}_${entryId}` : undefined;
+        const itemImageMapKey: string = itemImageId && itemId ? `${itemId}_${itemImageId}` : undefined;
+        const attributeMapKey: string = attributeId ? `${attributeId}` : undefined;
+        const attributeMetadataMapKey: string = attributeId && attributeMetadataId ? `${attributeId}_${attributeMetadataId}` : undefined;
+        const attributeMetadataEntryMapKey: string = attributeId && attributeMetadataId && attributeMetadataEntryId ? `${attributeId}_${attributeMetadataId}_${attributeMetadataEntryId}` : undefined;
+        const priceMapKey: string = pricingStructureItemId && itemId ? `${pricingStructureItemId}_${itemId}` : undefined;
 
 
         if (!iMap.has(iMapKey)) {
@@ -201,7 +209,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
             item.children = b;
         }
 
-        if (!priceMap.has(priceMapKey)) {
+        if (priceMapKey && !priceMap.has(priceMapKey)) {
             const p = {
                 price: i.PSI_PRICE,
                 country: i.PSI_COUNTRY
@@ -211,18 +219,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
             iMap.get(iMapKey).country = p.country;
         }
 
-        if (!itemValueMap.has(itemValueMapKey)) {
-            const itemValue2: ItemValue2 = {
-                id: i.V_ID,
-                attributeId: i.V_VIEW_ATTRIBUTE_ID,
-                metadatas: []
-            } as ItemValue2;
-            itemValueMap.set(itemValueMapKey, itemValue2);
-            iMap.get(iMapKey).values.push(itemValue2);
-        }
-
-
-        if (!itemImageMap.has(itemImageMapKey)) {
+        if (itemImageMapKey && !itemImageMap.has(itemImageMapKey)) {
             const itemImage = {
                 id: i.IMG_ID,
                 name: i.IMG_NAME,
@@ -234,7 +231,19 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
             iMap.get(iMapKey).images.push(itemImage);
         }
 
-        if (!itemAttValueMetaMap.has(itemAttValueMetaMapKey)) {
+        if (itemValueMapKey && !itemValueMap.has(itemValueMapKey)) {
+            const itemValue2: ItemValue2 = {
+                id: i.V_ID,
+                attributeId: i.V_VIEW_ATTRIBUTE_ID,
+                metadatas: []
+            } as ItemValue2;
+            itemValueMap.set(itemValueMapKey, itemValue2);
+            iMap.get(iMapKey).values.push(itemValue2);
+        }
+
+
+
+        if (itemAttValueMetaMapKey && !itemAttValueMetaMap.has(itemAttValueMetaMapKey)) {
             const meta: ItemMetadata2 = {
                 id: i.IM_ID,
                 name: i.IM_NAME,
@@ -243,11 +252,10 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                 entries: []
             } as ItemMetadata2;
             itemAttValueMetaMap.set(itemAttValueMetaMapKey, meta);
-            // iMap.get(iMapKey).metadatas.push(meta);
             itemValueMap.get(itemValueMapKey).metadatas.push(meta);
         }
 
-        if (!itemAttValueMetaEntryMap.has(itemAttValueMetaEntryMapKey)) {
+        if (itemAttValueMetaEntryMapKey && !itemAttValueMetaEntryMap.has(itemAttValueMetaEntryMapKey)) {
             const entry: ItemMetadataEntry2 = {
                 id: i.IE_ID,
                 key: i.IE_KEY,
@@ -258,7 +266,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
             itemAttValueMetaMap.get(itemAttValueMetaMapKey).entries.push(entry);
         }
 
-        if (!attributeMap.has(attributeMapKey)) {
+        if (attributeMapKey && !attributeMap.has(attributeMapKey)) {
             const a = {
                 id: i.A_ID,
                 name: i.A_NAME,
@@ -271,7 +279,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
             attributeMap.set(attributeMapKey, a);
         }
 
-        if (!attributeMetadataMap.has(attributeMetadataMapKey)) {
+        if (attributeMetadataMapKey && !attributeMetadataMap.has(attributeMetadataMapKey)) {
             const m = {
                 id: i.AM_ID,
                 name: i.AM_NAME,
@@ -281,7 +289,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
             attributeMap.get(attributeMapKey).metadatas.push(m);
         }
 
-        if (!attributeMetadataEntryMap.has(attributeMetadataEntryMapKey)) {
+        if (attributeMetadataEntryMapKey && !attributeMetadataEntryMap.has(attributeMetadataEntryMapKey)) {
             const e = {
                 id: i.AME_ID,
                 key: i.AME_KEY,
@@ -308,7 +316,19 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
             const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;
 
-            for (const itemValue2 of b.values) {
+            for (const itemValue2 of b.values.length ? b.values : [{
+                                                            id: -1,
+                                                            attributeId: attribute.id,
+                                                            metadatas: [
+                                                                {
+                                                                    id: -1,
+                                                                    attributeId: attribute.id,
+                                                                    attributeType: attribute.type,
+                                                                    name: '',
+                                                                    entries: []
+                                                                } as ItemMetadata2
+                                                            ]
+                                                        } as ItemValue2]) {
                 const metas: ItemMetadata2[] = itemValue2.metadatas.filter((m: ItemMetadata2) => {
                     if (m.attributeId === attribute.id) {
                         switch (attribute.type) {

@@ -92,7 +92,6 @@ import {
     GetItemsByIdsEvent,
     GetItemByIdEvent,
     GetItemByNameEvent,
-    FindChildrenItemsEvent,
     GetItemWithFilteringEvent,
     MarkItemImageAsPrimaryEvent,
     GetItemPrimaryImageEvent,
@@ -532,10 +531,6 @@ const d: any = {
     },
     GetItemByNameEvent: async (evt: GetItemByNameEvent) => {
         const msg = `get item by itemName - ${evt.itemName}, result - ${JSON.stringify(evt.item)}`;
-        await auditLog(`${msg}`, 'USER');
-    },
-    FindChildrenItemsEvent: async (evt: FindChildrenItemsEvent) => {
-        const msg = `find children items, viewId - ${evt.viewId}, parentItemId - ${evt.parentItemId}, result - ${JSON.stringify(evt.items)}`;
         await auditLog(`${msg}`, 'USER');
     },
     GetItemWithFilteringEvent: async (evt: GetItemWithFilteringEvent) => {

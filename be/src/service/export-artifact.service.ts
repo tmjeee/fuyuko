@@ -57,7 +57,7 @@ export const deleteExportArtifactById = async (dataExportArtifactId: number): Pr
         const q: QueryResponse = await conn.query(`
                 DELETE FROM TBL_DATA_EXPORT WHERE ID=?
             `, [dataExportArtifactId]);
-        return (q.affectedRows);
+        return (q.affectedRows > 0);
     });
     fireEvent({
        type: "DeleteExportArtifactByIdEvent",

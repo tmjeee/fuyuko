@@ -462,7 +462,7 @@ export const getAllGroupsCount = async (): Promise<number> => {
                 FROM TBL_GROUP AS G
                 WHERE G.STATUS = 'ENABLED'
             `, []);
-        return qTotal;
+        return qTotal[0].COUNT;
     });
 };
 

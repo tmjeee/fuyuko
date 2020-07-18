@@ -56,7 +56,7 @@ import {ActivateInvitationResult, createInvitation, activateInvitation, getInvit
 import {getAllItemsInViewCount, searchForItemsInViewCount, getAllFavouriteItemsInViewCount, searchForFavouriteItemsInViewCount,
         getAllFavouriteItem2sInView, searchForFavouriteItem2sInView, removeFavouriteItemIds, addFavouriteItemIds,
         getAllFavouriteItemIdsInView, getAllFavouriteItemsInView, getItemByName, getItemsByIdsCount, updateItemValue,
-        updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, findChildrenItems, getAllItemsInView,
+        updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, getAllItemsInView,
         searchForFavouriteItemsInView, updateItem, getItemsByIds} from './item.service';
 import {ItemWithFilteringResult, Item2WithFilteringResult, getItem2WithFiltering, getItemWithFiltering} from './item-filtering.service';
 import {addItemImage, markItemImageAsPrimary, getItemPrimaryImage, getItemImageContent, deleteItemImage} from './item-image.service';
@@ -98,7 +98,7 @@ import {eventsAsObservable, fireEvent, EventType, AllEvents, IncomingHttpEvent, 
     ChangeUserStatusEvent, CreateInvitationEvent, CreateJwtTokenEvent, DecodeJwtTokenEvent, DeleteCategoryEvent, DeleteCustomRulesEvent,
     DeleteExportArtifactByIdEvent, DeleteGroupEvent, DeleteItemImageEvent, DeleteSelfRegistrationEvent, DeleteUserEvent,
     DeleteUserFromGroupEvent, DeleteValidationResultEvent, DeleteViewEvent, ExportAttributeJobEvent, ExportAttributePreviewEvent,
-    ExportItemJobEvent, ExportItemPreviewEvent, ExportPriceJobEvent, ExportPricePreviewEvent, FindChildrenItemsEvent,
+    ExportItemJobEvent, ExportItemPreviewEvent, ExportPriceJobEvent, ExportPricePreviewEvent, 
     ForgotPasswordEvent, GetAllCustomBulkEditsEvent, GetAllCustomExportsEvent, GetAllCustomImportsEvent, GetAllCustomRulesEvent,
     GetAllCustomRulesForViewEvent, GetAllExportArtifactsEvent, GetAllFavouritedItemsInViewEvent, GetAllFavouriteItemIdsInViewEvent,
     GetAllGlobalAvatarsEvent, GetAllGroupsEvent, GetAllItemsInViewEvent, GetAllJobsEvent, GetAllPricingStructureItemsWithPriceEvent,
@@ -214,7 +214,7 @@ export {
     getAllItemsInViewCount, searchForItemsInViewCount, getAllFavouriteItemsInViewCount, searchForFavouriteItemsInViewCount,
     getAllFavouriteItem2sInView, searchForFavouriteItem2sInView, removeFavouriteItemIds, addFavouriteItemIds,
     getAllFavouriteItemIdsInView, getAllFavouriteItemsInView, getItemByName, getItemsByIdsCount, updateItemValue,
-    updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, findChildrenItems, getAllItemsInView,
+    updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, getAllItemsInView,
     searchForFavouriteItemsInView, updateItem, getItemsByIds,
 
     // item-filtering.service
@@ -295,7 +295,7 @@ export {
     ChangeUserStatusEvent, CreateInvitationEvent, CreateJwtTokenEvent, DecodeJwtTokenEvent, DeleteCategoryEvent, DeleteCustomRulesEvent,
     DeleteExportArtifactByIdEvent, DeleteGroupEvent, DeleteItemImageEvent, DeleteSelfRegistrationEvent, DeleteUserEvent,
     DeleteUserFromGroupEvent, DeleteValidationResultEvent, DeleteViewEvent, ExportAttributeJobEvent, ExportAttributePreviewEvent,
-    ExportItemJobEvent, ExportItemPreviewEvent, ExportPriceJobEvent, ExportPricePreviewEvent, FindChildrenItemsEvent,
+    ExportItemJobEvent, ExportItemPreviewEvent, ExportPriceJobEvent, ExportPricePreviewEvent, 
     ForgotPasswordEvent, GetAllCustomBulkEditsEvent, GetAllCustomExportsEvent, GetAllCustomImportsEvent, GetAllCustomRulesEvent,
     GetAllCustomRulesForViewEvent, GetAllExportArtifactsEvent, GetAllFavouritedItemsInViewEvent, GetAllFavouriteItemIdsInViewEvent,
     GetAllGlobalAvatarsEvent, GetAllGroupsEvent, GetAllItemsInViewEvent, GetAllJobsEvent, GetAllPricingStructureItemsWithPriceEvent,
