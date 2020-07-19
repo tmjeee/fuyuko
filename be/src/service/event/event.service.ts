@@ -61,6 +61,7 @@ import * as path from "path";
 import * as fs from "fs";
 import * as util from "util";
 import {i, w} from "../../logger";
+import * as semver from "semver";
 
 // ======= SYSTEM =================
 
@@ -93,7 +94,7 @@ const regs: EventSubscriptionRegistry[] = [];
 export const registerEventsSubscription = async () => {
     const dir: string = path.join(__dirname, 'custom-events-subscription');
     const dirEntries: string[] = await util.promisify(fs.readdir)(dir);
-    for (const dirEntry of dirEntries) {
+    for (const dirEntry of dirEntries.sort((f1: string, f2: string) => semver.compare(f1, f2))) {
        const filePath = path.join(dir, dirEntry);
        const stats: fs.Stats = await util.promisify(fs.stat)(filePath);
        if (stats.isFile() && dirEntry.endsWith('.js')) {

@@ -337,7 +337,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                                 const v1: string = (value ? (value.val as StringValue).value : null); // from rest API
-                                const v2: string = eValue.value; // actual item attribute value
+                                const v2: string = eValue ? eValue.value : null; // actual item attribute value
 
                                 return compareString(v1, v2, operator);
                             }
@@ -345,7 +345,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                                 const v1: string = (value ? (value.val as TextValue).value : null); // from rest api
-                                const v2: string = eValue.value; // from actual item attribute value
+                                const v2: string = eValue ? eValue.value : null; // from actual item attribute value
 
                                 return compareString(v1, v2, operator);
                             }
@@ -353,7 +353,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                                 const v1: number = (value ? (value.val as NumberValue).value : null);
-                                const v2: number = Number(eValue.value);
+                                const v2: number = eValue ? Number(eValue.value) : null;
 
                                 return compareNumber(v1, v2, operator);
                             }
@@ -364,8 +364,8 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as AreaValue).value : null);
                                 const u1: AreaUnits = (value ? (value.val as AreaValue).unit : null);
 
-                                const v2: number = Number((eValue.value));
-                                const u2: AreaUnits = (eUnit.value) as AreaUnits;
+                                const v2: number = eValue ? Number((eValue.value)): null;
+                                const u2: AreaUnits = eUnit ? (eUnit.value) as AreaUnits : null;
 
                                 const vv1: number = convertToCm2(v1, u1);
                                 const vv2: number = convertToCm2(v2, u2);
@@ -376,7 +376,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                                 const v1: number = (value ? (value.val as CurrencyValue).value : null);
-                                const v2: number = Number(eValue.value);
+                                const v2: number = eValue ? Number(eValue.value) : null;
 
                                 return compareNumber(v1, v2, operator);
                             }
@@ -400,10 +400,10 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const l1: number = (value ? ((value.val) as DimensionValue).length : null);
                                 const u1: DimensionUnits = (value ? ((value.val) as DimensionValue).unit : null);
 
-                                const h2: number = Number(eH.value);
-                                const w2: number = Number(eW.value);
-                                const l2: number = Number(eL.value);
-                                const u2: DimensionUnits = (eU.value) as DimensionUnits;
+                                const h2: number = eH ? Number(eH.value) : null;
+                                const w2: number = eW ? Number(eW.value) : null;
+                                const l2: number = eL ? Number(eL.value) : null;
+                                const u2: DimensionUnits = eU ? (eU.value) as DimensionUnits : null;
 
                                 const hh1: number = convertToCm(h1, u1);
                                 const ww1: number = convertToCm(w1, u1);
@@ -422,8 +422,8 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as HeightValue).value : null);
                                 const u1: HeightUnits = (value ? (value.val as HeightValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: HeightUnits = eU.value as HeightUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: HeightUnits = eU ? eU.value as HeightUnits : null;
 
                                 const vv1: number = convertToCm(v1, u1);
                                 const vv2: number = convertToCm(v2, u2);
@@ -437,8 +437,8 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as WeightValue).value : null);
                                 const u1: WeightUnits = (value ? (value.val as WeightValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: WeightUnits = eU.value as WeightUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: WeightUnits = eU ? eU.value as WeightUnits : null;
 
                                 const vv1: number = convertToG(v1, u1);
                                 const vv2: number = convertToG(v2, u2);
@@ -452,8 +452,8 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as LengthValue).value : null);
                                 const u1: LengthUnits = (value ? (value.val as LengthValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: LengthUnits = eU.value as LengthUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: LengthUnits = eU ? eU.value as LengthUnits : null;
 
                                 const vv1: number = convertToCm(v1, u1);
                                 const vv2: number = convertToCm(v2, u2);
@@ -467,8 +467,8 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as VolumeValue).value : null);
                                 const u1: VolumeUnits = (value ? (value.val as VolumeValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: VolumeUnits = eU.value as VolumeUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: VolumeUnits = eU ? eU.value as VolumeUnits : null;
 
                                 const vv1: number = convertToMl(v1, u1);
                                 const vv2: number = convertToMl(v2, u2);
@@ -482,8 +482,8 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as WidthValue).value : null);
                                 const u1: WidthUnits = (value ? (value.val as WidthValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: WidthUnits = eU.value as WidthUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: WidthUnits = eU ? eU.value as WidthUnits : null;
 
                                 const vv1: number = convertToCm(v1, u1);
                                 const vv2: number = convertToCm(v2, u2);
@@ -495,7 +495,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const eK: ItemMetadataEntry2 = findEntry(m.entries, 'key');
 
                                 const k1: string = (value ? (value.val as SelectValue).key : null);
-                                const k2: string = eK.value;
+                                const k2: string = eK ? eK.value : null;
 
                                 return compareString(k1, k2, operator);
                             }
@@ -505,8 +505,8 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
 
                                 const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null);
                                 const kTwo1: string = (value ? (value.val as DoubleSelectValue).key2 : null);
-                                const kOne2: string = eOne.value;
-                                const kTwo2: string = eTwo.value;
+                                const kOne2: string = eOne ? eOne.value : null;
+                                const kTwo2: string = eTwo ? eTwo.value : null;
 
                                 return (compareString(kOne1, kOne2, operator) && compareString(kTwo1, kTwo2, operator));
                             }
