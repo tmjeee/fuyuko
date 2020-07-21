@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import {TestBed, async, ComponentFixture} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import {AppMaterialsModule} from './app-materials.module';
@@ -8,7 +8,11 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-describe('AppComponent', () => {
+describe('AppComoponent', () => {
+
+  let fixture: ComponentFixture<AppComponent>;
+  let component: AppComponent;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -30,10 +34,13 @@ describe('AppComponent', () => {
           NotificationsService,
       ]
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   }));
 
   it('should create', () => {
-    const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeDefined();
   });

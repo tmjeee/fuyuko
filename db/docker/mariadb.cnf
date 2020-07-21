@@ -4,6 +4,7 @@
 [client]
 # Default is Latin1, if you need UTF-8 set this (also in server section)
 default-character-set = utf8
+protocol=tcp
 
 [mysqld]
 #
@@ -15,6 +16,6 @@ character-set-server = utf8
 collation-server = utf8_general_ci
 character_set_server = utf8
 collation_server = utf8_general_ci
-!includedir /etc/mysql/mariadb.conf.d/
 max_allowed_packet=1000M
 net_buffer_length=100M
+

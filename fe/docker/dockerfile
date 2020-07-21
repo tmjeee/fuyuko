@@ -4,11 +4,14 @@ FROM nginx
 COPY dist/fuyuko /usr/share/nginx/html
 COPY docker/conf /etc/nginx
 COPY docker-start-cmd.sh .
+COPY docker-wait-for-be.sh .
 
 RUN apt -y update && \
     apt -y install apt-utils && \
     apt -y install vim && \
+    apt -y install curl && \
     chmod u+x docker-start-cmd.sh && \
+    chmod u+x docker-wait-for-be.sh && \
     set -o vi
 
 VOLUME /usr/share/nginx/html

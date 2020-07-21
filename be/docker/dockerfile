@@ -1,18 +1,22 @@
 
 FROM node:12
 
+ENV DEBIAN_FRONTEND noninteractive
+
 WORKDIR /usr/src/fuyuko
 
-COPY package*.json ./
-COPY docker-start-cmd.sh .
-
+COPY ./package*.json ./
+COPY ./docker-start-cmd.sh ./
+COPY ./docker-wait-for-db.sh ./
 COPY . .
 
 RUN apt -y update && \
     apt -y install apt-utils && \
     apt -y install vim && \
+    apt -y install mariadb-client-10.1 && \
     npm install && \
     chmod u+x docker-start-cmd.sh && \
+    chmod u+x docker-wait-for-db.sh && \
     set -o vi
 
 EXPOSE 8888
