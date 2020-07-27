@@ -1,6 +1,6 @@
 import {Subject, Subscription, Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {Request} from 'express';
+import {Request, Router} from 'express';
 import {auditLogInfo} from "../audit.service";
 import {BulkEditPackage} from "../../model/bulk-edit.model";
 import {Attribute} from "../../model/attribute.model";
@@ -62,12 +62,16 @@ import * as fs from "fs";
 import * as util from "util";
 import {i, w} from "../../logger";
 import * as semver from "semver";
+import {Registry} from "../../registry";
 
 // ======= SYSTEM =================
 
-export const newEventSubscriptionRegistry = (d: any, name: string) => {
+export const newEventSubscriptionRegistry = (d: any, name: string, setupFn?: (v1AppRouter: Router, registry: Registry) => Promise<void>): EventSubscriptionRegistry => {
     return {
-        initEvent(observable: Observable<AllEvents>): void {
+        async initEvent(observable: Observable<AllEvents>, v1AppRouter: Router, registry: Registry): Promise<void> {
+            if (setupFn) {
+                await setupFn(v1AppRouter, registry);
+            }
             d.subscription = observable.pipe(
                 tap(async (e: AllEvents) => {
                     const fn: Function = d[e.type];
@@ -81,17 +85,17 @@ export const newEventSubscriptionRegistry = (d: any, name: string) => {
                 })
             ).subscribe();
         },
-        destroyEvent(): void {
+        async destroyEvent(): Promise<void> {
             d.subscription && d.subscription.unsubscribe();
         }
-    };
+    } as EventSubscriptionRegistry;
 }
 
 
 
 
 const regs: EventSubscriptionRegistry[] = [];
-export const registerEventsSubscription = async () => {
+export const registerEventsSubscription = async (v1AppRouter: Router, registry: Registry) => {
     const dir: string = path.join(__dirname, 'custom-events-subscription');
     const dirEntries: string[] = await util.promisify(fs.readdir)(dir);
     for (const dirEntry of dirEntries.sort((f1: string, f2: string) => semver.compare(f1, f2))) {
@@ -101,7 +105,7 @@ export const registerEventsSubscription = async () => {
            i(`importing event subscription registry file ${filePath}`);
            const reg: {default: EventSubscriptionRegistry} = await import(filePath);
            if (reg.default) {
-               reg.default.initEvent(eventsAsObservable());
+               await reg.default.initEvent(eventsAsObservable(), v1AppRouter, registry);
                regs.push(reg.default);
            } else {
                w(`Event subscription registratio in ${filePath} is missing a default export`);
@@ -110,15 +114,15 @@ export const registerEventsSubscription = async () => {
     }
 };
 
-export const destroyEventsSubscription = () => {
+export const destroyEventsSubscription = async () => {
     for (const reg of regs) {
-        reg.destroyEvent();
+        await reg.destroyEvent();
     }
 };
 
 export interface EventSubscriptionRegistry {
-    initEvent(observable: Observable<AllEvents>): void;
-    destroyEvent(): void;
+    initEvent(observable: Observable<AllEvents>, v1AppRouter: Router, registry: Registry): Promise<void>;
+    destroyEvent(): Promise<void>;
 }
 
 const events = new Subject<AllEvents>();

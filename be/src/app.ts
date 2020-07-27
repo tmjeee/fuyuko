@@ -54,7 +54,7 @@ app.all('*',  auditMiddlewareFn);
 const registry: Registry = Registry.newRegistry('api');
 const apiRouter: Router = express.Router();
 app.use('/api', apiRouter);
-registerV1AppRouter(apiRouter, registry);
+const v1AppRouter = registerV1AppRouter(apiRouter, registry);
 i('URL Mappings :-\n' + registry.print({indent: 2, text: ''}).text);
 
 export type PromiseFn = () => Promise<any>;
@@ -106,7 +106,7 @@ const fns: PromiseFn[] = [
 
     () => {
         i(`registrying global event subscription`);
-        return registerEventsSubscription().then((_: any) => {
+        return registerEventsSubscription(v1AppRouter, registry).then((_: any) => {
             i(`done with global event subscription`);
         });
     },
@@ -128,8 +128,8 @@ fns.reduce((p: Promise<any>, fn: PromiseFn) => {
     return p.then(_ => fn())
 }, Promise.resolve());
 
-process.on('exit', () => {
-    destroyEventsSubscription();
+process.on('exit', async () => {
+    await destroyEventsSubscription();
     i(`Fuyuko proces exit`);
 });
 process.on('uncaughtException', (e) => {

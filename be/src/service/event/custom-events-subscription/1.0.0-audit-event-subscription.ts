@@ -168,6 +168,8 @@ import {
     AddOrUpdateViewsEvent
 } from "../event.service";
 import {BulkEditItem, BulkEditPackage} from "../../../model/bulk-edit.model";
+import {Router} from "express";
+import {Registry} from "../../../registry";
 
 
 const d: any = {
@@ -835,6 +837,10 @@ const d: any = {
     }
 };
 
-const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `sample-event-subscription`);
+const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `sample-event-subscription`, 
+    (v1AppRouter: Router, registry: Registry): Promise<void> => {
+        return null
+    }
+);
 export default s;
 

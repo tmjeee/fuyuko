@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -12,6 +12,9 @@ import {ClockWidgetComponent} from './widgets/clock-widget/clock-widget.componen
 import {WeatherWidgetComponent} from './widgets/weather-widget/weather-widget.component';
 import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 import {StockTradingWidgetComponent} from "./widgets/stock-trading-widget/stock-trading-widget.component";
+import {MostActiveUsersWidgetComponent} from "./widgets/most-active-users-widget/most-active-users-widget.component";
+import {UserVisitsInsightWidgetComponent} from "./widgets/user-visits-insight-widget/user-visits-insight-widget.component";
+import {GoogleChartsModule} from "angular-google-charts";
 
 @NgModule({
     imports: [
@@ -24,6 +27,7 @@ import {StockTradingWidgetComponent} from "./widgets/stock-trading-widget/stock-
         FlexLayoutModule,
         JobsModule,
         SharedComponentUtilsModule,
+        GoogleChartsModule,
     ],
     declarations: [
         DashboardComponent,
@@ -33,6 +37,8 @@ import {StockTradingWidgetComponent} from "./widgets/stock-trading-widget/stock-
         ClockWidgetComponent,
         WeatherWidgetComponent,
         StockTradingWidgetComponent,
+        MostActiveUsersWidgetComponent,
+        UserVisitsInsightWidgetComponent,
     ],
     exports: [
         DashboardComponent,
@@ -42,11 +48,15 @@ import {StockTradingWidgetComponent} from "./widgets/stock-trading-widget/stock-
         ClockWidgetComponent,
         WeatherWidgetComponent,
         StockTradingWidgetComponent,
+        MostActiveUsersWidgetComponent,
+        UserVisitsInsightWidgetComponent,
     ],
     entryComponents: [
         ClockWidgetComponent,
         WeatherWidgetComponent,
         StockTradingWidgetComponent,
-    ]
+        MostActiveUsersWidgetComponent,
+        UserVisitsInsightWidgetComponent,
+    ],
 })
 export class DashboardModule {}

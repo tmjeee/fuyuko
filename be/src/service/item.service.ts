@@ -936,9 +936,9 @@ const _doQ = (q: QueryA): Item2[] => {
             const img: ItemImage = {
                 id: imageId,
                 name: c.IMG_NAME,
-                mimeType: c.IMG_MIMETYPE,
+                mimeType: c.IMG_MIME_TYPE,
                 size: c.IMG_SIZE,
-                primary: c.IMG_PRIMARY,
+                primary: !!c.IMG_PRIMARY,
             } as ItemImage;
             imgMap.set(imgMapKey, img);
             const item: Item2 = itemMap.get(itemMapKey);

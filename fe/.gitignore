@@ -4,5 +4,5 @@ node_modules/
 dist/
 out-tsc/
 
-src/app/model/
-src/app/shared-utils/
+projects/fuyuko/src/app/model/
+projects/fuyuko/src/app/shared-utils/

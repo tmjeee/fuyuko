@@ -32,7 +32,7 @@ import {
 } from "../model/unit.model";
 import moment from "moment";
 import {
-    compareDate,
+    compareDate, compareDimension,
     compareNumber,
     compareString,
     convertToCm,
@@ -385,7 +385,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const format = attribute.format ? attribute.format : DATE_FORMAT;
 
                                 const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
-                                const v2: moment.Moment = (eValue.value ? moment(eValue.value, format) : undefined);
+                                const v2: moment.Moment = eValue ? (eValue.value ? moment(eValue.value, format) : undefined) : undefined;
 
                                 return compareDate(v1, v2, operator);
                             }
@@ -405,15 +405,7 @@ export const getPricedItem2sWithFiltering = async (conn: Connection,
                                 const l2: number = eL ? Number(eL.value) : null;
                                 const u2: DimensionUnits = eU ? (eU.value) as DimensionUnits : null;
 
-                                const hh1: number = convertToCm(h1, u1);
-                                const ww1: number = convertToCm(w1, u1);
-                                const ll1: number = convertToCm(l1, u1);
-
-                                const hh2: number = convertToCm(h2, u2);
-                                const ww2: number = convertToCm(w2, u2);
-                                const ll2: number = convertToCm(l2, u2);
-
-                                return (compareNumber(hh1, hh2, operator) && compareNumber(ww1, ww2, operator) && compareNumber(ll1, ll2, operator));
+                                return compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
                             }
                             case "height": {
                                 const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');

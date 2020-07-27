@@ -1,0 +1,24 @@
+
+<div class="user-visits-insight-widget">
+    <div fxLayout="column">
+        <div fxFlex>
+            <mat-form-field>
+                <mat-label>Period</mat-label>
+                <mat-select [value]="period" (selectionChange)="onPeriodChange($event)">
+                    <mat-option *ngFor="let period of ['daily', 'weekly', 'monthly', 'yearly']" [value]="period">{{period}}</mat-option>
+                </mat-select>
+                <mat-hint>Select a period</mat-hint>
+            </mat-form-field>
+        </div>
+        <div fxFlex>
+
+            <google-chart
+               [type]="type"
+               [data]="data"
+               [options]="options">
+            </google-chart>
+
+        </div>
+    </div>
+
+</div>

@@ -151,7 +151,7 @@ import registerGetSearchForFavouriteItemsInViewRoute from './GET-search-for-favo
 const v1AppRouter:Router  = express.Router();
 
 
-const reg = (router: Router, regi: Registry) => {
+const reg = (router: Router, regi: Registry): Router => {
     const p = '/v1';
     const registry = regi.newRegistry(p);
     router.use(p, v1AppRouter);
@@ -302,6 +302,8 @@ const reg = (router: Router, regi: Registry) => {
     registerPostAddFavouriteItemsRoute(v1AppRouter, registry);
     registerDeleteFavouriteItemsRoute(v1AppRouter, registry);
     registerGetSearchForFavouriteItemsInViewRoute(v1AppRouter, registry);
+    
+    return v1AppRouter;
 };
 
 
