@@ -19,7 +19,7 @@ It allows management of product (name, description, attributes, pricing etc.) in
 * simple & intuitive
 * build off popular, proven tech ([Typescript](https://typescriptlang.com), [NodeJS](https://nodejs.org), [Angular10+](https://angular.io))
 * plays well with [Kubernetes](https://k8s.io)
-* [dockerizable](https://docker.com) 
+* [dockerizable](https://docker.com) and [docker-composable](https://docs.docker.com/compose/)
 * open source (LGPL v3)
 * no breaking the bank while managing your product data effectively
 
