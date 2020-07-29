@@ -90,7 +90,7 @@ export const scheduleValidation = async (viewId: number, name: string, descripti
 export const runValidation = async (viewId: number, validationId: number) => {
     try {
        await doInDbConnection(async (conn: Connection) => {
-            await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=? WHERE ID=?`, ['IN_PROGRESS', validationId]);
+            await conn.query(`UPDATE TBL_VIEW_VALIDATION SET PROGRESS=?, TOTAL_ITEMS=0 WHERE ID=?`, ['IN_PROGRESS', validationId]);
        });
 
         await _runPredefinedRulesValidation(viewId, validationId);
@@ -189,6 +189,12 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
 
 
     for (const item of items) {
+
+        await doInDbConnection(async (conn: Connection) => {
+            await conn.query(`UPDATE TBL_VIEW_VALIDATION SET TOTAL_ITEMS=? WHERE ID=?`, [items.length, validationId]);
+        });
+
+
         currentContext.item = item;
         for (const rule of rules) {
             currentContext.rule = rule;
@@ -278,8 +284,8 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
                         // insert error messages
                         for (const msg of currentContext.errornousMessages) {
                             const qry2: QueryResponse = await conn.query(`
-                                INSERT INTO TBL_VIEW_VALIDATION_ERROR (VIEW_VALIDATION_ID, RULE_ID, ITEM_ID, VIEW_ATTRIBUTE_ID, MESSAGE) VALUES (?,?,?,?,?)
-                            `, [validationId, msg.rule.id, msg.item.id, msg.attribute.id, msg.message]);
+                                INSERT INTO TBL_VIEW_VALIDATION_ERROR (VIEW_VALIDATION_ID, RULE_ID, ITEM_ID, VIEW_ATTRIBUTE_ID, MESSAGE, LEVEL) VALUES (?,?,?,?,?,?)
+                            `, [validationId, msg.rule.id, msg.item.id, msg.attribute.id, msg.message, rule.level]);
                         }
                     });
                 }

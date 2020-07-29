@@ -2,6 +2,7 @@
 import {ItemImage, ItemValTypes, Value} from "../model/item.model";
 import {AttributeType} from "../model/attribute.model";
 import {OperatorType} from "../model/operator.model";
+import {RuleLevel} from "../model/rule.model";
 
 
 
@@ -111,6 +112,7 @@ export interface Rule2 {
     name: string;
     status: string;
     description: string;
+    level: RuleLevel;
     validateClauses: ValidateClause2[];
     whenClauses: WhenClause2[];
 }

@@ -3,7 +3,7 @@ import {Registry} from "../../registry";
 import {check} from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
-import {getRule2} from "../../service/rule.service";
+import {getRule, getRule2} from "../../service/rule.service";
 import {Rule2} from "../../server-side-model/server-side.model";
 import {Rule} from "../../model/rule.model";
 import {rulesConvert} from "../../service/conversion-rule.service";
@@ -25,8 +25,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const ruleId: number = Number(req.params.ruleId);
 
-        const r2: Rule2 = await getRule2(viewId, ruleId);
-        const [r]: Rule[] = rulesConvert([r2]);
+        const r: Rule = await getRule(viewId, ruleId);
 
         res.status(200).json({
             status: 'SUCCESS',

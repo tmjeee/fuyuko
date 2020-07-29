@@ -92,6 +92,7 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                         id: -1,
                         name: '',
                         status: null,
+                        level: null,
                         description: '',
                         validateClauses: [{
                            id: -1,

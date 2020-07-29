@@ -18,7 +18,10 @@
             <div class="description">
               {{rule.description}}
             </div>
-            <div class="controls">
+          <div class="level">
+            Rule Level: {{rule.level}}
+          </div>
+          <div class="controls">
               <button type="button" [attr.test-icon-remove-rule]="rule.name" mat-icon-button color="primary" (click)="onDeleteRule($event, rule)" matTooltip="Delete Rule"><mat-icon>delete_outline</mat-icon></button>
               <button type="button" [attr.test-icon-enable-rule]="rule.name" mat-icon-button color="primary" *ngIf="isDisabled(rule)" (click)="onEnableRule($event, rule)" matTooltip="Enable Rule"><mat-icon>add_circle_outline</mat-icon></button>
               <button type="button" [attr.test-icon-disable-rule]="rule.name" mat-icon-button color="primary" *ngIf="isEnabled(rule)" (click)="onDisableRule($event, rule)" matTooltip="Disable Rule"><mat-icon>remove_circle_outline</mat-icon></button>

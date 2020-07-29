@@ -23,6 +23,7 @@ const SQL_1 = `
       R.ID AS R_ID,
       R.VIEW_ID AS R_VIEW_ID,
       R.NAME AS R_NAME,
+      R.LEVEL AS R_LEVEL,
       R.DESCRIPTION AS R_DESCRIPTION,
       R.STATUS AS R_STATUS,
       
@@ -108,7 +109,7 @@ const _ruleAdd = async (conn: Connection, viewId: number, rule2: Rule2) => {
         }
 
 
-        const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,'ENABLED')`, [viewId, rule2.name, rule2.description]);
+        const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS, LEVEL) VALUES (?,?,?,'ENABLED',?)`, [viewId, rule2.name, rule2.description, rule2.level]);
         const ruleId: number = rq.insertId;
 
         for (const validateClause of rule2.validateClauses) {
@@ -156,7 +157,7 @@ const _ruleUpdate = async (conn: Connection, viewId: number, rule2: Rule2) => {
             return;
         }
 
-        await conn.query(`UPDATE TBL_RULE SET NAME=?, DESCRIPTION=? WHERE ID=?`, [rule2.name, rule2.description, ruleId]);
+        await conn.query(`UPDATE TBL_RULE SET NAME=?, DESCRIPTION=?, LEVEL=? WHERE ID=?`, [rule2.name, rule2.description, rule2.level, ruleId]);
 
         await conn.query(`DELETE FROM TBL_RULE_VALIDATE_CLAUSE WHERE RULE_ID=?`, [ruleId]);
 
@@ -281,6 +282,7 @@ export const p = (q: QueryA): Rule2[] => {
                 name: i.R_NAME,
                 description: i.R_DESCRIPTION,
                 status: i.R_STATUS,
+                level: i.R_LEVEL,
                 whenClauses: [],
                 validateClauses: []
             } as Rule2;

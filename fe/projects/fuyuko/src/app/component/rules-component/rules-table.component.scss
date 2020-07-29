@@ -15,7 +15,7 @@
         }
         .mat-expansion-panel-header-description {
           display: flex;
-          .description {
+          .description, .level {
             align-self: flex-start;
             flex-grow: 1;
           }

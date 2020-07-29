@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {Attribute} from '../../model/attribute.model';
-import {Rule, ValidateClause, WhenClause} from '../../model/rule.model';
+import {Rule, RULE_LEVELS, RuleLevel, ValidateClause, WhenClause} from '../../model/rule.model';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {isItemValueOperatorAndAttributeWithIdValid} from '../../utils/item-value-operator-attribute.util';
@@ -34,6 +34,7 @@ export class RuleEditorComponent implements OnChanges {
 
     formControlName: FormControl;
     formControlDescription: FormControl;
+    formControlRuleLevel: FormControl;
 
     counter: number;
 
@@ -43,19 +44,23 @@ export class RuleEditorComponent implements OnChanges {
     @Output() events: EventEmitter<RuleEditorComponentEvent>;
 
     subscription: Subscription;
+    ruleLevels: RuleLevel[];
 
     constructor(private route: ActivatedRoute,
                 private formBuilder: FormBuilder,
                 private router: Router) {
+        this.ruleLevels = RULE_LEVELS;
         this.counter = -1;
         this.events = new EventEmitter<RuleEditorComponentEvent>();
         this.validateClauses = [];
         this.whenClauses = [];
         this.formControlName = formBuilder.control('', [Validators.required]);
         this.formControlDescription = formBuilder.control('', [Validators.required]);
+        this.formControlRuleLevel = formBuilder.control('', [Validators.required]);
         this.formGroup = formBuilder.group({
             name: this.formControlName,
             description: this.formControlDescription,
+            ruleLevel: this.formControlRuleLevel,
         });
         this.formGroup.setValidators([
             (c: AbstractControl): ValidationErrors | null => {
@@ -103,6 +108,7 @@ export class RuleEditorComponent implements OnChanges {
         if (this.rule) {
             this.formControlName.setValue(this.rule.name);
             this.formControlDescription.setValue(this.rule.description);
+            this.formControlRuleLevel.setValue(this.rule.level);
             if (this.rule.validateClauses) {
                 this.validateClauses = [];
                 this.rule.validateClauses.forEach((ruleValidateClause: ValidateClause) => {
@@ -185,6 +191,7 @@ export class RuleEditorComponent implements OnChanges {
             id: this.rule.id,
             name: this.formControlName.value,
             description: this.formControlDescription.value,
+            level: this.formControlRuleLevel.value,
             validateClauses: this.validateClauses.reduce((acc: ValidateClause[], g: ItemValueOperatorAndAttributeWithId) => {
                 acc.push({
                     id: g.id,

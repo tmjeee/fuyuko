@@ -71,6 +71,7 @@ export const getViewValidationResult = async (viewId: number, validationId: numb
                             E.ITEM_ID AS E_ITEM_ID,
                             E.MESSAGE AS E_MESSAGE,
                             E.VIEW_ATTRIBUTE_ID AS E_VIEW_ATTRIBUTE_ID,
+                            E.LEVEL AS E_LEVEL,
                             E.CREATION_DATE AS E_CREATION_DATE,
                             E.LAST_UPDATE AS E_LAST_UPDATE
                         FROM TBL_VIEW_VALIDATION_ERROR AS E 
@@ -82,6 +83,7 @@ export const getViewValidationResult = async (viewId: number, validationId: numb
                     if (!m_validationError.has(m_validationError_key)) {
                         const validationError: ValidationError = {
                             id: q.E_ID,
+                            level: q.E_LEVEL,
                             itemId: q.E_ITEM_ID,
                             ruleId: q.E_RULE_ID,
                             attributeId: q.E_VIEW_ATTRIBUTE_ID,

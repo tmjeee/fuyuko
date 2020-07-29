@@ -2,6 +2,7 @@ import {Item, Value} from './item.model';
 import {Level} from './level.model';
 import {Progress} from './progress.model';
 import {Attribute} from './attribute.model';
+import {RuleLevel} from "./rule.model";
 
 export interface CustomValidationContext {
     log: (msg: string) => void;
@@ -62,5 +63,6 @@ export interface ValidationError {
     itemId: number;
     attributeId: number;
     message: string;
+    level: RuleLevel;
 }
 

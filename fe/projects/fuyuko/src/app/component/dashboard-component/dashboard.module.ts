@@ -15,6 +15,8 @@ import {StockTradingWidgetComponent} from "./widgets/stock-trading-widget/stock-
 import {MostActiveUsersWidgetComponent} from "./widgets/most-active-users-widget/most-active-users-widget.component";
 import {UserVisitsInsightWidgetComponent} from "./widgets/user-visits-insight-widget/user-visits-insight-widget.component";
 import {GoogleChartsModule} from "angular-google-charts";
+import {GlobalMissingAttributeValuesWidgetComponent} from "./widgets/global-missing-attribute-values-widget/global-missing-attribute-values-widget.component";
+import {MissingAttributeValueWidgetComponent} from "./widgets/missing-attribute-values-widget/missing-attribute-value-widget.component";
 
 @NgModule({
     imports: [
@@ -39,6 +41,8 @@ import {GoogleChartsModule} from "angular-google-charts";
         StockTradingWidgetComponent,
         MostActiveUsersWidgetComponent,
         UserVisitsInsightWidgetComponent,
+        GlobalMissingAttributeValuesWidgetComponent,
+        MissingAttributeValueWidgetComponent,
     ],
     exports: [
         DashboardComponent,
@@ -50,6 +54,8 @@ import {GoogleChartsModule} from "angular-google-charts";
         StockTradingWidgetComponent,
         MostActiveUsersWidgetComponent,
         UserVisitsInsightWidgetComponent,
+        GlobalMissingAttributeValuesWidgetComponent,
+        MissingAttributeValueWidgetComponent,
     ],
     entryComponents: [
         ClockWidgetComponent,
@@ -57,6 +63,8 @@ import {GoogleChartsModule} from "angular-google-charts";
         StockTradingWidgetComponent,
         MostActiveUsersWidgetComponent,
         UserVisitsInsightWidgetComponent,
+        GlobalMissingAttributeValuesWidgetComponent,
+        MissingAttributeValueWidgetComponent,
     ],
 })
 export class DashboardModule {}

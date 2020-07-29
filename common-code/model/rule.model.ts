@@ -2,11 +2,15 @@ import {AttributeType} from './attribute.model';
 import {ItemValTypes} from './item.model';
 import {OperatorType} from './operator.model';
 
+export type RuleLevel = 'WARN' | 'ERROR';
+export const RULE_LEVELS: RuleLevel[] = ['WARN', 'ERROR'];
+
 export interface Rule {
   id: number;
   name: string;
   status: string;
   description: string;
+  level: RuleLevel;
   validateClauses: ValidateClause[];
   whenClauses: WhenClause[];
 }

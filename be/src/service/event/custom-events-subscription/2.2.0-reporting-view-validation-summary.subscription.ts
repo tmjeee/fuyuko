@@ -161,8 +161,6 @@ import {
     ValidationEvent,
     VerifyJwtTokenEvent
 } from "../event.service";
-import {doInDbConnection, QueryA, QueryI} from "../../../db";
-import {Connection} from "mariadb";
 import {NextFunction, Request, Response, Router} from "express";
 import {Registry} from "../../../registry";
 import {
@@ -173,13 +171,12 @@ import {
     vFnHasAnyUserRoles
 } from "../../../route/v1/common-middleware";
 import {ROLE_VIEW} from "../../../model/role.model";
-import {JwtPayload} from "../../../model/jwt.model";
-import * as jwt from "jsonwebtoken";
-import moment from 'moment';
-import {User} from "../../../model/user.model";
-import {Reporting_ActiveUser, Reporting_MostActiveUsers} from "../../../model/reporting.model";
+import {doInDbConnection, QueryA, QueryI} from "../../../db";
+import {Connection} from "mariadb";
+import { param } from "express-validator";
+import {Reporting_ViewValidationSummary} from "../../../model/reporting.model";
+import {RuleLevel} from "../../../model/rule.model";
 import {ApiResponse} from "../../../model/api-response.model";
-import {Lock} from "../../../util";
 
 
 const d: any = {
@@ -210,10 +207,7 @@ const d: any = {
     IsValidForgottenPasswordCodeEvent: (evt: IsValidForgottenPasswordCodeEvent) => {},
     ResetForgottenPasswordEvent: (evt: ResetForgottenPasswordEvent) => {},
     ForgotPasswordEvent: (evt: ForgotPasswordEvent) => {},
-    LoginEvent: async (evt: LoginEvent) => {
-        // todo:
-        await updateLoginInfos(evt.result.user);
-    },
+    LoginEvent: (evt: LoginEvent) => {},
     LogoutEvent: (evt: LogoutEvent) => {},
     AddGlobalAvatarEvent: (evt: AddGlobalAvatarEvent) => {},
     AddGlobalImageEvent: (evt: AddGlobalImageEvent) => {},
@@ -284,19 +278,9 @@ const d: any = {
     GetJobDetailsByIdEvent: (evt: GetJobDetailsByIdEvent) => {},
     GetAllJobsEvent: (evt: GetAllJobsEvent) => {},
     GetJobByIdEvent: (evt: GetJobByIdEvent) => {},
-    CreateJwtTokenEvent: async (evt: CreateJwtTokenEvent) => {
-       // todo:  when login
-        const jwtPayload: JwtPayload = jwt.decode(evt.jwtToken) as JwtPayload;
-        await updateLoginInfos(jwtPayload.user);
-    },
-    DecodeJwtTokenEvent: async (evt: DecodeJwtTokenEvent) => {
-        // todo: when logout
-        await updateLoginInfos(evt.jwtPayload.user);
-    },
-    VerifyJwtTokenEvent: async (evt: VerifyJwtTokenEvent) => {
-        // todo: when intercepting request
-        await updateLoginInfos(evt.jwtPayload.user);
-    },
+    CreateJwtTokenEvent: (evt: CreateJwtTokenEvent) => {},
+    DecodeJwtTokenEvent: (evt: DecodeJwtTokenEvent) => {},
+    VerifyJwtTokenEvent: (evt: VerifyJwtTokenEvent) => {},
     AddUserNotificationEvent: (evt: AddUserNotificationEvent) => {},
     GetUserNotificationsEvent: (evt: GetUserNotificationsEvent) => {},
     GetPricedItemsEvent: (evt: GetPricedItemsEvent) => {},
@@ -362,266 +346,98 @@ const d: any = {
     GetValidationByViewIdAndValidationIdEvent: (evt: GetValidationByViewIdAndValidationIdEvent) => {}
 };
 
-const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `audit-event-subscription`,
-    async (v1AppRouter: Router, registry: Registry): Promise<void> => {
-        await autoCreateTables();
-        await mountRoutes_mostActiveUsers(v1AppRouter, registry);
-        await mountRoutes_userVisitsInsignt(v1AppRouter, registry);
-    });
+const httpAction: any[] = [
+    [
+        param('viewId').exists().isNumeric()
+    ],
+    validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const viewId: number = Number(req.params.viewId);
+        const r: Reporting_ViewValidationSummary = await doInDbConnection(async (conn: Connection) => {
+            const q1: QueryA = await conn.query(`
+                SELECT 
+                    VAL.ID AS VAL_ID, 
+                    VAL.VIEW_ID AS VAL_VIEW_ID,
+                    VAL.NAME AS VAL_NAME,
+                    VAL.DESCRIPTION AS VAL_DESCRIPTION,
+                    VAL.PROGRESS AS VAL_PROGRESS,
+                    VAL.CREATION_DATE AS VAL_CREATION_DATE,
+                    VAL.LAST_UPDATE AS VAL_LAST_UPDATE,
+                    VAL.TOTAL_ITEMS AS VAL_TOTAL_ITEMS,
+                    V.ID AS V_ID,
+                    V.NAME AS V_NAME,
+                    V.DESCRIPTION AS V_DESCRIPTION,
+                    V.STATUS AS V_STATUS,
+                    V.CREATION_DATE AS V_CREATION_DATE,
+                    V.LAST_UPDATE AS V_LAST_UPDATE
+                FROM TBL_VIEW_VALIDATION AS VAL
+                INNER JOIN TBL_VIEW AS V ON V.ID = VAL.VIEW_ID 
+                WHERE VAL.VIEW_ID = ?
+                ORDER BY VAL.CREATION_DATE DESC 
+                LIMIT 1 OFFSET 0;
+            `, [viewId]);
+
+            if (q1 && q1.length) {
+                const validationId: number = q1[0].VAL_ID;
+                const validationName: string = q1[0].VAL_NAME;
+                const totalItems: number = q1[0].VAL_TOTAL_ITEMS;
+                const viewId: number = q1[0].VAL_VIEW_ID;
+                const viewName: string = q1[0].V_NAME;
+                const q2: QueryA = await conn.query(`
+                    SELECT 
+                         LEVEL, COUNT(*) AS COUNT
+                    FROM TBL_VIEW_VALIDATION_ERROR AS E
+                    INNER JOIN TBL_VIEW_VALIDATION AS V ON V.ID = E.VIEW_VALIDATION_ID
+                    WHERE E.VIEW_VALIDATION_ID = ? 
+                    GROUP BY E.LEVEL
+                `, [validationId]);
+
+                const r: {totalWithErrors: number, totalWithWarnings: number} = q2.reduce((acc:{totalWithErrors: number, totalWithWarnings: number}, i: QueryI) => {
+                    if ((i.LEVEL as RuleLevel) == 'WARN') {
+                        acc.totalWithWarnings = i.COUNT;
+                    } else if ((i.LEVEL as RuleLevel) == 'ERROR') {
+                        acc.totalWithErrors = i.COUNT;
+                    }
+                    return acc;
+                }, { totalWithErrors: 0, totalWithWarnings: 0});
+
+                return {
+                    validationId,
+                    validationName,
+                    viewId,
+                    viewName,
+                    totalItems,
+                    totalWithErrors: r.totalWithErrors,
+                    totalWithWarnings: r.totalWithWarnings
+                } as Reporting_ViewValidationSummary;
+            } else {
+                return null;
+            }
+        });
+
+        res.status(200).json({
+           status: 'SUCCESS',
+           message: 'success',
+           payload: r
+        } as ApiResponse<Reporting_ViewValidationSummary>);
+    }
+];
+
+const mountRoute = (v1AppRouter: Router, registry: Registry) => {
+    const p = `/reporting/view-validation-summary/view/:viewId`;
+    registry.addItem('GET', p);
+    v1AppRouter.get(p, ...httpAction);
+};
+
+const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `view-validation-summary-subscription`,
+    (v1AppRouter: Router, registry: Registry): Promise<void> => {
+        // perform db and router related setup
+        mountRoute(v1AppRouter, registry);
+        return null;
+    }
+);
 
 export default s;
-
-const lock = new Lock();
-
-const updateLoginInfos = async (user: User) => {
-    await lock.doInLock(async () => {
-        await doInDbConnection(async (conn: Connection) => {
-            const m = moment();
-            const d = moment(m).startOf('day');
-            const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_REPORTING_USER_LOGINS WHERE \`DATE\`=? AND USER_ID=? `, [d.toDate(), user.id]);
-            if (q[0].COUNT <= 0) { // this user access has not been logged yet
-                await conn.query(`INSERT INTO TBL_REPORTING_USER_LOGINS (\`DATE\`, \`DATETIME\`, USER_ID) VALUES (?, ?, ?)`, [d.toDate(), m.toDate(), user.id])
-            }
-        });
-    });
-}
-
-const autoCreateTables = async () => {
-    await doInDbConnection(async (conn: Connection) => {
-        await conn.query(`
-                CREATE TABLE IF NOT EXISTS TBL_REPORTING_USER_LOGINS (
-                    ID INT PRIMARY KEY AUTO_INCREMENT,
-                    \`DATE\` DATE NOT NULL,
-                    \`DATETIME\` TIMESTAMP NOT NULL,
-                    USER_ID INT
-                );
-           `);
-    });
-}
-
-const httpAction_mostActiveUsers: any[] = [
-    [
-    ],
-    validateMiddlewareFn,
-    validateJwtMiddlewareFn,
-    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
-    async (req: Request, res: Response, next: NextFunction) => {
-        const mostActiveUsersReport: Reporting_MostActiveUsers = await doInDbConnection(async (conn: Connection) => {
-            const q: QueryA = await conn.query(`
-                SELECT
-                    U.ID AS USER_ID,
-                    U.USERNAME AS USERNAME,
-                    U.EMAIL AS EMAIL,
-                    COUNT(*) AS COUNT
-                FROM TBL_REPORTING_USER_LOGINS AS R
-                LEFT JOIN TBL_USER AS U ON U.ID = R.USER_ID
-                GROUP BY U.ID, U.USERNAME, U.EMAIL
-                ORDER BY COUNT DESC
-                LIMIT 10
-                OFFSET 0
-            `);
-            
-            const activeUsers: Reporting_ActiveUser[] = q.reduce((acc: Reporting_ActiveUser[], i: QueryI) => {
-                acc.push({
-                    count: i.COUNT,
-                    userId: i.USER_ID,
-                    username: i.USERNAME,
-                    email: i.EMAIL
-                });
-                return acc;
-            }, []);
-            
-            return {
-                activeUsers,
-            } as Reporting_MostActiveUsers
-        });
-        res.status(200).json({
-           status: "SUCCESS",
-           message: 'success',
-           payload: mostActiveUsersReport
-        } as ApiResponse<Reporting_MostActiveUsers>);
-    }
-];
-const httpAction_userVisitsInsignt: any[] = [
-    [
-    ],
-    validateMiddlewareFn,
-    validateJwtMiddlewareFn,
-    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
-    async (req: Request, res: Response, next: NextFunction) => {
-        const m = moment();
-
-        // daily
-        const daily: { date: string, count: number }[] = [];
-        {
-            const dailyMap: Map<string, { date: string, count: number }> = await doInDbConnection(async (conn: Connection) => {
-                const q: QueryA = await conn.query(`
-              SELECT   
-                 CONCAT(DAY(R.\`DATE\`), '-', MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) AS DATE_RANGE,
-                 COUNT(R.USER_ID) AS COUNT
-              FROM TBL_REPORTING_USER_LOGINS AS R
-              GROUP BY CONCAT(DAY(R.\`DATE\`), '-', MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`))
-              ORDER BY CONCAT(DAY(R.\`DATE\`), '-', MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) DESC
-              LIMIT 10
-              OFFSET 0
-           `);
-                return q.reduce((acc: Map<string, { date: string, count: number }>, i: QueryI) => {
-                    acc.set(i.DATE_RANGE, {
-                        date: i.DATE_RANGE,
-                        count: i.COUNT
-                    })
-                    return acc;
-                }, new Map());
-            });
-
-            let _m = moment(m);
-            for (let i = 0; i < 10; i++) {
-                const d = `${_m.date()}-${_m.month() + 1}-${_m.year()}`;
-                if (dailyMap.has(d)) {
-                    daily.push(dailyMap.get(d));
-                } else {
-                    daily.push({date: d, count: 0});
-                }
-                _m = _m.subtract(1, 'day');
-            }
-        }
-        daily.reverse();
-
-
-
-
-        // weekly
-        const weekly: {date: string, count: number}[] = [];
-        {
-            const weeklyMap: Map<string, { date: string, count: number }> = await doInDbConnection(async (conn: Connection) => {
-                const q: QueryA = await conn.query(`
-              SELECT   
-                 CONCAT(WEEK(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) AS DATE_RANGE,
-                 COUNT(R.USER_ID) AS COUNT
-              FROM TBL_REPORTING_USER_LOGINS AS R
-              GROUP BY CONCAT(WEEK(R.\`DATE\`), '-', YEAR(R.\`DATE\`))
-              ORDER BY CONCAT(WEEK(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) DESC
-              LIMIT 10
-              OFFSET 0
-           `);
-                return q.reduce((acc: Map<string, { date: string, count: number }>, i: QueryI) => {
-                    acc.set(i.DATE_RANGE, {
-                        date: i.DATE_RANGE,
-                        count: i.COUNT
-                    })
-                    return acc;
-                }, new Map);
-            });
-
-            let _m = moment(m);
-            for (let i = 0; i < 10; i++) {
-                const d = `${_m.weeks()}-${_m.year()}`;
-                if (weeklyMap.has(d)) {
-                    weekly.push(weeklyMap.get(d));
-                } else {
-                    weekly.push({date: d, count: 0});
-                }
-                _m = _m.subtract(1, 'week');
-            }
-        }
-        weekly.reverse();
-
-
-        // monthly
-        const monthly: {date: string, count: number}[] = [];
-        {
-            const monthlyMap: Map<string, { date: string, count: number }> = await doInDbConnection(async (conn: Connection) => {
-                const q: QueryA = await conn.query(`
-              SELECT   
-                 CONCAT(MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) AS DATE_RANGE,
-                 COUNT(R.USER_ID) AS COUNT
-              FROM TBL_REPORTING_USER_LOGINS AS R
-              GROUP BY CONCAT(MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`))
-              ORDER BY CONCAT(MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) DESC
-              LIMIT 10
-              OFFSET 0
-           `);
-                return q.reduce((acc: Map<string, { date: string, count: number }>, i: QueryI) => {
-                    acc.set(i.DATE_RANGE, {
-                        date: i.DATE_RANGE,
-                        count: i.COUNT
-                    });
-                    return acc;
-                }, new Map());
-            });
-
-            let _m = moment(m);
-            for (let i = 0; i < 10; i++) {
-                const d = `${_m.month() + 1}-${_m.year()}`;
-                if (monthlyMap.has(d)) {
-                    monthly.push(monthlyMap.get(d));
-                } else {
-                    monthly.push({date: d, count: 0});
-                }
-                _m = _m.subtract(1, 'month');
-            }
-        }
-        monthly.reverse();
-
-
-        // yearly
-        const yearly: {date: string, count: number}[] = [];
-        {
-            const yearlyMap: Map<string, { date: string, count: number }> = await doInDbConnection(async (conn: Connection) => {
-                const q: QueryA = await conn.query(`
-              SELECT   
-                 CONCAT(YEAR(R.\`DATE\`)) AS DATE_RANGE,
-                 COUNT(R.USER_ID) AS COUNT
-              FROM TBL_REPORTING_USER_LOGINS AS R
-              GROUP BY CONCAT(YEAR(R.\`DATE\`))
-              ORDER BY CONCAT(YEAR(R.\`DATE\`)) DESC
-              LIMIT 10
-              OFFSET 0
-           `);
-                return q.reduce((acc: Map<string, { date: string, count: number }>, i: QueryI) => {
-                    acc.set(i.DATE_RANGE, {
-                        date: i.DATE_RANGE,
-                        count: i.COUNT
-                    })
-                    return acc;
-                }, new Map());
-            });
-
-            let _m = moment(m);
-            for (let i = 0; i < 10; i++) {
-                const d = `${_m.year()}`;
-                if (yearlyMap.has(d)) {
-                    yearly.push(yearlyMap.get(d));
-                } else {
-                    yearly.push({date: d, count: 0});
-                }
-                _m = _m.subtract(1, 'year');
-            }
-        }
-        yearly.reverse();
-
-        res.status(200).json({
-            status: "SUCCESS",
-            message: 'success',
-            payload: {
-                daily, weekly, monthly, yearly
-            }
-        } as ApiResponse<{
-            daily: {date: string, count: number}[],
-            weekly: {date: string, count: number}[],
-            monthly: {date: string, count: number}[],
-            yearly: {date: string, count: number}[]
-        }>);
-    }
-];
-const mountRoutes_mostActiveUsers = async (v1AppRouter: Router, registry: Registry) => {
-    const p = `/reporting/most-active-users`;
-    registry.addItem('GET', p);
-    v1AppRouter.get(p, ...httpAction_mostActiveUsers);
-};
-const mountRoutes_userVisitsInsignt = async (v1AppRouter: Router, registry: Registry) => {
-    const p = `/reporting/user-visits-insight`;
-    registry.addItem('GET', p);
-    v1AppRouter.get(p, ...httpAction_userVisitsInsignt);
-};
 

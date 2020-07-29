@@ -161,8 +161,6 @@ import {
     ValidationEvent,
     VerifyJwtTokenEvent
 } from "../event.service";
-import {doInDbConnection, QueryA, QueryI} from "../../../db";
-import {Connection} from "mariadb";
 import {NextFunction, Request, Response, Router} from "express";
 import {Registry} from "../../../registry";
 import {
@@ -173,13 +171,14 @@ import {
     vFnHasAnyUserRoles
 } from "../../../route/v1/common-middleware";
 import {ROLE_VIEW} from "../../../model/role.model";
-import {JwtPayload} from "../../../model/jwt.model";
-import * as jwt from "jsonwebtoken";
-import moment from 'moment';
-import {User} from "../../../model/user.model";
-import {Reporting_ActiveUser, Reporting_MostActiveUsers} from "../../../model/reporting.model";
+import {doInDbConnection, QueryA, QueryI} from "../../../db";
+import { Connection } from "mariadb";
+import {
+    Reporting_ItemsWithMissingAttributeInfo,
+    Reporting_ItemWithMissingAttribute, Reporting_MissingAttribute, Reporting_ViewWithMissingAttribute
+} from "../../../model/reporting.model";
+import {ENABLED} from "../../../model/status.model";
 import {ApiResponse} from "../../../model/api-response.model";
-import {Lock} from "../../../util";
 
 
 const d: any = {
@@ -200,20 +199,31 @@ const d: any = {
     ImportItemJobEvent: (evt: ImportItemJobEvent) => {},
     ImportPriceJobEvent: (evt: ImportPriceJobEvent) => {},
     ValidationEvent: (evt: ValidationEvent) => {},
-    UpdateAttributesEvent: (evt: UpdateAttributesEvent) => {},
-    ChangeAttributeStatusEvent: (evt: ChangeAttributeStatusEvent) => {},
-    GetAttributeInViewByNameEvent: (evt: GetAttributeInViewByNameEvent) => {},
-    GetAttributeInViewEvent: (evt: GetAttributeInViewEvent) => {},
-    GetAttributesInViewEvent: (evt: GetAttributesInViewEvent) => {},
-    SaveAttributesEvent: (evt: SaveAttributesEvent) => {},
-    SearchAttributesByViewEvent: (evt: SearchAttributesByViewEvent) => {},
+    UpdateAttributesEvent: (evt: UpdateAttributesEvent) => {
+
+    },
+    ChangeAttributeStatusEvent: (evt: ChangeAttributeStatusEvent) => {
+
+    },
+    GetAttributeInViewByNameEvent: (evt: GetAttributeInViewByNameEvent) => {
+
+    },
+    GetAttributeInViewEvent: (evt: GetAttributeInViewEvent) => {
+
+    },
+    GetAttributesInViewEvent: (evt: GetAttributesInViewEvent) => {
+
+    },
+    SaveAttributesEvent: (evt: SaveAttributesEvent) => {
+
+    },
+    SearchAttributesByViewEvent: (evt: SearchAttributesByViewEvent) => {
+
+    },
     IsValidForgottenPasswordCodeEvent: (evt: IsValidForgottenPasswordCodeEvent) => {},
     ResetForgottenPasswordEvent: (evt: ResetForgottenPasswordEvent) => {},
     ForgotPasswordEvent: (evt: ForgotPasswordEvent) => {},
-    LoginEvent: async (evt: LoginEvent) => {
-        // todo:
-        await updateLoginInfos(evt.result.user);
-    },
+    LoginEvent: (evt: LoginEvent) => {},
     LogoutEvent: (evt: LogoutEvent) => {},
     AddGlobalAvatarEvent: (evt: AddGlobalAvatarEvent) => {},
     AddGlobalImageEvent: (evt: AddGlobalImageEvent) => {},
@@ -261,10 +271,18 @@ const d: any = {
     GetGroupByIdEvent: (evt: GetGroupByIdEvent) => {},
     GetAllGroupsEvent: (evt: GetAllGroupsEvent) => {},
     UpdateItemsStatusEvent: (evt: UpdateItemsStatusEvent) => {},
-    UpdateItemValueEvent: (evt: UpdateItemValueEvent) => {},
-    UpdateItemEvent: (evt: UpdateItemEvent) => {},
-    AddItemEvent: (evt: AddItemEvent) => {},
-    AddOrUpdateItemEvent: (evt: AddOrUpdateItemEvent) => {},
+    UpdateItemValueEvent: (evt: UpdateItemValueEvent) => {
+
+    },
+    UpdateItemEvent: (evt: UpdateItemEvent) => {
+
+    },
+    AddItemEvent: (evt: AddItemEvent) => {
+
+    },
+    AddOrUpdateItemEvent: (evt: AddOrUpdateItemEvent) => {
+
+    },
     SearchForFavouriteItemsInViewEvent: (evt: SearchForFavouriteItemsInViewEvent) => {},
     SearchForItemsInViewEvent: (evt: SearchForItemsInViewEvent) => {},
     AddFavouriteItemIdsEvent: (evt: AddFavouriteItemIdsEvent) => {},
@@ -272,9 +290,15 @@ const d: any = {
     GetAllFavouriteItemIdsInViewEvent: (evt: GetAllFavouriteItemIdsInViewEvent) => {},
     GetAllFavouritedItemsInViewEvent: (evt: GetAllFavouritedItemsInViewEvent) => {},
     GetAllItemsInViewEvent: (evt: GetAllItemsInViewEvent) => {},
-    GetItemsByIdsEvent: (evt: GetItemsByIdsEvent) => {},
-    GetItemByIdEvent: (evt: GetItemByIdEvent) => {},
-    GetItemByNameEvent: (evt: GetItemByNameEvent) => {},
+    GetItemsByIdsEvent: (evt: GetItemsByIdsEvent) => {
+
+    },
+    GetItemByIdEvent: (evt: GetItemByIdEvent) => {
+
+    },
+    GetItemByNameEvent: (evt: GetItemByNameEvent) => {
+
+    },
     GetItemWithFilteringEvent: (evt: GetItemWithFilteringEvent) => {},
     MarkItemImageAsPrimaryEvent: (evt: MarkItemImageAsPrimaryEvent) => {},
     GetItemPrimaryImageEvent: (evt: GetItemPrimaryImageEvent) => {},
@@ -284,19 +308,9 @@ const d: any = {
     GetJobDetailsByIdEvent: (evt: GetJobDetailsByIdEvent) => {},
     GetAllJobsEvent: (evt: GetAllJobsEvent) => {},
     GetJobByIdEvent: (evt: GetJobByIdEvent) => {},
-    CreateJwtTokenEvent: async (evt: CreateJwtTokenEvent) => {
-       // todo:  when login
-        const jwtPayload: JwtPayload = jwt.decode(evt.jwtToken) as JwtPayload;
-        await updateLoginInfos(jwtPayload.user);
-    },
-    DecodeJwtTokenEvent: async (evt: DecodeJwtTokenEvent) => {
-        // todo: when logout
-        await updateLoginInfos(evt.jwtPayload.user);
-    },
-    VerifyJwtTokenEvent: async (evt: VerifyJwtTokenEvent) => {
-        // todo: when intercepting request
-        await updateLoginInfos(evt.jwtPayload.user);
-    },
+    CreateJwtTokenEvent: (evt: CreateJwtTokenEvent) => {},
+    DecodeJwtTokenEvent: (evt: DecodeJwtTokenEvent) => {},
+    VerifyJwtTokenEvent: (evt: VerifyJwtTokenEvent) => {},
     AddUserNotificationEvent: (evt: AddUserNotificationEvent) => {},
     GetUserNotificationsEvent: (evt: GetUserNotificationsEvent) => {},
     GetPricedItemsEvent: (evt: GetPricedItemsEvent) => {},
@@ -362,266 +376,158 @@ const d: any = {
     GetValidationByViewIdAndValidationIdEvent: (evt: GetValidationByViewIdAndValidationIdEvent) => {}
 };
 
-const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `audit-event-subscription`,
-    async (v1AppRouter: Router, registry: Registry): Promise<void> => {
-        await autoCreateTables();
-        await mountRoutes_mostActiveUsers(v1AppRouter, registry);
-        await mountRoutes_userVisitsInsignt(v1AppRouter, registry);
-    });
-
-export default s;
-
-const lock = new Lock();
-
-const updateLoginInfos = async (user: User) => {
-    await lock.doInLock(async () => {
-        await doInDbConnection(async (conn: Connection) => {
-            const m = moment();
-            const d = moment(m).startOf('day');
-            const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_REPORTING_USER_LOGINS WHERE \`DATE\`=? AND USER_ID=? `, [d.toDate(), user.id]);
-            if (q[0].COUNT <= 0) { // this user access has not been logged yet
-                await conn.query(`INSERT INTO TBL_REPORTING_USER_LOGINS (\`DATE\`, \`DATETIME\`, USER_ID) VALUES (?, ?, ?)`, [d.toDate(), m.toDate(), user.id])
-            }
-        });
-    });
-}
-
-const autoCreateTables = async () => {
-    await doInDbConnection(async (conn: Connection) => {
-        await conn.query(`
-                CREATE TABLE IF NOT EXISTS TBL_REPORTING_USER_LOGINS (
-                    ID INT PRIMARY KEY AUTO_INCREMENT,
-                    \`DATE\` DATE NOT NULL,
-                    \`DATETIME\` TIMESTAMP NOT NULL,
-                    USER_ID INT
-                );
-           `);
-    });
-}
-
-const httpAction_mostActiveUsers: any[] = [
+const httpActions: any[] = [
     [
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
-        const mostActiveUsersReport: Reporting_MostActiveUsers = await doInDbConnection(async (conn: Connection) => {
-            const q: QueryA = await conn.query(`
-                SELECT
-                    U.ID AS USER_ID,
-                    U.USERNAME AS USERNAME,
-                    U.EMAIL AS EMAIL,
-                    COUNT(*) AS COUNT
-                FROM TBL_REPORTING_USER_LOGINS AS R
-                LEFT JOIN TBL_USER AS U ON U.ID = R.USER_ID
-                GROUP BY U.ID, U.USERNAME, U.EMAIL
-                ORDER BY COUNT DESC
-                LIMIT 10
-                OFFSET 0
-            `);
-            
-            const activeUsers: Reporting_ActiveUser[] = q.reduce((acc: Reporting_ActiveUser[], i: QueryI) => {
-                acc.push({
-                    count: i.COUNT,
-                    userId: i.USER_ID,
-                    username: i.USERNAME,
-                    email: i.EMAIL
-                });
+
+        const views: {viewId: number, viewName: string}[] = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION, STATUS, CREATION_DATE, LAST_UPDATE FROM TBL_VIEW WHERE STATUS = ? `, [ENABLED]);
+            return q.reduce((acc: {viewId: number, viewName: string}[], i: QueryI) => {
+                acc.push({ viewId: i.ID, viewName: i.NAME});
                 return acc;
             }, []);
-            
-            return {
-                activeUsers,
-            } as Reporting_MostActiveUsers
         });
+
+        const itemsInfo: Reporting_ItemsWithMissingAttributeInfo = {
+            views: []
+        };
+
+        for (const view of views) {
+            const viewInfo: Reporting_ViewWithMissingAttribute = await doInDbConnection(async (conn: Connection) => {
+
+                const viewId: number = view.viewId;
+                const viewName: string = view.viewName;
+
+
+                // count total items with missing attributes
+                const totalItemsWithMissingAttributesInView: number = (await conn.query(`
+                    SELECT
+                        COUNT(I.ID) AS COUNT 
+                    FROM TBL_ITEM AS I
+                    LEFT JOIN TBL_VIEW AS V ON V.ID = I.VIEW_ID
+                    WHERE I.ID NOT IN (
+                        SELECT ITEM_ID FROM TBL_ITEM_VALUE 
+                    ) AND I.STATUS = ? AND I.VIEW_ID = ?
+            `, [ENABLED, viewId]) as QueryA)[0].COUNT;
+
+                // count total attributes that are missing value
+                let totalMissingAttributesInView: number = 0;
+                const q1: QueryA = (await conn.query(`SELECT ID FROM TBL_ITEM WHERE STATUS = ? AND VIEW_ID = ?`, [ENABLED, viewId]));
+                for (const qi of q1) {
+                    const itemId: number = qi.ID;
+                    const count: number = (await conn.query(`
+                        SELECT COUNT(*) AS COUNT FROM TBL_VIEW_ATTRIBUTE WHERE ID NOT IN (SELECT VIEW_ATTRIBUTE_ID FROM TBL_ITEM_VALUE WHERE ITEM_ID IN (SELECT ITEM_ID FROM TBL_VIEW WHERE ID=?));
+                    `, [itemId]))[0].COUNT;
+                    totalMissingAttributesInView += count;
+                }
+
+                const viewInfo: Reporting_ViewWithMissingAttribute = {
+                    viewId,
+                    viewName,
+                    totalItemsWithMissingAttributes: totalItemsWithMissingAttributesInView,
+                    totalMissingAttributes: totalMissingAttributesInView,
+                    items: []
+                };
+
+                // get all items with missing attribute values
+                const q: QueryA = await conn.query(`
+                    SELECT
+                       I.ID AS I_ID, 
+                       I.PARENT_ID AS I_PARENT_ID, 
+                       I.VIEW_ID AS I_VIEW_ID, 
+                       I.NAME AS I_NAME, 
+                       I.DESCRIPTION AS I_DESCRIPTION, 
+                       I.STATUS AS I_STATUS, 
+                       I.CREATION_DATE AS I_CREATION_DATE, 
+                       I.LAST_UPDATE AS I_LAST_UPDATE,
+                       V.ID AS V_ID, 
+                       V.NAME AS V_NAME, 
+                       V.DESCRIPTION AS V_DESCRIPTION, 
+                       V.STATUS AS V_STATUS, 
+                       V.CREATION_DATE AS V_CREATION_DATE, 
+                       V.LAST_UPDATE AS V_LAST_UPDATE
+                    FROM TBL_ITEM AS I
+                    LEFT JOIN TBL_VIEW AS V ON V.ID = I.VIEW_ID
+                    WHERE I.ID NOT IN (
+                        SELECT ITEM_ID FROM TBL_ITEM_VALUE 
+                    ) AND I.STATUS = ? AND I.VIEW_ID = ?
+                `, [ENABLED, viewId]);
+
+                for (let i of q) {
+
+                    const itemId: number = i.I_ID;
+                    const itemName: string = i.I_NAME;
+                    const totalMissingAttributesInItem: number = (await conn.query(`
+                        SELECT COUNT(*) AS COUNT FROM TBL_VIEW_ATTRIBUTE WHERE ID NOT IN (SELECT VIEW_ATTRIBUTE_ID FROM TBL_ITEM_VALUE WHERE ITEM_ID IN (SELECT ITEM_ID FROM TBL_VIEW WHERE ID=?));
+                    `, [itemId]))[0].COUNT;
+
+                    // get missing attributes in an item
+                    const qq: QueryA = await conn.query(`
+                    SELECT 
+                        A.ID AS A_ID,
+                        A.VIEW_ID AS A_VIEW_ID,
+                        A.TYPE AS A_TYPE,
+                        A.NAME AS A_NAME,
+                        A.STATUS AS A_STATUS,
+                        A.DESCRIPTION AS A_DESCRIPTION,
+                        A.CREATION_DATE AS A_CREATION_DATE,
+                        A.LAST_UPDATE AS A_LAST_UPDATE 
+                    FROM TBL_VIEW_ATTRIBUTE AS A
+                    WHERE A.ID NOT IN (
+                        SELECT VIEW_ATTRIBUTE_ID FROM TBL_ITEM_VALUE WHERE ITEM_ID = ?
+                    ) AND A.STATUS = ?
+                `, [itemId, ENABLED]);
+
+                    const a: Reporting_MissingAttribute[] = qq.reduce((acc: Reporting_MissingAttribute[], i: QueryI) => {
+                        const a = {
+                            attributeId: i.A_ID,
+                            attributeName: i.A_NAME,
+                            attributeType: i.A_TYPE
+                        } as Reporting_MissingAttribute;
+                        acc.push(a);
+                        return acc;
+                    }, []);
+
+                    const itemInfo: Reporting_ItemWithMissingAttribute = {
+                        totalMissingAttributes: totalMissingAttributesInItem,
+                        itemId,
+                        itemName,
+                        viewId,
+                        viewName,
+                        attributes: a
+                    }
+                    viewInfo.items.push(itemInfo);
+                }
+                return viewInfo;
+            });
+            itemsInfo.views.push(viewInfo);
+        }
+
         res.status(200).json({
            status: "SUCCESS",
            message: 'success',
-           payload: mostActiveUsersReport
-        } as ApiResponse<Reporting_MostActiveUsers>);
+           payload: itemsInfo
+        } as ApiResponse<Reporting_ItemsWithMissingAttributeInfo>);
     }
 ];
-const httpAction_userVisitsInsignt: any[] = [
-    [
-    ],
-    validateMiddlewareFn,
-    validateJwtMiddlewareFn,
-    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
-    async (req: Request, res: Response, next: NextFunction) => {
-        const m = moment();
 
-        // daily
-        const daily: { date: string, count: number }[] = [];
-        {
-            const dailyMap: Map<string, { date: string, count: number }> = await doInDbConnection(async (conn: Connection) => {
-                const q: QueryA = await conn.query(`
-              SELECT   
-                 CONCAT(DAY(R.\`DATE\`), '-', MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) AS DATE_RANGE,
-                 COUNT(R.USER_ID) AS COUNT
-              FROM TBL_REPORTING_USER_LOGINS AS R
-              GROUP BY CONCAT(DAY(R.\`DATE\`), '-', MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`))
-              ORDER BY CONCAT(DAY(R.\`DATE\`), '-', MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) DESC
-              LIMIT 10
-              OFFSET 0
-           `);
-                return q.reduce((acc: Map<string, { date: string, count: number }>, i: QueryI) => {
-                    acc.set(i.DATE_RANGE, {
-                        date: i.DATE_RANGE,
-                        count: i.COUNT
-                    })
-                    return acc;
-                }, new Map());
-            });
+const mountRoute = (v1AppRouter: Router, registry: Registry) => {
+    const p = `/reporting/missing-attribute-values`;
+    registry.addItem('GET', p);
+    v1AppRouter.get(p, ...httpActions);
+};
 
-            let _m = moment(m);
-            for (let i = 0; i < 10; i++) {
-                const d = `${_m.date()}-${_m.month() + 1}-${_m.year()}`;
-                if (dailyMap.has(d)) {
-                    daily.push(dailyMap.get(d));
-                } else {
-                    daily.push({date: d, count: 0});
-                }
-                _m = _m.subtract(1, 'day');
-            }
-        }
-        daily.reverse();
-
-
-
-
-        // weekly
-        const weekly: {date: string, count: number}[] = [];
-        {
-            const weeklyMap: Map<string, { date: string, count: number }> = await doInDbConnection(async (conn: Connection) => {
-                const q: QueryA = await conn.query(`
-              SELECT   
-                 CONCAT(WEEK(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) AS DATE_RANGE,
-                 COUNT(R.USER_ID) AS COUNT
-              FROM TBL_REPORTING_USER_LOGINS AS R
-              GROUP BY CONCAT(WEEK(R.\`DATE\`), '-', YEAR(R.\`DATE\`))
-              ORDER BY CONCAT(WEEK(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) DESC
-              LIMIT 10
-              OFFSET 0
-           `);
-                return q.reduce((acc: Map<string, { date: string, count: number }>, i: QueryI) => {
-                    acc.set(i.DATE_RANGE, {
-                        date: i.DATE_RANGE,
-                        count: i.COUNT
-                    })
-                    return acc;
-                }, new Map);
-            });
-
-            let _m = moment(m);
-            for (let i = 0; i < 10; i++) {
-                const d = `${_m.weeks()}-${_m.year()}`;
-                if (weeklyMap.has(d)) {
-                    weekly.push(weeklyMap.get(d));
-                } else {
-                    weekly.push({date: d, count: 0});
-                }
-                _m = _m.subtract(1, 'week');
-            }
-        }
-        weekly.reverse();
-
-
-        // monthly
-        const monthly: {date: string, count: number}[] = [];
-        {
-            const monthlyMap: Map<string, { date: string, count: number }> = await doInDbConnection(async (conn: Connection) => {
-                const q: QueryA = await conn.query(`
-              SELECT   
-                 CONCAT(MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) AS DATE_RANGE,
-                 COUNT(R.USER_ID) AS COUNT
-              FROM TBL_REPORTING_USER_LOGINS AS R
-              GROUP BY CONCAT(MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`))
-              ORDER BY CONCAT(MONTH(R.\`DATE\`), '-', YEAR(R.\`DATE\`)) DESC
-              LIMIT 10
-              OFFSET 0
-           `);
-                return q.reduce((acc: Map<string, { date: string, count: number }>, i: QueryI) => {
-                    acc.set(i.DATE_RANGE, {
-                        date: i.DATE_RANGE,
-                        count: i.COUNT
-                    });
-                    return acc;
-                }, new Map());
-            });
-
-            let _m = moment(m);
-            for (let i = 0; i < 10; i++) {
-                const d = `${_m.month() + 1}-${_m.year()}`;
-                if (monthlyMap.has(d)) {
-                    monthly.push(monthlyMap.get(d));
-                } else {
-                    monthly.push({date: d, count: 0});
-                }
-                _m = _m.subtract(1, 'month');
-            }
-        }
-        monthly.reverse();
-
-
-        // yearly
-        const yearly: {date: string, count: number}[] = [];
-        {
-            const yearlyMap: Map<string, { date: string, count: number }> = await doInDbConnection(async (conn: Connection) => {
-                const q: QueryA = await conn.query(`
-              SELECT   
-                 CONCAT(YEAR(R.\`DATE\`)) AS DATE_RANGE,
-                 COUNT(R.USER_ID) AS COUNT
-              FROM TBL_REPORTING_USER_LOGINS AS R
-              GROUP BY CONCAT(YEAR(R.\`DATE\`))
-              ORDER BY CONCAT(YEAR(R.\`DATE\`)) DESC
-              LIMIT 10
-              OFFSET 0
-           `);
-                return q.reduce((acc: Map<string, { date: string, count: number }>, i: QueryI) => {
-                    acc.set(i.DATE_RANGE, {
-                        date: i.DATE_RANGE,
-                        count: i.COUNT
-                    })
-                    return acc;
-                }, new Map());
-            });
-
-            let _m = moment(m);
-            for (let i = 0; i < 10; i++) {
-                const d = `${_m.year()}`;
-                if (yearlyMap.has(d)) {
-                    yearly.push(yearlyMap.get(d));
-                } else {
-                    yearly.push({date: d, count: 0});
-                }
-                _m = _m.subtract(1, 'year');
-            }
-        }
-        yearly.reverse();
-
-        res.status(200).json({
-            status: "SUCCESS",
-            message: 'success',
-            payload: {
-                daily, weekly, monthly, yearly
-            }
-        } as ApiResponse<{
-            daily: {date: string, count: number}[],
-            weekly: {date: string, count: number}[],
-            monthly: {date: string, count: number}[],
-            yearly: {date: string, count: number}[]
-        }>);
+const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `missing-attribute-values-subscription`,
+    (v1AppRouter: Router, registry: Registry): Promise<void> => {
+        // perform db and router related setup
+        mountRoute(v1AppRouter, registry);
+        return null;
     }
-];
-const mountRoutes_mostActiveUsers = async (v1AppRouter: Router, registry: Registry) => {
-    const p = `/reporting/most-active-users`;
-    registry.addItem('GET', p);
-    v1AppRouter.get(p, ...httpAction_mostActiveUsers);
-};
-const mountRoutes_userVisitsInsignt = async (v1AppRouter: Router, registry: Registry) => {
-    const p = `/reporting/user-visits-insight`;
-    registry.addItem('GET', p);
-    v1AppRouter.get(p, ...httpAction_userVisitsInsignt);
-};
+);
+
+export default s;
 

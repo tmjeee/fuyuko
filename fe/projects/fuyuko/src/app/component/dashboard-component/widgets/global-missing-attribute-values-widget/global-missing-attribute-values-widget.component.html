@@ -1,0 +1,20 @@
+<div class="global-missing-attribute-values-widget">
+    <div fxLayout="column">
+        <div fxFlex>
+            <mat-form-field>
+                <mat-label>Type</mat-label>
+                <mat-select [value]="selectedType" (selectionChange)="onTypeChange($event)">
+                    <mat-option *ngFor="let type of types" [value]="type">{{type}}</mat-option>
+                </mat-select>
+                <mat-hint>Select a type</mat-hint>
+            </mat-form-field>
+        </div>
+        <div fxFlex>
+            <google-chart
+                    [type]="chartType"
+                    [data]="data"
+                    [options]="options">
+            </google-chart>
+        </div>
+    </div>
+</div>

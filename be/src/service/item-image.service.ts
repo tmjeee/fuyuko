@@ -193,6 +193,9 @@ export const addItemImage = async (itemId: number, fileName: string, image: Buff
     const ft: fileType.FileTypeResult = await fileType.fromBuffer(image);
 
     const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
+        if (primaryImage) {
+            await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\` = false WHERE ITEM_ID=?`, [itemId]);
+        }
         return await conn.query(`
                 INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)
             `, [itemId, primaryImage ? primaryImage : false, ft.mime, fileName,  image.length, image]);
