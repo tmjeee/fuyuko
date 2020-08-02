@@ -65,16 +65,34 @@ export interface Reporting_ViewValidationSummary {
  * Reporting - view validation range summary
  */
 export interface Reporting_ViewValidationRangeSummary {
-    range: {
-        validationId: number,
-        validationName: string,
-        creationDate: Date,
-        totalItems: number,
-        totalWithWarnings: number,
-        totalWithErrors: number
-    }[]
+    range: Reporting_ViewValidationSummary[]
 }
 
 /**
  * Reporting - attributes errors summary
  */
+export interface Reporting_ViewAttributeValidationSummary {
+    viewId: number;
+    viewName: string;
+    validationId: number;
+    validationName: string;
+    attributes: {
+      attributeId: number,
+      attributeName: string,
+      errors: number,
+      warnings: number
+    }[]
+}
+
+export interface Reporting_ViewAttributeValidationRangeSummary {
+    viewId: number;
+    viewName: string;
+    ranges: {
+        validationId: number,
+        validationName: string,
+        totalAttributeErrors: number,
+        totalAttributeWarnings: number
+    }[];
+}
+
+

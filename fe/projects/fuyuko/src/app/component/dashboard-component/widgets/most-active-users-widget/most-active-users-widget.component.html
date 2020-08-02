@@ -1,10 +1,15 @@
 
 <div class="most-active-users-widget">
-
-    <google-chart
-        [type]="type"
-        [data]="data"
-        [options]="options">
-    </google-chart>
-
+    <div fxLayout="column">
+        <div fxFlex class="mat-title"> Most Active Users</div>
+        <div fxFlex>
+            <div *ngIf="!(data && data.length)">No Data</div>
+            <google-chart
+                    *ngIf="data && data.length"
+                    [type]="type"
+                    [data]="data"
+                    [options]="options">
+            </google-chart>
+        </div>
+    </div>
 </div>

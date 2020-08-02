@@ -17,6 +17,10 @@ import {UserVisitsInsightWidgetComponent} from "./widgets/user-visits-insight-wi
 import {GoogleChartsModule} from "angular-google-charts";
 import {GlobalMissingAttributeValuesWidgetComponent} from "./widgets/global-missing-attribute-values-widget/global-missing-attribute-values-widget.component";
 import {MissingAttributeValueWidgetComponent} from "./widgets/missing-attribute-values-widget/missing-attribute-value-widget.component";
+import {ViewValidationSummaryWidgetComponent} from "./widgets/view-validation-summary-widget/view-validation-summary-widget.component";
+import {ViewValidationRangeSummaryWidgetComponent} from "./widgets/view-validation-range-summary-widget/view-validation-range-summary-widget.component";
+import {ViewAttributeValidationSummaryWidgetComponent} from "./widgets/view-attribute-validation-summary-widget/view-attribute-validation-summary-widget.component";
+import {ViewAttributeValidationRangeSummaryWidgetComponent} from "./widgets/view-attribute-validation-range-summary-widget/view-attribute-validation-range-summary-widget.component";
 
 @NgModule({
     imports: [
@@ -43,6 +47,10 @@ import {MissingAttributeValueWidgetComponent} from "./widgets/missing-attribute-
         UserVisitsInsightWidgetComponent,
         GlobalMissingAttributeValuesWidgetComponent,
         MissingAttributeValueWidgetComponent,
+        ViewValidationSummaryWidgetComponent,
+        ViewValidationRangeSummaryWidgetComponent,
+        ViewAttributeValidationSummaryWidgetComponent,
+        ViewAttributeValidationRangeSummaryWidgetComponent,
     ],
     exports: [
         DashboardComponent,
@@ -56,6 +64,10 @@ import {MissingAttributeValueWidgetComponent} from "./widgets/missing-attribute-
         UserVisitsInsightWidgetComponent,
         GlobalMissingAttributeValuesWidgetComponent,
         MissingAttributeValueWidgetComponent,
+        ViewValidationSummaryWidgetComponent,
+        ViewValidationRangeSummaryWidgetComponent,
+        ViewAttributeValidationSummaryWidgetComponent,
+        ViewAttributeValidationRangeSummaryWidgetComponent,
     ],
     entryComponents: [
         ClockWidgetComponent,
@@ -65,6 +77,10 @@ import {MissingAttributeValueWidgetComponent} from "./widgets/missing-attribute-
         UserVisitsInsightWidgetComponent,
         GlobalMissingAttributeValuesWidgetComponent,
         MissingAttributeValueWidgetComponent,
+        ViewValidationSummaryWidgetComponent,
+        ViewValidationRangeSummaryWidgetComponent,
+        ViewAttributeValidationSummaryWidgetComponent,
+        ViewAttributeValidationRangeSummaryWidgetComponent,
     ],
 })
 export class DashboardModule {}

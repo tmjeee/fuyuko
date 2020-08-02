@@ -161,8 +161,21 @@ import {
     ValidationEvent,
     VerifyJwtTokenEvent
 } from "../event.service";
-import {Router} from "express";
+import {NextFunction, Request, Response, Router} from "express";
 import {Registry} from "../../../registry";
+import {param} from "express-validator";
+import {
+    aFnAnyTrue,
+    v,
+    validateJwtMiddlewareFn,
+    validateMiddlewareFn,
+    vFnHasAnyUserRoles
+} from "../../../route/v1/common-middleware";
+import {ROLE_VIEW} from "../../../model/role.model";
+import {doInDbConnection, QueryA, QueryI} from "../../../db";
+import {Connection} from "mariadb";
+import {RuleLevel} from "../../../model/rule.model";
+import {ApiResponse} from "../../../model/api-response.model";
 
 
 const d: any = {
@@ -332,9 +345,129 @@ const d: any = {
     GetValidationByViewIdAndValidationIdEvent: (evt: GetValidationByViewIdAndValidationIdEvent) => {}
 };
 
-const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `attributes-errors-summary-subscription`,
+const httpAction: any[] = [
+    [
+        param('viewId').exists().isNumeric()
+    ],
+    validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const viewId: number = Number(req.params.viewId);
+        const r: {
+            viewId: number;
+            viewName: string;
+            validationId: number;
+            validationName: string;
+            attributes: {
+                attributeId: number,
+                attributeName: string,
+                errors: number,
+                warnings: number
+            }[]
+        } = await doInDbConnection(async(conn: Connection) => {
+            const q1: QueryA = await conn.query(`
+                SELECT 
+                    VAL.ID AS VAL_ID, 
+                    VAL.VIEW_ID AS VAL_VIEW_ID,
+                    VAL.NAME AS VAL_NAME,
+                    VAL.DESCRIPTION AS VAL_DESCRIPTION,
+                    VAL.PROGRESS AS VAL_PROGRESS,
+                    VAL.CREATION_DATE AS VAL_CREATION_DATE,
+                    VAL.LAST_UPDATE AS VAL_LAST_UPDATE,
+                    VAL.TOTAL_ITEMS AS VAL_TOTAL_ITEMS,
+                    V.ID AS V_ID,
+                    V.NAME AS V_NAME,
+                    V.DESCRIPTION AS V_DESCRIPTION,
+                    V.STATUS AS V_STATUS,
+                    V.CREATION_DATE AS V_CREATION_DATE,
+                    V.LAST_UPDATE AS V_LAST_UPDATE
+                FROM TBL_VIEW_VALIDATION AS VAL
+                INNER JOIN TBL_VIEW AS V ON V.ID = VAL.VIEW_ID 
+                WHERE VAL.VIEW_ID = ?
+                ORDER BY VAL.CREATION_DATE DESC 
+                LIMIT 1 OFFSET 0;
+            `, [viewId]);
+
+            if (q1 && q1.length) {
+                const validationId: number = q1[0].VAL_ID;
+                const validationName: string = q1[0].VAL_NAME;
+                const totalItems: number = q1[0].VAL_TOTAL_ITEMS;
+                const viewId: number = q1[0].VAL_VIEW_ID;
+                const viewName: string = q1[0].V_NAME;
+
+                const q2: QueryA = await conn.query(`
+                    SELECT 
+                        E.VIEW_VALIDATION_ID AS VALIDATION_ID,
+                        E.VIEW_ATTRIBUTE_ID AS ATTRIBUTE_ID,
+                        A.NAME AS ATTRIBUTE_NAME,
+                        E.LEVEL AS LEVEL,
+                        COUNT(*) AS COUNT
+                    FROM TBL_VIEW_VALIDATION_ERROR AS E
+                    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = E.VIEW_ATTRIBUTE_ID
+                    WHERE E.VIEW_VALIDATION_ID = ?
+                    GROUP BY E.VIEW_VALIDATION_ID, E.VIEW_ATTRIBUTE_ID, E.LEVEL
+                `, [validationId]);
+                
+                const attributesMap: Map<number, {
+                   attributeId: number, attributeName: string, errors: number, warnings: number
+                }> = q2.reduce((acc: Map<number, {attributeId: number, attributeName: string, errors: number, warnings: number}>, i: QueryI) => {
+                    const attributeId: number = i.ATTRIBUTE_ID;
+                    if (!acc.has(attributeId)) {
+                        acc.set(attributeId, {
+                            attributeId: i.ATTRIBUTE_ID,
+                            attributeName: i.ATTRIBUTE_NAME,
+                        } as any);
+                    }
+                    if (i.LEVEL == 'WARN') {
+                        acc.get(attributeId).warnings = i.COUNT;
+                    }
+                    if (i.LEVEL == 'ERROR') {
+                        acc.get(attributeId).errors = i.COUNT;
+                    }
+                    return acc;
+                }, new Map());
+
+                return {
+                    viewId,
+                    viewName,
+                    validationId,
+                    validationName,
+                    attributes: [...attributesMap.values()]
+                };
+            }
+            return null;
+        });
+        
+        res.status(200).json({
+            status: 'SUCCESS',
+            message: 'success',
+            payload: r
+        } as ApiResponse<{
+            viewId: number;
+            viewName: string;
+            validationId: number;
+            validationName: string;
+            attributes: {
+                attributeId: number,
+                attributeName: string,
+                errors: number,
+                warnings: number
+            }[]
+        }>);
+    }
+];
+
+const mountRoute = (v1AppRouter: Router, registry: Registry) => {
+    const p = `/reporting/view-attributes-validation-summary/view/:viewId`;
+    registry.addItem('GET', p);
+    v1AppRouter.get(p, ...httpAction);
+};
+
+const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `attributes-validation-summary-subscription`,
     (v1AppRouter: Router, registry: Registry): Promise<void> => {
         // perform db and router related setup
+        mountRoute(v1AppRouter, registry);
         return null;
     }
 );

@@ -7,6 +7,7 @@ import {DashboardWidgetService} from "../../../../service/dashboard-service/dash
 import {Reporting_ActiveUser, Reporting_MostActiveUsers} from "../../../../model/reporting.model";
 import {tap} from "rxjs/operators";
 import {ChartType} from "angular-google-charts";
+import uuid from "uuid";
 
 
 @Component({
@@ -17,6 +18,8 @@ import {ChartType} from "angular-google-charts";
     ]
 })
 export class MostActiveUsersWidgetComponent extends DashboardWidget implements OnInit{
+    
+    uid: string = uuid();
 
     static info(): DashboardWidgetInfo {
         return { id: 'most-active-users-widget', name: 'most-active-users-widget', type: MostActiveUsersWidgetComponent };
@@ -52,6 +55,7 @@ export class MostActiveUsersWidgetComponent extends DashboardWidget implements O
         this.mostActiveUsersWidgetService.getActiveUsersInfo().pipe(
             tap((r: Reporting_MostActiveUsers) => {
                 this.mostActiveUsers = r;
+                // this.doDraw();
                 this.mostActiveUsers.activeUsers.map((a: Reporting_ActiveUser) => {
                     d.push([ a.username, a.count ]);
                 });
@@ -59,4 +63,27 @@ export class MostActiveUsersWidgetComponent extends DashboardWidget implements O
             })
         ).subscribe();
     }
+
+    /*
+    doDraw() {
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(this.drawChart.bind(this));
+    }
+
+    drawChart() {
+        const d = [];
+        d.push(['Username', 'Access']);
+        this.mostActiveUsers.activeUsers.forEach((a: Reporting_ActiveUser) => {
+            d.push([a.username, a.count]);
+        });
+
+        const data = google.visualization.arrayToDataTable([ d ]);
+        const options = {
+            title: 'Most Active Users'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById(this.uid));
+        chart.draw(data, options);
+    }
+     */
 }

@@ -3,7 +3,7 @@ import {ViewDataThumbnailPage} from "../page-object/sub-page-object/view-data-th
 import {AreaUnits} from "../model/unit.model";
 
 
-describe('view-data-thumbnail spec', () => {
+describe.skip('view-data-thumbnail spec', () => {
 
     let viewDataThumbnailPage: ViewDataThumbnailPage;
 

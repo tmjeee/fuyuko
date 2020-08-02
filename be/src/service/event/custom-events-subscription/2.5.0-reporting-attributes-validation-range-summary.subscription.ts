@@ -172,10 +172,8 @@ import {
     vFnHasAnyUserRoles
 } from "../../../route/v1/common-middleware";
 import {ROLE_VIEW} from "../../../model/role.model";
-import {Reporting_ViewValidationRangeSummary, Reporting_ViewValidationSummary} from "../../../model/reporting.model";
 import {doInDbConnection, QueryA, QueryI} from "../../../db";
 import {Connection} from "mariadb";
-import {RuleLevel} from "../../../model/rule.model";
 import {ApiResponse} from "../../../model/api-response.model";
 
 
@@ -354,11 +352,22 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
-
         const viewId: number = Number(req.params.viewId);
-        const ranges: Reporting_ViewValidationSummary[] = await doInDbConnection(async (conn: Connection) => {
-
-            const ranges: Reporting_ViewValidationSummary[] = [];
+       
+        const r: {
+            viewId: number;
+            viewName: string;
+            ranges: {
+                validationId: number,
+                validationName: string,
+                attributes: {
+                    attributeId: number,
+                    attributeName: string,
+                    errors: number,
+                    warnings: number
+                }[];
+            }[];
+        } = await doInDbConnection(async (conn: Connection) => {
 
             const q1: QueryA = await conn.query(`
                 SELECT 
@@ -386,6 +395,8 @@ const httpAction: any[] = [
             if (q1 && q1.length) {
                 let viewId: number;
                 let viewName: string;
+                
+                const ranges = [];
                 for (const qi of q1) {
                     const validationId: number = qi.VAL_ID;
                     const validationName: string = qi.VAL_NAME;
@@ -395,69 +406,79 @@ const httpAction: any[] = [
                     
                     const q2: QueryA = await conn.query(`
                     SELECT 
-                         LEVEL, COUNT(*) AS COUNT
+                        E.VIEW_VALIDATION_ID AS VALIDATION_ID,
+                        E.VIEW_ATTRIBUTE_ID AS ATTRIBUTE_ID,
+                        A.NAME AS ATTRIBUTE_NAME,
+                        E.LEVEL AS LEVEL,
+                        COUNT(*) AS COUNT
                     FROM TBL_VIEW_VALIDATION_ERROR AS E
-                    INNER JOIN TBL_VIEW_VALIDATION AS V ON V.ID = E.VIEW_VALIDATION_ID
-                    WHERE E.VIEW_VALIDATION_ID = ? 
-                    GROUP BY E.LEVEL
+                    LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.ID = E.VIEW_ATTRIBUTE_ID
+                    WHERE E.VIEW_VALIDATION_ID = ?
+                    GROUP BY E.VIEW_VALIDATION_ID, E.VIEW_ATTRIBUTE_ID, E.LEVEL
                 `, [validationId]);
 
-                    const r: { totalWithErrors: number, totalWithWarnings: number } = q2.reduce((acc: { totalWithErrors: number, totalWithWarnings: number }, i: QueryI) => {
-                        if ((i.LEVEL as RuleLevel) == 'WARN') {
-                            acc.totalWithWarnings = i.COUNT;
-                        } else if ((i.LEVEL as RuleLevel) == 'ERROR') {
-                            acc.totalWithErrors = i.COUNT;
+                    const acc: {
+                       totalAttributeErrors: number, totalAttributeWarnings: number
+                    } = q2.reduce((acc: { totalAttributeErrors: number, totalAttributeWarnings: number}, i: QueryI) => {
+                        if (i.LEVEL == 'WARN') {
+                            (acc).totalAttributeWarnings += i.COUNT;
+                        }
+                        if (i.LEVEL == 'ERROR') {
+                            (acc).totalAttributeErrors += i.COUNT;
                         }
                         return acc;
-                    }, {totalWithErrors: 0, totalWithWarnings: 0});
+                    }, {
+                        totalAttributeErrors: 0,
+                        totalAttributeWarnings: 0
+                    });
 
-                    const rs: Reporting_ViewValidationSummary = {
+                    const range = {
                         validationId,
                         validationName,
-                        viewId,
-                        viewName,
-                        totalItems,
-                        totalWithErrors: r.totalWithErrors,
-                        totalWithWarnings: r.totalWithWarnings
-                    } as Reporting_ViewValidationSummary;
-
-                    ranges.push(rs);
+                        totalAttributeErrors: acc.totalAttributeErrors,
+                        totalAttributeWarnings: acc.totalAttributeWarnings
+                    };
+                    ranges.push(range);
                 }
-
-                /*
-                while (ranges.length < 10) {
-                    ranges.push({
-                        validationId: null,
-                        validationName: '',
-                        viewId,
-                        viewName,
-                        totalItems: 0,
-                        totalWithErrors: 0,
-                        totalWithWarnings: 0
-                    });
-                }
-                */
+                
+                return {
+                    viewId,
+                    viewName,
+                    ranges
+                };
             }
-            return ranges.reverse();
+            return null;
         });
-
+        
         res.status(200).json({
-            status: 'SUCCESS',
+            status: "SUCCESS",
             message: 'success',
-            payload: {
-               range: ranges
-            } as Reporting_ViewValidationRangeSummary
-        } as ApiResponse<Reporting_ViewValidationRangeSummary>);
+            payload: r
+        } as ApiResponse<{
+            viewId: number;
+            viewName: string;
+            ranges: {
+                validationId: number,
+                validationName: string,
+                attributes: {
+                    attributeId: number,
+                    attributeName: string,
+                    errors: number,
+                    warnings: number
+                }[];
+            }[];
+        }>);
     }
 ];
 
-const mountRoute = (v1AppRegistry: Router, registry: Registry) => {
-   const p = `/reporting/view-validation-range-summary/view/:viewId`; 
-   registry.addItem('GET', p);
-   v1AppRegistry.get(p, ...httpAction);
-}
+const mountRoute = (v1AppRouter: Router, registry: Registry) => {
+    const p = `/reporting/view-attributes-validation-range-summary/view/:viewId`;
+    registry.addItem('GET', p);
+    v1AppRouter.get(p, ...httpAction);
+    
+};
 
-const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `reporting-view-validation-range-summary-subscription`,
+const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `attributes-validation-range-summary-subscription`,
     (v1AppRouter: Router, registry: Registry): Promise<void> => {
         // perform db and router related setup
         mountRoute(v1AppRouter, registry);
