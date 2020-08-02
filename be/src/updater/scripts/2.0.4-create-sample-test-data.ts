@@ -314,6 +314,7 @@ const createManyRules = async(conn: Connection, viewId: number, att1Id: number, 
                 id: -1,
                 name: `Rule #${x}`,
                 description: `Rule #${x} Description`,
+                level: (x % 2) ? 'ERROR' : 'WARN',
                 validateClauses: [
                     {
                         id: -1,

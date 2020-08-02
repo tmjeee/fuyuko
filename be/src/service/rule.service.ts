@@ -109,7 +109,7 @@ const _ruleAdd = async (conn: Connection, viewId: number, rule2: Rule2) => {
         }
 
 
-        const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS, LEVEL) VALUES (?,?,?,'ENABLED',?)`, [viewId, rule2.name, rule2.description, rule2.level]);
+        const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS, LEVEL) VALUES (?,?,?,'ENABLED',?)`, [viewId, rule2.name, rule2.description, rule2.level ? rule2.level : 'ERROR']);
         const ruleId: number = rq.insertId;
 
         for (const validateClause of rule2.validateClauses) {
