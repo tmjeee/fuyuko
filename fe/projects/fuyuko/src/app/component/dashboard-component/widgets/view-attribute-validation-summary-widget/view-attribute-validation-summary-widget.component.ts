@@ -65,11 +65,13 @@ export class ViewAttributeValidationSummaryWidgetComponent extends DashboardWidg
                 tap((r: Reporting_ViewAttributeValidationSummary) => {
                     this.r = r;
                     const d: any = [];
-                    r.attributes.forEach((a: {
-                        attributeId: number, attributeName: string, errors: number, warnings: number
-                    }) => {
-                        d.push([a.attributeName, a.warnings, a.errors])
-                    });
+                    if (r.attributes && r.attributes.length) {
+                        r.attributes.forEach((a: {
+                            attributeId: number, attributeName: string, errors: number, warnings: number
+                        }) => {
+                            d.push([a.attributeName, a.warnings, a.errors])
+                        });
+                    }
                     this.data = d;
                 })
             ).subscribe()
