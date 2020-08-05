@@ -37,6 +37,11 @@ export class ViewAttributeValidationSummaryWidgetComponent extends DashboardWidg
         legend: {
             position: 'bottom'
         },
+        hAxis: {
+            viewWindow: {
+                min: 0
+            }
+        }
     };
     type: ChartType = ChartType.BarChart;
 

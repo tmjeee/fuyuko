@@ -3,6 +3,7 @@ import {ItemImage, ItemValTypes, Value} from "../model/item.model";
 import {AttributeType} from "../model/attribute.model";
 import {OperatorType} from "../model/operator.model";
 import {RuleLevel} from "../model/rule.model";
+import {Status} from "../model/status.model";
 
 
 
@@ -110,7 +111,7 @@ export interface ItemMetadataEntry2 {
 export interface Rule2 {
     id: number;
     name: string;
-    status: string;
+    status: Status;
     description: string;
     level: RuleLevel;
     validateClauses: ValidateClause2[];

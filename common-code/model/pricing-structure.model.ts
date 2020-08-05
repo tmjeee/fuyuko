@@ -1,12 +1,14 @@
 import {PaginableApiResponse} from "./api-response.model";
 import {CountryCurrencyUnits} from "./unit.model";
 import {Group} from "./group.model";
+import {Status} from "./status.model";
 
 export interface PricingStructure {     // pricing structure
     id: number; // pricing structure id
     viewId: number;
     viewName: string;
     name: string;
+    status: Status;
     description: string;
     creationDate: Date;
     lastUpdate: Date;
@@ -17,6 +19,7 @@ export interface PricingStructureWithItems { // pricing structure
     viewId: number;
     name: string;
     description: string;
+    status: Status;
     items: PaginableApiResponse<PricingStructureItemWithPrice[]>;
     creationDate: Date;
     lastUpdate: Date;

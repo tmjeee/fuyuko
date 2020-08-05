@@ -3,11 +3,11 @@
         <div fxFlex class="mat-title"> Missing Attribute Values </div>
         <div fxFlex>
             <mat-form-field>
-                <mat-label>Type</mat-label>
+                <mat-label>View</mat-label>
                 <mat-select [value]="selectedView" (selectionChange)="onViewChange($event)">
                     <mat-option *ngFor="let view of (i ? i.views : [])" [value]="view">{{view.viewName}}</mat-option>
                 </mat-select>
-                <mat-hint>Select a type</mat-hint>
+                <mat-hint>Select a view</mat-hint>
             </mat-form-field>
         </div>
         <div fxFlex>

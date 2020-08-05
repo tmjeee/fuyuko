@@ -31,7 +31,7 @@ import {
  *  === searchGroupsAssociatedWithPricingStructure ===
  *  ======================================================
  */
-export const searchGroupsAssociatedWithPricingStructure = async (pricingStructureId: number, groupName: string): Promise<Group[]> => {
+export const searchGroupsAssociatedWithPricingStructure = async (pricingStructureId: number, groupName?: string): Promise<Group[]> => {
     const groups: Group[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
@@ -104,7 +104,7 @@ export const searchGroupsAssociatedWithPricingStructure = async (pricingStructur
  *  === searchGroupsNotAssociatedWithPricingStructure ===
  *  ======================================================
  */
-export const searchGroupsNotAssociatedWithPricingStructure = async (pricingStructureId: number, groupName: string): Promise<Group[]> => {
+export const searchGroupsNotAssociatedWithPricingStructure = async (pricingStructureId: number, groupName?: string): Promise<Group[]> => {
     const groups: Group[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
@@ -229,6 +229,7 @@ export const getPricingStructureGroupAssociations = async (): Promise<PricingStr
                     id: i.PS_ID,
                     name: i.PS_NAME,
                     description: i.PS_DESCRIPTION,
+                    status: i.PS_STATUS,
                     viewId: i.V_ID,
                     viewName: i.V_NAME,
                     lastUpdate: i.V_LAST_UPDATE,
@@ -373,19 +374,20 @@ export const updatePricingStructureStatus = async (pricingStructureId: number, s
  *  === addOrUpdatePricingStructures ===
  *  ======================================================
  */
-export const addOrUpdatePricingStructures = async (pricingStructures: PricingStructure[]): Promise<string[]> => {
+export interface AddOrUpdatePricingStructureInput { name: string; description: string;  viewId: number; status?: Status; id?: number,  };
+export const addOrUpdatePricingStructures = async (pricingStructures: AddOrUpdatePricingStructureInput[]): Promise<string[]> => {
     const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         for (const pricingStructure of pricingStructures) {
-            const viewId: number = pricingStructure.viewId;
-            if (pricingStructure.id <= 0) { // insert
+            if (!pricingStructure.id || pricingStructure.id <= 0) { // insert
+                const viewId: number = pricingStructure.viewId;
                 const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND VIEW_ID=?`, [pricingStructure.name, viewId]);
                 if (qq[0].COUNT > 0) {
                     errors.push(`Pricing structure with name ${pricingStructure.name} aready exists in view id ${viewId}`);
                 } else {
                     const q: QueryResponse = await conn.query(`
-                            INSERT INTO TBL_PRICING_STRUCTURE (NAME, DESCRIPTION, VIEW_ID, STATUS) VALUE (?,?,?, 'ENABLED')
-                        `, [pricingStructure.name, pricingStructure.description, pricingStructure.viewId]);
+                            INSERT INTO TBL_PRICING_STRUCTURE (NAME, DESCRIPTION, VIEW_ID, STATUS) VALUE (?,?,?,?)
+                        `, [pricingStructure.name, pricingStructure.description, pricingStructure.viewId, pricingStructure.status ? pricingStructure.status : 'ENABLED']);
                     if (q.affectedRows <= 0) {
                         errors.push(`Unable to persist pricing structure name ${pricingStructure.name}`);
                     }
@@ -396,14 +398,15 @@ export const addOrUpdatePricingStructures = async (pricingStructures: PricingStr
                     errors.push(`Pricing structrue with id ${pricingStructure.id} do not exists`);
                 } else {
                     const q: QueryResponse = await conn.query(`
-                        UPDATE TBL_PRICING_STRUCTURE SET NAME=?, DESCRIPTION=? WHERE ID=? AND VIEW_ID=? AND STATUS='ENABLED' 
-                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.id, pricingStructure.viewId]);
+                        UPDATE TBL_PRICING_STRUCTURE SET NAME=?, DESCRIPTION=? WHERE ID=? AND VIEW_ID=? AND STATUS=? 
+                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.id, pricingStructure.viewId, pricingStructure.status ? pricingStructure.status : 'ENABLED']);
                     if (q.affectedRows <= 0) {
                         errors.push(`Unable to update pricing structure id ${pricingStructure.id}`);
                     }
                 }
             }
         }
+        return errors;
     });
     fireEvent({
         type: "AddOrUpdatePricingStructuresEvent",
@@ -440,6 +443,7 @@ export const getPricingStructuresByView = async (viewId: number): Promise<Pricin
                 id: i.PS_ID,
                 viewId: i.PS_VIEW_ID,
                 name: i.PS_NAME,
+                status: i.PS_STATUS,
                 viewName: i.V_NAME,
                 lastUpdate: i.PS_LAST_UPDATE,
                 description: i.PS_DESCRIPTION,
@@ -494,6 +498,7 @@ export const getPartnerPricingStructures = async (userId: number): Promise<Prici
         const v: PricingStructure = {
             id: curr.PS_ID,
             name: curr.PS_NAME,
+            status: curr.PS_STATUS,
             viewId: curr.PS_VIEW_ID,
             viewName: curr.V_NAME,
             description: curr.PS_DESCRIPTION,
@@ -605,6 +610,7 @@ export const getAllPricingStructures = async (): Promise<PricingStructure[]> => 
                     PS.ID AS PS_ID, 
                     PS.VIEW_ID AS PS_VIEW_ID, 
                     PS.NAME AS PS_NAME, 
+                    PS.STATUS AS PS_STATUS,
                     V.NAME AS V_NAME,
                     PS.DESCRIPTION AS PS_DESCRIPTION, 
                     PS.CREATION_DATE AS PS_CREATION_DATE, 
@@ -619,6 +625,7 @@ export const getAllPricingStructures = async (): Promise<PricingStructure[]> => 
             const pricingStructure: PricingStructure = {
                 id: i.PS_ID,
                 name: i.PS_NAME,
+                status: i.PS_STATUS,
                 viewName: i.V_NAME,
                 viewId: i.PS_VIEW_ID,
                 description: i.PS_DESCRIPTION,
@@ -645,7 +652,7 @@ export const getAllPricingStructures = async (): Promise<PricingStructure[]> => 
  *  === getPricingStructureByName ===
  *  ======================================================
  */
-export const getPricingStructureByName =  async (pricingStructureName: string): Promise<PricingStructure> => {
+export const getPricingStructureByName =  async (viewId: number, pricingStructureName: string): Promise<PricingStructure> => {
     const pricingStructure: PricingStructure = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
@@ -659,13 +666,14 @@ export const getPricingStructureByName =  async (pricingStructureName: string): 
                     PS.LAST_UPDATE AS PS_LAST_UPDATE
                 FROM TBL_PRICING_STRUCTURE AS PS
                 LEFT JOIN TBL_VIEW AS V ON V.ID = PS.VIEW_ID
-                WHERE PS.NAME=? 
-            `, [pricingStructureName]);
+                WHERE PS.NAME=? AND V.ID = ? 
+            `, [pricingStructureName, viewId]);
 
         return q.reduce((acc: PricingStructure, i: QueryI) => {
             acc.id = i.PS_ID;
             acc.viewId = i.PS_VIEW_ID;
             acc.name = i.PS_NAME;
+            acc.status = i.PS_STATUS;
             acc.viewName = i.V_NAME;
             acc.description = i.PS_DESCRIPTION;
             acc.creationDate = i.PS_CREATION_DATE;
@@ -707,6 +715,7 @@ export const getPricingStructureById = async (pricingStructureId: number): Promi
             acc.id = i.PS_ID;
             acc.viewId = i.PS_VIEW_ID;
             acc.name = i.PS_NAME;
+            acc.status = i.PS_STATUS;
             acc.viewName = i.V_NAME;
             acc.description = i.PS_DESCRIPTION;
             acc.creationDate = i.PS_CREATION_DATE;

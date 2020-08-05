@@ -42,6 +42,11 @@ export class ViewAttributeValidationRangeSummaryWidgetComponent extends Dashboar
       legend: {
          position: 'bottom'
       },
+      hAxis: {
+          viewWindow: {
+              min: 0
+          }
+      }
    };
    type: ChartType = ChartType.BarChart;
 

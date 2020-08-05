@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -z $VERSION ] ; then
-  VERSION="1.0.0-beta"
+  VERSION="development-version"
 fi
 ZIP_FILE="fuyuko-${VERSION}.zip"
 

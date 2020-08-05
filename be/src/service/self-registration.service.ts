@@ -244,7 +244,7 @@ export const searchSelfRegistrationsByUsername = async (username: string): Promi
 export const deleteSelfRegistration = async (selfRegistrationId: number): Promise<boolean> => {
     const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`DELETE FROM TBL_SELF_REGISTRATION WHERE ID = ?`, [selfRegistrationId]);
-        return (q.affectedRows)
+        return (!!q.affectedRows)
     });
     fireEvent({
        type: "DeleteSelfRegistrationEvent",

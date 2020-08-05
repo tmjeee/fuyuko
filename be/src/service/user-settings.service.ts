@@ -14,8 +14,8 @@ DEFAULT_SETTINGS.openSubSideNav = true;
  *  === updateUserSettings ===
  *  =============================
  */
-export type UpdateUserSettingsInput = _UpdateUserSettingsInput[];
-export interface _UpdateUserSettingsInput { [key: string]: string }
+export type UpdateUserSettingsInput = _UpdateUserSettingsInput;
+export interface _UpdateUserSettingsInput { [key: string]: any }
 export const updateUserSettings = async (userId: number, settings: UpdateUserSettingsInput): Promise<string[]> => {
     const errors: string[] = [];
     for (const key in settings) {

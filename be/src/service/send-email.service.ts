@@ -3,6 +3,11 @@ import config from '../config';
 import {createTransport, SentMessageInfo, Transporter, SendMailOptions, TransportOptions} from "nodemailer";
 import {i} from '../logger';
 
+/**
+ * =================
+ * === sendEmail ===
+ * =================
+ */
 export const sendEmail = async (toEmail: string, subject: string, text: string): Promise<SendMailOptions> => {
     const fromEmail = config['smtp-from-email'];
     const info: SentMessageInfo = await _sendEmail( toEmail, subject, fromEmail, text, {

@@ -40,8 +40,13 @@ export class ViewValidationRangeSummaryWidgetComponent extends DashboardWidget i
         legend: {
             position: 'bottom'
         },
+        hAxis: {
+            viewWindow: {
+                min: 0
+            }
+        }
     };
-    type: ChartType = ChartType.BarChart;
+    type:  ChartType = ChartType.BarChart;
 
     constructor(protected dashboardWidgetService: DashboardWidgetService,
                 protected viewService: ViewService,

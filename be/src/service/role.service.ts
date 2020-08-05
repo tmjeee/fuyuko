@@ -18,7 +18,7 @@ import {
 export const addOrUpdateRole = async (role: Role): Promise<string[]> => {
     const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
-        if (role.id < 0) { // add
+        if (!role.id || role.id < 0) { // add
             const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ROLE WHERE NAME=? `, [role.name]);
             if (qc[0].COUNT > 0) {
                 errors.push(`Role ${role.name} already exists`);
@@ -30,7 +30,7 @@ export const addOrUpdateRole = async (role: Role): Promise<string[]> => {
             }
         } else { // update
             const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ROLE WHERE ID=?`, [role.id]);
-            if (qc[0].COUNT > 0) {
+            if (qc[0].COUNT <= 0) {
                 errors.push(`Role id ${role.id} do not exists`);
             } else {
                 const q: QueryResponse = await conn.query(`UPDATE TBL_ROLE SET NAME=?, DESCRIPTION=? WHERE ID=?`, [role.name, role.description, role.id]);

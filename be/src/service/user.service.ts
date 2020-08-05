@@ -41,6 +41,16 @@ export const addUser = async (u: AddUserInput): Promise<string[]> => {
         `, [u.username, u.email, u.status ? u.status : ENABLED, hashedPassword(u.password), u.firstName, u.lastName]);
             if (u1.affectedRows <= 0) {
                 errors.push(`Failed to insert user ${u.username}`);
+            } else {
+                // insert theme
+                const insertedUserId = u1.insertId;
+                const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER_THEME WHERE USER_ID=?`, insertedUserId);
+                if (q[0].COUNT <= 0) {
+                    const qr: QueryResponse = await conn.query('INSERT INTO TBL_USER_THEME (USER_ID, THEME) VALUES (?,?)', [insertedUserId, _theme]);
+                    if (qr.affectedRows <= 0) {
+                        errors.push(`Failed to inser theme ${_theme} for user ${u.username}`);
+                    }
+                }
             }
         }
         return errors;
@@ -671,7 +681,7 @@ export const deleteUser = async (userId: number): Promise<boolean> => {
         const q: QueryResponse = await conn.query(`
                 UPDATE TBL_USER SET STATUS = ? WHERE ID = ?
             `, ['DELETED', userId]);
-        return (q.affectedRows);
+        return (!!q.affectedRows);
     });
     fireEvent({
        type: "DeleteUserEvent",
@@ -815,7 +825,7 @@ export const getUserByUsername = async (username: string): Promise<User> => {
         const m: Map<number/*group id*/, Group> = new Map();
         const r: Map<number/*group id*/, Role[]> = new Map();
 
-        return q.reduce((u: User, i: QueryI, index: number) => {
+        const u: User =  q.reduce((u: User, i: QueryI, index: number) => {
             if (index === 0) {
                 u.id = i.U_ID;
                 u.firstName = i.U_FIRSTNAME;
@@ -857,6 +867,8 @@ export const getUserByUsername = async (username: string): Promise<User> => {
             email: null,
             groups: []
         } as User);
+
+        return (u.id) ? u : null;
     });
     fireEvent({
         type: "GetUserByUsernameEvent",
@@ -904,7 +916,7 @@ export const getUserById = async (userId: number): Promise<User>  => {
         const m: Map<number/*group id*/, Group> = new Map();
         const r: Map<number/*group id*/, Role[]> = new Map();
 
-        return q.reduce((u: User, i: QueryI, index: number) => {
+        const u: User = q.reduce((u: User, i: QueryI, index: number) => {
            if (index === 0) {
                u.id = i.U_ID;
                u.firstName = i.U_FIRSTNAME;
@@ -936,9 +948,6 @@ export const getUserById = async (userId: number): Promise<User>  => {
                description: i.R_DESCRIPTION
              } as Role);
            }
-
-
-
            return u;
         }, {
             id: null,
@@ -949,6 +958,8 @@ export const getUserById = async (userId: number): Promise<User>  => {
             email: null,
             groups: []
         } as User);
+
+        return (u.id ? u : null);
     });
     fireEvent({
        type: "GetUserByIdEvent",

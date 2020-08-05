@@ -284,8 +284,8 @@ const INSERT_VIEW_DATA = async (viewId: number, viewGroupId: number, editGroupId
     ]);
     checkErrors(errors, `Failed to save pricing structures`);
 
-    const ps1: PricingStructure = await getPricingStructureByName(`Pricing Structure #1`);
-    const ps2: PricingStructure = await getPricingStructureByName(`Pricing Structure #2`);
+    const ps1: PricingStructure = await getPricingStructureByName(viewId, `Pricing Structure #1`);
+    const ps2: PricingStructure = await getPricingStructureByName(viewId, `Pricing Structure #2`);
 
     // pricing structure with groups
     errors = await linkPricingStructureWithGroupId(ps1.id, adminGroupId);

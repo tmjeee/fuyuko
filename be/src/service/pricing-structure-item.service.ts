@@ -113,7 +113,7 @@ export const addItemToPricingStructure = async (viewId: number, pricingStructure
                     LEFT JOIN TBL_PRICING_STRUCTURE AS P ON P.ID = I.PRICING_STRUCTURE_ID
                     WHERE I.ITEM_ID=? AND I.PRICING_STRUCTURE_ID=? AND P.VIEW_ID=?`,
             [itemId, pricingStructureId, viewId]);
-        if (q && q.length > 0) { // item already in pricing structure
+        if (q && q.length > 0 && q[0].COUNT > 0) { // item already in pricing structure
             return false;
         } else { // item not yet in this pricing structure
             await conn.query(`INSERT INTO TBL_PRICING_STRUCTURE_ITEM (ITEM_ID, PRICING_STRUCTURE_ID, COUNTRY, PRICE) VALUES (?,?,?,?)`,

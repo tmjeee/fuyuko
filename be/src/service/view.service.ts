@@ -29,7 +29,7 @@ const SQL_3 = `${SQL_1} AND NAME=?`;
 export const deleteView = async (viewId: number): Promise<boolean> => {
     const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW SET STATUS='DELETED' WHERE ID=?`,[viewId]);
-        return q.affectedRows;
+        return !!q.affectedRows;
     });
     fireEvent({
        type: "DeleteViewEvent",

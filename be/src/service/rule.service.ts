@@ -109,7 +109,7 @@ const _ruleAdd = async (conn: Connection, viewId: number, rule2: Rule2) => {
         }
 
 
-        const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS, LEVEL) VALUES (?,?,?,'ENABLED',?)`, [viewId, rule2.name, rule2.description, rule2.level ? rule2.level : 'ERROR']);
+        const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS, LEVEL) VALUES (?,?,?,?,?)`, [viewId, rule2.name, rule2.description, (rule2.status ? rule2.status : 'ENABLED'), (rule2.level ? rule2.level : 'ERROR')]);
         const ruleId: number = rq.insertId;
 
         for (const validateClause of rule2.validateClauses) {
@@ -157,7 +157,7 @@ const _ruleUpdate = async (conn: Connection, viewId: number, rule2: Rule2) => {
             return;
         }
 
-        await conn.query(`UPDATE TBL_RULE SET NAME=?, DESCRIPTION=?, LEVEL=? WHERE ID=?`, [rule2.name, rule2.description, rule2.level, ruleId]);
+        await conn.query(`UPDATE TBL_RULE SET NAME=?, DESCRIPTION=?, LEVEL=?, STATUS=? WHERE ID=?`, [rule2.name, rule2.description, rule2.level, (rule2.status ? rule2.status : 'ENABLED'), ruleId]);
 
         await conn.query(`DELETE FROM TBL_RULE_VALIDATE_CLAUSE WHERE RULE_ID=?`, [ruleId]);
 
