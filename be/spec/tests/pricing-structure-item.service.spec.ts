@@ -6,7 +6,7 @@ import {
     getViewByName,
     setPrices
 } from "../../src/service";
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {PricingStructure, PricingStructureItemWithPrice} from "../../src/model/pricing-structure.model";
 import {Item} from "../../src/model/item.model";
 import {View} from "../../src/model/view.model";
@@ -19,18 +19,14 @@ describe('pricing-structure-item', () => {
     let pricingStructure2: PricingStructure;
     let item: Item;
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
     beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
         view = await getViewByName('Test View 1');
         pricingStructure = await getPricingStructureByName(view.id, 'Pricing Structure #1');
         pricingStructure2 = await getPricingStructureByName(view.id, 'Pricing Structure #2');
         item = await getItemByName(view.id, 'Item-1');
-    });
+    }, JASMINE_TIMEOUT);
 
     it('test setPrices', async () => {
         const errs: string[] = await setPrices([
@@ -54,7 +50,7 @@ describe('pricing-structure-item', () => {
         expect(i.country).toBe('AED');
     });
 
-    fit('test addItemToPricingStructure and getPricingStructureItem', async () => {
+    it('test addItemToPricingStructure and getPricingStructureItem', async () => {
         const r: boolean = await addItemToPricingStructure(view.id, pricingStructure2.id, item.id);
         expect(r).toBeTruthy();
 

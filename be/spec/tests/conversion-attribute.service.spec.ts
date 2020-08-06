@@ -2,6 +2,7 @@ import {attributeConvert, attributeRevert} from "../../src/service/conversion-at
 import {Attribute, AttributeType, Pair1} from "../../src/model/attribute.model";
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../../src/server-side-model/server-side.model";
 import {Metadata} from "showdown";
+import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 describe(`conversion-attribute.service.spec`, () => {
 

@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {
     addOrUpdateRole,
     addRoleToGroup,
@@ -17,23 +17,19 @@ describe('role.service', () => {
     let adminRole: Role;
     let viewGroup: Group;
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
     beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
         adminRole = await getRoleByName('ADMIN');
         viewGroup = await getGroupByName('VIEW Group');
-    });
+    }, JASMINE_TIMEOUT);
 
     it ('test addOrUpdateRole', async () => {
         const err: string[] = await addOrUpdateRole({
            name: "XXXROLE",
            description: "XXXROLE DESCRIPTION"
         } as Role);
-        console.log(err);
+        //console.log(err);
 
         expect(err.length).toBe(0);
 
@@ -90,7 +86,7 @@ describe('role.service', () => {
         const r: Role[] = await getAllRoles();
 
         // console.log(util.inspect(r));
-        expect(r.length).toBe(4);
+        expect(r.length).toBeGreaterThanOrEqual(4);
         expect(r[0].name).toBe('VIEW');
         expect(r[1].name).toBe('EDIT');
         expect(r[2].name).toBe('ADMIN');

@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {
     addOrUpdatePricingStructures,
     getAllPricingStructureItemsWithPrice,
@@ -37,17 +37,13 @@ describe('pricing-structure-service', () => {
     let admin1: User;
 
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
     beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
         view = await getViewByName('Test View 1');
         viewer1 = await getUserByUsername('viewer1');
         admin1 = await getUserByUsername('admin1');
-    });
+    }, JASMINE_TIMEOUT);
 
 
 
@@ -143,7 +139,6 @@ describe('pricing-structure-service', () => {
         expect(g3.length).toBe(0);
 
         const errors: string[] = await linkPricingStructureWithGroupId(1, g.id);
-        console.log(errors);
         expect(errors).toBeDefined();
         expect(errors.length).toBe(0);
 
@@ -168,7 +163,7 @@ describe('pricing-structure-service', () => {
     });
 
     it(`test addOrUpdatePricingStructure`, async () => {
-        const ps1name = `PS1-${new Date()}`;
+        const ps1name = `PS1-${Math.random()}`;
         const err1: string[]  = await addOrUpdatePricingStructures([{
             name: ps1name,
             viewId: view.id,
@@ -180,7 +175,7 @@ describe('pricing-structure-service', () => {
         expect(ps1.name).toBe(ps1name);
         expect(ps1.description).toBe('PS1 Description');
 
-        const ps2name = `PS1xxx-${new Date()}`;
+        const ps2name = `PS1xxx-${Math.random()}`;
         const err2: string[] = await addOrUpdatePricingStructures([{
             viewId: view.id,
             id: ps1.id,
@@ -196,8 +191,8 @@ describe('pricing-structure-service', () => {
     it(`test getPricingStructureByView`, async () => {
         const ps: PricingStructure[] = await getPricingStructuresByView(view.id);
 
-        console.log(util.inspect(ps));
-        expect(ps.length).toBe(2);
+        //console.log(util.inspect(ps));
+        expect(ps.length).toBeGreaterThanOrEqual(2);
         expect(ps[0].name).toBe('Pricing Structure #1');
         expect(ps[0].viewId).toBe(view.id);
         expect(ps[0].viewName).toBe('Test View 1');
@@ -261,7 +256,7 @@ describe('pricing-structure-service', () => {
         const pricingStructures = await getAllPricingStructures();
 
         // console.log(util.inspect(pricingStructures));
-        expect(pricingStructures.length).toBe(4);
+        expect(pricingStructures.length).toBeGreaterThanOrEqual(4);
         expect(pricingStructures[0].name).toBe('Pricing Structure #1');
         expect(pricingStructures[0].viewName).toBe('Test View 1');
         expect(pricingStructures[1].name).toBe('Pricing Structure #2');

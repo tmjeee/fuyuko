@@ -1,15 +1,13 @@
 import {activateInvitation, ActivateInvitationResult, createInvitation, getInvitationByCode} from "../../src/service";
 import {Invitation} from "../../src/model/invitation.model";
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe(`invitation.service`, () => {
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
+    beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
     }, JASMINE_TIMEOUT);
 
     it(`create & validate`, async () => {
@@ -26,7 +24,8 @@ describe(`invitation.service`, () => {
         expect(invitation.groupIds).toContain(1);
 
         // activate invitation
-        const r: ActivateInvitationResult = await activateInvitation('testcode', `${new Date()}`, `${new Date()}`, `${new Date()}`, `${new Date()}`, `test`);
+        const name = `${Math.random()}`;
+        const r: ActivateInvitationResult = await activateInvitation('testcode', `${name}`, `${name}@gmail.com`, `${name}`, `${name}`, `test`);
         expect(r.errors.length).toBe(0);
         expect(r.registrationId).toBeDefined();
 

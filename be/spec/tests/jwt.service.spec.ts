@@ -1,10 +1,11 @@
 import {createJwtToken, decodeJwtToken, verifyJwtToken} from "../../src/service";
 import {User} from "../../src/model/user.model";
 import {JwtPayload} from "../../src/model/jwt.model";
+import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe('jwt.service', () => {
-    
+
     it('jwtToken code and decode', () => {
         const jwt: string = createJwtToken({
            id: 1,

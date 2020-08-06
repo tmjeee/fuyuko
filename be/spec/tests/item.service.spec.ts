@@ -19,7 +19,7 @@ import {
     VolumeValue, WeightValue, WidthValue
 } from "../../src/model/item.model";
 import {Attribute} from "../../src/model/attribute.model";
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupTestDatabase, setupBeforeAll2} from "../helpers/test-helper";
 import {User} from "../../src/model/user.model";
 
 
@@ -51,16 +51,12 @@ describe('item.service', () => {
     let selectAtt: Attribute;
     let doubleSelectAtt: Attribute;
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
-
     beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
+
         user = await getUserByUsername('cypress');
-        
+
         item1 = await getItemByName(viewId, 'Item-1');
         item2 = await getItemByName(viewId, 'Item-2');
         item3 = await getItemByName(viewId, 'Item-3');
@@ -83,8 +79,8 @@ describe('item.service', () => {
         weightAtt = await getAttributeInViewByName(viewId, 'weight attribute');
         selectAtt = await getAttributeInViewByName(viewId, 'select attribute');
         doubleSelectAtt = await getAttributeInViewByName(viewId, 'doubleselect attribute');
-    });
-    
+    }, JASMINE_TIMEOUT);
+
     it(`favourite items`, async () => {
 
         const errors: string[] = await addFavouriteItemIds(user.id, [item1.id, item3.id]);
@@ -139,8 +135,8 @@ describe('item.service', () => {
 
 
     it('add / edit item', async () => {
-        const itemName = `item-${new Date()}`;
-        const newItemName = `newItem-${new Date()}`;
+        const itemName = `item-${Math.random()}`;
+        const newItemName = `newItem-${Math.random()}`;
         
         // create item
         await addItem(viewId, {
@@ -614,8 +610,8 @@ describe('item.service', () => {
 
 
         // add or update item
-        const iName: string = `xxxx-item-${new Date()}`;
-        const iName2: string = `yyyy-item-${new Date()}`;
+        const iName: string = `xxxx-item-${Math.random()}`;
+        const iName2: string = `yyyy-item-${Math.random()}`;
         await addOrUpdateItem(viewId, {
             id: -1,
             name: iName,

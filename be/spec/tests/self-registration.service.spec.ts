@@ -4,21 +4,19 @@ import {
     selfRegister,
     SelfRegisterResult
 } from "../../src/service";
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {SelfRegistration} from "../../src/model/self-registration.model";
 import * as util from "util";
 
 describe('self-registration.service', () => {
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
+    beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
     }, JASMINE_TIMEOUT);
 
     it('test selfRegister', async () => {
-        const name = `XXX-self-registration-${new Date()}`;
+        const name = `XXX-self-registration-${Math.random()}`;
         const selfRegisterResult: SelfRegisterResult = await selfRegister(name, `${name}@gmail.com`, name,  name, 'xxx');
         expect(selfRegisterResult.errors.length).toBe(0);
 

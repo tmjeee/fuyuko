@@ -6,6 +6,7 @@ import {ItemValTypes, NumberValue, StringValue} from "../../src/model/item.model
 import {AttributeType} from "../../src/model/attribute.model";
 import {OperatorType} from "../../src/model/operator.model";
 import * as util from "util";
+import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe('conversion-rule.service', () => {

@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {
     addOrUpdateGroup,
     addUserToGroup,
@@ -12,11 +12,10 @@ import * as util from "util";
 
 
 describe(`group.service`, () => {
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
+
+    beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
     }, JASMINE_TIMEOUT);
 
     it (`search`, async () => {
@@ -42,7 +41,7 @@ describe(`group.service`, () => {
     });
 
     it(`add and delete group`, async() => {
-        const groupName = `group-${new Date()}`;
+        const groupName = `group-${Math.random()}`;
         const groupDescription = groupName;
 
         // verify create group

@@ -16,9 +16,11 @@ import {
 } from "../../src/service/compare-attribute-values.service";
 import moment = require("moment");
 import {compare} from "semver";
+import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe(`compare-attribute-values.service.spec`, () => {
+
     it(`convertToCm`, () => {
         expect(convertToCm(1, 'm')).toBe(100);
         expect(convertToCm(1, 'mm')).toBe(0.1);

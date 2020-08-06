@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {JobLogger, newJobLogger} from "../../src/service/job-log.service";
 import {getViewByName} from "../../src/service/view.service";
 import {View} from "../../src/model/view.model";
@@ -21,6 +21,11 @@ import {
 
 
 describe(`job-do-bulk-edit.service.spec.ts`, () => {
+
+  beforeAll(async () => {
+    await setupTestDatabase();
+    await setupBeforeAll2();
+  }, JASMINE_TIMEOUT);
 
   const createChanges = (): { [attributeId: number]: { old: Value, new: Value} } => {
     return {

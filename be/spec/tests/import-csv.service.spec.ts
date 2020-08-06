@@ -4,10 +4,17 @@ import {readFile} from "fs";
 import * as util from "util";
 import * as path from "path";
 import {CsvAttribute, CsvItem, CsvPrice} from "../../src/server-side-model/server-side.model";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe(`import-csv.service`, () => {
-  it(`readKeyPairs`, () => {
+
+   beforeAll(async () => {
+       await setupTestDatabase();
+       await setupBeforeAll2();
+   }, JASMINE_TIMEOUT);
+
+  it(`readKeyPairs`, async () => {
     let kp = readKeyPairs(`one=two`);
 
     expect(kp.length).toBe(2);

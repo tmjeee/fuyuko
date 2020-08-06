@@ -1,20 +1,13 @@
-import {setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {newConsoleLogger, newLoggingCallback, newJobLogger, JobLogger, LoggingCallback} from "../../src/service";
 
 describe('job-log.service', () => {
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    /*
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
-     */
-
     beforeAll(async () => {
-    });
-    
+        await setupTestDatabase();
+        await setupBeforeAll2();
+    }, JASMINE_TIMEOUT);
+
     it('newConsoleLogger', () => {
         const consoleLogger = newConsoleLogger;
         consoleLogger('INFO', 'testing');

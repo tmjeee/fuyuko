@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {
     getUserDashboardSerializedData,
     getUserDashboardWidgetSerializedData,
@@ -14,11 +14,10 @@ import * as util from "util";
 
 
 describe(`dashboard.service`, () => {
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
+
+    beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
     }, JASMINE_TIMEOUT);
 
     it(`save dashboard widget`, async () => {

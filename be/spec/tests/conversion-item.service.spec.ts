@@ -7,8 +7,10 @@ import {
     PricedItem2
 } from "../../src/server-side-model/server-side.model";
 import {Item, ItemImage, PricedItem, StringValue, Value} from "../../src/model/item.model";
+import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 describe('conversion-item.service.ts', () => {
+
     it('itemConvert', () => {
         const attributeId: number = 3;
         const d = new Date();

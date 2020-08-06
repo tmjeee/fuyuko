@@ -1,5 +1,5 @@
 import {getAttributeInViewByName, getItemWithFiltering, ItemWithFilteringResult} from "../../src/service";
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupTestDatabase, setupBeforeAll2} from "../helpers/test-helper";
 import {WhenClause} from "../../src/model/rule.model";
 import {Attribute} from "../../src/model/attribute.model";
 import {ItemValueOperatorAndAttribute} from "../../src/model/item-attribute.model";
@@ -35,14 +35,9 @@ describe('item-filtering.service', () => {
     let selectAtt: Attribute;
     let doubleSelectAtt: Attribute;
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
-
     beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
         stringAtt = await getAttributeInViewByName(viewId, 'string attribute');
         textAtt = await getAttributeInViewByName(viewId, 'text attribute');
         numberAtt = await getAttributeInViewByName(viewId, 'number attribute');
@@ -57,7 +52,7 @@ describe('item-filtering.service', () => {
         weightAtt = await getAttributeInViewByName(viewId, 'weight attribute');
         selectAtt = await getAttributeInViewByName(viewId, 'select attribute');
         doubleSelectAtt = await getAttributeInViewByName(viewId, 'doubleselect attribute');
-    });
+    }, JASMINE_TIMEOUT);
 
     // string
     it('getItemWithFiltering - string - eq', async () => {

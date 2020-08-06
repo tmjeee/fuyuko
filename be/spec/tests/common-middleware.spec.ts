@@ -2,7 +2,7 @@ import * as m from "../../src/route/v1/common-middleware";
 import {Request, Response, NextFunction} from 'express';
 import {ROLE_ADMIN, ROLE_EDIT, ROLE_VIEW} from "../../src/model/role.model";
 import {JwtPayload} from "../../src/model/jwt.model";
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {getUserByUsername} from "../../src/service/user.service";
 import {User} from "../../src/model/user.model";
 
@@ -13,21 +13,14 @@ describe('common-middleware', () => {
     let editor: User;
     let partner: User;
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
-
-    beforeAll(async (done: DoneFn) => {
+    beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
         admin = await getUserByUsername('admin1');
         viewer = await getUserByUsername('viewer1');
         editor = await getUserByUsername('editor1');
         partner = await getUserByUsername('partner1');
-        done();
-    });
+    }, JASMINE_TIMEOUT);
 
     it(`aFnAllTrue #1`, async () => {
         const r1: boolean = await m.aFnAllTrue([

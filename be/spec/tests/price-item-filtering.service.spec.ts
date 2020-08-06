@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {
     getAttributeInViewByName,
     getPricedItemsWithFiltering,
@@ -38,14 +38,9 @@ describe(`price-item-filtering.service`, () => {
     let selectAtt: Attribute;
     let doubleSelectAtt: Attribute;
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
-
     beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
         stringAtt = await getAttributeInViewByName(viewId, 'string attribute');
         textAtt = await getAttributeInViewByName(viewId, 'text attribute');
         numberAtt = await getAttributeInViewByName(viewId, 'number attribute');
@@ -60,7 +55,7 @@ describe(`price-item-filtering.service`, () => {
         weightAtt = await getAttributeInViewByName(viewId, 'weight attribute');
         selectAtt = await getAttributeInViewByName(viewId, 'select attribute');
         doubleSelectAtt = await getAttributeInViewByName(viewId, 'doubleselect attribute');
-    });
+    }, JASMINE_TIMEOUT);
 
     // string
     it('getPricedItemWithFiltering - string - eq', async () => {

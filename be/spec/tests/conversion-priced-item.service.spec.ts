@@ -6,9 +6,12 @@ import {
     ItemValue2,
     PricedItem2
 } from "../../src/server-side-model/server-side.model";
+import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe(`conversion-priced-item.service.ts`, () => {
+
+
     it('pricedItemConvert', () => {
         const attributeId: number = 3;
         const d = new Date();

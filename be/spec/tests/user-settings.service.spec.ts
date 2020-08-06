@@ -1,6 +1,5 @@
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {
-    getGroupByName,
     getSettings,
     getUserByUsername,
     updateUserSettings,
@@ -9,24 +8,18 @@ import {
 import {User} from "../../src/model/user.model";
 import {Settings} from "../../src/model/settings.model";
 
-
 describe('user-settings.service', () => {
 
-    let viewer1: User;
-
-    beforeAll(() => {
+    beforeAll(async (done: DoneFn) => {
         setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
+        setupBeforeAll2().then((_) => {
+            done();
+        });
     }, JASMINE_TIMEOUT);
-    beforeAll(async () => {
-        viewer1 = await getUserByUsername('viewer1');
-    });
 
 
     it('test updateUserSettings and getSettings', async () => {
-
+        const viewer1 = await getUserByUsername('viewer1');
         const errs1: string[] = await updateUserSettings(viewer1.id, {
             "id": 1,
             "openHelpNav": true,
@@ -36,9 +29,12 @@ describe('user-settings.service', () => {
             "var2": "val2",
             "var3": "val3",
         } as UpdateUserSettingsInput);
+        console.log('****** errs1', errs1);
         expect(errs1.length).toBe(0);
 
+        console.log('******* viewer1', viewer1);
         const settings: Settings = await getSettings(viewer1.id);
+        console.log('******* settings', settings);
         expect(settings.id).toBe(1);
         expect(settings.openHelpNav).toBe(true);
         expect(settings.openSideNav).toBe(true);
@@ -47,5 +43,4 @@ describe('user-settings.service', () => {
         expect((settings as any)['var2']).toBe('val2');
         expect((settings as any)['var3']).toBe('val3');
     });
-
 });

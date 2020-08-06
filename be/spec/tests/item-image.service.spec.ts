@@ -8,7 +8,7 @@ import {
     markItemImageAsPrimary
 } from "../../src/service";
 import * as util from "util";
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {BinaryContent} from "../../src/model/binary-content.model";
 import * as fs from "fs";
 import {pathToFileURL} from "url";
@@ -19,16 +19,12 @@ describe('item-image.service', () => {
     const viewId = 2;
     let item1: Item;
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
+    beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
+        item1 = await getItemByName(viewId, 'Item-1');
     }, JASMINE_TIMEOUT);
     
-    beforeAll(async () => {
-        item1 = await getItemByName(viewId, 'Item-1');
-    });
 
     it('mark and check primary image', async () => {
         const imageId: number = item1.images[1].id;

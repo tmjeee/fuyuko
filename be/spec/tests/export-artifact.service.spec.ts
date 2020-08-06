@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {doInDbConnection, QueryResponse} from "../../src/db";
 import {Connection} from "mariadb";
 import {deleteExportArtifactById, getAllExportArtifacts, getExportArtifactContent} from "../../src/service";
@@ -7,19 +7,14 @@ import {BinaryContent} from "../../src/model/binary-content.model";
 
 
 describe('export-artifact.service', () => {
-    let exportName1: string = `name-${new Date().toString()}`;
-    let exportName2: string = `name-${new Date().toString()}`;
+    let exportName1: string = `name-${Math.random()}`;
+    let exportName2: string = `name-${Math.random()}`;
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
-
-    beforeAll((done: DoneFn) => {
+    beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
         const content: string = `test`;
-        doInDbConnection(async (conn: Connection) => {
+        await doInDbConnection(async (conn: Connection) => {
             const qr1: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_EXPORT (VIEW_ID, NAME, TYPE) VALUES (?,?,?)`,
                 [1, exportName1, 'item']);
             const q1: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_EXPORT_FILE (DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)`,
@@ -28,8 +23,8 @@ describe('export-artifact.service', () => {
                 [1, exportName2, 'item']);
             const q2: QueryResponse = await conn.query(`INSERT INTO TBL_DATA_EXPORT_FILE (DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)`,
                 [qr2.insertId, exportName2, 'text/plain', content.length, content]);
-        }).then(() => done());
-    });
+        });
+    }, JASMINE_TIMEOUT);
 
     it (`getAllExportArtifacts()`, async () => {
 

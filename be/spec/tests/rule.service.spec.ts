@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 import {
     addOrUpdateRules,
     getAttributeInViewByName,
@@ -20,20 +20,16 @@ describe('rule.service', () => {
     let stringAttribute: Attribute;
     let numberAttribute: Attribute;
 
-    beforeAll(() => {
-        setupTestDatabase();
-    });
-    beforeAll((done: DoneFn) => {
-        setupBeforeAll(done);
-    }, JASMINE_TIMEOUT);
     beforeAll(async () => {
+        await setupTestDatabase();
+        await setupBeforeAll2();
         view = await getViewByName('Test View 1');
         stringAttribute = await getAttributeInViewByName(view.id, 'string attribute');
         numberAttribute = await getAttributeInViewByName(view.id, 'number attribute');
-    });
+    }, JASMINE_TIMEOUT);
 
     it('test addOrUpdateRules & updateRuleStatus', async () => {
-        const name = `XXXRule-${new Date()}`;
+        const name = `XXXRule-${Math.random()}`;
         const err1: string[] = await addOrUpdateRules(view.id, [
             {
                 level: 'WARN',
@@ -97,7 +93,7 @@ describe('rule.service', () => {
         expect((rule.validateClauses[0].condition[0] as StringValue).value).toBe('xxxxxx');
 
 
-        const name2 = `YYYRule-${new Date()}`;
+        const name2 = `YYYRule-${Math.random()}`;
         const err2: string[] = await addOrUpdateRules(view.id, [{
             id: rule.id,
             name: name2,
