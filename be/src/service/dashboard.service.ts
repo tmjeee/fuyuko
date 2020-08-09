@@ -5,9 +5,20 @@ import {
     SerializedDashboardFormat,
     SerializedDashboardWidgetInstanceDataFormat
 } from "../model/dashboard-serialzable.model";
+import {
+    fireEvent, GetUserDashboardSerializedDataEvent,
+    GetUserDashboardWidgetSerializedDataEvent,
+    SaveUserDashboardEvent,
+    SaveUserDashboardWidgetDataEvent
+} from "./event/event.service";
 
+/**
+ *  ===================================
+ *  === SaveUserDashboardWidgetData ===
+ *  ===================================
+ */
 export const saveUserDashboardWidgetData = async (userId: number, d: SerializedDashboardWidgetInstanceDataFormat): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
         const q: QueryA = await conn.query(`SELECT ID FROM TBL_USER_DASHBOARD WHERE USER_ID=?`, [userId]);
@@ -23,15 +34,40 @@ export const saveUserDashboardWidgetData = async (userId: number, d: SerializedD
             dashboardId = q[0].ID;
         }
         const serializedData: string = JSON.stringify(d.data);
-        const q3: QueryResponse = await conn.query(`INSERT INTO TBL_USER_DASHBOARD_WIDGET (USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA) VALUES(?,?,?,?)`,
-            [dashboardId, d.instanceId, d.typeId, serializedData]);
-        if (q3.affectedRows <= 0) {
-            errors.push(`Failed to insert dashboard widget data`)
+        const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER_DASHBOARD_WIDGET WHERE USER_DASHBOARD_ID = ? AND WIDGET_INSTANCE_ID =? AND WIDGET_TYPE_ID=?`,
+            [dashboardId, d.instanceId, d.typeId]);
+        const total = qq[0].COUNT;
+        if (total === 0) { // do not exists yet, do insert
+            const q3: QueryResponse = await conn.query(`INSERT INTO TBL_USER_DASHBOARD_WIDGET (USER_DASHBOARD_ID, WIDGET_INSTANCE_ID, WIDGET_TYPE_ID, SERIALIZED_DATA) VALUES(?,?,?,?)`,
+                [dashboardId, d.instanceId, d.typeId, serializedData]);
+            if (q3.affectedRows <= 0) {
+                errors.push(`Failed to insert dashboard widget data`)
+            }
+        } else { // already exists, do update
+            const r: QueryResponse = await conn.query(`UPDATE TBL_USER_DASHBOARD_WIDGET SET SERIALIZED_DATA = ? WHERE USER_DASHBOARD_ID=? AND WIDGET_INSTANCE_ID=? AND WIDGET_TYPE_ID=?`,
+                [serializedData, dashboardId, d.instanceId, d.typeId]);
+            if (r.affectedRows <= 0) {
+                errors.push(`Failed to update dashboard widget data`);
+            }
         }
         return errors;
     });
+    
+    fireEvent({
+       type: 'SaveUserDashboardWidgetDataEvent',
+       data: d,
+       errors 
+    } as SaveUserDashboardWidgetDataEvent);
+    
+    return errors;
 };
 
+
+/**
+ *  ===================================
+ *  === SaveUserDashboard ===
+ *  ===================================
+ */
 export const saveUserDashboard = async (userId: number, serializeFormat: SerializedDashboardFormat) => {
     const errors: string[] = [];
     const serializeFormatInString: string = JSON.stringify(serializeFormat);
@@ -50,10 +86,22 @@ export const saveUserDashboard = async (userId: number, serializeFormat: Seriali
             }
         }
     });
+    
+    fireEvent({
+       type: "SaveUserDashboardEvent",
+       data: serializeFormat,
+       userId,
+       errors
+    } as SaveUserDashboardEvent);
     return errors;
 }
 
 
+/**
+ *  ============================================
+ *  === GetUserDashboardWidgetSerializedData ===
+ *  ============================================
+ */
 export const getUserDashboardWidgetSerializedData = async (userId: number, dashboardWidgetInstanceId: string): Promise<DataMap> => {
     const r: string = await doInDbConnection(async (conn: Connection) => {
         const q1: QueryA = await conn.query(`SELECT ID FROM TBL_USER_DASHBOARD WHERE USER_ID=?`, [userId]);
@@ -73,9 +121,21 @@ export const getUserDashboardWidgetSerializedData = async (userId: number, dashb
     });
 
     const d: DataMap = r ? JSON.parse(r) : '';
+    
+    fireEvent({
+       type: "GetUserDashboardWidgetSerializedDataEvent",
+       userId,
+       data: d 
+    } as GetUserDashboardWidgetSerializedDataEvent);
     return d;
 }
 
+
+/**
+ *  ======================================
+ *  === GetUserDashboardSerializedData ===
+ *  ======================================
+ */
 export const getUserDashboardSerializedData = async (userId: number): Promise<string> => {
     const f: string = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, USER_ID, SERIALIZED_DATA FROM TBL_USER_DASHBOARD WHERE USER_ID = ?`, [userId]);
@@ -87,5 +147,11 @@ export const getUserDashboardSerializedData = async (userId: number): Promise<st
             return null;
         }
     });
+    
+    fireEvent({
+        type: 'GetUserDashboardSerializedDataEvent',
+        userId,
+        data: f
+    } as GetUserDashboardSerializedDataEvent);
     return f;
 };

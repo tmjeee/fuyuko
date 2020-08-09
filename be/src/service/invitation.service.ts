@@ -8,15 +8,24 @@ import config from "../config";
 import uuid = require("uuid");
 import {SendMailOptions} from "nodemailer";
 import {sendEmail} from "./send-email.service";
-
+import {
+    ActivateInvitationEvent,
+    CreateInvitationEvent,
+    fireEvent,
+    GetInvitationByCodeEvent
+} from "./event/event.service";
 
 
 /**
+ * ================================
+ * === CreateInvitation ===========
+ * ================================
+ * 
  * Send out invitation to register / activate account (through email)
  */
 export const createInvitation = async (email: string, groupIds: number[] = [], sendMail:boolean = true, invitationCode?: string): Promise<string[]> => {
 
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
         const hasUserQuery: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER WHERE EMAIL = ?`, [email]);
@@ -57,16 +66,29 @@ export const createInvitation = async (email: string, groupIds: number[] = [], s
         }
         return errors;
     });
+    
+    fireEvent({
+        type: "CreateInvitationEvent",
+        email, groupIds, sendMail, invitationCode, errors
+    } as CreateInvitationEvent);
+    
+    return errors;
 };
 
 
 
+/**
+ * ================================
+ * === activateInvitation ===========
+ * ================================
+ */
+export interface ActivateInvitationResult { registrationId: number, errors: string[] }
 export const activateInvitation = async (code: string, username: string, email: string, firstName: string,
-                                         lastName: string, password: string): Promise<{ registrationId: number, errors: string[]}> => {
+                                         lastName: string, password: string): Promise<ActivateInvitationResult> => {
 
     let registrationId;
 
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: ActivateInvitationResult = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const q1: QueryA = await conn.query(`
                 SELECT ID, EMAIL, CREATION_DATE, CODE, ACTIVATED FROM TBL_INVITATION_REGISTRATION WHERE CODE=? AND ACTIVATED=?
@@ -133,11 +155,23 @@ export const activateInvitation = async (code: string, username: string, email: 
         }
         return  { registrationId, errors };
     });
+   
+    fireEvent({
+       type: "ActivateInvitationEvent",
+       code, username, email, firstName, lastName, password, result 
+    } as ActivateInvitationEvent);
+    
+    return result;
 };
 
 
+/**
+ * ================================
+ * === getInvitationByCode ===========
+ * ================================
+ */
 export const getInvitationByCode = async (code: string): Promise<Invitation> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const invitation: Invitation = await doInDbConnection(async (conn: Connection) => {
         const q1: QueryA = await conn.query(`
                 SELECT 
                     R.ID AS ID, R.EMAIL AS EMAIL, R.CREATION_DATE AS CREATION_DATE, R.CODE AS CODE, R.ACTIVATED AS ACTIVATED, 
@@ -152,7 +186,7 @@ export const getInvitationByCode = async (code: string): Promise<Invitation> => 
         }
 
         const id: number = q1[0].ID;
-        const activated: boolean = q1[0].ACTIVATED;
+        const activated: boolean = !!q1[0].ACTIVATED;
         const email: string = q1[0].EMAIL;
         const creationDate: Date = q1[0].CREATION_DATE;
         const groupIds: number[] = q1.reduce((acc: number[], c: QueryI) => {
@@ -169,4 +203,11 @@ export const getInvitationByCode = async (code: string): Promise<Invitation> => 
         };
         return invitation;
     });
+    
+    fireEvent({
+        type: "GetInvitationByCodeEvent",
+        code, invitation
+    } as GetInvitationByCodeEvent);
+    
+    return invitation;
 };

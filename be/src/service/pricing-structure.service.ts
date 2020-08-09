@@ -10,10 +10,29 @@ import {LimitOffset} from "../model/limit-offset.model";
 import {Role, ROLE_PARTNER} from "../model/role.model";
 import {Status} from "../model/status.model";
 import { Group } from "../model/group.model";
+import {
+    AddOrUpdatePricingStructuresEvent,
+    fireEvent,
+    GetAllPricingStructureItemsWithPriceEvent,
+    GetAllPricingStructuresEvent,
+    GetPartnerPricingStructuresEvent, GetPricingStructureByIdEvent, GetPricingStructureByNameEvent,
+    GetPricingStructureGroupAssociationsEvent,
+    GetPricingStructuresByViewEvent,
+    LinkPricingStructureWithGroupIdEvent,
+    SearchGroupsAssociatedWithPricingStructureEvent,
+    SearchGroupsNotAssociatedWithPricingStructureEvent,
+    UnlinkPricingStructureWithGroupIdEvent,
+    UpdatePricingStructureStatusEvent
+} from "./event/event.service";
 
 
-export const searchGroupsAssociatedWithPricingStructure = async (pricingStructureId: number, groupName: string): Promise<Group[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+/**
+ *  ======================================================
+ *  === searchGroupsAssociatedWithPricingStructure ===
+ *  ======================================================
+ */
+export const searchGroupsAssociatedWithPricingStructure = async (pricingStructureId: number, groupName?: string): Promise<Group[]> => {
+    const groups: Group[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
                 G.ID AS G_ID,
@@ -73,10 +92,20 @@ export const searchGroupsAssociatedWithPricingStructure = async (pricingStructur
             return a;
         }, []);
     });
+    fireEvent({
+       type: "SearchGroupsAssociatedWithPricingStructureEvent",
+       pricingStructureId, groupName, groups
+    } as SearchGroupsAssociatedWithPricingStructureEvent);
+    return groups;
 };
 
-export const searchGroupsNotAssociatedWithPricingStructure = async (pricingStructureId: number, groupName: string): Promise<Group[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+/**
+ *  ======================================================
+ *  === searchGroupsNotAssociatedWithPricingStructure ===
+ *  ======================================================
+ */
+export const searchGroupsNotAssociatedWithPricingStructure = async (pricingStructureId: number, groupName?: string): Promise<Group[]> => {
+    const groups: Group[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
                 G.ID AS G_ID,
@@ -136,10 +165,22 @@ export const searchGroupsNotAssociatedWithPricingStructure = async (pricingStruc
             return a;
         }, []);
     });
+
+    fireEvent({
+       type: "SearchGroupsNotAssociatedWithPricingStructureEvent",
+       pricingStructureId, groupName, groups
+    } as SearchGroupsNotAssociatedWithPricingStructureEvent);
+
+    return groups;
 };
 
+/**
+ *  ======================================================
+ *  === getPricingStructureGroupAssociations ===
+ *  ======================================================
+ */
 export const getPricingStructureGroupAssociations = async (): Promise<PricingStructureGroupAssociation[]>  => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const pricingStructureGroupAssociations: PricingStructureGroupAssociation[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
                 PS.ID AS PS_ID,
@@ -188,6 +229,7 @@ export const getPricingStructureGroupAssociations = async (): Promise<PricingStr
                     id: i.PS_ID,
                     name: i.PS_NAME,
                     description: i.PS_DESCRIPTION,
+                    status: i.PS_STATUS,
                     viewId: i.V_ID,
                     viewName: i.V_NAME,
                     lastUpdate: i.V_LAST_UPDATE,
@@ -225,12 +267,24 @@ export const getPricingStructureGroupAssociations = async (): Promise<PricingStr
             return a;
         }, []);
     });
+
+    fireEvent({
+        type: "GetPricingStructureGroupAssociationsEvent",
+        pricingStructureGroupAssociations
+    } as GetPricingStructureGroupAssociationsEvent);
+
+    return pricingStructureGroupAssociations;
 };
 
 
+/**
+ *  ======================================================
+ *  === linkPricingStructureWithGroupId ===
+ *  ======================================================
+ */
 export const linkPricingStructureWithGroupId = async(pricingStructureId: number, groupId: number): Promise<string[]> => {
     // todo: check if group has ROLE_PARTNER
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
         const _q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_PRICING_STRUCTURE_GROUP WHERE PRICING_STRUCTURE_ID =? AND GROUP_ID = ?`, [pricingStructureId, groupId]);
@@ -256,10 +310,23 @@ export const linkPricingStructureWithGroupId = async(pricingStructureId: number,
         }
         return errors;
     });
+
+    fireEvent({
+        type:"LinkPricingStructureWithGroupIdEvent",
+        pricingStructureId, groupId, errors
+    } as LinkPricingStructureWithGroupIdEvent);
+
+    return errors;
 };
 
+
+/**
+ *  ======================================================
+ *  === unlinkPricingStructureWithGroupId ===
+ *  ======================================================
+ */
 export const unlinkPricingStructureWithGroupId = async (pricingStructureId: number, groupId: number): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const _q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_LOOKUP_PRICING_STRUCTURE_GROUP WHERE PRICING_STRUCTURE_ID=? AND GROUP_ID=?`, [pricingStructureId, groupId]);
         if (_q[0].COUNT <= 0) {
@@ -274,32 +341,53 @@ export const unlinkPricingStructureWithGroupId = async (pricingStructureId: numb
         }
         return errors;
     });
+    fireEvent({
+       type: "UnlinkPricingStructureWithGroupIdEvent",
+       pricingStructureId, groupId, errors
+    } as UnlinkPricingStructureWithGroupIdEvent);
+    return errors;
 }
 
 
+/**
+ *  ======================================================
+ *  === updatePricingStructureStatus ===
+ *  ======================================================
+ */
 export const updatePricingStructureStatus = async (pricingStructureId: number, status: Status): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`
                 UPDATE TBL_PRICING_STRUCTURE SET STATUS=? WHERE ID=?
             `, [status, pricingStructureId]);
         return (q.affectedRows > 0);
     });
+    fireEvent({
+       type: "UpdatePricingStructureStatusEvent",
+       pricingStructureId, status, result
+    } as UpdatePricingStructureStatusEvent);
+    return result;
 };
 
 
-export const addOrUpdatePricingStructures = async (pricingStructures: PricingStructure[]): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+/**
+ *  ======================================================
+ *  === addOrUpdatePricingStructures ===
+ *  ======================================================
+ */
+export interface AddOrUpdatePricingStructureInput { name: string; description: string;  viewId: number; status?: Status; id?: number,  };
+export const addOrUpdatePricingStructures = async (pricingStructures: AddOrUpdatePricingStructureInput[]): Promise<string[]> => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         for (const pricingStructure of pricingStructures) {
-            const viewId: number = pricingStructure.viewId;
-            if (pricingStructure.id <= 0) { // insert
+            if (!pricingStructure.id || pricingStructure.id <= 0) { // insert
+                const viewId: number = pricingStructure.viewId;
                 const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_PRICING_STRUCTURE WHERE NAME=? AND VIEW_ID=?`, [pricingStructure.name, viewId]);
                 if (qq[0].COUNT > 0) {
                     errors.push(`Pricing structure with name ${pricingStructure.name} aready exists in view id ${viewId}`);
                 } else {
                     const q: QueryResponse = await conn.query(`
-                            INSERT INTO TBL_PRICING_STRUCTURE (NAME, DESCRIPTION, VIEW_ID, STATUS) VALUE (?,?,?, 'ENABLED')
-                        `, [pricingStructure.name, pricingStructure.description, pricingStructure.viewId]);
+                            INSERT INTO TBL_PRICING_STRUCTURE (NAME, DESCRIPTION, VIEW_ID, STATUS) VALUE (?,?,?,?)
+                        `, [pricingStructure.name, pricingStructure.description, pricingStructure.viewId, pricingStructure.status ? pricingStructure.status : 'ENABLED']);
                     if (q.affectedRows <= 0) {
                         errors.push(`Unable to persist pricing structure name ${pricingStructure.name}`);
                     }
@@ -310,18 +398,29 @@ export const addOrUpdatePricingStructures = async (pricingStructures: PricingStr
                     errors.push(`Pricing structrue with id ${pricingStructure.id} do not exists`);
                 } else {
                     const q: QueryResponse = await conn.query(`
-                        UPDATE TBL_PRICING_STRUCTURE SET NAME=?, DESCRIPTION=? WHERE ID=? AND VIEW_ID=? AND STATUS='ENABLED' 
-                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.id, pricingStructure.viewId]);
+                        UPDATE TBL_PRICING_STRUCTURE SET NAME=?, DESCRIPTION=? WHERE ID=? AND VIEW_ID=? AND STATUS=? 
+                    `, [pricingStructure.name, pricingStructure.description, pricingStructure.id, pricingStructure.viewId, pricingStructure.status ? pricingStructure.status : 'ENABLED']);
                     if (q.affectedRows <= 0) {
                         errors.push(`Unable to update pricing structure id ${pricingStructure.id}`);
                     }
                 }
             }
         }
+        return errors;
     });
+    fireEvent({
+        type: "AddOrUpdatePricingStructuresEvent",
+        pricingStructures, errors
+    } as AddOrUpdatePricingStructuresEvent);
+    return errors;
 };
 
 
+/**
+ *  ======================================================
+ *  === getPricingStructuresByView ===
+ *  ======================================================
+ */
 export const getPricingStructuresByView = async (viewId: number): Promise<PricingStructure[]> => {
     const pricingStructures: PricingStructure[] = await doInDbConnection(async (conn: Connection) => {
         const query: QueryA = await conn.query(`
@@ -344,6 +443,7 @@ export const getPricingStructuresByView = async (viewId: number): Promise<Pricin
                 id: i.PS_ID,
                 viewId: i.PS_VIEW_ID,
                 name: i.PS_NAME,
+                status: i.PS_STATUS,
                 viewName: i.V_NAME,
                 lastUpdate: i.PS_LAST_UPDATE,
                 description: i.PS_DESCRIPTION,
@@ -353,11 +453,20 @@ export const getPricingStructuresByView = async (viewId: number): Promise<Pricin
             return pricingStructures;
         }, []);
     });
+    fireEvent({
+       type: "GetPricingStructuresByViewEvent",
+       viewId, pricingStructures
+    } as GetPricingStructuresByViewEvent);
     return pricingStructures;
 };
 
-export const getPartnerPricingStructures = async (userId: number): Promise<PricingStructure[]> => {
 
+/**
+ *  ======================================================
+ *  === getPartnerPricingStructures ===
+ *  ======================================================
+ */
+export const getPartnerPricingStructures = async (userId: number): Promise<PricingStructure[]> => {
     const q: QueryA = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT  
@@ -389,6 +498,7 @@ export const getPartnerPricingStructures = async (userId: number): Promise<Prici
         const v: PricingStructure = {
             id: curr.PS_ID,
             name: curr.PS_NAME,
+            status: curr.PS_STATUS,
             viewId: curr.PS_VIEW_ID,
             viewName: curr.V_NAME,
             description: curr.PS_DESCRIPTION,
@@ -398,10 +508,18 @@ export const getPartnerPricingStructures = async (userId: number): Promise<Prici
         acc.push(v);
         return acc;
     }, []);
-
+    fireEvent({
+       type: "GetPartnerPricingStructuresEvent",
+       userId, pricingStructures
+    } as GetPartnerPricingStructuresEvent);
     return pricingStructures;
 }
 
+/**
+ *  ======================================================
+ *  === getAllPricingStructureItemsWithPrice ===
+ *  ======================================================
+ */
 export const getAllPricingStructureItemsWithPriceCount = async(pricingStructureId: number): Promise<number> => {
     return await doInDbConnection(async (conn: Connection) => {
         const qq: QueryA = await conn.query(`
@@ -415,9 +533,8 @@ export const getAllPricingStructureItemsWithPriceCount = async(pricingStructureI
         return total;
     });
 }
-
 export const getAllPricingStructureItemsWithPrice = async (pricingStructureId: number, limitOffset?: LimitOffset): Promise<PricingStructureItemWithPrice[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const pricingStructureItemWithPrices: PricingStructureItemWithPrice[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT
                     I.ID AS I_ID,
@@ -472,18 +589,28 @@ export const getAllPricingStructureItemsWithPrice = async (pricingStructureId: n
         }
         return [...mItemMap.values()];
     });
+    fireEvent({
+       type: "GetAllPricingStructureItemsWithPriceEvent",
+       pricingStructureId, limitOffset, pricingStructureItemWithPrices
+    } as GetAllPricingStructureItemsWithPriceEvent);
+    return pricingStructureItemWithPrices;
 }
 
 
 
+/**
+ *  ======================================================
+ *  === getAllPricingStructures ===
+ *  ======================================================
+ */
 export const getAllPricingStructures = async (): Promise<PricingStructure[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
-
+    const pricingStructures: PricingStructure[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     PS.ID AS PS_ID, 
                     PS.VIEW_ID AS PS_VIEW_ID, 
                     PS.NAME AS PS_NAME, 
+                    PS.STATUS AS PS_STATUS,
                     V.NAME AS V_NAME,
                     PS.DESCRIPTION AS PS_DESCRIPTION, 
                     PS.CREATION_DATE AS PS_CREATION_DATE, 
@@ -498,6 +625,7 @@ export const getAllPricingStructures = async (): Promise<PricingStructure[]> => 
             const pricingStructure: PricingStructure = {
                 id: i.PS_ID,
                 name: i.PS_NAME,
+                status: i.PS_STATUS,
                 viewName: i.V_NAME,
                 viewId: i.PS_VIEW_ID,
                 description: i.PS_DESCRIPTION,
@@ -511,10 +639,20 @@ export const getAllPricingStructures = async (): Promise<PricingStructure[]> => 
 
         return pricingStructures;
     });
+    fireEvent({
+        type: "GetAllPricingStructuresEvent",
+        pricingStructures
+    } as GetAllPricingStructuresEvent);
+    return pricingStructures;
 };
 
 
-export const getPricingStructureByName =  async (pricingStructureName: string): Promise<PricingStructure> => {
+/**
+ *  ======================================================
+ *  === getPricingStructureByName ===
+ *  ======================================================
+ */
+export const getPricingStructureByName =  async (viewId: number, pricingStructureName: string): Promise<PricingStructure> => {
     const pricingStructure: PricingStructure = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
@@ -528,13 +666,14 @@ export const getPricingStructureByName =  async (pricingStructureName: string): 
                     PS.LAST_UPDATE AS PS_LAST_UPDATE
                 FROM TBL_PRICING_STRUCTURE AS PS
                 LEFT JOIN TBL_VIEW AS V ON V.ID = PS.VIEW_ID
-                WHERE PS.NAME=? 
-            `, [pricingStructureName]);
+                WHERE PS.NAME=? AND V.ID = ? 
+            `, [pricingStructureName, viewId]);
 
         return q.reduce((acc: PricingStructure, i: QueryI) => {
             acc.id = i.PS_ID;
             acc.viewId = i.PS_VIEW_ID;
             acc.name = i.PS_NAME;
+            acc.status = i.PS_STATUS;
             acc.viewName = i.V_NAME;
             acc.description = i.PS_DESCRIPTION;
             acc.creationDate = i.PS_CREATION_DATE;
@@ -542,10 +681,19 @@ export const getPricingStructureByName =  async (pricingStructureName: string): 
             return acc;
         }, {} as PricingStructure);
     });
+    fireEvent({
+       type: "GetPricingStructureByNameEvent",
+       pricingStructureName, pricingStructure
+    } as GetPricingStructureByNameEvent);
     return pricingStructure;
 }
 
 
+/**
+ *  ======================================================
+ *  === getPricingStructureById ===
+ *  ======================================================
+ */
 export const getPricingStructureById = async (pricingStructureId: number): Promise<PricingStructure> => {
     const pricingStructure: PricingStructure = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
@@ -567,6 +715,7 @@ export const getPricingStructureById = async (pricingStructureId: number): Promi
             acc.id = i.PS_ID;
             acc.viewId = i.PS_VIEW_ID;
             acc.name = i.PS_NAME;
+            acc.status = i.PS_STATUS;
             acc.viewName = i.V_NAME;
             acc.description = i.PS_DESCRIPTION;
             acc.creationDate = i.PS_CREATION_DATE;
@@ -574,5 +723,9 @@ export const getPricingStructureById = async (pricingStructureId: number): Promi
             return acc;
         }, {} as PricingStructure);
     });
+    fireEvent({
+       type: "GetPricingStructureByIdEvent",
+       pricingStructureId, pricingStructure
+    } as GetPricingStructureByIdEvent)
     return pricingStructure;
 }

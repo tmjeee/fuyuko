@@ -12,10 +12,18 @@ import {View} from "../../model/view.model";
 import {File} from "formidable";
 import * as fs from "fs";
 import {CountryCurrencyUnits} from "../../model/unit.model";
+import {fireEvent, ImportPricePreviewEvent} from "../event/event.service";
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
 
-export const preview = async (viewId: number, priceDataCsvFile: File): Promise<{errors: string[], priceDataImport: PriceDataImport}> => {
+
+/**
+ * =================
+ * == preview ===
+ * =================
+ */
+export interface ImportPricePreviewResult { errors: string[], priceDataImport: PriceDataImport};
+export const preview = async (viewId: number, priceDataCsvFile: File): Promise<ImportPricePreviewResult> => {
     return await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
@@ -37,9 +45,14 @@ export const preview = async (viewId: number, priceDataCsvFile: File): Promise<{
             [dataImportId, priceDataCsvFile.name, mimeType, content.length, content]);
 
         const priceDataImport: PriceDataImport = await _preview(viewId, dataImportId, content);
-        return {
+        const r: ImportPricePreviewResult = {
             errors, priceDataImport
         }
+        fireEvent({
+           type: "ImportPricePreviewEvent",
+           previewResult: r
+        } as ImportPricePreviewEvent);
+        return r;
     });
 };
 

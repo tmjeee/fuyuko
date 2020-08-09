@@ -141,12 +141,17 @@ import registerGetCustomBulkEditRoute from './GET-all-custom-bulk-edit.route';
 import registerPostCustomBulkEditPreviewRoute from './POST-custom-bulk-edit-preview.route';
 import registerPostCustomBulkEditSubmitJobRoute from './POST-custom-bulk-edit-submit-job.route';
 import registerPostCustomBulkEditValidateInputRoute from './POST-custom-bulk-edit-validate-input.route';
+import registerGetAllFavouriteItemsRoute from './GET-all-favourite-items.route';
+import registerGetAllFavouriteItemIdsRoute from './GET-all-favourite-item-ids.route';
+import registerPostAddFavouriteItemsRoute from './POST-add-favourite-items.route';
+import registerDeleteFavouriteItemsRoute from './DELETE-favourite-items.route';
+import registerGetSearchForFavouriteItemsInViewRoute from './GET-search-for-favourite-items-in-view.route';
 
 
 const v1AppRouter:Router  = express.Router();
 
 
-const reg = (router: Router, regi: Registry) => {
+const reg = (router: Router, regi: Registry): Router => {
     const p = '/v1';
     const registry = regi.newRegistry(p);
     router.use(p, v1AppRouter);
@@ -291,6 +296,14 @@ const reg = (router: Router, regi: Registry) => {
     registerPostCustomBulkEditValidateInputRoute(v1AppRouter, registry);
 
     registerGetAuditLogsRoute(v1AppRouter, registry);
+
+    registerGetAllFavouriteItemsRoute(v1AppRouter, registry);
+    registerGetAllFavouriteItemIdsRoute(v1AppRouter, registry);
+    registerPostAddFavouriteItemsRoute(v1AppRouter, registry);
+    registerDeleteFavouriteItemsRoute(v1AppRouter, registry);
+    registerGetSearchForFavouriteItemsInViewRoute(v1AppRouter, registry);
+    
+    return v1AppRouter;
 };
 
 

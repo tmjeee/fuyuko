@@ -42,15 +42,15 @@ export const doInDbConnection = async <R> (callback: (conn: Connection) => R)  =
     } as ConnectionConfig;
     const conn: Connection = await createConnection(connConfig);
     try {
+        conn.debug(false);
+        conn.debugCompress(false);
         await conn.beginTransaction();
         const r: any =  await callback(conn);
         await conn.commit();
         return r;
     } catch(err) {
         await conn.rollback();
-        // e(err.toString(), err);
         throw err;
-        // return Promise.reject(e);
     } finally {
         await conn.end();
     }

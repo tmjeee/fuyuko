@@ -9,7 +9,7 @@ import {
 } from "./common-middleware";
 import {param} from 'express-validator';
 import {Job} from "../../model/job.model";
-import {getJobyById} from "../../service/job.service";
+import {getJobById} from "../../service/job.service";
 import {ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse} from "../../model/api-response.model";
 
@@ -25,7 +25,7 @@ const httpAction: any[] = [
 
         const jobId: number = Number(req.params.jobId);
 
-        const job: Job = await getJobyById(jobId);
+        const job: Job = await getJobById(jobId);
 
         res.status(200).json({
             status: 'SUCCESS',

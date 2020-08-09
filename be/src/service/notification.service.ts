@@ -1,17 +1,37 @@
 import {AppNotification, NewNotification} from "../model/notification.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
+import {AddUserNotificationEvent, fireEvent, GetUserNotificationsEvent} from "./event/event.service";
 
+
+/**
+ *  ===========================
+ *  === addUserNotification ===
+ *  ===========================
+ */
 export const addUserNotification = async (userId: number, newNotification: NewNotification): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`
                 INSERT INTO TBL_USER_NOTIFICATION (USER_ID, IS_NEW, STATUS, TITLE, MESSAGE) VALUES (?,?,?,?,?)
             `, [userId, true, newNotification.status, newNotification.title, newNotification.message]);
         return (q.affectedRows > 0);
     });
+
+    fireEvent({
+       type: 'AddUserNotificationEvent',
+       userId, newNotification,
+       result
+    } as AddUserNotificationEvent);
+
+    return result;
 }
 
 
+/**
+ * ============================
+ * === getUserNotifications ===
+ * ============================
+ */
 export const getUserNotifications = async (userId: number): Promise<AppNotification[]> => {
     const n: AppNotification[] = await doInDbConnection(async (conn: Connection) => {
         return (await conn.query(`
@@ -37,5 +57,10 @@ export const getUserNotifications = async (userId: number): Promise<AppNotificat
             return a;
         }, []);
     });
+    fireEvent({
+       type: 'GetUserNotificationsEvent',
+       userId,
+       notifications: n
+    } as GetUserNotificationsEvent);
     return n;
 };

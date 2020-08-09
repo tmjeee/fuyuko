@@ -3,11 +3,16 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_VIEW} from "../../model/role.model";
 import {NextFunction, Request, Response, Router} from "express";
 import {Item2} from "../../server-side-model/server-side.model";
-import {getAllItem2sInView, searchForItem2sInView} from "../../service/item.service";
+import {
+    getAllItem2sInView,
+    getAllItemsInView, getAllItemsInViewCount,
+    searchForItem2sInView,
+    searchForItemsInView, searchForItemsInViewCount
+} from "../../service/item.service";
 import {Item, ItemSearchType} from "../../model/item.model";
 import {itemsConvert} from "../../service/conversion-item.service";
 import {Registry} from "../../registry";
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
 import {LimitOffset} from "../../model/limit-offset.model";
 import {toLimitOffset} from "../../util/utils";
 
@@ -29,18 +34,23 @@ const httpAction: any[] = [
         const limitOffset: LimitOffset = toLimitOffset(req);
 
 
-        let allItem2s: Item2[] = [];
+        let allItems: Item[] = [];
+        let total: number;
         if (search) {
-            allItem2s = await searchForItem2sInView(viewId, searchType, search, limitOffset);
+            total = await searchForItemsInViewCount(viewId, searchType, search);
+            allItems = await searchForItemsInView(viewId, searchType, search, limitOffset);
         } else {
-            allItem2s = await getAllItem2sInView(viewId, true, limitOffset);
+            total = await getAllItemsInViewCount(viewId, true);
+            allItems = await getAllItemsInView(viewId, true, limitOffset);
         }
-        const allItems: Item[] = itemsConvert(allItem2s);
         res.status(200).json({
             status: 'SUCCESS',
             message: `Items retrieved`,
-            payload: allItems
-        } as ApiResponse<Item[]>);
+            payload: allItems,
+            total,
+            limit: limitOffset ? limitOffset.limit : total,
+            offset: limitOffset ? limitOffset.offset : 0,
+        } as PaginableApiResponse<Item[]>);
     }
 ]
 

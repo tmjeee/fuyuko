@@ -26,6 +26,7 @@ export const ruleConvert = (rule2: Rule2): Rule => {
         name: rule2.name,
         status: rule2.status,
         description: rule2.description,
+        level: rule2.level,
         validateClauses: rule2.validateClauses.map((v: ValidateClause2)=> ({
            id: v.id,
            attributeId : v.attributeId,
@@ -54,6 +55,7 @@ export const ruleRevert = (rule: Rule): Rule2 => {
         id: rule.id,
         name: rule.name,
         description: rule.description,
+        level: rule.level,
         status: rule.status,
         whenClauses: rule.whenClauses.map((w: WhenClause) => ({
            id: w.id,

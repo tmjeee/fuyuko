@@ -7,6 +7,13 @@ import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET} from "../util/utils";
 
 
+/**
+ * ================
+ * === auditLog ===
+ * ================
+ */
+export type AuditLevel = Level;
+export type AuditCategory = AuditCategory;
 export const auditLogDebug = async (message: string, category: AuditCategory = "APP") => {
     auditLog(message, category, 'DEBUG');
 }
@@ -29,10 +36,12 @@ export const auditLog = async (message: string, category: AuditCategory = "APP",
     });
 }
 
-export type AuditLevel = Level;
-export type AuditCategory = AuditCategory;
 
-
+/**
+ * ====================
+ * === getAuditLogs ===
+ * ====================
+ */
 export const getAuditLogsCount = async (filterByUserId: number = null, filterByCategory: AuditCategory = null,
                                         filterByLevel: Level = null, filterByLogs: string = null): Promise<number> => {
     const sqlParams: any[] = [];
@@ -65,7 +74,6 @@ export const getAuditLogsCount = async (filterByUserId: number = null, filterByC
     });
     return q[0].COUNT;
 };
-
 export const getAuditLogs = async (filterByUserId: number = null, filterByCategory: AuditCategory = null,
                                    filterByLevel: Level = null, filterByLogs: string = null, limitOffset: LimitOffset): Promise<AuditLog[]> => {
     const sqlParams: any[] = [];

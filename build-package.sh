@@ -1,6 +1,8 @@
 #!/bin/bash
 
-VERSION="1.0.0-beta"
+if [ -z $VERSION ] ; then
+  VERSION="development-version"
+fi
 ZIP_FILE="fuyuko-${VERSION}.zip"
 
 echo "VERSION: $VERSION"
@@ -11,12 +13,23 @@ if [ -f $ZIP_FILE ] ; then
   rm -fr $ZIP_FILE
 fi
 
-(echo "BUILD BE"; cd be; npm run build)
 
-(echo "BUILD FE"; cd fe; npx ng build --prod)
+echo "BUILD BE" 
+cd be 
+npm install 
+npm run build 
+
+cd ..
+
+echo "BUILD FE" 
+cd fe 
+npm install  
+npm run build-prod
+
+cd ..
 
 echo "ZIP BUILD"
-zip -r fuyuko-${VERSION}.zip \
+zip -9 -r fuyuko-${VERSION}.zip \
     LICENSE \
     README.md \
     be/src \

@@ -1,7 +1,7 @@
 import {Connection} from "mariadb";
 import {ItemValueOperatorAndAttribute} from "../model/item-attribute.model";
 import {Attribute} from "../model/attribute.model";
-import {QueryA} from "../db";
+import {doInDbConnection, QueryA} from "../db";
 import {
     Attribute2,
     AttributeMetadata2,
@@ -14,7 +14,7 @@ import {
     CurrencyValue, DATE_FORMAT,
     DateValue, DimensionValue, DoubleSelectValue, HeightValue, Item,
     ItemImage, LengthValue,
-    NumberValue, SelectValue,
+    NumberValue, PricedItem, SelectValue,
     StringValue,
     TextValue,
     Value, VolumeValue, WeightValue, WidthValue
@@ -32,13 +32,15 @@ import {
 } from "../model/unit.model";
 import moment from "moment";
 import {
-    compareDate,
+    compareDate, compareDimension,
     compareNumber,
     compareString,
     convertToCm,
     convertToCm2, convertToG,
     convertToMl
 } from "./compare-attribute-values.service";
+import {pricedItemsConvert} from "./conversion-priced-item.service";
+import {fireEvent, GetPricedItemsWithFilteringEvent} from "./event/event.service";
 
 const SQL: string = `
            SELECT 
@@ -95,10 +97,10 @@ const SQL: string = `
             PSI.PRICE AS PSI_PRICE
            
            FROM TBL_ITEM AS I
-           LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID
+           LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID 
+           LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID AND A.ID = V.VIEW_ATTRIBUTE_ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA AS AM ON AM.VIEW_ATTRIBUTE_ID = A.ID
            LEFT JOIN TBL_VIEW_ATTRIBUTE_METADATA_ENTRY AS AME ON AME.VIEW_ATTRIBUTE_METADATA_ID = AM.ID
-           LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA AS IM ON IM.ITEM_VALUE_ID = V.ID
            LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS IE ON IE.ITEM_VALUE_METADATA_ID = IM.ID
            LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
@@ -109,14 +111,46 @@ const SQL: string = `
 const SQL_WITH_NULL_PARENT = `${SQL} AND I.PARENT_ID IS NULL`;
 const SQL_WITH_PARAMETERIZED_PARENT = `${SQL} AND I.PARENT_ID = ? `;
 
-export type PricedItem2WithFilteringResult = {b: PricedItem2[], m: Map<string /* attributeId */, Attribute>};
 
-export const getPricedItem2WithFiltering = async (conn: Connection,
-                                            viewId: number,
-                                            pricingStructureId: number,
-                                            parentItemId: number,
-                                            whenClauses: ItemValueOperatorAndAttribute[]):
-    Promise<PricedItem2WithFilteringResult> => {
+/**
+ * ==================================
+ * === getPricedItemsWithFiltering ===
+ * ==================================
+ */
+export type PricedItem2sWithFilteringResult = {b: PricedItem2[], m: Map<string /* attributeId */, Attribute>};
+export type PricedItemsWithFilteringResult = {b: PricedItem[], m: Map<string /* attributeId */, Attribute>};
+export const getPricedItemsWithFiltering = async ( viewId: number,
+                                                   pricingStructureId: number,
+                                                   parentItemId: number,
+                                                   whenClauses: ItemValueOperatorAndAttribute[]): Promise<PricedItemsWithFilteringResult> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        return _getPricedItemsWithFiltering(conn, viewId, pricingStructureId, parentItemId, whenClauses);
+    });
+}
+export const _getPricedItemsWithFiltering = async (conn: Connection,
+                                                   viewId: number,
+                                                   pricingStructureId: number,
+                                                  parentItemId: number,
+                                                  whenClauses: ItemValueOperatorAndAttribute[]):
+    Promise<PricedItemsWithFilteringResult> => {
+    const r2: PricedItem2sWithFilteringResult = await getPricedItem2sWithFiltering(conn, viewId, pricingStructureId, parentItemId, whenClauses);
+    const r: PricedItemsWithFilteringResult = {
+        b: pricedItemsConvert(r2.b),
+        m: r2.m
+    } as PricedItemsWithFilteringResult;
+    fireEvent({
+       type: 'GetPricedItemsWithFilteringEvent',
+       viewId, pricingStructureId, parentItemId, whenClauses,
+       result: r
+    } as GetPricedItemsWithFilteringEvent);
+    return r;
+}
+export const getPricedItem2sWithFiltering = async (conn: Connection,
+                                                   viewId: number,
+                                                   pricingStructureId: number,
+                                                   parentItemId: number,
+                                                   whenClauses: ItemValueOperatorAndAttribute[]):
+    Promise<PricedItem2sWithFilteringResult> => {
 
     const q: QueryA = !!parentItemId ?
         await conn.query( SQL_WITH_PARAMETERIZED_PARENT, [pricingStructureId, viewId, parentItemId]) :
@@ -146,14 +180,14 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
         const pricingStructureItemId: number = i.PSI_ID;
 
         const iMapKey: string = `${itemId}`;
-        const itemValueMapKey: string = `${itemId}_${itemValueId}`;
-        const itemAttValueMetaMapKey: string = `${itemId}_${attributeId}_${metaId}`;
-        const itemAttValueMetaEntryMapKey: string = `${itemId}_${attributeId}_${metaId}_${entryId}`;
-        const itemImageMapKey: string = `${itemId}_${itemImageId}`;
-        const attributeMapKey: string = `${attributeId}`;
-        const attributeMetadataMapKey: string = `${attributeId}_${attributeMetadataId}`;
-        const attributeMetadataEntryMapKey: string = `${attributeId}_${attributeMetadataId}_${attributeMetadataEntryId}`;
-        const priceMapKey: string = `${pricingStructureItemId}_${itemId}`;
+        const itemValueMapKey: string = itemId && itemValueId ? `${itemId}_${itemValueId}` : undefined;
+        const itemAttValueMetaMapKey: string = metaId && itemValueId ? `${itemId}_${itemValueId}_${metaId}` : undefined;
+        const itemAttValueMetaEntryMapKey: string = entryId && itemValueId && metaId ? `${itemId}_${attributeId}_${metaId}_${entryId}` : undefined;
+        const itemImageMapKey: string = itemImageId && itemId ? `${itemId}_${itemImageId}` : undefined;
+        const attributeMapKey: string = attributeId ? `${attributeId}` : undefined;
+        const attributeMetadataMapKey: string = attributeId && attributeMetadataId ? `${attributeId}_${attributeMetadataId}` : undefined;
+        const attributeMetadataEntryMapKey: string = attributeId && attributeMetadataId && attributeMetadataEntryId ? `${attributeId}_${attributeMetadataId}_${attributeMetadataEntryId}` : undefined;
+        const priceMapKey: string = pricingStructureItemId && itemId ? `${pricingStructureItemId}_${itemId}` : undefined;
 
 
         if (!iMap.has(iMapKey)) {
@@ -171,11 +205,11 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
             iMap.set(iMapKey, item);
             bulkEditItem2s.push(item);
 
-            const { b /* BulkEditItem2[] */, } = await getPricedItem2WithFiltering(conn, viewId, pricingStructureId, itemId, whenClauses);
+            const { b /* BulkEditItem2[] */, } = await getPricedItem2sWithFiltering(conn, viewId, pricingStructureId, itemId, whenClauses);
             item.children = b;
         }
 
-        if (!priceMap.has(priceMapKey)) {
+        if (priceMapKey && !priceMap.has(priceMapKey)) {
             const p = {
                 price: i.PSI_PRICE,
                 country: i.PSI_COUNTRY
@@ -185,18 +219,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
             iMap.get(iMapKey).country = p.country;
         }
 
-        if (!itemValueMap.has(itemValueMapKey)) {
-            const itemValue2: ItemValue2 = {
-                id: i.V_ID,
-                attributeId: i.V_VIEW_ATTRIBUTE_ID,
-                metadatas: []
-            } as ItemValue2;
-            itemValueMap.set(itemValueMapKey, itemValue2);
-            iMap.get(iMapKey).values.push(itemValue2);
-        }
-
-
-        if (!itemImageMap.has(itemImageMapKey)) {
+        if (itemImageMapKey && !itemImageMap.has(itemImageMapKey)) {
             const itemImage = {
                 id: i.IMG_ID,
                 name: i.IMG_NAME,
@@ -208,7 +231,19 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
             iMap.get(iMapKey).images.push(itemImage);
         }
 
-        if (!itemAttValueMetaMap.has(itemAttValueMetaMapKey)) {
+        if (itemValueMapKey && !itemValueMap.has(itemValueMapKey)) {
+            const itemValue2: ItemValue2 = {
+                id: i.V_ID,
+                attributeId: i.V_VIEW_ATTRIBUTE_ID,
+                metadatas: []
+            } as ItemValue2;
+            itemValueMap.set(itemValueMapKey, itemValue2);
+            iMap.get(iMapKey).values.push(itemValue2);
+        }
+
+
+
+        if (itemAttValueMetaMapKey && !itemAttValueMetaMap.has(itemAttValueMetaMapKey)) {
             const meta: ItemMetadata2 = {
                 id: i.IM_ID,
                 name: i.IM_NAME,
@@ -217,11 +252,10 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                 entries: []
             } as ItemMetadata2;
             itemAttValueMetaMap.set(itemAttValueMetaMapKey, meta);
-            // iMap.get(iMapKey).metadatas.push(meta);
             itemValueMap.get(itemValueMapKey).metadatas.push(meta);
         }
 
-        if (!itemAttValueMetaEntryMap.has(itemAttValueMetaEntryMapKey)) {
+        if (itemAttValueMetaEntryMapKey && !itemAttValueMetaEntryMap.has(itemAttValueMetaEntryMapKey)) {
             const entry: ItemMetadataEntry2 = {
                 id: i.IE_ID,
                 key: i.IE_KEY,
@@ -232,7 +266,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
             itemAttValueMetaMap.get(itemAttValueMetaMapKey).entries.push(entry);
         }
 
-        if (!attributeMap.has(attributeMapKey)) {
+        if (attributeMapKey && !attributeMap.has(attributeMapKey)) {
             const a = {
                 id: i.A_ID,
                 name: i.A_NAME,
@@ -245,7 +279,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
             attributeMap.set(attributeMapKey, a);
         }
 
-        if (!attributeMetadataMap.has(attributeMetadataMapKey)) {
+        if (attributeMetadataMapKey && !attributeMetadataMap.has(attributeMetadataMapKey)) {
             const m = {
                 id: i.AM_ID,
                 name: i.AM_NAME,
@@ -255,7 +289,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
             attributeMap.get(attributeMapKey).metadatas.push(m);
         }
 
-        if (!attributeMetadataEntryMap.has(attributeMetadataEntryMapKey)) {
+        if (attributeMetadataEntryMapKey && !attributeMetadataEntryMap.has(attributeMetadataEntryMapKey)) {
             const e = {
                 id: i.AME_ID,
                 key: i.AME_KEY,
@@ -282,7 +316,19 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
             const attribute: Attribute = itemValueOperatorAndAttribute.attribute;
             const operator: OperatorType = itemValueOperatorAndAttribute.operator;
 
-            for (const itemValue2 of b.values) {
+            for (const itemValue2 of b.values.length ? b.values : [{
+                                                            id: -1,
+                                                            attributeId: attribute.id,
+                                                            metadatas: [
+                                                                {
+                                                                    id: -1,
+                                                                    attributeId: attribute.id,
+                                                                    attributeType: attribute.type,
+                                                                    name: '',
+                                                                    entries: []
+                                                                } as ItemMetadata2
+                                                            ]
+                                                        } as ItemValue2]) {
                 const metas: ItemMetadata2[] = itemValue2.metadatas.filter((m: ItemMetadata2) => {
                     if (m.attributeId === attribute.id) {
                         switch (attribute.type) {
@@ -291,7 +337,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                                 const v1: string = (value ? (value.val as StringValue).value : null); // from rest API
-                                const v2: string = eValue.value; // actual item attribute value
+                                const v2: string = eValue ? eValue.value : null; // actual item attribute value
 
                                 return compareString(v1, v2, operator);
                             }
@@ -299,7 +345,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                                 const v1: string = (value ? (value.val as TextValue).value : null); // from rest api
-                                const v2: string = eValue.value; // from actual item attribute value
+                                const v2: string = eValue ? eValue.value : null; // from actual item attribute value
 
                                 return compareString(v1, v2, operator);
                             }
@@ -307,7 +353,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                                 const v1: number = (value ? (value.val as NumberValue).value : null);
-                                const v2: number = Number(eValue.value);
+                                const v2: number = eValue ? Number(eValue.value) : null;
 
                                 return compareNumber(v1, v2, operator);
                             }
@@ -318,8 +364,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as AreaValue).value : null);
                                 const u1: AreaUnits = (value ? (value.val as AreaValue).unit : null);
 
-                                const v2: number = Number((eValue.value));
-                                const u2: AreaUnits = (eUnit.value) as AreaUnits;
+                                const v2: number = eValue ? Number((eValue.value)): null;
+                                const u2: AreaUnits = eUnit ? (eUnit.value) as AreaUnits : null;
 
                                 const vv1: number = convertToCm2(v1, u1);
                                 const vv2: number = convertToCm2(v2, u2);
@@ -330,7 +376,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const eValue: ItemMetadataEntry2 = findEntry(m.entries, 'value');
 
                                 const v1: number = (value ? (value.val as CurrencyValue).value : null);
-                                const v2: number = Number(eValue.value);
+                                const v2: number = eValue ? Number(eValue.value) : null;
 
                                 return compareNumber(v1, v2, operator);
                             }
@@ -339,7 +385,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const format = attribute.format ? attribute.format : DATE_FORMAT;
 
                                 const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
-                                const v2: moment.Moment = (eValue.value ? moment(eValue.value, format) : undefined);
+                                const v2: moment.Moment = eValue ? (eValue.value ? moment(eValue.value, format) : undefined) : undefined;
 
                                 return compareDate(v1, v2, operator);
                             }
@@ -354,20 +400,12 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const l1: number = (value ? ((value.val) as DimensionValue).length : null);
                                 const u1: DimensionUnits = (value ? ((value.val) as DimensionValue).unit : null);
 
-                                const h2: number = Number(eH.value);
-                                const w2: number = Number(eW.value);
-                                const l2: number = Number(eL.value);
-                                const u2: DimensionUnits = (eU.value) as DimensionUnits;
+                                const h2: number = eH ? Number(eH.value) : null;
+                                const w2: number = eW ? Number(eW.value) : null;
+                                const l2: number = eL ? Number(eL.value) : null;
+                                const u2: DimensionUnits = eU ? (eU.value) as DimensionUnits : null;
 
-                                const hh1: number = convertToCm(h1, u1);
-                                const ww1: number = convertToCm(w1, u1);
-                                const ll1: number = convertToCm(l1, u1);
-
-                                const hh2: number = convertToCm(h2, u2);
-                                const ww2: number = convertToCm(w2, u2);
-                                const ll2: number = convertToCm(l2, u2);
-
-                                return (compareNumber(hh1, hh2, operator) && compareNumber(ww1, ww2, operator) && compareNumber(ll1, ll2, operator));
+                                return compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
                             }
                             case "height": {
                                 const eV: ItemMetadataEntry2 = findEntry(m.entries, 'value');
@@ -376,8 +414,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as HeightValue).value : null);
                                 const u1: HeightUnits = (value ? (value.val as HeightValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: HeightUnits = eU.value as HeightUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: HeightUnits = eU ? eU.value as HeightUnits : null;
 
                                 const vv1: number = convertToCm(v1, u1);
                                 const vv2: number = convertToCm(v2, u2);
@@ -391,8 +429,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as WeightValue).value : null);
                                 const u1: WeightUnits = (value ? (value.val as WeightValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: WeightUnits = eU.value as WeightUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: WeightUnits = eU ? eU.value as WeightUnits : null;
 
                                 const vv1: number = convertToG(v1, u1);
                                 const vv2: number = convertToG(v2, u2);
@@ -406,8 +444,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as LengthValue).value : null);
                                 const u1: LengthUnits = (value ? (value.val as LengthValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: LengthUnits = eU.value as LengthUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: LengthUnits = eU ? eU.value as LengthUnits : null;
 
                                 const vv1: number = convertToCm(v1, u1);
                                 const vv2: number = convertToCm(v2, u2);
@@ -421,8 +459,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as VolumeValue).value : null);
                                 const u1: VolumeUnits = (value ? (value.val as VolumeValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: VolumeUnits = eU.value as VolumeUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: VolumeUnits = eU ? eU.value as VolumeUnits : null;
 
                                 const vv1: number = convertToMl(v1, u1);
                                 const vv2: number = convertToMl(v2, u2);
@@ -436,8 +474,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const v1: number = (value ? (value.val as WidthValue).value : null);
                                 const u1: WidthUnits = (value ? (value.val as WidthValue).unit : null);
 
-                                const v2: number = Number(eV.value);
-                                const u2: WidthUnits = eU.value as WidthUnits;
+                                const v2: number = eV ? Number(eV.value) : null;
+                                const u2: WidthUnits = eU ? eU.value as WidthUnits : null;
 
                                 const vv1: number = convertToCm(v1, u1);
                                 const vv2: number = convertToCm(v2, u2);
@@ -449,7 +487,7 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
                                 const eK: ItemMetadataEntry2 = findEntry(m.entries, 'key');
 
                                 const k1: string = (value ? (value.val as SelectValue).key : null);
-                                const k2: string = eK.value;
+                                const k2: string = eK ? eK.value : null;
 
                                 return compareString(k1, k2, operator);
                             }
@@ -459,8 +497,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
 
                                 const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null);
                                 const kTwo1: string = (value ? (value.val as DoubleSelectValue).key2 : null);
-                                const kOne2: string = eOne.value;
-                                const kTwo2: string = eTwo.value;
+                                const kOne2: string = eOne ? eOne.value : null;
+                                const kTwo2: string = eTwo ? eTwo.value : null;
 
                                 return (compareString(kOne1, kOne2, operator) && compareString(kTwo1, kTwo2, operator));
                             }
@@ -480,131 +518,8 @@ export const getPricedItem2WithFiltering = async (conn: Connection,
     return { b: matchedBulkEditItem2s, m: attMap};
 }
 
-/*
-const convertToCm = (v: number, u: DimensionUnits | WidthUnits | LengthUnits | HeightUnits): number => {
-    switch (u) {
-        case "cm":
-            return v;
-        case "mm":
-            return (v *10);
-        case "m":
-            return (v / 100);
-    }
-};
 
-const convertToCm2 = (v: number, u: AreaUnits): number => {
-    switch(u) {
-        case "cm2":
-            return v;
-        case "m2":
-            return (v / (100 * 100));
-        case "mm2":
-            return (v * 10 * 10);
-    }
-}
-
-const convertToMl = (v: number, u: VolumeUnits): number => {
-    switch(u) {
-        case "l":
-            return (v / 1000);
-        case "ml":
-            return v;
-    }
-}
-
-const compareDate = (a: moment.Moment,  // from REST Api
-                     b: moment.Moment,  // from actual item attribute value
-                     operator: OperatorType): boolean => {
-    switch (operator) {
-        case "empty":
-            return (!!!b); // when a is falsy
-        case "eq":
-            return b.isSame(a);
-        case "gt":
-            return b.isAfter(a);
-        case "gte":
-            return b.isSameOrAfter(a);
-        case "lt":
-            return b.isBefore(a);
-        case "lte":
-            return b.isSameOrBefore(a);
-        case "not empty":
-            return (!!b);
-        case "not eq":
-            return (!b.isSame(a));
-        case "not gt":
-            return (!b.isAfter(a));
-        case "not gte":
-            return (!b.isSameOrAfter(a));;
-        case "not lt":
-            return (!b.isBefore(a));
-        case "not lte":
-            return (!b.isSameOrBefore(a));
-    }
-}
-
-const compareNumber = (a: number, // from REST api
-                       b: number, // from actual item attribute value
-                       operator: OperatorType): boolean => {
-    switch (operator) {
-        case "empty":
-            return (!!!b);
-        case "eq":
-            return (b == a);
-        case "gt":
-            return (b > a);
-        case "gte":
-            return (b >= a);
-        case "lt":
-            return (b < a);
-        case "lte":
-            return (b <= a);
-        case "not empty":
-            return (!!b)
-        case "not eq":
-            return (b != a);
-        case "not gt":
-            return (!(b > a));
-        case "not gte":
-            return (!(b >= a));
-        case "not lt":
-            return (!(b < a));
-        case "not lte":
-            return (!(b <= a));
-    }
-}
-
-const compareString = (a: string // from REST Api ,
-                       b: string // from actual item attribute value ,
-                       operator: OperatorType): boolean => {
-    switch (operator) {
-        case "empty":
-            return (!!!b);
-        case "eq":
-            return (b == a);
-        case "gt":
-            return (b > a);
-        case "gte":
-            return (b >= a);
-        case "lt":
-            return (b <= a);
-        case "lte":
-            return (b <= a);
-        case "not empty":
-            return (!!b);
-        case "not eq":
-            return ( b != a);
-        case "not gt":
-            return (!(b > a));
-        case "not gte":
-            return (!(b >= a));
-        case "not lt":
-            return (!(b < a));
-        case "not lte":
-            return (!(b <= a));
-    }
-}
- */
+// ==== helper functions ======================
 
 const findEntry = (entries: ItemMetadataEntry2[], key: string): ItemMetadataEntry2 => {
     return entries.find((e: ItemMetadataEntry2) => e.key === key);

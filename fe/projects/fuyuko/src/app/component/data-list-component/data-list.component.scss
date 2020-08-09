@@ -1,0 +1,37 @@
+.data-list-component {
+  .search-container {
+    margin-bottom: 10px;
+  }
+  .main-control {
+    button:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+  .container {
+
+    .no-items {
+      padding: 30px 0;
+    }
+
+    .mat-accordion {
+      .mat-expansion-panel {
+        .mat-expansion-panel-header {
+          .mat-expansion-panel-header-title {
+            section {
+              line-height: 25px;
+              &.check-box {
+                margin: 10px;
+              }
+              &.favourite {
+                margin: 10px;
+              }
+              &.item-text {
+                margin: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

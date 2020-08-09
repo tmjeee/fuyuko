@@ -1,0 +1,25 @@
+<div class="view-attribute-validation-range-summary-widget">
+    <div fxLayout="column">
+        <div fxFlex class="mat-title"> View Attribute Validation Range Summary</div>
+        <div fxFlex>
+            <mat-form-field>
+                <mat-label>View</mat-label>
+                <mat-select [value]="selectedView" (selectionChange)="onViewChange($event)">
+                    <mat-option *ngFor="let view of views" [value]="view">{{view.name}}</mat-option>
+                </mat-select>
+                <mat-hint>Select a view</mat-hint>
+            </mat-form-field>
+        </div>
+        <div fxFlex>
+            <div *ngIf="!(data && data.length)">No data</div>
+            <div *ngIf="data && data.length">
+                <google-chart
+                        [type]="type"
+                        [columns]="columns"
+                        [data]="data"
+                        [options]="options">
+                </google-chart>
+            </div>
+        </div>
+    </div>
+</div>

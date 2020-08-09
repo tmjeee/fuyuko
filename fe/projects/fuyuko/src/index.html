@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fuyuko</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script> <!-- stock-trading-widget.component.ts -->
+  <!-- google charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" async></script>
+  <!--script type="text/javascript" src="https://www.gstatic.com/charts/49/loader.js" async></script-->
+  <!-- animation loading -->
+  <style>
+    .loading-animation {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .loading-animation .logo {
+      width: 480px;
+    }
+    .loading-animation .text {
+      margin-top: 10px;
+      font-size: 30px;
+      color: #5e7a5e;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <app-root>
+    <div class="loading-animation">
+      <div>
+        <img src="assets/images/logo/fuyuko-logo-with-side-wordings.png" class="logo">
+      </div>
+      <div>
+        <img src="assets/images/loading-animation/Bars-1s-200px.svg">
+        <img src="assets/images/loading-animation/Vanilla-1s-277px.svg">
+      </div>
+      <div class="text"></div>
+    </div>
+  </app-root>
+</body>
+</html>

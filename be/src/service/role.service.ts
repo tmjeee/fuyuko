@@ -1,11 +1,24 @@
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Role} from "../model/role.model";
+import {
+    AddOrUpdateRoleEvent,
+    AddRoleToGroupEvent,
+    fireEvent,
+    GetAllRolesEvent,
+    GetRoleByNameEvent, RemoveRoleFromGroup
+} from "./event/event.service";
 
+
+/**
+ * ===========================
+ * === addOrUpdateRole =======
+ * ===========================
+ */
 export const addOrUpdateRole = async (role: Role): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
-        if (role.id < 0) { // add
+        if (!role.id || role.id < 0) { // add
             const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ROLE WHERE NAME=? `, [role.name]);
             if (qc[0].COUNT > 0) {
                 errors.push(`Role ${role.name} already exists`);
@@ -17,7 +30,7 @@ export const addOrUpdateRole = async (role: Role): Promise<string[]> => {
             }
         } else { // update
             const qc: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ROLE WHERE ID=?`, [role.id]);
-            if (qc[0].COUNT > 0) {
+            if (qc[0].COUNT <= 0) {
                 errors.push(`Role id ${role.id} do not exists`);
             } else {
                 const q: QueryResponse = await conn.query(`UPDATE TBL_ROLE SET NAME=?, DESCRIPTION=? WHERE ID=?`, [role.name, role.description, role.id]);
@@ -28,10 +41,21 @@ export const addOrUpdateRole = async (role: Role): Promise<string[]> => {
         }
         return errors;
     });
+    fireEvent({
+       type: "AddOrUpdateRoleEvent",
+       role, errors
+    } as AddOrUpdateRoleEvent);
+    return errors;
 }
 
+
+/**
+ * ===========================
+ * === addRoleToGroup =======
+ * ===========================
+ */
 export const addRoleToGroup = async (groupId: number, roleName: string): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
         const qa: QueryA = await conn.query('SELECT ID FROM TBL_ROLE WHERE NAME = ?', [roleName]);
@@ -53,11 +77,21 @@ export const addRoleToGroup = async (groupId: number, roleName: string): Promise
         }
         return errors;
     });
+    fireEvent({
+        type: "AddRoleToGroupEvent",
+        groupId, roleName, errors
+    } as AddRoleToGroupEvent);
+    return errors;
 };
 
 
+/**
+ * ===========================
+ * === getRoleByName =======
+ * ===========================
+ */
 export const getRoleByName = async (roleName: string): Promise<Role> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const role: Role = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION FROM TBL_ROLE WHERE NAME=?`, roleName);
         if (q.length) {
             return {
@@ -68,10 +102,20 @@ export const getRoleByName = async (roleName: string): Promise<Role> => {
         }
         return null;
     });
+    fireEvent({
+       type: "GetRoleByNameEvent",
+        roleName, role
+    } as GetRoleByNameEvent);
+    return role;
 };
 
+/**
+ * ===========================
+ * === getAllRoles =======
+ * ===========================
+ */
 export const getAllRoles = async (): Promise<Role[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const roles: Role[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     ID, NAME, DESCRIPTION
@@ -88,8 +132,18 @@ export const getAllRoles = async (): Promise<Role[]> => {
 
         return roles;
     });
+    fireEvent({
+        type: "GetAllRolesEvent",
+        roles
+    } as GetAllRolesEvent);
+    return roles;
 };
 
+/**
+ * ===========================
+ * === removeRoleFromGroup =======
+ * ===========================
+ */
 export const removeRoleFromGroup = async (roleName: string, groupId: number): Promise<string[]> => {
     const errors: string[] = [];
     await doInDbConnection(async (conn: Connection) => {
@@ -107,5 +161,9 @@ export const removeRoleFromGroup = async (roleName: string, groupId: number): Pr
             }
         }
     });
+    fireEvent({
+       type: "RemoveRoleFromGroup",
+       roleName, groupId, errors
+    } as RemoveRoleFromGroup);
     return errors;
 }

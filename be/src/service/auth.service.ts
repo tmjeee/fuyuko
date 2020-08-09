@@ -9,24 +9,45 @@ import uuid = require("uuid");
 import {hashedPassword, sendEmail} from "./index";
 import {SendMailOptions} from "nodemailer";
 import config from "../config";
+import {
+    fireEvent,
+    ForgotPasswordEvent,
+    IsValidForgottenPasswordCodeEvent, LoginEvent, LogoutEvent,
+    ResetForgottenPasswordEvent
+} from "./event/event.service";
 
-
+/**
+ * ====================================
+ * === isValidForgottenPasswordCode ===
+ * ====================================
+ */
 export const isValidForgottenPasswordCode = async (code: string): Promise<boolean> => {
     return await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_FORGOT_PASSWORD WHERE CODE=? AND STATUS=?`, [code, ENABLED]);
+        let result: boolean = false;
         if (q[0].COUNT) {
-            return true;
+            result = true;
         }
-        return false;
+        fireEvent({
+           type: "IsValidForgottenPasswordCodeEvent",
+           code, result 
+        } as IsValidForgottenPasswordCodeEvent);
+        return result;
     });
 }
 
+/**
+ * ==============================
+ * === resetForgottenPassword ===
+ * ==============================
+ */
 export const resetForgottenPassword = async (code: string, password: string): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const hPass = hashedPassword(password);
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const q: QueryA = await conn.query(`SELECT ID, USER_ID, CODE, STATUS FROM TBL_FORGOT_PASSWORD WHERE CODE=? AND STATUS=?`, [code, ENABLED]);
         if (q.length > 0) {
-            const q0: QueryResponse = await conn.query(`UPDATE TBL_USER SET PASSWORD=? WHERE ID =?`, [hashedPassword(password), q[0].USER_ID]);
+            const q0: QueryResponse = await conn.query(`UPDATE TBL_USER SET PASSWORD=? WHERE ID =?`, [hPass, q[0].USER_ID]);
             if (q0.affectedRows <= 0) {
                 errors.push(`Failed to reset password for code ${code}`);
             } else {
@@ -40,8 +61,18 @@ export const resetForgottenPassword = async (code: string, password: string): Pr
         }
         return errors;
     });
+    fireEvent({
+       type: "ResetForgottenPasswordEvent",
+       code,  hashedPassword: hPass, errors
+    } as ResetForgottenPasswordEvent);
+    return errors;
 };
 
+/**
+ * ======================
+ * === forgotPassword ===
+ * ======================
+ */
 export const forgotPassword = async (o: {username?: string, email?: string}): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = []
@@ -75,10 +106,15 @@ export const forgotPassword = async (o: {username?: string, email?: string}): Pr
                 errors.push(`Email ${o.email} do not exists`);
             }
         }
+        
+        fireEvent({
+           type: "ForgotPasswordEvent",
+           username: o.username,  email: o.email, errors
+        } as ForgotPasswordEvent);
+        
         return errors;
     });
 };
-
 const registerForgottenPassword = async (i: {userId: number, email: string, username: string, firstName: string, lastName: string}): Promise<string[]> => {
     return await doInDbConnection(async (conn: Connection) => {
         const code: string = uuid();
@@ -104,12 +140,27 @@ const registerForgottenPassword = async (i: {userId: number, email: string, user
 };
 
 
+/**
+ * ==============
+ * === logout ===
+ * ==============
+ */
 export const logout = async (user: User): Promise<void> => {
+    fireEvent({
+       type: "LogoutEvent",
+       user 
+    } as LogoutEvent);
 };
 
 
-export const login = async (usrname: string, password: string): Promise<{errors: string[], user: User, jwtToken: string, theme: string }> => {
-    return await doInDbConnection(async (conn: Connection) => {
+/**
+ * =============
+ * === login ===
+ * =============
+ */
+export interface LoginResult { errors: string[], user: User, jwtToken: string, theme: string };
+export const login = async (usrname: string, password: string): Promise<LoginResult> => {
+    const loginResult: LoginResult =  await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
         const qUser: QueryA = await conn.query(`
@@ -203,4 +254,12 @@ export const login = async (usrname: string, password: string): Promise<{errors:
             };
         }
     });
+    
+    fireEvent({
+       type: "LoginEvent",
+       username: usrname,
+       result: loginResult 
+    } as LoginEvent);
+    
+    return loginResult;
 };

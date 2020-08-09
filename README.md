@@ -1,6 +1,6 @@
 
 
-<img src="https://raw.githubusercontent.com/tmjeee/fuyuko/v1.0.0-beta/fe/src/assets/images/logo/fuyuko-logo-with-side-wordings.png" width="300" style="margin-bottom: 20px; display: block">
+<img src="https://raw.githubusercontent.com/tmjeee/fuyuko/v1.0.0-beta/fe/projects/fuyuko/src/assets/images/logo/fuyuko-logo-with-side-wordings.png" width="300" style="margin-bottom: 20px; display: block">
 
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-fe&subject=FE%20Build%20Status%20v1.0.0-beta)](https://jenkins.fuyuko.org/job/fuyuko-fe/)
 [![Build Status](https://jenkins.fuyuko.org/buildStatus/icon?job=fuyuko-be&subject=BE%20Build%20Status%20v1.0.0-beta)](https://jenkins.fuyuko.org/job/fuyuko-be/)
@@ -17,17 +17,22 @@ It allows management of product (name, description, attributes, pricing etc.) in
 
 # Features
 * simple & intuitive
-* build off popular, proven tech ([typescript](https://typescriptlang.com), [nodejs](https://nodejs.org), [angular9+](https://angular.io))
+* build off popular, proven tech ([Typescript](https://typescriptlang.com), [NodeJS](https://nodejs.org), [Angular10+](https://angular.io))
 * plays well with [Kubernetes](https://k8s.io)
-* [dockerizable](https://docker.com) 
+* [dockerizable](https://docker.com) and [docker-composable](https://docs.docker.com/compose/)
 * open source (LGPL v3)
 * no breaking the bank while managing your product data effectively
 
 # Documentation
 Documentations are [here](https://docs.fuyuko.org)
 
-# Slack channel
-Want to drop a message or chat? We have Slack channel [here](https://fuyuko.slack.com/channels/#fuyuko). Feel free to drop by and say Hi :) 
+# Blog
+We have a blog [here](https://blog.fuyuko.org)
+
+# Queries
+Want to drop a message or chat? 
+* We have Slack channel [here](https://fuyuko.slack.com/channels/#fuyuko). Feel free to drop by and say Hi :) 
+* Email us at admin(at)fuyuko(dot)org
 
 # Demo
 Demo app running [here](https://demo.fuyuko.org)

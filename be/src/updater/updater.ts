@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import util from 'util';
 import * as semver from 'semver';
-import {i, e, w} from '../logger';
+import {i, e, w, d} from '../logger';
 import config from '../config';
 
 
@@ -40,7 +40,7 @@ export const runUpdater = async () => {
 }
 
 
-export const runUpdate = async () => {
+export const runUpdate = async ()  => {
 
     const updaterEntries: QueryA = await doInDbConnection<void>(async (conn: Connection) => {
         const r1: QueryResponse = await conn.query(`

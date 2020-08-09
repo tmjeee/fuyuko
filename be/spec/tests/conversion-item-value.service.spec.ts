@@ -1,9 +1,14 @@
 import {itemValueConvert, itemValueRevert} from "../../src/service/conversion-item-value.service";
 import {ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../../src/server-side-model/server-side.model";
 import {StringValue, Value} from "../../src/model/item.model";
+import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe('conversion-item-value.service.ts', () => {
+    beforeAll(async () => {
+        await setupTestDatabase();
+    });
+
    it ('itemValueConvert', () => {
       const i: Value = itemValueConvert({
         id: -1,

@@ -4,6 +4,12 @@ import util from 'util';
 import {IncomingMessage} from "http";
 import {Request} from 'express';
 
+
+/**
+ *  ==========================
+ *  === multipartParse ===
+ *  ==========================
+ */
 export const multipartParse = (req: Request): Promise<{fields: Fields, files: Files}> => {
     const incomingForm = new IncomingForm();
     (incomingForm.parse as any)[util.promisify.custom] = (req: IncomingMessage) => new Promise((res, rej) => {

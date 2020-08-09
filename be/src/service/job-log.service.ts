@@ -5,10 +5,12 @@ import {d, e, i, w} from '../logger';
 import {l} from "../logger/logger";
 import {Progress} from "../model/progress.model";
 
-export interface LoggingCallback  {
-    (level: Level, msg: string): void;
-}
 
+/**
+ *  =============================
+ *  === newConsoleLogger ===
+ *  =============================
+ */
 export const newConsoleLogger: LoggingCallback = (level: Level, msg: string) => {
     switch (level) {
         case "DEBUG":
@@ -23,16 +25,43 @@ export const newConsoleLogger: LoggingCallback = (level: Level, msg: string) => 
         case "WARN":
             w(msg);
             break;
-        }
-    };
+    }
+};
 
-export const newLoggingCallback = (jobLogger?: JobLogger) => {
+/**
+ *  =============================
+ *  === newLoggingCallback ===
+ *  =============================
+ */
+export const newLoggingCallback = (jobLogger?: JobLogger): LoggingCallback => {
     return (level: Level, msg: string): void => {
         if (jobLogger) {
             jobLogger.log(level, msg);
         }
         l(level, msg);
     }
+};
+
+
+/**
+ *  =============================
+ *  === newJobLogger ===
+ *  =============================
+ */
+export const newJobLogger = async (name: string, description: string = ''): Promise<JobLogger> => {
+    return await doInDbConnection(async (conn: Connection)=> {
+        const q: QueryResponse = await conn.query(`INSERT INTO TBL_JOB (NAME, DESCRIPTION, STATUS, PROGRESS) VALUES (?,?,'ENABLED','SCHEDULED')`,
+            [name, description]);
+        const id: number = q.insertId;
+        return new JobLogger(id, name, description);
+    });
+};
+
+
+// ========= misc helper ===================================
+
+export interface LoggingCallback  {
+    (level: Level, msg: string): void;
 }
 
 export class JobLogger {
@@ -70,11 +99,3 @@ export class JobLogger {
 }
 
 
-export const newJobLogger = async (name: string, description: string = ''): Promise<JobLogger> => {
-    return await doInDbConnection(async (conn: Connection)=> {
-        const q: QueryResponse = await conn.query(`INSERT INTO TBL_JOB (NAME, DESCRIPTION, STATUS, PROGRESS) VALUES (?,?,'ENABLED','SCHEDULED')`,
-            [name, description]);
-        const id: number = q.insertId;
-        return new JobLogger(id, name, description);
-    });
-}

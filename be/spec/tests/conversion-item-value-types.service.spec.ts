@@ -10,8 +10,14 @@ import {
     TextValue,
     VolumeValue, WeightValue, WidthValue
 } from "../../src/model/item.model";
+import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 describe('conversion-item-value-types.service.ts', () => {
+
+    beforeAll(async () => {
+        await setupTestDatabase();
+    });
+
     it ('itemValTypesConvert (string)', () => {
         const i: ItemValTypes = itemValTypesConvert([{
             entries: [

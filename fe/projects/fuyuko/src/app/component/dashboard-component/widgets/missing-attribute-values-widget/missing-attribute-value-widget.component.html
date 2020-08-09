@@ -1,0 +1,23 @@
+<div class="missing-attribute-value-widget">
+    <div fxLayout="column">
+        <div fxFlex class="mat-title"> Missing Attribute Values </div>
+        <div fxFlex>
+            <mat-form-field>
+                <mat-label>View</mat-label>
+                <mat-select [value]="selectedView" (selectionChange)="onViewChange($event)">
+                    <mat-option *ngFor="let view of (i ? i.views : [])" [value]="view">{{view.viewName}}</mat-option>
+                </mat-select>
+                <mat-hint>Select a view</mat-hint>
+            </mat-form-field>
+        </div>
+        <div fxFlex>
+            <ng-container *ngIf="!(data && data.length)">No items</ng-container>
+            <google-chart
+                    *ngIf="data && data.length"
+                    [type]="chartType"
+                    [data]="data"
+                    [options]="options">
+            </google-chart>
+        </div>
+    </div>
+</div>

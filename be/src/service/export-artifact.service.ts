@@ -3,10 +3,21 @@ import {Connection} from "mariadb";
 import {DataExportArtifact} from "../model/data-export.model";
 import {View} from "../model/view.model";
 import {BinaryContent} from "../model/binary-content.model";
+import {
+    DeleteExportArtifactByIdEvent,
+    fireEvent,
+    GetAllExportArtifactsEvent,
+    GetExportArtifactContentEvent
+} from "./event/event.service";
 
 
+/**
+ * ===================================
+ * === getExportArtifactContent() ===
+ * ===================================
+ */
 export const getExportArtifactContent = async (dataExportId: number): Promise<BinaryContent> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const binaryContent: BinaryContent = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     ID, DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT, CREATION_DATE, LAST_UPDATE
@@ -25,19 +36,46 @@ export const getExportArtifactContent = async (dataExportId: number): Promise<Bi
         }
         return null;
     });
+    
+    fireEvent({
+       type: "GetExportArtifactContentEvent",
+       dataExportId,
+       content: binaryContent 
+    } as GetExportArtifactContentEvent);
+    
+    return binaryContent;
 }
 
+
+/**
+ * ===================================
+ * === deleteExportArtifactById() ===
+ * ===================================
+ */
 export const deleteExportArtifactById = async (dataExportArtifactId: number): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const b: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`
                 DELETE FROM TBL_DATA_EXPORT WHERE ID=?
             `, [dataExportArtifactId]);
-        return (q.affectedRows);
+        return (q.affectedRows > 0);
     });
+    fireEvent({
+       type: "DeleteExportArtifactByIdEvent",
+       dataExportArtifactId,
+       result: b 
+    } as DeleteExportArtifactByIdEvent);
+    return b;
 };
 
+
+
+/**
+ * ===================================
+ * === getAllExportArtifacts() =======
+ * ===================================
+ */
 export const getAllExportArtifacts = async (): Promise<DataExportArtifact[]> => {
-    const dataExportArtifact: DataExportArtifact[] =  await doInDbConnection(async (conn: Connection) => {
+    const dataExportArtifacts: DataExportArtifact[] =  await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     E.ID AS E_ID,
@@ -86,6 +124,11 @@ export const getAllExportArtifacts = async (): Promise<DataExportArtifact[]> => 
             return acc;
         }, []);
     });
+    
+    fireEvent({
+        type: "GetAllExportArtifactsEvent",
+        dataExportArtifacts
+    } as GetAllExportArtifactsEvent);
 
-    return dataExportArtifact;
+    return dataExportArtifacts;
 };

@@ -4,7 +4,7 @@ import {Registry} from "../../registry";
 import {ApiResponse} from "../../model/api-response.model";
 import {logout} from "../../service/auth.service";
 import {User} from "../../model/user.model";
-import {verifyJwtToken} from "../../service";
+import {decodeJwtToken} from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
 
 // CHECKED
@@ -16,7 +16,7 @@ const httpAction: any[] = [
         let user: User = null;
         const jwtToken: string = req.headers['x-auth-jwt'] as string;
         if (jwtToken) {
-            const jwtPayload: JwtPayload = verifyJwtToken(jwtToken);
+            const jwtPayload: JwtPayload = decodeJwtToken(jwtToken);
             user = jwtPayload.user;
         }
         await logout(user);

@@ -3,7 +3,7 @@ import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../src/mo
 import {BulkEditPackage} from "../../src/model/bulk-edit.model";
 import {
     JASMINE_TIMEOUT,
-    setupBeforeAll, setupTestDatabase,
+    setupTestDatabase, setupBeforeAll2,
 } from "../helpers/test-helper";
 import {Attribute} from "../../src/model/attribute.model";
 import {
@@ -39,12 +39,9 @@ describe('bulk-edit.service', () => {
   let selectAttribute: Attribute;
   let doubleSelectAttribute: Attribute;
 
-  beforeAll(() => {
-      setupTestDatabase();
-  });
-
-  beforeAll((done: DoneFn) => {
-     setupBeforeAll(done);
+  beforeAll(async () => {
+     await setupTestDatabase();
+     await setupBeforeAll2();
   }, JASMINE_TIMEOUT);
 
   beforeAll(async (done: DoneFn) => {
@@ -3505,7 +3502,7 @@ describe('bulk-edit.service', () => {
               } as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
-      expect(bulkEditPackage.bulkEditItems.length).toBe(1);
+      expect(bulkEditPackage.bulkEditItems.length).toBe(7);
   });
   it(`preview when condition (doubleselect empty)`, async () => {
       const bulkEditPackage: BulkEditPackage = await preview(view.id,

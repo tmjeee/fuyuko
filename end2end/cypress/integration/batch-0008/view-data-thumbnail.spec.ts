@@ -45,7 +45,7 @@ describe('view-data-thumbnail spec', () => {
         ;
     });
 
-    it('should be searchable (basic search)', () => {
+    it.skip('should be searchable (basic search)', () => {
         viewDataThumbnailPage
             .doBasicSearch(`Item-2`)
             .verifyThumbnailsResultSize(1)

@@ -3,10 +3,23 @@ import {doInDbConnection, QueryA, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {BinaryContent} from "../model/binary-content.model";
 import {ClientError} from "../route/v1/common-middleware";
+import {
+    AddItemImageEvent, DeleteItemImageEvent,
+    fireEvent,
+    GetItemImageContentEvent,
+    GetItemPrimaryImageEvent,
+    MarkItemImageAsPrimaryEvent
+} from "./event/event.service";
 
 
+
+/**
+ * ================================
+ * === markItemImageAsPrimary() ===
+ * ================================
+ */
 export const markItemImageAsPrimary = async (itemId: number, itemImageId: number): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const q: QueryA = await conn.query(`
                 SELECT COUNT(*) AS COUNT FROM TBL_ITEM_IMAGE WHERE ID=? AND ITEM_ID=?
@@ -19,11 +32,22 @@ export const markItemImageAsPrimary = async (itemId: number, itemImageId: number
         }
         return errors;
     });
+
+    fireEvent({
+       type: "MarkItemImageAsPrimaryEvent",
+       itemId, itemImageId, errors
+    } as MarkItemImageAsPrimaryEvent);
+
+    return errors;
 };
 
-
+/**
+ * ================================
+ * === getItemPrimaryImage() ===
+ * ================================
+ */
 export const getItemPrimaryImage = async (itemId: number): Promise<BinaryContent> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const binaryContent: BinaryContent = await doInDbConnection(async (conn: Connection) => {
 
         const q: QueryA = await conn.query(`
                 SELECT 
@@ -79,10 +103,23 @@ export const getItemPrimaryImage = async (itemId: number): Promise<BinaryContent
             content: buffer
         } as BinaryContent;
     });
+
+    fireEvent({
+        type: "GetItemPrimaryImageEvent",
+        itemId, binaryContent
+    } as GetItemPrimaryImageEvent);
+
+    return binaryContent;
 };
 
+
+/**
+ * ================================
+ * === getItemImageContent() ===
+ * ================================
+ */
 export const getItemImageContent = async (itemImageId: number): Promise<BinaryContent> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const binaryContent: BinaryContent = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT 
                     ID, 
@@ -136,26 +173,61 @@ export const getItemImageContent = async (itemImageId: number): Promise<BinaryCo
            content: buffer
         } as BinaryContent;
     });
+
+    fireEvent({
+        type: 'GetItemImageContentEvent',
+        itemImageId, binaryContent
+    } as GetItemImageContentEvent);
+
+    return binaryContent;
 }
 
+
+/**
+ * ================================
+ * === addItemImage() ===
+ * ================================
+ */
 export const addItemImage = async (itemId: number, fileName: string, image: Buffer, primaryImage?: boolean ): Promise<boolean> => {
 
-    const ft: fileType.FileTypeResult = fileType(image);
+    const ft: fileType.FileTypeResult = await fileType.fromBuffer(image);
 
     const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
+        if (primaryImage) {
+            await conn.query(`UPDATE TBL_ITEM_IMAGE SET \`PRIMARY\` = false WHERE ITEM_ID=?`, [itemId]);
+        }
         return await conn.query(`
                 INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)
             `, [itemId, primaryImage ? primaryImage : false, ft.mime, fileName,  image.length, image]);
     });
+    const r: boolean = (q.affectedRows > 0);
 
-    return (q.affectedRows > 0);
+    fireEvent({
+       type: 'AddItemImageEvent',
+       itemId, fileName, image, primaryImage, result: r
+    } as AddItemImageEvent);
+
+    return r;
 };
 
+
+/**
+ *  =======================
+ *  === DeleteItemImage ===
+ *  =======================
+ */
 export const deleteItemImage = async (itemId: number, itemImageId: number): Promise<boolean> => {
     const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
         return await conn.query(`
                DELETE FROM TBL_ITEM_IMAGE WHERE ITEM_ID=? AND ID=?
             `, [itemId, itemImageId]);
     });
-    return (q.affectedRows > 0);
+    const result: boolean = (q.affectedRows > 0);
+
+    fireEvent({
+       type: 'DeleteItemImageEvent',
+       itemId, itemImageId, result
+    } as DeleteItemImageEvent);
+
+    return result;
 }

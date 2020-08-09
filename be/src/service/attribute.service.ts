@@ -1,5 +1,5 @@
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../server-side-model/server-side.model";
-import {Attribute} from "../model/attribute.model";
+import {Attribute, AttributeType} from "../model/attribute.model";
 import {attributeConvert, attributesConvert, attributesRevert} from "./conversion-attribute.service";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
@@ -7,6 +7,16 @@ import {LoggingCallback} from "./job-log.service";
 import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET} from "../util/utils";
 import {ENABLED, Status} from "../model/status.model";
+import {
+    ChangeAttributeStatusEvent,
+    fireEvent,
+    GetAttributeInViewByNameEvent,
+    GetAttributeInViewEvent,
+    GetAttributesInViewEvent,
+    SaveAttributesEvent,
+    SearchAttributesByViewEvent,
+    UpdateAttributesEvent
+} from "./event/event.service";
 
 const q1_count: string = `
                 SELECT
@@ -82,7 +92,8 @@ const q_byName = () => `
 // =====================
 // === updateAttribute ===
 // =======================
-export const updateAttributes = async (attributes: Attribute[]): Promise<{errors: string[], updatedAttributeIds: number[]}> => {
+export interface UpdateAttributesResult {errors: string[], updatedAttributeIds: number[]};
+export const updateAttributes = async (attributes: Attribute[]): Promise<UpdateAttributesResult> => {
     return await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
         const atts2: Attribute2[] = attributesRevert(attributes);
@@ -113,10 +124,17 @@ export const updateAttributes = async (attributes: Attribute[]): Promise<{errors
             updatedAttributeIds.push(att2.id);
         }
 
-        return {
+        const r: UpdateAttributesResult = {
             errors,
             updatedAttributeIds
         }
+        
+        fireEvent({
+            type: "UpdateAttributesEvent",
+            updateAttributesResult: r
+        } as UpdateAttributesEvent);
+        
+        return r;
     });
 }
 
@@ -125,10 +143,19 @@ export const updateAttributes = async (attributes: Attribute[]): Promise<{errors
 // === changeAttributeStatus ===
 // =============================
 export const changeAttributeStatus = async (attributeId: number, status: Status): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const r: boolean =  await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`UPDATE TBL_VIEW_ATTRIBUTE SET STATUS = ? WHERE ID = ? `, [status, attributeId]);
         return (q.affectedRows > 0);
     });
+    
+    fireEvent({
+       type: "ChangeAttributeStatusEvent",
+       success: r,
+       attributeId, 
+       attributeStatus: status 
+    } as ChangeAttributeStatusEvent);
+    
+    return r;
 };
 
 
@@ -154,10 +181,15 @@ export const getTotalAttributesInView = async (viewId: number, attributeIds?: nu
 // =================================
 export const getAttributeInViewByName = async (viewId: number, attributeName: string): Promise<Attribute> => {
     const attribute2: Attribute2 = await getAttribute2InViewByName(viewId, attributeName);
+    let attribute: Attribute = null;
     if (attribute2) {
-        return attributeConvert(attribute2);
+        attribute =  attributeConvert(attribute2);
     }
-    return null;
+    fireEvent({
+       type: 'GetAttributeInViewByNameEvent',
+       viewId, attribute
+    } as GetAttributeInViewByNameEvent);
+    return attribute;
 }
 export const getAttribute2InViewByName = async (viewId: number, attributeName: string): Promise<Attribute2> => {
    return doInDbConnection(async (conn: Connection) => {
@@ -180,23 +212,36 @@ export const getAttribute2InViewByName = async (viewId: number, attributeName: s
 
 
 // ============================
-// === getAttributesInView ====
+// === getAttributeInView ====
 // ============================
 export const getAttributeInView = async (viewId: number, attributeId: number): Promise<Attribute> => {
     const attributes: Attribute[] = await getAttributesInView(viewId, [attributeId]);
+    let attribute: Attribute = null;
     if (attributes && attributes.length) {
-        return attributes[0];
+        attribute = attributes[0];
     }
-    return null;
+    fireEvent({
+       type: "GetAttributeInViewEvent",
+       attribute,
+       viewId
+    } as GetAttributeInViewEvent);
+    return attribute;
 };
 
 
 // ============================
 // === getAttributesInView ====
 // ============================
-export const getAttributesInView = async (viewId: number, attributeIds?: number[], limtiOffset?: LimitOffset): Promise<Attribute[]> => {
-    const attribute2s: Attribute2[] = await getAttribute2sInView(viewId, attributeIds, limtiOffset);
-    return attributesConvert(attribute2s);
+export const getAttributesInView = async (viewId: number, attributeIds?: number[], limitOffset?: LimitOffset): Promise<Attribute[]> => {
+    const attribute2s: Attribute2[] = await getAttribute2sInView(viewId, attributeIds, limitOffset);
+    const attributes: Attribute[] =  attributesConvert(attribute2s);
+    fireEvent({
+       type: "GetAttributesInViewEvent",
+       viewId,
+       attributes,
+       limitOffset
+    } as GetAttributesInViewEvent);
+    return attributes;
 };
 export const getAttribute2sInView = async (viewId: number, attributeIds?: number[], limitOffset?: LimitOffset): Promise<Attribute2[]> => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -273,7 +318,14 @@ export const saveAttributes = async (viewId: number, att: Attribute[], loggingCa
     loggingCallback && loggingCallback('INFO', `converting attribute to attribute2`);
     const att2s: Attribute2[] = attributesRevert(att);
     loggingCallback && loggingCallback('INFO', `converted attribute to attribute2`)
-    return await saveAttribute2s(viewId, att2s, loggingCallback);
+    const errors: string[] =  await saveAttribute2s(viewId, att2s, loggingCallback);
+    fireEvent({
+       type: "SaveAttributesEvent",
+       viewId, 
+       attributes: att,
+       errors
+    } as SaveAttributesEvent);
+    return errors;
 };
 export const saveAttribute2s = async (viewId: number, attrs2: Attribute2[], loggingCallback?: LoggingCallback): Promise<string[]> => {
     const errors: string[] = [];
@@ -312,7 +364,12 @@ export const saveAttribute2s = async (viewId: number, attrs2: Attribute2[], logg
 // ==============================
 export const searchAttributesByView = async (viewId: number, search?: string): Promise<Attribute[]> => {
     const attribute2s: Attribute2[] = await searchAttribute2sByView(viewId, search);
-    return attributesConvert(attribute2s);
+    const attributes: Attribute[] =  attributesConvert(attribute2s);
+    fireEvent({
+        type: 'SearchAttributesByViewEvent',
+        search, viewId, attributes
+    } as SearchAttributesByViewEvent);
+    return attributes;
 };
 export const searchAttribute2sByView = async (viewId: number, search?: string): Promise<Attribute2[]> => {
     return await doInDbConnection(async (conn: Connection) => {

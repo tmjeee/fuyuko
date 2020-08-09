@@ -38,8 +38,8 @@ import {
 } from "../../model/unit.model";
 import moment from "moment";
 import {itemValueConvert} from "../conversion-item-value.service";
-import * as util from 'util';
-import {getAttributeInView, getAttributesInView} from "../attribute.service";
+import {getAttributeInView} from "../attribute.service";
+import {BulkEditPreviewEvent, fireEvent} from "..//event/event.service";
 
 const SQL: string = `
            SELECT 
@@ -113,7 +113,11 @@ interface BulkEditItem2 {
     children: BulkEditItem2[]
 }
 
-
+/**
+ * ===========================
+ * === preview ===
+ * ===========================
+ */
 export type PreviewItemValueAndAttribute = { itemValue: Value, attribute: {id: number}};
 export type PreviewItemValueOperatorAndAttribute = { itemValue: Value, attribute: {id: number}, operator: OperatorType };
 export const preview = async (viewId: number,
@@ -144,6 +148,10 @@ export const preview = async (viewId: number,
         } as BulkEditPackage
         return r;
     });
+    fireEvent({
+       type: 'BulkEditPreviewEvent',
+       bulkEditPackage 
+    } as BulkEditPreviewEvent)
     return bulkEditPackage;
 };
 

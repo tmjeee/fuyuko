@@ -1,6 +1,7 @@
 import {Settings} from "../model/settings.model";
 import {Connection} from "mariadb";
 import {doInDbConnection, QueryA, QueryResponse} from "../db";
+import {fireEvent, GetSettingsEvent, UpdateUserSettingsEvent} from "./event/event.service";
 
 export const DEFAULT_SETTINGS: Settings = new Settings();
 DEFAULT_SETTINGS.id = 0;
@@ -8,7 +9,14 @@ DEFAULT_SETTINGS.openHelpNav = false;
 DEFAULT_SETTINGS.openSideNav = true;
 DEFAULT_SETTINGS.openSubSideNav = true;
 
-export const updateUserSettings = async (userId: number, settings: {[key: string]: string}[]): Promise<string[]> => {
+/**
+ *  =============================
+ *  === updateUserSettings ===
+ *  =============================
+ */
+export type UpdateUserSettingsInput = _UpdateUserSettingsInput;
+export interface _UpdateUserSettingsInput { [key: string]: any }
+export const updateUserSettings = async (userId: number, settings: UpdateUserSettingsInput): Promise<string[]> => {
     const errors: string[] = [];
     for (const key in settings) {
         const k = key;
@@ -26,9 +34,18 @@ export const updateUserSettings = async (userId: number, settings: {[key: string
             errors.push(`Failed to update settings ${k} to ${v} of type ${tv}`);
         }
     }
+    fireEvent({
+        type: "UpdateUserSettingsEvent",
+        userId, settings, errors
+    } as UpdateUserSettingsEvent);
     return errors;
 }
 
+/**
+ *  =============================
+ *  === getSettings ===
+ *  =============================
+ */
 export const getSettings = async (userId: number): Promise<Settings> => {
     const settings: Settings = await doInDbConnection(async (conn: Connection) => {
         await createSettingsIfNotExists(userId, conn);
@@ -52,9 +69,12 @@ export const getSettings = async (userId: number): Promise<Settings> => {
         }
         return s;
     });
+    fireEvent({
+        type: "GetSettingsEvent",
+        userId, settings
+    } as GetSettingsEvent);
     return settings;
 }
-
 const createSettingsIfNotExists = async (userId: number, conn: Connection): Promise<boolean> => {
     const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_USER_SETTING WHERE USER_ID=?`, [userId]);
     if (q[0].COUNT <= 0) { // there is not yet a settings for this user

@@ -2,19 +2,44 @@ import {CustomRule, CustomRuleForView} from "../model/custom-rule.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Status} from "../model/status.model";
+import {
+    AddCustomRuleToViewEvent,
+    ChangeCustomRuleStatusEvent, DeleteCustomRulesEvent,
+    fireEvent,
+    GetAllCustomRulesEvent, GetAllCustomRulesForViewEvent
+} from "./event/event.service";
+
+// ChangeCustomRuleStatus  AddCustomRuleToView   GetAllCustomRules   GetAllCustomRulesForView
 
 
+/**
+ *  ===============================
+ *  === ChangeCustomRuleStatus ===
+ *  ===============================
+ */
 export const changeCustomRuleStatus = async (viewId: number, customRuleId: number, status: Status): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const r: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`
                 UPDATE TBL_CUSTOM_RULE_VIEW SET STATUS=? WHERE CUSTOM_RULE_ID=? AND VIEW_ID=?
             `, [status, customRuleId, viewId]);
         return (q.affectedRows > 0);
     });
+    
+    fireEvent({
+       type: 'ChangeCustomRuleStatusEvent',
+       viewId, customRuleId, status, result: r 
+    } as ChangeCustomRuleStatusEvent);
+    
+    return r;
 };
 
+/**
+ *  ===============================
+ *  === AddCustomRuleToView ===
+ *  ===============================
+ */
 export const addCustomRuleToView = async (viewId: number, customRuleIds: number[]): Promise<string[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
         const errors: string[] = [];
 
         const q: QueryResponse = await conn.query(`DELETE FROM TBL_CUSTOM_RULE_VIEW WHERE VIEW_ID=?`, [viewId]);
@@ -28,9 +53,21 @@ export const addCustomRuleToView = async (viewId: number, customRuleIds: number[
         }
         return errors;
     });
+    
+    fireEvent({
+       type:"AddCustomRuleToViewEvent",
+       viewId, customRuleIds, errors 
+    } as AddCustomRuleToViewEvent);
+    
+    return errors;
 };
 
 
+/**
+ *  ===============================
+ *  === GetAllCustomRules ===
+ *  ===============================
+ */
 export const getAllCustomRules = async (): Promise<CustomRule[]> => {
     const r: CustomRule[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
@@ -46,9 +83,21 @@ export const getAllCustomRules = async (): Promise<CustomRule[]> => {
             return customRules;
         }, []);
     });
+    
+    fireEvent({
+        type: "GetAllCustomRulesEvent",
+        customRules: r
+    } as GetAllCustomRulesEvent);
     return r;
 }
 
+
+
+/**
+ *  ===============================
+ *  === DeleteCustomRules ===
+ *  ===============================
+ */
 export const deleteCustomRules = async (viewId: number, customRuleIds: number[]): Promise<string[]> => {
     const errors: string[] = [];
     await doInDbConnection(async (conn: Connection) => {
@@ -61,11 +110,21 @@ export const deleteCustomRules = async (viewId: number, customRuleIds: number[])
             }
         }
     });
+    
+    fireEvent({
+       type: "DeleteCustomRulesEvent",
+       viewId, customRuleIds, errors 
+    } as DeleteCustomRulesEvent);
     return errors;
 }
 
 
 
+/**
+ *  ===============================
+ *  === GetAllCustomRulesForView ===
+ *  ===============================
+ */
 export const getAllCustomRulesForView: (viewId: number) => Promise<CustomRuleForView[]> = async (viewId: number) => {
     const r: CustomRuleForView[] = await doInDbConnection(async (conn: Connection) => {
         return (await conn.query(`
@@ -95,5 +154,11 @@ export const getAllCustomRulesForView: (viewId: number) => Promise<CustomRuleFor
             return acc;
         }, []);
     });
+    
+    fireEvent({
+       type: "GetAllCustomRulesForViewEvent",
+       viewId, 
+       customRules: r 
+    } as GetAllCustomRulesForViewEvent);
     return r;
 }

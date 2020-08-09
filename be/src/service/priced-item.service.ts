@@ -2,34 +2,25 @@ import {ItemImage, PricedItem} from "../model/item.model";
 import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2, PricedItem2} from "../server-side-model/server-side.model";
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
-import {findChildrenItem2s} from "./item.service";
-import {itemValueConvert} from "./conversion-item-value.service";
+import {fireEvent, GetPricedItemsEvent} from "./event/event.service";
+import {pricedItemsConvert} from "./conversion-priced-item.service";
 
-export const toPricedItems = (p: PricedItem2[]): PricedItem[] => {
-    return p.map(toPricedItem);
-}
-
-export const toPricedItem = (p2: PricedItem2): PricedItem => {
-    const p: PricedItem = {
-        id: p2.id,
-        name: p2.name,
-        description: p2.description,
-        parentId: p2.parentId,
-        images: p2.images,
-        country: p2.country,
-        price: p2.price,
-        creationDate: p2.creationDate,
-        lastUpdate: p2.lastUpdate,
-        children: toPricedItems(p2.children)
-    };
-    p2.values.reduce((p: PricedItem, i: ItemValue2) => {
-        p[i.attributeId] = itemValueConvert(i);
-        return p;
-    }, p);
-    return p;
-}
-
-export const getPricedItems = async (pricingStructureId: number): Promise<PricedItem2[]> => {
+/**
+ *  ==============================
+ *  === getPricedItems ===
+ *  ==============================
+ */
+export const getPricedItems = async (pricingStructureId: number): Promise<PricedItem[]> => {
+    const pricedItem2s: PricedItem2[] = await getPricedItem2s(pricingStructureId);
+    const pricedItems: PricedItem[] = pricedItemsConvert(pricedItem2s);
+    fireEvent({
+        type: 'GetPricedItemsEvent',
+        pricingStructureId,
+        pricedItems
+    } as GetPricedItemsEvent);
+    return pricedItems;
+};
+export const getPricedItem2s = async (pricingStructureId: number): Promise<PricedItem2[]> => {
     const item2s: PricedItem2[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT
@@ -75,7 +66,6 @@ export const getPricedItems = async (pricingStructureId: number): Promise<Priced
 
         return _doQ(q);
     });
-
 
     for (const item2 of item2s) {
         const itemId: number = item2.id;
@@ -143,6 +133,10 @@ export const getChildrenPricedItems = async (pricingStructureId: number, parentI
 
     return item2s;
 }
+
+
+
+// === helper functions ================
 
 const _doQ = (q: QueryA): PricedItem2[] => {
 

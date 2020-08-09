@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {validationResult} from 'express-validator';
 import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
-import {auditLog, verifyJwtToken} from "../../service";
+import {decodeJwtToken, verifyJwtToken} from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
 import {hasAllUserRoles, hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
 import {
@@ -12,7 +12,7 @@ import {
     ThreadLocalStore
 } from "../../service/thread-local.service";
 import uuid = require("uuid");
-import {auditLogInfo} from "../../service/audit.service";
+import {fireEvent, IncomingHttpEvent} from "../../service/event/event.service";
 
 
 
@@ -27,7 +27,7 @@ export interface AggregationFn {
 }
 
 export const aFnAllTrue: AggregationFn = async (vFns: ValidateFn[], req: Request, res: Response, msg: string[]): Promise<boolean> => {
-    let r = false;
+    let r = true;
     for (const vFn of vFns) {
         r = r && await vFn(req, res, msg);
     }
@@ -65,9 +65,6 @@ export const aFnAnyFalse: AggregationFn = async (vFns: ValidateFn[], req: Reques
 export const vFnHasAnyUserRoles  = (roleNames: string[]): ValidateFn => {
     return async (req: Request, res: Response) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
-        /*if (!jwtPayload || !jwtPayload.user) {
-            return false;
-        }*/
         const userId: number = jwtPayload.user.id;
         const hasRole: boolean = await hasAnyUserRoles(userId, roleNames);
         if (!hasRole) {
@@ -78,7 +75,7 @@ export const vFnHasAnyUserRoles  = (roleNames: string[]): ValidateFn => {
 }
 
 export const vFnHasAllUserRoles = (roleNames: string[]): ValidateFn => {
-    return async (req: Request, res: Response) => {
+    return async (req: Request, res: Response, msg: string[]) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
         const hasAllRole: boolean = await hasAllUserRoles(userId, roleNames);
@@ -90,19 +87,16 @@ export const vFnHasNoneUserRoles = (roleNames: string[]): ValidateFn => {
     return async (req: Request, res: Response) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
-        const hasRole: boolean = await hasNoneUserRoles(userId, roleNames);
-        if (!hasRole) {
-            return true;
-        }
-        return false;
+        const hasNoneRole: boolean = await hasNoneUserRoles(userId, roleNames);
+        return hasNoneRole;
     }
 }
 
-export const vFnIsSelf = (userId: number): ValidateFn => {
-    return async (req: Request, res: Response) => {
+export const vFnIsSelf = (uId: number): ValidateFn => {
+    return async (req: Request, res: Response, msg: string[]) => {
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
-        return (userId === userId);
+        return (userId === uId);
     }
 }
 
@@ -138,7 +132,7 @@ export const threadLocalMiddlewareFn = (req: Request, res: Response, next: NextF
         const jwtToken: string = req.headers['x-auth-jwt'] as string;
         if (jwtToken) {
             try {
-                const jwtPayload: JwtPayload = verifyJwtToken(jwtToken);
+                const jwtPayload: JwtPayload = decodeJwtToken(jwtToken);
                 setThreadLocalStore({
                     reqUuid,
                     jwtPayload
@@ -159,7 +153,10 @@ export const threadLocalMiddlewareFn = (req: Request, res: Response, next: NextF
 
 export const auditMiddlewareFn = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await auditLogInfo(`${req.method}-${req.originalUrl}`, 'HTTP');
+        fireEvent({
+            type: "IncomingHttpEvent",
+            req
+        } as IncomingHttpEvent);
     } finally {
         next();
     }

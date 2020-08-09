@@ -2,10 +2,16 @@ import {CustomDataExport, ExportScript, ExportScriptInput} from "../model/custom
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
 import {getExportScriptByName} from "../custom-export/custom-export-executor";
+import {fireEvent, GetAllCustomExportsEvent, GetCustomExportByIdEvent} from "./event/event.service";
 
 
+/**
+ *  =============================
+ *  === getCustomExportById() ===
+ *  =============================
+ */
 export const getCustomExportById = async (customExportId: number): Promise<CustomDataExport> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const customDataExport: CustomDataExport = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE FROM TBL_CUSTOM_DATA_EXPORT`, [customExportId]);
         if (q.length > 0) {
             const a: CustomDataExport = await p(q[0]);
@@ -14,9 +20,22 @@ export const getCustomExportById = async (customExportId: number): Promise<Custo
             return null;
         }
     });
+    
+    fireEvent({
+       type: "GetCustomExportByIdEvent",
+       customExportId,
+       customDataExport 
+    } as GetCustomExportByIdEvent);
+    
+    return customDataExport;
 };
 
 
+/**
+ *  =============================
+ *  === getAllCustomExports() ===
+ *  =============================
+ */
 export const getAllCustomExports = async (): Promise<CustomDataExport[]> => {
     const r: CustomDataExport[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE FROM TBL_CUSTOM_DATA_EXPORT`);
@@ -27,9 +46,17 @@ export const getAllCustomExports = async (): Promise<CustomDataExport[]> => {
         }
         return r;
     });
+    
+    fireEvent({
+        type: 'GetAllCustomExportsEvent',
+        customDataExports: r
+    } as GetAllCustomExportsEvent);
+    
     return r;
 }
 
+
+// === utils ===
 const p = async (i: QueryI): Promise<CustomDataExport> => {
     const s: ExportScript = await getExportScriptByName(i.NAME);
     const inputs: ExportScriptInput[] = s.inputs();

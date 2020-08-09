@@ -1,7 +1,7 @@
 import {Job, JobAndLogs, JobLog} from "../model/job.model";
 import {doInDbConnection, QueryA, QueryI} from "../db";
 import {Connection} from "mariadb";
-import {ApiResponse} from "../model/api-response.model";
+import {fireEvent, GetAllJobsEvent, GetJobByIdEvent, GetJobDetailsByIdEvent} from "./event/event.service";
 
 const J_SQL = `
                 SELECT 
@@ -41,6 +41,12 @@ const SQL = `
 const SQL_2 = `${SQL} AND L.ID > ?`
 
 
+
+/**
+ *  ================================
+ *  === getJobDetailsById ===
+ *  ================================
+ */
 export const getJobDetailsById = async (jobId: number, lastLogId?: number): Promise<JobAndLogs> => {
     const jobAndLogs: JobAndLogs = await doInDbConnection(async (conn: Connection) => {
 
@@ -94,11 +100,22 @@ export const getJobDetailsById = async (jobId: number, lastLogId?: number): Prom
 
         return jobAndLogs;
     });
+
+    fireEvent({
+       type: 'GetJobDetailsByIdEvent',
+       jobId, lastLogId, jobAndLogs
+    } as GetJobDetailsByIdEvent);
+
     return jobAndLogs;
 };
 
+/**
+ * =======================
+ * === getAllJobs ===
+ * =======================
+ */
 export const getAllJobs = async (): Promise<Job[]> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const jobs: Job[] = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
                 SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE, STATUS, PROGRESS FROM TBL_JOB ORDER BY ID DESC
             `, []);
@@ -119,16 +136,28 @@ export const getAllJobs = async (): Promise<Job[]> => {
 
         return jobs;
     });
+
+    fireEvent({
+       type: 'GetAllJobsEvent',
+       jobs
+    } as GetAllJobsEvent);
+
+    return jobs;
 };
 
-export const getJobyById = async (jobId: number): Promise<Job> => {
+/**
+ *  ===================
+ *  === getJobById ===
+ *  ==================
+ */
+export const getJobById = async (jobId: number): Promise<Job> => {
     const job: Job = await doInDbConnection(async (conn: Connection) => {
 
         const q: QueryA = await conn.query(`
                 SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE, STATUS, PROGRESS FROM TBL_JOB WHERE ID=? 
             `, [jobId]);
 
-        return {
+        return (q.length ? {
             id: q[0].ID,
             name: q[0].NAME,
             description: q[0].DESCRIPTION,
@@ -136,8 +165,13 @@ export const getJobyById = async (jobId: number): Promise<Job> => {
             lastUpdate: q[0].LAST_UPDATE,
             status: q[0].STATUS,
             progress: q[0].PROGRESS
-        } as Job;
+        } as Job : null);
     });
+
+    fireEvent({
+       type: "GetJobByIdEvent",
+       jobId, job
+    } as GetJobByIdEvent);
 
     return job;
 }

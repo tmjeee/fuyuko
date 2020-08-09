@@ -1,0 +1,26 @@
+<div class="category-page">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Category</mat-card-title>
+            <mat-card-subtitle>Navigate organised categories in view</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="(!treeLoading && (!categoriesWithItems || !!!categoriesWithItems.length))">No Categories</div>
+            <app-category *ngIf="!treeLoading && view && categoriesWithItems && !!categoriesWithItems.length"
+                          [viewId]="view.id"
+                          [categoriesWithItems]="categoriesWithItems"
+                          [getAttributesFn]="getAttributesFn"
+                          [getItemsFn]="getItemsFn"
+                          [deleteItemImageFn]="deleteItemImageFn"
+                          [markItemImageAsPrimaryFn]="markItemImageAsPrimaryFn"
+                          [saveItemAttributeValueFn]="saveItemAttributeValueFn"
+                          [saveItemInfoFn]="saveItemInfoFn"
+                          [saveOrUpdateTableItemsFn]="saveOrUpdateTableItemsFn"
+                          [getFavouriteItemIdsFn]="getFavouriteItemIdsFn"
+                          [addFavouriteItemsFn]="addFavouriteItemsFn"
+                          [removeFavouriteItemsFn]="removeFavouriteItemsFn"
+                          [uploadItemImageFn]="uploadItemImageFn">
+            </app-category>
+        </mat-card-content>
+    </mat-card>
+</div>

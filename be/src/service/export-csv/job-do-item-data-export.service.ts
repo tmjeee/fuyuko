@@ -1,18 +1,24 @@
 import {Attribute} from "../../model/attribute.model";
 import {Job} from "../../model/job.model";
 import {JobLogger, newJobLogger} from "../job-log.service";
-import {getJobyById} from "../job.service";
+import {getJobById} from "../job.service";
 import {Item, Value} from "../../model/item.model";
-import {doInDbConnection, QueryResponse} from "../../db";
+import {doInDbConnection, QueryA, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {Parser} from "json2csv";
 import JSON2CSVParser from "json2csv/JSON2CSVParser";
 import {convertToCsv} from "../../shared-utils/ui-item-value-converters.util";
 import {e} from '../../logger';
+import JSZip from 'jszip';
+import {ExportItemJobEvent, fireEvent} from "../event/event.service";
 
 const uuid = require('uuid');
 
-
+/**
+ * =========================
+ * === runJob ===
+ * =========================
+ */
 export const runJob = async (viewId: number, attributes: Attribute[], items: Item[]): Promise<Job> => {
 
     const uid = uuid();
@@ -21,10 +27,18 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
 
     const jobLogger: JobLogger = await newJobLogger(name, description);
 
+    const zip = new JSZip();
+    
+    fireEvent({
+        type: "ExportItemJobEvent",
+        state: "Scheduled",
+        jobId: jobLogger.jobId
+    } as ExportItemJobEvent);
+
     (async ()=>{
         try {
             // id,name,description,att1,att2,att3,att4,att5
-            const headers: string[] = ['id', 'name', 'description'];
+            const headers: string[] = ['id', 'name', 'description', 'image'];
             for (const attribute of attributes) {
                 headers.push(attribute.name);
             }
@@ -38,11 +52,27 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
 
 
             for (const item of items) {
+                const imagePaths: string[] = [];
                 const d: any = {
                     id: item.id,
                     name: item.name,
                     description: item.description,
+                    images: ''
                 };
+
+                for (const image of (item.images ? item.images : [])) {
+                    const imageId: number = image.id;
+                    await doInDbConnection(async (conn: Connection) => {
+                        const q: QueryA = await conn.query(`SELECT CONTENT, NAME FROM TBL_ITEM_IMAGE WHERE ID=? AND ITEM_ID=? `, [imageId, item.id]);
+                        if (q.length > 0) {
+                            const imagePath: string = `item-${item.id}/image-${imageId}/${q[0].NAME}`;
+                            const buffer: Buffer = q[0].CONTENT;
+                            zip.file(imagePath, buffer, {binary: true});
+                            imagePaths.push(imagePath);
+                        }
+                    });
+                }
+                d.image = (imagePaths.length ? imagePaths.join('|'): '');
 
                 for (const attribute of attributes) {
                     const v: Value = item[attribute.id]
@@ -54,6 +84,7 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
             }
 
             const csv: string = parser.parse(data);
+            zip.file('data.csv', csv, {binary: true});
 
             await doInDbConnection(async (conn: Connection) => {
 
@@ -62,21 +93,36 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
                 `, [viewId, name]);
                 const dataExportId: number = q.insertId;
 
+                const buffer: Buffer = await zip.generateAsync({type: 'nodebuffer'});
+
                 await conn.query(`
                     INSERT INTO TBL_DATA_EXPORT_FILE (DATA_EXPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)
-                `, [dataExportId, name, 'text/csv', Buffer.byteLength(csv), csv]);
+                `, [dataExportId, name, 'application/zip', Buffer.byteLength(buffer), buffer]);
 
                 await jobLogger.logInfo(`Put entry into db (dataExportId = ${dataExportId}`);
             });
+
+            fireEvent({
+                type: "ExportItemJobEvent",
+                state: "Completed",
+                jobId: jobLogger.jobId
+            } as ExportItemJobEvent);
+            
             await jobLogger.updateProgress('COMPLETED');
         } catch(err) {
             e(err.toString(), err);
             await jobLogger.logError(`${err.toString()}`);
             await jobLogger.updateProgress("FAILED");
+
+            fireEvent({
+                type: "ExportItemJobEvent",
+                state: "Failed",
+                jobId: jobLogger.jobId
+            } as ExportItemJobEvent);
         } finally {
             await jobLogger.logInfo(`Done with ${name}`);
         }
     })();
 
-    return await getJobyById(jobLogger.jobId);
+    return await getJobById(jobLogger.jobId);
 }

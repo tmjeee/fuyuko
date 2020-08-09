@@ -1,0 +1,20 @@
+<div class="sample-2-widget-component">
+    <div class="mat-title"> Weather </div>
+    <mat-form-field>
+        <mat-label>Location</mat-label>
+        <mat-select (selectionChange)="onLocationChange($event)">
+            <mat-option *ngFor="let location of locations" [value]="location">
+                {{location.displayName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-divider></mat-divider>
+    <a class="weatherwidget-io"
+       [attr.href]="currentLocation.internalUrl"
+       [attr.data-label_1]="currentLocation.internalName"
+       [attr.data-label_2]="'WEATHER'"
+       data-theme="original">
+        {{currentLocation.internalName}} WEATHER
+    </a>
+</div>
+

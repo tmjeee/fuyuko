@@ -10,12 +10,20 @@ import {Rule} from "../model/rule.model";
 import {ruleConvert, rulesConvert, rulesRevert} from "./conversion-rule.service";
 import {Status} from "../model/status.model";
 import {ApiResponse} from "../model/api-response.model";
+import {
+    AddOrUpdateRuleEvent,
+    fireEvent,
+    GetRuleEvent,
+    GetRulesEvent,
+    UpdateRuleStatusEvent
+} from "./event/event.service";
 
 const SQL_1 = `
    SELECT
       R.ID AS R_ID,
       R.VIEW_ID AS R_VIEW_ID,
       R.NAME AS R_NAME,
+      R.LEVEL AS R_LEVEL,
       R.DESCRIPTION AS R_DESCRIPTION,
       R.STATUS AS R_STATUS,
       
@@ -60,6 +68,7 @@ const SQL_1 = `
 const SQL_2 = `${SQL_1} AND R.ID=?`;
 
 
+
 // =======================
 // === addOrUpdateRule ===
 // =======================
@@ -82,6 +91,10 @@ export const addOrUpdateRules = async (viewId: number, rules: Rule[]): Promise<s
             errors.push(...errs);
         }
     }
+    fireEvent({
+       type: "AddOrUpdateRuleEvent",
+       rules, errors
+    } as AddOrUpdateRuleEvent);
     return errors;
 };
 
@@ -96,7 +109,7 @@ const _ruleAdd = async (conn: Connection, viewId: number, rule2: Rule2) => {
         }
 
 
-        const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS) VALUES (?,?,?,'ENABLED')`, [viewId, rule2.name, rule2.description]);
+        const rq: QueryResponse = await conn.query(`INSERT INTO TBL_RULE (VIEW_ID, NAME, DESCRIPTION, STATUS, LEVEL) VALUES (?,?,?,?,?)`, [viewId, rule2.name, rule2.description, (rule2.status ? rule2.status : 'ENABLED'), (rule2.level ? rule2.level : 'ERROR')]);
         const ruleId: number = rq.insertId;
 
         for (const validateClause of rule2.validateClauses) {
@@ -144,7 +157,7 @@ const _ruleUpdate = async (conn: Connection, viewId: number, rule2: Rule2) => {
             return;
         }
 
-        await conn.query(`UPDATE TBL_RULE SET NAME=?, DESCRIPTION=? WHERE ID=?`, [rule2.name, rule2.description, ruleId]);
+        await conn.query(`UPDATE TBL_RULE SET NAME=?, DESCRIPTION=?, LEVEL=?, STATUS=? WHERE ID=?`, [rule2.name, rule2.description, rule2.level, (rule2.status ? rule2.status : 'ENABLED'), ruleId]);
 
         await conn.query(`DELETE FROM TBL_RULE_VALIDATE_CLAUSE WHERE RULE_ID=?`, [ruleId]);
 
@@ -191,10 +204,15 @@ const _ruleUpdate = async (conn: Connection, viewId: number, rule2: Rule2) => {
 // === updateRuleStatus ===
 // ========================
 export const updateRuleStatus = async (ruleId: number, status: Status): Promise<boolean> => {
-    return await doInDbConnection(async (conn: Connection) => {
+    const result: boolean = await doInDbConnection(async (conn: Connection) => {
         const q: QueryResponse = await conn.query(`UPDATE TBL_RULE SET STATUS = ? WHERE ID = ? `, [status, ruleId]);
         return (q.affectedRows > 0);
     });
+    fireEvent({
+       type: "UpdateRuleStatusEvent",
+       ruleId, status, result
+    } as UpdateRuleStatusEvent);
+    return result;
 };
 
 
@@ -203,7 +221,12 @@ export const updateRuleStatus = async (ruleId: number, status: Status): Promise<
 // ================
 export const getRules = async (viewId: number): Promise<Rule[]> => {
     const rule2s: Rule2[] = await getRule2s(viewId);
-    return rulesConvert(rule2s);
+    const rules: Rule[] = rulesConvert(rule2s);
+    fireEvent({
+       type: "GetRulesEvent",
+       viewId, rules
+    } as GetRulesEvent);
+    return rules;
 };
 export const getRule2s = async (viewId: number): Promise<Rule2[]>  => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -216,11 +239,16 @@ export const getRule2s = async (viewId: number): Promise<Rule2[]>  => {
 
 
 // ================
-// === getRule2 ===
+// === getRule ===
 // ================
 export const getRule = async (viewId: number, ruleId: number): Promise<Rule> => {
     const rule2: Rule2 = await getRule2(viewId, ruleId);
-    return ruleConvert(rule2);
+    const rule: Rule = ruleConvert(rule2);
+    fireEvent({
+        type: "GetRuleEvent",
+        viewId, ruleId, rule
+    } as GetRuleEvent);
+    return rule;
 };
 export const getRule2 = async (viewId: number, ruleId: number): Promise<Rule2> => {
     return await doInDbConnection(async (conn: Connection) => {
@@ -254,6 +282,7 @@ export const p = (q: QueryA): Rule2[] => {
                 name: i.R_NAME,
                 description: i.R_DESCRIPTION,
                 status: i.R_STATUS,
+                level: i.R_LEVEL,
                 whenClauses: [],
                 validateClauses: []
             } as Rule2;

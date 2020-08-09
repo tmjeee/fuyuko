@@ -1,0 +1,50 @@
+version: "3.3"
+services:
+  db:
+    build:
+      context: ../db
+      dockerfile: docker/dockerfile
+    logging:
+      driver: journald
+      options:
+        tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
+    networks:
+      - appnetwork
+    ports:
+      - 3307:3306
+    expose:
+      - 3307
+#    volumes:
+#      - ${PWD}/mariadb:/var/lib/mysql
+  be:
+    build:
+      context: ../be
+      dockerfile: docker/dockerfile
+    networks:
+      - appnetwork
+    links:
+      - db
+    depends_on:
+      - db
+    command: [
+      "./docker-wait-for-db.sh -- node src/app.js --db-host=db --db-port=3306"
+    ]
+    ports:
+      - 8888:8888
+    expose:
+      - 8888
+  fe:
+    build:
+      context: ../fe
+      dockerfile: docker/dockerfile
+    network_mode: "host"
+    depends_on:
+      - be
+    command: [
+      "nginx", "-g", "daemon off;"
+#      "./docker-wait-for-be.sh -- nginx -g 'daemon off;'"
+    ]
+
+networks:
+  appnetwork:
+    driver: bridge

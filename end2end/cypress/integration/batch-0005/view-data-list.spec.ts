@@ -56,7 +56,7 @@ describe(`view-data-list spec`, () => {
     });
 
 
-    it('should be searchable (basic search)', () => {
+    it.skip('should be searchable (basic search)', () => {
         viewDataListPage
             .doBasicSearch(`Item-2`)
             .verifyListResultSize(1)
