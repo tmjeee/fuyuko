@@ -24,7 +24,7 @@ cd ..
 echo "BUILD FE" 
 cd fe 
 npm install  
-npx ng build --prod 
+npx run build-prod
 
 cd ..
 
