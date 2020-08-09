@@ -24,7 +24,7 @@ cd ..
 echo "BUILD FE" 
 cd fe 
 npm install  
-npx run build-prod
+npm run build-prod
 
 cd ..
 
