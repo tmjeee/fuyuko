@@ -3,6 +3,10 @@ import config from '../config';
 import {createTransport, SentMessageInfo, Transporter, SendMailOptions, TransportOptions} from "nodemailer";
 import {i} from '../logger';
 
+export const opts:any = {
+    dev: false,
+};
+
 /**
  * =================
  * === sendEmail ===
@@ -19,22 +23,23 @@ export const sendEmail = async (toEmail: string, subject: string, text: string):
            pass: config['smtp-password']
        }
     } as TransportOptions);
-
     return info;
 };
 
 const _sendEmail = async (toEmail: string, subject: string, text: string, fromEmail: string, options: TransportOptions): Promise<SendMailOptions> => {
-    const transporter: Transporter = createTransport(options);
+    if (opts.dev) {
+        return {};
+    } else {
+        const transporter: Transporter = createTransport(options);
+        const info: SentMessageInfo = await transporter.sendMail({
+            from: fromEmail,
+            to: toEmail,
+            subject,
+            text
+        } as SendMailOptions);
 
-    const info: SentMessageInfo = await transporter.sendMail({
-        from: fromEmail,
-        to: toEmail,
-        subject,
-        text
-    } as SendMailOptions);
-
-    i(`Send email `, info);
-
-    return info;
+        i(`Send email `, info);
+        return info;
+    }
 };
 

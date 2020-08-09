@@ -10,6 +10,9 @@ import {Item, ItemImage, PricedItem, StringValue, Value} from "../../src/model/i
 import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 describe('conversion-item.service.ts', () => {
+    beforeAll(async () => {
+        await setupTestDatabase();
+    });
 
     it('itemConvert', () => {
         const attributeId: number = 3;

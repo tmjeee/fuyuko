@@ -5,7 +5,9 @@ import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe('conversion-item-value.service.ts', () => {
-
+    beforeAll(async () => {
+        await setupTestDatabase();
+    });
 
    it ('itemValueConvert', () => {
       const i: Value = itemValueConvert({

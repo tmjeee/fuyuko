@@ -24,7 +24,6 @@ import {Group} from "../../src/model/group.model";
 import {BinaryContent} from "../../src/model/binary-content.model";
 import * as util from "util";
 
-/*
 describe('user.service', () => {
 
     let viewer1: User;
@@ -221,4 +220,3 @@ describe('user.service', () => {
         expect(user2).toBeFalsy();
     });
 });
-*/

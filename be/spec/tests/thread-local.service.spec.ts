@@ -5,11 +5,10 @@ import {getGroupByName, getUserByUsername} from "../../src/service";
 describe('thread-local.service', () => {
 
     beforeAll(async () => {
-        await setupTestDatabase();
-        await setupBeforeAll2();
+        setupTestDatabase();
     }, JASMINE_TIMEOUT);
 
-    it('test ', () => {
+    it('test ', async () => {
         expect(true).toBe(true);
     });
 

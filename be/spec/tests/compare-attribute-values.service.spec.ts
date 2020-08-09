@@ -21,6 +21,10 @@ import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 describe(`compare-attribute-values.service.spec`, () => {
 
+    beforeAll(async () => {
+        await setupTestDatabase();
+    });
+
     it(`convertToCm`, () => {
         expect(convertToCm(1, 'm')).toBe(100);
         expect(convertToCm(1, 'mm')).toBe(0.1);

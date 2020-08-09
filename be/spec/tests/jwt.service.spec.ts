@@ -5,6 +5,9 @@ import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe('jwt.service', () => {
+    beforeAll(async () => {
+        await setupTestDatabase();
+    });
 
     it('jwtToken code and decode', () => {
         const jwt: string = createJwtToken({

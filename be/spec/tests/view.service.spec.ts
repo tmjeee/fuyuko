@@ -8,7 +8,6 @@ import {
 } from "../../src/service";
 import {View} from "../../src/model/view.model";
 
-/*
 describe('view.service', () => {
 
     beforeAll(async () => {
@@ -51,7 +50,4 @@ describe('view.service', () => {
         expect(view2).toBeTruthy();
         expect(view2.id).toBe(view1.id);
     });
-
 });
-
- */

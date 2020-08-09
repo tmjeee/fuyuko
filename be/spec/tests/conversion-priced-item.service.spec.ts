@@ -10,8 +10,9 @@ import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe(`conversion-priced-item.service.ts`, () => {
-
-
+    beforeAll(async () => {
+        await setupTestDatabase();
+    });
     it('pricedItemConvert', () => {
         const attributeId: number = 3;
         const d = new Date();

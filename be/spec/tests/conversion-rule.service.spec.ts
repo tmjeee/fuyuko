@@ -10,6 +10,9 @@ import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
 
 
 describe('conversion-rule.service', () => {
+    beforeAll(async () => {
+        await setupTestDatabase();
+    });
 
     it(`ruleConvert`, () => {
         const rule = ruleConvert({
