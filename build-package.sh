@@ -32,7 +32,12 @@ echo "ZIP BUILD"
 zip -9 -r fuyuko-${VERSION}.zip \
     LICENSE \
     README.md \
+    db/docker \
     be/src \
-    fe/dist/fuyuko
+    be/docker \
+    fe/dist/fuyuko \
+    fe/docker \
+    kubernetes \
+    docker-compose
 echo "DONE BUILD PACKAGE"
 
