@@ -4,7 +4,7 @@
   "db-password": "root",
   "db-port": 3306,
   "db-database": "fuyuko",
-  "version": "1.0.0-beta",
+  "version": "1.0.0",
   "port": 8888,
 
   "timezone": "Australia/Sydney",
