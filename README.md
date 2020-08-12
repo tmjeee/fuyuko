@@ -26,6 +26,12 @@ It allows management of product (name, description, attributes, pricing etc.) in
 # Documentation
 Documentations are [here](https://docs.fuyuko.org)
 
+# Code Repository
+Hosted in [GitHub](https://github.com/tmjeee/fuyuko)
+
+# Releases
+Listed [here](https://github.com/tmjeee/fuyuko/releases)
+
 # Blog
 We have a blog [here](https://blog.fuyuko.org)
 
