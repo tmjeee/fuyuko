@@ -120,7 +120,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
     
     reloadAddableItemsTable(viewId: number, categoryId: number) {
         if (categoryId && viewId) {
-            this.getCategorySimpleItemsNotInCategoryFn(viewId, categoryId)
+            this.getCategorySimpleItemsNotInCategoryFn(viewId, categoryId, this.addableCategoryTableItemsPagination.limitOffset())
                 .pipe(
                     tap((r: PaginableApiResponse<CategorySimpleItem[]>) => {
                         this.addableCategoryTableItemsPagination.update(r);
