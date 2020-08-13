@@ -1,7 +1,7 @@
 import {UPDATER_PROFILE_CARS_DATA} from "../updater";
 import {View} from "../../model/view.model";
 import {getViewByName, addOrUpdateViews} from "../../service/view.service";
-import {checkErrors} from "../script-util";
+import {checkErrors, checkNotNull} from "../script-util";
 import {Attribute} from "../../model/attribute.model";
 import {getAttributesInView, saveAttributes} from "../../service/attribute.service";
 import {i, l} from "../../logger/logger";
@@ -9,10 +9,18 @@ import Path from "path";
 import util from "util";
 import fs from "fs";
 import {Item} from "../../model/item.model";
-import {addOrUpdateItem, getItemByName} from "../../service";
+import {
+    addCategory,
+    AddCategoryInput,
+    addItemToViewCateogry,
+    addOrUpdateItem,
+    getItemByName,
+    getViewCategoryByName
+} from "../../service";
 import {createNewItem} from "../../shared-utils/ui-item-value-creator.utils";
 import {setItemNumberValue, setItemStringValue} from "../../shared-utils/ui-item-value-setter.util";
 import {addItemImage} from "../../service/item-image.service";
+import {Category} from "../../model/category.model";
 
 export const profiles = [UPDATER_PROFILE_CARS_DATA];
 
@@ -70,7 +78,7 @@ const runImport = async () => {
     }
 
 
-    // create items & images for all files
+    // create items & images for all files & categories
     const pathToAssetsDir: string = Path.join(__dirname, '../assets/cars-data-images');
     const filesInDir: string[] = await util.promisify(fs.readdir)(pathToAssetsDir);
     for (const fileInDir of filesInDir) {
@@ -104,6 +112,38 @@ const runImport = async () => {
                 throw new Error(`Failed to create item ${item.name}`);
             }
             primaryImage = true;
+
+
+            let makeCategory: Category = await getViewCategoryByName(view.id, make);
+            if (!makeCategory) {
+                const err: string[] = await addCategory(view.id, null, { name: make, description: make, children: []} as AddCategoryInput);
+                checkErrors(err, `Failed to create category ${make}`);
+                makeCategory = await getViewCategoryByName(view.id, make);
+                checkNotNull(makeCategory, `Failed to find newly created category ${make}`);
+            }
+            let yearCategory: Category = await getViewCategoryByName(view.id, year, makeCategory.id);
+            if (!yearCategory) {
+                const err: string[] = await addCategory(view.id, makeCategory.id, { name: `${year}`, description: `${year}`, children: []} as AddCategoryInput);
+                checkErrors(err, `Failed to create category ${year} under parent category ${make}`);
+                yearCategory = await getViewCategoryByName(view.id, year, makeCategory.id);
+                checkNotNull(yearCategory, `Failed to find newly created category ${year} under parent category ${make}`);
+            }
+            let modelCategory: Category = await getViewCategoryByName(view.id, model, yearCategory.id);
+            if (!modelCategory) {
+                const err: string[] = await addCategory(view.id, yearCategory.id, { name: model, description: model, children: []} as AddCategoryInput);
+                checkErrors(err, `Failed to create category ${model} under parent category ${year} under parent category ${make}`);
+                modelCategory = await getViewCategoryByName(view.id, model, yearCategory.id);
+                checkNotNull(modelCategory, `Failed to find newly created category ${model} under parent category ${year} under parent category ${make}`);
+            }
+
+            const err1: string[] = await addItemToViewCateogry(makeCategory.id, item.id);
+            checkErrors(err1, `Failed to add item ${item.name} to category ${makeCategory.name}`);
+
+            const err2: string[] = await addItemToViewCateogry(yearCategory.id, item.id);
+            checkErrors(err2, `Failed to add item ${item.name} to category ${yearCategory.name} under parent category ${makeCategory.name}`);
+
+            const err3: string[] = await addItemToViewCateogry(modelCategory.id, item.id);
+            checkErrors(err3, `Failed to add item ${item.name} to category ${modelCategory.name} under parent Category ${yearCategory.name} under parent Category ${makeCategory.name}`);
         }
 
         const image: Buffer = await util.promisify(fs.readFile)(Path.join(pathToAssetsDir, fileInDir));
@@ -112,5 +152,8 @@ const runImport = async () => {
             throw new Error(`Failed to add image for item ${item.name}`);
         }
     }
+
+
+
 };
 
