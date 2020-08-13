@@ -4,13 +4,16 @@
   "db-password": "root",
   "db-port": 3306,
   "db-database": "fuyuko",
+  "db-connection-limit": 30,
+  "db-connect-timeout": 1000000,
+  "db-acquire-timeout": 1000000,
   "version": "1.0.0",
   "port": 8888,
 
   "timezone": "Australia/Sydney",
 
   "updater-run": true,
-  "updater-profiles": ["CORE", "TEST-DATA"],
+  "updater-profiles": ["CORE", "TEST-DATA", "CARS-DATA"],
   "updater-profiles-help": "Available updater profiles are CORE, TEST-DATA, CARS-DATA, LEEFAHMEE-DATA",
 
   "salt": "some-salt",
