@@ -1,9 +1,10 @@
 import {i, w} from "../logger";
+import {reset} from "../db/db";
 
 const regexp = /--(.*)=(.*)/;
 const SelfReloadJson = require('self-reload-json');
 
-const overrideWithProcessArgv = (config: any) => {
+const overrideWithProcessArgv = async (config: any) => {
     const args: string[] = process.argv.slice(2);
     for (const arg of args) {
         const match: string[] = arg.match(regexp);
@@ -18,12 +19,13 @@ const overrideWithProcessArgv = (config: any) => {
             i(`Command line arguments ${match[1]}=${match[2]} will override the one in config.json`);
         }
     }
+    await reset();
 };
 
 const config = new SelfReloadJson(require('path').resolve(__dirname, './config.json'));
 overrideWithProcessArgv(config);
-config.on('updated', function(json: any) {
-    overrideWithProcessArgv(config);
+config.on('updated', async function(json: any) {
+    await overrideWithProcessArgv(config);
 });
 
 export default config;

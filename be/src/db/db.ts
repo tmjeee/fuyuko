@@ -33,25 +33,28 @@ export type QueryResponse  = {
 };
 
 
-
 let pool: Pool;
+export const reset = async () => {
+    const poolConfig: PoolConfig = {
+        connectionLimit: config["db-connection-limit"],
+        connectTimeout: config["db-connection-timeout"],
+        acquireTimeout: config["db-acquire-timeout"],
+        host: config["db-host"],
+        user: config["db-user"],
+        port: config["db-port"],
+        password: config["db-password"],
+        database: config["db-database"],
+    } as PoolConfig;
+    pool &&  (await pool.end());
+    pool = await createPool(poolConfig);
+};
+
 const getConn = async (): Promise<PoolConnection> => {
     if (!pool) {
-        const poolConfig: PoolConfig = {
-
-            connectionLimit: config["db-connection-limit"],
-            connectTimeout: config["db-connection-timeout"],
-            acquireTimeout: config["db-acquire-timeout"],
-            host: config["db-host"],
-            user: config["db-user"],
-            port: config["db-port"],
-            password: config["db-password"],
-            database: config["db-database"],
-        } as PoolConfig;
-        pool = await createPool(poolConfig);
+        await reset();
     }
     return pool.getConnection();
-}
+};
 
 
 export const doInDbConnection = async <R> (callback: (conn: Connection) => R)  => {
