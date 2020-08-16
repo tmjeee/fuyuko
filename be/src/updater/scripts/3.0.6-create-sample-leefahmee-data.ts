@@ -13,12 +13,13 @@ import {
     addCategory,
     AddCategoryInput,
     addItem,
-    addItemImage, addItemToViewCateogry,
+    addItemImage, addItemToViewCateogry, addOrUpdateRules,
     getItemByName,
     getViewCategoryByName
 } from "../../service";
 import {Item} from "../../model/item.model";
 import {createNewItem} from "../../shared-utils/ui-item-value-creator.utils";
+import {Rule, ValidateClause} from "../../model/rule.model";
 
 export const profiles = [UPDATER_PROFILE_LEEFAHMEE_DATA];
 
@@ -480,4 +481,33 @@ const runImport = async () => {
             checkTrue(r, `Failed to add image ${img} to item ${m.name}`);
         }
     }
+
+
+    // rules
+    addOrUpdateRules(view.id, [
+        {
+           id: -1,
+           name: '',
+           description: '',
+           status: "ENABLED",
+           level: "ERROR",
+           whenClauses: [],
+           validateClauses: [
+               {
+                  id: -1,
+                  attributeId:  sizeAttribute.id,
+                  attributeName: sizeAttribute.name,
+                  attributeType: sizeAttribute.type,
+                  operator: "not empty"
+               } as ValidateClause,
+               {
+                   id: -1,
+                   attributeId:  cartonAttribute.id,
+                   attributeName: cartonAttribute.name,
+                   attributeType: cartonAttribute.type,
+                   operator: "not empty"
+               } as ValidateClause
+           ]
+        } as Rule,
+    ]);
 };
