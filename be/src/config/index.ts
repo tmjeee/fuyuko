@@ -1,5 +1,9 @@
 import {i, w} from "../logger";
-import {reset} from "../db/db";
+// import {reset} from "../db/db";
+
+export const opts: {test: boolean}  = {
+    test: false
+};
 
 const regexp = /--(.*)=(.*)/;
 const SelfReloadJson = require('self-reload-json');
@@ -19,7 +23,7 @@ const overrideWithProcessArgv = async (config: any) => {
           i(`Command line arguments ${match[1]}=${match[2]} will override the one in config.json`);
       }
   }
-  reset && await reset();
+  // reset && await reset();
 };
 
 const config = new SelfReloadJson(require('path').resolve(__dirname, './config.json'));

@@ -40,12 +40,9 @@ describe('bulk-edit.service', () => {
   let doubleSelectAttribute: Attribute;
 
   beforeAll(async () => {
-     await setupTestDatabase();
-     await setupBeforeAll2();
-  }, JASMINE_TIMEOUT);
-
-  beforeAll(async (done: DoneFn) => {
       try {
+          // await setupTestDatabase();
+          await setupBeforeAll2();
           view = await getViewByName('Test View 1');
           stringAttribute = await getAttributeInViewByName(view.id, 'string attribute');
           textAttribute = await getAttributeInViewByName(view.id, 'text attribute');
@@ -61,11 +58,10 @@ describe('bulk-edit.service', () => {
           weightAttribute = await getAttributeInViewByName(view.id, 'weight attribute');
           selectAttribute = await getAttributeInViewByName(view.id, 'select attribute');
           doubleSelectAttribute = await getAttributeInViewByName(view.id, 'doubleselect attribute');
-          done();
       } catch(e) {
           console.error(e);
       }
-  });
+  }, JASMINE_TIMEOUT);
 
 
   it('preview, make sure changes are in place', async () => {

@@ -1,5 +1,5 @@
 import {Connection, ConnectionConfig, createConnection, createPool, Pool, PoolConfig, PoolConnection} from 'mariadb';
-import config from '../config';
+import config, {opts} from '../config';
 
 export interface QueryM {
     meta: {
@@ -33,7 +33,7 @@ export type QueryResponse  = {
 };
 
 
-let pool: Pool;
+let cfg: { pool: Pool} = { pool: null};
 export const reset = async () => {
     const poolConfig: PoolConfig = {
         connectionLimit: config["db-connection-limit"],
@@ -45,56 +45,56 @@ export const reset = async () => {
         password: config["db-password"],
         database: config["db-database"],
     } as PoolConfig;
-    pool &&  (await pool.end());
-    pool = await createPool(poolConfig);
+    cfg.pool &&  (await cfg.pool.end());
+    cfg.pool = await createPool(poolConfig);
 };
 
 const getConn = async (): Promise<PoolConnection> => {
-    if (!pool) {
+    if (!cfg.pool) {
         await reset();
     }
-    return pool.getConnection();
+    return cfg.pool.getConnection();
 };
 
 
 export const doInDbConnection = async <R> (callback: (conn: Connection) => R)  => {
-    const conn: PoolConnection = await getConn();
-    try {
-        conn.debug(false);
-        conn.debugCompress(false);
-        await conn.beginTransaction();
-        const r: any =  await callback(conn);
-        await conn.commit();
-        return r;
-    } catch(err) {
-        await conn.rollback();
-        throw err;
-    } finally {
-        await conn.release();
+    if (opts.test) {
+        const connConfig: ConnectionConfig = {
+            host: config["db-host"],
+            user: config["db-user"],
+            port: config["db-port"],
+            password: config["db-password"],
+            database: config["db-database"],
+        } as ConnectionConfig;
+        const conn: Connection = await createConnection(connConfig);
+        try {
+            conn.debug(false);
+            conn.debugCompress(false);
+            await conn.beginTransaction();
+            const r: any =  await callback(conn);
+            await conn.commit();
+            return r;
+        } catch(err) {
+            await conn.rollback();
+            throw err;
+        } finally {
+            await conn.end();
+        }
+    } else {
+        const conn: PoolConnection = await getConn();
+        try {
+            conn.debug(false);
+            conn.debugCompress(false);
+            await conn.beginTransaction();
+            const r: any =  await callback(conn);
+            await conn.commit();
+            return r;
+        } catch(err) {
+            await conn.rollback();
+            throw err;
+        } finally {
+            await conn.release();
+        }
     }
-
-    /*
-    const connConfig: ConnectionConfig = {
-        host: config["db-host"],
-        user: config["db-user"],
-        port: config["db-port"],
-        password: config["db-password"],
-        database: config["db-database"],
-    } as ConnectionConfig;
-    const conn: Connection = await createConnection(connConfig);
-    try {
-        conn.debug(false);
-        conn.debugCompress(false);
-        await conn.beginTransaction();
-        const r: any =  await callback(conn);
-        await conn.commit();
-        return r;
-    } catch(err) {
-        await conn.rollback();
-        throw err;
-    } finally {
-        await conn.end();
-    }
-    */
 };
 

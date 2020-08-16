@@ -1,8 +1,7 @@
 import {doInDbConnection} from "../../src/db";
 import {Connection} from "mariadb";
-import config from "../../src/config";
+import config, {opts} from "../../src/config";
 import {runUpdate} from "../../src/updater";
-import {opts} from "../../src/service/send-email.service";
 
 const testDbName = `fuyuko-be-test`;
 const testDbUser = `admin`;
@@ -32,28 +31,19 @@ export const doDone = (doneFn: DoneFn) => {
 export const setupTestDatabase = () => {
     config['db-database'] = testDbName;
     config['db-user'] = testDbUser;
-    opts.dev = true;
+    opts.test = true;
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 };
 
 export const recreateDatabase = async ()  => {
     await setupTestDatabase();
     await doInDbConnection(async (conn: Connection) => {
-        console.log('*** clean up db');
         await conn.query(` SET FOREIGN_KEY_CHECKS = 0; `);
         await conn.query(` DROP DATABASE IF EXISTS \`${testDbName}\`;`);
         await conn.query(` CREATE DATABASE IF NOT EXISTS \`${testDbName}\`;`);
         await runUpdate();
         await conn.query(` SET FOREIGN_KEY_CHECKS = 1; `);
     });
-    /*
-    await setupTestDatabase();
-    await doInDbConnection(async (conn: Connection) => {
-        await conn.query(` SET FOREIGN_KEY_CHECKS = 0; `);
-        await runUpdate();
-        await conn.query(` SET FOREIGN_KEY_CHECKS = 1; `);
-    });
-     */
 };
 
 export const setupTestData = async () => {
