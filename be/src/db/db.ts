@@ -96,6 +96,5 @@ export const doInDbConnection = async <R> (callback: (conn: Connection) => R)  =
         await conn.end();
     }
     */
-
 };
 

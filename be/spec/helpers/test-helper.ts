@@ -37,19 +37,23 @@ export const setupTestDatabase = () => {
 };
 
 export const recreateDatabase = async ()  => {
+    await setupTestDatabase();
     await doInDbConnection(async (conn: Connection) => {
-        await setupTestDatabase();
+        console.log('*** clean up db');
         await conn.query(` SET FOREIGN_KEY_CHECKS = 0; `);
         await conn.query(` DROP DATABASE IF EXISTS \`${testDbName}\`;`);
         await conn.query(` CREATE DATABASE IF NOT EXISTS \`${testDbName}\`;`);
+        await runUpdate();
         await conn.query(` SET FOREIGN_KEY_CHECKS = 1; `);
     });
+    /*
+    await setupTestDatabase();
     await doInDbConnection(async (conn: Connection) => {
-        await setupTestDatabase();
         await conn.query(` SET FOREIGN_KEY_CHECKS = 0; `);
         await runUpdate();
         await conn.query(` SET FOREIGN_KEY_CHECKS = 1; `);
     });
+     */
 };
 
 export const setupTestData = async () => {

@@ -319,6 +319,7 @@ export const getViewCategories = async (viewId: number, parentCategoryId: number
                 ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
             FROM TBL_VIEW_CATEGORY WHERE VIEW_ID=? AND ${parentCategoryId ? 'PARENT_ID=? AND STATUS=?' : 'PARENT_ID IS NULL AND STATUS = ?'}
         `, parentCategoryId ? [viewId, parentCategoryId, ENABLED] : [viewId, ENABLED]);
+        return q;
     });
 
     let categories: Category[] = [];
