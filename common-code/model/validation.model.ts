@@ -31,6 +31,17 @@ export interface Validation {
     lastUpdate: Date;
 }
 
+export interface ValidationLogResult {
+    progress: Progress;
+    batchHasMoreBefore: boolean;
+    batchHasMoreAfter: boolean;
+    batchTotal: number;
+    batchSize: number;
+    batchFirstValidationLogId: number;
+    batchLastValidationLogId: number;
+    logs: ValidationLog[];
+};
+
 export interface ValidationResult {
     id: number;
     viewId: number;
@@ -39,7 +50,7 @@ export interface ValidationResult {
     progress: Progress;
     creationDate: Date;
     lastUpdate: Date;
-    logs: ValidationLog[];
+    logResult: ValidationLogResult;
     errors: ValidationError[];
 }
 

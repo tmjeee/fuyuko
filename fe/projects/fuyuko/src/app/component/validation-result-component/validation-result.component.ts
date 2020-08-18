@@ -9,6 +9,7 @@ import {toTableItem} from '../../utils/item-to-table-items.util';
 import {ValidationResultTableComponentEvent} from './validation-result-table.component';
 import {ValidationResultTreeComponentEvent} from './validation-result-tree.component';
 import {BehaviorSubject} from 'rxjs';
+import {ValidationResultLogReloadFn} from "./validation-result-log.component";
 
 @Component({
     selector: 'app-validation-result',
@@ -24,6 +25,7 @@ export  class ValidationResultComponent implements OnInit {
     @Input() validationResult: ValidationResult;
     @Input() rules: Rule[];
     @Input() view: View;
+    @Input() validationResultLogReloadFn: ValidationResultLogReloadFn;
 
     @Output() events: EventEmitter<ValidationResultTableComponentEvent>;
 

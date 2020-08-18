@@ -3,8 +3,8 @@ import {View} from '../../model/view.model';
 import {Item} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';
 import {Rule} from '../../model/rule.model';
-import {ValidationError, ValidationResult} from '../../model/validation.model';
-import {forkJoin, Subscription, throwError} from 'rxjs';
+import {ValidationError, ValidationLogResult, ValidationResult} from '../../model/validation.model';
+import {forkJoin, Observable, Subscription, throwError} from 'rxjs';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ItemService} from '../../service/item-service/item.service';
 import {ValidationService} from '../../service/validation-service/validation.service';
@@ -17,6 +17,10 @@ import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model'
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {LoadingService} from "../../service/loading-service/loading.service";
+import {
+    ValidationResultLogComponentEvent,
+    ValidationResultLogReloadFn
+} from "../../component/validation-result-component/validation-result-log.component";
 
 @Component({
     templateUrl: './view-validation-details.page.html',
@@ -29,6 +33,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
     attributes: Attribute[];
     rules: Rule[];
     validationResult: ValidationResult;
+    validationResultLogReloadFn: ValidationResultLogReloadFn;
 
     subscription: Subscription;
     viewId: string;
@@ -46,6 +51,9 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
         this.items = [];
         this.attributes = [];
         this.rules = [];
+        this.validationResultLogReloadFn = (event: ValidationResultLogComponentEvent): Observable<ValidationLogResult> => {
+            return this.validationService.getValidationLogResult(event.viewId, event.validationId, event.validationLogId, event.order, event.limit)
+        };
     }
 
     ngOnInit(): void {
