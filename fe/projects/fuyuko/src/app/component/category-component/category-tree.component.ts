@@ -12,7 +12,7 @@ export interface TreeNode {
 
     currentCategoryWithItems: CategoryWithItems;
     categoriesWithItems: CategoryWithItems[];
-    currentItem: {id: number, name: string, description: string};
+    currentItem: {id: number, name: string, description: string, creationDate: Date, lastUpdate: Date};
 };
 
 export interface CategoryTreeComponentEvent {

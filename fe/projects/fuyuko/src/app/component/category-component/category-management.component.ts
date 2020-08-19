@@ -155,14 +155,16 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
             .open(EditCategoryPopupComponent, {width: '90vw', height: '90vh', data: null})
             .afterClosed().pipe(
                 tap((r: {id: number, name: string, description: string}) => {
-                    this.addCategoryFn(-1, r.name, r.description)
-                        .pipe(
-                            tap((res: ApiResponse) => {
-                                if (res.status === "SUCCESS") {
-                                   this.reloadTree(this.viewId); 
-                                }                                
-                            })
-                        ).subscribe()                                 
+                    if (r) {
+                        this.addCategoryFn(-1, r.name, r.description)
+                            .pipe(
+                                tap((res: ApiResponse) => {
+                                    if (res.status === "SUCCESS") {
+                                        this.reloadTree(this.viewId);
+                                    }
+                                })
+                            ).subscribe()
+                    }
                 })
         ).subscribe()
         
@@ -173,14 +175,16 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
             .open(EditCategoryPopupComponent, {width: '90vw', height: '90vh', data: null})
             .afterClosed().pipe(
             tap((r: {id: number, name: string, description: string}) => {
-                this.addCategoryFn(this.selectedTreeNode.currentCategoryWithItems.id, r.name, r.description)
-                    .pipe(
-                        tap((res: ApiResponse) => {
-                            if (res.status === 'SUCCESS') {
-                                this.reloadTree(this.viewId);
-                            } 
-                        })
-                    ).subscribe();
+                if (r) {
+                    this.addCategoryFn(this.selectedTreeNode.currentCategoryWithItems.id, r.name, r.description)
+                        .pipe(
+                            tap((res: ApiResponse) => {
+                                if (res.status === 'SUCCESS') {
+                                    this.reloadTree(this.viewId);
+                                }
+                            })
+                        ).subscribe();
+                }
             })
         ).subscribe();
     }
@@ -206,13 +210,15 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
             .open(EditCategoryPopupComponent, {width: '90vw', height: '90vh', data: category})
             .afterClosed().pipe(
                 tap((r: {id: number, name: string, description: string}) => {
-                    this.editCategoryFn(r.id, r.name, r.description).pipe(
-                        tap((res: ApiResponse) => {
-                            if (res.status === 'SUCCESS') {
-                                this.reloadTree(this.viewId);
-                            }
-                        })
-                    ).subscribe();
+                    if (r) {
+                        this.editCategoryFn(r.id, r.name, r.description).pipe(
+                            tap((res: ApiResponse) => {
+                                if (res.status === 'SUCCESS') {
+                                    this.reloadTree(this.viewId);
+                                }
+                            })
+                        ).subscribe();
+                    }
                 })
         ).subscribe();
     }

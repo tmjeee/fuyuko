@@ -51,7 +51,9 @@ export const categorySimpleItemsInCategory = async (viewId: number, categoryId: 
             SELECT 
                 I.ID AS I_ID,
                 I.NAME AS I_NAME,
-                I.DESCRIPTION AS I_DESCRIPTION 
+                I.DESCRIPTION AS I_DESCRIPTION, 
+                I.CREATION_DATE AS I_CREATION_DATE,
+                I.LAST_UPDATE AS I_LAST_UPDATE
             FROM TBL_ITEM AS I
             WHERE I.ID IN ? AND I.STATUS = ? AND I.PARENT_ID IS NULL
         `, [itemIds, ENABLED]);
@@ -60,7 +62,9 @@ export const categorySimpleItemsInCategory = async (viewId: number, categoryId: 
             const itm: CategorySimpleItem = {
                 id: i.I_ID,
                 name: i.I_NAME,
-                description: i.I_DESCRIPTION
+                description: i.I_DESCRIPTION,
+                creationDate: i.I_CREATION_DATE,
+                lastUpdate: i.I_LAST_UPDATE,
             };
             a.push(itm);
             return a;
@@ -106,7 +110,9 @@ export const categorySimpleItemsNotInCategory = async (viewId: number, categoryI
             SELECT 
                 I.ID AS I_ID,
                 I.NAME AS I_NAME,
-                I.DESCRIPTION AS I_DESCRIPTION 
+                I.DESCRIPTION AS I_DESCRIPTION ,
+                I.CREATION_DATE AS I_CREATION_DATE,
+                I.LAST_UPDATE AS I_LAST_UPDATE
             FROM TBL_ITEM AS I
             WHERE I.ID NOT IN ? AND I.STATUS = ? AND I.PARENT_ID IS NULL AND I.VIEW_ID=?
             ${LIMIT_OFFSET(limitOffset)}
@@ -116,7 +122,9 @@ export const categorySimpleItemsNotInCategory = async (viewId: number, categoryI
             const itm: CategorySimpleItem = {
                 id: i.I_ID,
                 name: i.I_NAME,
-                description: i.I_DESCRIPTION
+                description: i.I_DESCRIPTION,
+                creationDate: i.I_CREATION_DATE,
+                lastUpdate: i.I_LAST_UPDATE,
             };
             a.push(itm);
             return a;
@@ -387,7 +395,7 @@ export const getViewCategoriesWithItems = async (viewId: number, parentCategoryI
     return categoryWithItems;
 };
 
-const _getCategoryItemSimple = async (viewId: number, categoryId: number): Promise<{id: number, name: string, description: string}[]> => {
+const _getCategoryItemSimple = async (viewId: number, categoryId: number): Promise<{id: number, name: string, description: string, creationDate: Date, lastUpdate: Date}[]> => {
     const q: QueryA =  await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
             SELECT 
@@ -406,9 +414,9 @@ const _getCategoryItemSimple = async (viewId: number, categoryId: number): Promi
         return q;
     });
 
-    return q.reduce((a: {id: number, name: string, description: string}[], i: QueryI) => {
+    return q.reduce((a: {id: number, name: string, description: string, creationDate: Date, lastUpdate: Date}[], i: QueryI) => {
         const itm = {
-            id: i.I_ID, name: i.I_NAME, description: i.I_DESCRIPTION
+            id: i.I_ID, name: i.I_NAME, description: i.I_DESCRIPTION, creationDate: i.I_CREATION_DATE, lastUpdate: i.I_LAST_UPDATE
         };
         a.push(itm);
         return a;
