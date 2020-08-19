@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {View} from '../../model/view.model';
 import {Item} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';
@@ -10,7 +10,7 @@ import {ItemService} from '../../service/item-service/item.service';
 import {ValidationService} from '../../service/validation-service/validation.service';
 import {RuleService} from '../../service/rule-service/rule.service';
 import {ViewService} from '../../service/view-service/view.service';
-import {catchError, finalize, map, tap} from 'rxjs/operators';
+import {catchError, finalize, map, skip, tap} from 'rxjs/operators';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import {ValidationResultTableComponentEvent} from '../../component/validation-result-component/validation-result-table.component';
 import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
@@ -26,7 +26,7 @@ import {
     templateUrl: './view-validation-details.page.html',
     styleUrls: ['./view-validation-details.page.scss']
 })
-export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
+export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     view: View;
     items: Item[];
@@ -40,12 +40,15 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
     validationId: string;
     loading: boolean;
 
+
+
     constructor(private attributeService: AttributeService,
                 private itemService: ItemService,
                 private notificationService: NotificationsService,
                 private validationService: ValidationService,
                 private ruleService: RuleService,
                 private viewService: ViewService,
+                private router: Router,
                 private route: ActivatedRoute,
                 private loadingService: LoadingService) {
         this.items = [];
@@ -58,6 +61,17 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.reload();
+    }
+
+    ngAfterViewInit(): void {
+        this.subscription = this.viewService.asObserver().pipe(
+            skip(1), // the second change means view changes when we are in validation details page, redirect back to validation main page
+            tap((v: View) => {
+                if (v) {
+                    this.router.navigate(['/view-layout', 'validation']);
+                }
+            })
+        ).subscribe();
     }
 
     ngOnDestroy(): void {
