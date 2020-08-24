@@ -4,6 +4,10 @@
     .mat-tree {
       height: 100%;
       .mat-tree-node {
+        .drag-enter {
+          border: var(--my-app-primary-darker) solid 2px;
+          border-radius: 5px;
+        }
         .label {
           cursor: pointer;
           padding: 5px;

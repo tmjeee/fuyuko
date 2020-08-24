@@ -17,7 +17,8 @@ import {runJob as importItemRunJob} from './import-csv/job-do-item-data-import.s
 import {runJob as importPriceRunJob} from './import-csv/job-do-price-data-import.service';
 import {runValidation, scheduleValidation} from './validation/run-validation.service';
 import {getViewValidationResult, deleteValidationResult, getAllViewValidations, getValidationByViewIdAndValidationId,
-        getValidationsByViewId}
+        getValidationsByViewId,
+        getViewValidationResultLog}
         from './validation/validation.service';
 import {getAttributeInViewByName, getAttributesInView, saveAttributes, updateAttributes, changeAttributeStatus,
         searchAttributesByView, getTotalAttributesInView, getAttributeInView, UpdateAttributesResult}
@@ -32,7 +33,8 @@ import {SaveUserAvatarResult, AvatarInput, addGlobalImage, addGlobalAvatar, save
 import {UpdateCategoryInput, AddCategoryInput, categorySimpleItemsInCategory, categorySimpleItemsInCategoryCount, deleteCategory,
         getViewCategoryByName, addItemToViewCateogry, getViewCategories, getViewCategoriesWithItems, removeItemFromViewCategory,
         getViewCategoryItemsCount, getViewCategoryItems, addCategory, categorySimpleItemsNotInCategory, categorySimpleItemsNotInCategoryCount,
-        updateCategory} from './category.service';
+        updateCategory,
+        updateCategoryHierarchy} from './category.service';
 import {compareDoubleselect, compareSelect, compareDimension, compareVolume, compareCurrency, compareString, compareNumber,
         compareDate, convertToCm, compareWeight, compareArea, compareHeight, compareLength, compareWidth, convertToCm2,
         convertToG, convertToMl}
@@ -138,7 +140,7 @@ export {
 
     // validation.service
     runValidation, scheduleValidation, getViewValidationResult, deleteValidationResult, getAllViewValidations, getValidationsByViewId,
-    getValidationByViewIdAndValidationId, UpdateAttributesResult,
+    getValidationByViewIdAndValidationId, UpdateAttributesResult, getViewValidationResultLog,
 
     // attribute.service
     getAttributeInViewByName, getAttributeInView, saveAttributes, updateAttributes, changeAttributeStatus, searchAttributesByView,
@@ -157,7 +159,7 @@ export {
     UpdateCategoryInput, AddCategoryInput, categorySimpleItemsNotInCategory, categorySimpleItemsNotInCategoryCount,
     categorySimpleItemsInCategoryCount, categorySimpleItemsInCategory, deleteCategory, getViewCategoryByName, addItemToViewCateogry,
     getViewCategories, getViewCategoriesWithItems, removeItemFromViewCategory, getViewCategoryItemsCount, getViewCategoryItems,
-    addCategory, updateCategory,
+    addCategory, updateCategory, updateCategoryHierarchy,
 
     // compare-attribute-values.service
     compareDoubleselect, compareSelect, compareDimension, compareVolume, compareCurrency, compareString, compareNumber,

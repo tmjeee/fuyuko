@@ -16,12 +16,22 @@ const URL_DELETE_CATEGORY = () => `${config().api_host_url}/view/:viewId/categor
 const URL_POST_UPDATE_CATEGORY = () => `${config().api_host_url}/view/:viewId/update-category`;
 const URL_POST_ADD_ITEM_TO_CATEGORY = () => `${config().api_host_url}/view/:viewId/category/:categoryId/item/:itemId`;
 const URL_POST_REMOVE_ITEM_FROM_CATEGORY = () => `${config().api_host_url}/view/:viewId/category/:categoryId/item/:itemId`;
+const URL_POST_UPDATE_CATEGORY_HIERARCHY = () => `${config().api_host_url}/view/:viewId/category/:categoryId/parentId/:parentId/update-hierarchy`;
 
 
 @Injectable()
 export class CategoryService {
 
     constructor(private httpClient: HttpClient) { }
+
+    updateCategoryHierarchy(viewId: number, categoryId: number, parentId: number = null): Observable<ApiResponse> {
+        return this.httpClient.post<ApiResponse>(
+            URL_POST_UPDATE_CATEGORY_HIERARCHY()
+                .replace(':viewId', String(viewId))
+                .replace(':categoryId', String(categoryId))
+                .replace(':parentId', parentId ? String(parentId) : 'null'), {}
+        )
+    }
 
     getCategoriesWithItems(viewId: number): Observable<CategoryWithItems[]> {
         return this.httpClient.get<ApiResponse<CategoryWithItems[]>>(
@@ -47,7 +57,7 @@ export class CategoryService {
                 .replace(':categoryId', String(categoryId)));
     }
 
-    addCategory(viewId: number, parentCategoryId: number, name: string, description: string) {
+    addCategory(viewId: number, parentCategoryId: number, name: string, description: string): Observable<ApiResponse> {
         return this.httpClient.post<ApiResponse>(
             URL_POST_ADD_CATEGORY()
                 .replace(':viewId', String(viewId)), {
@@ -64,7 +74,7 @@ export class CategoryService {
                 .replace(':categoryId', String(categoryId)));
     }
 
-    updateCategory(viewId: number, parentCategoryId: number, categoryId: number, name: string, description: string) {
+    updateCategory(viewId: number, parentCategoryId: number, categoryId: number, name: string, description: string): Observable<ApiResponse> {
         return this.httpClient.post<ApiResponse>(
             URL_POST_UPDATE_CATEGORY()
                 .replace(':viewId', String(viewId)), {
@@ -97,7 +107,7 @@ export class CategoryService {
         );
     }
 
-    removeItemsFromCategory(viewId: number, categoryId: number, items: CategorySimpleItem[]) {
+    removeItemsFromCategory(viewId: number, categoryId: number, items: CategorySimpleItem[]): Observable<ApiResponse> {
         const q:Observable<ApiResponse>[] = items.map((i: CategorySimpleItem) =>
             this.httpClient.delete<ApiResponse>(URL_POST_REMOVE_ITEM_FROM_CATEGORY()
                 .replace(':viewId', String(viewId))

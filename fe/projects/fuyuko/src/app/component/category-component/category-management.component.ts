@@ -1,17 +1,17 @@
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component,
+    Component, EventEmitter,
     Input,
     OnChanges,
-    OnInit,
+    OnInit, Output,
     SimpleChange,
     SimpleChanges
 } from "@angular/core";
 import {Category, CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
 import {Observable} from "rxjs";
 import {finalize, tap} from "rxjs/operators";
-import {CategoryTreeComponentEvent, TreeNode} from "./category-tree.component";
+import {CategoryTreeComponentDragDropEvent, CategoryTreeComponentEvent, TreeNode} from "./category-tree.component";
 import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
 import {Pagination} from "../../utils/pagination.utils";
 import {LimitOffset} from "../../model/limit-offset.model";
@@ -28,6 +28,13 @@ export type EditCategoryFn = (categoryId: number, name: string, description: str
 export type DeleteCategoryFn = (categoryId: number) => Observable<ApiResponse>;
 export type AddItemsToCategoryFn = (categoryId: number, items: CategorySimpleItem[]) => Observable<ApiResponse>;
 export type RemoveItemsFromCategoryFn = (categoryId: number, items: CategorySimpleItem[]) => Observable<ApiResponse>;
+
+export interface CategoryManagementComponentTreeDragDropEvent {
+    type: 'drop' | 'move-to-root';
+    sourceItem: TreeNode;
+    destinationItem? : TreeNode;        // only when type is 'drop'
+    reloadTreeFn: () => void;
+};
 
 @Component({
     selector: 'app-category-management',
@@ -47,6 +54,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
     @Input() deleteCategoryFn: DeleteCategoryFn;
     @Input() addItemsToCategoryFn: AddItemsToCategoryFn;
     @Input() removeItemsFromCategoryFn: RemoveItemsFromCategoryFn;
+    @Output() categoryTreeDragDropEvents: EventEmitter<CategoryManagementComponentTreeDragDropEvent>;
 
     selectedTreeNode: TreeNode;
     categoriesWithItems: CategoryWithItems[];
@@ -60,6 +68,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
     constructor(private matDialog: MatDialog,
                 private changeDetectorRef: ChangeDetectorRef) {
         this.categoriesWithItems = [];
+        this.categoryTreeDragDropEvents = new EventEmitter<CategoryManagementComponentTreeDragDropEvent>();
         this.addableCategoryTableItemsPagination = new Pagination();
         this.removableCategoryTableItemsPagination = new Pagination();
         this.removeableCategoryTableActions = [
@@ -223,6 +232,18 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
         ).subscribe();
     }
 
+    moveCategoryToRoot($event: MouseEvent) {
+        const category: Category = this.selectedTreeNode.currentCategoryWithItems;
+        this.categoryTreeDragDropEvents.emit({
+           sourceItem: this.selectedTreeNode,
+           destinationItem: null,
+           type: 'move-to-root',
+           reloadTreeFn: () => {
+               this.reloadTree(this.viewId);
+           }
+        } as CategoryManagementComponentTreeDragDropEvent);
+    }
+
     onAddableCategoryTableEvent($event: CategoryItemTableComponentEvent) {
        const items: CategorySimpleItem[] = $event.items;
        const categoryId: number = this.selectedTreeNode.currentCategoryWithItems.id;
@@ -249,4 +270,16 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
             })
         ).subscribe();
     }
+
+    onCategoryTreeDragDropEvents($event: CategoryTreeComponentDragDropEvent) {
+        this.categoryTreeDragDropEvents.emit({
+           type: "drop",
+           sourceItem: $event.sourceItem,
+           destinationItem: $event.destinationItem,
+           reloadTreeFn: () => {
+               this.reloadTree(this.viewId)
+           }
+        } as CategoryManagementComponentTreeDragDropEvent);
+    }
+
 }

@@ -543,3 +543,37 @@ export const removeItemFromViewCategory = async (categoryId: number, itemId: num
     return errors;
 };
 
+
+/**
+ * =================================
+ * === updateCategoryHierarchy() ===
+ * =================================
+ */
+export const updateCategoryHierarchy = async (categoryId: number, parentId: number): Promise<string[]> => {
+    return await doInDbConnection(async (conn: Connection) => {
+        const errors: string[] = [];
+        const q1: QueryA = await conn.query(`
+             SELECT ID, PARENT_ID, STATUS FROM TBL_VIEW_CATEGORY WHERE ID = ?            
+        `, [categoryId]);
+
+        if (!q1.length) {
+            errors.push(`Category with id ${categoryId} not found`);
+        } else {
+            if (parentId) {
+                const q2: QueryResponse = await conn.query(`UPDATE TBL_VIEW_CATEGORY SET PARENT_ID = ? WHERE ID = ? `, [parentId, categoryId]);
+                if (q2.affectedRows <= 0) {
+                    errors.push(`Failed to update PARENT_ID for category ${categoryId} to ${parentId}`);
+                }
+            } else if (categoryId == parentId) {
+                errors.push(`Cannot move category ${categoryId} to a parent that is itself`);
+            } else {
+                const q2: QueryResponse = await conn.query(`UPDATE TBL_VIEW_CATEGORY SET PARENT_ID = NULL WHERE ID = ? `, [categoryId]);
+                if (q2.affectedRows <= 0) {
+                    errors.push(`Failed to update PARENT_ID for category ${categoryId} to NULL`);
+                }
+            }
+        }
+        return errors;
+    });
+}
+

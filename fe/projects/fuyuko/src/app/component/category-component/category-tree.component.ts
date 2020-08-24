@@ -2,22 +2,35 @@ import {Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges
 import {CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
 import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material/tree";
 import {FlatTreeControl} from "@angular/cdk/tree";
+import {CdkDragDrop, CdkDragEnd, CdkDragEnter, CdkDragExit, CdkDragSortEvent} from "@angular/cdk/drag-drop";
 
 export interface TreeNode {
-    name: string;
-    level: number;
-    expandable: boolean;
-    type: 'category' | 'item',
-    isCurrentlyInExpandedState: boolean;
+    name: string;                                   // node name
+    level: number;                                  // level
+    expandable: boolean;                            // can this node be expanded (not a leaf node)
+    type: 'category' | 'item',                      // is this node an item or category
+    isCurrentlyInExpandedState: boolean;            // is this node expanded?
 
-    currentCategoryWithItems: CategoryWithItems;
-    categoriesWithItems: CategoryWithItems[];
-    currentItem: {id: number, name: string, description: string, creationDate: Date, lastUpdate: Date};
+    currentCategoryWithItems: CategoryWithItems;    // current selected node  as category (if it is a category)
+    categoriesWithItems: CategoryWithItems[];       // all categories
+    currentItem: {                                  // current selected node as item (if it is an item)
+        id: number,
+        name: string,
+        description: string,
+        creationDate: Date,
+        lastUpdate: Date
+    };
 };
 
 export interface CategoryTreeComponentEvent {
     type: 'node-selected',
     node: TreeNode
+};
+
+export interface CategoryTreeComponentDragDropEvent {
+    type: 'drop';
+    sourceItem: TreeNode;
+    destinationItem: TreeNode;
 };
 
 
@@ -36,8 +49,10 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
     @Input() includeItems: boolean;
     @Input() selectedCategoryId: number;
     @Output() events: EventEmitter<CategoryTreeComponentEvent>;
+    @Output() dragDropEvents: EventEmitter<CategoryTreeComponentDragDropEvent>;
 
     currentlySelectedTreeNode: TreeNode;
+    currentlyDragEnterTreeNode: TreeNode;
 
     tmp: Set<number>;  // store the id of category that is expanded
     treeNodeNeesExpanding: TreeNode[] = []; // keeps the TreeNode that needs expanding
@@ -50,6 +65,7 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
         this.tmp = new Set();
         this.includeItems = true;
         this.events = new EventEmitter<CategoryTreeComponentEvent>();
+        this.dragDropEvents = new EventEmitter<CategoryTreeComponentDragDropEvent>();
         this.treeControl = new FlatTreeControl<TreeNode>(
             (n: TreeNode) => n.level,
             (n: TreeNode) => n.expandable
@@ -146,5 +162,48 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
         } else if (node.type === 'item') {
             return (this.currentlySelectedTreeNode === node);
         }
+    }
+
+    onDrop($event: CdkDragDrop<any, any>) {
+        this.currentlyDragEnterTreeNode = null;
+        const sourceItem: TreeNode = $event.item.data;
+        const dropItem: TreeNode = $event.container.data;
+        if (sourceItem.currentCategoryWithItems.id == dropItem.currentCategoryWithItems.id) {
+            // try to move a category into itself, not possible
+            return;
+        }
+        /*
+        this.dragDropEvents.emit({
+           type: 'drop',
+           sourceItem,
+           destinationItem: dropItem
+        } as CategoryTreeComponentDragDropEvent);
+         */
+        console.log(`**** on drop, drop ${sourceItem.currentCategoryWithItems.name}  into ${dropItem.currentCategoryWithItems.name}`);
+    }
+
+    onEnter($event: CdkDragEnter<any>) {
+        console.log(`**** drag drop on enter ${$event.container.data.name}`);
+        this.currentlyDragEnterTreeNode = $event.container.data;
+    }
+
+    onExit($event: CdkDragExit<any>) {
+        console.log(`***** drag drop on exit ${$event.container.data.name}`);
+        this.currentlyDragEnterTreeNode = null;
+    }
+
+    isCurrentDragEnterTreeNode(n: TreeNode): boolean {
+        return (this.currentlyDragEnterTreeNode === n);
+    }
+
+    onSorted($event: CdkDragSortEvent<any>) {
+        console.log('****** drag drop on sorted', $event.container.data.name);
+    }
+
+    onDragEnd($event: CdkDragEnd) {
+        console.log('*====== drag end');
+        $event.source.element.nativeElement.style.transform = 'none' // visually reset element to its origin
+        const source: any = $event.source
+        source._passiveTransform = { x: 0, y: 0 } // make it so new drag starts from same origin
     }
 }
