@@ -1,9 +1,25 @@
-import {Argument, Engine, EngineResponse, EngineStatus, NextState, State, StateProcessFn} from "./index";
+import {
+    Argument, deserializeArgument,
+    Engine,
+    EngineResponse,
+    EngineStatus,
+    NextState,
+    serializeArgument,
+    State,
+    StateProcessFn
+} from "./index";
+
+interface SerializedState {
+    name: string,
+    currentEvent: string,
+    transition: {[k:string]: any}
+}
+
 
 export class InternalState implements State, NextState {
 
     name: string;
-    fn: StateProcessFn;
+    fn: StateProcessFn;   // perform state operation and return next an event optionally
 
     // transition map, indicating when 'event' occurred we proceed to the given State
     map: Map<string /* event */, State> = new Map();
@@ -25,6 +41,26 @@ export class InternalState implements State, NextState {
         this.currentEvent = null;
         return this;
     }
+
+    serialize(): string {
+        return JSON.stringify({
+            name,
+            currentEvent: this.currentEvent,
+            transition: [...this.map.entries()].reduce((acc: {[k: string]: any}, e: [string, State]) => {
+                acc[e[0]] = e[1].serialize();
+                return acc;
+            }, {})
+        });
+    }
+
+    deserialize(data: string): void {
+        const d: SerializedState = JSON.parse(data);
+        this.name = d.name;
+        this.currentEvent = d.currentEvent;
+        for (const t in d.transition) {
+            this.map.get(t).deserialize(d.transition[t]);
+        }
+    }
 }
 
 export class InternalEngine implements Engine {
@@ -32,7 +68,7 @@ export class InternalEngine implements Engine {
     startState: State;
     states: State[] = [];
     endState: State;
-    arg: Argument;
+    args: Argument;
 
     transitionMap: Map<string /* from_state_name_event */, string /* to_state_name */>;
     stateMap: Map<string /* state name */, State>;
@@ -44,6 +80,57 @@ export class InternalEngine implements Engine {
         this.transitionMap = new Map();
         this.stateMap = new Map();
         this.status = 'UNIITIALIZED';
+    }
+
+    serialize(): string {
+       return JSON.stringify({
+          startState: this.startState.serialize(),
+          states: this.states.map((s: State) => s.serialize()),
+          endState: this.endState.serialize(),
+          arg: this.args.serialize(),
+          transitionMap: [...this.transitionMap.entries()].reduce((acc: {[k: string]: any}, e: [string, string]) => {
+              return acc;
+          }, {}),
+          stateMap: [...this.stateMap.entries()].reduce((acc: {[k: string]: State}, e: [string, State]) => {
+              return acc;
+          }, {}),
+          status: this.status,
+          currentState: this.currentState.serialize(),
+       });
+    }
+
+    deserialize(data: string) {
+        const d: {
+           startState: string,
+           states: string[],
+           endState: string,
+           args: string,
+           transitionMap: {[k: string]: string},
+           stateMap: {[k: string]: string},
+           status: string,
+           currentState: string
+        } = JSON.parse(data);
+
+        this.startState.deserialize(d.startState);
+        for (const s in d.states) {
+           const _st: SerializedState = JSON.parse(s);
+           const sta: State = this.states.find((st: State) => st.name === _st.name);
+           if (sta) {
+               sta.deserialize(s);
+           }
+        }
+        this.endState.deserialize(d.endState);
+        this.args = deserializeArgument(d.args);
+        for (const t in d.transitionMap) {
+            this.transitionMap.set(t, d.transitionMap[t]);
+        }
+        for (const t in d.stateMap) {
+            if (this.stateMap.has(t)) {
+                this.stateMap.get(t).deserialize(d.stateMap[t]);
+            }
+        }
+        this.status = d.status as EngineStatus;
+        this.currentState.deserialize(d.currentState);
     }
 
 
@@ -74,7 +161,7 @@ export class InternalEngine implements Engine {
     }
 
     init(arg: Argument): Engine {
-        this.arg = arg;
+        this.args = arg;
         for (const state of this.states) {
             const fromState: InternalState = state as InternalState;
             this.stateMap.set(fromState.name, fromState);
