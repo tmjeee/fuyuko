@@ -93,7 +93,7 @@
                         </td>
                     </ng-container>
 
-                    <tr mat-header-row class="item-header" *matHeaderRowDef="['expansion', 'name', 'description', 'pricing', 'country', 'actions']"></tr>
+                    <tr mat-header-row class="item-header" *matHeaderRowDef="['expansion', 'name', 'description', 'creationDate', 'lastUpdate', 'pricing', 'country', 'actions']"></tr>
                     <tr mat-row class="item" [attr.test-table-row-item]="tableItem.itemName" *matRowDef="let tableItem; columns: ['expansion', 'name', 'description', 'creationDate', 'lastUpdate', 'pricing', 'country', 'actions'];"></tr>
                     <tr mat-row class="item" [attr.test-table-row-item]="tableItem.itemName" *matRowDef="let tableItem; columns: ['children-expansion', 'name', 'description', 'creationDate', 'lastUpdate', 'pricing', 'country', 'actions']; when: isChildRow"
                              [@detailExpand]="isAnyParentRowExpanded(tableItem) ? 'expanded' : 'collapsed'"></tr>

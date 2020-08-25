@@ -8,7 +8,7 @@ import {CategorySimpleItem, CategoryWithItems} from "../../model/category.model"
 import {View} from "../../model/view.model";
 import {finalize, tap} from "rxjs/operators";
 import {
-    AddCategoryFn, AddItemsToCategoryFn, DeleteCategoryFn, EditCategoryFn,
+    AddCategoryFn, AddItemsToCategoryFn, CategoryManagementComponentTreeDragDropEvent, DeleteCategoryFn, EditCategoryFn,
     GetCategoriesWithItemsFn,
     GetCategorySimpleItemsInCategoryFn, GetCategorySimpleItemsNotInCategoryFn, RemoveItemsFromCategoryFn
 } from "../../component/category-component/category-management.component";
@@ -17,6 +17,7 @@ import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model"
 import {LimitOffset} from "../../model/limit-offset.model";
 import {toNotifications} from "../../service/common.service";
 import {LoadingService} from "../../service/loading-service/loading.service";
+import {CategoryTreeComponentDragDropEvent} from "../../component/category-component/category-tree.component";
 
 @Component({
    templateUrl: './category-management.page.html',
@@ -109,4 +110,34 @@ export class CategoryManagementPageComponent implements OnInit {
          })
       ).subscribe();
    }
+
+    onCategoryTreeDragDropEvents($event: CategoryManagementComponentTreeDragDropEvent) {
+       switch($event.type) {
+          case "drop": {
+              this.categoryService.updateCategoryHierarchy(
+                  this.view.id,
+                  $event.sourceItem.currentCategoryWithItems.id,
+                  $event.destinationItem.currentCategoryWithItems.id)
+                  .pipe(
+                      tap((r: ApiResponse) => {
+                          toNotifications(this.notificationsService, r);
+                          $event.reloadTreeFn();
+                      })
+                  ).subscribe();
+              break;
+          }
+           case "move-to-root": {
+               this.categoryService.updateCategoryHierarchy(
+                   this.view.id,
+                   $event.sourceItem.currentCategoryWithItems.id)
+                   .pipe(
+                       tap((r: ApiResponse) => {
+                           toNotifications(this.notificationsService, r);
+                           $event.reloadTreeFn();
+                       })
+                   ).subscribe();
+               break;
+           }
+       }
+    }
 }

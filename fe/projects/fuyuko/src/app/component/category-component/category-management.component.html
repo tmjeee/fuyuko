@@ -5,6 +5,7 @@
         <button mat-flat-button color="primary" [disabled]="!hasCategory() || !hasTreeNodeSelected()" (click)="addChildCategory($event)">Add Child Category</button>
         <button mat-flat-button color="primary" [disabled]="!hasCategory() || !hasTreeNodeSelected()" (click)="deleteCategory($event)">Delete Category</button>
         <button mat-flat-button color="primary" [disabled]="!hasCategory() || !hasTreeNodeSelected()" (click)="editCategory($event)">Rename Category</button>
+        <button mat-flat-button color="primary" [disabled]="!hasCategory() || !hasTreeNodeSelected()" (click)="moveCategoryToRoot($event)">Move category to Root</button>
     </div>
     <div>
         <div fxLayout="row">
@@ -14,6 +15,7 @@
                                    [includeItems]="false"
                                    [selectedCategoryId]="selectedTreeNode && selectedTreeNode.currentCategoryWithItems ? (selectedTreeNode.currentCategoryWithItems.id) : null"
                                    (events)="onCategoryTreeEvents($event)"
+                                   (dragDropEvents)="onCategoryTreeDragDropEvents($event)"
                                    [categoriesWithItems]="categoriesWithItems">
                 </app-category-tree>
             </div>

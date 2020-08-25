@@ -15,7 +15,9 @@
                                      [editCategoryFn]="editCategoryFn"
                                      [deleteCategoryFn]="deleteCategoryFn"
                                      [addItemsToCategoryFn]="addItemsToCategoryFn"
-                                     [removeItemsFromCategoryFn]="removeItemsFromCategoryFn">
+                                     [removeItemsFromCategoryFn]="removeItemsFromCategoryFn"
+                                     (categoryTreeDragDropEvents)="onCategoryTreeDragDropEvents($event)"
+            >
             </app-category-management>
         </mat-card-content>
     </mat-card>

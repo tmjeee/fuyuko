@@ -1,5 +1,6 @@
 .category-component {
   height: 100%;
+  /*
   mat-sidenav-container {
     height: 100%;
     mat-sidenav {
@@ -26,6 +27,13 @@
           cursor: pointer;
         }
       }
+    }
+  }
+  */
+
+  .view-switch {
+    .mat-icon {
+      cursor: pointer;
     }
   }
   .tree-container {

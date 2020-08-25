@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "test": "jasmine-ts --config=jasmine.json",
+    "test": "npx jasmine --reporter=jasmine-ts-console-reporter",
     "prebuild": "",
     "build": "npm run tsc",
     "postbuild": ""
@@ -14,10 +14,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/jasmine": "^3.5.7",
-    "jasmine": "^3.5.0",
-    "jasmine-ts": "^0.3.0",
+    "@types/jasmine": "^3.5.0",
+    "@types/node": "^14.6.0",
     "ts-node": "^8.6.2",
-    "typescript": "^3.7.2"
-  }
+    "typescript": "^3.7.2",
+    "jasmine": "^3.5.0",
+    "jasmine-spec-reporter": "^5.0.2",
+    "jasmine-ts-console-reporter": "^3.1.1"
+  },
+  "dependencies": {}
 }

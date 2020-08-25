@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Validation, ValidationResult} from '../../model/validation.model';
+import {Validation, ValidationLogResult, ValidationResult} from '../../model/validation.model';
 import config from '../../utils/config.util';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
@@ -8,6 +8,7 @@ import {map} from "rxjs/operators";
 
 const URL_GET_ALL_VALIDATIONS = () => `${config().api_host_url}/view/:viewId/validations`;
 const URL_GET_VALIDATION_DETAILS = () => `${config().api_host_url}/view/:viewId/validation/:validationId`;
+const URL_GET_VALIDATION_LOG_RESULT = () => `${config().api_host_url}/view/:viewId/validation/:validationId/validationLogId/:validationLogId/order/:order/limit/:limit`;
 const URL_POST_SCHEDULE_VALIDATION = () => `${config().api_host_url}/view/:viewId/validation`;
 const URL_DELETE_VALIDATION = () => `${config().api_host_url}/view/:viewId/validation/:validationId`;
 
@@ -20,6 +21,19 @@ export class ValidationService {
             .get<ApiResponse<Validation[]>>(URL_GET_ALL_VALIDATIONS().replace(':viewId', String(viewId)))
             .pipe(
                 map((r: ApiResponse<Validation[]>) => r.payload)
+            );
+    }
+
+    getValidationLogResult(viewId: number, validationId: number, validationLogId?: number, order: 'before' | 'after' = 'after', limit: number = 100): Observable<ValidationLogResult> {
+        return this.httpClient
+            .get<ApiResponse<ValidationLogResult>>(URL_GET_VALIDATION_LOG_RESULT()
+                .replace(':viewId', String(viewId))
+                .replace(':validationId', String(validationId))
+                .replace(':validationLogId', validationLogId ? String(validationLogId) : '')
+                .replace(':order', order)
+                .replace(':limit', String(limit))
+            ).pipe(
+                map((r: ApiResponse<ValidationLogResult>) => r.payload)
             );
     }
 

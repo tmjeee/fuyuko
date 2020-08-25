@@ -11,7 +11,7 @@ export interface Category {
     children: Category[];
 };
 
-export type CategorySimpleItem = {id: number, name: string, description: string};
+export type CategorySimpleItem = {id: number, name: string, description: string, creationDate: Date, lastUpdate: Date};
 
 export interface CategoryWithItems {
     id: number;

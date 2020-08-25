@@ -307,7 +307,7 @@ export const p = (q: QueryA): Rule2[] => {
 
         const vcmId: number = i.VCM_ID;
         const vcmMapKey: string = `${ruleId}_${vcId}_${vcmId}`;
-        if (!vcmMap.has(vcmMapKey)) {
+        if (vcmId && !vcmMap.has(vcmMapKey)) {
             const vcm = {
                 id: vcmId,
                 name: i.VCM_NAME,
@@ -319,7 +319,7 @@ export const p = (q: QueryA): Rule2[] => {
 
         const vcmeId: number = i.VCME_ID;
         const vcmeMapKey: string = `${ruleId}_${vcId}_${vcmId}_${vcmeId}`;
-        if (!vcmeMap.has(vcmeMapKey)) {
+        if (vcmId && vcmeId && !vcmeMap.has(vcmeMapKey)) {
             const vcme = {
                 id: vcmeId,
                 key: i.VCME_KEY,
@@ -332,7 +332,7 @@ export const p = (q: QueryA): Rule2[] => {
 
         const wcId: number = i.WC_ID;
         const wcMapKey: string = `${ruleId}_${wcId}`;
-        if (!wcMap.has(wcMapKey)) {
+        if (wcId && !wcMap.has(wcMapKey)) {
             const wc = {
                 id: wcId,
                 attributeId: i.WC_VIEW_ATTRIBUTE_ID,
@@ -347,7 +347,7 @@ export const p = (q: QueryA): Rule2[] => {
 
         const wcmId: number = i.WCM_ID;
         const wcmMapKey: string = `${ruleId}_${wcId}_${wcmId}`;
-        if (!wcmMap.has(wcmMapKey)) {
+        if (vcmId && !wcmMap.has(wcmMapKey)) {
             const wcm = {
                 id: wcmId,
                 name: i.WCM_NAME,
@@ -359,7 +359,7 @@ export const p = (q: QueryA): Rule2[] => {
 
         const wcmeId: number = i.WCME_ID;
         const wcmeMapKey: string = `${ruleId}_${wcId}_${wcmId}_${wcmeId}`;
-        if (!wcmeMap.has(wcmeMapKey)) {
+        if (vcmId && vcmeId && !wcmeMap.has(wcmeMapKey)) {
             const wcme = {
                 id: wcmeId,
                 key: i.WCME_KEY,

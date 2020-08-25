@@ -1,22 +1,60 @@
 <div class="category-tree-component">
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl"
+              cdkDropListGroup
+    >
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-            <button mat-icon-button disabled></button>
-            <mat-icon *ngIf="node.type == 'item'">view_stream</mat-icon>
-            <mat-icon *ngIf="node.type == 'category'">category</mat-icon>
-            <div class="label"
-                 [ngClass]="{selected: isTreeNodeSelected(node)}"
-                 (click)="onTreeNodeClicked($event, node)">{{node.name}}</div>
+            <div    fxLayout="column"
+                    cdkDropList
+                    cdkDropListSortingDisabled
+                    [cdkDropListData]="node"
+            >
+                <div fxFlex fxLayout="row" cdkDrag
+                     [cdkDragData]="node"
+                     (cdkDragEntered)="onEnter($event)"
+                     (cdkDragExited)="onExit($event)"
+                     (cdkDragDropped)="onDrop($event)"
+                     (cdkDragEnded)="onDragEnd($event)"
+                     [ngClass]="{'drag-enter': isCurrentDragEnterTreeNode(node)}"
+                >
+                    <button fxFlex="1 0 auto" mat-icon-button disabled></button>
+                    <mat-icon fxFlex="1 0 auto" *ngIf="node.type == 'item'">view_stream</mat-icon>
+                    <mat-icon fxFlex="1 0 auto" *ngIf="node.type == 'category'">category</mat-icon>
+                    <span fxFlex="1 0 100%" class="label"
+                         [ngClass]="{selected: isTreeNodeSelected(node)}"
+                         (click)="onTreeNodeClicked($event, node)">{{node.name}}
+                    </span>
+                    <span fxFlex *cdkDragPreview>&nbsp;</span>
+                    <span fxFlex *cdkDragPlaceholder></span>
+                </div>
+            </div>
         </mat-tree-node>
         <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-            <button mat-icon-button matTreeNodeToggle (click)="onTreeExpandIconClicked(node)">
-                <mat-icon class="mat-icon-trl-mirror">{{node.isCurrentlyInExpandedState ? 'expand_more' : 'chevron_right'}}</mat-icon>
-            </button>
-            <mat-icon *ngIf="node.type == 'item'">view_stream</mat-icon>
-            <mat-icon *ngIf="node.type == 'category'">category</mat-icon>
-            <div class="label"
-                 [ngClass]="{selected: isTreeNodeSelected(node)}"
-                 (click)="onTreeNodeClicked($event, node)">{{node.name}}</div>
+            <div    fxLayout="column"
+                    cdkDropList
+                    cdkDropListSortingDisabled
+                    [cdkDropListData]="node"
+            >
+                <div fxFlex fxLayout cdkDrag
+                     [cdkDragData]="node"
+                     (cdkDragEntered)="onEnter($event)"
+                     (cdkDragExited)="onExit($event)"
+                     (cdkDragDropped)="onDrop($event)"
+                     (cdkDragEnded)="onDragEnd($event)"
+                     [ngClass]="{'drag-enter': isCurrentDragEnterTreeNode(node)}"
+                >
+                    <button fxFlex="1 0 auto" mat-icon-button matTreeNodeToggle (click)="onTreeExpandIconClicked(node)">
+                        <mat-icon class="mat-icon-trl-mirror">{{node.isCurrentlyInExpandedState ? 'expand_more' : 'chevron_right'}}</mat-icon>
+                    </button>
+                    <mat-icon fxFlex="1 0 auto" *ngIf="node.type == 'item'">view_stream</mat-icon>
+                    <mat-icon fxFlex="1 0 auto" *ngIf="node.type == 'category'">category</mat-icon>
+                    <span fxFlex="1 0 auto" class="label"
+                         [ngClass]="{selected: isTreeNodeSelected(node)}"
+                          (click)="onTreeNodeClicked($event, node)">{{node.name}}
+                    </span>
+                    <span fxFlex *cdkDragPreview>&nbsp;</span>
+                    <span fxFlex *cdkDragPlaceholder></span>
+                </div>
+            </div>
         </mat-tree-node>
     </mat-tree>
 </div>

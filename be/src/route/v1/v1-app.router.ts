@@ -146,6 +146,8 @@ import registerGetAllFavouriteItemIdsRoute from './GET-all-favourite-item-ids.ro
 import registerPostAddFavouriteItemsRoute from './POST-add-favourite-items.route';
 import registerDeleteFavouriteItemsRoute from './DELETE-favourite-items.route';
 import registerGetSearchForFavouriteItemsInViewRoute from './GET-search-for-favourite-items-in-view.route';
+import registerGetViewValidationLogResultRoute from './GET-view-validation-log-result.route';
+import registerPostUpdateCategoryHierarchyRoute from './POST-update-category-hierarchy.route';
 
 
 const v1AppRouter:Router  = express.Router();
@@ -302,6 +304,8 @@ const reg = (router: Router, regi: Registry): Router => {
     registerPostAddFavouriteItemsRoute(v1AppRouter, registry);
     registerDeleteFavouriteItemsRoute(v1AppRouter, registry);
     registerGetSearchForFavouriteItemsInViewRoute(v1AppRouter, registry);
+    registerGetViewValidationLogResultRoute(v1AppRouter, registry);
+    registerPostUpdateCategoryHierarchyRoute(v1AppRouter, registry);
     
     return v1AppRouter;
 };

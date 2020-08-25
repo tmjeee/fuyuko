@@ -1,39 +1,46 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {View} from '../../model/view.model';
 import {Item} from '../../model/item.model';
 import {Attribute} from '../../model/attribute.model';
 import {Rule} from '../../model/rule.model';
-import {ValidationError, ValidationResult} from '../../model/validation.model';
-import {forkJoin, Subscription, throwError} from 'rxjs';
+import {ValidationError, ValidationLogResult, ValidationResult} from '../../model/validation.model';
+import {forkJoin, Observable, Subscription, throwError} from 'rxjs';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ItemService} from '../../service/item-service/item.service';
 import {ValidationService} from '../../service/validation-service/validation.service';
 import {RuleService} from '../../service/rule-service/rule.service';
 import {ViewService} from '../../service/view-service/view.service';
-import {catchError, finalize, map, tap} from 'rxjs/operators';
+import {catchError, finalize, map, skip, tap} from 'rxjs/operators';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import {ValidationResultTableComponentEvent} from '../../component/validation-result-component/validation-result-table.component';
 import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {LoadingService} from "../../service/loading-service/loading.service";
+import {
+    ValidationResultLogComponentEvent,
+    ValidationResultLogReloadFn
+} from "../../component/validation-result-component/validation-result-log.component";
 
 @Component({
     templateUrl: './view-validation-details.page.html',
     styleUrls: ['./view-validation-details.page.scss']
 })
-export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
+export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     view: View;
     items: Item[];
     attributes: Attribute[];
     rules: Rule[];
     validationResult: ValidationResult;
+    validationResultLogReloadFn: ValidationResultLogReloadFn;
 
     subscription: Subscription;
     viewId: string;
     validationId: string;
     loading: boolean;
+
+
 
     constructor(private attributeService: AttributeService,
                 private itemService: ItemService,
@@ -41,15 +48,30 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy {
                 private validationService: ValidationService,
                 private ruleService: RuleService,
                 private viewService: ViewService,
+                private router: Router,
                 private route: ActivatedRoute,
                 private loadingService: LoadingService) {
         this.items = [];
         this.attributes = [];
         this.rules = [];
+        this.validationResultLogReloadFn = (event: ValidationResultLogComponentEvent): Observable<ValidationLogResult> => {
+            return this.validationService.getValidationLogResult(event.viewId, event.validationId, event.validationLogId, event.order, event.limit)
+        };
     }
 
     ngOnInit(): void {
         this.reload();
+    }
+
+    ngAfterViewInit(): void {
+        this.subscription = this.viewService.asObserver().pipe(
+            skip(1), // the second change means view changes when we are in validation details page, redirect back to validation main page
+            tap((v: View) => {
+                if (v) {
+                    this.router.navigate(['/view-layout', 'validation']);
+                }
+            })
+        ).subscribe();
     }
 
     ngOnDestroy(): void {

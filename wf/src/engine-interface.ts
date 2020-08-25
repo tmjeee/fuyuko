@@ -6,7 +6,10 @@ export interface Engine {
     endsWith(state: State): Engine;
     init(arg: Argument): Engine;
     next(): Promise<EngineResponse>;
+    serialize(): string;
+    deserialize(d: string): void;
 }
+
 
 export interface EngineResponse {
     end: boolean;
@@ -22,9 +25,14 @@ export interface StateProcessFn  {
 }
 
 export interface State {
+    name: string;
     on(event?: string): NextState;
+    serialize(): string;
+    deserialize(data: string): void;
 }
 
 export interface NextState {
     to(nextState: State): State;
+    serialize(): string;
+    deserialize(data: string): void;
 }

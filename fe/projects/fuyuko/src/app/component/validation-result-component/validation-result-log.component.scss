@@ -3,6 +3,9 @@
   .logs {
     height: 90vh;
     overflow-y: scroll;
+    .clickable {
+      cursor: pointer;
+    }
     .log {
       .id {
         min-width: 50px;

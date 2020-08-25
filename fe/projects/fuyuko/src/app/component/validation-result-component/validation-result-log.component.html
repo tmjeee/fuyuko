@@ -1,10 +1,16 @@
 <div class="validation-result-log-component">
     <div class="logs">
-        <div fxLayout="row" class="log" *ngFor="let log of validationResult.logs">
+        <div fxLayout="column" *ngIf="validationResult.logResult.batchHasMoreBefore">
+           <div class="clickable" (click)="showPrevious($event)">... show previous ...</div>
+        </div>
+        <div fxLayout="row" class="log" *ngFor="let log of validationResult.logResult.logs">
             <span fxFlex="0 1 auto" class="id">{{log?.id}}</span>
             <span fxFlex="0 1 auto" class="level">{{log?.level}}</span>
             <span fxFlex="0 1 auto" class="date">{{log?.creationDate | date}}</span>
             <span fxFlex="0 1 auto" class="message">{{log?.message}}</span>
+        </div>
+        <div fxLayout="column" *ngIf="validationResult.logResult.batchHasMoreAfter">
+            <div class="clickable" (click)="showMore($event)">... show more ...</div>
         </div>
     </div>
 </div>

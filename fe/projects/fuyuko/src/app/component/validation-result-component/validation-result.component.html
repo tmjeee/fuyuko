@@ -50,7 +50,8 @@
                 <span [attr.test-mat-tab]="'logs'">Logs</span>
             </ng-template>
             <div class="content" [attr.test-mat-tab-content]="'logs'">
-                <app-validation-result-log [validationResult]="validationResult">
+                <app-validation-result-log [validationResult]="validationResult"
+                                           [validationResultLogReloadFn]="validationResultLogReloadFn" >
                 </app-validation-result-log>
             </div>
         </mat-tab>

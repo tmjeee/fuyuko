@@ -1,11 +1,8 @@
 
-import config from '../config';
+import config, {opts} from '../config';
 import {createTransport, SentMessageInfo, Transporter, SendMailOptions, TransportOptions} from "nodemailer";
 import {i} from '../logger';
 
-export const opts:any = {
-    dev: false,
-};
 
 /**
  * =================
@@ -27,7 +24,7 @@ export const sendEmail = async (toEmail: string, subject: string, text: string):
 };
 
 const _sendEmail = async (toEmail: string, subject: string, text: string, fromEmail: string, options: TransportOptions): Promise<SendMailOptions> => {
-    if (opts.dev) {
+    if (opts.test) {
         return {};
     } else {
         const transporter: Transporter = createTransport(options);

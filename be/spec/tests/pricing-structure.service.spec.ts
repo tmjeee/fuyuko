@@ -253,18 +253,15 @@ describe('pricing-structure-service', () => {
 
     it('test getAllPricingStructures', async () => {
 
-        const pricingStructures = await getAllPricingStructures();
+        const pricingStructures: PricingStructure[]  = await getAllPricingStructures();
+        const pricingStructureNames: string[] = pricingStructures.map((p: PricingStructure) => `${p.viewName} - ${p.name}`);
 
         // console.log(util.inspect(pricingStructures));
         expect(pricingStructures.length).toBeGreaterThanOrEqual(4);
-        expect(pricingStructures[0].name).toBe('Pricing Structure #1');
-        expect(pricingStructures[0].viewName).toBe('Test View 1');
-        expect(pricingStructures[1].name).toBe('Pricing Structure #2');
-        expect(pricingStructures[1].viewName).toBe('Test View 1');
-        expect(pricingStructures[2].name).toBe('Pricing Structure #1');
-        expect(pricingStructures[2].viewName).toBe('Test View 2');
-        expect(pricingStructures[3].name).toBe('Pricing Structure #2');
-        expect(pricingStructures[3].viewName).toBe('Test View 2');
+        expect(pricingStructureNames).toContain('Test View 1 - Pricing Structure #1');
+        expect(pricingStructureNames).toContain('Test View 1 - Pricing Structure #2');
+        expect(pricingStructureNames).toContain('Test View 2 - Pricing Structure #1');
+        expect(pricingStructureNames).toContain('Test View 2 - Pricing Structure #2');
     });
 
 

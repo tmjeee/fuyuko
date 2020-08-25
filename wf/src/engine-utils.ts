@@ -1,4 +1,4 @@
-import {Engine, State, StateProcessFn} from "./engine-interface";
+import {Argument, Engine, State, StateProcessFn} from "./engine-interface";
 import {InternalEngine, InternalState} from "./engine-impl";
 
 export const createState = (name: string, fn?: StateProcessFn): State => {
@@ -8,3 +8,12 @@ export const createState = (name: string, fn?: StateProcessFn): State => {
 export const createEngine = (): Engine => {
     return new InternalEngine();
 }
+
+export const serializeArgument = (arg: Argument): string => {
+    return JSON.stringify(arg);
+}
+
+export const deserializeArgument = (d: string): Argument => {
+    return JSON.parse(d);
+}
+

@@ -60,7 +60,7 @@ import {Validation, ValidationResult} from "../../model/validation.model";
 import * as path from "path";
 import * as fs from "fs";
 import * as util from "util";
-import {i, w} from "../../logger";
+import {e, i, w} from "../../logger";
 import * as semver from "semver";
 import {Registry} from "../../registry";
 
@@ -73,13 +73,13 @@ export const newEventSubscriptionRegistry = (d: any, name: string, setupFn?: (v1
                 await setupFn(v1AppRouter, registry);
             }
             d.subscription = observable.pipe(
-                tap(async (e: AllEvents) => {
-                    const fn: Function = d[e.type];
+                tap(async (evt: AllEvents) => {
+                    const fn: Function = d[evt.type];
                     if (fn) {
                         try {
-                            await fn(e);
-                        } catch(e) {
-                            e(`error handling event ${e.type} on ${name}`, e);
+                            await fn(evt);
+                        } catch(err) {
+                            e(`error handling event ${evt.type} on ${name}`, err);
                         }
                     }
                 })

@@ -79,8 +79,9 @@ export class RuleEditorComponent implements OnChanges {
                     }
                 }
                 if (this.whenClauses.length <= 0) {
-                    validationErrors.missingWhenClause = true;
-                    hasError = true;
+                    // #113 "whenClause" is optional, if not presents it means "validateClause" is to be applied to all items
+                    // validationErrors.missingWhenClause = true;
+                    // hasError = true;
                 } else {
                     for (const whenClause of this.whenClauses) {
                         if (!isItemValueOperatorAndAttributeWithIdValid(whenClause)) {

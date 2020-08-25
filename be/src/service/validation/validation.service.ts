@@ -1,4 +1,10 @@
-import {Validation, ValidationError, ValidationLog, ValidationResult} from "../../model/validation.model";
+import {
+    Validation,
+    ValidationError,
+    ValidationLog,
+    ValidationLogResult,
+    ValidationResult
+} from "../../model/validation.model";
 import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {
@@ -7,6 +13,8 @@ import {
     GetAllViewValidationsEvent, GetValidationByViewIdAndValidationIdEvent, GetValidationsByViewIdEvent,
     GetViewValidationResultEvent
 } from "../event/event.service";
+import {valid} from "semver";
+import {Progress} from "../../model/progress.model";
 
 const SQL_1 = `
                 SELECT 
@@ -16,6 +24,99 @@ const SQL_1 = `
 
 const SQL_2 = `${SQL_1} AND ID=?`
 
+
+/**
+ * ==============================
+ * === getViewValidationResultLog ===
+ * ==============================
+ */
+export const getViewValidationResultLog = async (viewId: number, validationId: number, validationLogId: number = null, order: 'before' | 'after' = 'after', limit: number = 100): Promise<ValidationLogResult> => {
+    // logs of this validation
+    const progress: Progress = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`SELECT PROGRESS FROM TBL_VIEW_VALIDATION WHERE VIEW_ID=? AND ID=?`, [viewId, validationId]);
+        return (q.length && q[0].PROGRESS);
+    });
+
+    const batchTotal: number = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_VIEW_VALIDATION_LOG WHERE VIEW_VALIDATION_ID = ? `, [validationId]);
+        return q[0].COUNT;
+    });
+
+    const q3: QueryA = await doInDbConnection(async (conn: Connection) => {
+        const q3: QueryA = (await conn.query(
+            validationLogId ?
+        `
+            SELECT * FROM (
+                    SELECT 
+                        L.ID AS L_ID,
+                        L.VIEW_VALIDATION_ID AS L_VIEW_VALIDATION_ID,
+                        L.LEVEL AS L_LEVEL,
+                        L.MESSAGE AS L_MESSAGE,
+                        L.CREATION_DATE AS L_CREATION_DATE,
+                        L.LAST_UPDATE AS L_LAST_UPDATE
+                    FROM TBL_VIEW_VALIDATION_LOG AS L 
+                    WHERE L.VIEW_VALIDATION_ID = ? AND ${order == 'before' ? 'L.ID < ?' : 'L.ID > ?'}
+                    ORDER BY  L.ID DESC
+                    LIMIT ${limit}
+            ) AS L 
+            ORDER BY L.L_ID ASC
+        `:
+        `
+            SELECT * FROM (
+                    SELECT 
+                        L.ID AS L_ID,
+                        L.VIEW_VALIDATION_ID AS L_VIEW_VALIDATION_ID,
+                        L.LEVEL AS L_LEVEL,
+                        L.MESSAGE AS L_MESSAGE,
+                        L.CREATION_DATE AS L_CREATION_DATE,
+                        L.LAST_UPDATE AS L_LAST_UPDATE
+                    FROM TBL_VIEW_VALIDATION_LOG AS L 
+                    WHERE L.VIEW_VALIDATION_ID = ?
+                    ORDER BY  L.ID DESC
+                    LIMIT ${limit}
+            ) AS L 
+            ORDER BY L.L_ID ASC
+        `,
+        validationLogId ? [validationId, validationLogId] : [validationId]
+        ));
+        return q3;
+    });
+
+    const logs: ValidationLog[] = [];
+    for (const q of q3) {
+        const m_validationLog_key = `${q.L_ID}`;
+        const validationLog: ValidationLog = {
+            id: q.L_ID,
+            level: q.L_LEVEL,
+            message: q.L_MESSAGE,
+            creationDate: q.L_CREATION_DATE
+        }
+        logs.push(validationLog);
+    }
+
+    const batchFirstValidationLogId = (logs && logs.length ? logs[0].id : null);
+    const batchLastValidationLogId = (logs && logs.length ? logs[logs.length-1].id : null);
+
+    const {min: min, max: max} = await doInDbConnection(async (conn: Connection) => {
+        const q: QueryA = await conn.query(`
+            SELECT MAX(L.ID) AS MAX_ID, MIN(L.ID) AS MIN_ID FROM TBL_VIEW_VALIDATION_LOG AS L WHERE L.VIEW_VALIDATION_ID = ? 
+            `, [validationId]);
+
+        return { min: q[0].MIN_ID,  max: q[0].MAX_ID };
+    });
+
+    return {
+        batchFirstValidationLogId,
+        batchLastValidationLogId,
+        batchTotal,
+        progress,
+        max, min,
+        batchSize: limit,
+        batchHasMoreAfter: (progress === 'IN_PROGRESS' || (batchLastValidationLogId < max)),
+        batchHasMoreBefore: (batchFirstValidationLogId > min),
+        logs
+    } as ValidationLogResult;
+}
 
 
 
@@ -28,10 +129,9 @@ export const getViewValidationResult = async (viewId: number, validationId: numb
 
     const m_validationResult: Map<string /* validationId */, ValidationResult> = new Map();
     const m_validationError: Map<string /* validationErrorId */, ValidationError> = new Map();
-    const m_validationLog: Map<string /* validationLogId */, ValidationLog> = new Map();
     const validationResults: ValidationResult[] = [];
 
-    await doInDbConnection(async (conn: Connection) => {
+    const q1: QueryA = await doInDbConnection(async (conn: Connection) => {
         const q1: QueryA = (await conn.query(`
                 SELECT 
                     V.ID AS V_ID,
@@ -44,86 +144,67 @@ export const getViewValidationResult = async (viewId: number, validationId: numb
                 FROM TBL_VIEW_VALIDATION AS V
                 WHERE V.ID = ? AND V.VIEW_ID = ?
             `, [validationId, viewId]));
+        return q1;
+    });
 
-        for (const qq1 of q1) {
-            const m_validationResult_key = `${qq1.V_ID}`;
-            if (!m_validationResult.has(m_validationResult_key)) {
-                const validationResult: ValidationResult = {
-                    id : qq1.V_ID,
-                    viewId : qq1.V_VIEW_ID,
-                    name : qq1.V_NAME,
-                    description : qq1.V_DESCRIPTION,
-                    progress : qq1.V_PROGRESS,
-                    creationDate : qq1.V_CREATION_DATE,
-                    lastUpdate : qq1.V_LAST_UPDATE,
-                    logs: [],
-                    errors: []
-                };
-                m_validationResult.set(m_validationResult_key, validationResult);
-                validationResults.push(validationResult);
+    for (const qq1 of q1) {
+        const m_validationResult_key = `${qq1.V_ID}`;
+        if (!m_validationResult.has(m_validationResult_key)) {
 
-                // error of this validation
+            const validationResult: ValidationResult = {
+                id : qq1.V_ID,
+                viewId : qq1.V_VIEW_ID,
+                name : qq1.V_NAME,
+                description : qq1.V_DESCRIPTION,
+                progress : qq1.V_PROGRESS,
+                creationDate : qq1.V_CREATION_DATE,
+                lastUpdate : qq1.V_LAST_UPDATE,
+                logResult: null,
+                errors: []
+            };
+            m_validationResult.set(m_validationResult_key, validationResult);
+            validationResults.push(validationResult);
+
+            // error of this validation
+            const q2: QueryA = await doInDbConnection(async (conn: Connection) => {
                 const q2: QueryA = (await conn.query(`
-                        SELECT 
-                            E.ID AS E_ID,
-                            E.VIEW_VALIDATION_ID AS E_VIEW_VALIDATION_ID,
-                            E.RULE_ID AS E_RULE_ID,
-                            E.ITEM_ID AS E_ITEM_ID,
-                            E.MESSAGE AS E_MESSAGE,
-                            E.VIEW_ATTRIBUTE_ID AS E_VIEW_ATTRIBUTE_ID,
-                            E.LEVEL AS E_LEVEL,
-                            E.CREATION_DATE AS E_CREATION_DATE,
-                            E.LAST_UPDATE AS E_LAST_UPDATE
-                        FROM TBL_VIEW_VALIDATION_ERROR AS E 
-                        WHERE E.VIEW_VALIDATION_ID = ? 
-                    `, [validationId]));
+                    SELECT 
+                        E.ID AS E_ID,
+                        E.VIEW_VALIDATION_ID AS E_VIEW_VALIDATION_ID,
+                        E.RULE_ID AS E_RULE_ID,
+                        E.ITEM_ID AS E_ITEM_ID,
+                        E.MESSAGE AS E_MESSAGE,
+                        E.VIEW_ATTRIBUTE_ID AS E_VIEW_ATTRIBUTE_ID,
+                        E.LEVEL AS E_LEVEL,
+                        E.CREATION_DATE AS E_CREATION_DATE,
+                        E.LAST_UPDATE AS E_LAST_UPDATE
+                    FROM TBL_VIEW_VALIDATION_ERROR AS E 
+                    WHERE E.VIEW_VALIDATION_ID = ? 
+                `, [validationId]));
+                return q2;
+            });
 
-                for (const q of q2) {
-                    const m_validationError_key = `${q.E_ID}`;
-                    if (!m_validationError.has(m_validationError_key)) {
-                        const validationError: ValidationError = {
-                            id: q.E_ID,
-                            level: q.E_LEVEL,
-                            itemId: q.E_ITEM_ID,
-                            ruleId: q.E_RULE_ID,
-                            attributeId: q.E_VIEW_ATTRIBUTE_ID,
-                            message: q.E_MESSAGE,
-                        };
-                        m_validationError.set(m_validationError_key, validationError);
-                        m_validationResult.get(m_validationResult_key).errors.push(validationError);
-                    }
-                }
-
-
-                // logs of this validation
-                const q3: QueryA = (await conn.query(`
-                        SELECT 
-                            L.ID AS L_ID,
-                            L.VIEW_VALIDATION_ID AS L_VIEW_VALIDATION_ID,
-                            L.LEVEL AS L_LEVEL,
-                            L.MESSAGE AS L_MESSAGE,
-                            L.CREATION_DATE AS L_CREATION_DATE,
-                            L.LAST_UPDATE AS L_LAST_UPDATE
-                        FROM TBL_VIEW_VALIDATION_LOG AS L 
-                        WHERE L.VIEW_VALIDATION_ID = ?
-                    `, [validationId]));
-
-                for (const q of q3) {
-                    const m_validationLog_key = `${q.L_ID}`;
-                    if (!m_validationLog.has(m_validationLog_key)) {
-                        const validationLog: ValidationLog = {
-                            id: q.L_ID,
-                            level: q.L_LEVEL,
-                            message: q.L_MESSAGE,
-                            creationDate: q.L_CREATION_DATE
-                        }
-                        m_validationLog.set(m_validationLog_key, validationLog);
-                        m_validationResult.get(m_validationResult_key).logs.push(validationLog);
-                    }
+            for (const q of q2) {
+                const m_validationError_key = `${q.E_ID}`;
+                if (!m_validationError.has(m_validationError_key)) {
+                    const validationError: ValidationError = {
+                        id: q.E_ID,
+                        level: q.E_LEVEL,
+                        itemId: q.E_ITEM_ID,
+                        ruleId: q.E_RULE_ID,
+                        attributeId: q.E_VIEW_ATTRIBUTE_ID,
+                        message: q.E_MESSAGE,
+                    };
+                    m_validationError.set(m_validationError_key, validationError);
+                    m_validationResult.get(m_validationResult_key).errors.push(validationError);
                 }
             }
+
+            // get validation logs
+            const logResult: ValidationLogResult = await getViewValidationResultLog(viewId, validationId);
+            validationResult.logResult = logResult;
         }
-    });
+    }
 
     const r: ValidationResult[] = validationResults;
     const _r: ValidationResult = (r && r.length ? r[0] : null);
