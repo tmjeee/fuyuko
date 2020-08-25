@@ -13,15 +13,24 @@ import {
     addCategory,
     AddCategoryInput,
     addItem,
-    addItemImage, addItemToPricingStructure, addItemToViewCateogry, addOrUpdatePricingStructures, addOrUpdateRules,
-    getItemByName, getPricingStructureByName,
-    getViewCategoryByName, setPrices
+    addItemImage,
+    addItemToPricingStructure,
+    addItemToViewCateogry,
+    addOrUpdatePricingStructures,
+    addOrUpdateRules,
+    getGroupByName,
+    getItemByName,
+    getPricingStructureByName,
+    getViewCategoryByName,
+    linkPricingStructureWithGroupId,
+    setPrices
 } from "../../service";
 import {Item} from "../../model/item.model";
 import {createNewItem} from "../../shared-utils/ui-item-value-creator.utils";
 import {Rule, ValidateClause} from "../../model/rule.model";
 import {AddOrUpdatePricingStructureInput} from "../../service/pricing-structure.service";
 import {PricingStructure} from "../../model/pricing-structure.model";
+import {Group, GROUP_ADMIN, GROUP_PARTNER} from "../../model/group.model";
 
 export const profiles = [UPDATER_PROFILE_LEEFAHMEE_DATA];
 
@@ -424,6 +433,17 @@ export const update = async () => {
 };
 
 const runImport = async () => {
+
+    // find groups
+    const adminGroup: Group = (await getGroupByName(GROUP_ADMIN));
+    checkNotNull(adminGroup, `Failed to find admin group`);
+    const partnerGroup: Group = (await getGroupByName(GROUP_PARTNER));
+    checkNotNull(partnerGroup, `Failed to find partner group`);
+
+    const adminGroupId: number = adminGroup.id;
+    const partnerGroupId: number = partnerGroup.id;
+
+
     // create view
     const viewName = 'Lee Fah Mee';
     let view: View = await getViewByName(viewName);
@@ -481,7 +501,7 @@ const runImport = async () => {
         attributes = await getAttributesInView(view.id);
     }
 
-    // pricing
+    // pricing structure
     const PRICING_STRUCTURE_NAME = `Lee Fah Mee Standard Pricing Structure`;
     const errs: string[] = await addOrUpdatePricingStructures([{
         id: -1, name: PRICING_STRUCTURE_NAME, description: 'Lee Fah Mee collections standard Pricing Structure', status: "ENABLED", viewId: view.id
@@ -489,6 +509,12 @@ const runImport = async () => {
     checkErrors(errs, `Failed to create Lee Fah Mee pricing structure`);
     const pricingStructure: PricingStructure = await getPricingStructureByName(view.id, PRICING_STRUCTURE_NAME);
     checkNotNull(pricingStructure, `Failed to find pricing structure ${pricingStructure}`);
+
+    // link pricing structure to group
+    const errors1 = await linkPricingStructureWithGroupId(pricingStructure.id, adminGroupId);
+    checkErrors(errors1, `Failed to link group ${adminGroup.name} with Id ${adminGroupId} with pricing structure ${pricingStructure.id}`);
+    const errors2 = await linkPricingStructureWithGroupId(pricingStructure.id, partnerGroupId);
+    checkErrors(errors2, `Failed to link group ${partnerGroup.name} with Id ${partnerGroupId} with pricing structure ${pricingStructure.id}`);
 
     // create items & images for all files
     const sizeAttribute: Attribute = await getAttributeInViewByName(view.id, 'Size');
@@ -544,6 +570,7 @@ const runImport = async () => {
         const r: boolean = await addItemToPricingStructure(view.id, pricingStructure.id, item.id);
         checkTrue(r, `Failed to add item ${item.name} with id ${item.id} to pricing structure ${pricingStructure.name} with id ${pricingStructure.id}`);
 
+        // set item pricing
         const errs2: string[] = await setPrices([{
             pricingStructureId: pricingStructure.id,
             item: {price: m.price, itemId: item.id, country: m.country}
