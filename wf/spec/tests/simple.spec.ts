@@ -28,7 +28,7 @@ describe('simple', () => {
         while(!(await engine.next()).end) {}
     });
 
-    fit('test #2', async () => {
+    it('test #2', async () => {
         /**
          *  <start> -> step1  +-(event1)->  step2 +-> step5 -> <end>
          *                    \-(event3)->  step3 +
