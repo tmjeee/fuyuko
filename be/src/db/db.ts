@@ -44,6 +44,7 @@ export const reset = async () => {
         port: config["db-port"],
         password: config["db-password"],
         database: config["db-database"],
+        resetAfterUse: false,
     } as PoolConfig;
     cfg.pool &&  (await cfg.pool.end());
     cfg.pool = await createPool(poolConfig);
