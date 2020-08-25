@@ -1,9 +1,9 @@
 import {UPDATER_PROFILE_CARS_DATA} from "../updater";
 import {View} from "../../model/view.model";
 import {getViewByName, addOrUpdateViews} from "../../service/view.service";
-import {checkErrors, checkNotNull} from "../script-util";
+import {checkErrors, checkNotNull, checkTrue} from "../script-util";
 import {Attribute} from "../../model/attribute.model";
-import {getAttributesInView, saveAttributes} from "../../service/attribute.service";
+import {getAttributeInViewByName, getAttributesInView, saveAttributes} from "../../service/attribute.service";
 import {i, l} from "../../logger/logger";
 import Path from "path";
 import util from "util";
@@ -11,18 +11,23 @@ import fs from "fs";
 import {Item} from "../../model/item.model";
 import {
     addCategory,
-    AddCategoryInput,
+    AddCategoryInput, addItemToPricingStructure,
     addItemToViewCateogry,
-    addOrUpdateItem,
-    getItemByName,
-    getViewCategoryByName
+    addOrUpdateItem, addOrUpdatePricingStructures, addOrUpdateRules,
+    getItemByName, getPricingStructureByName,
+    getViewCategoryByName, setPrices
 } from "../../service";
 import {createNewItem} from "../../shared-utils/ui-item-value-creator.utils";
 import {setItemNumberValue, setItemStringValue} from "../../shared-utils/ui-item-value-setter.util";
 import {addItemImage} from "../../service/item-image.service";
 import {Category} from "../../model/category.model";
+import {Rule, ValidateClause} from "../../model/rule.model";
+import {AddOrUpdatePricingStructureInput} from "../../service/pricing-structure.service";
+import {PricingStructure} from "../../model/pricing-structure.model";
 
 export const profiles = [UPDATER_PROFILE_CARS_DATA];
+
+const prices: number[] = [100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000];
 
 
 export const update = async () => {
@@ -51,24 +56,27 @@ const runImport = async () => {
 
 
     // create attributes
+    const attYear = `Year`;
+    const attModel = `Model`;
+    const attMake = `Make`;
     let attributes: Attribute[] = await getAttributesInView(view.id);
     if (!attributes || !attributes.length) {
         const errors: string[] = await saveAttributes(view.id, [
             {
                 id: -1,
-                name: `Make`,
+                name: attMake,
                 type: 'string',
                 description: 'Make description'
             }  as Attribute,
             {
                 id: -1,
-                name: `Model`,
+                name: attModel,
                 type: 'string',
                 description: 'Model description'
             } as Attribute,
             {
                 id: -1,
-                name: 'Year',
+                name: attYear,
                 type: 'number',
                 description: 'Year description'
             } as Attribute
@@ -76,12 +84,30 @@ const runImport = async () => {
         checkErrors(errors, `Failed ot create attributes for Cars view`);
         attributes = await getAttributesInView(view.id);
     }
+    const makeAttribute = await getAttributeInViewByName(view.id, attMake);
+    checkNotNull(makeAttribute, `Failed to retrieve ${attMake} attribute`);
+    const modelAttribute = await getAttributeInViewByName(view.id, attModel);
+    checkNotNull(modelAttribute, `Failed to retrieve ${attModel} attribute`);
+    const yearAttribute = await getAttributeInViewByName(view.id, attYear);
+    checkNotNull(yearAttribute, `Failed to retrieve ${attYear} attribute`);
+
+
+    // pricing
+    const PRICING_STRUCTURE_NAME = `Cars Standard Pricing Structure`;
+    const errs: string[] = await addOrUpdatePricingStructures([{
+        id: -1, name: PRICING_STRUCTURE_NAME, description: 'Cars collections standard Pricing Structure', status: "ENABLED", viewId: view.id
+    } as AddOrUpdatePricingStructureInput])
+    checkErrors(errs, `Failed to create cars pricing structure`);
+    const pricingStructure: PricingStructure = await getPricingStructureByName(view.id, PRICING_STRUCTURE_NAME);
+    checkNotNull(pricingStructure, `Failed to find pricing structure ${pricingStructure}`);
 
 
     // create items & images for all files & categories
     const pathToAssetsDir: string = Path.join(__dirname, '../assets/cars-data-images');
     const filesInDir: string[] = await util.promisify(fs.readdir)(pathToAssetsDir);
+    let i = -1;
     for (const fileInDir of filesInDir) {
+        i++;
         const filename = fileInDir.substring(0, fileInDir.indexOf('.'));
         const fileSegments: string[] = fileInDir.split('_');
         const make = fileSegments[0];
@@ -144,6 +170,16 @@ const runImport = async () => {
 
             const err3: string[] = await addItemToViewCateogry(modelCategory.id, item.id);
             checkErrors(err3, `Failed to add item ${item.name} to category ${modelCategory.name} under parent Category ${yearCategory.name} under parent Category ${makeCategory.name}`);
+
+
+            const r: boolean = await addItemToPricingStructure(view.id, pricingStructure.id, item.id);
+            checkTrue(r, `Failed to add item ${item.name} with id ${item.id} to pricing structure ${pricingStructure.name} with id ${pricingStructure.id}`);
+
+            const errs: string[] = await setPrices([{
+                pricingStructureId: pricingStructure.id,
+                item: {price: prices[i%prices.length], itemId: item.id, country: 'AUD'}
+            }]);
+            checkErrors(errs, `Failed to set price for item id ${item.id} named ${item.name}`);
         }
 
         const image: Buffer = await util.promisify(fs.readFile)(Path.join(pathToAssetsDir, fileInDir));
@@ -152,6 +188,64 @@ const runImport = async () => {
             throw new Error(`Failed to add image for item ${item.name}`);
         }
     }
+
+
+    // create rules
+    const err: string[] = await addOrUpdateRules(view.id, [
+        {
+           id: -1,
+           name: `${attMake} should not be empty`,
+           description: `validate that ${attMake} should not be empty`,
+           status: 'ENABLED',
+           level: 'ERROR',
+           whenClauses: [],
+           validateClauses: [
+               {
+                  id: -1,
+                  attributeId: makeAttribute.id,
+                  attributeName: makeAttribute.name,
+                  attributeType: makeAttribute.type,
+                  operator: 'not empty'
+               } as ValidateClause
+           ]
+        } as Rule,
+        {
+            id: -1,
+            name: `${attModel} should not be empty`,
+            description: `validate that ${attModel} should not be empty`,
+            status: 'ENABLED',
+            level: 'ERROR',
+            whenClauses: [],
+            validateClauses: [
+                {
+                    id: -1,
+                    attributeId: modelAttribute.id,
+                    attributeName: modelAttribute.name,
+                    attributeType: modelAttribute.type,
+                    operator: 'not empty'
+                } as ValidateClause
+            ]
+        } as Rule,
+        {
+            id: -1,
+            name: `${attYear} should not be empty`,
+            description: `validate that ${attYear} should not be empty`,
+            status: 'ENABLED',
+            level: 'ERROR',
+            whenClauses: [],
+            validateClauses: [
+                {
+                    id: -1,
+                    attributeId: yearAttribute.id,
+                    attributeName: yearAttribute.name,
+                    attributeType: yearAttribute.type,
+                    operator: 'not empty'
+                } as ValidateClause
+            ]
+        } as Rule,
+    ]);
+    checkErrors(err, `Failed to create rules`);
+
 
 
 
