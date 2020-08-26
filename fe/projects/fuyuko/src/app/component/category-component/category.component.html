@@ -1,7 +1,7 @@
 <div class="category-component">
-    <!--app-loading [show]="loading"></app-loading-->
     <div fxLayout="row" fxLayoutGap="15px">
         <div fxFlex="0 0 20%"
+             class="category-tree"
              [ngStyle]="{display: (showCategorySidebar ? 'block' : 'none'), visibility: (showCategorySidebar ? 'visible' : 'hidden')}">
             <app-category-tree [categoriesWithItems]="categoriesWithItems"
                                (events)="onCategoryTreeEvent($event)">

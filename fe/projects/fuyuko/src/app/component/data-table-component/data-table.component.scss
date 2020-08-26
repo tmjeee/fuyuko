@@ -52,14 +52,14 @@
           mat-header-cell {
             margin: 5px;
             &.selection-header  {
-              min-width: 50px;
+              flex: 0 0 50px;
               display: flex;
               justify-content: flex-start;
               align-content: center;
               line-height: 50px;
             }
             &.actions-header {
-              min-width: 100px;
+              flex: 1 0 100px;
               display: flex;
               justify-content: flex-start;
               align-content: center;
@@ -67,7 +67,7 @@
             }
 
             &.expansion-header {
-              min-width: 50px;
+              flex: 1 0 50px;
               display: flex;
               justify-content: flex-start;
               align-content: center;
@@ -76,7 +76,7 @@
             }
 
             &.attribute-header {
-              min-width: 150px;
+              flex: 1 0 150px;
             }
           }
         }
@@ -87,14 +87,14 @@
             margin: 5px;
             align-items: stretch;
             &.selection {
-              min-width: 50px;
+              flex: 0 0 50px;
               display: flex;
               justify-content: flex-start;
               align-items: center;
               line-height: 50px;
             }
             &.actions {
-              min-width: 100px !important;
+              flex: 1 0 100px !important;
               display: flex;
               justify-content: flex-start;
               align-items: center;
@@ -104,7 +104,7 @@
               }
             }
             &.expansion {
-              min-width: 50px;
+              flex: 1 0 50px;
               display: flex;
               justify-content: flex-start;
               align-items: center;
@@ -155,7 +155,7 @@
               }
             }
             &.attribute {
-              min-width: 150px;
+              flex: 1 0 150px;
             }
           }
         }
