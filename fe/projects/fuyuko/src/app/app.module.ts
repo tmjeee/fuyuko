@@ -153,6 +153,12 @@ import {LoadingService} from "./service/loading-service/loading.service";
 import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-bulk-edit.page";
 import {CustomBulkEditService} from "./service/custom-bulk-edit-service/custom-bulk-edit.service";
 import config from './utils/config.util';
+import {WorkflowLayoutComponent} from "./layout/workflow-layout/workflow.layout";
+import {WorkflowListingPageComponent} from "./page/workflow-listing-page/workflow-listing.page";
+import {WorkflowMappingPageComponent} from "./page/workflow-mapping-page/workflow-mapping.page";
+import {WorkflowTaskPageComponent} from "./page/workflow-task-page/workflow-task.page";
+import {WorkflowInstanceDetailsPageComponent} from "./page/workflow-instance-details-page/workflow-instance-details.page";
+import {WorkflowHelpPageComponent} from "./page/workflow-help-page/workflow-help.page";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -206,6 +212,7 @@ const appInitializer = (settingsService: SettingsService,
     PartnerLayoutComponent,
     PriceLayoutComponent,
     AdministrationLayoutComponent,
+    WorkflowLayoutComponent,
 
     // pages
     LoginPageComponent,
@@ -264,6 +271,11 @@ const appInitializer = (settingsService: SettingsService,
     AuditLogPageComponent,
     AdministrationHelpPageComponent,
     CustomBulkEditPageComponent,
+    WorkflowListingPageComponent,
+    WorkflowMappingPageComponent,
+    WorkflowTaskPageComponent,
+    WorkflowInstanceDetailsPageComponent,  
+    WorkflowHelpPageComponent,
   ],
   imports: [
     BrowserModule,

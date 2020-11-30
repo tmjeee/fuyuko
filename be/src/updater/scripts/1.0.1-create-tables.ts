@@ -63,11 +63,95 @@ export const update = async () => {
    await TBL_LOOKUP_VIEW_CATEGORY_ITEM();
    await TBL_FORGOT_PASSWORD();
    await TBL_FAVOURITE_ITEM();
+   await TBL_WORKFLOW();
+   await TBL_WORKFLOW_MAPPING();
+   await TBL_WORKFLOW_INSTANCE();
+   await TBL_WORKFLOW_INSTANCE_LOG();
+   await TBL_WORKFLOW_INSTANCE_PARAM();
 
    await ADD_FK_CONSTRAINT();
    await ADD_INDEXES();
 
    i(`done running update on ${__filename}`);
+};
+
+const TBL_WORKFLOW = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW`);
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(200),
+            DESCRIPTION VARCHAR(500),
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+};
+
+const TBL_WORKFLOW_MAPPING = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW_MAPPING`);      
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_MAPPING (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            VIEW_ID INT,
+            WORKFLOW_ID INT,
+            TYPE VARCHAR(200),
+            ACTION VARCHAR(200),
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+};
+
+const TBL_WORKFLOW_INSTANCE = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW_INSTANCE`);
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_INSTANCE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            WORKFLOW_MAPPING_ID INT,
+            DATA TEXT,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+};
+
+const TBL_WORKFLOW_INSTANCE_LOG = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW_INSTANCE_LOG`);
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_INSTANCE_LOG (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            WORKFLOW_INSTANCE_ID INT,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            LOG TEXT 
+         );
+      `);
+   }); 
+};
+
+const TBL_WORKFLOW_INSTANCE_PARAM = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW_INSTANCE_PARAM`);  
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_INSTANCE_PARAM (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            WORKFLOW_INSTANCE_ID INT,
+            NAME VARCHAR(200),
+            VALUE TEXT,
+            TYPE VARCHAR(200),
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
 };
 
 const TBL_FAVOURITE_ITEM = async () => {
@@ -1034,7 +1118,7 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_DATA_EXPORT ADD CONSTRAINT \`fk_tbl_data_export-1\` FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
       await conn.query(`ALTER TABLE TBL_DATA_EXPORT_FILE ADD CONSTRAINT \`fk_tbl_data_export_file-1\` FOREIGN KEY (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID) ON DELETE CASCADE`);
 
-      await conn.query(`ALTER TABLE TBL_JOB_LOG ADD CONSTRAINT \`fk_tbl_job_log-1\` FOREIGN KEY (JOB_ID) REFERENCES TBL_JOB(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_JOB_LOG ADD CONSTRAINT \`fk_tbl_job_log-1\` FOREIGN KEY gg(JOB_ID) REFERENCES TBL_JOB(ID) ON DELETE CASCADE`);
 
       await conn.query(`ALTER TABLE TBL_USER_SETTING ADD CONSTRAINT \`fk_tbl_user_setting-1\` FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE`);
 
@@ -1057,9 +1141,14 @@ const ADD_FK_CONSTRAINT = async () => {
 
       await conn.query(`ALTER TABLE TBL_FAVOURITE_ITEM ADD CONSTRAINT \`fk_tbl_favourite_item-1\` FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_FAVOURITE_ITEM ADD CONSTRAINT \`fk_tbl_favourite_item-2\` FOREIGN KEY (ITEM_ID) REFERENCES TBL_ITEM(ID) ON DELETE CASCADE`);
-
+      
+      await conn.query('ALTER TABLE TBL_WORKFLOW_MAPPING ADD CONSTRAINT \`fk_tbl_workflow_mapping-1\` FOREIGN KEY (WORKFLOW_ID) REFERENCES TBL_WORKFLOW(ID) ON DELETE CASCADE');
+      await conn.query(`ALTER TABLE TBL_WORKFLOW_MAPPING ADD CONSTRAINT \`fk_tbl_workflow_mapping-2\` FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID) ON DELETE CASCADE`);
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE ADD CONSTRAINT \`fk_tbl_workflow_instance-1\` FOREIGN KEY (WORKFLOW_MAPPING_ID) REFERENCES TBL_WORKFLOW_MAPPING(ID) ON DELETE CASCADE');
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE_LOG ADD CONSTRAINT \`fk_tbl_workflow_instance_log-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE');
+      await conn.query(`ALTER TABLE TBL_WORKFLOW_INSTANCE_PARAM ADD CONSTRAINT \`fk_tbl_workflow_instance_param-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE`);
    });
-}
+};
 
 
 

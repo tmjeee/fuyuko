@@ -1,4 +1,5 @@
-import {Argument, createEngine, createState} from "../../src";
+import {Argument, createEngine, createState, EngineResponse, State} from "../../src";
+import {InternalEngine} from "../../src/engine-impl";
 
 describe('simple', () => {
     it('test #1', async () => {
@@ -58,5 +59,120 @@ describe('simple', () => {
         ;
 
         while(!(await engine.next()).end) {}
+    });
+
+    fit('test #3', async () => {
+        const state1 = createState(`step1`, () => Promise.resolve(`e1`));
+        const state2 = createState(`step2`, () => Promise.resolve(`e2`));
+        const state3 = createState(`step3`, () => Promise.resolve(`e3`));
+        const state4 = createState(`step4`, () => Promise.resolve(`e4`));
+        const state5 = createState(`step5`, () => Promise.resolve(`e5`));
+
+        state1.on().to(state2);
+        state2.on().to(state3);
+        state3.on().to(state4);
+        state4.on().to(state5);
+
+        const engine = createEngine()
+            .startsWith(state1)
+            .register(state2)
+            .register(state3)
+            .register(state4)
+            .endsWith(state5)
+            .init({} as Argument)
+        ;
+
+
+        const _engine: InternalEngine = engine as InternalEngine;
+        
+        {   // initial
+            console.log('***** initial ******');
+            const data: string = _engine.serialize();
+            console.log('data', data);
+            engine.deserialize(data);
+            console.log('startState', _engine.startState.name);
+            console.log('states', _engine.states.map((s: State) => s.name));
+            console.log('endState', _engine.endState.name);
+            console.log('args', _engine.args);
+            console.log('stateMap', _engine.stateMap.keys());
+            console.log('status', _engine.status);
+            console.log('currentState', _engine.currentState.name);
+        }
+        
+        {   // step 1
+            console.log('***** step 1 ******');
+            const r: EngineResponse = await engine.next();
+            const data: string = _engine.serialize();
+            console.log('data', data);
+            engine.deserialize(data);
+            console.log('startState', _engine.startState.name);
+            console.log('states', _engine.states.map((s: State) => s.name));
+            console.log('endState', _engine.endState.name);
+            console.log('args', _engine.args);
+            console.log('stateMap', _engine.stateMap.keys());
+            console.log('status', _engine.status);
+            console.log('currentState', _engine.currentState.name);
+        } 
+        
+        {   // step 2
+            console.log('***** step 2 ******');
+            const r: EngineResponse = await engine.next();
+            const data: string = _engine.serialize();
+            console.log('data', data);
+            engine.deserialize(data);
+            console.log('startState', _engine.startState.name);
+            console.log('states', _engine.states.map((s: State) => s.name));
+            console.log('endState', _engine.endState.name);
+            console.log('args', _engine.args);
+            console.log('stateMap', _engine.stateMap.keys());
+            console.log('status', _engine.status);
+            console.log('currentState', _engine.currentState.name);
+        }
+
+
+        {   // step 3
+            console.log('***** step 3 ******');
+            const r: EngineResponse = await engine.next();
+            const data: string = _engine.serialize();
+            console.log('data', data);
+            engine.deserialize(data);
+            console.log('startState', _engine.startState.name);
+            console.log('states', _engine.states.map((s: State) => s.name));
+            console.log('endState', _engine.endState.name);
+            console.log('args', _engine.args);
+            console.log('stateMap', _engine.stateMap.keys());
+            console.log('status', _engine.status);
+            console.log('currentState', _engine.currentState.name);
+        }
+
+        {   // step 4
+            console.log('***** step 4 ******');
+            const r: EngineResponse = await engine.next();
+            const data: string = _engine.serialize();
+            console.log('data', data);
+            engine.deserialize(data);
+            console.log('startState', _engine.startState.name);
+            console.log('states', _engine.states.map((s: State) => s.name));
+            console.log('endState', _engine.endState.name);
+            console.log('args', _engine.args);
+            console.log('stateMap', _engine.stateMap.keys());
+            console.log('status', _engine.status);
+            console.log('currentState', _engine.currentState.name);
+        }
+
+        {   // step 5
+            console.log('***** step 5 ******');
+            const r: EngineResponse = await engine.next();
+            const data: string = _engine.serialize();
+            console.log('data', data);
+            engine.deserialize(data);
+            console.log('startState', _engine.startState.name);
+            console.log('states', _engine.states.map((s: State) => s.name));
+            console.log('endState', _engine.endState.name);
+            console.log('args', _engine.args);
+            console.log('stateMap', _engine.stateMap.keys());
+            console.log('status', _engine.status);
+            console.log('currentState', _engine.currentState.name);
+        }
     });
 });

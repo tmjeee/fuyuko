@@ -26,6 +26,7 @@ import {
     EventSubscriptionRegistry,
     registerEventsSubscription
 } from "./service/event/event.service";
+import {runCustomWorkflowSync} from "./custom-workflow/custom-workflow-executor";
 
 i(`Run Timezoner`);
 runTimezoner(config.timezone);
@@ -101,6 +102,14 @@ const fns: PromiseFn[] = [
         return runCustomBulkEditSync()
             .then((_: any) => {
                 i(`done with custom bulk edit sync`);
+            });
+    },
+    
+    () => {
+        i(`running workflow sync`);
+        return runCustomWorkflowSync()
+            .then((_: any) => {
+                i(`done with workflow sync`);
             });
     },
 
