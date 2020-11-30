@@ -44,7 +44,7 @@ export class InternalState implements State, NextState {
 
     serialize(): string {
         return JSON.stringify({
-            name,
+            name: this.name,
             currentEvent: this.currentEvent,
             transition: [...this.map.entries()].reduce((acc: {[k: string]: any}, e: [string, State]) => {
                 acc[e[0]] = e[1].serialize();
@@ -87,7 +87,7 @@ export class InternalEngine implements Engine {
           startState: this.startState.serialize(),
           states: this.states.map((s: State) => s.serialize()),
           endState: this.endState.serialize(),
-          arg: this.args.serialize(),
+          arg: serializeArgument(this.args),
           transitionMap: [...this.transitionMap.entries()].reduce((acc: {[k: string]: any}, e: [string, string]) => {
               return acc;
           }, {}),
@@ -111,7 +111,10 @@ export class InternalEngine implements Engine {
            currentState: string
         } = JSON.parse(data);
 
+        // startState
         this.startState.deserialize(d.startState);
+        
+        // states
         for (const s in d.states) {
            const _st: SerializedState = JSON.parse(s);
            const sta: State = this.states.find((st: State) => st.name === _st.name);
@@ -119,17 +122,27 @@ export class InternalEngine implements Engine {
                sta.deserialize(s);
            }
         }
+        
+        // endState
         this.endState.deserialize(d.endState);
+        
+        // args
         this.args = deserializeArgument(d.args);
         for (const t in d.transitionMap) {
             this.transitionMap.set(t, d.transitionMap[t]);
         }
+        
+        // stateMap
         for (const t in d.stateMap) {
             if (this.stateMap.has(t)) {
                 this.stateMap.get(t).deserialize(d.stateMap[t]);
             }
         }
+        
+        // status
         this.status = d.status as EngineStatus;
+        
+        // currentState
         this.currentState.deserialize(d.currentState);
     }
 
@@ -188,7 +201,7 @@ export class InternalEngine implements Engine {
 
         const currentState: InternalState = this.currentState as InternalState;
         try {
-            const event: string = await currentState.fn();
+            const event: string = await currentState.fn(this.args);
             console.log('**', currentState.name);
 
             if (currentState.name === (this.endState as InternalState).name) { // end

@@ -65,6 +65,12 @@ import {AdministrationLayoutComponent} from "./layout/administration-layout/admi
 import {AuditLogPageComponent} from "./page/audit-log-page/audit-log.page";
 import {AdministrationHelpPageComponent} from "./page/administration-help-page/administration-help.page";
 import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-bulk-edit.page";
+import {WorkflowLayoutComponent} from "./layout/workflow-layout/workflow.layout";
+import {WorkflowListingPageComponent} from "./page/workflow-listing-page/workflow-listing.page";
+import {WorkflowMappingPageComponent} from "./page/workflow-mapping-page/workflow-mapping.page";
+import {WorkflowTaskPageComponent} from "./page/workflow-task-page/workflow-task.page";
+import {WorkflowInstanceDetailsPageComponent} from "./page/workflow-instance-details-page/workflow-instance-details.page";
+import {WorkflowHelpPageComponent} from "./page/workflow-help-page/workflow-help.page";
 
 const routes: Routes = [
 
@@ -100,7 +106,7 @@ const routes: Routes = [
     redirectTo: '/login-layout/reset-password/:code'
   },
 
-
+    
   // login-layout
  {
    path: 'login-layout',
@@ -133,7 +139,6 @@ const routes: Routes = [
      } as Route,
    ]
  } as Route,
-
 
   // partner-layout
   {
@@ -207,6 +212,64 @@ const routes: Routes = [
       }
     ]
   } as Route,
+
+
+  // workflow-layout
+  {
+    path: 'workflow-layout',
+    canActivate: [AuthGuard],
+    component: WorkflowLayoutComponent,
+    data: {
+      sideNav: 'workflow'
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/workflow-layout/(workflow-listing//help:workflow-help)'
+      },
+      {
+        path: 'workflow-listing',
+        canActivate: [AuthGuard],
+        component: WorkflowListingPageComponent,
+        data: {
+          subSideNav: 'workflowListing'
+        }
+      } as Route,
+      {
+        path: 'workflow-mapping',
+        canActivate: [AuthGuard],
+        component: WorkflowMappingPageComponent,
+        data: {
+          subSideNav: 'workflowMapping'
+        }
+      } as Route,
+      {
+        path: 'workflow-task',
+        canActivate: [AuthGuard],
+        component: WorkflowTaskPageComponent,
+        data: {
+          subSideNav: 'workflowTask'
+        }
+      },
+      {
+        path: 'workflow-instance-details' ,
+        canActivate: [AuthGuard],
+        component: WorkflowInstanceDetailsPageComponent,
+        data: {
+          subSideNav: 'workflowInstanceDetails'
+        }
+      },
+      {
+        path: 'workflow-help' ,
+        canActivate: [AuthGuard],
+        component: WorkflowHelpPageComponent,
+        outlet: 'help'
+      }
+    ]
+  },
+
+
 
   // administration-layout
   {

@@ -4,6 +4,7 @@ import {AttributeType} from "../model/attribute.model";
 import {OperatorType} from "../model/operator.model";
 import {RuleLevel} from "../model/rule.model";
 import {Status} from "../model/status.model";
+import {Argument, Engine} from "../wf";
 
 
 
@@ -163,6 +164,11 @@ export interface WhenClauseMetadataEntry2 {
 }
 
 
+// ===== workflow ================
+
+export interface WorkflowScript {
+    createEngine(args?: Argument): Engine;
+}
 
 
 

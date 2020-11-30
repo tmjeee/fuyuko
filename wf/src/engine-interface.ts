@@ -21,7 +21,7 @@ export interface Argument {
 }
 
 export interface StateProcessFn  {
-    ():  Promise<string> | null | undefined;
+    (arg: Argument):  Promise<string> | null | undefined;
 }
 
 export interface State {
