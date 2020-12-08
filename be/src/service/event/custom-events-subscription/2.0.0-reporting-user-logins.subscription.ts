@@ -374,16 +374,18 @@ export default s;
 const lock = new Lock();
 
 const updateLoginInfos = async (user: User) => {
-    await lock.doInLock(async () => {
-        await doInDbConnection(async (conn: Connection) => {
-            const m = moment();
-            const d = moment(m).startOf('day');
-            const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_REPORTING_USER_LOGINS WHERE \`DATE\`=? AND USER_ID=? `, [d.toDate(), user.id]);
-            if (q[0].COUNT <= 0) { // this user access has not been logged yet
-                await conn.query(`INSERT INTO TBL_REPORTING_USER_LOGINS (\`DATE\`, \`DATETIME\`, USER_ID) VALUES (?, ?, ?)`, [d.toDate(), m.toDate(), user.id])
-            }
+    if (user) {
+        await lock.doInLock(async () => {
+            await doInDbConnection(async (conn: Connection) => {
+                const m = moment();
+                const d = moment(m).startOf('day');
+                const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_REPORTING_USER_LOGINS WHERE \`DATE\`=? AND USER_ID=? `, [d.toDate(), user.id]);
+                if (q[0].COUNT <= 0) { // this user access has not been logged yet
+                    await conn.query(`INSERT INTO TBL_REPORTING_USER_LOGINS (\`DATE\`, \`DATETIME\`, USER_ID) VALUES (?, ?, ?)`, [d.toDate(), m.toDate(), user.id])
+                }
+            });
         });
-    });
+    }
 }
 
 const autoCreateTables = async () => {
