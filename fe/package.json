@@ -39,7 +39,7 @@
     "moment-timezone": "^0.5.25",
     "normalize.css": "^8.0.1",
     "numeral": "^2.0.6",
-    "rxjs": "~6.5.4",
+    "rxjs": "~6.6.3",
     "sprintf": "^0.1.5",
     "tslib": "^2.0.0",
     "uuid": "^3.3.3",
