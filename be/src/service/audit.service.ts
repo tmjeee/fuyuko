@@ -7,58 +7,60 @@ import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET} from "../util/utils";
 
 
-/**
- * ================
- * === auditLog ===
- * ================
- */
 export type AuditLevel = Level;
 export type AuditCategory = AuditCategory;
-export const auditLogDebug = async (message: string, category: AuditCategory = "APP") => {
-    auditLog(message, category, 'DEBUG');
-}
-export const auditLogInfo = async (message: string, category: AuditCategory = "APP") => {
-    auditLog(message, category, 'INFO');
-}
-export const auditLogWarn = async (message: string, category: AuditCategory = "APP") => {
-    auditLog(message, category, 'WARN');
-}
-export const auditLogError = async (message: string, category: AuditCategory = "APP") => {
-    auditLog(message, category, 'ERROR');
-}
-export const auditLog = async (message: string, category: AuditCategory = "APP", level: AuditLevel = "INFO") => {
-    await doInDbConnection(async (conn: Connection) => {
-        const threadLocalStore: ThreadLocalStore = getThreadLocalStore();
-        const reqUuid = threadLocalStore ? threadLocalStore.reqUuid : null;
-        const userId = threadLocalStore ? threadLocalStore.jwtPayload ? threadLocalStore.jwtPayload.user ? threadLocalStore.jwtPayload.user.id : null : null : null;
-        const q: QueryResponse = await conn.query(`INSERT INTO TBL_AUDIT_LOG (CATEGORY, LEVEL, REQUEST_UUID, USER_ID, LOG) VALUES (?,?,?,?,?)`,
-            [category, level, reqUuid, userId, message]);
-    });
-}
+
+class AuditService {
+    /**
+     * ================
+     * === auditLog ===
+     * ================
+     */
+    async auditLogDebug(message: string, category: AuditCategory = "APP") {
+        auditLog(message, category, 'DEBUG');
+    }
+    async auditLogInfo(message: string, category: AuditCategory = "APP") {
+        auditLog(message, category, 'INFO');
+    }
+    async auditLogWarn(message: string, category: AuditCategory = "APP") {
+        auditLog(message, category, 'WARN');
+    }
+    async auditLogError(message: string, category: AuditCategory = "APP") {
+        auditLog(message, category, 'ERROR');
+    }
+    async auditLog(message: string, category: AuditCategory = "APP", level: AuditLevel = "INFO") {
+        await doInDbConnection(async (conn: Connection) => {
+            const threadLocalStore: ThreadLocalStore = getThreadLocalStore();
+            const reqUuid = threadLocalStore ? threadLocalStore.reqUuid : null;
+            const userId = threadLocalStore ? threadLocalStore.jwtPayload ? threadLocalStore.jwtPayload.user ? threadLocalStore.jwtPayload.user.id : null : null : null;
+            const q: QueryResponse = await conn.query(`INSERT INTO TBL_AUDIT_LOG (CATEGORY, LEVEL, REQUEST_UUID, USER_ID, LOG) VALUES (?,?,?,?,?)`,
+                [category, level, reqUuid, userId, message]);
+        });
+    }
 
 
-/**
- * ====================
- * === getAuditLogs ===
- * ====================
- */
-export const getAuditLogsCount = async (filterByUserId: number = null, filterByCategory: AuditCategory = null,
-                                        filterByLevel: Level = null, filterByLogs: string = null): Promise<number> => {
-    const sqlParams: any[] = [];
+    /**
+     * ====================
+     * === getAuditLogs ===
+     * ====================
+     */
+    async getAuditLogsCount(filterByUserId: number = null, filterByCategory: AuditCategory = null,
+                                            filterByLevel: Level = null, filterByLogs: string = null): Promise<number> {
+        const sqlParams: any[] = [];
 
-    const sqlFilterByUserId = filterByUserId ? filterByUserId == -1 ? ` AND USER_ID IS NULL` : ` AND USER_ID=? ` : ``;
-    if (filterByUserId && filterByUserId != -1) { sqlParams.push(filterByUserId)};
+        const sqlFilterByUserId = filterByUserId ? filterByUserId == -1 ? ` AND USER_ID IS NULL` : ` AND USER_ID=? ` : ``;
+        if (filterByUserId && filterByUserId != -1) { sqlParams.push(filterByUserId)};
 
-    const sqlFilterByCategory = filterByCategory ? ` AND CATEGORY=? `: ``;
-    if (filterByCategory) { sqlParams.push(filterByCategory)}
+        const sqlFilterByCategory = filterByCategory ? ` AND CATEGORY=? `: ``;
+        if (filterByCategory) { sqlParams.push(filterByCategory)}
 
-    const sqlFilterByLevel = filterByLevel ? ` AND LEVEL=? `: ``;
-    if (filterByLevel) { sqlParams.push(filterByLevel)}
+        const sqlFilterByLevel = filterByLevel ? ` AND LEVEL=? `: ``;
+        if (filterByLevel) { sqlParams.push(filterByLevel)}
 
-    const sqlFilterByLogs = filterByLogs ? ` AND LOG LIKE ? ` : ``;
-    if (filterByLogs) { sqlParams.push(`%${filterByLogs}%`)}
+        const sqlFilterByLogs = filterByLogs ? ` AND LOG LIKE ? ` : ``;
+        if (filterByLogs) { sqlParams.push(`%${filterByLogs}%`)}
 
-    const sql = `
+        const sql = `
             SELECT
                 COUNT(*) AS COUNT
             FROM TBL_AUDIT_LOG
@@ -69,28 +71,28 @@ export const getAuditLogsCount = async (filterByUserId: number = null, filterByC
             ${sqlFilterByLogs}
     `;
 
-    const q: QueryA =  await doInDbConnection(async (conn: Connection) => {
-        return await conn.query(sql, sqlParams);
-    });
-    return q[0].COUNT;
-};
-export const getAuditLogs = async (filterByUserId: number = null, filterByCategory: AuditCategory = null,
-                                   filterByLevel: Level = null, filterByLogs: string = null, limitOffset: LimitOffset): Promise<AuditLog[]> => {
-    const sqlParams: any[] = [];
+        const q: QueryA =  await doInDbConnection(async (conn: Connection) => {
+            return await conn.query(sql, sqlParams);
+        });
+        return q[0].COUNT;
+    };
+    async getAuditLogs(filterByUserId: number = null, filterByCategory: AuditCategory = null,
+                                       filterByLevel: Level = null, filterByLogs: string = null, limitOffset: LimitOffset): Promise<AuditLog[]> {
+        const sqlParams: any[] = [];
 
-    const sqlFilterByUserId = filterByUserId ? filterByUserId == -1 ? ` AND AL.USER_ID IS NULL` : ` AND U.ID=? ` : ``;
-    if (filterByUserId && filterByUserId != -1) { sqlParams.push(filterByUserId)};
+        const sqlFilterByUserId = filterByUserId ? filterByUserId == -1 ? ` AND AL.USER_ID IS NULL` : ` AND U.ID=? ` : ``;
+        if (filterByUserId && filterByUserId != -1) { sqlParams.push(filterByUserId)};
 
-    const sqlFilterByCategory = filterByCategory ? ` AND AL.CATEGORY=? `: ``;
-    if (filterByCategory) { sqlParams.push(filterByCategory)}
+        const sqlFilterByCategory = filterByCategory ? ` AND AL.CATEGORY=? `: ``;
+        if (filterByCategory) { sqlParams.push(filterByCategory)}
 
-    const sqlFilterByLevel = filterByLevel ? ` AND AL.LEVEL=? `: ``;
-    if (filterByLevel) { sqlParams.push(filterByLevel)}
+        const sqlFilterByLevel = filterByLevel ? ` AND AL.LEVEL=? `: ``;
+        if (filterByLevel) { sqlParams.push(filterByLevel)}
 
-    const sqlFilterByLogs = filterByLogs ? ` AND AL.LOG LIKE ? ` : ``;
-    if (filterByLogs) { sqlParams.push(`%${filterByLogs}%`)}
+        const sqlFilterByLogs = filterByLogs ? ` AND AL.LOG LIKE ? ` : ``;
+        if (filterByLogs) { sqlParams.push(`%${filterByLogs}%`)}
 
-    const sql = `
+        const sql = `
             SELECT
                 AL.ID AS AL_ID, 
                 AL.CATEGORY AS AL_CATEGORY, 
@@ -112,21 +114,32 @@ export const getAuditLogs = async (filterByUserId: number = null, filterByCatego
             ORDER BY AL.CREATION_DATE DESC
             ${LIMIT_OFFSET(limitOffset)}
     `;
-    const q: QueryA = await doInDbConnection(async (conn: Connection) => {
-        return await conn.query(sql, sqlParams);
-    });
-    return q.reduce((acc: AuditLog[], i: QueryI) => {
-        acc.push({
-           id: i.AL_ID,
-           category: i.AL_CATEGORY,
-           level: i.AL_LEVEL,
-           creationDate: i.AL_CREATION_DATE,
-           lastUpdate: i.AL_LAST_UPDATE,
-           requestUuid: i.AL_REQUEST_UUID,
-           userId: i.U_USER_ID,
-           userName: i.U_USERNAME,
-           log: i.AL_LOG
-        } as AuditLog);
-        return acc;
-    }, []);
-};
+        const q: QueryA = await doInDbConnection(async (conn: Connection) => {
+            return await conn.query(sql, sqlParams);
+        });
+        return q.reduce((acc: AuditLog[], i: QueryI) => {
+            acc.push({
+                id: i.AL_ID,
+                category: i.AL_CATEGORY,
+                level: i.AL_LEVEL,
+                creationDate: i.AL_CREATION_DATE,
+                lastUpdate: i.AL_LAST_UPDATE,
+                requestUuid: i.AL_REQUEST_UUID,
+                userId: i.U_USER_ID,
+                userName: i.U_USERNAME,
+                log: i.AL_LOG
+            } as AuditLog);
+            return acc;
+        }, []);
+    };
+}
+
+const s = new AuditService()
+export const
+    auditLogDebug = s.auditLogDebug.bind(s),
+    auditLogInfo = s.auditLogInfo.bind(s),
+    auditLogWarn = s.auditLogWarn.bind(s),
+    auditLogError = s.auditLogError.bind(s),
+    auditLog = s.auditLog.bind(s),
+    getAuditLogsCount = s.getAuditLogsCount.bind(s),
+    getAuditLogs = s.getAuditLogs.bind(s);

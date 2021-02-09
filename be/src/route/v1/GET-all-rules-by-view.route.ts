@@ -9,12 +9,8 @@ import {
 } from "./common-middleware";
 import {check} from 'express-validator';
 import {Rule} from "../../model/rule.model";
-import {
-    Rule2,
-} from "../../server-side-model/server-side.model";
-import {rulesConvert} from '../../service/conversion-rule.service';
 import {ROLE_VIEW} from "../../model/role.model";
-import {getRule2s} from "../../service/rule.service";
+import {getRules} from "../../service/rule.service";
 import {ApiResponse} from "../../model/api-response.model";
 
 // CHECKED
@@ -27,8 +23,7 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
-        const rule2s: Rule2[] = await getRule2s(viewId);
-        const rules: Rule[] = rulesConvert(rule2s);
+        const rules: Rule[] = await getRules(viewId);
         res.status(200).json({
             status: 'SUCCESS',
             message: `Rules retrieved successfully`,

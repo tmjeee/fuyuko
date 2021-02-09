@@ -3,7 +3,7 @@ import {View} from "./view.model";
 export type WorkflowInstanceAction = 'Create' | 'Edit' | 'Delete';
 export type WorkflowInstanceType = 'Attribute' | 'Item' | 'Price' | 'Rule' | 'User' | 'Category';
 
-export interface Workflow {
+export interface WorkflowDefinition {
     id: number,
     name: string,
     description: string,
@@ -11,9 +11,9 @@ export interface Workflow {
     lastUpdate: Date,
 };
 
-export interface WorkflowMapping {
+export interface Workflow {
     id: number;
-    workflow: Workflow;
+    workflowDefinition: WorkflowDefinition;
     view: View;
     type: WorkflowInstanceType,
     action: WorkflowInstanceAction,
@@ -23,7 +23,7 @@ export interface WorkflowMapping {
 
 export interface WorkflowInstance {
     id: number;
-    workflowMappingId: number;
+    workflowId: number;
     params: WorkflowInstanceParam[],
     progress: 'IN_PROGRESS' | 'ENDED',
     engineData: string,

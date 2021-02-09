@@ -3,13 +3,10 @@ import {Router, Request, Response, NextFunction} from "express";
 import { param } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
 import {AppNotification} from "../../model/notification.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {getUserNotifications} from "../../service/notification.service";
+import {getUserNotifications} from "../../service/app-notification.service";
 
-// CHECKED
 
 const httpAction: any[] = [
     [

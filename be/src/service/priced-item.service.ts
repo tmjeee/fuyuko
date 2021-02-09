@@ -5,24 +5,26 @@ import {Connection} from "mariadb";
 import {fireEvent, GetPricedItemsEvent} from "./event/event.service";
 import {pricedItemsConvert} from "./conversion-priced-item.service";
 
-/**
- *  ==============================
- *  === getPricedItems ===
- *  ==============================
- */
-export const getPricedItems = async (pricingStructureId: number): Promise<PricedItem[]> => {
-    const pricedItem2s: PricedItem2[] = await getPricedItem2s(pricingStructureId);
-    const pricedItems: PricedItem[] = pricedItemsConvert(pricedItem2s);
-    fireEvent({
-        type: 'GetPricedItemsEvent',
-        pricingStructureId,
-        pricedItems
-    } as GetPricedItemsEvent);
-    return pricedItems;
-};
-export const getPricedItem2s = async (pricingStructureId: number): Promise<PricedItem2[]> => {
-    const item2s: PricedItem2[] = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryA = await conn.query(`
+class PricedItemService {
+
+    /**
+     *  ==============================
+     *  === getPricedItems ===
+     *  ==============================
+     */
+    async getPricedItems(pricingStructureId: number): Promise<PricedItem[]> {
+        const pricedItem2s: PricedItem2[] = await getPricedItem2s(pricingStructureId);
+        const pricedItems: PricedItem[] = pricedItemsConvert(pricedItem2s);
+        fireEvent({
+            type: 'GetPricedItemsEvent',
+            pricingStructureId,
+            pricedItems
+        } as GetPricedItemsEvent);
+        return pricedItems;
+    };
+    async getPricedItem2s(pricingStructureId: number): Promise<PricedItem2[]> {
+        const item2s: PricedItem2[] = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
                 SELECT
                     I.ID AS I_ID,
                     I.PARENT_ID AS I_PARENT_ID,
@@ -64,22 +66,21 @@ export const getPricedItem2s = async (pricingStructureId: number): Promise<Price
                 WHERE PSI.PRICING_STRUCTURE_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND PS.STATUS = 'ENABLED'
             `, [pricingStructureId]);
 
-        return _doQ(q);
-    });
+            return this._doQ(q);
+        });
 
-    for (const item2 of item2s) {
-        const itemId: number = item2.id;
-        item2.children = await getChildrenPricedItems(pricingStructureId, itemId);
+        for (const item2 of item2s) {
+            const itemId: number = item2.id;
+            item2.children = await getChildrenPricedItems(pricingStructureId, itemId);
+        }
+
+        return item2s;
     }
+    async getChildrenPricedItems(pricingStructureId: number, parentItemId: number): Promise<PricedItem2[]> {
 
-    return item2s;
-}
+        const item2s: PricedItem2[] =  await doInDbConnection(async (conn: Connection) => {
 
-export const getChildrenPricedItems = async (pricingStructureId: number, parentItemId: number): Promise<PricedItem2[]> => {
-
-    const item2s: PricedItem2[] =  await doInDbConnection(async (conn: Connection) => {
-
-        const q: QueryA = await conn.query(`
+            const q: QueryA = await conn.query(`
                 SELECT
                     I.ID AS I_ID,
                     I.PARENT_ID AS I_PARENT_ID,
@@ -122,119 +123,124 @@ export const getChildrenPricedItems = async (pricingStructureId: number, parentI
                 WHERE PSI.PRICING_STRUCTURE_ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND PS.STATUS = 'ENABLED' AND I.PARENT_ID = ?
             `, [pricingStructureId, parentItemId]);
 
-        return _doQ(q);
-    });
+            return this._doQ(q);
+        });
 
 
-    for (const item2 of item2s) {
-        const itemId: number = item2.id;
-        item2.children = await getChildrenPricedItems(pricingStructureId, itemId);
+        for (const item2 of item2s) {
+            const itemId: number = item2.id;
+            item2.children = await getChildrenPricedItems(pricingStructureId, itemId);
+        }
+
+        return item2s;
     }
 
-    return item2s;
+
+    // === helper functions ================
+    private _doQ(q: QueryA): PricedItem2[] {
+
+        const itemMap:  Map<string  /* itemId */,                                            Item2> = new Map();
+        const imgMap:   Map<string  /* itemId_imageId */,                                    ItemImage> = new Map();
+        const valueMap: Map<string  /* itemId_attributeId_valueId */,                        ItemValue2> = new Map();
+        const metaMap:  Map<string  /* itemId_attributeId_valueId_metadataId> */,            ItemMetadata2> = new Map();
+        const entMap:   Map<string  /* itemId_attributeId_valueId_metadataId_entryId */,     ItemMetadataEntry2> = new Map();
+
+        const allItems2: PricedItem2[] =  q.reduce((acc: PricedItem2[], c: QueryI) => {
+
+            const itemId: number = c.I_ID;
+            const itemMapKey: string = `${itemId}`;
+
+            const attributeId: number = c.A_ID;
+            const attributeType: string = c.A_TYPE;
+            const valueId: number = c.V_ID;
+            const valueMapKey: string = `${itemId}_${attributeId}_${valueId}`;
+
+            const metadataId: number = c.M_ID;
+            const metaMapKey = `${itemId}_${attributeId}_${valueId}_${metadataId}`;
+
+            const entryId: number = c.E_ID;
+            const entryMapKey = `${itemId}_${attributeId}_${metadataId}_${entryId}`;
+
+            const imageId: number = c.IMG_ID;
+            const imgMapKey: string = `${itemId}_${imageId}`;
+
+            if (!itemMap.has(itemMapKey)) {
+                const item: PricedItem2 = {
+                    id: itemId,
+                    parentId: c.I_PARENT_ID,
+                    name: c.I_NAME,
+                    description: c.I_DESCRIPTION,
+                    creationDate: c.I_CREATION_DATE,
+                    lastUpdate: c.I_LAST_UPDATE,
+                    images: [],
+                    values: [],
+                    children: [],
+                    price: c.PSI_PRICE,
+                    country: c.PSI_COUNTRY
+                } as PricedItem2;
+
+                itemMap.set(itemMapKey, item);
+                acc.push(item);
+            }
+
+            if (!imgMap.has(imgMapKey)) {
+                const img: ItemImage = {
+                    id: imageId,
+                    name: c.IMG_NAME,
+                    mimeType: c.IMG_MIMETYPE,
+                    size: c.IMG_SIZE,
+                    primary: c.IMG_PRIMARY,
+                } as ItemImage;
+                imgMap.set(imgMapKey, img);
+                const item: Item2 = itemMap.get(itemMapKey);
+                item.images.push(img);
+            }
+
+            if (!valueMap.has(valueMapKey)) {
+                const itemValue: ItemValue2 = {
+                    id: valueId,
+                    attributeId,
+                    metadatas: []
+                } as ItemValue2;
+                valueMap.set(valueMapKey, itemValue);
+                const item: Item2 = itemMap.get(itemMapKey);
+                item.values.push(itemValue);
+            }
+
+            if (!metaMap.has(metaMapKey)) {
+                const itemMetadata: ItemMetadata2 = {
+                    id: metadataId,
+                    name: c.M_NAME,
+                    attributeId,
+                    attributeType: c.A_TYPE,
+                    entries: []
+                } as ItemMetadata2;
+                metaMap.set(metaMapKey, itemMetadata);
+                const value: ItemValue2 = valueMap.get(valueMapKey);
+                value.metadatas.push(itemMetadata);
+            }
+
+            if (!entMap.has(entryMapKey)) {
+                const entry: ItemMetadataEntry2 = {
+                    id: entryId,
+                    key: c.E_KEY,
+                    value: c.E_VALUE,
+                    dataType: c.E_DATA_TYPE
+                };
+                entMap.set(entryMapKey, entry);
+                const meta: ItemMetadata2 = metaMap.get(metaMapKey);
+                meta.entries.push(entry);
+            }
+
+            return acc;
+        }, []);
+
+        return allItems2;
+    }
 }
 
-
-
-// === helper functions ================
-
-const _doQ = (q: QueryA): PricedItem2[] => {
-
-    const itemMap:  Map<string  /* itemId */,                                            Item2> = new Map();
-    const imgMap:   Map<string  /* itemId_imageId */,                                    ItemImage> = new Map();
-    const valueMap: Map<string  /* itemId_attributeId_valueId */,                        ItemValue2> = new Map();
-    const metaMap:  Map<string  /* itemId_attributeId_valueId_metadataId> */,            ItemMetadata2> = new Map();
-    const entMap:   Map<string  /* itemId_attributeId_valueId_metadataId_entryId */,     ItemMetadataEntry2> = new Map();
-
-    const allItems2: PricedItem2[] =  q.reduce((acc: PricedItem2[], c: QueryI) => {
-
-        const itemId: number = c.I_ID;
-        const itemMapKey: string = `${itemId}`;
-
-        const attributeId: number = c.A_ID;
-        const attributeType: string = c.A_TYPE;
-        const valueId: number = c.V_ID;
-        const valueMapKey: string = `${itemId}_${attributeId}_${valueId}`;
-
-        const metadataId: number = c.M_ID;
-        const metaMapKey = `${itemId}_${attributeId}_${valueId}_${metadataId}`;
-
-        const entryId: number = c.E_ID;
-        const entryMapKey = `${itemId}_${attributeId}_${metadataId}_${entryId}`;
-
-        const imageId: number = c.IMG_ID;
-        const imgMapKey: string = `${itemId}_${imageId}`;
-
-        if (!itemMap.has(itemMapKey)) {
-            const item: PricedItem2 = {
-                id: itemId,
-                parentId: c.I_PARENT_ID,
-                name: c.I_NAME,
-                description: c.I_DESCRIPTION,
-                creationDate: c.I_CREATION_DATE,
-                lastUpdate: c.I_LAST_UPDATE,
-                images: [],
-                values: [],
-                children: [],
-                price: c.PSI_PRICE,
-                country: c.PSI_COUNTRY
-            } as PricedItem2;
-
-            itemMap.set(itemMapKey, item);
-            acc.push(item);
-        }
-
-        if (!imgMap.has(imgMapKey)) {
-            const img: ItemImage = {
-                id: imageId,
-                name: c.IMG_NAME,
-                mimeType: c.IMG_MIMETYPE,
-                size: c.IMG_SIZE,
-                primary: c.IMG_PRIMARY,
-            } as ItemImage;
-            imgMap.set(imgMapKey, img);
-            const item: Item2 = itemMap.get(itemMapKey);
-            item.images.push(img);
-        }
-
-        if (!valueMap.has(valueMapKey)) {
-            const itemValue: ItemValue2 = {
-                id: valueId,
-                attributeId,
-                metadatas: []
-            } as ItemValue2;
-            valueMap.set(valueMapKey, itemValue);
-            const item: Item2 = itemMap.get(itemMapKey);
-            item.values.push(itemValue);
-        }
-
-        if (!metaMap.has(metaMapKey)) {
-            const itemMetadata: ItemMetadata2 = {
-                id: metadataId,
-                name: c.M_NAME,
-                attributeId,
-                attributeType: c.A_TYPE,
-                entries: []
-            } as ItemMetadata2;
-            metaMap.set(metaMapKey, itemMetadata);
-            const value: ItemValue2 = valueMap.get(valueMapKey);
-            value.metadatas.push(itemMetadata);
-        }
-
-        if (!entMap.has(entryMapKey)) {
-            const entry: ItemMetadataEntry2 = {
-                id: entryId,
-                key: c.E_KEY,
-                value: c.E_VALUE,
-                dataType: c.E_DATA_TYPE
-            };
-            entMap.set(entryMapKey, entry);
-            const meta: ItemMetadata2 = metaMap.get(metaMapKey);
-            meta.entries.push(entry);
-        }
-
-        return acc;
-    }, []);
-
-    return allItems2;
-}
+const s = new PricedItemService();
+export const
+    getPricedItems = s.getPricedItems.bind(s),
+    getPricedItem2s = s.getPricedItem2s.bind(s),
+    getChildrenPricedItems = s.getChildrenPricedItems.bind(s);

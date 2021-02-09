@@ -56,20 +56,20 @@ import {AddOrUpdateGroupInput, addOrUpdateGroup, getGroupByName, searchForGroups
 import {heartbeat} from './heartbeat.service';
 import {ActivateInvitationResult, createInvitation, activateInvitation, getInvitationByCode} from './invitation.service';
 import {getAllItemsInViewCount, searchForItemsInViewCount, getAllFavouriteItemsInViewCount, searchForFavouriteItemsInViewCount,
-        getAllFavouriteItem2sInView, searchForFavouriteItem2sInView, removeFavouriteItemIds, addFavouriteItemIds,
+        removeFavouriteItemIds, addFavouriteItemIds,
         getAllFavouriteItemIdsInView, getAllFavouriteItemsInView, getItemByName, getItemsByIdsCount, updateItemValue,
         updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, getAllItemsInView,
         searchForFavouriteItemsInView, updateItem, getItemsByIds} from './item.service';
-import {ItemWithFilteringResult, Item2WithFilteringResult, getItem2WithFiltering, getItemWithFiltering} from './item-filtering.service';
+import {ItemWithFilteringResult, getItemWithFiltering} from './item-filtering.service';
 import {addItemImage, markItemImageAsPrimary, getItemPrimaryImage, getItemImageContent, deleteItemImage} from './item-image.service';
 import {getJobDetailsById, getAllJobs, getJobById} from './job.service';
 import {LoggingCallback, JobLogger, newConsoleLogger, newLoggingCallback, newJobLogger} from './job-log.service';
 import {decodeJwtToken, verifyJwtToken, createJwtToken} from './jwt.service';
 import {multipartParse} from './multipart.service';
-import {addUserNotification, getUserNotifications} from './notification.service';
+import {addUserNotification, getUserNotifications} from './app-notification.service';
 import {hashedPassword} from './password.service';
 import {getChildrenPricedItems, getPricedItems} from './priced-item.service';
-import {PricedItemsWithFilteringResult, PricedItem2sWithFilteringResult, getPricedItemsWithFiltering} from './priced-item-filtering.service';
+import {PricedItemsWithFilteringResult, getPricedItemsWithFiltering} from './priced-item-filtering.service';
 import {searchGroupsNotAssociatedWithPricingStructure, unlinkPricingStructureWithGroupId, linkPricingStructureWithGroupId,
         getPricingStructureGroupAssociations, getPricingStructureByName, getPricingStructureById, addOrUpdatePricingStructures,
         getPricingStructuresByView, getPartnerPricingStructures, getAllPricingStructureItemsWithPrice, getAllPricingStructureItemsWithPriceCount,
@@ -214,13 +214,13 @@ export {
 
     // item.service
     getAllItemsInViewCount, searchForItemsInViewCount, getAllFavouriteItemsInViewCount, searchForFavouriteItemsInViewCount,
-    getAllFavouriteItem2sInView, searchForFavouriteItem2sInView, removeFavouriteItemIds, addFavouriteItemIds,
+    removeFavouriteItemIds, addFavouriteItemIds,
     getAllFavouriteItemIdsInView, getAllFavouriteItemsInView, getItemByName, getItemsByIdsCount, updateItemValue,
     updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, getAllItemsInView,
     searchForFavouriteItemsInView, updateItem, getItemsByIds,
 
     // item-filtering.service
-    ItemWithFilteringResult, Item2WithFilteringResult, getItem2WithFiltering, getItemWithFiltering,
+    ItemWithFilteringResult, getItemWithFiltering,
 
     // item-image.service
     addItemImage, markItemImageAsPrimary, getItemPrimaryImage, getItemImageContent, deleteItemImage,
@@ -247,7 +247,7 @@ export {
     getChildrenPricedItems, getPricedItems,
 
     // priced-item-filtering.service
-    PricedItemsWithFilteringResult, PricedItem2sWithFilteringResult, getPricedItemsWithFiltering,
+    PricedItemsWithFilteringResult, getPricedItemsWithFiltering,
 
     // pricing-structure.service
     searchGroupsNotAssociatedWithPricingStructure, unlinkPricingStructureWithGroupId, linkPricingStructureWithGroupId,

@@ -11,7 +11,7 @@ import {check, param, query} from 'express-validator';
 import { Item } from "../../model/item.model";
 import {Item2} from "../../server-side-model/server-side.model";
 import {itemsConvert} from "../../service/conversion-item.service";
-import {getAllItem2sInView, getAllItemsInViewCount} from "../../service/item.service";
+import {getAllItemsInView, getAllItemsInViewCount} from "../../service/item.service";
 import {ROLE_VIEW} from "../../model/role.model";
 import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
 import {isLimit, isOffset, toLimitOffset} from "../../util/utils";
@@ -31,8 +31,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const limitOffset: LimitOffset = toLimitOffset(req);
 
-        const allItem2s: Item2[] = await getAllItem2sInView(viewId, true, limitOffset);
-        const allItems: Item[] = itemsConvert(allItem2s);
+        const allItems: Item[] = await getAllItemsInView(viewId, true, limitOffset);
         const allItemsTotal: number = await getAllItemsInViewCount(viewId, true);
         res.status(200).json({
             status: 'SUCCESS',

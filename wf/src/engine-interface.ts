@@ -1,6 +1,7 @@
 export type EngineStatus = 'UNIITIALIZED' | 'INIT' | 'STARTED' | 'ENDED' | 'ERROR';
 
 export interface Engine {
+    readonly args: Argument | undefined;
     startsWith(state: State): Engine;
     register(state: State): Engine;
     endsWith(state: State): Engine;
@@ -21,7 +22,7 @@ export interface Argument {
 }
 
 export interface StateProcessFn  {
-    (arg: Argument):  Promise<string> | null | undefined;
+    (arg: Argument):  Promise<string> | undefined;
 }
 
 export interface State {

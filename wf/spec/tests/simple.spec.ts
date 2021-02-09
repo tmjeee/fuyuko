@@ -6,11 +6,11 @@ describe('simple', () => {
         /**
          *     <start> -> step1 -> step2 -> step3 -> <end>
          */
-        const state1 = createState(`step1`, () => Promise.resolve(`e1`));
-        const state2 = createState(`step2`, () => Promise.resolve(`e2`));
-        const state3 = createState(`step3`, () => Promise.resolve(`e3`));
-        const state4 = createState(`step4`, () => Promise.resolve(`e4`));
-        const state5 = createState(`step5`, () => Promise.resolve(`e5`));
+        const state1 = createState(`step1`, (args) => Promise.resolve(`e1`));
+        const state2 = createState(`step2`, (args) => Promise.resolve(`e2`));
+        const state3 = createState(`step3`, (args) => Promise.resolve(`e3`));
+        const state4 = createState(`step4`, (args) => Promise.resolve(`e4`));
+        const state5 = createState(`step5`, (args) => Promise.resolve(`e5`));
 
         state1.on().to(state2);
         state2.on().to(state3);
@@ -35,11 +35,11 @@ describe('simple', () => {
          *                    \-(event3)->  step3 +
          *                    \-(*)------>  step4 +
          */
-        const state1 = createState(`step1`, () => Promise.resolve('e1'));
-        const state2 = createState(`step2`, () => Promise.resolve('e2'));
-        const state3 = createState(`step3`, () => Promise.resolve('e3'));
-        const state4 = createState(`step4`, () => Promise.resolve('e4'));
-        const state5 = createState(`step5`, () => Promise.resolve('e5'));
+        const state1 = createState(`step1`, (args) => Promise.resolve('e1'));
+        const state2 = createState(`step2`, (args) => Promise.resolve('e2'));
+        const state3 = createState(`step3`, (args) => Promise.resolve('e3'));
+        const state4 = createState(`step4`, (args) => Promise.resolve('e4'));
+        const state5 = createState(`step5`, (args) => Promise.resolve('e5'));
 
         state1
             .on('e1').to(state2)
@@ -62,11 +62,11 @@ describe('simple', () => {
     });
 
     fit('test #3', async () => {
-        const state1 = createState(`step1`, () => Promise.resolve(`e1`));
-        const state2 = createState(`step2`, () => Promise.resolve(`e2`));
-        const state3 = createState(`step3`, () => Promise.resolve(`e3`));
-        const state4 = createState(`step4`, () => Promise.resolve(`e4`));
-        const state5 = createState(`step5`, () => Promise.resolve(`e5`));
+        const state1 = createState(`step1`, (args) => Promise.resolve(`e1`));
+        const state2 = createState(`step2`, (args) => Promise.resolve(`e2`));
+        const state3 = createState(`step3`, (args) => Promise.resolve(`e3`));
+        const state4 = createState(`step4`, (args) => Promise.resolve(`e4`));
+        const state5 = createState(`step5`, (args) => Promise.resolve(`e5`));
 
         state1.on().to(state2);
         state2.on().to(state3);
@@ -90,13 +90,13 @@ describe('simple', () => {
             const data: string = _engine.serialize();
             console.log('data', data);
             engine.deserialize(data);
-            console.log('startState', _engine.startState.name);
+            console.log('startState', _engine.startState?.name);
             console.log('states', _engine.states.map((s: State) => s.name));
-            console.log('endState', _engine.endState.name);
+            console.log('endState', _engine.endState?.name);
             console.log('args', _engine.args);
             console.log('stateMap', _engine.stateMap.keys());
             console.log('status', _engine.status);
-            console.log('currentState', _engine.currentState.name);
+            console.log('currentState', _engine.currentState?.name);
         }
         
         {   // step 1
@@ -105,13 +105,13 @@ describe('simple', () => {
             const data: string = _engine.serialize();
             console.log('data', data);
             engine.deserialize(data);
-            console.log('startState', _engine.startState.name);
+            console.log('startState', _engine.startState?.name);
             console.log('states', _engine.states.map((s: State) => s.name));
-            console.log('endState', _engine.endState.name);
+            console.log('endState', _engine.endState?.name);
             console.log('args', _engine.args);
             console.log('stateMap', _engine.stateMap.keys());
             console.log('status', _engine.status);
-            console.log('currentState', _engine.currentState.name);
+            console.log('currentState', _engine.currentState?.name);
         } 
         
         {   // step 2
@@ -120,13 +120,13 @@ describe('simple', () => {
             const data: string = _engine.serialize();
             console.log('data', data);
             engine.deserialize(data);
-            console.log('startState', _engine.startState.name);
+            console.log('startState', _engine.startState?.name);
             console.log('states', _engine.states.map((s: State) => s.name));
-            console.log('endState', _engine.endState.name);
+            console.log('endState', _engine.endState?.name);
             console.log('args', _engine.args);
             console.log('stateMap', _engine.stateMap.keys());
             console.log('status', _engine.status);
-            console.log('currentState', _engine.currentState.name);
+            console.log('currentState', _engine.currentState?.name);
         }
 
 
@@ -136,13 +136,13 @@ describe('simple', () => {
             const data: string = _engine.serialize();
             console.log('data', data);
             engine.deserialize(data);
-            console.log('startState', _engine.startState.name);
+            console.log('startState', _engine.startState?.name);
             console.log('states', _engine.states.map((s: State) => s.name));
-            console.log('endState', _engine.endState.name);
+            console.log('endState', _engine.endState?.name);
             console.log('args', _engine.args);
             console.log('stateMap', _engine.stateMap.keys());
             console.log('status', _engine.status);
-            console.log('currentState', _engine.currentState.name);
+            console.log('currentState', _engine.currentState?.name);
         }
 
         {   // step 4
@@ -151,13 +151,13 @@ describe('simple', () => {
             const data: string = _engine.serialize();
             console.log('data', data);
             engine.deserialize(data);
-            console.log('startState', _engine.startState.name);
+            console.log('startState', _engine.startState?.name);
             console.log('states', _engine.states.map((s: State) => s.name));
-            console.log('endState', _engine.endState.name);
+            console.log('endState', _engine.endState?.name);
             console.log('args', _engine.args);
             console.log('stateMap', _engine.stateMap.keys());
             console.log('status', _engine.status);
-            console.log('currentState', _engine.currentState.name);
+            console.log('currentState', _engine.currentState?.name);
         }
 
         {   // step 5
@@ -166,13 +166,13 @@ describe('simple', () => {
             const data: string = _engine.serialize();
             console.log('data', data);
             engine.deserialize(data);
-            console.log('startState', _engine.startState.name);
+            console.log('startState', _engine.startState?.name);
             console.log('states', _engine.states.map((s: State) => s.name));
-            console.log('endState', _engine.endState.name);
+            console.log('endState', _engine.endState?.name);
             console.log('args', _engine.args);
             console.log('stateMap', _engine.stateMap.keys());
             console.log('status', _engine.status);
-            console.log('currentState', _engine.currentState.name);
+            console.log('currentState', _engine.currentState?.name);
         }
     });
 });

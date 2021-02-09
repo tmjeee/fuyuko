@@ -7,7 +7,7 @@ import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
 import {Connection} from "mariadb";
 import {NewNotification} from "../../model/notification.model";
 import {ApiResponse} from "../../model/api-response.model";
-import {addUserNotification} from "../../service/notification.service";
+import {addUserNotification} from "../../service/app-notification.service";
 
 // CHECKED
 

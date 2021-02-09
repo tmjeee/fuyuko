@@ -168,6 +168,7 @@ export interface WhenClauseMetadataEntry2 {
 
 export interface WorkflowScript {
     createEngine(args?: Argument): Engine;
+    description: string;
 }
 
 

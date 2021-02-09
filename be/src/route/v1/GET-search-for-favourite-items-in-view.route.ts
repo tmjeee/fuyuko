@@ -1,7 +1,6 @@
 import {param} from "express-validator";
 import {
     aFnAllTrue,
-    aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
@@ -13,15 +12,11 @@ import {NextFunction, Request, Response, Router} from "express";
 import {Item, ItemSearchType} from "../../model/item.model";
 import {LimitOffset} from "../../model/limit-offset.model";
 import {toLimitOffset} from "../../util/utils";
-import {Item2} from "../../server-side-model/server-side.model";
 import {
-    getAllFavouriteItem2sInView, getAllFavouriteItemsInView, getAllFavouriteItemsInViewCount,
-    getAllItem2sInView,
-    searchForFavouriteItem2sInView, searchForFavouriteItemsInView, searchForFavouriteItemsInViewCount,
-    searchForItem2sInView
-} from "../../service/item.service";
-import {itemsConvert} from "../../service/conversion-item.service";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
+    getAllFavouriteItemsInView, getAllFavouriteItemsInViewCount,
+    searchForFavouriteItemsInView, searchForFavouriteItemsInViewCount,
+} from "../../service";
+import {PaginableApiResponse} from "../../model/api-response.model";
 import {Registry} from "../../registry";
 
 const httpAction: any[] = [

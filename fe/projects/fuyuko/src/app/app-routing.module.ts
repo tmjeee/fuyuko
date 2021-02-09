@@ -66,7 +66,7 @@ import {AuditLogPageComponent} from "./page/audit-log-page/audit-log.page";
 import {AdministrationHelpPageComponent} from "./page/administration-help-page/administration-help.page";
 import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-bulk-edit.page";
 import {WorkflowLayoutComponent} from "./layout/workflow-layout/workflow.layout";
-import {WorkflowListingPageComponent} from "./page/workflow-listing-page/workflow-listing.page";
+import {WorkflowDefinitionListingPageComponent} from "./page/workflow-definition-listing-page/workflow-definition-listing.page";
 import {WorkflowMappingPageComponent} from "./page/workflow-mapping-page/workflow-mapping.page";
 import {WorkflowTaskPageComponent} from "./page/workflow-task-page/workflow-task.page";
 import {WorkflowInstanceDetailsPageComponent} from "./page/workflow-instance-details-page/workflow-instance-details.page";
@@ -226,12 +226,12 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/workflow-layout/(workflow-listing//help:workflow-help)'
+        redirectTo: '/workflow-layout/(workflow-definition-listing//help:workflow-help)'
       },
       {
-        path: 'workflow-listing',
+        path: 'workflow-definition-listing',
         canActivate: [AuthGuard],
-        component: WorkflowListingPageComponent,
+        component: WorkflowDefinitionListingPageComponent,
         data: {
           subSideNav: 'workflowListing'
         }

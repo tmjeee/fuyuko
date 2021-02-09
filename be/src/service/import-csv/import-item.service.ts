@@ -1,11 +1,9 @@
 import {ItemDataImport} from "../../model/data-import.model";
-import {Attribute2, CsvItem} from "../../server-side-model/server-side.model";
+import {CsvItem} from "../../server-side-model/server-side.model";
 import {readCsv} from "./import-csv.service";
 import {Message, Messages} from "../../model/notification-listing.model";
 import {Item, ItemImage, Value} from "../../model/item.model";
 import {Attribute} from "../../model/attribute.model";
-import {getAttribute2sInView} from "../attribute.service";
-import { attributesConvert } from "../conversion-attribute.service";
 import * as fileType from 'file-type';
 import {
     setItemAreaValue,
@@ -35,6 +33,7 @@ import {unzipFromBuffer, unzipFromPath} from "../../util/zip.util";
 import JSZip from "jszip";
 import {w} from "../../logger";
 import {fireEvent, ImportItemPreviewEvent} from "../event/event.service";
+import {getAttributesInView} from "../index";
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
 
@@ -144,8 +143,7 @@ const _preview = async (viewId: number, dataImportId: number, bufferInfos: Buffe
     const infos: Message[] = [];
     const warnings: Message[] = [];
 
-    const att2s: Attribute2[] = await getAttribute2sInView(viewId);
-    const attributes: Attribute[] = attributesConvert(att2s);
+    const attributes: Attribute[] = await getAttributesInView(viewId);
 
     const [attributeByIdMap, attributeByNameMap] = attributes.reduce((acc: [Map<number, Attribute>, Map<string, Attribute>], a: Attribute) => {
         acc[0].set(a.id, a);

@@ -9,125 +9,124 @@ import {
     GetAllCustomRulesEvent, GetAllCustomRulesForViewEvent
 } from "./event/event.service";
 
-// ChangeCustomRuleStatus  AddCustomRuleToView   GetAllCustomRules   GetAllCustomRulesForView
 
+class CustomRuleService {
 
-/**
- *  ===============================
- *  === ChangeCustomRuleStatus ===
- *  ===============================
- */
-export const changeCustomRuleStatus = async (viewId: number, customRuleId: number, status: Status): Promise<boolean> => {
-    const r: boolean = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryResponse = await conn.query(`
+    /**
+     *  ===============================
+     *  === ChangeCustomRuleStatus ===
+     *  ===============================
+     */
+    async changeCustomRuleStatus(viewId: number, customRuleId: number, status: Status): Promise<boolean> {
+        const r: boolean = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryResponse = await conn.query(`
                 UPDATE TBL_CUSTOM_RULE_VIEW SET STATUS=? WHERE CUSTOM_RULE_ID=? AND VIEW_ID=?
             `, [status, customRuleId, viewId]);
-        return (q.affectedRows > 0);
-    });
-    
-    fireEvent({
-       type: 'ChangeCustomRuleStatusEvent',
-       viewId, customRuleId, status, result: r 
-    } as ChangeCustomRuleStatusEvent);
-    
-    return r;
-};
+            return (q.affectedRows > 0);
+        });
 
-/**
- *  ===============================
- *  === AddCustomRuleToView ===
- *  ===============================
- */
-export const addCustomRuleToView = async (viewId: number, customRuleIds: number[]): Promise<string[]> => {
-    const errors: string[] = await doInDbConnection(async (conn: Connection) => {
-        const errors: string[] = [];
+        fireEvent({
+            type: 'ChangeCustomRuleStatusEvent',
+            viewId, customRuleId, status, result: r
+        } as ChangeCustomRuleStatusEvent);
 
-        const q: QueryResponse = await conn.query(`DELETE FROM TBL_CUSTOM_RULE_VIEW WHERE VIEW_ID=?`, [viewId]);
-        for (const customRuleId of customRuleIds) {
-            const qq: QueryResponse = await conn.query(`
+        return r;
+    };
+
+    /**
+     *  ===============================
+     *  === AddCustomRuleToView ===
+     *  ===============================
+     */
+    async addCustomRuleToView(viewId: number, customRuleIds: number[]): Promise<string[]> {
+        const errors: string[] = await doInDbConnection(async (conn: Connection) => {
+            const errors: string[] = [];
+
+            const q: QueryResponse = await conn.query(`DELETE FROM TBL_CUSTOM_RULE_VIEW WHERE VIEW_ID=?`, [viewId]);
+            for (const customRuleId of customRuleIds) {
+                const qq: QueryResponse = await conn.query(`
                     INSERT INTO TBL_CUSTOM_RULE_VIEW (CUSTOM_RULE_ID, STATUS, VIEW_ID) VALUES (?,?,?)
                 `, [customRuleId, 'ENABLED', viewId]);
-            if (qq.affectedRows <= 0) {
-                errors.push(`Unable to add custom rule id ${customRuleId} to view id ${viewId}`);
+                if (qq.affectedRows <= 0) {
+                    errors.push(`Unable to add custom rule id ${customRuleId} to view id ${viewId}`);
+                }
             }
-        }
+            return errors;
+        });
+
+        fireEvent({
+            type:"AddCustomRuleToViewEvent",
+            viewId, customRuleIds, errors
+        } as AddCustomRuleToViewEvent);
+
         return errors;
-    });
-    
-    fireEvent({
-       type:"AddCustomRuleToViewEvent",
-       viewId, customRuleIds, errors 
-    } as AddCustomRuleToViewEvent);
-    
-    return errors;
-};
+    };
 
 
-/**
- *  ===============================
- *  === GetAllCustomRules ===
- *  ===============================
- */
-export const getAllCustomRules = async (): Promise<CustomRule[]> => {
-    const r: CustomRule[] = await doInDbConnection(async (conn: Connection) => {
-        const q: QueryA = await conn.query(`
+    /**
+     *  ===============================
+     *  === GetAllCustomRules ===
+     *  ===============================
+     */
+    async getAllCustomRules(): Promise<CustomRule[]> {
+        const r: CustomRule[] = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
                 SELECT ID, NAME, DESCRIPTION FROM TBL_CUSTOM_RULE
             `);
-        return q.reduce((customRules: CustomRule[], qi: QueryI) => {
-            const r: CustomRule = {
-                id: qi.ID,
-                name: qi.NAME,
-                description: qi.DESCRIPTION
-            };
-            customRules.push(r);
-            return customRules;
-        }, []);
-    });
-    
-    fireEvent({
-        type: "GetAllCustomRulesEvent",
-        customRules: r
-    } as GetAllCustomRulesEvent);
-    return r;
-}
+            return q.reduce((customRules: CustomRule[], qi: QueryI) => {
+                const r: CustomRule = {
+                    id: qi.ID,
+                    name: qi.NAME,
+                    description: qi.DESCRIPTION
+                };
+                customRules.push(r);
+                return customRules;
+            }, []);
+        });
+
+        fireEvent({
+            type: "GetAllCustomRulesEvent",
+            customRules: r
+        } as GetAllCustomRulesEvent);
+        return r;
+    }
 
 
-
-/**
- *  ===============================
- *  === DeleteCustomRules ===
- *  ===============================
- */
-export const deleteCustomRules = async (viewId: number, customRuleIds: number[]): Promise<string[]> => {
-    const errors: string[] = [];
-    await doInDbConnection(async (conn: Connection) => {
-        for (const customRuleId of customRuleIds) {
-            const q: QueryResponse = await conn.query(`
+    /**
+     *  ===============================
+     *  === DeleteCustomRules ===
+     *  ===============================
+     */
+    async deleteCustomRules(viewId: number, customRuleIds: number[]): Promise<string[]> {
+        const errors: string[] = [];
+        await doInDbConnection(async (conn: Connection) => {
+            for (const customRuleId of customRuleIds) {
+                const q: QueryResponse = await conn.query(`
                     DELETE FROM TBL_CUSTOM_RULE_VIEW WHERE CUSTOM_RULE_ID=? AND VIEW_ID=?
                 `, [customRuleId, viewId]);
-            if (q.affectedRows <= 0) {
-                errors.push(`Failed to delete custom rule id ${customRuleId} in view id ${viewId}`);
+                if (q.affectedRows <= 0) {
+                    errors.push(`Failed to delete custom rule id ${customRuleId} in view id ${viewId}`);
+                }
             }
-        }
-    });
-    
-    fireEvent({
-       type: "DeleteCustomRulesEvent",
-       viewId, customRuleIds, errors 
-    } as DeleteCustomRulesEvent);
-    return errors;
-}
+        });
+
+        fireEvent({
+            type: "DeleteCustomRulesEvent",
+            viewId, customRuleIds, errors
+        } as DeleteCustomRulesEvent);
+        return errors;
+    }
 
 
 
-/**
- *  ===============================
- *  === GetAllCustomRulesForView ===
- *  ===============================
- */
-export const getAllCustomRulesForView: (viewId: number) => Promise<CustomRuleForView[]> = async (viewId: number) => {
-    const r: CustomRuleForView[] = await doInDbConnection(async (conn: Connection) => {
-        return (await conn.query(`
+    /**
+     *  ===============================
+     *  === GetAllCustomRulesForView ===
+     *  ===============================
+     */
+    async getAllCustomRulesForView(viewId: number): Promise<CustomRuleForView[]> {
+        const r: CustomRuleForView[] = await doInDbConnection(async (conn: Connection) => {
+            return (await conn.query(`
                 SELECT 
                     R.ID AS R_ID,
                     R.NAME AS R_NAME,
@@ -142,23 +141,32 @@ export const getAllCustomRulesForView: (viewId: number) => Promise<CustomRuleFor
                 INNER JOIN TBL_CUSTOM_RULE AS R ON R.ID = V.CUSTOM_RULE_ID
                 WHERE V.VIEW_ID = ?
             `, viewId) as QueryA).reduce((acc: CustomRuleForView[], i: QueryI) => {
-            const r: CustomRuleForView = {
-                id: i.R_ID,
-                name: i.R_NAME,
-                description: i.R_DESCRIPTION,
-                status: i.V_STATUS,
-                customRuleViewId: i.V_ID,
-                viewId: i.V_VIEW_ID
-            };
-            acc.push(r);
-            return acc;
-        }, []);
-    });
-    
-    fireEvent({
-       type: "GetAllCustomRulesForViewEvent",
-       viewId, 
-       customRules: r 
-    } as GetAllCustomRulesForViewEvent);
-    return r;
+                const r: CustomRuleForView = {
+                    id: i.R_ID,
+                    name: i.R_NAME,
+                    description: i.R_DESCRIPTION,
+                    status: i.V_STATUS,
+                    customRuleViewId: i.V_ID,
+                    viewId: i.V_VIEW_ID
+                };
+                acc.push(r);
+                return acc;
+            }, []);
+        });
+
+        fireEvent({
+            type: "GetAllCustomRulesForViewEvent",
+            viewId,
+            customRules: r
+        } as GetAllCustomRulesForViewEvent);
+        return r;
+    }
 }
+
+const s = new CustomRuleService()
+export const
+    changeCustomRuleStatus = s.changeCustomRuleStatus.bind(s),
+    addCustomRuleToView = s.addCustomRuleToView.bind(s),
+    getAllCustomRules = s.getAllCustomRules.bind(s),
+    deleteCustomRules = s.deleteCustomRules.bind(s),
+    getAllCustomRulesForView = s.getAllCustomRulesForView.bind(s);

@@ -5,7 +5,7 @@ export const opts: {test: boolean}  = {
     test: false
 };
 
-const regexp = /--(.*)=(.*)/;
+const regexp = /--FFF(.*)=(.*)/;
 const SelfReloadJson = require('self-reload-json');
 
 const overrideWithProcessArgv = async (config: any) => {

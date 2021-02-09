@@ -30,40 +30,19 @@ export const newConsoleLogger: LoggingCallback = (level: Level, msg: string) => 
 
 /**
  *  =============================
- *  === newLoggingCallback ===
+ *  === LoggingCallback ===
  *  =============================
  */
-export const newLoggingCallback = (jobLogger?: JobLogger): LoggingCallback => {
-    return (level: Level, msg: string): void => {
-        if (jobLogger) {
-            jobLogger.log(level, msg);
-        }
-        l(level, msg);
-    }
-};
-
-
-/**
- *  =============================
- *  === newJobLogger ===
- *  =============================
- */
-export const newJobLogger = async (name: string, description: string = ''): Promise<JobLogger> => {
-    return await doInDbConnection(async (conn: Connection)=> {
-        const q: QueryResponse = await conn.query(`INSERT INTO TBL_JOB (NAME, DESCRIPTION, STATUS, PROGRESS) VALUES (?,?,'ENABLED','SCHEDULED')`,
-            [name, description]);
-        const id: number = q.insertId;
-        return new JobLogger(id, name, description);
-    });
-};
-
-
-// ========= misc helper ===================================
-
 export interface LoggingCallback  {
     (level: Level, msg: string): void;
 }
 
+
+/**
+ *  =============================
+ *  === JobLogger ===
+ *  =============================
+ */
 export class JobLogger {
 
     constructor(public jobId: number,
@@ -98,4 +77,39 @@ export class JobLogger {
     }
 }
 
+class JobLogService {
 
+    /**
+     *  =============================
+     *  === newLoggingCallback ===
+     *  =============================
+     */
+    newLoggingCallback(jobLogger?: JobLogger): LoggingCallback {
+        return (level: Level, msg: string): void => {
+            if (jobLogger) {
+                jobLogger.log(level, msg);
+            }
+            l(level, msg);
+        }
+    };
+
+
+    /**
+     *  =============================
+     *  === newJobLogger ===
+     *  =============================
+     */
+    async newJobLogger(name: string, description: string = ''): Promise<JobLogger> {
+        return await doInDbConnection(async (conn: Connection)=> {
+            const q: QueryResponse = await conn.query(`INSERT INTO TBL_JOB (NAME, DESCRIPTION, STATUS, PROGRESS) VALUES (?,?,'ENABLED','SCHEDULED')`,
+                [name, description]);
+            const id: number = q.insertId;
+            return new JobLogger(id, name, description);
+        });
+    };
+}
+
+const s = new JobLogService();
+export const
+    newLoggingCallback = s.newLoggingCallback.bind(s),
+    newJobLogger = s.newJobLogger.bind(s);

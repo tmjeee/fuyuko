@@ -2,11 +2,10 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response } from "express";
 import {param, query} from "express-validator";
 import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {getItem2sByIds, getItemsByIdsCount} from "../../service/item.service";
+import {getItemsByIds, getItemsByIdsCount} from "../../service/item.service";
 import {Item} from "../../model/item.model";
-import {Item2} from "../../server-side-model/server-side.model";
 import {itemsConvert} from "../../service/conversion-item.service";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
+import {PaginableApiResponse} from "../../model/api-response.model";
 import {LimitOffset} from "../../model/limit-offset.model";
 import {toLimitOffset} from "../../util/utils";
 
@@ -25,8 +24,7 @@ const httpAction: any[] = [
         const itemIds: number[] = req.params.itemIds.split(',').map((i: string) => Number(i));
         const limitOffset: LimitOffset = toLimitOffset(req);
 
-        const item2s: Item2[] = await getItem2sByIds(viewId, itemIds, true, limitOffset);
-        const items: Item[] = itemsConvert(item2s);
+        const items: Item[] = await getItemsByIds(viewId, itemIds, true, limitOffset);
         const itemsTotal: number = await getItemsByIdsCount(viewId, itemIds);
 
         res.status(200).json({

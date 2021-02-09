@@ -22,13 +22,13 @@ export class InternalState implements State, NextState {
     fn: StateProcessFn;   // perform state operation and return next an event optionally
 
     // transition map, indicating when 'event' occurred we proceed to the given State
-    map: Map<string /* event */, State> = new Map();
+    eventToStateMap: Map<string /* event */, State> = new Map();
 
-    currentEvent: string;
+    currentEvent: string | undefined;
 
     constructor(name: string, fn: StateProcessFn) {
         this.name = name;
-        this.fn = fn ? fn : () => null ;
+        this.fn = fn ? fn : async () => '*' ;
     }
 
     on(event?: string): NextState {
@@ -37,8 +37,11 @@ export class InternalState implements State, NextState {
     }
 
     to(nextState: State): State {
-        this.map.set(this.currentEvent, nextState);
-        this.currentEvent = null;
+        if (!this.currentEvent) {
+            throw Error('Bad usage need to call on(...) before to(...)')
+        }
+        this.eventToStateMap.set(this.currentEvent, nextState);
+        this.currentEvent = undefined;
         return this;
     }
 
@@ -46,7 +49,7 @@ export class InternalState implements State, NextState {
         return JSON.stringify({
             name: this.name,
             currentEvent: this.currentEvent,
-            transition: [...this.map.entries()].reduce((acc: {[k: string]: any}, e: [string, State]) => {
+            transition: [...this.eventToStateMap.entries()].reduce((acc: {[k: string]: any}, e: [string, State]) => {
                 acc[e[0]] = e[1].serialize();
                 return acc;
             }, {})
@@ -58,23 +61,26 @@ export class InternalState implements State, NextState {
         this.name = d.name;
         this.currentEvent = d.currentEvent;
         for (const t in d.transition) {
-            this.map.get(t).deserialize(d.transition[t]);
+            const r = this.eventToStateMap.get(t);
+            if (r) {
+                r.deserialize(d.transition[t]);
+            }
         }
     }
 }
 
 export class InternalEngine implements Engine {
 
-    startState: State;
+    startState: State | undefined;
     states: State[] = [];
-    endState: State;
-    args: Argument;
+    endState: State | undefined ;
+    args: Argument | undefined;
 
     transitionMap: Map<string /* from_state_name_event */, string /* to_state_name */>;
     stateMap: Map<string /* state name */, State>;
 
     status: EngineStatus;
-    currentState: State;
+    currentState: State | undefined;
 
     constructor() {
         this.transitionMap = new Map();
@@ -84,10 +90,10 @@ export class InternalEngine implements Engine {
 
     serialize(): string {
        return JSON.stringify({
-          startState: this.startState.serialize(),
+          startState: this.startState ? this.startState.serialize(): this.startState,
           states: this.states.map((s: State) => s.serialize()),
-          endState: this.endState.serialize(),
-          arg: serializeArgument(this.args),
+          endState: this.endState ? this.endState.serialize() : this.endState,
+          arg: this.args ? serializeArgument(this.args) : this.args,
           transitionMap: [...this.transitionMap.entries()].reduce((acc: {[k: string]: any}, e: [string, string]) => {
               return acc;
           }, {}),
@@ -95,7 +101,7 @@ export class InternalEngine implements Engine {
               return acc;
           }, {}),
           status: this.status,
-          currentState: this.currentState.serialize(),
+          currentState: this.currentState ? this.currentState.serialize() : this.currentState,
        });
     }
 
@@ -112,19 +118,23 @@ export class InternalEngine implements Engine {
         } = JSON.parse(data);
 
         // startState
-        this.startState.deserialize(d.startState);
+        if (this.startState) {
+            this.startState.deserialize(d.startState);
+        }
         
         // states
         for (const s in d.states) {
            const _st: SerializedState = JSON.parse(s);
-           const sta: State = this.states.find((st: State) => st.name === _st.name);
+           const sta: State | undefined = this.states.find((st: State) => st.name === _st.name);
            if (sta) {
                sta.deserialize(s);
            }
         }
         
         // endState
-        this.endState.deserialize(d.endState);
+        if (this.endState) {
+            this.endState.deserialize(d.endState);
+        }
         
         // args
         this.args = deserializeArgument(d.args);
@@ -135,7 +145,7 @@ export class InternalEngine implements Engine {
         // stateMap
         for (const t in d.stateMap) {
             if (this.stateMap.has(t)) {
-                this.stateMap.get(t).deserialize(d.stateMap[t]);
+                this.stateMap.get(t)!.deserialize(d.stateMap[t]);
             }
         }
         
@@ -143,7 +153,9 @@ export class InternalEngine implements Engine {
         this.status = d.status as EngineStatus;
         
         // currentState
-        this.currentState.deserialize(d.currentState);
+        if (this.currentState) {
+            this.currentState.deserialize(d.currentState);
+        }
     }
 
 
@@ -178,11 +190,13 @@ export class InternalEngine implements Engine {
         for (const state of this.states) {
             const fromState: InternalState = state as InternalState;
             this.stateMap.set(fromState.name, fromState);
-            const m: Map<string, InternalState> = fromState.map as Map<string, InternalState>;
-            for (const fromStateEvent of m.keys()) {
-                const toState: InternalState = m.get(fromStateEvent);
-                this.transitionMap.set(`${fromState.name}_${fromStateEvent}`, `${toState.name}`);
-                this.stateMap.set(toState.name, toState);
+            const eventToStateMap: Map<string /* event */, InternalState> = fromState.eventToStateMap as Map<string, InternalState>;
+            for (const fromStateEvent of eventToStateMap.keys()) {
+                const toState: InternalState | undefined = eventToStateMap.get(fromStateEvent);
+                if (toState) {
+                    this.transitionMap.set(`${fromState.name}_${fromStateEvent}`, `${toState.name}`);
+                    this.stateMap.set(toState.name, toState);
+                }
             }
         }
         this.status = 'INIT';
@@ -201,7 +215,7 @@ export class InternalEngine implements Engine {
 
         const currentState: InternalState = this.currentState as InternalState;
         try {
-            const event: string = await currentState.fn(this.args);
+            const event: string | undefined = await currentState.fn(this.args || {});
             console.log('**', currentState.name);
 
             if (currentState.name === (this.endState as InternalState).name) { // end
@@ -209,21 +223,25 @@ export class InternalEngine implements Engine {
                 return {end: true, status: this.status} as EngineResponse;
             }
 
-            const nextStateName: string = this.transitionMap.get(`${currentState.name}_${event}`);
-            let nextState: InternalState = this.stateMap.get(nextStateName) as InternalState;
-
-            if (!nextState) {
-                // try to find a generic transition
-                const nextWildcardStateName: string = this.transitionMap.get(`${currentState.name}_*`);
-                nextState = this.stateMap.get(nextWildcardStateName) as InternalState;
+            const nextStateName: string | undefined = this.transitionMap.get(`${currentState.name}_${event}`);
+            if (nextStateName) {
+                let nextState: InternalState = this.stateMap.get(nextStateName) as InternalState;
 
                 if (!nextState) {
-                    this.status = 'ERROR';
-                    throw new Error(`current state named ${currentState.name} fired event ${event} result in no possible next state`);
-                }
-            }
+                    // try to find a generic transition
+                    const nextWildcardStateName: string | undefined = this.transitionMap.get(`${currentState.name}_*`);
+                    if (nextWildcardStateName) {
+                        nextState = this.stateMap.get(nextWildcardStateName) as InternalState;
 
-            this.currentState = nextState;
+                        if (!nextState) {
+                            this.status = 'ERROR';
+                            throw new Error(`current state named ${currentState.name} fired event ${event} result in no possible next state`);
+                        }
+                    }
+                }
+
+                this.currentState = nextState;
+            }
 
             return {end: false, status: this.status } as EngineResponse;
         } catch (e) {

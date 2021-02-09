@@ -3,10 +3,8 @@ import {Registry} from "../../registry";
 import {check} from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_VIEW} from "../../model/role.model";
-import {getRule, getRule2} from "../../service/rule.service";
-import {Rule2} from "../../server-side-model/server-side.model";
+import {getRule} from "../../service/rule.service";
 import {Rule} from "../../model/rule.model";
-import {rulesConvert} from "../../service/conversion-rule.service";
 import {ApiResponse} from "../../model/api-response.model";
 
 

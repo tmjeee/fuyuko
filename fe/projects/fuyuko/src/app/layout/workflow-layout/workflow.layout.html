@@ -36,18 +36,21 @@
                 <!-- user sub-side-nav -->
                 <mat-sidenav-container class="sub-side-nav-container">
                     <mat-sidenav [opened]="subSideBarOpened" mode="side" [fixedInViewport]="true" [fixedTopGap]="65" position="start">
+                        <!-- workflow definitions listing -->
                         <mat-list>
                             <mat-list-item [class.selected]="routeSubSideNavData === 'workflowListing'">
                                 <mat-icon>list</mat-icon>
-                                <a href="#" [routerLink]="['/workflow-layout', {outlets: {primary:['workflow-listing'], help:['workflow-help']}}]">Workflow Listing</a>
+                                <a href="#" [routerLink]="['/workflow-layout', {outlets: {primary:['workflow-definition-listing'], help:['workflow-help']}}]">Workflow Definition Listing</a>
                             </mat-list-item>
                         </mat-list>
+                        <!-- workflow mappings -->
                         <mat-list>
                             <mat-list-item [class.selected]="routeSubSideNavData === 'workflowMapping'">
                                 <mat-icon>map</mat-icon>
                                 <a href="#" [routerLink]="['/workflow-layout', {outlets: {primary:['workflow-mapping'], help:['workflow-help']}}]">Workflow Mappings</a>
                             </mat-list-item>
                         </mat-list>
+                        <!-- workflow tasks -->
                         <mat-list>
                             <mat-list-item [class.selected]="routeSubSideNavData === 'workflowTask'">
                                 <mat-icon>play_for_work</mat-icon>

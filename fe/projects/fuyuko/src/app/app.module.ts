@@ -154,11 +154,12 @@ import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-b
 import {CustomBulkEditService} from "./service/custom-bulk-edit-service/custom-bulk-edit.service";
 import config from './utils/config.util';
 import {WorkflowLayoutComponent} from "./layout/workflow-layout/workflow.layout";
-import {WorkflowListingPageComponent} from "./page/workflow-listing-page/workflow-listing.page";
+import {WorkflowDefinitionListingPageComponent} from "./page/workflow-definition-listing-page/workflow-definition-listing.page";
 import {WorkflowMappingPageComponent} from "./page/workflow-mapping-page/workflow-mapping.page";
 import {WorkflowTaskPageComponent} from "./page/workflow-task-page/workflow-task.page";
 import {WorkflowInstanceDetailsPageComponent} from "./page/workflow-instance-details-page/workflow-instance-details.page";
 import {WorkflowHelpPageComponent} from "./page/workflow-help-page/workflow-help.page";
+import { HotToastModule } from '@ngneat/hot-toast';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -271,7 +272,7 @@ const appInitializer = (settingsService: SettingsService,
     AuditLogPageComponent,
     AdministrationHelpPageComponent,
     CustomBulkEditPageComponent,
-    WorkflowListingPageComponent,
+    WorkflowDefinitionListingPageComponent,
     WorkflowMappingPageComponent,
     WorkflowTaskPageComponent,
     WorkflowInstanceDetailsPageComponent,  
@@ -286,6 +287,10 @@ const appInitializer = (settingsService: SettingsService,
     AppMaterialsModule,
     FlexLayoutModule,
     HttpClientModule,
+    HotToastModule.forRoot({
+      dismissible: true,
+      autoClose: false,
+    }),
     SimpleNotificationsModule.forRoot({
       position: ['bottom', 'center'],
       timeOut: 0,
@@ -378,7 +383,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true, deps: [AuthService]} as Provider,
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true} as Provider,
     {provide: ErrorHandler, useClass: GlobalErrorHandler} as Provider,
   ],
   entryComponents: [

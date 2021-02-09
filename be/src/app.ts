@@ -1,3 +1,4 @@
+import 'source-map-support/register';
 import express, {Express, Router} from 'express';
 require('express-async-errors');
 import cookieParser from 'cookie-parser';
@@ -40,6 +41,7 @@ const options: Options = {
 };
 
 app.all('*', threadLocalMiddlewareFn);
+
 app.use(timingLogMiddlewareFn);
 app.use(express.urlencoded(options));
 app.use(express.json(options));
@@ -48,8 +50,8 @@ app.use(express.raw(options))
 app.use(cookieParser());
 app.use(httpLogMiddlewareFn);
 app.use(catchErrorMiddlewareFn);
+app.use(cors());
 
-app.all('*', cors());
 app.all('*',  auditMiddlewareFn);
 
 const registry: Registry = Registry.newRegistry('api');
