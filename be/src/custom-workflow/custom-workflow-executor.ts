@@ -10,8 +10,7 @@ import {WorkflowScript} from "../server-side-model/server-side.model";
 
 export const runCustomWorkflowSync = async () => {
     i(`Running workflow sync `);
-
-    const workflowsDirPath: string = path.join(__dirname, 'workflows'); 
+    const workflowsDirPath: string = path.join(__dirname, 'workflows');
     const filesInWorkflowsDir: string[] = await util.promisify(fs.readdir)(workflowsDirPath);
     const sortedWorkflowFilesInWorkflowsDir: string[] = filesInWorkflowsDir
         .filter((f: string) => f.endsWith('.js'))

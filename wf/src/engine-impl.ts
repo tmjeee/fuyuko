@@ -121,7 +121,7 @@ export class InternalEngine implements Engine {
         if (this.startState) {
             this.startState.deserialize(d.startState);
         }
-        
+
         // states
         for (const s in d.states) {
            const _st: SerializedState = JSON.parse(s);
@@ -135,7 +135,7 @@ export class InternalEngine implements Engine {
         if (this.endState) {
             this.endState.deserialize(d.endState);
         }
-        
+
         // args
         this.args = deserializeArgument(d.args);
         for (const t in d.transitionMap) {

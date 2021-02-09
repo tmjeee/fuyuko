@@ -50,27 +50,27 @@ import {EditAttributePageComponent} from './page/view-attributes-page/edit-attri
 import {ViewValidationDetailsPageComponent} from './page/view-validation-details-page/view-validation-details.page';
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
 import {AddAttributePageComponent} from './page/view-attributes-page/add-attribute.page';
-import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
-import {NgModule} from "@angular/core";
-import {CustomImportPageComponent} from "./page/custom-import-page/custom-import.page";
-import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
-import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
-import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
-import {CategoryPageComponent} from "./page/category-page/category.page";
-import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
-import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
-import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
-import {ResetPasswordPageComponent} from "./page/reset-password-page/reset-password.page";
-import {AdministrationLayoutComponent} from "./layout/administration-layout/administration.layout";
-import {AuditLogPageComponent} from "./page/audit-log-page/audit-log.page";
-import {AdministrationHelpPageComponent} from "./page/administration-help-page/administration-help.page";
-import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-bulk-edit.page";
-import {WorkflowLayoutComponent} from "./layout/workflow-layout/workflow.layout";
-import {WorkflowDefinitionListingPageComponent} from "./page/workflow-definition-listing-page/workflow-definition-listing.page";
-import {WorkflowMappingPageComponent} from "./page/workflow-mapping-page/workflow-mapping.page";
-import {WorkflowTaskPageComponent} from "./page/workflow-task-page/workflow-task.page";
-import {WorkflowInstanceDetailsPageComponent} from "./page/workflow-instance-details-page/workflow-instance-details.page";
-import {WorkflowHelpPageComponent} from "./page/workflow-help-page/workflow-help.page";
+import {ExportArtifactsPageComponent} from './page/export-artifacts-page/export-artifacts.page';
+import {NgModule} from '@angular/core';
+import {CustomImportPageComponent} from './page/custom-import-page/custom-import.page';
+import {CustomExportPageComponent} from './page/custom-export-page/custom-export.page';
+import {PriceLayoutComponent} from './layout/price-layout/price.layout';
+import {PricingStructurePartnerAssociationPageComponent} from './page/pricing-structure-partner-association-page/pricing-structure-partner-association.page';
+import {CategoryPageComponent} from './page/category-page/category.page';
+import {CategoryHelpPageComponent} from './page/category-help-page/category-help.page';
+import {CategoryManagementPageComponent} from './page/category-management-page/category-management.page';
+import {ForgotPasswordPageComponent} from './page/forgot-password-page/forgot-password.page';
+import {ResetPasswordPageComponent} from './page/reset-password-page/reset-password.page';
+import {AdministrationLayoutComponent} from './layout/administration-layout/administration.layout';
+import {AuditLogPageComponent} from './page/audit-log-page/audit-log.page';
+import {AdministrationHelpPageComponent} from './page/administration-help-page/administration-help.page';
+import {CustomBulkEditPageComponent} from './page/custom-bulk-edit-page/custom-bulk-edit.page';
+import {WorkflowLayoutComponent} from './layout/workflow-layout/workflow.layout';
+import {WorkflowDefinitionListingPageComponent} from './page/workflow-definition-listing-page/workflow-definition-listing.page';
+import {WorkflowMappingPageComponent} from './page/workflow-mapping-page/workflow-mapping.page';
+import {WorkflowTaskPageComponent} from './page/workflow-task-page/workflow-task.page';
+import {WorkflowInstanceDetailsPageComponent} from './page/workflow-instance-details-page/workflow-instance-details.page';
+import {WorkflowHelpPageComponent} from './page/workflow-help-page/workflow-help.page';
 
 const routes: Routes = [
 
@@ -106,7 +106,7 @@ const routes: Routes = [
     redirectTo: '/login-layout/reset-password/:code'
   },
 
-    
+
   // login-layout
  {
    path: 'login-layout',
@@ -695,7 +695,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { enableTracing: false, scrollPositionRestoration: 'enabled', relativeLinkResolution: 'corrected' })],
+  imports: [RouterModule.forRoot(routes,
+      { enableTracing: false, scrollPositionRestoration: 'enabled', relativeLinkResolution: 'corrected' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

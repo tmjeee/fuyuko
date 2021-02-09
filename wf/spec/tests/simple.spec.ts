@@ -112,7 +112,7 @@ describe('simple', () => {
             console.log('stateMap', _engine.stateMap.keys());
             console.log('status', _engine.status);
             console.log('currentState', _engine.currentState?.name);
-        } 
+        }
         
         {   // step 2
             console.log('***** step 2 ******');
