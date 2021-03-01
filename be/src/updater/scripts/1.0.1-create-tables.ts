@@ -67,7 +67,7 @@ export const update = async () => {
    await TBL_WORKFLOW();
    await TBL_WORKFLOW_INSTANCE();
    await TBL_WORKFLOW_INSTANCE_LOG();
-   await TBL_WORKFLOW_INSTANCE_PARAM();
+   await TBL_WORKFLOW_INSTANCE_TASK();
 
    await ADD_FK_CONSTRAINT();
    await ADD_INDEXES();
@@ -114,10 +114,30 @@ const TBL_WORKFLOW_INSTANCE = async () => {
          CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_INSTANCE (
             ID INT PRIMARY KEY AUTO_INCREMENT,
             WORKFLOW_ID INT,
+            FUNCTION_INPUTS TEXT,
+            CURRENT_WORKFLOW_STATE VARCHAR(200),
             DATA TEXT,
             CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
          );
+      `);
+   });
+};
+
+const TBL_WORKFLOW_INSTANCE_TASK = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW_INSTANCE_TASK`);
+      await conn.query(`
+         CREATE TBL_WORKFLOW_INSTANCE_TASK (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            WORKFLOW_INSTANCE_ID INT,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            WORKFLOW_STATE VARCHAR(500),
+            APPROVAL_STAGE VARCHAR(500),
+            APPROVER_USER_ID INT,
+            STATUS VARCHAR(500)        /* PENDING, ACTIONED, EXPIRED */
+         ); 
       `);
    });
 };
@@ -134,25 +154,9 @@ const TBL_WORKFLOW_INSTANCE_LOG = async () => {
             LOG TEXT 
          );
       `);
-   }); 
-};
-
-const TBL_WORKFLOW_INSTANCE_PARAM = async () => {
-   await doInDbConnection(async (conn: Connection) => {
-      i(`update TBL_WORKFLOW_INSTANCE_PARAM`);  
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_INSTANCE_PARAM (
-            ID INT PRIMARY KEY AUTO_INCREMENT,
-            WORKFLOW_INSTANCE_ID INT,
-            NAME VARCHAR(200),
-            VALUE TEXT,
-            TYPE VARCHAR(200),
-            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-         );
-      `);
    });
 };
+
 
 const TBL_FAVOURITE_ITEM = async () => {
    await doInDbConnection(async (conn: Connection) => {
@@ -1146,7 +1150,8 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_WORKFLOW ADD CONSTRAINT \`fk_tbl_workflow_mapping-2\` FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID) ON DELETE CASCADE`);
       await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE ADD CONSTRAINT \`fk_tbl_workflow_instance-1\` FOREIGN KEY (WORKFLOW_ID) REFERENCES TBL_WORKFLOW(ID) ON DELETE CASCADE');
       await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE_LOG ADD CONSTRAINT \`fk_tbl_workflow_instance_log-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE');
-      await conn.query(`ALTER TABLE TBL_WORKFLOW_INSTANCE_PARAM ADD CONSTRAINT \`fk_tbl_workflow_instance_param-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE`);
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE_APPROVAL ADD CONSTRAINT \`fk_tbl_workflow_instance_approval-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE');
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE_APPROVAL ADD CONSTRAINT \`fk_tbl_workflow_instance_approval-2\` FOREIGN KEY (APPROVER_USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE');
    });
 };
 

@@ -67,10 +67,10 @@ import {AdministrationHelpPageComponent} from './page/administration-help-page/a
 import {CustomBulkEditPageComponent} from './page/custom-bulk-edit-page/custom-bulk-edit.page';
 import {WorkflowLayoutComponent} from './layout/workflow-layout/workflow.layout';
 import {WorkflowDefinitionListingPageComponent} from './page/workflow-definition-listing-page/workflow-definition-listing.page';
-import {WorkflowMappingPageComponent} from './page/workflow-mapping-page/workflow-mapping.page';
 import {WorkflowTaskPageComponent} from './page/workflow-task-page/workflow-task.page';
 import {WorkflowInstanceDetailsPageComponent} from './page/workflow-instance-details-page/workflow-instance-details.page';
 import {WorkflowHelpPageComponent} from './page/workflow-help-page/workflow-help.page';
+import {WorkflowListingPageComponent} from "./page/workflow-listing-page/workflow-listing.page";
 
 const routes: Routes = [
 
@@ -226,22 +226,22 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/workflow-layout/(workflow-definition-listing//help:workflow-help)'
+        redirectTo: '/workflow-layout/(workflow-definition-listing//help:workflow-help)',
       },
       {
         path: 'workflow-definition-listing',
         canActivate: [AuthGuard],
         component: WorkflowDefinitionListingPageComponent,
         data: {
-          subSideNav: 'workflowListing'
+          subSideNav: 'workflowDefinitionListing'
         }
       } as Route,
       {
-        path: 'workflow-mapping',
+        path: 'workflow-listing',
         canActivate: [AuthGuard],
-        component: WorkflowMappingPageComponent,
+        component: WorkflowListingPageComponent,
         data: {
-          subSideNav: 'workflowMapping'
+          subSideNav: 'workflowListing'
         }
       } as Route,
       {

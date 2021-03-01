@@ -3,7 +3,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
-import {ApiErrorContext} from "../model/api-error.model";
+import {ApiErrorContext, isApiError, isApiErrorContext} from "../model/api-error.model";
 import {GlobalCommunicationService} from "../service/global-communication-service/global-communication.service";
 import {ApiResponse} from "../model/api-response.model";
 import {AuthService, isUnauthorizationFailedRedirectable} from "../service/auth-service/auth.service";
@@ -93,25 +93,27 @@ export class GlobalErrorHandler extends ErrorHandler {
 
     private getErrorMessages(r: HttpErrorResponse): string {
 
-        // case 1:
-        const apiErrorContext: ApiErrorContext = r.error;
-        if (apiErrorContext && apiErrorContext.errors && apiErrorContext.errors.length > 0) {
-            return apiErrorContext.errors.reduce((acc: string[], err: {message?: string, msg?: string}) => {
-                if (err.message) {
-                    acc.push(err.message);
-                }
-                if (err.msg) {
-                    acc.push(err.msg);
-                }
-                return acc;
-            }, [])
-            .map((c: string) => c).join('<br/>');
+        // case 1: ApiErrorContext
+        if (isApiErrorContext(r.error)) {
+            const apiErrorContext = r.error;
+            if (apiErrorContext && apiErrorContext.errors && apiErrorContext.errors.length > 0) {
+                return apiErrorContext.errors.reduce((acc: string[], err: { message?: string, msg?: string }) => {
+                    if (err.message) {
+                        acc.push(err.message);
+                    }
+                    if (err.msg) {
+                        acc.push(err.msg);
+                    }
+                    return acc;
+                }, [])
+                    .map((c: string) => c).join('<br/>');
+            }
         }
 
-        // case 2:
+        // case 2: ApiResponse
         const apiResponse: ApiResponse = r.error;
-        if (apiResponse.message && apiResponse.status) {
-            return apiResponse.message;
+            if (apiResponse.message && apiResponse.status) {
+                return apiResponse.message;
         }
 
         return null;

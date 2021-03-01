@@ -8,6 +8,7 @@ import {
     State,
     StateProcessFn
 } from "./index";
+import {StateInitFn} from "./engine-interface";
 
 interface SerializedState {
     name: string,
@@ -16,19 +17,26 @@ interface SerializedState {
 }
 
 
+/**
+ * =======================
+ * === InternalState
+ * =======================
+ */
 export class InternalState implements State, NextState {
 
     name: string;
-    fn: StateProcessFn;   // perform state operation and return next an event optionally
+    initFn: StateInitFn;         // perform state init operation
+    processFn: StateProcessFn;   // perform state operation and return next an event optionally
 
     // transition map, indicating when 'event' occurred we proceed to the given State
     eventToStateMap: Map<string /* event */, State> = new Map();
 
     currentEvent: string | undefined;
 
-    constructor(name: string, fn: StateProcessFn) {
+    constructor(name: string, initFn?: StateInitFn, processFn?: StateProcessFn) {
         this.name = name;
-        this.fn = fn ? fn : async () => '*' ;
+        this.initFn = initFn ? initFn : async ()=>{};
+        this.processFn = processFn ? processFn : async () => '*' ;
     }
 
     on(event?: string): NextState {
@@ -69,18 +77,25 @@ export class InternalState implements State, NextState {
     }
 }
 
+/**
+ * =======================
+ * === InternalEngine
+ * =======================
+ */
 export class InternalEngine implements Engine {
 
-    startState: State | undefined;
-    states: State[] = [];
-    endState: State | undefined ;
+    private startState: State | undefined;
+    private states: State[] = [];
+    private endStates: State[] = [];
     args: Argument | undefined;
 
-    transitionMap: Map<string /* from_state_name_event */, string /* to_state_name */>;
-    stateMap: Map<string /* state name */, State>;
+    private transitionMap: Map<string /* from_state_name_event */, string /* to_state_name */>;
+    private stateMap: Map<string /* state name */, State>;
 
     status: EngineStatus;
+    private previousState: State | undefined;
     currentState: State | undefined;
+    private initedStateNames: string[] = [];
 
     constructor() {
         this.transitionMap = new Map();
@@ -92,7 +107,7 @@ export class InternalEngine implements Engine {
        return JSON.stringify({
           startState: this.startState ? this.startState.serialize(): this.startState,
           states: this.states.map((s: State) => s.serialize()),
-          endState: this.endState ? this.endState.serialize() : this.endState,
+          endStates: this.endStates.map((s: State) => s.serialize()),
           arg: this.args ? serializeArgument(this.args) : this.args,
           transitionMap: [...this.transitionMap.entries()].reduce((acc: {[k: string]: any}, e: [string, string]) => {
               return acc;
@@ -109,7 +124,7 @@ export class InternalEngine implements Engine {
         const d: {
            startState: string,
            states: string[],
-           endState: string,
+           endStates: string[],
            args: string,
            transitionMap: {[k: string]: string},
            stateMap: {[k: string]: string},
@@ -131,9 +146,13 @@ export class InternalEngine implements Engine {
            }
         }
         
-        // endState
-        if (this.endState) {
-            this.endState.deserialize(d.endState);
+        // endStates
+        for (const s in d.endStates) {
+            const _st: SerializedState = JSON.parse(s);
+            const sta: State | undefined = this.states.find((st: State) => st.name === _st.name);
+            if (sta) {
+                sta.deserialize(s);
+            }
         }
 
         // args
@@ -164,7 +183,9 @@ export class InternalEngine implements Engine {
             throw Error(`A start state was already defined`);
         }
         this.startState = state;
-        this.states.push(state);
+        if (!this.states.includes(state)) {
+            this.states.push(state);
+        }
         return this;
     }
 
@@ -176,12 +197,16 @@ export class InternalEngine implements Engine {
         return this;
     }
 
-    endsWith(state: State): Engine {
-        if (this.endState) {
-            throw Error(`An end state was already defined`);
+    endsWith(...states: State[]): Engine {
+        if (this.endStates && this.endStates.length) {
+            throw Error(`End state(s) was / were already defined`);
         }
-        this.states.push(state);
-        this.endState = state;
+        for (const state of states) {
+            if (!this.states.includes(state)) {
+                this.states.push(state);
+            }
+        }
+        this.endStates = [...states];
         return this;
     }
 
@@ -198,27 +223,28 @@ export class InternalEngine implements Engine {
                     this.stateMap.set(toState.name, toState);
                 }
             }
+            this.runInitFn(state);
         }
         this.status = 'INIT';
         this.currentState = this.startState;
-
         return this;
     }
 
-    async next(): Promise<EngineResponse> {
+    async next(inputArg?: Argument): Promise<EngineResponse> {
         if (this.status === 'INIT') {
             this.status = 'STARTED';
         }
         if (this.status === 'ENDED') {
-            return { end: true } as EngineResponse;
+            return { end: true, status: this.status };
         }
 
+        this.combineArgs(inputArg);
         const currentState: InternalState = this.currentState as InternalState;
         try {
-            const event: string | undefined = await currentState.fn(this.args || {});
+            const event: string | undefined = await currentState.processFn(this.previousState, this.args || {});
             console.log('**', currentState.name);
 
-            if (currentState.name === (this.endState as InternalState).name) { // end
+            if (this.endStates.map((s) => s.name).includes(currentState.name)) { // end
                 this.status = 'ENDED';
                 return {end: true, status: this.status} as EngineResponse;
             }
@@ -240,13 +266,27 @@ export class InternalEngine implements Engine {
                     }
                 }
 
+                this.previousState = this.currentState;
                 this.currentState = nextState;
             }
 
-            return {end: false, status: this.status } as EngineResponse;
+            return {end: false, status: this.status };
         } catch (e) {
             this.status = 'ERROR';
             throw e;
+        }
+    }
+
+    private runInitFn(state: State | undefined) {
+        if (state && this.initedStateNames.includes(state.name)) {
+            this.initedStateNames.push(state.name);
+            (state as InternalState).initFn(this.args || {});
+        }
+    }
+
+    private combineArgs(inputArg?: Argument) {
+        if (inputArg) {
+            this.args = {...this.args, ...inputArg};
         }
     }
 }

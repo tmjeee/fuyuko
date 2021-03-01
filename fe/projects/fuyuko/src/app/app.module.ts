@@ -155,11 +155,11 @@ import {CustomBulkEditService} from './service/custom-bulk-edit-service/custom-b
 import config from './utils/config.util';
 import {WorkflowLayoutComponent} from './layout/workflow-layout/workflow.layout';
 import {WorkflowDefinitionListingPageComponent} from './page/workflow-definition-listing-page/workflow-definition-listing.page';
-import {WorkflowMappingPageComponent} from './page/workflow-mapping-page/workflow-mapping.page';
 import {WorkflowTaskPageComponent} from './page/workflow-task-page/workflow-task.page';
 import {WorkflowInstanceDetailsPageComponent} from './page/workflow-instance-details-page/workflow-instance-details.page';
 import {WorkflowHelpPageComponent} from './page/workflow-help-page/workflow-help.page';
 import { HotToastModule } from '@ngneat/hot-toast';
+import {WorkflowListingPageComponent} from './page/workflow-listing-page/workflow-listing.page';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -273,7 +273,7 @@ const appInitializer = (settingsService: SettingsService,
     AdministrationHelpPageComponent,
     CustomBulkEditPageComponent,
     WorkflowDefinitionListingPageComponent,
-    WorkflowMappingPageComponent,
+    WorkflowListingPageComponent,
     WorkflowTaskPageComponent,
     WorkflowInstanceDetailsPageComponent,
     WorkflowHelpPageComponent,

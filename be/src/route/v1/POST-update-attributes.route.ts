@@ -16,6 +16,7 @@ import {Attribute2} from "../../server-side-model/server-side.model";
 import {ApiResponse} from "../../model/api-response.model";
 import {ROLE_EDIT} from "../../model/role.model";
 import {updateAttributes} from "../../service/attribute.service";
+import {triggerWorkflow} from "../../service/workflow-trigger.service";
 
 
 // CHECKED

@@ -38,22 +38,22 @@
                     <mat-sidenav [opened]="subSideBarOpened" mode="side" [fixedInViewport]="true" [fixedTopGap]="65" position="start">
                         <!-- workflow definitions listing -->
                         <mat-list>
-                            <mat-list-item [class.selected]="routeSubSideNavData === 'workflowListing'">
-                                <mat-icon>list</mat-icon>
+                            <mat-list-item [class.selected]="routeSubSideNavData === 'workflowDefinitionListing'">
+                                <mat-icon>list_alt</mat-icon>
                                 <a href="#" [routerLink]="['/workflow-layout', {outlets: {primary:['workflow-definition-listing'], help:['workflow-help']}}]">Workflow Definition Listing</a>
                             </mat-list-item>
                         </mat-list>
-                        <!-- workflow mappings -->
+                        <!-- workflow listing -->
                         <mat-list>
-                            <mat-list-item [class.selected]="routeSubSideNavData === 'workflowMapping'">
-                                <mat-icon>map</mat-icon>
-                                <a href="#" [routerLink]="['/workflow-layout', {outlets: {primary:['workflow-mapping'], help:['workflow-help']}}]">Workflow Mappings</a>
+                            <mat-list-item [class.selected]="routeSubSideNavData === 'workflowListing'">
+                                <mat-icon>listings</mat-icon>
+                                <a href="#" [routerLink]="['/workflow-layout', {outlets: {primary:['workflow-listing'], help:['workflow-help']}}]">Workflow Listing</a>
                             </mat-list-item>
                         </mat-list>
                         <!-- workflow tasks -->
                         <mat-list>
                             <mat-list-item [class.selected]="routeSubSideNavData === 'workflowTask'">
-                                <mat-icon>play_for_work</mat-icon>
+                                <mat-icon>task</mat-icon>
                                 <a href="#" [routerLink]="['/workflow-layout', {outlets: {primary:['workflow-task'], help:['workflow-help']}}]">Workflow Tasks</a>
                             </mat-list-item>
                         </mat-list>
