@@ -1,7 +1,9 @@
 import {View} from "./view.model";
 
-export type WorkflowInstanceAction = 'Create' | 'Edit' | 'Delete';
-export type WorkflowInstanceType = 'Attribute' | 'Item' | 'Price' | 'Rule' | 'User' | 'Category';
+export const WORKFLOW_INSTANCE_ACTION = ['Create', 'Edit', 'Delete'];
+export const WORKFLOW_INSTANCE_TYPE = ['Attribute', 'Item', 'Price', 'Rule', 'User', 'Category'];
+export type WorkflowInstanceAction = typeof WORKFLOW_INSTANCE_ACTION[number];
+export type WorkflowInstanceType = typeof WORKFLOW_INSTANCE_TYPE[number];
 
 export interface WorkflowDefinition {
     id: number,
