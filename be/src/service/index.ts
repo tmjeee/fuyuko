@@ -128,6 +128,8 @@ import {eventsAsObservable, fireEvent, EventType, AllEvents, IncomingHttpEvent, 
     UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry}
     from "./event/event.service";
 
+import { getAllWorkflowDefinition } from './workflow.service'
+
 export {
     // bulk-edit.service
     bulkEditPreview, bulkEditRun, bulkEditRunJob,
@@ -322,5 +324,12 @@ export {
     SearchGroupsNotAssociatedWithPricingStructureEvent, SearchSelfRegistrationByUsernameEvent, SearchUserByUsernameAndStatusEvent,
     SelfRegisterEvent, SetPricesEvent, UnlinkPricingStructureWithGroupIdEvent, UpdateAttributesEvent, UpdateCategoryEvent,
     UpdateItemEvent, UpdateItemsStatusEvent, UpdateItemValueEvent, UpdatePricingStructureStatusEvent, UpdateRuleStatusEvent,
-    UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry
+    UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry,
+
+    // workflow.service,
+    getAllWorkflowDefinition,
+
+    // workflow-trigger.service
+
+    // workflow-utils.service
 };
