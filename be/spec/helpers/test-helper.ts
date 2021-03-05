@@ -21,7 +21,7 @@ export const doDone = (doneFn: DoneFn) => {
     return () => {
         return new Promise((res, rej) => {
             doneFn();
-            res();
+            res(null);
         }).catch((err) => {
             console.error(err.toString(), err);
         });

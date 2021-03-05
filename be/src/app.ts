@@ -129,7 +129,7 @@ const fns: PromiseFn[] = [
            i(`Fuyuko ready for operation !!!`);
            app.listen(port, () => {
                i(`Fuyuko API started listening at port ${port}`);
-               res();
+               res(true);
            });
        });
     }

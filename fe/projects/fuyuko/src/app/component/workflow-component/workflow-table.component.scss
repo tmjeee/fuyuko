@@ -1,0 +1,25 @@
+.workflow-table-component {
+  table {
+    tr {
+      &.headerRow { }
+      &.normalRow {
+        cursor: pointer;
+      }
+      &.expandableRow {
+        &.expanded {
+          visibility: visible;
+          display: table-row;
+        }
+        &.collapsed {
+          visibility: hidden;
+          display: none;
+        }
+        td {
+          .details {
+            margin: 20px;
+          }
+        }
+      }
+    }
+  }
+}

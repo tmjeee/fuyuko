@@ -128,7 +128,8 @@ import {eventsAsObservable, fireEvent, EventType, AllEvents, IncomingHttpEvent, 
     UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry}
     from "./event/event.service";
 
-import { getAllWorkflowDefinition } from './workflow.service'
+import { getAllWorkflowDefinition, addWorkflow, getWorkflowByViewActionAndType } from './workflow.service'
+import { hasWorkflow } from './workflow-trigger.service'
 
 export {
     // bulk-edit.service
@@ -327,9 +328,10 @@ export {
     UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry,
 
     // workflow.service,
-    getAllWorkflowDefinition,
+    getAllWorkflowDefinition, addWorkflow, getWorkflowByViewActionAndType,
 
     // workflow-trigger.service
+    hasWorkflow,
 
-    // workflow-utils.service
+    // workflow-scripts-utils.service
 };

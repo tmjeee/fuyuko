@@ -6,8 +6,10 @@ const engine: Engine = new InternalEngine();
 
 const workflowScript: WorkflowScript = {
     description: 'Workflow Scritp Definition #2 description',
-    createEngine(args?: Argument): Engine {
+    buildEngine(args?: Argument): Engine {
         return engine;
     }
 }
 export default workflowScript;
+export const buildEngine = workflowScript.buildEngine.bind(workflowScript);
+export const description = workflowScript.description;

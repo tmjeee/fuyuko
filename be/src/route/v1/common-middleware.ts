@@ -4,15 +4,15 @@ import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {decodeJwtToken, verifyJwtToken} from "../../service";
 import {JwtPayload} from "../../model/jwt.model";
-import {hasAllUserRoles, hasAnyUserRoles, hasNoneUserRoles} from "../../service/user.service";
 import {
     getThreadLocalStore,
     setThreadLocalStore,
     threadLocalInit,
-    ThreadLocalStore
-} from "../../service/thread-local.service";
-import uuid = require("uuid");
-import {fireEvent, IncomingHttpEvent} from "../../service/event/event.service";
+    ThreadLocalStore,
+    hasAllUserRoles, hasAnyUserRoles, hasNoneUserRoles,
+    fireEvent, IncomingHttpEvent
+} from '../../service';
+import {v4 as uuid} from 'uuid';
 
 
 

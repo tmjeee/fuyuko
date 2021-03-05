@@ -3,8 +3,14 @@ import {Registry} from "../../registry";
 import {getAllWorkflowDefinition} from "../../service";
 import {ApiResponse} from "../../model/api-response.model";
 import {WorkflowDefinition} from "../../model/workflow.model";
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
+import {ROLE_VIEW} from "../../model/role.model";
 
 const httpAction: any[] = [
+    [],
+    validateMiddlewareFn,
+    validateJwtMiddlewareFn,
+    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const workflowDefinitions = await getAllWorkflowDefinition()
         const r: ApiResponse<WorkflowDefinition[]> = {

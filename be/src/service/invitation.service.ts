@@ -5,7 +5,7 @@ import {ClientError} from "../route/v1/common-middleware";
 import {DELETED, ENABLED} from "../model/status.model";
 import {hashedPassword} from "./password.service";
 import config from "../config";
-import uuid = require("uuid");
+import {v4 as uuid} from 'uuid';
 import {SendMailOptions} from "nodemailer";
 import {sendEmail} from "./send-email.service";
 import {

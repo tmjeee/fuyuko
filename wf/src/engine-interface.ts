@@ -1,5 +1,13 @@
 export type EngineStatus = 'UNIITIALIZED' | 'INIT' | 'STARTED' | 'ENDED' | 'ERROR';
 
+export interface EngineSerializedData {
+    args: Argument,
+    status: EngineStatus,
+    previousState: {name: string} | undefined,
+    currentState: {name: string} | undefined,
+    initedStateNames: string[];
+};
+
 export interface Engine {
     readonly args: Argument | undefined;
     readonly currentState: State | undefined;
@@ -7,10 +15,9 @@ export interface Engine {
     startsWith(state: State): Engine;
     register(state: State): Engine;
     endsWith(...states: State[]): Engine;
-    init(arg: Argument): Engine;
+    init(arg: Argument, serializedData?: string): Engine;
     next(arg?: Argument): Promise<EngineResponse>;
-    serialize(): string;
-    deserialize(d: string): void;
+    serializeData(): string;
 }
 
 
@@ -33,12 +40,8 @@ export interface StateProcessFn  {
 export interface State {
     name: string;
     on(event?: string): NextState;
-    serialize(): string;
-    deserialize(data: string): void;
 }
 
 export interface NextState {
     to(nextState: State): State;
-    serialize(): string;
-    deserialize(data: string): void;
 }

@@ -5,7 +5,7 @@ import {Group} from "../model/group.model";
 import {Role} from "../model/role.model";
 import {createJwtToken} from "./jwt.service";
 import {DISABLED, ENABLED} from "../model/status.model";
-import uuid = require("uuid");
+import {v4 as uuid} from 'uuid';
 import {hashedPassword, sendEmail} from "./index";
 import {SendMailOptions} from "nodemailer";
 import config from "../config";

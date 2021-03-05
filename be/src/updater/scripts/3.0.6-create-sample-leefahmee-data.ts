@@ -31,6 +31,7 @@ import {Rule, ValidateClause} from "../../model/rule.model";
 import {AddOrUpdatePricingStructureInput} from "../../service/pricing-structure.service";
 import {PricingStructure} from "../../model/pricing-structure.model";
 import {Group, GROUP_ADMIN, GROUP_PARTNER} from "../../model/group.model";
+import {Status} from '../../model/status.model';
 
 export const profiles = [UPDATER_PROFILE_LEEFAHMEE_DATA];
 
@@ -504,7 +505,11 @@ const runImport = async () => {
     // pricing structure
     const PRICING_STRUCTURE_NAME = `Lee Fah Mee Standard Pricing Structure`;
     const errs: string[] = await addOrUpdatePricingStructures([{
-        id: -1, name: PRICING_STRUCTURE_NAME, description: 'Lee Fah Mee collections standard Pricing Structure', status: "ENABLED", viewId: view.id
+        id: -1,
+        name: PRICING_STRUCTURE_NAME,
+        description: 'Lee Fah Mee collections standard Pricing Structure',
+        status: "ENABLED",
+        viewId: view.id
     } as AddOrUpdatePricingStructureInput])
     checkErrors(errs, `Failed to create Lee Fah Mee pricing structure`);
     const pricingStructure: PricingStructure = await getPricingStructureByName(view.id, PRICING_STRUCTURE_NAME);
@@ -598,7 +603,7 @@ const runImport = async () => {
            id: -1,
            name: 'size attriute value is not empty',
            description: 'validate size attribute value is not empty',
-           status: "ENABLED",
+           status: "ENABLED" as Status,
            level: "ERROR",
            whenClauses: [],
            validateClauses: [
@@ -615,7 +620,7 @@ const runImport = async () => {
             id: -1,
             name: 'carton attribute value is not empty',
             description: 'validate carton attribute value is not empty',
-            status: "ENABLED",
+            status: "ENABLED" as Status,
             level: "ERROR",
             whenClauses: [],
             validateClauses: [

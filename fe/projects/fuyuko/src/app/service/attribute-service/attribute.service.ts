@@ -5,16 +5,16 @@ import {Attribute} from '../../model/attribute.model';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
 import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
-import {map} from "rxjs/operators";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {toQuery} from "../../utils/pagination.utils";
+import {map} from 'rxjs/operators';
+import {LimitOffset} from '../../model/limit-offset.model';
+import {toQuery} from '../../utils/pagination.utils';
 
 const URL_ALL_ATTRIBUTES_BY_VIEW = (limitOffset: LimitOffset) => `${config().api_host_url}/attributes/view/:viewId?${toQuery(limitOffset)}`;
 const URL_ATTRIBUTE_BY_VIEW = () => `${config().api_host_url}/attribute/:attributeId/view/:viewId`;
 const URL_SEARCH_ALL_ATTRIBUTES_BY_VIEW = () => `${config().api_host_url}/attributes/view/:viewId/search/:attribute`;
 const URL_ADD_ATTRIBUTE_TO_VIEW = () => `${config().api_host_url}/view/:viewId/attributes/add`;
-const URL_UPDATE_ATTRIBUTE = () => `${config().api_host_url}/attributes/update`;
-const URL_UPDATE_ATTRIBUTE_STATUS = () => `${config().api_host_url}/attribute/:attributeId/state/:state`;
+const URL_UPDATE_ATTRIBUTE = () => `${config().api_host_url}/view/:viewId/attributes/update`;
+const URL_UPDATE_ATTRIBUTE_STATUS = () => `${config().api_host_url}/view/:viewId/attribute/:attributeId/state/:state`;
 
 @Injectable()
 export class AttributeService {
@@ -30,7 +30,8 @@ export class AttributeService {
 
   getAttributeByView(viewId: number, attributeId: number): Observable<Attribute> {
       return this.httpClient
-          .get<ApiResponse<Attribute>>(URL_ATTRIBUTE_BY_VIEW().replace(':viewId', String(viewId)).replace(':attributeId', String(attributeId)))
+          .get<ApiResponse<Attribute>>(URL_ATTRIBUTE_BY_VIEW()
+              .replace(':viewId', String(viewId)).replace(':attributeId', String(attributeId)))
           .pipe(
               map((r: ApiResponse<Attribute>) => r.payload)
           );
@@ -38,7 +39,10 @@ export class AttributeService {
 
   deleteAttribute(view: View, attribute: Attribute): Observable<ApiResponse> {
       return this.httpClient.post<ApiResponse>(
-          URL_UPDATE_ATTRIBUTE_STATUS().replace(':attributeId', String(attribute.id)).replace(':state', 'DELETED'), {});
+          URL_UPDATE_ATTRIBUTE_STATUS()
+              .replace(':viewId', String(view.id))
+              .replace(':attributeId', String(attribute.id))
+              .replace(':state', 'DELETED'), {});
   }
 
   searchAttribute(viewId: number, search: string): Observable<Attribute[]> {
@@ -60,9 +64,10 @@ export class AttributeService {
 
   updateAttribute(view: View, attribute: Attribute): Observable<ApiResponse> {
       return this.httpClient.post<ApiResponse>(
-          URL_UPDATE_ATTRIBUTE(), {
-            attributes: [attribute]
-          });
+          URL_UPDATE_ATTRIBUTE()
+            .replace(':viewId', String(view.id)), {
+                attributes: [attribute]
+            });
   }
 }
 

@@ -8,8 +8,8 @@ import {Connection} from "mariadb";
 import {File} from "formidable";
 import * as util from "util";
 import * as fs from "fs";
-import uuid = require("uuid");
-import {fireEvent, ImportAttributePreviewEvent} from "../event/event.service";
+import {v4 as uuid} from 'uuid';
+import {fireEvent, ImportAttributePreviewEvent} from '../event/event.service';
 const detectCsv = require('detect-csv');
 
 

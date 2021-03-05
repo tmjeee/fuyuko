@@ -1,0 +1,22 @@
+.workflow-definition-table {
+  table {
+    tr {
+      &.normalRow {
+        cursor: pointer;
+      }
+      &.detailsRow {
+        &.hidden {
+          display: none;
+        }
+        &.expanded {
+          display: block;
+          & td {
+            .details {
+              margin: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

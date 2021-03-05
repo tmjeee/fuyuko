@@ -17,7 +17,7 @@ import * as fs from "fs";
 import * as semver from "semver";
 import {doInDbConnection, QueryA, QueryResponse} from "../db";
 import {Connection} from "mariadb";
-import uuid = require("uuid");
+import {v4 as uuid} from 'uuid';
 import {getCustomBulkEditById} from "../service/custom-bulk-edit.service";
 import {ExportScript} from "../model/custom-export.model";
 
@@ -128,7 +128,7 @@ export const runCustomBulkEditJob = async (viewId: number, customBulkEditId: num
     new Promise((res, rej) => {
         try {
             job.run();
-            res();
+            res(true);
         } catch(e) {
             rej(e);
         }

@@ -37,7 +37,7 @@ import {PricingStructurePageComponent} from './page/pricing-structure-page/prici
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
 import {DashboardPageComponent} from './page/dashboard-page/dashboard.page';
 import {UserManagementService} from './service/user-management-service/user-management.service';
-import {Prov, ViewAttributesPageComponent} from './page/view-attributes-page/view-attributes.page';
+import {ViewAttributesPageComponent} from './page/view-attributes-page/view-attributes.page';
 import {ViewDataTabularPageComponent} from './page/view-data-tabular-page/view-data-tabular.page';
 import {ViewDataThumbnailPageComponent} from './page/view-data-thumbnail-page/view-data-thumbnail.page';
 import {ViewDataListPageComponent} from './page/view-data-list-page/view-data-list.page';
@@ -160,6 +160,8 @@ import {WorkflowInstanceDetailsPageComponent} from './page/workflow-instance-det
 import {WorkflowHelpPageComponent} from './page/workflow-help-page/workflow-help.page';
 import { HotToastModule } from '@ngneat/hot-toast';
 import {WorkflowListingPageComponent} from './page/workflow-listing-page/workflow-listing.page';
+import {WorkflowModule} from './component/workflow-component/workflow.module';
+import {WorkflowService} from "./service/workflow-service/workflow.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -340,6 +342,7 @@ const appInitializer = (settingsService: SettingsService,
     SharedComponentUtilsModule,
     CategoryModule,
     AuditLogModule,
+    WorkflowModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -378,6 +381,7 @@ const appInitializer = (settingsService: SettingsService,
     {provide: AuditLogService, useClass: AuditLogService} as Provider,
     {provide: LoadingService, useClass: LoadingService} as Provider,
     {provide: CustomBulkEditService, useClass: CustomBulkEditService} as Provider,
+    {provide: WorkflowService, useClass: WorkflowService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
       deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,

@@ -3,11 +3,11 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
-import {ApiErrorContext, isApiError, isApiErrorContext} from "../model/api-error.model";
-import {GlobalCommunicationService} from "../service/global-communication-service/global-communication.service";
-import {ApiResponse} from "../model/api-response.model";
-import {AuthService, isUnauthorizationFailedRedirectable} from "../service/auth-service/auth.service";
-import {LoadingService} from "../service/loading-service/loading.service";
+import {ApiErrorContext, isApiError, isApiErrorContext} from '../model/api-error.model';
+import {GlobalCommunicationService} from '../service/global-communication-service/global-communication.service';
+import {ApiResponse} from '../model/api-response.model';
+import {AuthService, isUnauthorizationFailedRedirectable} from '../service/auth-service/auth.service';
+import {LoadingService} from '../service/loading-service/loading.service';
 
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {
@@ -48,13 +48,14 @@ export class GlobalErrorHandler extends ErrorHandler {
                     this.loadingService.stopLoading();
                     if (isUnauthorizationFailedRedirectable(location.href)) {
                         this.getNgZone().run(() => {
-                            this.notificationService.error('Unauthorized', httpErrorResponse.error.errors.map((e: {msg: string}) => e.msg).join(', '));
+                            this.notificationService.error(
+                                'Unauthorized', httpErrorResponse.error.errors.map((e: {msg: string}) => e.msg).join(', '));
                             this.getRouter().navigate(['/login-layout', 'login']);
                         });
                     }
                 } else if (httpErrorResponse.status === 403) {
                     // forbidden - 403
-                    const msg = `Not allowed access to  ${httpErrorResponse.url}`
+                    const msg = `Not allowed access to  ${httpErrorResponse.url}`;
                     this.notificationService.error('Forbidden', msg);
                     this.globalCommunicationService.publishGlobalError(msg);
                     this.loadingService.stopLoading();
@@ -112,7 +113,7 @@ export class GlobalErrorHandler extends ErrorHandler {
 
         // case 2: ApiResponse
         const apiResponse: ApiResponse = r.error;
-            if (apiResponse.message && apiResponse.status) {
+        if (apiResponse.message && apiResponse.status) {
                 return apiResponse.message;
         }
 

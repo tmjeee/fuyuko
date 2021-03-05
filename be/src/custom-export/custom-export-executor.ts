@@ -16,7 +16,7 @@ import {getCustomExportById} from "../service/custom-export.service";
 import {View} from "../model/view.model";
 import {getViewById} from "../service/view.service";
 import {LoggingCallback, newJobLogger, newLoggingCallback} from "../service/job-log.service";
-import uuid = require("uuid");
+import {v4 as uuid} from 'uuid';
 
 const createCustomExportContext = (): CustomExportContext => {
     return {data: {}} as CustomExportContext;
@@ -127,7 +127,7 @@ export const runCustomExportJob = async (viewId: number, customDataExportId: num
     new Promise((res, rej) => {
         try {
             job.run();
-            res();
+            res(true);
         } catch(e) {
             rej(e);
         }

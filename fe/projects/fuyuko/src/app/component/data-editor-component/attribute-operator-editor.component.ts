@@ -35,8 +35,8 @@ import {
     LengthUnits, VOLUME_UNITS,
     VolumeUnits, WeightUnits, WIDTH_UNITS,
     WidthUnits, WEIGHT_UNITS,
-} from "../../model/unit.model";
-import moment from "moment";
+} from '../../model/unit.model';
+import moment from 'moment';
 
 @Component({
     selector: 'app-attribute-operator-editor',

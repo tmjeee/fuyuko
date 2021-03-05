@@ -12,10 +12,8 @@ import {
     ImportScript,
     ImportScriptInputValue, ImportScriptJobSubmissionResult, ImportScriptPreview, ImportScriptValidateResult
 } from "../model/custom-import.model";
-import {LoggingCallback, newJobLogger, newLoggingCallback} from "../service/job-log.service";
-import uuid = require("uuid");
-import {getCustomImportById} from "../service/custom-import.service";
-import {getViewById} from "../service/view.service";
+import {LoggingCallback, newJobLogger, newLoggingCallback, getCustomImportById, getViewById} from '../service';
+import {v4 as uuid} from 'uuid';
 import {View} from "../model/view.model";
 
 const createCustomImportContext = () => {
@@ -123,7 +121,7 @@ export const runCustomImportJob = async (viewId: number, customDataImportId: num
     new Promise((res, rej) => {
         try {
             job.run();
-            res();
+            res(true);
         } catch(e) {
             rej(e);
         }

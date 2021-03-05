@@ -5,9 +5,12 @@ import {WorkflowScript} from "../server-side-model/server-side.model";
 import {Argument, EngineStatus} from "../wf";
 import {Attribute} from "../model/attribute.model";
 import {InternalEngine} from "../wf/engine-impl";
-import * as u from './workflow-utils.service'
-import {StateLike} from "./workflow-utils.service";
+import * as u from './workflow-scripts-utils.service'
+import {StateLike} from "./workflow-scripts-utils.service";
 import {e} from "../logger";
+import {ENABLED} from '../model/status.model';
+import {v4 as uuid} from 'uuid';
+import {getAttributesInView} from './index';
 
 /**
  * Contains functions to assist
@@ -74,6 +77,7 @@ class WorkflowTriggerService {
         const viewIdAttMap = await attributes.reduce(async (acc: Promise<Map<number /* viewId */, Attribute[]>>, att: Attribute) => {
             const map = await acc;
             await doInDbConnection(async (conn) => {
+                // group the passed in attribute by view
                 const q: QueryA = await conn.query(`SELECT VIEW_ID FROM TBL_VIEW_ATTRIBUTE WHERE ID = ?`, [att.id])
                 if (q.length) {
                     const viewId = q[0].VIEW_ID;
@@ -88,17 +92,28 @@ class WorkflowTriggerService {
         }, Promise.resolve(new Map()));
 
         for ( const [viewId, attributes] of viewIdAttMap.entries()) {
-            await this.triggerWorkflow(viewId, workflowDefinitionId, action, 'Attribute', attributes, args)
+            const oldAttributes = await getAttributesInView(viewId, attributes.map(a => a.id), {limit: Number.MAX_SAFE_INTEGER, offset:0});
+            const newAttributes = [...attributes];
+
+            await this.triggerWorkflow(
+               viewId, workflowDefinitionId, action, 'Attribute',
+               JSON.stringify(oldAttributes), JSON.stringify(newAttributes),
+               attributes, args);
         }
     }
 
-    async triggerWorkflow(viewId: number, workflowDefinitionId: number, action: WorkflowInstanceAction, type: WorkflowInstanceType,
-                  functionInputs: any[], args?: Argument): Promise<WorkflowTriggerResult> {
+    async triggerWorkflow(viewId: number, workflowDefinitionId: number, action: WorkflowInstanceAction,
+                          type: WorkflowInstanceType, oldValue: string, newValue: string,
+                          functionInputs: any[], args?: Argument): Promise<WorkflowTriggerResult> {
         return await doInDbConnection(async (conn) => {
             // find workflow
             const qr1: QueryA =  await conn.query(`
-               SELECT (ID, VIEW_ID, WORKFLOW_DEFINITION_ID, ACTION, TYPE, CREATION_DATE, LAST_UPDATE) FROM TBL_WORKFLOW 
-               WHERE VIEW_ID=? AND WORKFLOW_DEFINITION_ID = ? AND ACTION = ? AND TYPE = ?  
+               SELECT 
+                    ID, NAME, VIEW_ID, WORKFLOW_DEFINITION_ID, ACTION, TYPE, CREATION_DATE, LAST_UPDATE 
+               FROM 
+                    TBL_WORKFLOW 
+               WHERE 
+                    VIEW_ID=? AND WORKFLOW_DEFINITION_ID = ? AND ACTION = ? AND TYPE = ?  
             `, [viewId, workflowDefinitionId, action, type]);
             if (qr1.length <= 0) {
                 // no workflow configured
@@ -108,11 +123,14 @@ class WorkflowTriggerService {
                 return r;
             }
             const workflowId = qr1[0].ID;
-
+            const workflowName = qr1[0].NAME;
 
             // find workflow definition for workflow
             const qr0: QueryA = await conn.query(`
-                SELECT ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE FROM TBL_WORKFLOW_DEFINITION WHERE ID = ?
+                SELECT 
+                    ID, NAME, DESCRIPTION, CREATION_DATE, LAST_UPDATE 
+                FROM 
+                    TBL_WORKFLOW_DEFINITION WHERE ID = ?
             `, [workflowDefinitionId]);
             if (qr0.length <= 0) {
                 const r: WorkflowTriggerError = {
@@ -128,14 +146,20 @@ class WorkflowTriggerService {
             const workflowDefinitionName = qr0[0].NAME;
             const workflowDefinitionFileFullPath = Path.join(__dirname, '../custom-workflow/workflows/', workflowDefinitionName);
             const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
-            const engine = workflowScript.createEngine(args);
+            console.log('******************** ', workflowDefinitionFileFullPath)
+            console.log(workflowScript);
+            console.log(workflowScript.buildEngine);
+            const engine = workflowScript.buildEngine(args);
             const currentState = engine.currentState;
-            const data = engine.serialize();
+            const data = engine.serializeData();
             const dataAsJSON = JSON.stringify(data);
+            const workflowInstanceName = `${workflowName}-${uuid()}`;
 
             const qr2: QueryResponse = await conn.query(`
-                INSERT INTO TBL_WORKFLOW_INSTANCE (WORKFLOW_ID, DATA, FUNCTION_INPUTS, CURRENT_WORKFLOW_STATE) VALUES (?,?,?,?)
-            `, [workflowId, dataAsJSON, functionInputsAsJSON, currentState.name]);
+                INSERT INTO TBL_WORKFLOW_INSTANCE 
+                    (WORKFLOW_ID, NAME, DATA, FUNCTION_INPUTS, CURRENT_WORKFLOW_STATE, OLD_VALUE, NEW_VALUE) 
+                VALUES (?,?,?,?,?,?,?)
+            `, [workflowId, workflowInstanceName, dataAsJSON, functionInputsAsJSON, currentState.name, oldValue, newValue]);
             if (qr2.affectedRows == 0) {
                 // todo: failed to insert row
                 e(`Failed to insert row in TBL_WORKFLOW_INSTANCE`);
@@ -151,7 +175,7 @@ class WorkflowTriggerService {
             engine.args[ENGINE_WORKFLOW_ID] = workflowId;
             engine.args[ENGINE_WORKFLOW_INSTANCE_ID] = workflowInstanceId;
 
-            const data2 = engine.serialize();
+            const data2 = engine.serializeData();
 
             const qr3: QueryResponse = await conn.query(`
                 UPDATE TBL_WORKFLOW_INSTANCE SET DATA = ? WHERE ID = ?
@@ -212,12 +236,11 @@ class WorkflowTriggerService {
 
             const workflowDefinitionFileFullPath = Path.join(__dirname, '../custom-workflow/workflows/', workflowDefinitionName);
             const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
-            const engine = workflowScript.createEngine();
+            const engine = workflowScript.buildEngine({}, data);
             const oldStateName = (engine as InternalEngine).currentState.name;
-            engine.deserialize(data);
             await engine.next(args);
             const currentState = engine.currentState;
-            const _data = engine.serialize();
+            const _data = engine.serializeData();
             const dataAsJSON = JSON.stringify(_data);
 
             const q3: QueryResponse = await conn.query(`
@@ -281,11 +304,10 @@ class WorkflowTriggerService {
 
             const workflowDefinitionFileFullPath = Path.join(__dirname, '../custom-workflow/workflows/', workflowDefinitionName);
             const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
-            const engine = workflowScript.createEngine();
-            const oldStateName = (engine as InternalEngine).currentState.name;
-            engine.deserialize(data);
+            const engine = workflowScript.buildEngine({}, data);
+            const currentState = engine.currentState;
 
-            const s: StateLike = { state: engine.currentState, args: engine.args }
+            const s: StateLike = { state: currentState, args: engine.args }
             const r: CurrentWorkflowStateFound = {
                 type: "workflow-state-found",
                 workflowInstanceId,
@@ -327,10 +349,20 @@ class WorkflowTriggerService {
             }
         })
     }
+
+    async hasWorkflow(action: WorkflowInstanceAction, type: WorkflowInstanceType): Promise<boolean> {
+        return await doInDbConnection(async conn => {
+            const q: QueryA = await conn.query(`
+                SELECT COUNT(*) AS COUNT FROM TBL_WORKFLOW WHERE STATUS = ? AND ACTION = ? AND TYPE = ? 
+            `, [ENABLED, action, type]);
+            return (q[0].COUNT > 0);
+        });
+    }
 }
 
 const s = new WorkflowTriggerService();
 export const
+    hasWorkflow = s.hasWorkflow.bind(s),
     triggerWorkflow = s.triggerWorkflow.bind(s),
     triggerAttributeWorkflow = s.triggerAttributeWorkflow.bind(s),
     continueWorkflow = s.continueWorkflow.bind(s),

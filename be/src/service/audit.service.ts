@@ -2,13 +2,13 @@ import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
 import {Connection} from "mariadb";
 import {Level} from '../model/level.model';
 import {getThreadLocalStore, ThreadLocalStore} from "./thread-local.service";
-import {AuditCategory, AuditLog} from "../model/audit-log.model";
+import {AuditCategory as AC, AuditLog} from "../model/audit-log.model";
 import {LimitOffset} from "../model/limit-offset.model";
 import {LIMIT_OFFSET} from "../util/utils";
 
 
 export type AuditLevel = Level;
-export type AuditCategory = AuditCategory;
+export type AuditCategory = AC;
 
 class AuditService {
     /**

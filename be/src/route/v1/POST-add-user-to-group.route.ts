@@ -7,7 +7,7 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check} from 'express-validator';
+import {body} from 'express-validator';
 import {doInDbConnection, QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
@@ -19,8 +19,8 @@ import {addUserToGroup} from "../../service/user.service";
 
 const httpAction: any[] = [
     [
-        check('groupId').exists().isNumeric(),
-        check('userId').exists().isNumeric()
+        body('groupId').exists().isNumeric(),
+        body('userId').exists().isNumeric()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
