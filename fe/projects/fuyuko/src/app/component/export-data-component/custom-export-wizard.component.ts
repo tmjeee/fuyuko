@@ -1,22 +1,23 @@
-import {Component, Input, ViewChild} from "@angular/core";
+import {Component, Input, ViewChild} from '@angular/core';
 import {
    CustomDataExport,
    ExportScriptInputValue, ExportScriptJobSubmissionResult,
    ExportScriptPreview,
    ExportScriptValidateResult
-} from "../../model/custom-export.model";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {MatStepper} from "@angular/material/stepper";
-import {View} from "../../model/view.model";
-import {CustomDataImport} from "../../model/custom-import.model";
-import {CustomImportPreviewComponentEvent} from "../import-data-component/custom-import-preview.component";
-import {Observable} from "rxjs";
-import {CustomExportListComponentEvent} from "./custom-export-list.component";
-import {CustomExportInputFormComponentEvent} from "./custom-export-input-form.component";
+} from '@fuyuko-common/model/custom-export.model';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {MatStepper} from '@angular/material/stepper';
+import {View} from '@fuyuko-common/model/view.model';
+import {CustomDataImport} from '@fuyuko-common/model/custom-import.model';
+import {CustomImportPreviewComponentEvent} from '../import-data-component/custom-import-preview.component';
+import {Observable} from 'rxjs';
+import {CustomExportListComponentEvent} from './custom-export-list.component';
+import {CustomExportInputFormComponentEvent} from './custom-export-input-form.component';
 
 export type CustomExportValidateFn = (v: View, c: CustomDataExport, i: ExportScriptInputValue[]) => Observable<ExportScriptValidateResult>;
 export type CustomExportPreviewFn  = (v: View, c: CustomDataExport, i: ExportScriptInputValue[]) => Observable<ExportScriptPreview>;
-export type CustomExportSubmitFn  =  (v: View, c: CustomDataExport, p: ExportScriptPreview, i: ExportScriptInputValue[]) => Observable<ExportScriptJobSubmissionResult>;
+export type CustomExportSubmitFn  =
+    (v: View, c: CustomDataExport, p: ExportScriptPreview, i: ExportScriptInputValue[]) => Observable<ExportScriptJobSubmissionResult>;
 
 @Component({
    selector: 'app-custom-export-wizard',
@@ -27,7 +28,7 @@ export class CustomExportWizardComponent {
 
    @Input() customDataExports: CustomDataExport[];
    @Input() customExportFormValidateFn: CustomExportValidateFn;
-   @Input() customExportPreviewFn: CustomExportPreviewFn
+   @Input() customExportPreviewFn: CustomExportPreviewFn;
    @Input() customExportSubmitFn: CustomExportSubmitFn;
 
    step1Ready: boolean;
@@ -57,28 +58,28 @@ export class CustomExportWizardComponent {
       this.step1Ready = true;
       this.formControlCustomDataExport = formBuilder.control('', [Validators.required]);
       this.firstStepFormGroup = formBuilder.group({
-         'customDataExport': this.formControlCustomDataExport
+         customDataExport: this.formControlCustomDataExport
       });
 
       // second step
       this.step2Ready = false;
       this.formControlView = formBuilder.control('', [Validators.required]);
       this.secondStepFormGroup = formBuilder.group({
-         'view': this.formControlView
+         view: this.formControlView
       });
 
       // third step
       this.step3Ready = false;
       this.formControlCustomExportInputValues = formBuilder.control('', [Validators.required]);
       this.thirdStepFormGroup = formBuilder.group({
-         'customExportInputValues':  this.formControlCustomExportInputValues
+         customExportInputValues:  this.formControlCustomExportInputValues
       });
 
       // fourth step
       this.step4Ready = false;
       this.formControlCustomExportPreview = formBuilder.control('', [Validators.required]);
       this.fourthStepFormGroup = formBuilder.group({
-         'preview': this.formControlCustomExportPreview
+         preview: this.formControlCustomExportPreview
       });
 
       // fifth step

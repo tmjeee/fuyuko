@@ -1,9 +1,7 @@
 import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
-import {MatOptionSelectionChange} from "@angular/material/core";
-import {AuthService} from "../../../../service/auth-service/auth.service";
-import {MatSelectChange} from "@angular/material/select";
+import {MatSelectChange} from '@angular/material/select';
 
 export interface Location {
     displayName: string;

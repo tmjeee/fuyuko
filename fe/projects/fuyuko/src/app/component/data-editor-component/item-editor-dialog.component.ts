@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {Item} from '../../model/item.model';
+import {Item} from '@fuyuko-common/model/item.model';
 import {Type} from './item-editor.component';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 

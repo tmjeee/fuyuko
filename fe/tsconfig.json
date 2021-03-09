@@ -17,7 +17,7 @@
     "strict": true,
     "strictNullChecks": false,
     "paths": {                                /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
-        "@fuyuko-common/*": ["../common-code/*"],
+        "@fuyuko-common/*": ["../common-code/src/*"],
         "@fuyuko-workflow/*": ["../wf/src/*"]
     },
     "typeRoots": [

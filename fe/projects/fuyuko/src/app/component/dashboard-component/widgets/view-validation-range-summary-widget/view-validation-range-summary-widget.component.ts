@@ -1,27 +1,28 @@
-import {Component, OnInit, Provider} from "@angular/core";
-import {ViewValidationSummaryWidgetService} from "../view-validation-summary-widget/view-validation-summary-widget.service";
-import {DashboardWidget, DashboardWidgetInfo} from "../../dashboard.model";
-import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
-import {ViewValidationRangeSummaryWidgetService} from "./view-validation-range-summary-widget.service";
-import {View} from "../../../../model/view.model";
-import {Reporting_ViewValidationRangeSummary, Reporting_ViewValidationSummary} from "../../../../model/reporting.model";
-import {ChartType} from "angular-google-charts";
-import {take, tap} from "rxjs/operators";
-import {MatSelectChange} from "@angular/material/select";
-import {ViewService} from "../../../../service/view-service/view.service";
+import {Component, OnInit, Provider} from '@angular/core';
+import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
+import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
+import {ViewValidationRangeSummaryWidgetService} from './view-validation-range-summary-widget.service';
+import {View} from '@fuyuko-common/model/view.model';
+import {Reporting_ViewValidationRangeSummary, Reporting_ViewValidationSummary} from '@fuyuko-common/model/reporting.model';
+import {ChartType} from 'angular-google-charts';
+import {take, tap} from 'rxjs/operators';
+import {MatSelectChange} from '@angular/material/select';
+import {ViewService} from '../../../../service/view-service/view.service';
 
 
 @Component({
-    templateUrl: './view-validation-range-summary-widget.component.html', 
+    templateUrl: './view-validation-range-summary-widget.component.html',
     styleUrls: ['./view-validation-range-summary-widget.component.scss'],
     providers: [
-        { provide: ViewValidationRangeSummaryWidgetService, useClass: ViewValidationRangeSummaryWidgetService} as Provider,        
+        { provide: ViewValidationRangeSummaryWidgetService, useClass: ViewValidationRangeSummaryWidgetService} as Provider,
     ]
 })
 export class ViewValidationRangeSummaryWidgetComponent extends DashboardWidget implements OnInit {
 
-    static info(): DashboardWidgetInfo {
-        return { id: 'view-validation-range-summary-widget', name: 'view-validation-range-summary-widget', type: ViewValidationRangeSummaryWidgetComponent };
+    constructor(protected dashboardWidgetService: DashboardWidgetService,
+                protected viewService: ViewService,
+                protected viewValidationRangeSummaryWidgetService: ViewValidationRangeSummaryWidgetService) {
+       super(dashboardWidgetService);
     }
 
     selectedView: View;
@@ -35,7 +36,7 @@ export class ViewValidationRangeSummaryWidgetComponent extends DashboardWidget i
         title: 'Validation Range Summary',
         is3D: true,
         width: 800,
-        height:400,
+        height: 400,
         bars: 'horizontal',
         legend: {
             position: 'bottom'
@@ -46,12 +47,10 @@ export class ViewValidationRangeSummaryWidgetComponent extends DashboardWidget i
             }
         }
     };
-    type:  ChartType = ChartType.BarChart;
+    type: ChartType = ChartType.BarChart;
 
-    constructor(protected dashboardWidgetService: DashboardWidgetService,
-                protected viewService: ViewService,
-                protected viewValidationRangeSummaryWidgetService: ViewValidationRangeSummaryWidgetService) {
-       super(dashboardWidgetService);
+    static info(): DashboardWidgetInfo {
+        return { id: 'view-validation-range-summary-widget', name: 'view-validation-range-summary-widget', type: ViewValidationRangeSummaryWidgetComponent };
     }
 
     ngOnInit(): void {
@@ -72,7 +71,7 @@ export class ViewValidationRangeSummaryWidgetComponent extends DashboardWidget i
         this.selectedView = $event.value;
         this.reload();
     }
-    
+
     reload() {
         this.viewValidationRangeSummaryWidgetService
             .getViewValidationRangeSummary(this.selectedView.id)

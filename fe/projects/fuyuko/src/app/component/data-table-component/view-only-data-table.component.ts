@@ -1,11 +1,11 @@
 import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
-import {Attribute} from '../../model/attribute.model';
-import {Item, TableItem} from '../../model/item.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {Item, TableItem} from '@fuyuko-common/model/item.model';
 import {toTableItem} from '../../utils/item-to-table-items.util';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {RowInfo} from './data-table.component';
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 
 class ViewOnlyDataTableDatasource implements DataSource<TableItem> {

@@ -1,14 +1,14 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
 import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {MatSelectChange} from "@angular/material/select";
-import uuid from "uuid";
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {MatSelectChange} from '@angular/material/select';
+import uuid from 'uuid';
 
 export interface Location {
     displayName: string;
     internalName: string;
-    internalUrl: string
+    internalUrl: string;
 }
 
 /**

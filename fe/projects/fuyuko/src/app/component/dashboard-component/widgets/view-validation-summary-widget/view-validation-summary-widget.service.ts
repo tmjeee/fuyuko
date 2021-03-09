@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import config from "../../../../utils/config.util";
-import {HttpClient} from "@angular/common/http";
-import {map, take} from "rxjs/operators";
-import {Reporting_ViewValidationSummary} from "../../../../model/reporting.model";
-import {ApiResponse} from "../../../../model/api-response.model";
-import {Observable} from "rxjs";
+import {Injectable} from '@angular/core';
+import config from '../../../../utils/config.util';
+import {HttpClient} from '@angular/common/http';
+import {map, take} from 'rxjs/operators';
+import {Reporting_ViewValidationSummary} from '@fuyuko-common/model/reporting.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Observable} from 'rxjs';
 
 const URL_GET_VIEW_VALIDATION_SUMMARY = () => `${config().api_host_url}/reporting/view-validation-summary/view/:viewId`;
 
@@ -20,7 +20,7 @@ export class ViewValidationSummaryWidgetService {
             .pipe(
                 take(1),
                 map((r: ApiResponse<Reporting_ViewValidationSummary>) => r.payload)
-            )
+            );
     }
 
 

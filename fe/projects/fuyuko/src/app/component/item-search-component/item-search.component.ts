@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ItemSearchType} from '../../model/item.model';
+import {FormBuilder, FormControl} from '@angular/forms';
+import {ItemSearchType} from '@fuyuko-common/model/item.model';
 
 
 

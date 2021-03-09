@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import config from "../../../../utils/config.util";
-import {map, take} from "rxjs/operators";
-import {ApiResponse} from "../../../../model/api-response.model";
-import {Reporting_MostActiveUsers} from "../../../../model/reporting.model";
-import {Observable} from "rxjs";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import config from '../../../../utils/config.util';
+import {map, take} from 'rxjs/operators';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Reporting_MostActiveUsers} from '@fuyuko-common/model/reporting.model';
+import {Observable} from 'rxjs';
 
 const URL_GET_MOST_ACTIVE_USERS = () => `${config().api_host_url}/reporting/most-active-users`;
 

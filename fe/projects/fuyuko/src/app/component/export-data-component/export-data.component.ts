@@ -1,25 +1,24 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {forkJoin, Observable, } from 'rxjs';
-import {Attribute} from '../../model/attribute.model';
-import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {tap} from 'rxjs/operators';
 import {MatRadioChange} from '@angular/material/radio';
 import {MatHorizontalStepper} from '@angular/material/stepper';
-import {Job} from '../../model/job.model';
+import {Job} from '@fuyuko-common/model/job.model';
 import {
     AttributeDataExport,
-    DataExport,
     DataExportType,
     ItemDataExport,
     PriceDataExport
-} from '../../model/data-export.model';
+} from '@fuyuko-common/model/data-export.model';
 import {MatCheckboxChange} from '@angular/material/checkbox';
-import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
+import {convertToString} from '@fuyuko-common/shared-utils/ui-item-value-converters.util';
 import {MatSelectChange} from '@angular/material/select';
-import {PricingStructure} from '../../model/pricing-structure.model';
-import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES} from "../../model/operator.model";
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
+import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES} from '@fuyuko-common/model/operator.model';
 
 export type ViewAttributeFn = (viewId: number) => Observable<Attribute[]>;
 export type ViewPricingStructureFn = (viewId: number) => Observable<PricingStructure[]>;
@@ -249,7 +248,7 @@ export class ExportDataComponent implements OnInit {
         (g.get('operator') as FormControl).setValue($event.operator);
         (g.get('itemValue') as FormControl).setValue($event.attribute ? convertToString($event.attribute, $event.itemValue) : undefined);
         this.thirdFormGroup.updateValueAndValidity();
-        const _i: ItemValueOperatorAndAttribute = this.itemValueOperatorAndAttributeList.find((i: ItemValueOperatorAndAttribute) => (i as any).id === id)
+        const _i: ItemValueOperatorAndAttribute = this.itemValueOperatorAndAttributeList.find((i: ItemValueOperatorAndAttribute) => (i as any).id === id);
         if (_i) {
             _i.attribute = $event.attribute;
             _i.operator = $event.operator;
@@ -306,7 +305,7 @@ export class ExportDataComponent implements OnInit {
     onPricingStructureSelectionChanged($event: MatSelectChange) {
         this.selectedPricingStructure = $event.value;
     }
-    
+
     formControlForAttribute(attribute: Attribute): FormControl {
         return this.secondFormGroup.get('attributes').get('' + attribute.id) as FormControl;
     }
@@ -324,7 +323,7 @@ export class ExportDataComponent implements OnInit {
             if (fcItemValue.value == null || fcItemValue.value == undefined || fcItemValue.value.toString().trim() == '') {
                 return {
                     filterInvalid: true
-                }
+                };
             }
         }
         return null;

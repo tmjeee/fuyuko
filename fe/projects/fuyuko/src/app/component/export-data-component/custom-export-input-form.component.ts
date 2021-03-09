@@ -1,22 +1,22 @@
-import {Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges} from "@angular/core";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {tap} from "rxjs/operators";
-import {FileDataObject} from "../../model/file.model";
-import {fromFileToFileDataObject} from "../../shared-utils/buffer.util";
-import {CustomImportInputFormComponentEvent} from "../import-data-component/custom-import-input-form.component";
+import {Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {tap} from 'rxjs/operators';
+import {FileDataObject} from '@fuyuko-common/model/file.model';
+import {fromFileToFileDataObject} from '@fuyuko-common/shared-utils/buffer.util';
+import {CustomImportInputFormComponentEvent} from '../import-data-component/custom-import-input-form.component';
 import {
     CustomDataExport,
     ExportScriptInput,
     ExportScriptInputValue,
     ExportScriptValidateResult
-} from "../../model/custom-export.model";
-import {CustomExportValidateFn} from "./custom-export-wizard.component";
-import {View} from "../../model/view.model";
+} from '@fuyuko-common/model/custom-export.model';
+import {CustomExportValidateFn} from './custom-export-wizard.component';
+import {View} from '@fuyuko-common/model/view.model';
 
 export interface CustomExportInputFormComponentEvent {
     inputValues: ExportScriptInputValue[];
     validationResult: ExportScriptValidateResult;
-};
+}
 
 @Component({
     selector: 'app-custom-export-input-form',
@@ -37,9 +37,9 @@ export class CustomExportInputFormComponent {
 
     constructor(private formBuilder: FormBuilder) {
         this.formGroup = this.formBuilder.group({});
-        this.events = new EventEmitter<CustomImportInputFormComponentEvent>()
+        this.events = new EventEmitter<CustomImportInputFormComponentEvent>();
     }
-    
+
     formControl(k: string): FormControl {
         return this.formGroup.controls[k] as FormControl;
     }

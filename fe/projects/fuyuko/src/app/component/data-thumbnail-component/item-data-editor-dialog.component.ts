@@ -1,8 +1,8 @@
 import {Component, Inject} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {ItemAndAttributes, ItemValueAndAttribute} from '../../model/item-attribute.model';
-import {Item} from '../../model/item.model';
-import {Attribute} from '../../model/attribute.model';
+import {ItemAndAttributes, ItemValueAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {Item} from '@fuyuko-common/model/item.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 import {copyAttrProperties} from '../../utils/item-to-table-items.util';
 

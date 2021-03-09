@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
-import {Group} from '../../model/group.model';
+import {Group} from '@fuyuko-common/model/group.model';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CollectionViewer} from '@angular/cdk/collections';

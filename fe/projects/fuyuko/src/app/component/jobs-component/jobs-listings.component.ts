@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Job, JobAndLogs, JobLog} from '../../model/job.model';
+import {Job, JobAndLogs} from '@fuyuko-common/model/job.model';
 import {Observable} from 'rxjs';
 
 @Component({

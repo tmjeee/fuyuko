@@ -1,12 +1,12 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {View} from "../../model/view.model";
-import {finalize, tap} from "rxjs/operators";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {View} from '@fuyuko-common/model/view.model';
+import {finalize, tap} from 'rxjs/operators';
 import {
    CustomBulkEdit,
    CustomBulkEditScriptInputValue,
    CustomBulkEditScriptPreview
-} from "../../model/custom-bulk-edit.model";
-import {CustomBulkEditPreviewFn} from "./custom-bulk-edit-wizard.component";
+} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {CustomBulkEditPreviewFn} from './custom-bulk-edit-wizard.component';
 
 
 export interface CustomBulkEditPreviewComponentEvent {

@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges} from "@angular/core";
-import {DataExportArtifact} from "../../model/data-export.model";
-import {CollectionViewer, DataSource} from "@angular/cdk/collections";
-import {BehaviorSubject, Observable} from "rxjs";
-import config from "../../utils/config.util";
-import {HttpClient, HttpResponse} from "@angular/common/http";
-import {tap} from "rxjs/operators";
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges} from '@angular/core';
+import {DataExportArtifact} from '@fuyuko-common/model/data-export.model';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
+import config from '../../utils/config.util';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {tap} from 'rxjs/operators';
 
 
 export interface ExportArtifactsComponentEvent {

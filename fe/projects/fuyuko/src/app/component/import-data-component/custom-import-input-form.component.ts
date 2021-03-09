@@ -1,22 +1,22 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from "@angular/core";
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {
     CustomDataImport,
     ImportScriptInput,
     ImportScriptInputValue,
     ImportScriptValidateResult
-} from "../../model/custom-import.model";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {CustomImportValidateFn} from "./custom-import-wizard.component";
-import {tap} from "rxjs/operators";
-import {fromFileToFileDataObject} from "../../shared-utils/buffer.util";
-import {FileDataObject} from "../../model/file.model";
-import {View} from "../../model/view.model";
+} from '@fuyuko-common/model/custom-import.model';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {CustomImportValidateFn} from './custom-import-wizard.component';
+import {tap} from 'rxjs/operators';
+import {fromFileToFileDataObject} from '@fuyuko-common/shared-utils/buffer.util';
+import {FileDataObject} from '@fuyuko-common/model/file.model';
+import {View} from '@fuyuko-common/model/view.model';
 
 
 export interface CustomImportInputFormComponentEvent {
     inputValues: ImportScriptInputValue[];
     validationResult: ImportScriptValidateResult;
-};
+}
 
 @Component({
    selector: 'app-custom-import-input-form',
@@ -37,7 +37,7 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
 
    constructor(private formBuilder: FormBuilder) {
       this.formGroup = this.formBuilder.group({});
-      this.events = new EventEmitter<CustomImportInputFormComponentEvent>()
+      this.events = new EventEmitter<CustomImportInputFormComponentEvent>();
    }
 
    ngOnInit(): void {
@@ -55,7 +55,7 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
           }
        }
    }
-   
+
    formControl(key: string): FormControl {
        return this.formGroup.controls[key] as FormControl;
    }

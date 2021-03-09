@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from "@angular/core";
-import {CollectionViewer, DataSource, SelectionModel} from "@angular/cdk/collections";
-import {BehaviorSubject, Observable} from "rxjs";
-import {MatCheckboxChange} from "@angular/material/checkbox";
-import {CategorySimpleItem} from "../../model/category.model";
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
+import {CollectionViewer, DataSource, SelectionModel} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {MatCheckboxChange} from '@angular/material/checkbox';
+import {CategorySimpleItem} from '@fuyuko-common/model/category.model';
 
 export interface RowInfo {
     item: CategorySimpleItem;
@@ -24,12 +24,12 @@ export class CategoryItemTableDatasource extends DataSource<CategorySimpleItem> 
     update(items: CategorySimpleItem[]) {
         this.subject.next(items);
     }
-};
+}
 
 
 export interface Action {
-    id: string, name: string, description: string
-};
+    id: string; name: string; description: string;
+}
 
 export interface CategoryItemTableComponentEvent {
     actionId: string;
@@ -47,7 +47,7 @@ export class CategoryItemTableComponent implements OnInit, OnChanges {
 
     datasource: CategoryItemTableDatasource;
 
-    @Input() categorySimpleItems: CategorySimpleItem[]
+    @Input() categorySimpleItems: CategorySimpleItem[];
     @Input() actions: Action[];
     @Output() events: EventEmitter<CategoryItemTableComponentEvent>;
 
@@ -77,7 +77,7 @@ export class CategoryItemTableComponent implements OnInit, OnChanges {
             this.datasource.update(i);
         }
     }
-    
+
     masterToggle($event: MatCheckboxChange) {
         if (this.categorySimpleItems.length > 0 &&
             this.selectionModel.selected.length === this.categorySimpleItems.length) {

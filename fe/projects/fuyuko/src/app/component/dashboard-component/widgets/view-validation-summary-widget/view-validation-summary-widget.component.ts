@@ -1,13 +1,13 @@
-import {Component, OnInit, Provider} from "@angular/core";
-import {ViewValidationSummaryWidgetService} from "./view-validation-summary-widget.service";
-import {DashboardWidget, DashboardWidgetInfo} from "../../dashboard.model";
-import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
-import {ViewService} from "../../../../service/view-service/view.service";
-import {take, tap} from "rxjs/operators";
-import {Reporting_ViewValidationSummary} from "../../../../model/reporting.model";
-import {View} from "../../../../model/view.model";
-import {MatSelectChange} from "@angular/material/select";
-import {ChartType} from "angular-google-charts";
+import {Component, OnInit, Provider} from '@angular/core';
+import {ViewValidationSummaryWidgetService} from './view-validation-summary-widget.service';
+import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
+import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
+import {ViewService} from '../../../../service/view-service/view.service';
+import {take, tap} from 'rxjs/operators';
+import {Reporting_ViewValidationSummary} from '@fuyuko-common/model/reporting.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {MatSelectChange} from '@angular/material/select';
+import {ChartType} from 'angular-google-charts';
 
 
 @Component({
@@ -19,8 +19,10 @@ import {ChartType} from "angular-google-charts";
 })
 export class ViewValidationSummaryWidgetComponent extends DashboardWidget implements OnInit {
 
-   static info(): DashboardWidgetInfo {
-       return { id: 'view-validation-summary-widget', name: 'view-validation-summary-widget', type: ViewValidationSummaryWidgetComponent };
+   constructor(protected dashboardWidgetService: DashboardWidgetService,
+               protected viewService: ViewService,
+               protected viewValidationSummaryWidgetService: ViewValidationSummaryWidgetService) {
+      super(dashboardWidgetService);
    }
 
    selectedView: View;
@@ -33,7 +35,7 @@ export class ViewValidationSummaryWidgetComponent extends DashboardWidget implem
        title: 'Validation Summary',
        is3D: true,
        width: 800,
-       height:400,
+       height: 400,
        legend: {
            position: 'bottom'
        },
@@ -46,10 +48,8 @@ export class ViewValidationSummaryWidgetComponent extends DashboardWidget implem
    };
    type: ChartType = ChartType.PieChart;
 
-   constructor(protected dashboardWidgetService: DashboardWidgetService,
-               protected viewService: ViewService,
-               protected viewValidationSummaryWidgetService: ViewValidationSummaryWidgetService) {
-      super(dashboardWidgetService);
+   static info(): DashboardWidgetInfo {
+       return { id: 'view-validation-summary-widget', name: 'view-validation-summary-widget', type: ViewValidationSummaryWidgetComponent };
    }
 
    ngOnInit(): void {
@@ -70,7 +70,7 @@ export class ViewValidationSummaryWidgetComponent extends DashboardWidget implem
       this.selectedView = $event.value;
       this.reload();
    }
-   
+
    reload() {
        this.viewValidationSummaryWidgetService
            .getViewValidationSummary(this.selectedView.id)
@@ -79,7 +79,7 @@ export class ViewValidationSummaryWidgetComponent extends DashboardWidget implem
                    this.r = r;
                    const d: any[] = [];
                    if (this.r && r.totalWithWarnings && r.totalWithErrors && r.totalItems) {
-                       d.push(['Successful', Math.abs(this.r.totalItems - this.r.totalWithErrors - this.r.totalWithWarnings)])
+                       d.push(['Successful', Math.abs(this.r.totalItems - this.r.totalWithErrors - this.r.totalWithWarnings)]);
                        d.push(['Errors', this.r.totalWithErrors]);
                        d.push(['Warnings', this.r.totalWithWarnings]);
                    }

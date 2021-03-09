@@ -1,8 +1,7 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from "@angular/core";
-import {DashboardWidget, DashboardWidgetInfo} from "../../dashboard.model";
-import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
-import uuid from "uuid";
-import {AuthService} from "../../../../service/auth-service/auth.service";
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
+import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
+import uuid from 'uuid';
 
 declare const TradingView: any;
 
@@ -18,14 +17,14 @@ declare const TradingView: any;
 })
 export class StockTradingWidgetComponent extends DashboardWidget implements OnInit, AfterViewInit, OnDestroy {
 
-    static info(): DashboardWidgetInfo {
-       return { id: 'stock-trading-widget', name: 'stock-trading-widget', type: StockTradingWidgetComponent };
+    constructor(protected dashboardWidgetService: DashboardWidgetService) {
+        super(dashboardWidgetService);
     }
 
     uid = `tradingview_${uuid()}`;
 
-    constructor(protected dashboardWidgetService: DashboardWidgetService) {
-        super(dashboardWidgetService);
+    static info(): DashboardWidgetInfo {
+       return { id: 'stock-trading-widget', name: 'stock-trading-widget', type: StockTradingWidgetComponent };
     }
 
     ngOnInit(): void {
@@ -49,18 +48,18 @@ export class StockTradingWidgetComponent extends DashboardWidget implements OnIn
         setTimeout(() => {
             new TradingView.widget(
                 {
-                    "width": 980,
-                    "height": 610,
-                    "symbol": "NASDAQ:AAPL",
-                    "interval": "D",
-                    "timezone": "Etc/UTC",
-                    "theme": "light",
-                    "style": "1",
-                    "locale": "en",
-                    "toolbar_bg": "#f1f3f6",
-                    "enable_publishing": false,
-                    "allow_symbol_change": true,
-                    "container_id": this.uid
+                    width: 980,
+                    height: 610,
+                    symbol: 'NASDAQ:AAPL',
+                    interval: 'D',
+                    timezone: 'Etc/UTC',
+                    theme: 'light',
+                    style: '1',
+                    locale: 'en',
+                    toolbar_bg: '#f1f3f6',
+                    enable_publishing: false,
+                    allow_symbol_change: true,
+                    container_id: this.uid
                 }
             );
         }, 3000);

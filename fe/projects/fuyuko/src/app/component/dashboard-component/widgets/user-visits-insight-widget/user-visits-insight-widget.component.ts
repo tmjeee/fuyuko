@@ -1,11 +1,10 @@
-import {DashboardWidget, DashboardWidgetInfo} from "../../dashboard.model";
-import {Component, OnInit, Provider} from "@angular/core";
-import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
-import {ChartType} from "angular-google-charts";
-import {MatSelectChange} from "@angular/material/select";
-import {UserVisitsInsightWidgetService} from "./user-visits-insight-widget.service";
-import {take, tap} from "rxjs/operators";
-import ChartEditorOptions = google.visualization.ChartEditorOptions;
+import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
+import {Component, OnInit, Provider} from '@angular/core';
+import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
+import {ChartType} from 'angular-google-charts';
+import {MatSelectChange} from '@angular/material/select';
+import {UserVisitsInsightWidgetService} from './user-visits-insight-widget.service';
+import {take, tap} from 'rxjs/operators';
 
 export type PERIOD_TYPE = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
@@ -18,9 +17,12 @@ export type PERIOD_TYPE = 'daily' | 'weekly' | 'monthly' | 'yearly';
 })
 export class UserVisitsInsightWidgetComponent extends DashboardWidget implements OnInit {
 
-    static info(): DashboardWidgetInfo {
-        return { id: 'users-visits-insight-widget', name: 'user-visits-insight-widget', type: UserVisitsInsightWidgetComponent };
-    }
+constructor(protected dashboardWidgetService: DashboardWidgetService,
+            protected userVisitsInsightWidgetService: UserVisitsInsightWidgetService) {
+      super(dashboardWidgetService);
+      this.type = ChartType.LineChart;
+      this.period = 'daily';
+   }
 
    type: ChartType;
    period: PERIOD_TYPE;
@@ -38,7 +40,7 @@ export class UserVisitsInsightWidgetComponent extends DashboardWidget implements
       title: 'User Visits Insights',
       is3D: true,
       width: 800,
-      height:400,
+      height: 400,
       legend: {
           position: 'bottom'
       },
@@ -50,12 +52,9 @@ export class UserVisitsInsightWidgetComponent extends DashboardWidget implements
       }
    };
 
-constructor(protected dashboardWidgetService: DashboardWidgetService,
-               protected userVisitsInsightWidgetService: UserVisitsInsightWidgetService) {
-      super(dashboardWidgetService);
-      this.type = ChartType.LineChart;
-      this.period = 'daily';
-   }
+    static info(): DashboardWidgetInfo {
+        return { id: 'users-visits-insight-widget', name: 'user-visits-insight-widget', type: UserVisitsInsightWidgetComponent };
+    }
 
    ngOnInit(): void {
        this.userVisitsInsightWidgetService.getUserVisitInsights().pipe(
@@ -79,7 +78,7 @@ constructor(protected dashboardWidgetService: DashboardWidgetService,
 
    reload() {
        const d: any[][] = [];
-       switch(this.period) {
+       switch (this.period) {
            case 'daily': {
                this.userVisitsInsight.daily.map((i: {date: string, count: number}) => {
                    d.push([i.date, i.count]);

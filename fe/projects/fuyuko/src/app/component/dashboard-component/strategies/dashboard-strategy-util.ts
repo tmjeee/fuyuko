@@ -1,10 +1,10 @@
 // a must be array / multi-dimention array of SerializeInstanceFormat
-import {SerializedDashboardWidgetInstanceFormat} from '../../../model/dashboard-serialzable.model';
+import {SerializedDashboardWidgetInstanceFormat} from '@fuyuko-common/model/dashboard-serialzable.model';
 import {DashboardWidgetInfo} from '../dashboard.model';
 import {DASHBOARD_WIDGET_INFOS} from '../widgets';
 
-export type StickInTypesArgs = SerializedDashboardWidgetInstanceFormat | 
-                               SerializedDashboardWidgetInstanceFormat[] | 
+export type StickInTypesArgs = SerializedDashboardWidgetInstanceFormat |
+                               SerializedDashboardWidgetInstanceFormat[] |
                                SerializedDashboardWidgetInstanceFormat[][];
 
 export const stickInTypes = (a: StickInTypesArgs): StickInTypesArgs => {
@@ -12,7 +12,7 @@ export const stickInTypes = (a: StickInTypesArgs): StickInTypesArgs => {
         const arr: any = [];
         const ar: SerializedDashboardWidgetInstanceFormat[] = a as SerializedDashboardWidgetInstanceFormat[];
         for (const ai of ar) {
-            var r: SerializedDashboardWidgetInstanceFormat[] = stickInTypes(ai) as SerializedDashboardWidgetInstanceFormat[]; 
+            const r: SerializedDashboardWidgetInstanceFormat[] = stickInTypes(ai) as SerializedDashboardWidgetInstanceFormat[];
             if (r) {
                 arr.push(r);
             }

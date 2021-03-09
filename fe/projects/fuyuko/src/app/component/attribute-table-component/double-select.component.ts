@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {Pair1, Pair2} from '../../model/attribute.model';
+import {Pair1, Pair2} from '@fuyuko-common/model/attribute.model';
 
 export const uniqueP1KeyValidator = (currentPair: Pair1, pairs: Pair1[], formGroup: FormGroup) =>
   (c: AbstractControl): ValidationErrors => {

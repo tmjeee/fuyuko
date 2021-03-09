@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {Pair1} from '../../model/attribute.model';
+import {Pair1} from '@fuyuko-common/model/attribute.model';
 
 export const uniqueKeyValidator = (currentPair: Pair1, pairs: Pair1[], formGroup: FormGroup, changeDetectorRef: ChangeDetectorRef) => (c: AbstractControl): ValidationErrors => {
     const count: number = pairs.filter((p: Pair1) => {

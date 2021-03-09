@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Item, TableItem} from '../../model/item.model';
-import {FormBuilder, FormControl} from '@angular/forms';
+import {Item, TableItem} from '@fuyuko-common/model/item.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {ItemEditorDialogComponent} from './item-editor-dialog.component';
 import {map} from 'rxjs/operators';

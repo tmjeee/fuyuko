@@ -1,6 +1,5 @@
-import {Component, Input} from "@angular/core";
-import {DomSanitizer} from "@angular/platform-browser";
-
+import {Component, Input} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
     selector: 'app-help',
