@@ -1,14 +1,14 @@
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {DataExportArtifact} from "../model/data-export.model";
-import {View} from "../model/view.model";
-import {BinaryContent} from "../model/binary-content.model";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {DataExportArtifact} from '@fuyuko-common/model/data-export.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
 import {
     DeleteExportArtifactByIdEvent,
     fireEvent,
     GetAllExportArtifactsEvent,
     GetExportArtifactContentEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 export class ExportArtifactService {
     /**

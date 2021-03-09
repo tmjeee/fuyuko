@@ -8,10 +8,10 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {check} from 'express-validator';
-import {Rule} from "../../model/rule.model";
-import {ROLE_VIEW} from "../../model/role.model";
-import {getRules} from "../../service/rule.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {Rule} from '@fuyuko-common/model/rule.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {getRules} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 const httpAction: any[] = [

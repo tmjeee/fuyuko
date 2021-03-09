@@ -1,7 +1,7 @@
-import {Argument} from "../wf";
-import {doInDbConnection, QueryA, QueryResponse} from "../db";
-import {ENGINE_WORKFLOW_INSTANCE_ID} from "./workflow-trigger.service";
-import {e} from "../logger";
+import {Argument} from '@fuyuko-workflow/index';
+import {doInDbConnection, QueryA, QueryResponse} from '../db';
+import {ENGINE_WORKFLOW_INSTANCE_ID} from './workflow-trigger.service';
+import {e} from '../logger';
 
 /**
  * Contains functions to assist with
@@ -54,18 +54,20 @@ class WorkflowScriptsUtilsService {
         const taskTitle = this.getTitle(state);
         const taskDescription = this.getDescription(state);
         const possibleApprovalStages = JSON.stringify(this.getPossibleApprovalStages(state));
-        const taskOldValue: undefined = undefined; // todo: not used
-        const taskNewValue: undefined = undefined; // todo: not used
+        const taskOldValue: null = null; // todo: not used
+        const taskNewValue: null = null; // todo: not used
+        console.log('**************** workflow-scripts-utils, setApprovalUserNamesAndCreateInstanceTasks workflowInstanceId', workflowInstanceId);
         await doInDbConnection(async (conn) => {
-            for (const username in usernames) {
+            for (const username of usernames) {
                 const q0: QueryA = await conn.query(`
                     SELECT NAME FROM TBL_WORKFLOW_INSTANCE WHERE ID = ?
                 `, [workflowInstanceId]);
+                console.log('***** q0.length, q0[0]', q0.length, q0[0]);
                 const workflowInstanceName = q0[0].NAME;
                 const workflowInstanceTaskName = `${workflowInstanceName}-task-${username}-${workflowInstanceStateName}`;
                 if (q0.length) {
                     const q1: QueryA = await conn.query(`
-                    SELECT ID FROM TBL_USER WHERE USERNAME
+                    SELECT ID FROM TBL_USER WHERE USERNAME = ?
                 `, [username]);
                     if (q1.length) {
                         const approverUserId = q1[0].ID;

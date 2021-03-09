@@ -1,16 +1,16 @@
-import {doInDbConnection, QueryA, QueryResponse} from "../db";
-import {Connection} from "mariadb";
+import {doInDbConnection, QueryA, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
 import {
     DataMap,
     SerializedDashboardFormat,
     SerializedDashboardWidgetInstanceDataFormat
-} from "../model/dashboard-serialzable.model";
+} from '@fuyuko-common/model/dashboard-serialzable.model';
 import {
     fireEvent, GetUserDashboardSerializedDataEvent,
     GetUserDashboardWidgetSerializedDataEvent,
     SaveUserDashboardEvent,
     SaveUserDashboardWidgetDataEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 class DashboardService {
 

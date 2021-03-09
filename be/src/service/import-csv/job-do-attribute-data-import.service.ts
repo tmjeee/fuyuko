@@ -1,11 +1,11 @@
-import {Job} from "../../model/job.model";
-import {Attribute} from "../../model/attribute.model";
-import {JobLogger, newJobLogger, newLoggingCallback} from "../job-log.service";
-import {saveAttributes} from "../attribute.service";
-import {getJobById} from "../job.service";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {fireEvent, ImportAttributeJobEvent} from "../event/event.service";
+import {Job} from '@fuyuko-common/model/job.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {JobLogger, newJobLogger, newLoggingCallback} from '../job-log.service';
+import {saveAttributes} from '../attribute.service';
+import {getJobById} from '../job.service';
+import {doInDbConnection, QueryA} from '../../db';
+import {Connection} from 'mariadb';
+import {fireEvent, ImportAttributeJobEvent} from '../event/event.service';
 
 const uuid = require('uuid');
 

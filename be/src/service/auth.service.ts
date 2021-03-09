@@ -1,20 +1,20 @@
-import {User} from "../model/user.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {Group} from "../model/group.model";
-import {Role} from "../model/role.model";
-import {createJwtToken} from "./jwt.service";
-import {DISABLED, ENABLED} from "../model/status.model";
+import {User} from '@fuyuko-common/model/user.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {Group} from '@fuyuko-common/model/group.model';
+import {Role} from '@fuyuko-common/model/role.model';
+import {createJwtToken} from './jwt.service';
+import {DISABLED, ENABLED} from '@fuyuko-common/model/status.model';
 import {v4 as uuid} from 'uuid';
-import {hashedPassword, sendEmail} from "./index";
-import {SendMailOptions} from "nodemailer";
-import config from "../config";
+import {hashedPassword, sendEmail} from './';
+import {SendMailOptions} from 'nodemailer';
+import config from '../config';
 import {
     fireEvent,
     ForgotPasswordEvent,
     IsValidForgottenPasswordCodeEvent, LoginEvent, LogoutEvent,
     ResetForgottenPasswordEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 
 export interface LoginResult { errors: string[], user: User, jwtToken: string, theme: string };

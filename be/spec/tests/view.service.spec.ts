@@ -1,12 +1,11 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
 import {
     addOrUpdateViews,
-    AddOrUpdateViewsInput,
     AddOrUpdateViewsInputView,
     deleteView, getAllViews, getViewById,
     getViewByName
-} from "../../src/service";
-import {View} from "../../src/model/view.model";
+} from '../../src/service';
+import {View} from '@fuyuko-common/model/view.model';
 
 describe('view.service', () => {
 

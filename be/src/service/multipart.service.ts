@@ -1,7 +1,7 @@
 
 import {Fields, Files, IncomingForm} from 'formidable';
 import util from 'util';
-import {IncomingMessage} from "http";
+import {IncomingMessage} from 'http';
 import {Request} from 'express';
 
 

@@ -1,20 +1,19 @@
-import {e, i} from "../../logger";
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
-import {sprintf} from "sprintf";
-import * as Path from "path";
-import util from "util";
-import {readFile} from "fs";
-import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
-import {addOrUpdateItem, getItemByName, hashedPassword, updateItemValue} from "../../service";
-import {UPDATER_PROFILE_TEST_DATA} from "../updater";
-import {getGroupByName} from "../../service/group.service";
-import {getViewByName, addOrUpdateViews} from "../../service/view.service";
-import {View} from "../../model/view.model";
-import {selfRegister} from "../../service/self-registration.service";
-import {createInvitation} from "../../service/invitation.service";
-import {getAttributesInView, saveAttributes} from "../../service/attribute.service";
-import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
+import {e, i} from '../../logger';
+import {doInDbConnection} from '../../db';
+import {Connection} from 'mariadb';
+import {sprintf} from 'sprintf';
+import * as Path from 'path';
+import util from 'util';
+import {readFile} from 'fs';
+import {GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from '@fuyuko-common/model/group.model';
+import {addOrUpdateItem, getItemByName, hashedPassword, updateItemValue, getGroupByName, getViewByName, addOrUpdateViews,
+        selfRegister, createInvitation, getAttributesInView, saveAttributes, addOrUpdatePricingStructures,
+        getPricingStructureByName, linkPricingStructureWithGroupId, addItemImage, setPrices, addOrUpdateRules, addCategory,
+        addItemToViewCateogry, getViewCategoryByName
+} from '../../service';
+import {UPDATER_PROFILE_TEST_DATA} from '../updater';
+import {View} from '@fuyuko-common/model/view.model';
+import {Attribute, Pair1, Pair2} from '@fuyuko-common/model/attribute.model';
 import {
     createAreaAttribute,
     createCurrencyAttribute,
@@ -29,12 +28,8 @@ import {
     createTextAttribute,
     createVolumeAttribute, createWeightAttribute,
     createWidthAttribute
-} from "../../shared-utils/attribute-creator.utils";
-import {
-    addOrUpdatePricingStructures,
-    getPricingStructureByName, linkPricingStructureWithGroupId
-} from "../../service/pricing-structure.service";
-import {PricingStructure} from "../../model/pricing-structure.model";
+} from '@fuyuko-common/shared-utils/attribute-creator.utils';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import {
     AreaValue,
     CurrencyValue,
@@ -45,18 +40,10 @@ import {
     TextValue,
     Value,
     VolumeValue, WeightValue, WidthValue
-} from "../../model/item.model";
-import {addItemImage} from "../../service/item-image.service";
-import {setPrices} from "../../service/pricing-structure-item.service";
-import {addOrUpdateRules} from "../../service/rule.service";
-import {Rule, ValidateClause, WhenClause} from "../../model/rule.model";
-import {checkErrors} from "../script-util";
-import {
-    addCategory, addItemToViewCateogry,
-    getViewCategories,
-    getViewCategoryByName
-} from "../../service/category.service";
-import { Category } from "../../model/category.model";
+} from '@fuyuko-common/model/item.model';
+import {Rule, ValidateClause, WhenClause} from '@fuyuko-common/model/rule.model';
+import {checkErrors} from '../script-util';
+import { Category } from '@fuyuko-common/model/category.model';
 
 
 export const profiles = [UPDATER_PROFILE_TEST_DATA];

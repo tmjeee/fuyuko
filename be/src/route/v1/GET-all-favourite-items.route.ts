@@ -9,13 +9,13 @@ import {
     vFnHasAnyUserRoles,
     vFnIsSelf
 } from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import { param } from "express-validator";
 import {getAllFavouriteItemsInView, getAllFavouriteItemsInViewCount} from "../../service/item.service";
 import {toLimitOffset} from "../../util/utils";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {Item} from "../../model/item.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {Item} from '@fuyuko-common/model/item.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction:  any[] = [
         [

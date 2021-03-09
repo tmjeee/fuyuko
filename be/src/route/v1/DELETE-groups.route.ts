@@ -2,9 +2,9 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import { body } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
+import {ROLE_ADMIN, ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {deleteGroup} from "../../service/group.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const httpAction: any[] = [

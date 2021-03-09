@@ -1,18 +1,18 @@
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {GlobalAvatar} from "../model/avatar.model";
-import {BinaryContent} from "../model/binary-content.model";
-import util from "util";
-import fs from "fs";
-import fileType from "file-type";
-import {File} from "formidable";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {GlobalAvatar} from '@fuyuko-common/model/avatar.model';
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
+import util from 'util';
+import fs from 'fs';
+import fileType from 'file-type';
+import {File} from 'formidable';
 import {
     AddGlobalAvatarEvent,
     AddGlobalImageEvent,
     fireEvent, GetAllGlobalAvatarsEvent,
     GetGlobalAvatarContentByNameEvent,
     SaveUserAvatarEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 
 export interface SaveUserAvatarResult { userAvatarId: number, errors: string[] };

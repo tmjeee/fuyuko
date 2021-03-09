@@ -1,4 +1,4 @@
-import {ItemMetadata2, ItemMetadataEntry2, ItemValue2} from "../server-side-model/server-side.model";
+import {ItemMetadata2, ItemMetadataEntry2} from '../server-side-model/server-side.model';
 import {
     AreaValue, CurrencyValue, DateValue,
     DimensionValue, DoubleSelectValue, HeightValue,
@@ -7,7 +7,7 @@ import {
     StringValue,
     TextValue, VolumeValue, WeightValue,
     WidthValue
-} from "../model/item.model";
+} from '@fuyuko-common/model/item.model';
 
 class ConversionItemValueTypesService {
 

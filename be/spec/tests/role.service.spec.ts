@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
 import {
     addOrUpdateRole,
     addRoleToGroup,
@@ -6,10 +6,9 @@ import {
     getGroupByName,
     getGroupsWithRole,
     getRoleByName, removeRoleFromGroup
-} from "../../src/service";
-import {Role} from "../../src/model/role.model";
-import {Group} from "../../src/model/group.model";
-import * as util from "util";
+} from '../../src/service';
+import {Role} from '@fuyuko-common/model/role.model';
+import {Group} from '@fuyuko-common/model/group.model';
 
 
 describe('role.service', () => {

@@ -1,12 +1,12 @@
-import {ItemImage, PricedItem, StringValue, Value} from "../../src/model/item.model";
-import {pricedItemConvert, pricedItemRevert} from "../../src/service/conversion-priced-item.service";
+import {ItemImage, PricedItem, StringValue, Value} from '@fuyuko-common/model/item.model';
+import {pricedItemConvert, pricedItemRevert} from '../../src/service';
 import {
     ItemMetadata2,
     ItemMetadataEntry2,
     ItemValue2,
     PricedItem2
-} from "../../src/server-side-model/server-side.model";
-import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+} from '../../src/server-side-model/server-side.model';
+import {setupTestDatabase} from '../helpers/test-helper';
 
 
 describe(`conversion-priced-item.service.ts`, () => {

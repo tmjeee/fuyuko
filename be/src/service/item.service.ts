@@ -1,17 +1,17 @@
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
 import {
     Item2,
     ItemMetadata2,
     ItemMetadataEntry2,
     ItemValue2,
-} from "../server-side-model/server-side.model";
-import {Item, ItemImage, ItemSearchType, ItemValTypes, Value} from "../model/item.model";
-import {LimitOffset} from "../model/limit-offset.model";
-import {LIMIT_OFFSET} from "../util/utils";
-import {itemValueRevert} from "./conversion-item-value.service";
-import {itemConvert, itemRevert, itemsConvert} from "./conversion-item.service";
-import {ENABLED, Status} from "../model/status.model";
+} from '../server-side-model/server-side.model';
+import {Item, ItemImage, ItemSearchType, ItemValTypes, Value} from '@fuyuko-common/model/item.model';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {LIMIT_OFFSET} from '../util/utils';
+import {itemValueRevert} from './conversion-item-value.service';
+import {itemConvert, itemRevert, itemsConvert} from './conversion-item.service';
+import {ENABLED, Status} from '@fuyuko-common/model/status.model';
 import {
     AddFavouriteItemIdsEvent,
     AddItemEvent,
@@ -24,7 +24,7 @@ import {
     UpdateItemEvent,
     UpdateItemsStatusEvent,
     UpdateItemValueEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 //////////////////////// SQLs //////////////////////////////////////////////////////////////////
 

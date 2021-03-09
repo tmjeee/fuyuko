@@ -13,10 +13,9 @@ import {
     convertToCm2,
     convertToG,
     convertToMl
-} from "../../src/service/compare-attribute-values.service";
-import moment = require("moment");
-import {compare} from "semver";
-import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+} from '../../src/service';
+import moment = require('moment');
+import {setupTestDatabase} from "../helpers/test-helper";
 
 
 describe(`compare-attribute-values.service.spec`, () => {

@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "copy": "npm run copy-model && npm run copy-shared-utils",
-    "copy-model": "rm -fr ./src/app/model && cp -fr ../common-code/model ./projects/fuyuko/src/app/",
-    "copy-shared-utils": "rm -fr ./src/app/shared-utils && cp -fr ../common-code/shared-utils ./projects/fuyuko/src/app",
+    "copy-model": "rm -fr ./src/app/model && cp -fr ../common-code/src/model ./projects/fuyuko/src/app/",
+    "copy-shared-utils": "rm -fr ./src/app/shared-utils && cp -fr ../common-code/src/shared-utils ./projects/fuyuko/src/app",
     "serve": "npm run copy && npx ng serve",
     "build": "npm run copy && npx ng build",
     "build-prod": "npm run copy && npx ng build --prod",

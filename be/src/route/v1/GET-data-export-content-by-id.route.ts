@@ -2,12 +2,10 @@ import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import { param } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
 import {makeApiError, makeApiErrorObj} from "../../util";
-import {ROLE_VIEW} from "../../model/role.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {getExportArtifactContent} from "../../service/export-artifact.service";
-import {BinaryContent} from "../../model/binary-content.model";
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
 
 // CHECKED
 const httpAction: any[] = [

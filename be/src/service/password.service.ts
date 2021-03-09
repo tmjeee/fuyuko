@@ -1,6 +1,6 @@
 
 import config from '../config';
-import sha256 from "sha256";
+import sha256 from 'sha256';
 
 class PasswordService {
     hashedPassword(passwd: string): string {

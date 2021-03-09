@@ -1,8 +1,7 @@
-import {getAttributeInViewByName, getItemWithFiltering, ItemWithFilteringResult} from "../../src/service";
-import {JASMINE_TIMEOUT, setupTestDatabase, setupBeforeAll2} from "../helpers/test-helper";
-import {WhenClause} from "../../src/model/rule.model";
-import {Attribute} from "../../src/model/attribute.model";
-import {ItemValueOperatorAndAttribute} from "../../src/model/item-attribute.model";
+import {getAttributeInViewByName, getItemWithFiltering, ItemWithFilteringResult} from '../../src/service';
+import {JASMINE_TIMEOUT, setupTestDatabase, setupBeforeAll2} from '../helpers/test-helper';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ItemValueOperatorAndAttribute} from "@fuyuko-common/model/item-attribute.model";
 import {
     AreaValue,
     CurrencyValue,
@@ -12,8 +11,7 @@ import {
     TextValue,
     Value,
     VolumeValue, WeightValue, WidthValue
-} from "../../src/model/item.model";
-import * as util from "util";
+} from '@fuyuko-common/model/item.model';
 
 
 describe('item-filtering.service', () => {

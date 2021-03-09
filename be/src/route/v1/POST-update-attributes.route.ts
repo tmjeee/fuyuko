@@ -1,24 +1,25 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {
-    aFnAnyTrue,
+    aFnAnyTrue, threadLocalMiddlewareFn,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {body, param} from 'express-validator';
-import {Attribute} from "../../model/attribute.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_EDIT} from "../../model/role.model";
-import {getWorkflowByViewActionAndType, hasWorkflow, updateAttributes} from '../../service';
-import {triggerAttributeWorkflow} from '../../service/workflow-trigger.service';
-import {Workflow} from '../../model/workflow.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {getWorkflowByViewActionAndType, updateAttributes} from '../../service';
+import {triggerAttributeWorkflow} from '../../service';
+import {Workflow} from "@fuyuko-common/model/workflow.model";
 
 
 // CHECKED
 
 const httpAction: any[] = [
+    threadLocalMiddlewareFn,
     [
         param('viewId').exists().isNumeric(),
         body('attributes').isArray(),
@@ -48,8 +49,6 @@ const httpAction: any[] = [
             });
             return;
         }
-
-
 
         const r: {errors: string[], updatedAttributeIds: number[]} = await updateAttributes(atts);
 

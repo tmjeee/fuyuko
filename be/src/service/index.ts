@@ -4,8 +4,8 @@
 import {preview as bulkEditPreview} from './bulk-edit/bulk-edit.service';
 import {run as bulkEditRun, runJob as bulkEditRunJob} from './bulk-edit/job-do-bulk-edit.service';
 import {preview as exportAttributePreview} from './export-csv/export-attribute.service';
-import {preview as exportItemPreview} from './export-csv/export-item.service';
-import {preview as exportPricePreview} from './export-csv/export-price.service';
+import {preview as exportItemPreview, PreviewResult as ExportItemPreviewResult} from './export-csv/export-item.service';
+import {preview as exportPricePreview, PreviewResult as ExportPricePreviewResult } from './export-csv/export-price.service';
 import {runJob as exportAttributeRunJob} from './export-csv/job-do-attribute-data-export.service';
 import {runJob as exportItemRunJob} from './export-csv/job-do-item-data-export.service';
 import {runJob as exportPriceRunJob} from './export-csv/job-do-price-data-export.service';
@@ -73,7 +73,7 @@ import {PricedItemsWithFilteringResult, getPricedItemsWithFiltering} from './pri
 import {searchGroupsNotAssociatedWithPricingStructure, unlinkPricingStructureWithGroupId, linkPricingStructureWithGroupId,
         getPricingStructureGroupAssociations, getPricingStructureByName, getPricingStructureById, addOrUpdatePricingStructures,
         getPricingStructuresByView, getPartnerPricingStructures, getAllPricingStructureItemsWithPrice, getAllPricingStructureItemsWithPriceCount,
-        getAllPricingStructures, searchGroupsAssociatedWithPricingStructure, updatePricingStructureStatus}
+        getAllPricingStructures, searchGroupsAssociatedWithPricingStructure, updatePricingStructureStatus, AddOrUpdatePricingStructureInput}
         from './pricing-structure.service';
 import {setPrices, addItemToPricingStructure, getPricingStructureItem, setPricesB} from './pricing-structure-item.service';
 import {addRoleToGroup, addOrUpdateRole, getRoleByName, getAllRoles, removeRoleFromGroup} from './role.service';
@@ -128,15 +128,16 @@ import {eventsAsObservable, fireEvent, EventType, AllEvents, IncomingHttpEvent, 
     UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry}
     from "./event/event.service";
 
-import { getAllWorkflowDefinition, addWorkflow, getWorkflowByViewActionAndType } from './workflow.service'
-import { hasWorkflow } from './workflow-trigger.service'
+import { getAllWorkflowDefinition, getWorkflowByView, addWorkflow, getWorkflowByViewActionAndType } from './workflow.service'
+import { hasWorkflow, triggerAttributeWorkflow } from './workflow-trigger.service'
 
 export {
     // bulk-edit.service
     bulkEditPreview, bulkEditRun, bulkEditRunJob,
 
     // export-csv.service
-    exportAttributePreview, exportItemPreview, exportPricePreview, exportAttributeRunJob, exportItemRunJob, exportPriceRunJob,
+    exportAttributePreview, exportItemPreview, ExportItemPreviewResult, exportPricePreview, ExportPricePreviewResult, exportAttributeRunJob,
+    exportItemRunJob, exportPriceRunJob,
 
     // import-csv.service
     importAttributePreview, importItemPreview, importPricePreview, importAttributeRunJob, importItemRunJob, importPriceRunJob,
@@ -257,7 +258,7 @@ export {
     getPricingStructureGroupAssociations, getPricingStructureByName, getPricingStructureById, addOrUpdatePricingStructures,
     getPricingStructuresByView, getPartnerPricingStructures, getAllPricingStructureItemsWithPrice,
     getAllPricingStructureItemsWithPriceCount, getAllPricingStructures, searchGroupsAssociatedWithPricingStructure,
-    updatePricingStructureStatus,
+    updatePricingStructureStatus, AddOrUpdatePricingStructureInput,
 
     // pricing-structure-item.service
     setPrices, addItemToPricingStructure, getPricingStructureItem, setPricesB,
@@ -328,10 +329,10 @@ export {
     UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry,
 
     // workflow.service,
-    getAllWorkflowDefinition, addWorkflow, getWorkflowByViewActionAndType,
+    getAllWorkflowDefinition, addWorkflow, getWorkflowByViewActionAndType, getWorkflowByView,
 
     // workflow-trigger.service
-    hasWorkflow,
+    hasWorkflow, triggerAttributeWorkflow,
 
     // workflow-scripts-utils.service
 };

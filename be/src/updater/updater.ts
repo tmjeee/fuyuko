@@ -1,6 +1,6 @@
 
-import {doInDbConnection, QueryResponse, QueryI, QueryA } from "../db";
-import {Connection} from "mariadb";
+import {doInDbConnection, QueryResponse, QueryI, QueryA } from '../db';
+import {Connection} from 'mariadb';
 import path from 'path';
 import fs from 'fs';
 import util from 'util';

@@ -1,10 +1,10 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {searchGroupsAssociatedWithPricingStructure} from "../../service/pricing-structure.service";
-import { Group } from "../../model/group.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {searchGroupsAssociatedWithPricingStructure} from '../../service';
+import { Group } from '@fuyuko-common/model/group.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [],

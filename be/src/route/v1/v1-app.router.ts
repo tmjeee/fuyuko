@@ -151,6 +151,7 @@ import registerPostUpdateCategoryHierarchyRoute from './POST-update-category-hie
 import registerGetAllWorkflowDefinitionsRoute from './GET-all-workflow-definition.route';
 import registerGetAllWorkflowsByIdRoute from './GET-all-workflows-by-view.route';
 import registerPostAddWorkflowRoute from './POST-add-workflow.route';
+import registerGetAllWorkflowByViewActionAndTypeRoute  from './GET-all-workflow-by-view-action-and-type.route';
 
 
 const v1AppRouter:Router  = express.Router();
@@ -312,6 +313,7 @@ const reg = (router: Router, regi: Registry): Router => {
     registerGetAllWorkflowDefinitionsRoute(v1AppRouter, registry);
     registerGetAllWorkflowsByIdRoute(v1AppRouter, registry);
     registerPostAddWorkflowRoute(v1AppRouter, registry);
+    registerGetAllWorkflowByViewActionAndTypeRoute(v1AppRouter, registry);
 
     return v1AppRouter;
 };

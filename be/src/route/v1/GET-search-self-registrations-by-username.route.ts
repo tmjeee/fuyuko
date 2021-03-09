@@ -1,12 +1,10 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {param} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {SelfRegistration} from "../../model/self-registration.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {searchSelfRegistrationsByUsername} from "../../service/self-registration.service";
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from './common-middleware';
+import {SelfRegistration} from '@fuyuko-common/model/self-registration.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {searchSelfRegistrationsByUsername} from '../../service';
 
 
 // CHECKED

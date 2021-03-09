@@ -1,10 +1,10 @@
 // this is the attribute form stored in db
-import {ItemImage, ItemValTypes, Value} from "../model/item.model";
-import {AttributeType} from "../model/attribute.model";
-import {OperatorType} from "../model/operator.model";
-import {RuleLevel} from "../model/rule.model";
-import {Status} from "../model/status.model";
-import {Argument, Engine} from "../wf";
+import {ItemImage, ItemValTypes, Value} from '@fuyuko-common/model/item.model';
+import {AttributeType} from '@fuyuko-common/model/attribute.model';
+import {OperatorType} from '@fuyuko-common/model/operator.model';
+import {RuleLevel} from '@fuyuko-common/model/rule.model';
+import {Status} from '@fuyuko-common/model/status.model';
+import {Argument, Engine} from '@fuyuko-workflow/index';
 
 
 
@@ -167,7 +167,8 @@ export interface WhenClauseMetadataEntry2 {
 // ===== workflow ================
 
 export interface WorkflowScript {
-    buildEngine(args?: Argument, serializedData?: string): Engine;
+    buildEngine(): Engine;
+    initEngine(engine: Engine, args?: Argument, serializedData?: string): Engine;
     description: string;
 }
 

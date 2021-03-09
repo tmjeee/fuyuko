@@ -1,9 +1,9 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
-import { param } from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {ApiResponse} from "../../model/api-response.model";
-import {markItemImageAsPrimary} from "../../service/item-image.service";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
+import { param } from 'express-validator';
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from './common-middleware';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {markItemImageAsPrimary} from '../../service';
 
 // CHECKED
 

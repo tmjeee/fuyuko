@@ -1,7 +1,7 @@
-import {Job, JobAndLogs, JobLog} from "../model/job.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
-import {Connection} from "mariadb";
-import {fireEvent, GetAllJobsEvent, GetJobByIdEvent, GetJobDetailsByIdEvent} from "./event/event.service";
+import {Job, JobAndLogs, JobLog} from '@fuyuko-common/model/job.model';
+import {doInDbConnection, QueryA, QueryI} from '../db';
+import {Connection} from 'mariadb';
+import {fireEvent, GetAllJobsEvent, GetJobByIdEvent, GetJobDetailsByIdEvent} from './event/event.service';
 
 const J_SQL = `
                 SELECT 

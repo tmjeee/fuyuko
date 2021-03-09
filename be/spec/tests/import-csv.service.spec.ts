@@ -1,10 +1,10 @@
-import {readCsv, readKeyPairs, readPair1Csv, readPair2Csv} from "../../src/service/import-csv/import-csv.service";
-import {Pair1, Pair2} from "../../src/model/attribute.model";
-import {readFile} from "fs";
-import * as util from "util";
-import * as path from "path";
-import {CsvAttribute, CsvItem, CsvPrice} from "../../src/server-side-model/server-side.model";
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {readCsv, readKeyPairs, readPair1Csv, readPair2Csv} from '../../src/service/import-csv/import-csv.service';
+import {Pair1, Pair2} from '@fuyuko-common/model/attribute.model';
+import {readFile} from 'fs';
+import * as util from 'util';
+import * as path from 'path';
+import {CsvAttribute, CsvItem, CsvPrice} from '../../src/server-side-model/server-side.model';
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
 
 
 describe(`import-csv.service`, () => {

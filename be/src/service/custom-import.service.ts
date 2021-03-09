@@ -1,8 +1,8 @@
-import {CustomDataImport, ImportScript, ImportScriptInput} from "../model/custom-import.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
-import {Connection} from "mariadb";
-import {getImportScriptByName} from "../custom-import/custom-import-executor";
-import {fireEvent, GetAllCustomImportsEvent, GetCustomImportByIdEvent} from "./event/event.service";
+import {CustomDataImport, ImportScript, ImportScriptInput} from '@fuyuko-common/model/custom-import.model';
+import {doInDbConnection, QueryA, QueryI} from '../db';
+import {Connection} from 'mariadb';
+import {getImportScriptByName} from '../custom-import/custom-import-executor';
+import {fireEvent, GetAllCustomImportsEvent, GetCustomImportByIdEvent} from './event/event.service';
 
 class CustomImportService {
 

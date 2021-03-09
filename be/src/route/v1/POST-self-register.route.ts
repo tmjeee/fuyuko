@@ -2,11 +2,11 @@
 import {Request, Response, NextFunction, Router} from 'express';
 import {body} from 'express-validator';
 
-import {validateMiddlewareFn} from "./common-middleware";
+import {validateMiddlewareFn} from './common-middleware';
 
-import {Registry} from "../../registry";
-import {RegistrationResponse} from "../../model/api-response.model";
-import {selfRegister} from "../../service/self-registration.service";
+import {Registry} from '../../registry';
+import {RegistrationResponse} from '@fuyuko-common/model/api-response.model';
+import {selfRegister} from '../../service';
 
 const httpAction = [
     [

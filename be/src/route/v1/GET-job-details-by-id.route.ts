@@ -1,17 +1,17 @@
-import {Registry} from "../../registry";
-import {Router, Request, Response, NextFunction} from "express";
+import {Registry} from '../../registry';
+import {Router, Request, Response, NextFunction} from 'express';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {param} from 'express-validator';
-import {JobAndLogs} from "../../model/job.model";
-import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {getJobDetailsById} from "../../service/job.service";
+import {JobAndLogs} from '@fuyuko-common/model/job.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getJobDetailsById} from '../../service';
 
 // CHECKED
 

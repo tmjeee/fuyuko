@@ -1,11 +1,11 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
-import { body } from "express-validator/src/middlewares/validation-chain-builders";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
-import {addOrUpdateGroup} from "../../service/group.service";
-import {Group} from "../../model/group.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
+import {addOrUpdateGroup} from '../../service';
+import {Group} from '@fuyuko-common/model/group.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {body} from 'express-validator';
 
 const httpAction: any[] = [
     [

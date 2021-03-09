@@ -7,12 +7,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check, body} from 'express-validator';
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {View} from "../../model/view.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
+import {body} from 'express-validator';
+import {View} from '@fuyuko-common/model/view.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {deleteView} from "../../service/view.service";
 
 

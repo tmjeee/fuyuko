@@ -1,9 +1,9 @@
-import {ItemImage, PricedItem} from "../model/item.model";
-import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2, PricedItem2} from "../server-side-model/server-side.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
-import {Connection} from "mariadb";
-import {fireEvent, GetPricedItemsEvent} from "./event/event.service";
-import {pricedItemsConvert} from "./conversion-priced-item.service";
+import {ItemImage, PricedItem} from '@fuyuko-common/model/item.model';
+import {Item2, ItemMetadata2, ItemMetadataEntry2, ItemValue2, PricedItem2} from '../server-side-model/server-side.model';
+import {doInDbConnection, QueryA, QueryI} from '../db';
+import {Connection} from 'mariadb';
+import {fireEvent, GetPricedItemsEvent} from './event/event.service';
+import {pricedItemsConvert} from './conversion-priced-item.service';
 
 class PricedItemService {
 

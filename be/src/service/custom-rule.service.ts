@@ -1,13 +1,13 @@
-import {CustomRule, CustomRuleForView} from "../model/custom-rule.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {Status} from "../model/status.model";
+import {CustomRule, CustomRuleForView} from '@fuyuko-common/model/custom-rule.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {Status} from '@fuyuko-common/model/status.model';
 import {
     AddCustomRuleToViewEvent,
     ChangeCustomRuleStatusEvent, DeleteCustomRulesEvent,
     fireEvent,
     GetAllCustomRulesEvent, GetAllCustomRulesForViewEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 
 class CustomRuleService {

@@ -1,8 +1,8 @@
-import {Group} from "../model/group.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {Role} from "../model/role.model";
-import {DELETED, ENABLED} from "../model/status.model";
+import {Group} from '@fuyuko-common/model/group.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {Role} from '@fuyuko-common/model/role.model';
+import {DELETED, ENABLED} from '@fuyuko-common/model/status.model';
 import {
     AddOrUpdateGroupEvent,
     DeleteGroupEvent,
@@ -13,7 +13,7 @@ import {
     GetGroupsWithRoleEvent,
     SearchForGroupByNameEvent,
     SearchForGroupsWithNoSuchRoleEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 export interface AddOrUpdateGroupInput { id: number, name: string, description: string, isSystem?: boolean};
 class GroupService {

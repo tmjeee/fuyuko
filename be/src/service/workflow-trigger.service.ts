@@ -1,16 +1,16 @@
-import {WorkflowInstanceAction, WorkflowInstanceType} from "../model/workflow.model";
-import {doInDbConnection, QueryA, QueryResponse} from "../db";
+import {WorkflowInstanceAction, WorkflowInstanceType} from '@fuyuko-common/model/workflow.model';
+import {doInDbConnection, QueryA, QueryResponse} from '../db';
 import * as Path from 'path';
-import {WorkflowScript} from "../server-side-model/server-side.model";
-import {Argument, EngineStatus} from "../wf";
-import {Attribute} from "../model/attribute.model";
-import {InternalEngine} from "../wf/engine-impl";
+import {WorkflowScript} from '../server-side-model/server-side.model';
+import {Argument, EngineStatus} from '@fuyuko-workflow/index';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {InternalEngine} from "@fuyuko-workflow/engine-impl";
 import * as u from './workflow-scripts-utils.service'
-import {StateLike} from "./workflow-scripts-utils.service";
-import {e} from "../logger";
-import {ENABLED} from '../model/status.model';
+import {StateLike} from './workflow-scripts-utils.service';
+import {e} from '../logger';
+import {ENABLED} from "@fuyuko-common/model/status.model";
 import {v4 as uuid} from 'uuid';
-import {getAttributesInView} from './index';
+import {getAttributesInView, getThreadLocalStore} from './';
 
 /**
  * Contains functions to assist
@@ -105,9 +105,10 @@ class WorkflowTriggerService {
     async triggerWorkflow(viewId: number, workflowDefinitionId: number, action: WorkflowInstanceAction,
                           type: WorkflowInstanceType, oldValue: string, newValue: string,
                           functionInputs: any[], args?: Argument): Promise<WorkflowTriggerResult> {
-        return await doInDbConnection(async (conn) => {
+        const userId = (getThreadLocalStore().jwtPayload?.user?.id ?? null);
+        const {workflowInstanceId, engine, workflowScript} = await doInDbConnection(async (conn) => {
             // find workflow
-            const qr1: QueryA =  await conn.query(`
+            const qr1: QueryA = await conn.query(`
                SELECT 
                     ID, NAME, VIEW_ID, WORKFLOW_DEFINITION_ID, ACTION, TYPE, CREATION_DATE, LAST_UPDATE 
                FROM 
@@ -134,7 +135,7 @@ class WorkflowTriggerService {
             `, [workflowDefinitionId]);
             if (qr0.length <= 0) {
                 const r: WorkflowTriggerError = {
-                    type:"workflow-trigger-error",
+                    type: "workflow-trigger-error",
                     message: `Unable to find workflow definition id ${workflowDefinitionId}`
                 }
                 return r;
@@ -144,22 +145,23 @@ class WorkflowTriggerService {
             // create workflow instance for workflow
             const functionInputsAsJSON = JSON.stringify(functionInputs);
             const workflowDefinitionName = qr0[0].NAME;
+            const workflowInstanceName = `${workflowName}-${uuid()}`;
+
             const workflowDefinitionFileFullPath = Path.join(__dirname, '../custom-workflow/workflows/', workflowDefinitionName);
             const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
             console.log('******************** ', workflowDefinitionFileFullPath)
             console.log(workflowScript);
             console.log(workflowScript.buildEngine);
-            const engine = workflowScript.buildEngine(args);
-            const currentState = engine.currentState;
-            const data = engine.serializeData();
-            const dataAsJSON = JSON.stringify(data);
-            const workflowInstanceName = `${workflowName}-${uuid()}`;
+            const engine = workflowScript.buildEngine();
+            engine.args[ENGINE_WORKFLOW_DEFINITION_ID] = workflowDefinitionId;
+            engine.args[ENGINE_WORKFLOW_ID] = workflowId;
 
             const qr2: QueryResponse = await conn.query(`
                 INSERT INTO TBL_WORKFLOW_INSTANCE 
-                    (WORKFLOW_ID, NAME, DATA, FUNCTION_INPUTS, CURRENT_WORKFLOW_STATE, OLD_VALUE, NEW_VALUE) 
-                VALUES (?,?,?,?,?,?,?)
-            `, [workflowId, workflowInstanceName, dataAsJSON, functionInputsAsJSON, currentState.name, oldValue, newValue]);
+                    (WORKFLOW_ID, NAME, DATA, FUNCTION_INPUTS, CURRENT_WORKFLOW_STATE, ENGINE_STATUS, OLD_VALUE, NEW_VALUE, CREATOR_USER_ID) 
+                VALUES (?,?,?,?,?,?,?,?,?)
+            `, [workflowId, workflowInstanceName, null, functionInputsAsJSON, (engine.currentState?.name ?? null),
+                engine.status, oldValue, newValue, userId]);
             if (qr2.affectedRows == 0) {
                 // todo: failed to insert row
                 e(`Failed to insert row in TBL_WORKFLOW_INSTANCE`);
@@ -170,16 +172,23 @@ class WorkflowTriggerService {
                 return r;
             }
             const workflowInstanceId = qr2.insertId;
+            return {workflowInstanceId, engine, workflowScript}
+        });
 
-            engine.args[ENGINE_WORKFLOW_DEFINITION_ID] = workflowDefinitionId;
-            engine.args[ENGINE_WORKFLOW_ID] = workflowId;
+        return await doInDbConnection(async (conn) => {
             engine.args[ENGINE_WORKFLOW_INSTANCE_ID] = workflowInstanceId;
-
-            const data2 = engine.serializeData();
+            workflowScript.initEngine(engine, {}, undefined); // init new engine, no state to recover from
+            const currentState = engine.currentState;
+            const data = engine.serializeData();
+            const engineStatus = engine.status;
 
             const qr3: QueryResponse = await conn.query(`
-                UPDATE TBL_WORKFLOW_INSTANCE SET DATA = ? WHERE ID = ?
-            `, [data2, workflowInstanceId]);
+                UPDATE TBL_WORKFLOW_INSTANCE SET 
+                    DATA = ?,
+                    CURRENT_WORKFLOW_STATE = ?,
+                    ENGINE_STATUS = ?
+                WHERE ID = ?
+            `, [data, currentState.name , engineStatus, workflowInstanceId]);
             if (qr3.affectedRows == 0) {
                // todo: failed to update row
                e(`Failed to update row in TBL_WORKFLOW_INSTANCE`);
@@ -236,16 +245,22 @@ class WorkflowTriggerService {
 
             const workflowDefinitionFileFullPath = Path.join(__dirname, '../custom-workflow/workflows/', workflowDefinitionName);
             const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
-            const engine = workflowScript.buildEngine({}, data);
+            const engine = workflowScript.buildEngine();
+            workflowScript.initEngine(engine, {}, data);
             const oldStateName = (engine as InternalEngine).currentState.name;
             await engine.next(args);
             const currentState = engine.currentState;
+            const engineStatus = engine.status;
             const _data = engine.serializeData();
             const dataAsJSON = JSON.stringify(_data);
 
             const q3: QueryResponse = await conn.query(`
-                UPDATE TBL_WORKFLOW_INSTANCE SET DATA = ?, CURRENT_WORKFLOW_STATE = ? WHERE ID = ?
-            `, [_data, currentState.name, workflowInstanceId]);
+                UPDATE TBL_WORKFLOW_INSTANCE SET 
+                    DATA = ?, 
+                    CURRENT_WORKFLOW_STATE = ?,
+                    ENGINE_STATUS = ?
+                WHERE ID = ?
+            `, [_data, currentState.name, engineStatus, workflowInstanceId]);
             if (!q3.affectedRows) {
                 const r: WorkflowContinuationError = {
                    type: "workflow-continuation-error",
@@ -304,7 +319,8 @@ class WorkflowTriggerService {
 
             const workflowDefinitionFileFullPath = Path.join(__dirname, '../custom-workflow/workflows/', workflowDefinitionName);
             const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
-            const engine = workflowScript.buildEngine({}, data);
+            const engine = workflowScript.buildEngine();
+            workflowScript.initEngine(engine, {}, data);
             const currentState = engine.currentState;
 
             const s: StateLike = { state: currentState, args: engine.args }

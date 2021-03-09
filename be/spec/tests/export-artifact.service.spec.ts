@@ -1,9 +1,9 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {doInDbConnection, QueryResponse} from "../../src/db";
-import {Connection} from "mariadb";
-import {deleteExportArtifactById, getAllExportArtifacts, getExportArtifactContent} from "../../src/service";
-import {DataExportArtifact} from "../../src/model/data-export.model";
-import {BinaryContent} from "../../src/model/binary-content.model";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
+import {doInDbConnection, QueryResponse} from '../../src/db';
+import {Connection} from 'mariadb';
+import {deleteExportArtifactById, getAllExportArtifacts, getExportArtifactContent} from '../../src/service';
+import {DataExportArtifact} from '@fuyuko-common/model/data-export.model';
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
 
 
 describe('export-artifact.service', () => {

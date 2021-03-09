@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
 import {
     addOrUpdatePricingStructures,
     getAllPricingStructureItemsWithPrice,
@@ -18,15 +18,14 @@ import {
     unlinkPricingStructureWithGroupId,
     updatePricingStructureStatus
 } from "../../src/service";
-import {Group} from "../../src/model/group.model";
-import * as util from "util";
+import {Group} from '@fuyuko-common/model/group.model';
 import {
     PricingStructure,
     PricingStructureGroupAssociation,
     PricingStructureItemWithPrice
-} from "../../src/model/pricing-structure.model";
-import {View} from "../../src/model/view.model";
-import {User} from "../../src/model/user.model";
+} from '@fuyuko-common/model/pricing-structure.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {User} from '@fuyuko-common/model/user.model';
 
 
 

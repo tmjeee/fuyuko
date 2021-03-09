@@ -1,12 +1,12 @@
-import {User} from "../model/user.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {Group} from "../model/group.model";
-import {Role} from "../model/role.model";
-import {BinaryContent} from "../model/binary-content.model";
-import {ENABLED, Status} from "../model/status.model";
-import {hashedPassword} from "./password.service";
-import { Themes } from "../model/theme.model";
+import {User} from '@fuyuko-common/model/user.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {Group} from '@fuyuko-common/model/group.model';
+import {Role} from '@fuyuko-common/model/role.model';
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
+import {ENABLED, Status} from '@fuyuko-common/model/status.model';
+import {hashedPassword} from './password.service';
+import { Themes } from '@fuyuko-common/model/theme.model';
 import {
     AddUserEvent,
     AddUserToGroupEvent,
@@ -18,7 +18,7 @@ import {
     GetUsersInGroupEvent, HasAllUserRolesEvent, HasAnyUserRolesEvent, HasNoneUserRolesEvent,
     SearchForUserNotInGroupEvent, SearchUserByUsernameAndStatusEvent,
     UpdateUserEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 
 export interface AddUserInput {username: string, firstName: string, lastName: string, email: string, password: string, theme?: string, status?: Status};

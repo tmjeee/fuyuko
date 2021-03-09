@@ -1,14 +1,13 @@
-import {Connection} from "mariadb";
+import {Connection} from 'mariadb';
 import {i} from '../../logger';
 import {doInDbConnection} from '../../db';
-import {Group, GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
-import {Themes} from "../../model/theme.model";
-import {UPDATER_PROFILE_TEST_DATA} from "../updater";
-import {addUser, addUserToGroup, getUserByUsername, updateUser} from "../../service/user.service";
-import {checkErrors} from "../script-util";
-import {getGroupByName} from "../../service/group.service";
-import {User} from "../../model/user.model";
-import {DISABLED} from "../../model/status.model";
+import {Group, GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from '@fuyuko-common/model/group.model';
+import {Themes} from '@fuyuko-common/model/theme.model';
+import {UPDATER_PROFILE_TEST_DATA} from '../updater';
+import {addUser, addUserToGroup, getUserByUsername, updateUser, getGroupByName} from '../../service';
+import {checkErrors} from '../script-util';
+import {User} from '@fuyuko-common/model/user.model';
+import {DISABLED} from '@fuyuko-common/model/status.model';
 
 export const profiles = [UPDATER_PROFILE_TEST_DATA];
 

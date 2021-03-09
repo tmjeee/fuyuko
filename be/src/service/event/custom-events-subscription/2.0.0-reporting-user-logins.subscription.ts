@@ -160,26 +160,26 @@ import {
     UpdateUserSettingsEvent,
     ValidationEvent,
     VerifyJwtTokenEvent
-} from "../event.service";
-import {doInDbConnection, QueryA, QueryI} from "../../../db";
-import {Connection} from "mariadb";
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../../registry";
+} from '../event.service';
+import {doInDbConnection, QueryA, QueryI} from '../../../db';
+import {Connection} from 'mariadb';
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "../../../route/v1/common-middleware";
-import {ROLE_VIEW} from "../../../model/role.model";
-import {JwtPayload} from "../../../model/jwt.model";
-import * as jwt from "jsonwebtoken";
+} from '../../../route/v1/common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {JwtPayload} from "@fuyuko-common/model/jwt.model";
+import * as jwt from 'jsonwebtoken';
 import moment from 'moment';
-import {User} from "../../../model/user.model";
-import {Reporting_ActiveUser, Reporting_MostActiveUsers} from "../../../model/reporting.model";
-import {ApiResponse} from "../../../model/api-response.model";
-import {Lock} from "../../../util";
+import {User} from '@fuyuko-common/model/user.model';
+import {Reporting_ActiveUser, Reporting_MostActiveUsers} from '@fuyuko-common/model/reporting.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Lock} from '../../../util';
 
 
 const d: any = {

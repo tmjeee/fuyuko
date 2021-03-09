@@ -1,5 +1,5 @@
-import {itemValTypesConvert, itemValTypesRevert} from "../../src/service/conversion-item-value-types.service";
-import {ItemMetadata2, ItemMetadataEntry2} from "../../src/server-side-model/server-side.model";
+import {itemValTypesConvert, itemValTypesRevert} from '../../src/service';
+import {ItemMetadata2, ItemMetadataEntry2} from '../../src/server-side-model/server-side.model';
 import {
     AreaValue,
     CurrencyValue,
@@ -9,8 +9,8 @@ import {
     StringValue,
     TextValue,
     VolumeValue, WeightValue, WidthValue
-} from "../../src/model/item.model";
-import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+} from '@fuyuko-common/model/item.model';
+import {setupTestDatabase} from '../helpers/test-helper';
 
 describe('conversion-item-value-types.service.ts', () => {
 

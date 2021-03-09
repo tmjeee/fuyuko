@@ -1,14 +1,12 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
 import {
     addOrUpdateGroup,
-    addUserToGroup,
     deleteGroup,
     getAllGroups, getAllGroupsCount,
     getGroupById,
     getGroupByName, getGroupsWithRole, searchForGroupByName, searchForGroupsWithNoSuchRole
-} from "../../src/service";
-import {Group} from "../../src/model/group.model";
-import * as util from "util";
+} from '../../src/service';
+import {Group} from '@fuyuko-common/model/group.model';
 
 
 describe(`group.service`, () => {

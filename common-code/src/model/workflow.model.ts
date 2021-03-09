@@ -6,6 +6,8 @@ export const WORKFLOW_INSTANCE_TYPE = ['Attribute', 'AttributeValue', 'Item', 'P
 export type WorkflowInstanceAction = typeof WORKFLOW_INSTANCE_ACTION[number];
 export type WorkflowInstanceType = typeof WORKFLOW_INSTANCE_TYPE[number];
 
+
+
 // === WorkflowInstanceTask
 export type WorkflowInstanceTaskStatus = 'PENDING' | 'ACTIONED' | 'EXPIRED';
 export interface WorkflowInstanceTasks {
@@ -129,3 +131,25 @@ export interface WorkflowForCategory {
 
 
 // === WorkflowInstance
+export interface WorkflowInstance {
+    id: number;
+    name: string;
+    workflowId: number;
+    functionInputs: string;
+    currentWorkflowState: string;
+    engineStatus: string; // EngineStatus;
+    data: string;
+    creator: { id: number, username: string },
+    comments: WorkflowInstanceComment[];
+    creationDate: Date;
+    lastUpdate: Date;
+}
+
+export interface WorkflowInstanceComment {
+    id: number;
+    workflowInstanceId: number,
+    creator: { id: number, username: string },
+    creationDate: Date;
+    lastUpdate: Date;
+}
+

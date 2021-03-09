@@ -1,21 +1,21 @@
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
 import {
     Rule2,
     ValidateClause2,
     ValidateClauseMetadata2,
     ValidateClauseMetadataEntry2, WhenClause2, WhenClauseMetadata2, WhenClauseMetadataEntry2
-} from "../server-side-model/server-side.model";
-import {Rule} from "../model/rule.model";
-import {ruleConvert, rulesConvert, rulesRevert} from "./conversion-rule.service";
-import {Status} from "../model/status.model";
+} from '../server-side-model/server-side.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
+import {ruleConvert, rulesConvert, rulesRevert} from './conversion-rule.service';
+import {Status} from '@fuyuko-common/model/status.model';
 import {
     AddOrUpdateRuleEvent,
     fireEvent,
     GetRuleEvent,
     GetRulesEvent,
     UpdateRuleStatusEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 const SQL_1 = `
    SELECT

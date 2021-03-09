@@ -1,12 +1,12 @@
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../server-side-model/server-side.model";
-import {Attribute, AttributeType} from "../model/attribute.model";
-import {attributeConvert, attributesConvert, attributesRevert} from "./conversion-attribute.service";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {LoggingCallback} from "./job-log.service";
-import {LimitOffset} from "../model/limit-offset.model";
-import {LIMIT_OFFSET} from "../util/utils";
-import {ENABLED, Status} from "../model/status.model";
+import {Attribute, AttributeType} from '@fuyuko-common/model/attribute.model';
+import {attributeConvert, attributesConvert, attributesRevert} from './conversion-attribute.service';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {LoggingCallback} from './job-log.service';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {LIMIT_OFFSET} from '../util/utils';
+import {ENABLED, Status} from '@fuyuko-common/model/status.model';
 import {
     ChangeAttributeStatusEvent,
     fireEvent,
@@ -16,7 +16,7 @@ import {
     SaveAttributesEvent,
     SearchAttributesByViewEvent,
     UpdateAttributesEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 
 const q1_count: string = `

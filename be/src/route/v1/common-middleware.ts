@@ -3,7 +3,7 @@ import {validationResult} from 'express-validator';
 import {e, i} from "../../logger";
 import {makeApiError, makeApiErrorObj} from "../../util";
 import {decodeJwtToken, verifyJwtToken} from "../../service";
-import {JwtPayload} from "../../model/jwt.model";
+import {JwtPayload} from '@fuyuko-common/model/jwt.model';
 import {
     getThreadLocalStore,
     setThreadLocalStore,
@@ -128,25 +128,29 @@ export const getJwtPayload = (res: Response): JwtPayload => {
 
 export const threadLocalMiddlewareFn = (req: Request, res: Response, next: NextFunction) => {
     threadLocalInit((ns) => {
-        const reqUuid = uuid();
-        const jwtToken: string = req.headers['x-auth-jwt'] as string;
-        if (jwtToken) {
-            try {
-                const jwtPayload: JwtPayload = decodeJwtToken(jwtToken);
+        try {
+            const reqUuid = uuid();
+            const jwtToken: string = req.headers['x-auth-jwt'] as string;
+            if (jwtToken) {
+                try {
+                    const jwtPayload: JwtPayload = decodeJwtToken(jwtToken);
+                    setThreadLocalStore({
+                        reqUuid,
+                        jwtPayload
+                    } as ThreadLocalStore);
+                } catch (err) {
+                    e(`Error setting thread local`, err);
+                }
+            } else {
                 setThreadLocalStore({
                     reqUuid,
-                    jwtPayload
-                } as ThreadLocalStore);
-            } catch (err) {
+                    jwtPayload: undefined
+                });
             }
-        } else {
-            setThreadLocalStore({
-                reqUuid,
-                jwtPayload: undefined
-            });
+        } finally {
+            const threadLocalStore: ThreadLocalStore = getThreadLocalStore();
+            next();
         }
-        const threadLocalStore: ThreadLocalStore = getThreadLocalStore();
-        next();
     });
 };
 
@@ -227,6 +231,7 @@ export const validateJwtMiddlewareFn = (req: Request, res: Response, next: NextF
         ));
     }
 };
+
 
 export const catchErrorMiddlewareFn = async (err: any, req: Request, res: Response, next: NextFunction) => {
     let errorStatus = 500;

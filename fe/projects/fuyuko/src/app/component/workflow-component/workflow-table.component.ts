@@ -41,7 +41,7 @@ export class InternalDataSource extends DataSource<Workflow> {
 })
 export class WorkflowTableComponent implements OnChanges {
 
-   columnsToDisplay: string[] = ['workflowDefinition', 'workflowAction' , 'workflowType'];
+   columnsToDisplay: string[] = ['workflowDefinition', 'workflowName', 'workflowAction' , 'workflowType'];
    dataSource = new InternalDataSource();
 
    @Input() workflows: Workflow[];

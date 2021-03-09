@@ -1,37 +1,23 @@
-import {UPDATER_PROFILE_LEEFAHMEE_DATA} from "../updater";
-import {i} from "../../logger";
-import {View} from "../../model/view.model";
-import {addOrUpdateViews, getViewByName} from "../../service/view.service";
-import {checkErrors, checkNotNull, checkTrue} from "../script-util";
-import {Attribute} from "../../model/attribute.model";
-import {getAttributeInViewByName, getAttributesInView, saveAttributes} from "../../service/attribute.service";
-import {l} from "../../logger/logger";
-import * as Path from "path";
-import * as util from "util";
-import * as fs from "fs";
-import {
-    addCategory,
-    AddCategoryInput,
-    addItem,
-    addItemImage,
-    addItemToPricingStructure,
-    addItemToViewCateogry,
-    addOrUpdatePricingStructures,
-    addOrUpdateRules,
-    getGroupByName,
-    getItemByName,
-    getPricingStructureByName,
-    getViewCategoryByName,
-    linkPricingStructureWithGroupId,
-    setPrices
-} from "../../service";
-import {Item} from "../../model/item.model";
-import {createNewItem} from "../../shared-utils/ui-item-value-creator.utils";
-import {Rule, ValidateClause} from "../../model/rule.model";
-import {AddOrUpdatePricingStructureInput} from "../../service/pricing-structure.service";
-import {PricingStructure} from "../../model/pricing-structure.model";
-import {Group, GROUP_ADMIN, GROUP_PARTNER} from "../../model/group.model";
-import {Status} from '../../model/status.model';
+import {UPDATER_PROFILE_LEEFAHMEE_DATA} from '../updater';
+import {i} from '../../logger';
+import {View} from '@fuyuko-common/model/view.model';
+import {addOrUpdateViews, getViewByName, getAttributeInViewByName, getAttributesInView, saveAttributes,
+    addCategory, AddCategoryInput, addItem, addItemImage, addItemToPricingStructure, addItemToViewCateogry,
+    addOrUpdatePricingStructures, addOrUpdateRules, getGroupByName, getItemByName, getPricingStructureByName,
+    getViewCategoryByName, linkPricingStructureWithGroupId, setPrices, AddOrUpdatePricingStructureInput
+} from '../../service';
+
+import {checkErrors, checkNotNull, checkTrue} from '../script-util';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {l} from '../../logger/logger';
+import * as Path from 'path';
+import * as util from 'util';
+import * as fs from 'fs';
+import {Item} from '@fuyuko-common/model/item.model';
+import {Rule, ValidateClause} from '@fuyuko-common/model/rule.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
+import {Group, GROUP_ADMIN, GROUP_PARTNER} from '@fuyuko-common/model/group.model';
+import {Status} from '@fuyuko-common/model/status.model';
 
 export const profiles = [UPDATER_PROFILE_LEEFAHMEE_DATA];
 

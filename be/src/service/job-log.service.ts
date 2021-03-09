@@ -1,9 +1,9 @@
-import {doInDbConnection, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {Level} from "../model/level.model";
+import {doInDbConnection, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {Level} from '@fuyuko-common/model/level.model';
 import {d, e, i, w} from '../logger';
-import {l} from "../logger/logger";
-import {Progress} from "../model/progress.model";
+import {l} from '../logger/logger';
+import {Progress} from '@fuyuko-common/model/progress.model';
 
 
 /**

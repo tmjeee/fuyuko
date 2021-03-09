@@ -1,10 +1,10 @@
-import * as m from "../../src/route/v1/common-middleware";
-import {Request, Response, NextFunction} from 'express';
-import {ROLE_ADMIN, ROLE_EDIT, ROLE_VIEW} from "../../src/model/role.model";
-import {JwtPayload} from "../../src/model/jwt.model";
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {getUserByUsername} from "../../src/service/user.service";
-import {User} from "../../src/model/user.model";
+import * as m from '../../src/route/v1/common-middleware';
+import {Request, Response } from "express";
+import {ROLE_ADMIN, ROLE_EDIT, ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {JwtPayload} from '@fuyuko-common/model/jwt.model';
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
+import {getUserByUsername} from '../../src/service';
+import {User} from '@fuyuko-common/model/user.model';
 
 describe('common-middleware', () => {
 

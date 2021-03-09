@@ -2,11 +2,8 @@ import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {check} from 'express-validator';
 import {validateMiddlewareFn} from "./common-middleware";
-import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
-import {makeApiError, makeApiErrorObj} from "../../util";
-import {BinaryContent} from "../../model/binary-content.model";
-import {getItemPrimaryImage} from "../../service/item-image.service";
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
+import {getItemPrimaryImage} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [

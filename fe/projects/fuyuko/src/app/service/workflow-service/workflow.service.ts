@@ -10,6 +10,8 @@ import {View} from '../../model/view.model';
 const URL_ALL_WORKFLOW_DEFINITIONS = () => `${config().api_host_url}/workflow/definitions`;
 const URL_CREATE_WORKFLOW = () => `${config().api_host_url}/workflow/workflow`;
 const URL_ALL_WORKFLOWS_BY_VIEW = (viewId: number) => `${config().api_host_url}/workflow/workflow/${viewId}`;
+const URL_ALL_WORKFLOWS_BY_VIEW_ACTION_AND_TYPE = (viewId: number, action: WorkflowInstanceAction, type: WorkflowInstanceType) =>
+    `${config().api_host_url}/workflow/view/${viewId}/action/${action}/type/${type}`;
 
 @Injectable()
 export class WorkflowService {
@@ -39,5 +41,11 @@ export class WorkflowService {
     getWorkflowsByView(viewId: number): Observable<ApiResponse<Workflow[]>> {
         return this.httpClient
             .get<ApiResponse<Workflow[]>>(URL_ALL_WORKFLOWS_BY_VIEW(viewId));
+    }
+
+    getWorkflowsByViewActionAndType(viewId: number, action: WorkflowInstanceAction, type: WorkflowInstanceType):
+        Observable<ApiResponse<Workflow[]>> {
+        return this.httpClient
+            .get<ApiResponse<Workflow[]>>(URL_ALL_WORKFLOWS_BY_VIEW_ACTION_AND_TYPE(viewId, action, type));
     }
 }

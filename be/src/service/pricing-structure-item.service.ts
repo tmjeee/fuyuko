@@ -1,14 +1,14 @@
-import {Connection} from "mariadb";
-import {PricingStructureItemWithPrice} from "../model/pricing-structure.model";
-import {doInDbConnection, QueryA, QueryResponse} from "../db";
-import {LoggingCallback, newLoggingCallback} from "./job-log.service";
-import {CountryCurrencyUnits} from "../model/unit.model";
+import {Connection} from 'mariadb';
+import {PricingStructureItemWithPrice} from '@fuyuko-common/model/pricing-structure.model';
+import {doInDbConnection, QueryA, QueryResponse} from '../db';
+import {LoggingCallback, newLoggingCallback} from './job-log.service';
+import {CountryCurrencyUnits} from '@fuyuko-common/model/unit.model';
 import {
     AddItemToPricingStructureEvent,
     fireEvent,
     GetPricingStructureItemEvent,
     SetPricesEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 
 class PricingStructureItemService {

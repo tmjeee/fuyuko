@@ -1,12 +1,10 @@
-import {JwtPayload} from "../model/jwt.model";
+import {JwtPayload} from '@fuyuko-common/model/jwt.model';
 
+import * as h from 'cls-hooked';
 const NAMESPACE = 'F-NAMESPACE';
 const KEY = `F-KEY`;
-const continuationLocalStorage = require(`continuation-local-storage`);
-const createNamespace = continuationLocalStorage.createNamespace;
-const getNamespace = continuationLocalStorage.getNamespace;
 
-const NS = createNamespace(NAMESPACE);
+const NS = h.createNamespace(NAMESPACE);
 
 export interface ThreadLocalStore {
     reqUuid: string;

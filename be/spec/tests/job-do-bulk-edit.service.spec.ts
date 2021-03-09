@@ -1,12 +1,11 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {JobLogger, newJobLogger} from "../../src/service/job-log.service";
-import {getViewByName} from "../../src/service/view.service";
-import {View} from "../../src/model/view.model";
-import {run} from "../../src/service/bulk-edit/job-do-bulk-edit.service";
-import {BulkEditItem, BulkEditPackage} from "../../src/model/bulk-edit.model";
-import {getAttributeInViewByName} from "../../src/service/attribute.service";
-import {Attribute} from "../../src/model/attribute.model";
-import {getItemById, getItemByName} from "../../src/service";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
+import {JobLogger, newJobLogger, getViewByName} from '../../src/service';
+import {View} from '@fuyuko-common/model/view.model';
+import {run} from '../../src/service/bulk-edit/job-do-bulk-edit.service';
+import {BulkEditItem, BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
+import {getAttributeInViewByName} from '../../src/service';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {getItemById, getItemByName} from '../../src/service';
 import {
   AreaValue,
   CurrencyValue,
@@ -17,7 +16,7 @@ import {
   TextValue,
   Value,
   VolumeValue, WeightValue, WidthValue
-} from "../../src/model/item.model";
+} from '@fuyuko-common/model/item.model';
 
 
 describe(`job-do-bulk-edit.service.spec.ts`, () => {

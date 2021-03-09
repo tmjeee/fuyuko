@@ -8,14 +8,12 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {check} from 'express-validator';
-import {Attribute} from "../../model/attribute.model";
-import {attributesConvert} from "../../service/conversion-attribute.service";
-import {Attribute2} from "../../server-side-model/server-side.model";
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {getAttributesInView, getTotalAttributesInView} from "../../service/attribute.service";
-import {ROLE_ADMIN, ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toLimitOffset} from "../../util/utils";
-import {LimitOffset} from "../../model/limit-offset.model";
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 
 // CHECKED
 const httpAction: any[] = [

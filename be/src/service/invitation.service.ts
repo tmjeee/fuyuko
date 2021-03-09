@@ -1,19 +1,19 @@
-import {Invitation} from "../model/invitation.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {ClientError} from "../route/v1/common-middleware";
-import {DELETED, ENABLED} from "../model/status.model";
-import {hashedPassword} from "./password.service";
-import config from "../config";
+import {Invitation} from '@fuyuko-common/model/invitation.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {ClientError} from '../route/v1/common-middleware';
+import {DELETED, ENABLED} from '@fuyuko-common/model/status.model';
+import {hashedPassword} from './password.service';
+import config from '../config';
 import {v4 as uuid} from 'uuid';
-import {SendMailOptions} from "nodemailer";
+import {SendMailOptions} from 'nodemailer';
 import {sendEmail} from "./send-email.service";
 import {
     ActivateInvitationEvent,
     CreateInvitationEvent,
     fireEvent,
     GetInvitationByCodeEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 export interface ActivateInvitationResult { registrationId: number, errors: string[] }
 class InvitationService {

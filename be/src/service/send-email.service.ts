@@ -1,6 +1,6 @@
 
 import config, {opts} from '../config';
-import {createTransport, SentMessageInfo, Transporter, SendMailOptions, TransportOptions} from "nodemailer";
+import {createTransport, SentMessageInfo, Transporter, SendMailOptions, TransportOptions} from 'nodemailer';
 import {i} from '../logger';
 
 class SendEmailService {

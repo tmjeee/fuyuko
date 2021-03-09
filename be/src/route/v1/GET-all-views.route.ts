@@ -7,10 +7,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {View} from "../../model/view.model";
-import {ROLE_VIEW} from "../../model/role.model";
-import {getAllViews} from "../../service/view.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {View} from '@fuyuko-common/model/view.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {getAllViews} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 const httpAction: any[] = [

@@ -1,13 +1,13 @@
-import {View} from "../model/view.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
+import {View} from '@fuyuko-common/model/view.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
 import {
     AddOrUpdateViewsEvent,
     DeleteViewEvent,
     fireEvent,
     GetAllViewsEvent,
     GetViewByIdEvent, GetViewByNameEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 const SQL_1 = `
    SELECT 

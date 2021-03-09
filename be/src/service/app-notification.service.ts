@@ -1,7 +1,7 @@
-import {AppNotification, NewNotification} from "../model/notification.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {AddUserNotificationEvent, fireEvent, GetUserNotificationsEvent} from "./event/event.service";
+import {AppNotification, NewNotification} from '@fuyuko-common/model/notification.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {AddUserNotificationEvent, fireEvent, GetUserNotificationsEvent} from './event/event.service';
 
 class AppNotificationService {
 

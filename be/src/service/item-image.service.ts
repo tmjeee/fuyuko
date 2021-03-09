@@ -1,15 +1,15 @@
-import fileType from "file-type";
-import {doInDbConnection, QueryA, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {BinaryContent} from "../model/binary-content.model";
-import {ClientError} from "../route/v1/common-middleware";
+import fileType from 'file-type';
+import {doInDbConnection, QueryA, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
+import {ClientError} from '../route/v1/common-middleware';
 import {
     AddItemImageEvent, DeleteItemImageEvent,
     fireEvent,
     GetItemImageContentEvent,
     GetItemPrimaryImageEvent,
     MarkItemImageAsPrimaryEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 
 class ItemImageService {

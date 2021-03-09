@@ -1,15 +1,15 @@
 import {
     PricingStructure, PricingStructureGroupAssociation,
     PricingStructureItemWithPrice,
-} from "../model/pricing-structure.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {LIMIT_OFFSET} from "../util/utils";
-import {getChildrenWithConn} from "./pricing-structure-item.service";
-import {LimitOffset} from "../model/limit-offset.model";
-import {Role, ROLE_PARTNER} from "../model/role.model";
-import {Status} from "../model/status.model";
-import { Group } from "../model/group.model";
+} from '@fuyuko-common/model/pricing-structure.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {LIMIT_OFFSET} from '../util/utils';
+import {getChildrenWithConn} from './pricing-structure-item.service';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {Role, ROLE_PARTNER} from '@fuyuko-common/model/role.model';
+import {Status} from '@fuyuko-common/model/status.model';
+import { Group } from '@fuyuko-common/model/group.model';
 import {
     AddOrUpdatePricingStructuresEvent,
     fireEvent,
@@ -23,7 +23,7 @@ import {
     SearchGroupsNotAssociatedWithPricingStructureEvent,
     UnlinkPricingStructureWithGroupIdEvent,
     UpdatePricingStructureStatusEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 export interface AddOrUpdatePricingStructureInput { name: string; description: string;  viewId: number; status?: Status; id?: number };
 class PricingStructureService {

@@ -11,10 +11,10 @@ import {
     CustomImportJob,
     ImportScript,
     ImportScriptInputValue, ImportScriptJobSubmissionResult, ImportScriptPreview, ImportScriptValidateResult
-} from "../model/custom-import.model";
+} from '@fuyuko-common/model/custom-import.model';
 import {LoggingCallback, newJobLogger, newLoggingCallback, getCustomImportById, getViewById} from '../service';
 import {v4 as uuid} from 'uuid';
-import {View} from "../model/view.model";
+import {View} from '@fuyuko-common/model/view.model';
 
 const createCustomImportContext = () => {
     return {data: {}} as CustomImportContext;

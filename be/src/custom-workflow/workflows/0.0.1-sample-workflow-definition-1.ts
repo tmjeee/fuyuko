@@ -1,5 +1,5 @@
 import {WorkflowScript} from "../../server-side-model/server-side.model";
-import {Argument, createEngine, createState, Engine, State} from "../../wf";
+import {Argument, createEngine, createState, Engine, State} from "@fuyuko-workflow/index";
 import * as u  from '../../service/workflow-scripts-utils.service';
 import _ from 'lodash';
 import {StateLike} from "../../service/workflow-scripts-utils.service";
@@ -198,24 +198,24 @@ state3.on('r').to(rejected);
 approved.on('*').to(approved);
 rejected.on('*').to(rejected);
 
-let engine: Engine | undefined  = undefined
-const _buildEngine = (args: Argument, serializedData?: string): Engine => {
-    engine = engine ? engine :
-        createEngine()
+const _buildEngine = (): Engine => {
+    return createEngine()
             .startsWith(state1)
             .register(state2)
-            .endsWith(state3)
-            .init({
-                ...args,
-            }, serializedData);
-    return engine;
+            .endsWith(state3);
 };
+
+const _initEngine = (engine: Engine, args: Argument, serializedData?: string): Engine => {
+    return engine.init({...args}, serializedData);
+}
 
 const workflowScript: WorkflowScript = {
     description: 'Workflow Scritp Definition #1 description',
     buildEngine: _buildEngine,
+    initEngine: _initEngine,
 };
 export default workflowScript;
 export const buildEngine = workflowScript.buildEngine.bind(workflowScript);
+export const initEngine = workflowScript.initEngine.bind(workflowScript);
 export const description = workflowScript.description;
 

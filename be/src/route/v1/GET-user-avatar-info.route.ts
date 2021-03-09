@@ -1,12 +1,12 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../registry";
-import { param } from "express-validator";
-import {validateMiddlewareFn} from "./common-middleware";
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../registry';
+import { param } from 'express-validator';
+import {validateMiddlewareFn} from './common-middleware';
 import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
-import {UserAvatar} from "../../model/avatar.model";
-import {makeApiError, makeApiErrorObj} from "../../util";
-import {ApiResponse} from "../../model/api-response.model";
+import {Connection} from 'mariadb';
+import {UserAvatar} from '@fuyuko-common/model/avatar.model';
+import {makeApiError, makeApiErrorObj} from '../../util';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED

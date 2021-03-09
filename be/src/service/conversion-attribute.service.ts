@@ -2,9 +2,9 @@ import {
     Attribute,
     Pair1,
     Pair2
-} from "../model/attribute.model";
+} from '@fuyuko-common/model/attribute.model';
 import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from '../server-side-model/server-side.model';
-import {DATE_FORMAT, NUMBER_FORMAT, SHOW_COUNTRY_CURRENCY} from "../model/item.model";
+import {DATE_FORMAT, NUMBER_FORMAT, SHOW_COUNTRY_CURRENCY} from '@fuyuko-common/model/item.model';
 
 
 class ConversionAttributeService {

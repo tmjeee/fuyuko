@@ -1,19 +1,17 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {check, param} from 'express-validator';
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
-import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_EDIT} from "../../model/role.model";
-import {updateRuleStatus} from "../../service/rule.service";
-import {Status} from "../../model/status.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {updateRuleStatus} from '../../service';
+import {Status} from '@fuyuko-common/model/status.model';
 
 // CHECKED
 

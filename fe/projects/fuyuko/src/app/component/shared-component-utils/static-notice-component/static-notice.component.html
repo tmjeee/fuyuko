@@ -1,0 +1,19 @@
+<div class="static-notice-component">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title><ng-content select="[title]"></ng-content></mat-card-title>
+            <mat-card-subtitle></mat-card-subtitle>
+            <div mat-card-avatar>
+                <div [ngSwitch]="level">
+                    <div *ngSwitchCase="'INFO'"><mat-icon>info</mat-icon></div>
+                    <div *ngSwitchCase="'SUCCESS'"><mat-icon>check_circle</mat-icon></div>
+                    <div *ngSwitchCase="'WARN'"><mat-icon>warning</mat-icon></div>
+                    <div *ngSwitchCase="'ERROR'">error</div>
+                </div>
+            </div>
+        </mat-card-header>
+        <mat-card-content>
+            <ng-content select="[content]"></ng-content>
+        </mat-card-content>
+    </mat-card>
+</div>

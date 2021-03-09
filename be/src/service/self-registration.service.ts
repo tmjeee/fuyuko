@@ -1,15 +1,15 @@
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {SelfRegistration} from "../model/self-registration.model";
-import config from "../config";
-import {sendEmail} from "./send-email.service";
-import {hashedPassword} from "./password.service";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {SelfRegistration} from '@fuyuko-common/model/self-registration.model';
+import config from '../config';
+import {sendEmail} from './send-email.service';
+import {hashedPassword} from './password.service';
 import {
     ApproveSelfRegistrationEvent, DeleteSelfRegistrationEvent,
     fireEvent,
     GetAllSelfRegistrationsEvent, SearchSelfRegistrationByUsernameEvent,
     SelfRegisterEvent
-} from "./event/event.service";
+} from './event/event.service';
 
 
 export interface SelfRegisterResult { errors: string[], registrationId: number, email: string, username: string};

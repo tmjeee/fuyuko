@@ -5,15 +5,15 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {Registry} from "../../registry";
-import {Router, Request, Response, NextFunction} from "express";
-import {PricedItem} from "../../model/item.model";
-import {runJob} from "../../service/export-csv/job-do-price-data-export.service";
-import {Job} from "../../model/job.model";
-import {Attribute} from "../../model/attribute.model";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {Registry} from '../../registry';
+import {Router, Request, Response, NextFunction} from 'express';
+import {PricedItem} from '@fuyuko-common/model/item.model';
+import {exportPriceRunJob} from '../../service';
+import {Job} from '@fuyuko-common/model/job.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 
@@ -34,7 +34,7 @@ const httpAction: any[] = [
         const pricedItems: PricedItem[] = req.body.pricedItems;
         const attributes: Attribute[] = req.body.attributes;
 
-        const job: Job = await runJob(viewId, pricingStructureId, attributes, pricedItems);
+        const job: Job = await exportPriceRunJob(viewId, pricingStructureId, attributes, pricedItems);
 
         res.status(200).json({
             status: 'SUCCESS',

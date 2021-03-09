@@ -6,16 +6,14 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {check, param, query} from 'express-validator';
-import { Item } from "../../model/item.model";
-import {Item2} from "../../server-side-model/server-side.model";
-import {itemsConvert} from "../../service/conversion-item.service";
+} from './common-middleware';
+import {param} from 'express-validator';
+import { Item } from '@fuyuko-common/model/item.model';
 import {getAllItemsInView, getAllItemsInViewCount} from "../../service/item.service";
-import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
-import {isLimit, isOffset, toLimitOffset} from "../../util/utils";
-import {LimitOffset} from "../../model/limit-offset.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toLimitOffset} from "../../util/utils";
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 
 // CHECKED
 const httpAction: any[] = [

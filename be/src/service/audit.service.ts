@@ -1,10 +1,10 @@
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {Level} from '../model/level.model';
-import {getThreadLocalStore, ThreadLocalStore} from "./thread-local.service";
-import {AuditCategory as AC, AuditLog} from "../model/audit-log.model";
-import {LimitOffset} from "../model/limit-offset.model";
-import {LIMIT_OFFSET} from "../util/utils";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {Level} from "@fuyuko-common/model/level.model";
+import {getThreadLocalStore, ThreadLocalStore} from './thread-local.service';
+import {AuditCategory as AC, AuditLog} from '@fuyuko-common/model/audit-log.model';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {LIMIT_OFFSET} from '../util/utils';
 
 
 export type AuditLevel = Level;

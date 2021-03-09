@@ -1,16 +1,15 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
 import {
     getUserDashboardSerializedData,
     getUserDashboardWidgetSerializedData,
     saveUserDashboard,
     saveUserDashboardWidgetData
-} from "../../src/service";
+} from '../../src/service';
 import {
     DataMap,
     SerializedDashboardFormat, SerializedDashboardWidgetInstanceDataFormat,
     SerializedDashboardWidgetInstanceFormat
-} from "../../src/model/dashboard-serialzable.model";
-import * as util from "util";
+} from '@fuyuko-common/model/dashboard-serialzable.model';
 
 
 describe(`dashboard.service`, () => {

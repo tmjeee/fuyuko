@@ -2,8 +2,8 @@ import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import { validateJwtMiddlewareFn, validateMiddlewareFn, v, aFnAnyTrue, vFnHasAnyUserRoles } from "./common-middleware";
 import {check} from "express-validator";
-import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_ADMIN} from "../../model/role.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
 import {removeRoleFromGroup} from "../../service/role.service";
 
 // CHECKED

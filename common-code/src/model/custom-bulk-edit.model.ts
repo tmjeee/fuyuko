@@ -3,7 +3,7 @@
 import {View} from "./view.model";
 import {Level} from "./level.model";
 import {NewNotification} from "./notification.model";
-import moment from "moment";
+import moment from 'moment';
 import {FileDataObject} from "./file.model";
 
 export interface CustomBulkEdit {

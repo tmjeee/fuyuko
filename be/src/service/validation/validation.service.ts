@@ -4,17 +4,16 @@ import {
     ValidationLog,
     ValidationLogResult,
     ValidationResult
-} from "../../model/validation.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
+} from '@fuyuko-common/model/validation.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../../db';
+import {Connection} from 'mariadb';
 import {
     DeleteValidationResultEvent,
     fireEvent,
     GetAllViewValidationsEvent, GetValidationByViewIdAndValidationIdEvent, GetValidationsByViewIdEvent,
     GetViewValidationResultEvent
-} from "../event/event.service";
-import {valid} from "semver";
-import {Progress} from "../../model/progress.model";
+} from '../event/event.service';
+import {Progress} from '@fuyuko-common/model/progress.model';
 
 const SQL_1 = `
                 SELECT 

@@ -160,22 +160,21 @@ import {
     UpdateUserSettingsEvent,
     ValidationEvent,
     VerifyJwtTokenEvent
-} from "../event.service";
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../../registry";
-import {param} from "express-validator";
+} from '../event.service';
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../../registry';
+import {param} from 'express-validator';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "../../../route/v1/common-middleware";
-import {ROLE_VIEW} from "../../../model/role.model";
-import {doInDbConnection, QueryA, QueryI} from "../../../db";
-import {Connection} from "mariadb";
-import {RuleLevel} from "../../../model/rule.model";
-import {ApiResponse} from "../../../model/api-response.model";
+} from '../../../route/v1/common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {doInDbConnection, QueryA, QueryI} from '../../../db';
+import {Connection} from 'mariadb';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const d: any = {

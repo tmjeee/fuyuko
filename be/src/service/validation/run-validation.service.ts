@@ -1,8 +1,8 @@
-import {Level} from "../../model/level.model";
-import {doInDbConnection, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {getValidationByViewIdAndValidationId} from "./validation.service";
-import {Validation} from "../../model/validation.model";
+import {Level} from '@fuyuko-common/model/level.model';
+import {doInDbConnection, QueryResponse} from '../../db';
+import {Connection} from 'mariadb';
+import {getValidationByViewIdAndValidationId} from './validation.service';
+import {Validation} from '@fuyuko-common/model/validation.model';
 import {
     AreaValue,
     CurrencyValue, DATE_FORMAT,
@@ -13,19 +13,19 @@ import {
     StringValue,
     TextValue,
     Value, VolumeValue, WeightValue, WidthValue
-} from "../../model/item.model";
-import {Rule, WhenClause} from "../../model/rule.model";
-import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from "../../model/operator.model";
-import {getAttributesInView} from "../attribute.service";
-import {Attribute} from "../../model/attribute.model";
+} from '@fuyuko-common/model/item.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
+import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from '@fuyuko-common/model/operator.model';
+import {getAttributesInView} from '../attribute.service';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import moment from 'moment';
 import * as logger from '../../logger';
-import {convertToDebugString, convertToDebugStrings} from "../../shared-utils/ui-item-value-converters.util";
-import {getViewById} from "../view.service";
-import {View} from "../../model/view.model";
-import {CustomRule, CustomRuleForView} from "../../model/custom-rule.model";
-import {getAllCustomRulesForView} from "../custom-rule.service";
-import {runCustomRule} from "../../custom-rule";
+import {convertToDebugString, convertToDebugStrings} from '@fuyuko-common/shared-utils/ui-item-value-converters.util';
+import {getViewById} from '../view.service';
+import {View} from '@fuyuko-common/model/view.model';
+import {CustomRule, CustomRuleForView} from '@fuyuko-common/model/custom-rule.model';
+import {getAllCustomRulesForView} from '../custom-rule.service';
+import {runCustomRule} from '../../custom-rule';
 import {
     compareArea,
     compareCurrency,
@@ -33,10 +33,10 @@ import {
     compareNumber, compareSelect,
     compareString,
     compareVolume, compareWeight, compareWidth
-} from "../compare-attribute-values.service";
-import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
-import {fireEvent, ValidationEvent} from "../event/event.service";
-import {getAllItemsInView, getRules} from "../index";
+} from '../compare-attribute-values.service';
+import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
+import {fireEvent, ValidationEvent} from '../event/event.service';
+import {getAllItemsInView, getRules} from "../";
 
 
 /**

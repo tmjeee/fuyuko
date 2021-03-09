@@ -1,7 +1,7 @@
 import * as util from 'util';
 import * as fs from 'fs';
-import JSZip from "jszip";
-import {Readable} from "stream";
+import JSZip from 'jszip';
+import {Readable} from 'stream';
 
 export const unzipFromBuffer = async (buffer: Buffer, unzipFilePath: string): Promise<JSZip> => {
     return JSZip.loadAsync(buffer);

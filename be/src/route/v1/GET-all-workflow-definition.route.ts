@@ -1,10 +1,10 @@
 import {Router, Request, Response, NextFunction} from "express";
 import {Registry} from "../../registry";
 import {getAllWorkflowDefinition} from "../../service";
-import {ApiResponse} from "../../model/api-response.model";
-import {WorkflowDefinition} from "../../model/workflow.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {WorkflowDefinition} from '@fuyuko-common/model/workflow.model';
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 
 const httpAction: any[] = [
     [],

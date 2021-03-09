@@ -1,12 +1,12 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from './common-middleware';
 import {param} from 'express-validator';
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {User} from "../../model/user.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {searchUserByUsernameAndStatus} from "../../service/user.service";
+import {doInDbConnection} from '../../db';
+import {Connection} from 'mariadb';
+import {User} from '@fuyuko-common/model/user.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {searchUserByUsernameAndStatus} from '../../service';
 
 // CHECKED
 export const httpAction: any[] = [

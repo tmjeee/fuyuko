@@ -7,9 +7,9 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {check} from 'express-validator';
-import {ROLE_ADMIN} from "../../model/role.model";
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
 import {deleteUser} from "../../service/user.service";
 
 // CHECKED

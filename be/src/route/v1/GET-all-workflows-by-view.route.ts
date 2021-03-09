@@ -1,11 +1,11 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {param} from "express-validator";
-import {getWorkflowByView} from "../../service/workflow.service";
-import {ApiResponse} from "../../model/api-response.model";
-import {Workflow} from "../../model/workflow.model";
+import {getWorkflowByView} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Workflow} from '@fuyuko-common/model/workflow.model';
 
 const httpAction: any[] = [
     [

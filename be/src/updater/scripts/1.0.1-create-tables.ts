@@ -1,7 +1,7 @@
-import {Connection} from "mariadb";
+import {Connection} from 'mariadb';
 import {i} from '../../logger';
-import {doInDbConnection} from "../../db";
-import {UPDATER_PROFILE_CORE} from "../updater";
+import {doInDbConnection} from '../../db';
+import {UPDATER_PROFILE_CORE} from '../updater';
 
 export const profiles = [UPDATER_PROFILE_CORE];
 
@@ -135,10 +135,12 @@ const TBL_WORKFLOW_INSTANCE = async () => {
             NAME VARCHAR(500) NOT NULL,
             WORKFLOW_ID INT,
             FUNCTION_INPUTS TEXT,
-            CURRENT_WORKFLOW_STATE VARCHAR(200),
+            CURRENT_WORKFLOW_STATE VARCHAR(200),      
+            ENGINE_STATUS VARCHAR(200),               /* workflow engine status */
             OLD_VALUE TEXT,                           /* old changed value (in json format) */
             NEW_VALUE TEXT,                           /* new changed value (in json format) */
             DATA TEXT,                                /* engine in serialized form */
+            CREATOR_USER_ID INT,                      /* user who created or trigger this workflow instance */
             CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
          );
@@ -1195,6 +1197,7 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_WORKFLOW_ATTRIBUTE ADD CONSTRAINT \`fk_tbl_workflow_attribute-1\` FOREIGN KEY (WORKFLOW_ID) REFERENCES TBL_WORKFLOW(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_WORKFLOW_ATTRIBUTE ADD CONSTRAINT \`fk_tbl_workflow_attribute-2\` FOREIGN KEY (ATTRIBUTE_ID) REFERENCES TBL_VIEW_ATTRIBUTE(ID) ON DELETE CASCADE`);
       await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE ADD CONSTRAINT \`fk_tbl_workflow_instance-1\` FOREIGN KEY (WORKFLOW_ID) REFERENCES TBL_WORKFLOW(ID) ON DELETE CASCADE');
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE ADD CONSTRAINT \`fk_tbl_workflow_instance-2\` FOREIGN KEY (CREATOR_USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE');
       await conn.query(`ALTER TABLE TBL_WORKFLOW_INSTANCE_COMMENT ADD CONSTRAINT \`fk_tbl_workflow_instance_comment-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_WORKFLOW_INSTANCE_COMMENT ADD CONSTRAINT \`fk_tbl_workflow_instance_comment-2\` FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE`);
       await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE_LOG ADD CONSTRAINT \`fk_tbl_workflow_instance_log-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE');

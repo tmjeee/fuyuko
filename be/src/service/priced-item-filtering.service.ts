@@ -1,14 +1,14 @@
-import {Connection} from "mariadb";
-import {ItemValueOperatorAndAttribute} from "../model/item-attribute.model";
-import {Attribute} from "../model/attribute.model";
-import {doInDbConnection, QueryA} from "../db";
+import {Connection} from 'mariadb';
+import {ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {doInDbConnection, QueryA} from '../db';
 import {
     Attribute2,
     AttributeMetadata2,
     AttributeMetadataEntry2,
     ItemMetadata2,
     ItemMetadataEntry2, ItemValue2, PricedItem2
-} from "../server-side-model/server-side.model";
+} from '../server-side-model/server-side.model';
 import {
     AreaValue,
     CurrencyValue, DATE_FORMAT,
@@ -18,9 +18,9 @@ import {
     StringValue,
     TextValue,
     Value, VolumeValue, WeightValue, WidthValue
-} from "../model/item.model";
-import {attributeConvert} from "./conversion-attribute.service";
-import {OperatorType} from "../model/operator.model";
+} from '@fuyuko-common/model/item.model';
+import {attributeConvert} from './conversion-attribute.service';
+import {OperatorType} from '@fuyuko-common/model/operator.model';
 import {
     AreaUnits,
     DimensionUnits,
@@ -29,8 +29,8 @@ import {
     VolumeUnits,
     WeightUnits,
     WidthUnits
-} from "../model/unit.model";
-import moment from "moment";
+} from '@fuyuko-common/model/unit.model';
+import moment from 'moment';
 import {
     compareDate, compareDimension,
     compareNumber,
@@ -38,9 +38,9 @@ import {
     convertToCm,
     convertToCm2, convertToG,
     convertToMl
-} from "./compare-attribute-values.service";
-import {pricedItemsConvert} from "./conversion-priced-item.service";
-import {fireEvent, GetPricedItemsWithFilteringEvent} from "./event/event.service";
+} from './compare-attribute-values.service';
+import {pricedItemsConvert} from './conversion-priced-item.service';
+import {fireEvent, GetPricedItemsWithFilteringEvent} from './event/event.service';
 
 const SQL: string = `
            SELECT 

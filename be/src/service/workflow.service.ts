@@ -1,13 +1,15 @@
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import { Connection } from "mariadb";
-import {WorkflowDefinition, WorkflowInstanceAction, Workflow, WorkflowInstanceType} from "../model/workflow.model";
-import {Argument, Engine, EngineResponse, State} from "../wf";
-import * as Path from 'path';
-import {WorkflowScript} from "../server-side-model/server-side.model";
-import {InternalEngine, InternalState} from "../wf/engine-impl";
-import {e} from "../logger";
-import {STATUS_CODES} from 'http';
-import {ENABLED} from '../model/status.model';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import { Connection } from 'mariadb';
+import {
+    WorkflowDefinition,
+    WorkflowInstanceAction,
+    Workflow,
+    WorkflowInstanceType,
+    WorkflowForAttributeValue
+} from '@fuyuko-common/model/workflow.model';
+import {e} from '../logger';
+import {ENABLED} from '@fuyuko-common/model/status.model';
+import {AttributeType} from '@fuyuko-common/model/attribute.model';
 
 const q1: string = `
             SELECT 
@@ -20,6 +22,9 @@ const q1: string = `
                 W.STATUS AS M_STATUS,
                 W.CREATION_DATE AS M_CREATION_DATE,
                 W.LAST_UPDATE AS M_LAST_UPDATE,
+                AT.ID AS AT_ID,
+                AT.NAME AS AT_NAME,
+                AT.TYPE AS AT_TYPE,
                 WD.ID AS W_ID,
                 WD.NAME AS W_NAME,
                 WD.DESCRIPTION AS W_DESCRIPTION,
@@ -34,6 +39,8 @@ const q1: string = `
             FROM TBL_WORKFLOW AS W
             LEFT JOIN TBL_WORKFLOW_DEFINITION AS WD ON WD.ID = W.WORKFLOW_DEFINITION_ID
             LEFT JOIN TBL_VIEW AS V ON V.ID = W.VIEW_ID
+            LEFT JOIN TBL_WORKFLOW_ATTRIBUTE AS A ON A.WORKFLOW_ID = W.ID
+            LEFT JOIN TBL_VIEW_ATTRIBUTE AS AT ON AT.ID = A.ATTRIBUTE_ID
             WHERE V.ID = ? AND W.STATUS = ?
 `;
 
@@ -114,8 +121,9 @@ class WorkflowService {
      */
     async getWorkflowByView(viewId: number): Promise<Workflow[]> {
         return await doInDbConnection(async (conn: Connection) => {
-            return (await conn.query(q1, [viewId, ENABLED]))
-                .reduce(this.reduceQueryToWorkflow.bind(this), []);
+            const m: Map<number /* workflowId */, Workflow> = (await conn.query(q1, [viewId, ENABLED]))
+                .reduce(this.reduceQueryToWorkflow.bind(this), new Map<number /* workflowId */, Workflow>());
+            return [...m.values()];
         });
     };
 
@@ -126,8 +134,9 @@ class WorkflowService {
      */
     async getWorkflowByViewActionAndType(viewId: number, action: WorkflowInstanceAction, type: WorkflowInstanceType): Promise<Workflow[]> {
         return await doInDbConnection(async (conn: Connection) => {
-            return (await conn.query(q2, [viewId, ENABLED, action, type]))
-                .reduce(this.reduceQueryToWorkflow.bind(this), []);
+            const m: Map<number /* workflowId */, Workflow> = (await conn.query(q2, [viewId, ENABLED, action, type]))
+                .reduce(this.reduceQueryToWorkflow.bind(this), new Map<number /* workflowId */, Workflow>());
+            return [...m.values()];
         });
     }
 
@@ -142,15 +151,18 @@ class WorkflowService {
 
 
 
-    private reduceQueryToWorkflow(acc: Workflow[], i: QueryI): Workflow[] {
-        const workflowMapping: Workflow = {
-            id: i.M_ID,
+    private reduceQueryToWorkflow(acc: Map<number /* workflowId */, Workflow>, i: QueryI): Map<number /* workflowId */, Workflow> {
+        const workflowId: number = i.M_ID;
+        const workflowType: WorkflowInstanceType = i.M_TYPE;
+        const workflow: Workflow = acc.get(workflowId) || {
+            id: workflowId,
             name: i.M_NAME,
             action: i.M_ACTION,
-            type: i.M_TYPE,
+            type: workflowType as any,
             status: i.M_STATUS,
             creationDate: i.M_CREATION_DATE,
             lastUpdate: i.M_LAST_UPDATE,
+            attributeIds: [],
             view: {
                 id: i.V_ID,
                 name: i.V_NAME,
@@ -166,7 +178,15 @@ class WorkflowService {
                 lastUpdate: i.W_LAST_UPDATE
             }
         };
-        acc.push(workflowMapping);
+        acc.set(workflowId, workflow);
+
+        const attributeId: number = i.AT_ID;
+        const attributeName: string = i.AT_NAME;
+        const attributeType: AttributeType = i.AT_TYPE;
+        if (workflowType === 'AttributeValue' &&  attributeId) {
+            (acc.get(workflowId) as WorkflowForAttributeValue).attributeIds.push(attributeId);
+        }
+
         return acc;
     }
 }

@@ -1,5 +1,5 @@
-import {Router, Request, Response, NextFunction} from "express";
-import {Registry} from "../../registry";
+import {Router, Request, Response, NextFunction} from 'express';
+import {Registry} from '../../registry';
 import {body, param} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -7,12 +7,12 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {BulkEditPackage} from "../../model/bulk-edit.model";
-import {runJob} from "../../service/bulk-edit/job-do-bulk-edit.service";
-import {Job} from "../../model/job.model";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
+import {bulkEditRunJob} from '../../service';
+import {Job} from '@fuyuko-common/model/job.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED
@@ -30,7 +30,7 @@ const httpAction = [
         const viewId: number = Number(req.params.viewId);
         const bulkEditPackage: BulkEditPackage = req.body.bulkEditPackage;
 
-        const job: Job = await runJob(viewId, bulkEditPackage);
+        const job: Job = await bulkEditRunJob(viewId, bulkEditPackage);
 
         res.status(200).json( {
             status: 'SUCCESS',

@@ -1,6 +1,7 @@
+// import 'module-alias/register';   // module-alise for @fuyuko-*
 import 'source-map-support/register';
 import express, {Express, Router} from 'express';
-require('express-async-errors');
+import 'express-async-errors';    // catch async errors
 import cookieParser from 'cookie-parser';
 import registerV1AppRouter from './route/v1/v1-app.router';
 import cors from 'cors';
@@ -14,20 +15,19 @@ import {
     httpLogMiddlewareFn,
     threadLocalMiddlewareFn,
     timingLogMiddlewareFn
-} from "./route/v1/common-middleware";
-import {Registry} from "./registry";
-import {runCustomRuleSync} from "./custom-rule";
-import {Options} from "body-parser";
-import {runCustomImportSync} from "./custom-import";
-import {runCustomExportSync} from "./custom-export/custom-export-executor";
-import {runTimezoner} from "./timezoner";
-import {runCustomBulkEditSync} from "./custom-bulk-edit/custom-bulk-edit-executor";
+} from './route/v1/common-middleware';
+import {Registry} from './registry';
+import {runCustomRuleSync} from './custom-rule';
+import {Options} from 'body-parser';
+import {runCustomImportSync} from './custom-import';
+import {runCustomExportSync} from './custom-export';
+import {runTimezoner} from './timezoner';
+import {runCustomBulkEditSync} from './custom-bulk-edit';
 import {
     destroyEventsSubscription,
-    EventSubscriptionRegistry,
     registerEventsSubscription
-} from "./service/event/event.service";
-import {runCustomWorkflowSync} from "./custom-workflow/custom-workflow-executor";
+} from './service/event/event.service';
+import {runCustomWorkflowSync} from './custom-workflow';
 
 i(`Run Timezoner`);
 runTimezoner(config.timezone);
@@ -41,6 +41,7 @@ const options: Options = {
 };
 
 app.all('*', threadLocalMiddlewareFn);
+app.all('/api/*',  auditMiddlewareFn);
 
 app.use(timingLogMiddlewareFn);
 app.use(express.urlencoded(options));
@@ -51,8 +52,6 @@ app.use(cookieParser());
 app.use(httpLogMiddlewareFn);
 app.use(catchErrorMiddlewareFn);
 app.use(cors());
-
-app.all('*',  auditMiddlewareFn);
 
 const registry: Registry = Registry.newRegistry('api');
 const apiRouter: Router = express.Router();

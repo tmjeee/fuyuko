@@ -1,4 +1,4 @@
-import {LimitOffset} from "../model/limit-offset.model";
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {Request} from 'express';
 
 export function range(start: number, stop: number, step: number = 1) {

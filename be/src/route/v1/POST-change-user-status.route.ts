@@ -1,16 +1,16 @@
-import {NextFunction, Router, Request, Response } from "express";
-import {Registry } from "../../registry";
+import {NextFunction, Router, Request, Response } from 'express';
+import {Registry } from '../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {param} from 'express-validator';
-import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_ADMIN} from "../../model/role.model";
-import {changeUserStatus} from "../../service/user.service";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
+import {changeUserStatus} from '../../service';
 
 // CHECKED
 

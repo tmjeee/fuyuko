@@ -1,13 +1,13 @@
-import {Attribute} from "../../model/attribute.model";
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {doInDbConnection} from '../../db';
+import {Connection} from 'mariadb';
 import {
     getItemWithFiltering,
     ItemWithFilteringResult
 } from "../item-filtering.service";
-import {Item} from "../../model/item.model";
-import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import {ExportItemPreviewEvent, fireEvent} from "../event/event.service";
+import {Item} from '@fuyuko-common/model/item.model';
+import {ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {ExportItemPreviewEvent, fireEvent} from '../event/event.service';
 
 /**
  * =============================

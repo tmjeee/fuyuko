@@ -2,15 +2,15 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import { param } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {LimitOffset} from "../../model/limit-offset.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toLimitOffset} from "../../util/utils";
 import {
     categorySimpleItemsNotInCategory,
     categorySimpleItemsNotInCategoryCount
-} from "../../service/category.service";
-import {CategorySimpleItem} from "../../model/category.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
+} from '../../service';
+import {CategorySimpleItem} from '@fuyuko-common/model/category.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [

@@ -1,11 +1,11 @@
-import {Rule, ValidateClause, WhenClause} from "../model/rule.model";
+import {Rule, ValidateClause, WhenClause} from '@fuyuko-common/model/rule.model';
 import {
     ItemMetadataEntry2,
     Rule2,
     ValidateClause2,
     ValidateClauseMetadata2, ValidateClauseMetadataEntry2, WhenClause2,
     WhenClauseMetadata2, WhenClauseMetadataEntry2
-} from "../server-side-model/server-side.model";
+} from '../server-side-model/server-side.model';
 import {
     AreaValue, CurrencyValue, DateValue,
     DimensionValue, DoubleSelectValue, HeightValue,
@@ -14,7 +14,7 @@ import {
     StringValue,
     TextValue, VolumeValue, WeightValue,
     WidthValue
-} from "../model/item.model";
+} from '@fuyuko-common/model/item.model';
 
 class ConversionRuleService {
 

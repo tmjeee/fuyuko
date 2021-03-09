@@ -1,6 +1,6 @@
-import {Item2, ItemValue2, PricedItem2} from "../server-side-model/server-side.model";
-import {Item, ItemValTypes, PricedItem, Value} from "../model/item.model";
-import {itemValueConvert, itemValueRevert} from "./conversion-item-value.service";
+import {ItemValue2, PricedItem2} from '../server-side-model/server-side.model';
+import {PricedItem, Value} from '@fuyuko-common/model/item.model';
+import {itemValueConvert, itemValueRevert} from './conversion-item-value.service';
 
 class ConversionPricedItemService {
 

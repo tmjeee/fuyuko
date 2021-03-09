@@ -1,9 +1,9 @@
-import {CustomDataExport, ExportScript, ExportScriptInput} from "../model/custom-export.model";
-import {doInDbConnection, QueryA, QueryI} from "../db";
-import {Connection} from "mariadb";
-import {CustomBulkEdit} from "../model/custom-bulk-edit.model";
-import {getCustomBulkEditScriptByName} from "../custom-bulk-edit/custom-bulk-edit-executor";
-import {fireEvent, GetAllCustomBulkEditsEvent, GetCustomBulkEditByIdEvent} from "./event/event.service";
+import {CustomDataExport, ExportScript, ExportScriptInput} from '@fuyuko-common/model/custom-export.model';
+import {doInDbConnection, QueryA, QueryI} from '../db';
+import {Connection} from 'mariadb';
+import {CustomBulkEdit} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {getCustomBulkEditScriptByName} from '../custom-bulk-edit';
+import {fireEvent, GetAllCustomBulkEditsEvent, GetCustomBulkEditByIdEvent} from './event/event.service';
 
 class CustomBulkEditService {
     /**

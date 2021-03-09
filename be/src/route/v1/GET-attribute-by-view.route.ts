@@ -1,11 +1,11 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../registry";
-import {check} from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {Attribute} from "../../model/attribute.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {getAttributesInView} from "../../service";
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../registry';
+import {check} from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getAttributesInView} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [

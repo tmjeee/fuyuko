@@ -7,6 +7,10 @@
             <th mat-header-cell *matHeaderCellDef>Definition</th>
             <td mat-cell *matCellDef="let workflow">{{workflow.workflowDefinition.name}}</td>
         </ng-container>
+        <ng-container matColumnDef="workflowName">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let workflow">{{workflow.name}}</td>
+        </ng-container>
         <ng-container matColumnDef="workflowAction">
             <th mat-header-cell *matHeaderCellDef>Action</th>
             <td mat-cell *matCellDef="let workflow">{{workflow.action}}</td>

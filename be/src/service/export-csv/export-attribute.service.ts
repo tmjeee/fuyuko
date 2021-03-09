@@ -1,6 +1,6 @@
-import {Attribute} from "../../model/attribute.model";
-import {ExportAttributePreviewEvent, fireEvent} from "../event/event.service";
-import {getAttributesInView} from "../index";
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ExportAttributePreviewEvent, fireEvent} from '../event/event.service';
+import {getAttributesInView} from '../';
 
 /**
  * ===============

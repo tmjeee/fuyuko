@@ -1,13 +1,13 @@
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../db";
-import {Connection} from "mariadb";
-import {Role} from "../model/role.model";
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
+import {Connection} from 'mariadb';
+import {Role} from '@fuyuko-common/model/role.model';
 import {
     AddOrUpdateRoleEvent,
     AddRoleToGroupEvent,
     fireEvent,
     GetAllRolesEvent,
     GetRoleByNameEvent, RemoveRoleFromGroup
-} from "./event/event.service";
+} from './event/event.service';
 
 class RoleService {
 

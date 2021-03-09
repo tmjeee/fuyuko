@@ -1,7 +1,7 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Response, Request} from "express";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import { param } from "express-validator";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Response, Request} from 'express';
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from './common-middleware';
+import { param } from 'express-validator';
 import fetch, {Response as FetchResponse} from 'node-fetch';
 import showdown from 'showdown';
 import config from '../../config';

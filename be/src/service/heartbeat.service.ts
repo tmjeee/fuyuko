@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from 'moment';
 
 class HeartbeatService {
     heartbeat(): {date: string} {

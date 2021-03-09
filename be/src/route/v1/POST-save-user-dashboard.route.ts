@@ -1,5 +1,5 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response } from "express";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response } from 'express';
 import {param, body} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -7,13 +7,11 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {SerializedDashboardFormat} from "../../model/dashboard-serialzable.model";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {saveUserDashboard} from "../../service/dashboard.service";
+} from './common-middleware';
+import {SerializedDashboardFormat} from '@fuyuko-common/model/dashboard-serialzable.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {saveUserDashboard} from '../../service';
 
 
 // CHECKED

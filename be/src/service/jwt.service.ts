@@ -1,8 +1,8 @@
-import {User} from "../model/user.model";
-import * as jwt from "jsonwebtoken";
-import {JwtPayload} from "../model/jwt.model";
+import {User} from '@fuyuko-common/model/user.model';
+import * as jwt from 'jsonwebtoken';
+import {JwtPayload} from '@fuyuko-common/model/jwt.model';
 import config from '../config';
-import {CreateJwtTokenEvent, DecodeJwtTokenEvent, fireEvent, VerifyJwtTokenEvent} from "./event/event.service";
+import {CreateJwtTokenEvent, DecodeJwtTokenEvent, fireEvent, VerifyJwtTokenEvent} from './event/event.service';
 
 
 class JwtService {

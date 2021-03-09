@@ -1,11 +1,11 @@
-import {BulkEditItem, BulkEditPackage} from "../../model/bulk-edit.model";
-import {Job} from "../../model/job.model";
-import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
-import {JobLogger, newJobLogger} from "../job-log.service";
-import {Value} from "../../model/item.model";
-import {updateItemValue} from "../item.service";
-import {convertToDebugString} from "../../shared-utils/ui-item-value-converters.util";
+import {BulkEditItem, BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
+import {Job} from '@fuyuko-common/model/job.model';
+import {doInDbConnection, QueryA} from '../../db';
+import {Connection} from 'mariadb';
+import {JobLogger, newJobLogger} from '../job-log.service';
+import {Value} from '@fuyuko-common/model/item.model';
+import {updateItemValue} from '../item.service';
+import {convertToDebugString} from '@fuyuko-common/shared-utils/ui-item-value-converters.util';
 import {BulkEditJobEvent, fireEvent} from "../event/event.service";
 const uuid = require('uuid');
 

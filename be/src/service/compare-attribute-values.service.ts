@@ -6,9 +6,9 @@ import {
     LengthUnits,
     VolumeUnits, WeightUnits,
     WidthUnits
-} from "../model/unit.model";
-import moment from "moment";
-import {OperatorType} from "../model/operator.model";
+} from '@fuyuko-common/model/unit.model';
+import moment from 'moment';
+import {OperatorType} from '@fuyuko-common/model/operator.model';
 
 
 class CompareAttributeValuesService {

@@ -1,13 +1,12 @@
-import {itemConvert, itemRevert} from "../../src/service/conversion-item.service";
+import {itemConvert, itemRevert} from '../../src/service';
 import {
     Item2,
     ItemMetadata2,
     ItemMetadataEntry2,
     ItemValue2,
-    PricedItem2
-} from "../../src/server-side-model/server-side.model";
-import {Item, ItemImage, PricedItem, StringValue, Value} from "../../src/model/item.model";
-import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+} from '../../src/server-side-model/server-side.model';
+import {Item, ItemImage, StringValue, Value} from '@fuyuko-common/model/item.model';
+import {setupTestDatabase} from '../helpers/test-helper';
 
 describe('conversion-item.service.ts', () => {
     beforeAll(async () => {

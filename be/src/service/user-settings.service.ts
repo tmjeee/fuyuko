@@ -1,7 +1,7 @@
-import {Settings} from "../model/settings.model";
-import {Connection} from "mariadb";
-import {doInDbConnection, QueryA, QueryResponse} from "../db";
-import {fireEvent, GetSettingsEvent, UpdateUserSettingsEvent} from "./event/event.service";
+import {Settings} from '@fuyuko-common/model/settings.model';
+import {Connection} from 'mariadb';
+import {doInDbConnection, QueryA, QueryResponse} from '../db';
+import {fireEvent, GetSettingsEvent, UpdateUserSettingsEvent} from './event/event.service';
 
 export const DEFAULT_SETTINGS: Settings = new Settings();
 DEFAULT_SETTINGS.id = 0;

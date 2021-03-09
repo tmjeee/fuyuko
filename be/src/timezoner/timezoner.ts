@@ -1,5 +1,4 @@
-import {i} from "../logger";
-
+import {i} from '../logger';
 
 export const runTimezoner = (timezone: string) => {
     // set node process env and run Date() to make sure timezone is setup in node
