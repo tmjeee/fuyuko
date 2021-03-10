@@ -1,7 +1,7 @@
-import {createJwtToken, decodeJwtToken, verifyJwtToken} from "../../src/service";
-import {User} from "../../src/model/user.model";
-import {JwtPayload} from "../../src/model/jwt.model";
-import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {createJwtToken, decodeJwtToken, verifyJwtToken} from '../../src/service';
+import {User} from '@fuyuko-common/model/user.model';
+import {JwtPayload} from '@fuyuko-common/model/jwt.model';
+import {setupTestDatabase} from '../helpers/test-helper';
 
 
 describe('jwt.service', () => {

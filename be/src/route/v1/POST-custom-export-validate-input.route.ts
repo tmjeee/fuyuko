@@ -2,10 +2,10 @@ import {Registry} from "../../registry";
 import {NextFunction, Request, Response, Router} from "express";
 import {body, param} from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {validate} from "../../custom-import/custom-import-executor";
-import {ExportScriptInputValue, ExportScriptValidateResult} from "../../model/custom-export.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {validate} from '../../custom-import/custom-import-executor';
+import {ExportScriptInputValue, ExportScriptValidateResult} from '@fuyuko-common/model/custom-export.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 

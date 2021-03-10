@@ -1,23 +1,22 @@
 import {Component, OnDestroy, OnInit, Provider} from '@angular/core';
 import {ViewService} from '../../service/view-service/view.service';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {RuleService} from '../../service/rule-service/rule.service';
-import {Rule} from '../../model/rule.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
 import {RulesTableComponentEvent} from '../../component/rules-component/rules-table.component';
 import {CounterService} from '../../service/counter-service/counter.service';
 import {combineAll, finalize, flatMap, map, tap} from 'rxjs/operators';
 import {combineLatest, of, Subscription} from 'rxjs';
-import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
 import {CustomRuleService} from '../../service/custom-rule-service/custom-rule.service';
-import {CustomRule, CustomRuleForView} from '../../model/custom-rule.model';
+import {CustomRule, CustomRuleForView} from '@fuyuko-common/model/custom-rule.model';
 import {CustomRuleTableComponentEvent} from '../../component/rules-component/custom-rule-table.component';
-import {not} from "rxjs/internal-compatibility";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

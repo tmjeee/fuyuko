@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Group} from '../../model/group.model';
+import {Group} from '@fuyuko-common/model/group.model';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-// @ts-ignore
 import config from '../../utils/config.util';
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const URL_CREATE_INVITATION = () => `${config().api_host_url}/create-invitation`;
 

@@ -1,22 +1,19 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
-import {check, body} from 'express-validator';
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
+import {body} from 'express-validator';
 import {
     aFnAnyTrue,
     getJwtPayload, v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
-import {JwtPayload} from "../../model/jwt.model";
-import {getUserById, hashedPassword} from "../../service";
-import {User} from "../../model/user.model";
-import {ROLE_EDIT} from "../../model/role.model";
-import {QueryA} from "../../db/db";
-import {ApiResponse} from "../../model/api-response.model";
-import {updateUser} from "../../service/user.service";
+} from './common-middleware';
+import {JwtPayload} from '@fuyuko-common/model/jwt.model';
+import {getUserById} from "../../service";
+import {User} from '@fuyuko-common/model/user.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from "@fuyuko-common/model/api-response.model";
+import {updateUser} from '../../service';
 
 // CHECKED
 

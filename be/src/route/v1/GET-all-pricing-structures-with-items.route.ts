@@ -7,23 +7,20 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check, param} from 'express-validator';
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
+import {param} from 'express-validator';
 import {
     PricingStructure,
     PricingStructureItemWithPrice,
     PricingStructureWithItems
-} from "../../model/pricing-structure.model";
-import {getChildrenWithConn} from "../../service/pricing-structure-item.service";
-import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
-import {LIMIT_OFFSET, toLimitOffset} from "../../util/utils";
-import {LimitOffset} from "../../model/limit-offset.model";
+} from '@fuyuko-common/model/pricing-structure.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toLimitOffset} from "../../util/utils";
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {
     getAllPricingStructureItemsWithPrice,
     getAllPricingStructureItemsWithPriceCount, getPricingStructureById
-} from "../../service/pricing-structure.service";
+} from '../../service';
 
 
 // CHECKED

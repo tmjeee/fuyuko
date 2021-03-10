@@ -1,26 +1,23 @@
-import {NextFunction, Router, Request, Response } from "express";
-import {Registry } from "../../registry";
+import {NextFunction, Router, Request, Response } from 'express';
+import {Registry } from '../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {check} from 'express-validator';
-import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
-import {makeApiError, makeApiErrorObj} from "../../util";
-import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_ADMIN} from "../../model/role.model";
-import {addUserToGroup} from "../../service/user.service";
+} from './common-middleware';
+import {body} from 'express-validator';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
+import {addUserToGroup} from '../../service';
 
 // CHECKED
 
 const httpAction: any[] = [
     [
-        check('groupId').exists().isNumeric(),
-        check('userId').exists().isNumeric()
+        body('groupId').exists().isNumeric(),
+        body('userId').exists().isNumeric()
     ],
     validateMiddlewareFn,
     validateJwtMiddlewareFn,

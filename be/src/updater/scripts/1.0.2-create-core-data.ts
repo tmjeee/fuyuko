@@ -1,18 +1,15 @@
-import {i} from "../../logger";
-import path from "path";
-import util from "util";
-import fs from "fs";
-import {doInDbConnection} from "../../db";
+import {i} from '../../logger';
+import path from 'path';
+import util from 'util';
+import fs from 'fs';
+import {doInDbConnection} from '../../db';
 import {Connection} from "mariadb";
-import {Group, GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from "../../model/group.model";
-import {UPDATER_PROFILE_CORE} from "../updater";
-import {addOrUpdateGroup, getGroupByName} from "../../service/group.service";
-import {checkErrors} from "../script-util";
-import {addOrUpdateRole, addRoleToGroup, getRoleByName} from "../../service/role.service";
-import {Role, ROLE_ADMIN, ROLE_EDIT, ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
-import {addGlobalAvatar, addGlobalImage} from "../../service/avatar.service";
-import {addOrUpdateViews} from "../../service/view.service";
-import {addUser} from "../../service/user.service";
+import {Group, GROUP_ADMIN, GROUP_EDIT, GROUP_PARTNER, GROUP_VIEW} from '@fuyuko-common/model/group.model';
+import {UPDATER_PROFILE_CORE} from '../updater';
+import {addOrUpdateGroup, getGroupByName, addOrUpdateRole, addRoleToGroup, getRoleByName, addGlobalAvatar,
+    addGlobalImage, addOrUpdateViews, addUser} from '../../service';
+import {checkErrors} from '../script-util';
+import {Role, ROLE_ADMIN, ROLE_EDIT, ROLE_PARTNER, ROLE_VIEW} from '@fuyuko-common/model/role.model';
 
 export const profiles = [UPDATER_PROFILE_CORE];
 

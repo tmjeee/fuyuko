@@ -13,8 +13,8 @@ import {SettingsService} from '../../service/settings-service/settings.service';
 import {RouterTestingModule} from '@angular/router/testing';
 import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
 import {BrowserLocationHistoryService} from '../../service/browser-location-history-service/browser-location-history.service';
-import {of} from "rxjs";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {of} from 'rxjs';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 describe('DashboardLayoutComponent', () => {

@@ -1,17 +1,19 @@
-import {Component, Input, OnInit} from "@angular/core";
-import {AUDIT_CATEGORIES, AuditCategory, AuditLog} from "../../model/audit-log.model";
-import {Level, LEVELS} from "../../model/level.model";
-import {FormBuilder, FormControl} from "@angular/forms";
-import {BehaviorSubject, Observable, of} from "rxjs";
-import {User} from "../../model/user.model";
-import {CollectionViewer, DataSource} from "@angular/cdk/collections";
-import {audit, debounceTime, tap} from "rxjs/operators";
-import {Pagination} from "../../utils/pagination.utils";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {PaginationComponentEvent} from "../pagination-component/pagination.component";
-import {PaginableApiResponse} from "../../model/api-response.model";
+import {Component, Input, OnInit} from '@angular/core';
+import {AUDIT_CATEGORIES, AuditCategory, AuditLog} from '@fuyuko-common/model/audit-log.model';
+import {Level, LEVELS} from '@fuyuko-common/model/level.model';
+import {FormBuilder, FormControl} from '@angular/forms';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {User} from '@fuyuko-common/model/user.model';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {debounceTime, tap} from 'rxjs/operators';
+import {Pagination} from '../../utils/pagination.utils';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {PaginationComponentEvent} from '../pagination-component/pagination.component';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 
-export type FindAuditLogsFn = (category: AuditCategory, level: Level, userId: number, log: string, limitOffset: LimitOffset) => Observable<PaginableApiResponse<AuditLog[]>>;
+export type FindAuditLogsFn =
+    (category: AuditCategory, level: Level, userId: number, log: string, limitOffset: LimitOffset) =>
+        Observable<PaginableApiResponse<AuditLog[]>>;
 export type FindUsersFn = (username: string) => Observable<User[]>;
 
 
@@ -65,11 +67,11 @@ export class AuditLogComponent implements OnInit {
        this.formControlUsernameSearch = formBuilder.control('', []);
        this.formControlLogSearch = formBuilder.control('', []);
        this.usernameDisplayWith = (value: any): string => {
-           if(typeof value == 'string') {
+           if (typeof value === 'string') {
                return value;
            }
-           if (value.id == -1) { // search for unknown user
-               return "Unknown";
+           if (value.id === -1) { // search for unknown user
+               return 'Unknown';
            }
            return (value as User).username;
        };

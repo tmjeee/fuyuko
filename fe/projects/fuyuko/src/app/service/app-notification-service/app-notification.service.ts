@@ -1,12 +1,12 @@
-import {Directive, Injectable, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {AppNotification, NewNotification} from '../../model/notification.model';
-import {User} from '../../model/user.model';
+import {AppNotification, NewNotification} from '@fuyuko-common/model/notification.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {AuthService} from '../auth-service/auth.service';
 import {map, tap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const URL_POST_CREATE_USER_NOTIFICATION = () => `${config().api_host_url}/user/:userId/notification`;
 const URL_GET_USER_NOTIFICATIONS = () => `${config().api_host_url}/user/:userId/notifications`;

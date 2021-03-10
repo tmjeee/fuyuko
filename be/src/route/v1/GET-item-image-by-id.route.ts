@@ -1,9 +1,9 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {check} from 'express-validator';
-import {validateMiddlewareFn} from "./common-middleware";
-import {BinaryContent} from "../../model/binary-content.model";
-import {getItemImageContent} from "../../service/item-image.service";
+import {validateMiddlewareFn} from './common-middleware';
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
+import {getItemImageContent} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [

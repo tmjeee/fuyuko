@@ -1,6 +1,6 @@
 
 import moment from 'moment';
-import {Level} from "../model/level.model";
+import {Level} from '@fuyuko-common/model/level.model';
 import {EOL} from 'os';
 import {getThreadLocalStore, ThreadLocalStore} from "../service/thread-local.service";
 

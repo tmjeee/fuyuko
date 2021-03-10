@@ -1,5 +1,5 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
 import {body, param} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -7,15 +7,15 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {Attribute} from "../../model/attribute.model";
-import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import {PriceDataExport} from "../../model/data-export.model";
-import {preview, PreviewResult} from "../../service/export-csv/export-price.service";
-import {ROLE_EDIT} from "../../model/role.model";
-import {PricingStructure} from "../../model/pricing-structure.model";
-import {getPricingStructureById} from "../../service/pricing-structure.service";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {PriceDataExport} from '@fuyuko-common/model/data-export.model';
+import {exportPricePreview, ExportPricePreviewResult} from '../../service';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
+import {getPricingStructureById} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 
@@ -36,7 +36,7 @@ const httpAction: any[] = [
         const attributes: Attribute[] = req.body.attributes;
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
 
-        const p: PreviewResult = await preview(viewId, pricingStructureId, filter);
+        const p: ExportPricePreviewResult = await exportPricePreview(viewId, pricingStructureId, filter);
         const ps: PricingStructure = await getPricingStructureById(pricingStructureId);
 
         const priceDataExport: PriceDataExport = ({

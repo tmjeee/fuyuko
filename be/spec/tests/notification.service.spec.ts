@@ -1,7 +1,7 @@
-import {addUserNotification, getUserByUsername, getUserNotifications} from "../../src/service";
-import {User} from "../../src/model/user.model";
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {NewNotification} from "../../src/model/notification.model";
+import {addUserNotification, getUserByUsername, getUserNotifications} from '../../src/service';
+import {User} from '@fuyuko-common/model/user.model';
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
+import {NewNotification} from '@fuyuko-common/model/notification.model';
 
 
 describe('notification.service', () => {

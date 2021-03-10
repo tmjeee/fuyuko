@@ -2,6 +2,7 @@ node_modules/
 *.iml
 .idea/
 
+dist/
 src/model/
 src/shared-utils/
 src/wf/

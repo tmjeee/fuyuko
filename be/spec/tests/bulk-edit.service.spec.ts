@@ -1,11 +1,11 @@
-import { preview } from "../../src/service/bulk-edit/bulk-edit.service";
-import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../src/model/item-attribute.model";
-import {BulkEditPackage} from "../../src/model/bulk-edit.model";
+import { preview } from '../../src/service/bulk-edit/bulk-edit.service';
+import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
 import {
     JASMINE_TIMEOUT,
-    setupTestDatabase, setupBeforeAll2,
-} from "../helpers/test-helper";
-import {Attribute} from "../../src/model/attribute.model";
+    setupBeforeAll2,
+} from '../helpers/test-helper';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {
     AreaValue,
     CurrencyValue,
@@ -15,11 +15,9 @@ import {
     TextValue,
     Value,
     VolumeValue, WeightValue, WidthValue
-} from "../../src/model/item.model";
-import {View} from "../../src/model/view.model";
-import {getViewByName} from "../../src/service/view.service";
-import {getAttributeInViewByName} from "../../src/service/attribute.service";
-import * as util from "util";
+} from '@fuyuko-common/model/item.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {getViewByName, getAttributeInViewByName} from '../../src/service';
 
 describe('bulk-edit.service', () => {
 

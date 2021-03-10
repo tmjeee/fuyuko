@@ -1,0 +1,95 @@
+<div class="workflow-editor-dialog-component">
+    <h2 mat-dialog-title>Workflow Editor</h2>
+    <mat-dialog-content class="mat-typography">
+
+        <!-- workflow name -->
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput placeholder="Workflow Name" [formControl]="formControlName">
+            <mat-hint>Enter a workflow name</mat-hint>
+            <mat-error *ngIf="formControlName.errors && formControlName.errors.required">
+                Workflow name is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- view -->
+        <mat-form-field>
+            <mat-label>View</mat-label>
+            <mat-select [formControl]="formControlSelectedView" (selectionChange)="onViewChanged($event)">
+                <mat-option *ngFor="let view of views" [value]="view">
+                    {{view.name}}
+                </mat-option>
+            </mat-select>
+            <mat-hint>View for workflow to be applied</mat-hint>
+            <mat-error *ngIf="formControlSelectedView.errors && formControlSelectedView.errors.required">
+                View selection is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- action -->
+        <mat-form-field>
+            <mat-label>Action</mat-label>
+            <mat-select [formControl]="formControlAction">
+                <mat-option *ngFor="let action of actions" [value]="action">
+                    {{action}}
+                </mat-option>
+            </mat-select>
+            <mat-hint>Workflow Action to be applied</mat-hint>
+            <mat-error *ngIf="formControlAction.errors && formControlAction.errors.required">
+                Action selection is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- type -->
+        <mat-form-field>
+            <mat-label>Type</mat-label>
+            <mat-select [formControl]="formControlType">
+                <mat-option *ngFor="let type of types" [value]="type">
+                    {{type}}
+                </mat-option>
+            </mat-select>
+            <mat-hint>Workflow Type to be applied</mat-hint>
+            <mat-error *ngIf="formControlType.errors && formControlType.errors.required">
+                Type selection is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- workflow definition -->
+        <mat-form-field>
+            <mat-label>Workflow Definition</mat-label>
+            <mat-select [formControl]="formControlWorkflowDefinition">
+                <mat-option *ngFor="let workflowDefinition of workflowDefinitions" [value]="workflowDefinition">
+                    {{workflowDefinition.name}}
+                </mat-option>
+            </mat-select>
+            <mat-hint>Workflow Definition to be applied</mat-hint>
+            <mat-error *ngIf="formControlWorkflowDefinition.errors && formControlWorkflowDefinition.errors.required">
+                Workflow definition is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- view attributes (only when type is 'AttributeValue' -->
+        <mat-form-field *ngIf="isAttributeSelectionAllowed()">
+            <mat-label>View Attributes</mat-label>
+            <input matInput placeholder="Input" style="visibility: hidden" >
+            <mat-checkbox (change)="onSelectAllAttributes($event)"
+                          [checked]="selectAllAttributes">
+                Select All Attributes
+            </mat-checkbox>
+            <div fxLayout="row wrap" fxLayoutGap="10px">
+                <mat-checkbox *ngFor="let attribute of viewAttributes"
+                              [checked]="isAttributeSelected(attribute)"
+                              [value]="attribute.name"
+                              (change)="onAttributeChange(attribute, $event)">
+                    {{attribute.name}}
+                </mat-checkbox>
+            </div>
+            <mat-hint>View attributes to be applied on</mat-hint>
+        </mat-form-field>
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button color="primary" type="button" mat-flat-button (click)="submit()" [disabled]="formGroup.invalid">Submit</button>
+        <button type="button" mat-flat-button (click)="close()">Close</button>
+    </mat-dialog-actions>
+</div>

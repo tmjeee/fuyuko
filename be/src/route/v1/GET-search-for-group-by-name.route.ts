@@ -1,13 +1,11 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {param} from 'express-validator';
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {Role, ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {Group} from "../../model/group.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {searchForGroupByName} from "../../service/group.service";
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {Group} from '@fuyuko-common/model/group.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {searchForGroupByName} from '../../service';
 
 // CHECKED
 

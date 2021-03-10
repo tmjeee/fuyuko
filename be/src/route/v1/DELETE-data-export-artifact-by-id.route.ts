@@ -2,8 +2,8 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import { param } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteExportArtifactById} from "../../service/export-artifact.service";
 
 // CHECKED

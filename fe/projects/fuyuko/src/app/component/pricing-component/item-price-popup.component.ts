@@ -1,8 +1,8 @@
 import {Component, Inject} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {TablePricingStructureItemWithPrice} from '../../model/pricing-structure.model';
+import {TablePricingStructureItemWithPrice} from '@fuyuko-common/model/pricing-structure.model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {COUNTRY_CURRENCY_UNITS, CountryCurrencyUnits} from "../../model/unit.model";
+import {COUNTRY_CURRENCY_UNITS, CountryCurrencyUnits} from '@fuyuko-common/model/unit.model';
 
 
 @Component({

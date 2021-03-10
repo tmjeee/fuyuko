@@ -1,9 +1,9 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
-import { body } from "express-validator";
-import {validateMiddlewareFn} from "./common-middleware";
-import {forgotPassword} from "../../service/auth.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
+import { body } from 'express-validator';
+import {validateMiddlewareFn} from './common-middleware';
+import {forgotPassword} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const httpAction: any = [

@@ -1,7 +1,7 @@
-import {Connection} from "mariadb";
+import {Connection} from 'mariadb';
 import {i} from '../../logger';
-import {doInDbConnection} from "../../db";
-import {UPDATER_PROFILE_CORE} from "../updater";
+import {doInDbConnection} from '../../db';
+import {UPDATER_PROFILE_CORE} from '../updater';
 
 export const profiles = [UPDATER_PROFILE_CORE];
 
@@ -63,12 +63,146 @@ export const update = async () => {
    await TBL_LOOKUP_VIEW_CATEGORY_ITEM();
    await TBL_FORGOT_PASSWORD();
    await TBL_FAVOURITE_ITEM();
+   await TBL_WORKFLOW_DEFINITION();
+   await TBL_WORKFLOW();
+   await TBL_WORKFLOW_ATTRIBUTE();
+   await TBL_WORKFLOW_INSTANCE();
+   await TBL_WORKFLOW_INSTANCE_COMMENT();
+   await TBL_WORKFLOW_INSTANCE_LOG();
+   await TBL_WORKFLOW_INSTANCE_TASK();
 
    await ADD_FK_CONSTRAINT();
    await ADD_INDEXES();
 
    i(`done running update on ${__filename}`);
 };
+
+const TBL_WORKFLOW_DEFINITION = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW_DEFINITION`);
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_DEFINITION (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(200),
+            DESCRIPTION VARCHAR(500),
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+};
+
+const TBL_WORKFLOW = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW`);
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(200) NOT NULL,
+            VIEW_ID INT,
+            WORKFLOW_DEFINITION_ID INT,
+            TYPE VARCHAR(200),      /* Attribute, Item, Price, Rule, User, Category, AttributeValue */
+            ACTION VARCHAR(200),    /* Create, Edit, Delete */
+            STATUS VARCHAR(200),    /* ENABLED, DISABLED, DELETED */
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+};
+
+const TBL_WORKFLOW_ATTRIBUTE = async () => {
+   await doInDbConnection(async (conn) => {
+      i(`update TBL_WORKFLOW_ATTRIBUTE`);
+      await conn.query(`
+         CREATE TABLE TBL_WORKFLOW_ATTRIBUTE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            WORKFLOW_ID INT NOT NULL,
+            ATTRIBUTE_ID INT NOT NULL,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+};
+
+const TBL_WORKFLOW_INSTANCE = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW_INSTANCE`);
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_INSTANCE (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(500) NOT NULL,
+            WORKFLOW_ID INT,
+            FUNCTION_INPUTS TEXT,
+            CURRENT_WORKFLOW_STATE VARCHAR(200),      
+            ENGINE_STATUS VARCHAR(200),               /* workflow engine status */
+            OLD_VALUE TEXT,                           /* old changed value (in json format) */
+            NEW_VALUE TEXT,                           /* new changed value (in json format) */
+            DATA TEXT,                                /* engine in serialized form */
+            CREATOR_USER_ID INT,                      /* user who created or trigger this workflow instance */
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         );
+      `);
+   });
+};
+
+const TBL_WORKFLOW_INSTANCE_COMMENT = async () => {
+   await doInDbConnection(async conn => {
+      i(`update TBL_WORKFLOW_INSTANCE_COMMENT`);
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_INSTANCE_COMMENT (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            WORKFLOW_INSTANCE_ID INT NOT NULL, 
+            COMMENT TEXT,
+            USER_ID INT NOT NULL,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         ); 
+      `);
+   });
+};
+
+const TBL_WORKFLOW_INSTANCE_TASK = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW_INSTANCE_TASK`);
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_INSTANCE_TASK (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(500) NOT NULL,
+            WORKFLOW_INSTANCE_ID INT,
+            TASK_TITLE VARCHAR(500),
+            TASK_DESCRIPTION TEXT,
+            POSSIBLE_APPROVAL_STAGES VARCHAR(200),    /* possible approval stages eg. (approve, reject etc) in json array format */
+            TASK_OLD_VALUE TEXT,                      /* not used */
+            TASK_NEW_VALUE TEXT,                      /* not used */
+            WORKFLOW_STATE VARCHAR(500),              /* workflow instance state for this task */
+            APPROVAL_STAGE VARCHAR(500),              /* action done on this task, eg. approve, reject etc. (NULL if not yet done)  */
+            APPROVER_USER_ID INT,                     /* the user who needs to action on this */
+            STATUS VARCHAR(500),                      /* PENDING, ACTIONED, EXPIRED */
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+         ); 
+      `);
+   });
+};
+
+const TBL_WORKFLOW_INSTANCE_LOG = async () => {
+   await doInDbConnection(async (conn: Connection) => {
+      i(`update TBL_WORKFLOW_INSTANCE_LOG`);
+      await conn.query(`
+         CREATE TABLE IF NOT EXISTS TBL_WORKFLOW_INSTANCE_LOG (
+            ID INT PRIMARY KEY AUTO_INCREMENT,
+            WORKFLOW_INSTANCE_ID INT,
+            CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            LOG TEXT 
+         );
+      `);
+   });
+};
+
 
 const TBL_FAVOURITE_ITEM = async () => {
    await doInDbConnection(async (conn: Connection) => {
@@ -1034,7 +1168,7 @@ const ADD_FK_CONSTRAINT = async () => {
       await conn.query(`ALTER TABLE TBL_DATA_EXPORT ADD CONSTRAINT \`fk_tbl_data_export-1\` FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID)`);
       await conn.query(`ALTER TABLE TBL_DATA_EXPORT_FILE ADD CONSTRAINT \`fk_tbl_data_export_file-1\` FOREIGN KEY (DATA_EXPORT_ID) REFERENCES TBL_DATA_EXPORT(ID) ON DELETE CASCADE`);
 
-      await conn.query(`ALTER TABLE TBL_JOB_LOG ADD CONSTRAINT \`fk_tbl_job_log-1\` FOREIGN KEY (JOB_ID) REFERENCES TBL_JOB(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_JOB_LOG ADD CONSTRAINT \`fk_tbl_job_log-1\` FOREIGN KEY gg(JOB_ID) REFERENCES TBL_JOB(ID) ON DELETE CASCADE`);
 
       await conn.query(`ALTER TABLE TBL_USER_SETTING ADD CONSTRAINT \`fk_tbl_user_setting-1\` FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE`);
 
@@ -1057,9 +1191,20 @@ const ADD_FK_CONSTRAINT = async () => {
 
       await conn.query(`ALTER TABLE TBL_FAVOURITE_ITEM ADD CONSTRAINT \`fk_tbl_favourite_item-1\` FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE`);
       await conn.query(`ALTER TABLE TBL_FAVOURITE_ITEM ADD CONSTRAINT \`fk_tbl_favourite_item-2\` FOREIGN KEY (ITEM_ID) REFERENCES TBL_ITEM(ID) ON DELETE CASCADE`);
-
+      
+      await conn.query('ALTER TABLE TBL_WORKFLOW ADD CONSTRAINT \`fk_tbl_workflow-1\` FOREIGN KEY (WORKFLOW_DEFINITION_ID) REFERENCES TBL_WORKFLOW_DEFINITION(ID) ON DELETE CASCADE');
+      await conn.query(`ALTER TABLE TBL_WORKFLOW ADD CONSTRAINT \`fk_tbl_workflow-2\` FOREIGN KEY (VIEW_ID) REFERENCES TBL_VIEW(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_WORKFLOW_ATTRIBUTE ADD CONSTRAINT \`fk_tbl_workflow_attribute-1\` FOREIGN KEY (WORKFLOW_ID) REFERENCES TBL_WORKFLOW(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_WORKFLOW_ATTRIBUTE ADD CONSTRAINT \`fk_tbl_workflow_attribute-2\` FOREIGN KEY (ATTRIBUTE_ID) REFERENCES TBL_VIEW_ATTRIBUTE(ID) ON DELETE CASCADE`);
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE ADD CONSTRAINT \`fk_tbl_workflow_instance-1\` FOREIGN KEY (WORKFLOW_ID) REFERENCES TBL_WORKFLOW(ID) ON DELETE CASCADE');
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE ADD CONSTRAINT \`fk_tbl_workflow_instance-2\` FOREIGN KEY (CREATOR_USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE');
+      await conn.query(`ALTER TABLE TBL_WORKFLOW_INSTANCE_COMMENT ADD CONSTRAINT \`fk_tbl_workflow_instance_comment-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE`);
+      await conn.query(`ALTER TABLE TBL_WORKFLOW_INSTANCE_COMMENT ADD CONSTRAINT \`fk_tbl_workflow_instance_comment-2\` FOREIGN KEY (USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE`);
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE_LOG ADD CONSTRAINT \`fk_tbl_workflow_instance_log-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE');
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE_TASK ADD CONSTRAINT \`fk_tbl_workflow_instance_approval-1\` FOREIGN KEY (WORKFLOW_INSTANCE_ID) REFERENCES TBL_WORKFLOW_INSTANCE(ID) ON DELETE CASCADE');
+      await conn.query('ALTER TABLE TBL_WORKFLOW_INSTANCE_TASK ADD CONSTRAINT \`fk_tbl_workflow_instance_approval-2\` FOREIGN KEY (APPROVER_USER_ID) REFERENCES TBL_USER(ID) ON DELETE CASCADE');
    });
-}
+};
 
 
 

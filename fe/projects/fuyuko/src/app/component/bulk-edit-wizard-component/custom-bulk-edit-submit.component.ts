@@ -1,12 +1,12 @@
-import {Component, Input} from "@angular/core";
-import {View} from "../../model/view.model";
-import {finalize, tap} from "rxjs/operators";
+import {Component, Input} from '@angular/core';
+import {View} from '@fuyuko-common/model/view.model';
+import {finalize, tap} from 'rxjs/operators';
 import {
     CustomBulkEdit,
     CustomBulkEditScriptInputValue, CustomBulkEditScriptJobSubmissionResult,
     CustomBulkEditScriptPreview
-} from "../../model/custom-bulk-edit.model";
-import {CustomBulkEditSubmitFn} from "./custom-bulk-edit-wizard.component";
+} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {CustomBulkEditSubmitFn} from './custom-bulk-edit-wizard.component';
 
 
 @Component({

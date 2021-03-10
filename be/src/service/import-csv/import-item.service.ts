@@ -1,11 +1,9 @@
-import {ItemDataImport} from "../../model/data-import.model";
-import {Attribute2, CsvItem} from "../../server-side-model/server-side.model";
-import {readCsv} from "./import-csv.service";
-import {Message, Messages} from "../../model/notification-listing.model";
-import {Item, ItemImage, Value} from "../../model/item.model";
-import {Attribute} from "../../model/attribute.model";
-import {getAttribute2sInView} from "../attribute.service";
-import { attributesConvert } from "../conversion-attribute.service";
+import {ItemDataImport} from '@fuyuko-common/model/data-import.model';
+import {CsvItem} from '../../server-side-model/server-side.model';
+import {readCsv} from './import-csv.service';
+import {Message, Messages} from '@fuyuko-common/model/notification-listing.model';
+import {Item, ItemImage, Value} from '@fuyuko-common/model/item.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import * as fileType from 'file-type';
 import {
     setItemAreaValue,
@@ -14,7 +12,7 @@ import {
     setItemNumberValue, setItemSelectValue,
     setItemStringValue,
     setItemTextValue, setItemVolumeValue, setItemWeightValue, setItemWidthValue
-} from "../../shared-utils/ui-item-value-setter.util";
+} from '@fuyuko-common/shared-utils/ui-item-value-setter.util';
 import {
     AreaUnits,
     DimensionUnits,
@@ -23,18 +21,19 @@ import {
     VolumeUnits,
     WeightUnits,
     WidthUnits
-} from "../../model/unit.model";
-import {doInDbConnection, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {File} from "formidable";
-import * as util from "util";
-import * as fs from "fs";
-import * as path from "path";
-import {FileTypeResult} from "file-type";
-import {unzipFromBuffer, unzipFromPath} from "../../util/zip.util";
-import JSZip from "jszip";
-import {w} from "../../logger";
-import {fireEvent, ImportItemPreviewEvent} from "../event/event.service";
+} from '@fuyuko-common/model/unit.model';
+import {doInDbConnection, QueryResponse} from '../../db';
+import {Connection} from 'mariadb';
+import {File} from 'formidable';
+import * as util from 'util';
+import * as fs from 'fs';
+import * as path from 'path';
+import {FileTypeResult} from 'file-type';
+import {unzipFromBuffer} from '../../util/zip.util';
+import JSZip from 'jszip';
+import {w} from '../../logger';
+import {fireEvent, ImportItemPreviewEvent} from '../event/event.service';
+import {getAttributesInView} from '../index';
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
 
@@ -144,8 +143,7 @@ const _preview = async (viewId: number, dataImportId: number, bufferInfos: Buffe
     const infos: Message[] = [];
     const warnings: Message[] = [];
 
-    const att2s: Attribute2[] = await getAttribute2sInView(viewId);
-    const attributes: Attribute[] = attributesConvert(att2s);
+    const attributes: Attribute[] = await getAttributesInView(viewId);
 
     const [attributeByIdMap, attributeByNameMap] = attributes.reduce((acc: [Map<number, Attribute>, Map<string, Attribute>], a: Attribute) => {
         acc[0].set(a.id, a);

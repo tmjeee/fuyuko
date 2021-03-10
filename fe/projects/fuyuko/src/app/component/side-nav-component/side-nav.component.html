@@ -69,6 +69,18 @@
   </div>
 
 
+  <!-- workflow -->
+  <div [class.selected]="routeSideNavData === 'workflow'">
+      <mat-icon class="action"
+                [attr.test-sidenav]="'workflow'"
+                matTooltipPosition="after"
+                matTooltip="Workflow Management"
+                [routerLink]="['/workflow-layout', {outlets: {primary: ['workflow-definition-listing'], help: ['workflow-help']}}]">
+        alt_route
+      </mat-icon>
+  </div>
+
+
   <!-- partner -->
   <div>
     <mat-icon class="action"

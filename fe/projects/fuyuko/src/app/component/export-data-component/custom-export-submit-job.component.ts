@@ -1,13 +1,13 @@
-import {Component, Input} from "@angular/core";
-import {View} from "../../model/view.model";
-import {finalize, tap} from "rxjs/operators";
+import {Component, Input, OnInit} from '@angular/core';
+import {View} from '@fuyuko-common/model/view.model';
+import {finalize, tap} from 'rxjs/operators';
 import {
     CustomDataExport,
     ExportScriptInputValue,
     ExportScriptJobSubmissionResult,
     ExportScriptPreview
-} from "../../model/custom-export.model";
-import {CustomExportSubmitFn} from "./custom-export-wizard.component";
+} from '@fuyuko-common/model/custom-export.model';
+import {CustomExportSubmitFn} from './custom-export-wizard.component';
 
 
 @Component({
@@ -15,7 +15,7 @@ import {CustomExportSubmitFn} from "./custom-export-wizard.component";
     templateUrl: './custom-export-submit-job.component.html',
     styleUrls: ['./custom-export-submit-job.component.scss']
 })
-export class CustomExportSubmitJobComponent {
+export class CustomExportSubmitJobComponent implements OnInit {
 
     @Input() view: View;
     @Input() customDataExport: CustomDataExport;

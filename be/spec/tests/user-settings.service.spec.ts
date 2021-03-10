@@ -1,12 +1,11 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
 import {
     getSettings,
     getUserByUsername,
     updateUserSettings,
     UpdateUserSettingsInput
-} from "../../src/service";
-import {User} from "../../src/model/user.model";
-import {Settings} from "../../src/model/settings.model";
+} from '../../src/service';
+import {Settings} from '@fuyuko-common/model/settings.model';
 
 describe('user-settings.service', () => {
 

@@ -1,0 +1,30 @@
+<div class="workflow-component">
+    <div class="controls">
+        <button color="primary" mat-flat-button (click)="createWorkflow()">Create Workflow</button>
+    </div>
+
+    <form class="view-selection">
+        <mat-form-field>
+            <mat-label>View</mat-label>
+            <mat-select (selectionChange)="onViewChanged($event)">
+                <mat-option *ngFor="let view of views" [value]="view">
+                    {{view.name}}
+                </mat-option>
+            </mat-select>
+            <mat-hint>Select a view</mat-hint>
+        </mat-form-field>
+    </form>
+
+    <ng-container *ngIf="selectedView">
+        <div class="workflow-table">
+            <app-workflow-table [workflows]="currentViewWorkflows">
+            </app-workflow-table>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!selectedView">
+        <app-spaceholder>
+            A view need to be selected, please select a view to see it's workflows.
+        </app-spaceholder>
+    </ng-container>
+
+</div>

@@ -7,10 +7,8 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {check} from 'express-validator';
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
-import {ROLE_ADMIN} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteSelfRegistration} from "../../service/self-registration.service";
 
 // CHECKED

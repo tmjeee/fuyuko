@@ -1,6 +1,5 @@
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse} from "../model/api-response.model";
-
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 export const toNotifications = (
         notificationService: NotificationsService,

@@ -1,9 +1,9 @@
-import {Job} from "../../model/job.model";
-import {JobLogger, newJobLogger, newLoggingCallback} from "../job-log.service";
+import {Job} from '@fuyuko-common/model/job.model';
+import {JobLogger, newJobLogger, newLoggingCallback} from '../job-log.service';
 import {getJobById} from "../job.service";
-import {PriceDataItem, PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
-import {setPrices} from "../pricing-structure-item.service";
-import {fireEvent, ImportItemJobEvent, ImportPriceJobEvent} from "../event/event.service";
+import {PriceDataItem} from '@fuyuko-common/model/pricing-structure.model';
+import {setPrices} from '../pricing-structure-item.service';
+import {fireEvent, ImportPriceJobEvent} from '../event/event.service';
 
 const uuid = require('uuid');
 

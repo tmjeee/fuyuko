@@ -4,13 +4,13 @@ import {
     ItemDataImport,
     PriceDataImport,
     DataImportType,
-} from '../../model/data-import.model';
+} from '@fuyuko-common/model/data-import.model';
 import {Observable, of} from 'rxjs';
-import {Job} from '../../model/job.model';
+import {Job} from '@fuyuko-common/model/job.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from "../../model/api-response.model";
-import {map} from "rxjs/operators";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {map} from 'rxjs/operators';
 
 const URL_PREVIEW_ATTRIBUTES = () => `${config().api_host_url}/view/:viewId/import/attributes/preview`;
 const URL_PREVIEW_PRICES = () => `${config().api_host_url}/view/:viewId/import/prices/preview`;
@@ -51,7 +51,7 @@ export class ImportDataService {
                 formData.set('priceDataCsvFile', file);
                 return this.httpClient.post<ApiResponse<PriceDataImport>>(
                     URL_PREVIEW_PRICES().replace(':viewId', String(viewId)), formData)
-                    .pipe(map((r:ApiResponse<PriceDataImport>) => r.payload));
+                    .pipe(map((r: ApiResponse<PriceDataImport>) => r.payload));
             }
         }
     }

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {ViewService} from '../../service/view-service/view.service';
 import {ExportDataService} from '../../service/export-data-service/export-data.service';
 import {finalize, map, tap} from 'rxjs/operators';
@@ -7,15 +7,14 @@ import {
     PreviewExportFn, SubmitExportJobFn,
     ViewAttributeFn, ViewPricingStructureFn,
 } from '../../component/export-data-component/export-data.component';
-import {Attribute} from '../../model/attribute.model';
-import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
-import {AttributeDataExport, DataExportType, ItemDataExport, PriceDataExport} from '../../model/data-export.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {AttributeDataExport, DataExportType, ItemDataExport, PriceDataExport} from '@fuyuko-common/model/data-export.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
-import {PricingStructure} from '../../model/pricing-structure.model';
-import {Observable} from "rxjs";
-import {PricingStructureService} from "../../service/pricing-structure-service/pricing-structure.service";
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
+import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
     templateUrl: './export.page.html',

@@ -1,19 +1,19 @@
-import {Registry} from "../../registry";
-import {NextFunction, Request, Response, Router} from "express";
-import {param, body} from "express-validator";
+import {Registry} from '../../registry';
+import {NextFunction, Request, Response, Router} from 'express';
+import {param, body} from 'express-validator';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {multipartParse} from "../../service";
-import {File} from "formidable";
-import {PriceDataImport} from "../../model/data-import.model";
-import {preview} from "../../service/import-csv/import-price.service";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {multipartParse} from '../../service';
+import {File} from 'formidable';
+import {PriceDataImport} from '@fuyuko-common/model/data-import.model';
+import {importPricePreview} from '../../service';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED
@@ -31,7 +31,7 @@ const httpAction: any[] = [
         const {fields, files} = await multipartParse(req);
         const priceDataCsvFile: File = files.priceDataCsvFile;
 
-        const r: {errors: string[], priceDataImport: PriceDataImport} = await preview(viewId, priceDataCsvFile);
+        const r: {errors: string[], priceDataImport: PriceDataImport} = await importPricePreview(viewId, priceDataCsvFile);
 
         if (r.errors && r.errors.length) {
             res.status(400).json({

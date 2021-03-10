@@ -1,11 +1,11 @@
 import {NextFunction, Router, Request, Response } from "express";
 import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {CustomRuleForView} from '../../model/custom-rule.model';
+import {CustomRuleForView} from '@fuyuko-common/model/custom-rule.model';
 import { param } from "express-validator";
-import {ROLE_VIEW} from "../../model/role.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {getAllCustomRulesForView} from "../../service/custom-rule.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 const httpAction: any[] = [

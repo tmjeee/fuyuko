@@ -1,11 +1,11 @@
-import {Component, OnInit} from "@angular/core";
-import {FindAuditLogsFn, FindUsersFn} from "../../component/audit-log-component/audit-log.component";
-import {AuditLogService} from "../../service/audit-log-service/audit-log.service";
-import {UserManagementService} from "../../service/user-management-service/user-management.service";
-import {tap} from "rxjs/operators";
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {AuditLog} from "../../model/audit-log.model";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {Component, OnInit} from '@angular/core';
+import {FindAuditLogsFn, FindUsersFn} from '../../component/audit-log-component/audit-log.component';
+import {AuditLogService} from '../../service/audit-log-service/audit-log.service';
+import {UserManagementService} from '../../service/user-management-service/user-management.service';
+import {tap} from 'rxjs/operators';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {AuditLog} from '@fuyuko-common/model/audit-log.model';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
     templateUrl: './audit-log.page.html',

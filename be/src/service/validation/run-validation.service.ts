@@ -1,10 +1,8 @@
-import {Level} from "../../model/level.model";
-import {doInDbConnection, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {getAllItem2sInView} from "../item.service";
-import {getValidationByViewIdAndValidationId} from "./validation.service";
-import {Validation} from "../../model/validation.model";
-import {Attribute2, Item2, ItemMetadata2, Rule2} from "../../server-side-model/server-side.model";
+import {Level} from '@fuyuko-common/model/level.model';
+import {doInDbConnection, QueryResponse} from '../../db';
+import {Connection} from 'mariadb';
+import {getValidationByViewIdAndValidationId} from './validation.service';
+import {Validation} from '@fuyuko-common/model/validation.model';
 import {
     AreaValue,
     CurrencyValue, DATE_FORMAT,
@@ -15,23 +13,19 @@ import {
     StringValue,
     TextValue,
     Value, VolumeValue, WeightValue, WidthValue
-} from "../../model/item.model";
-import * as itemConverter from "../conversion-item.service";
-import * as ruleConverter from "../conversion-rule.service";
-import * as attributeConverter from "../conversion-attribute.service";
-import {getRule2s} from "../rule.service";
-import {Rule, WhenClause} from "../../model/rule.model";
-import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from "../../model/operator.model";
-import {getAttribute2sInView} from "../attribute.service";
-import {Attribute} from "../../model/attribute.model";
+} from '@fuyuko-common/model/item.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
+import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES, OperatorType} from '@fuyuko-common/model/operator.model';
+import {getAttributesInView} from '../attribute.service';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import moment from 'moment';
 import * as logger from '../../logger';
-import {convertToDebugString, convertToDebugStrings} from "../../shared-utils/ui-item-value-converters.util";
-import {getViewById} from "../view.service";
-import {View} from "../../model/view.model";
-import {CustomRule, CustomRuleForView} from "../../model/custom-rule.model";
-import {getAllCustomRulesForView} from "../custom-rule.service";
-import {runCustomRule} from "../../custom-rule";
+import {convertToDebugString, convertToDebugStrings} from '@fuyuko-common/shared-utils/ui-item-value-converters.util';
+import {getViewById} from '../view.service';
+import {View} from '@fuyuko-common/model/view.model';
+import {CustomRule, CustomRuleForView} from '@fuyuko-common/model/custom-rule.model';
+import {getAllCustomRulesForView} from '../custom-rule.service';
+import {runCustomRule} from '../../custom-rule';
 import {
     compareArea,
     compareCurrency,
@@ -39,9 +33,10 @@ import {
     compareNumber, compareSelect,
     compareString,
     compareVolume, compareWeight, compareWidth
-} from "../compare-attribute-values.service";
-import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
-import {fireEvent, ValidationEvent} from "../event/event.service";
+} from '../compare-attribute-values.service';
+import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
+import {fireEvent, ValidationEvent} from '../event/event.service';
+import {getAllItemsInView, getRules} from "../";
 
 
 /**
@@ -138,19 +133,16 @@ const _runCustomRulesValidation = async (viewId: number, validationId: number) =
     const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
     await i(currentContext, `Successfully retrieved validation for validationId ${validationId}`);
 
-    const a2s: Attribute2[] = await getAttribute2sInView(viewId);
-    const as: Attribute[] = await attributeConverter.attributesConvert(a2s);
+    const as: Attribute[] = await getAttributesInView(viewId);
     await i(currentContext,`Successfully retrieved attributes for viewId ${viewId}`);
 
-    const item2s: Item2[] = await getAllItem2sInView(viewId);
-    const items: Item[] = itemConverter.itemsConvert(item2s);
+    const items: Item[] = await getAllItemsInView(viewId);
     await i(currentContext, `Successfully retrieved all items for viewId ${viewId}`);
 
     const customRules: CustomRuleForView[] = await getAllCustomRulesForView(viewId);
     await i(currentContext, `Successfully retrieved all custom rules for viewId ${viewId}`);
 
-    const rule2s: Rule2[] = await getRule2s(viewId);
-    const rules: Rule[] = ruleConverter.rulesConvert(rule2s);
+    const rules: Rule[] =  await getRules(viewId);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
 
     const l = async (msg: string) => {
@@ -175,16 +167,13 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
     const v: Validation = await getValidationByViewIdAndValidationId(viewId, validationId);
     await i(currentContext, `Successfully retrieved validation for validationId ${validationId}`);
 
-    const a2s: Attribute2[] = await getAttribute2sInView(viewId);
-    const as: Attribute[] = await attributeConverter.attributesConvert(a2s);
+    const as: Attribute[] = await getAttributesInView(viewId);
     await i(currentContext,`Successfully retrieved attributes for viewId ${viewId}`);
 
-    const item2s: Item2[] = await getAllItem2sInView(viewId);
-    const items: Item[] = itemConverter.itemsConvert(item2s);
+    const items: Item[] = await getAllItemsInView(viewId);
     await i(currentContext, `Successfully retrieved all items for viewId ${viewId}`);
 
-    const rule2s: Rule2[] = await getRule2s(viewId);
-    const rules: Rule[] = ruleConverter.rulesConvert(rule2s);
+    const rules: Rule[] = await getRules(viewId);
     await i(currentContext, `Successfully retrieved all rules for viewId ${viewId}`);
 
 

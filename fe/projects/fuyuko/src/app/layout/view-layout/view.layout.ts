@@ -5,11 +5,11 @@ import {AuthService} from '../../service/auth-service/auth.service';
 import {AppNotificationService} from '../../service/app-notification-service/app-notification.service';
 import {ViewService} from '../../service/view-service/view.service';
 import {Subscription} from 'rxjs';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {finalize, map} from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 import {SettingsService} from '../../service/settings-service/settings.service';
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

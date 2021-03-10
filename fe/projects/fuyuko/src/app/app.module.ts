@@ -37,7 +37,7 @@ import {PricingStructurePageComponent} from './page/pricing-structure-page/prici
 import {DashboardLayoutComponent} from './layout/dashboard-layout/dashboard.layout';
 import {DashboardPageComponent} from './page/dashboard-page/dashboard.page';
 import {UserManagementService} from './service/user-management-service/user-management.service';
-import {Prov, ViewAttributesPageComponent} from './page/view-attributes-page/view-attributes.page';
+import {ViewAttributesPageComponent} from './page/view-attributes-page/view-attributes.page';
 import {ViewDataTabularPageComponent} from './page/view-data-tabular-page/view-data-tabular.page';
 import {ViewDataThumbnailPageComponent} from './page/view-data-thumbnail-page/view-data-thumbnail.page';
 import {ViewDataListPageComponent} from './page/view-data-list-page/view-data-list.page';
@@ -68,7 +68,7 @@ import {GlobalErrorHandler} from './error-handler/global-error-handler.service';
 import {CarouselModule} from './component/carousel-component/carousel.module';
 import {ViewModule} from './component/view-component/view.module';
 import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
-import {DATE_FORMAT, MAT_DATE_FORMAT} from './model/item.model';
+import {DATE_FORMAT, MAT_DATE_FORMAT} from '@fuyuko-common/model/item.model';
 import {BulkEditService} from './service/bulk-edit-service/bulk-edit.service';
 import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
@@ -84,7 +84,7 @@ import {ExportDataService} from './service/export-data-service/export-data.servi
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {SettingsService} from './service/settings-service/settings.service';
 import {tap} from 'rxjs/operators';
-import {User} from './model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {SettingsModule} from './component/settings-component/settings.module';
 import {DashboardModule} from './component/dashboard-component/dashboard.module';
 import {DashboardService} from './service/dashboard-service/dashboard.service';
@@ -123,43 +123,52 @@ import {ValidationResultModule} from './component/validation-result-component/va
 import { ViewValidationDetailsPageComponent } from './page/view-validation-details-page/view-validation-details.page';
 import {CustomRuleService} from './service/custom-rule-service/custom-rule.service';
 import {AddRulePageComponent} from './page/view-rules-page/add-rule.page';
-import {ExportArtifactsPageComponent} from "./page/export-artifacts-page/export-artifacts.page";
-import {HelpService} from "./service/help.service/help.service";
-import {HelpModule} from "./component/help-component/help.module";
-import {CustomExportPageComponent} from "./page/custom-export-page/custom-export.page";
-import {CustomImportPageComponent} from "./page/custom-import-page/custom-import.page";
-import {CustomImportService} from "./service/custom-import-service/custom-import.service";
-import {CustomExportService} from "./service/custom-export-service/custom-export.service";
-import {ExportArtifactService} from "./service/export-artifact-service/export-artifact.service";
-import {PaginationModule} from "./component/pagination-component/pagination.module";
-import {SecurityModule} from "./component/security-directive/security.module";
-import {SharedComponentUtilsModule} from "./component/shared-component-utils/shared-component-utils.module";
-import {PriceLayoutComponent} from "./layout/price-layout/price.layout";
-import {PricingStructurePartnerAssociationPageComponent} from "./page/pricing-structure-partner-association-page/pricing-structure-partner-association.page";
-import {CategoryPageComponent} from "./page/category-page/category.page";
-import {CategoryHelpPageComponent} from "./page/category-help-page/category-help.page";
-import {CategoryModule} from "./component/category-component/category.module";
-import {CategoryService} from "./service/category-service/category.service";
-import {CategoryManagementPageComponent} from "./page/category-management-page/category-management.page";
-import {reload} from "./utils/config.util";
-import {ForgotPasswordPageComponent} from "./page/forgot-password-page/forgot-password.page";
-import {ResetPasswordPageComponent} from "./page/reset-password-page/reset-password.page";
-import {AdministrationLayoutComponent} from "./layout/administration-layout/administration.layout";
-import {AuditLogPageComponent} from "./page/audit-log-page/audit-log.page";
-import {AdministrationHelpPageComponent} from "./page/administration-help-page/administration-help.page";
-import {AuditLogModule} from "./component/audit-log-component/audit-log.module";
-import {AuditLogService} from "./service/audit-log-service/audit-log.service";
-import {LoadingService} from "./service/loading-service/loading.service";
-import {CustomBulkEditPageComponent} from "./page/custom-bulk-edit-page/custom-bulk-edit.page";
-import {CustomBulkEditService} from "./service/custom-bulk-edit-service/custom-bulk-edit.service";
+import {ExportArtifactsPageComponent} from './page/export-artifacts-page/export-artifacts.page';
+import {HelpService} from './service/help.service/help.service';
+import {HelpModule} from './component/help-component/help.module';
+import {CustomExportPageComponent} from './page/custom-export-page/custom-export.page';
+import {CustomImportPageComponent} from './page/custom-import-page/custom-import.page';
+import {CustomImportService} from './service/custom-import-service/custom-import.service';
+import {CustomExportService} from './service/custom-export-service/custom-export.service';
+import {ExportArtifactService} from './service/export-artifact-service/export-artifact.service';
+import {PaginationModule} from './component/pagination-component/pagination.module';
+import {SecurityModule} from './component/security-directive/security.module';
+import {SharedComponentUtilsModule} from './component/shared-component-utils/shared-component-utils.module';
+import {PriceLayoutComponent} from './layout/price-layout/price.layout';
+import {PricingStructurePartnerAssociationPageComponent} from './page/pricing-structure-partner-association-page/pricing-structure-partner-association.page';
+import {CategoryPageComponent} from './page/category-page/category.page';
+import {CategoryHelpPageComponent} from './page/category-help-page/category-help.page';
+import {CategoryModule} from './component/category-component/category.module';
+import {CategoryService} from './service/category-service/category.service';
+import {CategoryManagementPageComponent} from './page/category-management-page/category-management.page';
+import {reload} from './utils/config.util';
+import {ForgotPasswordPageComponent} from './page/forgot-password-page/forgot-password.page';
+import {ResetPasswordPageComponent} from './page/reset-password-page/reset-password.page';
+import {AdministrationLayoutComponent} from './layout/administration-layout/administration.layout';
+import {AuditLogPageComponent} from './page/audit-log-page/audit-log.page';
+import {AdministrationHelpPageComponent} from './page/administration-help-page/administration-help.page';
+import {AuditLogModule} from './component/audit-log-component/audit-log.module';
+import {AuditLogService} from './service/audit-log-service/audit-log.service';
+import {LoadingService} from './service/loading-service/loading.service';
+import {CustomBulkEditPageComponent} from './page/custom-bulk-edit-page/custom-bulk-edit.page';
+import {CustomBulkEditService} from './service/custom-bulk-edit-service/custom-bulk-edit.service';
 import config from './utils/config.util';
+import {WorkflowLayoutComponent} from './layout/workflow-layout/workflow.layout';
+import {WorkflowDefinitionListingPageComponent} from './page/workflow-definition-listing-page/workflow-definition-listing.page';
+import {WorkflowTaskPageComponent} from './page/workflow-task-page/workflow-task.page';
+import {WorkflowInstanceDetailsPageComponent} from './page/workflow-instance-details-page/workflow-instance-details.page';
+import {WorkflowHelpPageComponent} from './page/workflow-help-page/workflow-help.page';
+import { HotToastModule } from '@ngneat/hot-toast';
+import {WorkflowListingPageComponent} from './page/workflow-listing-page/workflow-listing.page';
+import {WorkflowModule} from './component/workflow-component/workflow.module';
+import {WorkflowService} from './service/workflow-service/workflow.service';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
                         themeService: ThemeService,
-                        viewService: ViewService, 
+                        viewService: ViewService,
                         httpClient: HttpClient) => {
-  return ():Promise<any> => {
+  return (): Promise<any> => {
     return new Promise((res, rej) => {
       reload(httpClient, () => {
         authService.asObservable()
@@ -175,17 +184,17 @@ const appInitializer = (settingsService: SettingsService,
                   }
                 })
             ).subscribe();
-        res();
+        res(undefined);
         console.log(`
-         ______                 _                 
-        |  ____|               | |                
-        | |__ _   _ _   _ _   _| | _____          
-        |  __| | | | | | | | | | |/ / _ \\         
- _ _ _  | |  | |_| | |_| | |_| |   < (_) |  _ _ _ 
+         ______                 _
+        |  ____|               | |
+        | |__ _   _ _   _ _   _| | _____
+        |  __| | | | | | | | | | |/ / _ \\
+ _ _ _  | |  | |_| | |_| | |_| |   < (_) |  _ _ _
 (_|_|_) |_|   \\__,_|\\__, |\\__,_|_|\\_\\___/  (_|_|_)
-                     __/ |                        
-                    |___/     ${config()['version']}                    
-    
+                     __/ |
+                    |___/     ${config().version}
+
     `);
         console.log(`*** Fuyuko App initialize ***`);
       });
@@ -206,6 +215,7 @@ const appInitializer = (settingsService: SettingsService,
     PartnerLayoutComponent,
     PriceLayoutComponent,
     AdministrationLayoutComponent,
+    WorkflowLayoutComponent,
 
     // pages
     LoginPageComponent,
@@ -264,6 +274,11 @@ const appInitializer = (settingsService: SettingsService,
     AuditLogPageComponent,
     AdministrationHelpPageComponent,
     CustomBulkEditPageComponent,
+    WorkflowDefinitionListingPageComponent,
+    WorkflowListingPageComponent,
+    WorkflowTaskPageComponent,
+    WorkflowInstanceDetailsPageComponent,
+    WorkflowHelpPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -274,6 +289,10 @@ const appInitializer = (settingsService: SettingsService,
     AppMaterialsModule,
     FlexLayoutModule,
     HttpClientModule,
+    HotToastModule.forRoot({
+      dismissible: true,
+      autoClose: false,
+    }),
     SimpleNotificationsModule.forRoot({
       position: ['bottom', 'center'],
       timeOut: 0,
@@ -323,6 +342,7 @@ const appInitializer = (settingsService: SettingsService,
     SharedComponentUtilsModule,
     CategoryModule,
     AuditLogModule,
+    WorkflowModule,
   ],
   providers: [
     {provide: ThemeService, useClass: ThemeService} as Provider,
@@ -361,12 +381,14 @@ const appInitializer = (settingsService: SettingsService,
     {provide: AuditLogService, useClass: AuditLogService} as Provider,
     {provide: LoadingService, useClass: LoadingService} as Provider,
     {provide: CustomBulkEditService, useClass: CustomBulkEditService} as Provider,
+    {provide: WorkflowService, useClass: WorkflowService} as Provider,
 
-    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true, deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,
+    {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
+      deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,
     {provide: DateAdapter, useClass: MomentDateAdapter} as Provider,
     {provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FORMAT},
     {provide: HTTP_INTERCEPTORS, useClass: ProfilingInterceptor, multi: true} as Provider,
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true, deps: [AuthService]} as Provider,
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true} as Provider,
     {provide: ErrorHandler, useClass: GlobalErrorHandler} as Provider,
   ],
   entryComponents: [

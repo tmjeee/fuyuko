@@ -1,15 +1,15 @@
-import {Registry} from "../../registry";
-import {NextFunction, Request, Response, Router} from "express";
-import {body, param} from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {Registry} from '../../registry';
+import {NextFunction, Request, Response, Router} from 'express';
+import {body, param} from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {
     CustomBulkEditScriptInputValue,
     CustomBulkEditScriptJobSubmissionResult,
     CustomBulkEditScriptPreview
-} from "../../model/custom-bulk-edit.model";
-import {runCustomBulkEditJob} from "../../custom-bulk-edit/custom-bulk-edit-executor";
+} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {runCustomBulkEditJob} from '../../custom-bulk-edit';
 
 
 // CHECKED

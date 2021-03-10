@@ -4,8 +4,8 @@
 import {preview as bulkEditPreview} from './bulk-edit/bulk-edit.service';
 import {run as bulkEditRun, runJob as bulkEditRunJob} from './bulk-edit/job-do-bulk-edit.service';
 import {preview as exportAttributePreview} from './export-csv/export-attribute.service';
-import {preview as exportItemPreview} from './export-csv/export-item.service';
-import {preview as exportPricePreview} from './export-csv/export-price.service';
+import {preview as exportItemPreview, PreviewResult as ExportItemPreviewResult} from './export-csv/export-item.service';
+import {preview as exportPricePreview, PreviewResult as ExportPricePreviewResult } from './export-csv/export-price.service';
 import {runJob as exportAttributeRunJob} from './export-csv/job-do-attribute-data-export.service';
 import {runJob as exportItemRunJob} from './export-csv/job-do-item-data-export.service';
 import {runJob as exportPriceRunJob} from './export-csv/job-do-price-data-export.service';
@@ -56,24 +56,24 @@ import {AddOrUpdateGroupInput, addOrUpdateGroup, getGroupByName, searchForGroups
 import {heartbeat} from './heartbeat.service';
 import {ActivateInvitationResult, createInvitation, activateInvitation, getInvitationByCode} from './invitation.service';
 import {getAllItemsInViewCount, searchForItemsInViewCount, getAllFavouriteItemsInViewCount, searchForFavouriteItemsInViewCount,
-        getAllFavouriteItem2sInView, searchForFavouriteItem2sInView, removeFavouriteItemIds, addFavouriteItemIds,
+        removeFavouriteItemIds, addFavouriteItemIds,
         getAllFavouriteItemIdsInView, getAllFavouriteItemsInView, getItemByName, getItemsByIdsCount, updateItemValue,
         updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, getAllItemsInView,
         searchForFavouriteItemsInView, updateItem, getItemsByIds} from './item.service';
-import {ItemWithFilteringResult, Item2WithFilteringResult, getItem2WithFiltering, getItemWithFiltering} from './item-filtering.service';
+import {ItemWithFilteringResult, getItemWithFiltering} from './item-filtering.service';
 import {addItemImage, markItemImageAsPrimary, getItemPrimaryImage, getItemImageContent, deleteItemImage} from './item-image.service';
 import {getJobDetailsById, getAllJobs, getJobById} from './job.service';
 import {LoggingCallback, JobLogger, newConsoleLogger, newLoggingCallback, newJobLogger} from './job-log.service';
 import {decodeJwtToken, verifyJwtToken, createJwtToken} from './jwt.service';
 import {multipartParse} from './multipart.service';
-import {addUserNotification, getUserNotifications} from './notification.service';
+import {addUserNotification, getUserNotifications} from './app-notification.service';
 import {hashedPassword} from './password.service';
 import {getChildrenPricedItems, getPricedItems} from './priced-item.service';
-import {PricedItemsWithFilteringResult, PricedItem2sWithFilteringResult, getPricedItemsWithFiltering} from './priced-item-filtering.service';
+import {PricedItemsWithFilteringResult, getPricedItemsWithFiltering} from './priced-item-filtering.service';
 import {searchGroupsNotAssociatedWithPricingStructure, unlinkPricingStructureWithGroupId, linkPricingStructureWithGroupId,
         getPricingStructureGroupAssociations, getPricingStructureByName, getPricingStructureById, addOrUpdatePricingStructures,
         getPricingStructuresByView, getPartnerPricingStructures, getAllPricingStructureItemsWithPrice, getAllPricingStructureItemsWithPriceCount,
-        getAllPricingStructures, searchGroupsAssociatedWithPricingStructure, updatePricingStructureStatus}
+        getAllPricingStructures, searchGroupsAssociatedWithPricingStructure, updatePricingStructureStatus, AddOrUpdatePricingStructureInput}
         from './pricing-structure.service';
 import {setPrices, addItemToPricingStructure, getPricingStructureItem, setPricesB} from './pricing-structure-item.service';
 import {addRoleToGroup, addOrUpdateRole, getRoleByName, getAllRoles, removeRoleFromGroup} from './role.service';
@@ -128,12 +128,16 @@ import {eventsAsObservable, fireEvent, EventType, AllEvents, IncomingHttpEvent, 
     UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry}
     from "./event/event.service";
 
+import { getAllWorkflowDefinition, getWorkflowByView, addWorkflow, getWorkflowByViewActionAndType } from './workflow.service'
+import { hasWorkflow, triggerAttributeWorkflow } from './workflow-trigger.service'
+
 export {
     // bulk-edit.service
     bulkEditPreview, bulkEditRun, bulkEditRunJob,
 
     // export-csv.service
-    exportAttributePreview, exportItemPreview, exportPricePreview, exportAttributeRunJob, exportItemRunJob, exportPriceRunJob,
+    exportAttributePreview, exportItemPreview, ExportItemPreviewResult, exportPricePreview, ExportPricePreviewResult, exportAttributeRunJob,
+    exportItemRunJob, exportPriceRunJob,
 
     // import-csv.service
     importAttributePreview, importItemPreview, importPricePreview, importAttributeRunJob, importItemRunJob, importPriceRunJob,
@@ -214,13 +218,13 @@ export {
 
     // item.service
     getAllItemsInViewCount, searchForItemsInViewCount, getAllFavouriteItemsInViewCount, searchForFavouriteItemsInViewCount,
-    getAllFavouriteItem2sInView, searchForFavouriteItem2sInView, removeFavouriteItemIds, addFavouriteItemIds,
+    removeFavouriteItemIds, addFavouriteItemIds,
     getAllFavouriteItemIdsInView, getAllFavouriteItemsInView, getItemByName, getItemsByIdsCount, updateItemValue,
     updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, getAllItemsInView,
     searchForFavouriteItemsInView, updateItem, getItemsByIds,
 
     // item-filtering.service
-    ItemWithFilteringResult, Item2WithFilteringResult, getItem2WithFiltering, getItemWithFiltering,
+    ItemWithFilteringResult, getItemWithFiltering,
 
     // item-image.service
     addItemImage, markItemImageAsPrimary, getItemPrimaryImage, getItemImageContent, deleteItemImage,
@@ -247,14 +251,14 @@ export {
     getChildrenPricedItems, getPricedItems,
 
     // priced-item-filtering.service
-    PricedItemsWithFilteringResult, PricedItem2sWithFilteringResult, getPricedItemsWithFiltering,
+    PricedItemsWithFilteringResult, getPricedItemsWithFiltering,
 
     // pricing-structure.service
     searchGroupsNotAssociatedWithPricingStructure, unlinkPricingStructureWithGroupId, linkPricingStructureWithGroupId,
     getPricingStructureGroupAssociations, getPricingStructureByName, getPricingStructureById, addOrUpdatePricingStructures,
     getPricingStructuresByView, getPartnerPricingStructures, getAllPricingStructureItemsWithPrice,
     getAllPricingStructureItemsWithPriceCount, getAllPricingStructures, searchGroupsAssociatedWithPricingStructure,
-    updatePricingStructureStatus,
+    updatePricingStructureStatus, AddOrUpdatePricingStructureInput,
 
     // pricing-structure-item.service
     setPrices, addItemToPricingStructure, getPricingStructureItem, setPricesB,
@@ -322,5 +326,13 @@ export {
     SearchGroupsNotAssociatedWithPricingStructureEvent, SearchSelfRegistrationByUsernameEvent, SearchUserByUsernameAndStatusEvent,
     SelfRegisterEvent, SetPricesEvent, UnlinkPricingStructureWithGroupIdEvent, UpdateAttributesEvent, UpdateCategoryEvent,
     UpdateItemEvent, UpdateItemsStatusEvent, UpdateItemValueEvent, UpdatePricingStructureStatusEvent, UpdateRuleStatusEvent,
-    UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry
+    UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry,
+
+    // workflow.service,
+    getAllWorkflowDefinition, addWorkflow, getWorkflowByViewActionAndType, getWorkflowByView,
+
+    // workflow-trigger.service
+    hasWorkflow, triggerAttributeWorkflow,
+
+    // workflow-scripts-utils.service
 };

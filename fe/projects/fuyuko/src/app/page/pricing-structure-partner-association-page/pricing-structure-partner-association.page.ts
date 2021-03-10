@@ -1,16 +1,16 @@
-import {Component, OnInit} from "@angular/core";
-import {PricingStructureGroupAssociation} from "../../model/pricing-structure.model";
+import {Component, OnInit} from '@angular/core';
+import {PricingStructureGroupAssociation} from '@fuyuko-common/model/pricing-structure.model';
 import { GroupSearchFn } from '../../component/group-table-component/group-table.component';
-import {UserManagementService} from "../../service/user-management-service/user-management.service";
-import {finalize, tap} from "rxjs/operators";
-import {Observable} from "rxjs";
-import {Group} from "../../model/group.model";
-import {PricingStructureService} from "../../service/pricing-structure-service/pricing-structure.service";
-import {PricingStructureGroupAssociationComponentEvent} from "../../component/pricing-component/pricing-structure-group-association.component";
-import {ApiResponse} from "../../model/api-response.model";
-import {toNotifications} from "../../service/common.service";
-import {NotificationsService} from "angular2-notifications";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {UserManagementService} from '../../service/user-management-service/user-management.service';
+import {finalize, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {Group} from '@fuyuko-common/model/group.model';
+import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
+import {PricingStructureGroupAssociationComponentEvent} from '../../component/pricing-component/pricing-structure-group-association.component';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({
@@ -43,7 +43,7 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
                     for (const _r of r) {
                         this.groupSearchFnsMap.set(_r.pricingStructure.id, (group: string): Observable<Group[]> => {
                             return this.userManagementService.findGroupsNotAssociatedWithPricingStructure(_r.pricingStructure.id, group);
-                        })
+                        });
                     }
                     this.loading = false;
                 }),
@@ -56,8 +56,8 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
 
 
     onPricingStructureGroupAssociationEvent($event: PricingStructureGroupAssociationComponentEvent) {
-        switch($event.type) {
-            case "link": {
+        switch ($event.type) {
+            case 'link': {
                 this.pricingStructureService.linkPricingStructureGroup($event.pricingStructure.id, $event.group.id)
                     .pipe(
                         tap((r: ApiResponse) => {

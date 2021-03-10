@@ -8,10 +8,10 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {check} from 'express-validator';
-import {Group} from "../../model/group.model";
-import {ROLE_VIEW} from "../../model/role.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {getGroupsWithRole, getGroupsWithRoleCount} from "../../service/group.service";
+import {Group} from '@fuyuko-common/model/group.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getGroupsWithRole, getGroupsWithRoleCount} from '../../service';
 
 
 // CHECKED

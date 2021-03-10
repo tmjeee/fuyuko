@@ -1,7 +1,7 @@
-import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Category} from "../../model/category.model";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Category} from '@fuyuko-common/model/category.model';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 
 @Component({
@@ -9,12 +9,12 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
    styleUrls: ['./edit-category-popup.component.scss']
 })
 export class EditCategoryPopupComponent {
-   
+
    formGroup: FormGroup;
    formControlName: FormControl;
    formControlDescription: FormControl;
 
-   constructor(private matDialogRef: MatDialogRef<EditCategoryPopupComponent>, 
+   constructor(private matDialogRef: MatDialogRef<EditCategoryPopupComponent>,
                @Inject(MAT_DIALOG_DATA) private data: Category,
                private formBuilder: FormBuilder) {
       this.formControlName = this.formBuilder.control(data && data.name ? data.name : '', [Validators.required]);

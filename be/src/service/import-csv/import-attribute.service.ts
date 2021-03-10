@@ -1,15 +1,15 @@
-import {AttributeDataImport} from "../../model/data-import.model";
+import {AttributeDataImport} from '@fuyuko-common/model/data-import.model';
 import {readCsv, readPair1Csv, readPair2Csv} from './import-csv.service';
 import {CsvAttribute} from "../../server-side-model/server-side.model";
-import {Messages, Message} from "../../model/notification-listing.model";
-import {Attribute, Pair1, Pair2} from "../../model/attribute.model";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {File} from "formidable";
-import * as util from "util";
-import * as fs from "fs";
-import uuid = require("uuid");
-import {fireEvent, ImportAttributePreviewEvent} from "../event/event.service";
+import {Messages, Message} from '@fuyuko-common/model/notification-listing.model';
+import {Attribute, Pair1, Pair2} from '@fuyuko-common/model/attribute.model';
+import {doInDbConnection, QueryA, QueryResponse} from '../../db';
+import {Connection} from 'mariadb';
+import {File} from 'formidable';
+import * as util from 'util';
+import * as fs from 'fs';
+import {v4 as uuid} from 'uuid';
+import {fireEvent, ImportAttributePreviewEvent} from '../event/event.service';
 const detectCsv = require('detect-csv');
 
 

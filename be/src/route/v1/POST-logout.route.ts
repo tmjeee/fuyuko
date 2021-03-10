@@ -1,11 +1,11 @@
-import {Router, Request, Response, NextFunction} from "express";
-import {validateMiddlewareFn} from "./common-middleware";
-import {Registry} from "../../registry";
-import {ApiResponse} from "../../model/api-response.model";
-import {logout} from "../../service/auth.service";
-import {User} from "../../model/user.model";
-import {decodeJwtToken} from "../../service";
-import {JwtPayload} from "../../model/jwt.model";
+import {Router, Request, Response, NextFunction} from 'express';
+import {validateMiddlewareFn} from './common-middleware';
+import {Registry} from '../../registry';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {logout} from '../../service';
+import {User} from '@fuyuko-common/model/user.model';
+import {decodeJwtToken} from '../../service';
+import {JwtPayload} from '@fuyuko-common/model/jwt.model';
 
 // CHECKED
 

@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {View} from "../../model/view.model";
-import {finalize, tap} from "rxjs/operators";
-import {CustomDataExport, ExportScriptInputValue, ExportScriptPreview} from "../../model/custom-export.model";
-import {CustomExportPreviewFn} from "./custom-export-wizard.component";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {View} from '@fuyuko-common/model/view.model';
+import {finalize, tap} from 'rxjs/operators';
+import {CustomDataExport, ExportScriptInputValue, ExportScriptPreview} from '@fuyuko-common/model/custom-export.model';
+import {CustomExportPreviewFn} from './custom-export-wizard.component';
 
 export interface CustomExportPreviewComponentEvent {
     preview: ExportScriptPreview;

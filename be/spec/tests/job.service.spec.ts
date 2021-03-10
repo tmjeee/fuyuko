@@ -1,6 +1,5 @@
-import {Item} from "../../src/model/item.model";
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {getAllJobs, getItemByName, getJobById, getJobDetailsById} from "../../src/service";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
+import {getAllJobs, getJobById, getJobDetailsById} from '../../src/service';
 
 
 describe('job.service', () => {

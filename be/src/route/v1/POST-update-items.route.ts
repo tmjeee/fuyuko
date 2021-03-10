@@ -1,19 +1,17 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {body, param} from 'express-validator';
-import {Item} from "../../model/item.model";
-import {Item2} from "../../server-side-model/server-side.model";
-import {itemsRevert as itemRevert} from "../../service/conversion-item.service";
-import {ApiResponse} from "../../model/api-response.model";
-import {addOrUpdateItem2} from "../../service/item.service";
-import {ROLE_EDIT} from "../../model/role.model";
+import {Item} from '@fuyuko-common/model/item.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {addOrUpdateItem} from "../../service";
 
 // CHECKED
 
@@ -33,11 +31,10 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
         const items: Item[] = req.body.items;
-        const item2s: Item2[]  = itemRevert(items);
 
         const errors: string[] = [];
-        for (const item2 of item2s) {
-            const err: string[] = await addOrUpdateItem2(viewId, item2);
+        for (const item of items) {
+            const err: string[] = await addOrUpdateItem(viewId, item);
             errors.push(...err);
         }
 

@@ -4,8 +4,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {GroupTableComponent} from './group-table.component';
-import {EditGroupPopupComponent} from "./edit-group-popup.component";
-import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
+import {EditGroupPopupComponent} from './edit-group-popup.component';
+import {SharedComponentUtilsModule} from '../shared-component-utils/shared-component-utils.module';
 
 
 @NgModule({

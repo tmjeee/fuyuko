@@ -1,13 +1,10 @@
 import {
     Component,
-    ElementRef,
     EventEmitter,
     Input,
     OnInit,
     Output,
     QueryList,
-    Type,
-    ViewChild,
     ViewChildren, ViewContainerRef
 } from '@angular/core';
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
@@ -20,7 +17,7 @@ import {
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import * as uuid from 'uuid/v1';
 import {WidgetContainerComponent} from './widget-container.component';
-import {User} from "../../model/user.model";
+import {User} from '@fuyuko-common/model/user.model';
 
 
 

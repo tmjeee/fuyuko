@@ -2,12 +2,12 @@ import {Component} from '@angular/core';
 import {GroupSearchFn, SendInviteComponentEvent} from '../../component/send-invite-component/send-invite.component';
 import {NotificationsService} from 'angular2-notifications';
 import {Observable} from 'rxjs';
-import {Group} from '../../model/group.model';
+import {Group} from '@fuyuko-common/model/group.model';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {InvitationService} from '../../service/invitation-service/invitation.service';
 import {tap} from 'rxjs/operators';
 import {toNotifications} from '../../service/common.service';
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 @Component({

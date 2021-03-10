@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {NotificationsService} from 'angular2-notifications';
 import {ValidationService} from '../../service/validation-service/validation.service';
 import {MatDialog} from '@angular/material/dialog';

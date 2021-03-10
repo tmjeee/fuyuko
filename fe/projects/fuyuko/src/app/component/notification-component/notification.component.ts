@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {NotificationDialogComponent} from './notification-dialog.component';
 import {AppNotificationService} from '../../service/app-notification-service/app-notification.service';
 import {map} from 'rxjs/operators';
-import {AppNotification} from '../../model/notification.model';
+import {AppNotification} from '@fuyuko-common/model/notification.model';
 
 @Component({
   selector: 'app-notification',

@@ -1,13 +1,11 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../registry";
-import {check} from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {getRule, getRule2} from "../../service/rule.service";
-import {Rule2} from "../../server-side-model/server-side.model";
-import {Rule} from "../../model/rule.model";
-import {rulesConvert} from "../../service/conversion-rule.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../registry';
+import {check} from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {getRule} from '../../service';
+import {Rule} from '@fuyuko-common/model/rule.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED

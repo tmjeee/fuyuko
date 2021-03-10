@@ -17,12 +17,11 @@ import {
     searchUserByUsernameAndStatus,
     updateUser,
     UpdateUserInput
-} from "../../src/service";
-import {User} from "../../src/model/user.model";
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {Group} from "../../src/model/group.model";
-import {BinaryContent} from "../../src/model/binary-content.model";
-import * as util from "util";
+} from '../../src/service';
+import {User} from '@fuyuko-common/model/user.model';
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
+import {Group} from '@fuyuko-common/model/group.model';
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
 
 describe('user.service', () => {
 

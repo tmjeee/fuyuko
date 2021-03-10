@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {Attribute, ATTRIBUTE_TYPES} from '../../model/attribute.model';
+import {Attribute, ATTRIBUTE_TYPES} from '@fuyuko-common/model/attribute.model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {SingleSelectComponent} from './single-select.component';
 import {dateFormatValidator, numberFormatValidator} from '../../service/custom-validators';

@@ -1,32 +1,31 @@
-import {Component, Input} from "@angular/core";
-import {CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
-import {CategoryTreeComponentEvent} from "./category-tree.component";
-import {Observable, of} from "rxjs";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
-import {Item, TableItem} from "../../model/item.model";
-import {combineAll, finalize, tap} from "rxjs/operators";
-import {ItemAndAttributeSet, ItemValueAndAttribute, TableItemAndAttributeSet} from "../../model/item-attribute.model";
-import {Attribute} from "../../model/attribute.model";
-import {toTableItem} from "../../utils/item-to-table-items.util";
-import {DataTableComponentEvent} from "../data-table-component/data-table.component";
-import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
-import {ItemSearchComponentEvent} from "../item-search-component/item-search.component";
-import {ItemEditorComponentEvent, Type} from "../data-editor-component/item-editor.component";
-import {DataEditorEvent} from "../data-editor-component/item-info.component";
+import {Component, Input} from '@angular/core';
+import {CategorySimpleItem, CategoryWithItems} from '@fuyuko-common/model/category.model';
+import {CategoryTreeComponentEvent} from './category-tree.component';
+import {Observable, of} from 'rxjs';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Item, TableItem} from '@fuyuko-common/model/item.model';
+import {combineAll, finalize, tap} from 'rxjs/operators';
+import {ItemAndAttributeSet, ItemValueAndAttribute, TableItemAndAttributeSet} from '@fuyuko-common/model/item-attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {toTableItem} from '../../utils/item-to-table-items.util';
+import {DataTableComponentEvent} from '../data-table-component/data-table.component';
+import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/carousel.component';
+import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
+import {ItemEditorComponentEvent, Type} from '../data-editor-component/item-editor.component';
+import {DataEditorEvent} from '../data-editor-component/item-info.component';
 import {
     DataThumbnailComponentEvent,
     DataThumbnailSearchComponentEvent
-} from "../data-thumbnail-component/data-thumbnail.component";
-import {DataListComponentEvent, DataListSearchComponentEvent} from "../data-list-component/data-list.component";
-import {Pagination} from "../../utils/pagination.utils";
-import {PaginationComponentEvent} from "../pagination-component/pagination.component";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {toNotifications} from "../../service/common.service";
+} from '../data-thumbnail-component/data-thumbnail.component';
+import {DataListComponentEvent, DataListSearchComponentEvent} from '../data-list-component/data-list.component';
+import {Pagination} from '../../utils/pagination.utils';
+import {PaginationComponentEvent} from '../pagination-component/pagination.component';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 
-export type GetItemsFn = (viewId: number, itemIds: number[], limitOffset: LimitOffset)=> Observable<PaginableApiResponse<Item[]>>
-export type GetAttributesFn = (viewId: number) => Observable<Attribute[]>
+export type GetItemsFn = (viewId: number, itemIds: number[], limitOffset: LimitOffset) => Observable<PaginableApiResponse<Item[]>>;
+export type GetAttributesFn = (viewId: number) => Observable<Attribute[]>;
 export type SaveOrUpdateTableItemsFn = (modifiedTableItems: TableItem[], deletedTableItems: TableItem[]) => Observable<ApiResponse[]>;
-export type MarkItemImageAsPrimaryFn = (itemId: number, image: CarouselItemImage)=> Observable<ApiResponse>;
+export type MarkItemImageAsPrimaryFn = (itemId: number, image: CarouselItemImage) => Observable<ApiResponse>;
 export type DeleteItemImageFn = (itemId: number, image: CarouselItemImage) => Observable<ApiResponse>;
 export type UploadItemImageFn = (itemId: number, file: File) => Observable<ApiResponse>;
 export type SaveItemInfoFn = (type: Type, item: Item) => Observable<ApiResponse>;
@@ -66,7 +65,7 @@ export class CategoryComponent {
 
     viewType: 'table' | 'thumbnail' | 'list'; // when displayType is 'category'
 
-    displayType: 'category' | 'item'
+    displayType: 'category' | 'item';
     currentCategoryWithItems: CategoryWithItems;        // when displayType is 'category'
     currentItem: CategorySimpleItem;                    // when displayType is 'item'
     paginableApiResponse: PaginableApiResponse<Item[]>;
@@ -88,12 +87,12 @@ export class CategoryComponent {
 
 
     onDataTableEvent($event: DataTableComponentEvent) {
-        switch($event.type) {
-            case "reload": {
+        switch ($event.type) {
+            case 'reload': {
                 this.reload();
                 break;
             }
-            case "modification": {
+            case 'modification': {
                 this.saveOrUpdateTableItemsFn($event.modifiedItems, $event.deletedItems)
                     .pipe(
                         tap((r: ApiResponse[]) => {
@@ -102,7 +101,7 @@ export class CategoryComponent {
                     ).subscribe();
                 break;
             }
-            case "favourite": {
+            case 'favourite': {
                 this.addFavouriteItemsFn(
                     this.viewId,
                     $event.favouritedItems.map((i: TableItem) => i.id)
@@ -120,7 +119,7 @@ export class CategoryComponent {
                 ).subscribe();
                 break;
             }
-            case "unfavourite": {
+            case 'unfavourite': {
                 this.removeFavouriteItemsFn(
                     this.viewId,
                     $event.favouritedItems.map((i: TableItem) => i.id)
@@ -143,8 +142,8 @@ export class CategoryComponent {
     }
 
     onDataTableCarouselEvent($event: CarouselComponentEvent) {
-        switch($event.type) {
-            case "markAsPrimary": {
+        switch ($event.type) {
+            case 'markAsPrimary': {
                 this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
                     tap((r: ApiResponse) => {
                        this.reload();
@@ -152,7 +151,7 @@ export class CategoryComponent {
                 ).subscribe();
                 break;
             }
-            case "upload": {
+            case 'upload': {
                 this.uploadItemImageFn($event.itemId, $event.file).pipe(
                    tap((r: ApiResponse) => {
                         this.reload();
@@ -160,7 +159,7 @@ export class CategoryComponent {
                 ).subscribe();
                 break;
             }
-            case "delete": {
+            case 'delete': {
                 this.deleteItemImageFn($event.itemId, $event.image).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -176,8 +175,8 @@ export class CategoryComponent {
     }
 
     onItemInfoCarouselEvent($event: CarouselComponentEvent) {
-        switch($event.type) {
-            case "markAsPrimary": {
+        switch ($event.type) {
+            case 'markAsPrimary': {
                 this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -185,7 +184,7 @@ export class CategoryComponent {
                 ).subscribe();
                 break;
             }
-            case "upload": {
+            case 'upload': {
                 this.uploadItemImageFn($event.itemId, $event.file).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -193,7 +192,7 @@ export class CategoryComponent {
                 ).subscribe();
                 break;
             }
-            case "delete": {
+            case 'delete': {
                 this.deleteItemImageFn($event.itemId, $event.image).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -222,23 +221,23 @@ export class CategoryComponent {
 
 
     onThumbnailEvent($event: DataThumbnailComponentEvent) {
-        switch($event.type) {
-            case "reload":
+        switch ($event.type) {
+            case 'reload':
                 this.reload();
                 break;
-            case "modification":
+            case 'modification':
                this.saveOrUpdateItemsFn($event.modifiedItems, $event.deletedItems).pipe(
                    tap((r: ApiResponse[]) => {
                        this.reload();
                    })
                ).subscribe();
-                break;
+               break;
         }
     }
 
     onThumbnailCarouselEvent($event: CarouselComponentEvent) {
-        switch($event.type) {
-            case "markAsPrimary": {
+        switch ($event.type) {
+            case 'markAsPrimary': {
                 this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -246,7 +245,7 @@ export class CategoryComponent {
                 ).subscribe();
                 break;
             }
-            case "upload": {
+            case 'upload': {
                 this.uploadItemImageFn($event.itemId, $event.file).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -254,7 +253,7 @@ export class CategoryComponent {
                 ).subscribe();
                 break;
             }
-            case "delete": {
+            case 'delete': {
                 this.deleteItemImageFn($event.itemId, $event.image).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -271,11 +270,11 @@ export class CategoryComponent {
 
 
     onListEvent($event: DataListComponentEvent) {
-        switch($event.type) {
-            case "reload":
+        switch ($event.type) {
+            case 'reload':
                 this.reload();
                 break;
-            case "modification":
+            case 'modification':
                 this.saveOrUpdateItemsFn($event.modifiedItems, $event.deletedItems).pipe(
                     tap((r: ApiResponse[]) => {
                         this.reload();
@@ -290,8 +289,8 @@ export class CategoryComponent {
     }
 
     onListCarouselEvent($event: CarouselComponentEvent) {
-        switch($event.type) {
-            case "markAsPrimary": {
+        switch ($event.type) {
+            case 'markAsPrimary': {
                 this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -299,7 +298,7 @@ export class CategoryComponent {
                 ).subscribe();
                 break;
             }
-            case "upload": {
+            case 'upload': {
                 this.uploadItemImageFn($event.itemId, $event.file).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -307,7 +306,7 @@ export class CategoryComponent {
                 ).subscribe();
                 break;
             }
-            case "delete": {
+            case 'delete': {
                 this.deleteItemImageFn($event.itemId, $event.image).pipe(
                     tap((r: ApiResponse) => {
                         this.reload();
@@ -326,8 +325,8 @@ export class CategoryComponent {
     }
 
     reload() {
-        switch(this.displayType) {
-            case "category": {
+        switch (this.displayType) {
+            case 'category': {
                 if (this.currentCategoryWithItems) {
                     this.loading = true;
                     const itemIds: number[] = this.currentCategoryWithItems.items.reduce((acc: number[], i: CategorySimpleItem) => {
@@ -339,7 +338,7 @@ export class CategoryComponent {
                         this.getAttributesFn(this.viewId),
                         this.getFavouriteItemIdsFn(this.viewId),
                     ).pipe(
-                        <any>combineAll(),
+                        combineAll() as any,
                         tap((r: [PaginableApiResponse<Item[]>, Attribute[], number[]]) => {
                             this.paginableApiResponse = r[0];
                             this.attributes = r[1];
@@ -360,19 +359,19 @@ export class CategoryComponent {
                 }
                 break;
             }
-            case "item": {
+            case 'item': {
                 if (this.currentItem) {
                     this.loading = true;
                     of(
                         this.getItemsFn(this.viewId, [this.currentItem.id], this.pagination.limitOffset()),
                         this.getAttributesFn(this.viewId)
                     ).pipe(
-                        <any>combineAll(),
-                        tap((r:[PaginableApiResponse<Item[]>, Attribute[]]) => {
+                        combineAll() as any,
+                        tap((r: [PaginableApiResponse<Item[]>, Attribute[]]) => {
                             this.paginableApiResponse = r[0];
                             this.item = r[0].payload[0];
                             this.attributes = r[1];
-                            
+
                         }),
                         finalize(() => this.loading = false)
                     ).subscribe();

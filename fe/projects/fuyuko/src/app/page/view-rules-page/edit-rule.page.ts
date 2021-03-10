@@ -4,8 +4,8 @@ import {AttributeService} from '../../service/attribute-service/attribute.servic
 import {NotificationsService} from 'angular2-notifications';
 import {RuleService} from '../../service/rule-service/rule.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AbstractRulePageComponent} from "./abstract-rule.page";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {AbstractRulePageComponent} from './abstract-rule.page';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
     templateUrl: './edit-rule.page.html',

@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Job, JobAndLogs} from '../../model/job.model';
+import {Job, JobAndLogs} from '@fuyuko-common/model/job.model';
 import {Observable, of} from 'rxjs';
-import {BulkEditPackage} from '../../model/bulk-edit.model';
+import {BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from "../../model/api-response.model";
-import {map} from "rxjs/operators";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {map} from 'rxjs/operators';
 
 
 const URL_SCHEDULE_BULK_EDIT_JOB = () => `${config().api_host_url}/view/:viewId/bulk-edit`;

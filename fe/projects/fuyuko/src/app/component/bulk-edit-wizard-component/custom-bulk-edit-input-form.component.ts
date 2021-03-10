@@ -1,22 +1,22 @@
-import {Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges} from "@angular/core";
-import {View} from "../../model/view.model";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {tap} from "rxjs/operators";
-import {FileDataObject} from "../../model/file.model";
-import {fromFileToFileDataObject} from "../../shared-utils/buffer.util";
-import {CustomBulkEditFormValidateFn} from "./custom-bulk-edit-wizard.component";
+import {Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges} from '@angular/core';
+import {View} from '@fuyuko-common/model/view.model';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {tap} from 'rxjs/operators';
+import {FileDataObject} from '@fuyuko-common/model/file.model';
+import {fromFileToFileDataObject} from '@fuyuko-common/shared-utils/buffer.util';
+import {CustomBulkEditFormValidateFn} from './custom-bulk-edit-wizard.component';
 import {
    CustomBulkEdit, CustomBulkEditScriptInput,
    CustomBulkEditScriptInputValue,
    CustomBulkEditScriptValidateResult
-} from "../../model/custom-bulk-edit.model";
-import {CustomImportInputFormComponentEvent} from "../import-data-component/custom-import-input-form.component";
+} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {CustomImportInputFormComponentEvent} from '../import-data-component/custom-import-input-form.component';
 
 
 export interface CustomBulkEditInputFormComponentEvent {
    inputValues: CustomBulkEditScriptInputValue[];
    validationResult: CustomBulkEditScriptValidateResult;
-};
+}
 
 @Component({
    selector: 'app-custom-bulk-edit-input-form',
@@ -37,7 +37,7 @@ export class CustomBulkEditInputFormComponent {
 
    constructor(private formBuilder: FormBuilder) {
       this.formGroup = this.formBuilder.group({});
-      this.events = new EventEmitter<CustomImportInputFormComponentEvent>()
+      this.events = new EventEmitter<CustomImportInputFormComponentEvent>();
    }
 
    ngOnInit(): void {
@@ -68,8 +68,8 @@ export class CustomBulkEditInputFormComponent {
          this.validateFn(this.view, this.customBulkEdit, iv).pipe(
              tap((r: CustomBulkEditScriptValidateResult) => {
                  console.log('************** submit validation result', r);
-                this.validationResult = r;
-                this.events.emit({
+                 this.validationResult = r;
+                 this.events.emit({
                    inputValues: iv,
                    validationResult: this.validationResult
                 });

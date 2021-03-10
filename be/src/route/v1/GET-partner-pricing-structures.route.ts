@@ -1,5 +1,5 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {param} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -7,11 +7,11 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {ROLE_PARTNER, ROLE_VIEW} from "../../model/role.model";
-import {PricingStructure} from "../../model/pricing-structure.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {getPartnerPricingStructures} from "../../service/pricing-structure.service";
+} from './common-middleware';
+import {ROLE_PARTNER} from '@fuyuko-common/model/role.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getPartnerPricingStructures} from '../../service';
 
 
 // CHECKED

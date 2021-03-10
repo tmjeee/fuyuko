@@ -1,5 +1,5 @@
-import {DEFAULT_LIMIT, LimitOffset} from "../model/limit-offset.model";
-import {PageEvent} from "@angular/material/paginator";
+import {DEFAULT_LIMIT, LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {PageEvent} from '@angular/material/paginator';
 
 
 export const toQuery = (limitOffset: LimitOffset): string => {
@@ -59,6 +59,6 @@ export class Pagination {
         const total: number  = pageEvent.length;
         this.update({
             limit, offset, total
-        })
+        });
     }
-};
+}

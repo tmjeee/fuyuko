@@ -9,9 +9,9 @@ import {PartnerDataThumbnailComponent} from './partner-data-thumbnail.component'
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {CarouselModule} from '../carousel-component/carousel.module';
 import {PartnerAttributeTableComponent} from './partner-attribute-table.component';
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {PartnerItemInfoTableComponent} from "./partner-item-info-table.component";
-import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {PartnerItemInfoTableComponent} from './partner-item-info-table.component';
+import {SharedComponentUtilsModule} from '../shared-component-utils/shared-component-utils.module';
 
 
 @NgModule({

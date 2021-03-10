@@ -1,5 +1,5 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
 import {param, body} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -7,13 +7,13 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {Attribute} from "../../model/attribute.model";
-import {AttributeDataExport} from "../../model/data-export.model";
-import {preview} from "../../service/export-csv/export-attribute.service";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {AttributeDataExport} from '@fuyuko-common/model/data-export.model';
+import {exportAttributePreview} from '../../service';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 
@@ -30,7 +30,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const atts: Attribute[] = req.body.attributes;
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
-        const attributes: Attribute[] = await preview(viewId, atts);
+        const attributes: Attribute[] = await exportAttributePreview(viewId, atts);
         res.status(200).json({
             payload: {
                 type: 'ATTRIBUTE',

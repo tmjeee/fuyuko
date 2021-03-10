@@ -7,11 +7,9 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
 import {check} from 'express-validator';
-import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_ADMIN} from "../../model/role.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
 import {deleteUserFromGroup} from "../../service/user.service";
 
 // CHECKED

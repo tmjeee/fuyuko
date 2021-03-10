@@ -1,6 +1,6 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
-import {Job, JobAndLogs, JobLog} from '../../model/job.model';
-import {Observable, Subscription} from 'rxjs';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Job, JobAndLogs, JobLog} from '@fuyuko-common/model/job.model';
+import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 @Component({

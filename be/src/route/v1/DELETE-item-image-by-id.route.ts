@@ -2,7 +2,7 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {ClientError, validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
 import { param } from "express-validator";
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteItemImage} from "../../service/item-image.service";
 
 // CHECK:

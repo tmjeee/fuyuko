@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Pagination} from "../../utils/pagination.utils";
-import {PageEvent} from "@angular/material/paginator";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Pagination} from '../../utils/pagination.utils';
+import {PageEvent} from '@angular/material/paginator';
 
 export interface PaginationComponentEvent {
    pageEvent: PageEvent;
@@ -15,7 +15,7 @@ export interface PaginationComponentEvent {
 export class PaginationComponent {
 
    @Input() pagination: Pagination;
-   @Output() events: EventEmitter<PaginationComponentEvent>
+   @Output() events: EventEmitter<PaginationComponentEvent>;
 
    constructor() {
        this.events = new EventEmitter<PaginationComponentEvent>();

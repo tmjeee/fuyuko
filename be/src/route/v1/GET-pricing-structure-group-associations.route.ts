@@ -1,10 +1,10 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {getPricingStructureGroupAssociations} from "../../service/pricing-structure.service";
-import {PricingStructureGroupAssociation} from "../../model/pricing-structure.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {getPricingStructureGroupAssociations} from '../../service';
+import {PricingStructureGroupAssociation} from '@fuyuko-common/model/pricing-structure.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const httpAction: any[] = [

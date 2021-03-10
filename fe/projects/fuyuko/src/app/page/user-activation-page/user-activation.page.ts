@@ -1,6 +1,5 @@
 import {Component, OnInit, Self} from '@angular/core';
 import {UserSearchFn} from '../../component/user-search-table-component/user-search-table.component';
-import {User} from '../../model/user.model';
 import {
     ActionType,
     UserSearchTableComponentEvent
@@ -9,10 +8,10 @@ import {NotificationsService} from 'angular2-notifications';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {Observable} from 'rxjs';
 import {finalize, map, tap} from 'rxjs/operators';
-import {SelfRegistration} from '../../model/self-registration.model';
-import {ApiResponse, RegistrationResponse} from '../../model/api-response.model';
+import {SelfRegistration} from '@fuyuko-common/model/self-registration.model';
+import {ApiResponse, RegistrationResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 

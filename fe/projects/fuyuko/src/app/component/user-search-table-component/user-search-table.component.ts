@@ -5,17 +5,16 @@ import {
   OnChanges,
   OnInit,
   Output,
-  Self,
   SimpleChange,
   SimpleChanges
 } from '@angular/core';
-import {User} from '../../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
-import {SelfRegistration} from '../../model/self-registration.model';
+import {SelfRegistration} from '@fuyuko-common/model/self-registration.model';
 
 export type UserSearchFn = (username: string) => Observable<User[] | SelfRegistration[]>;
 

@@ -1,4 +1,4 @@
-import {EventEmitter} from "events";
+import {} from 'events';
 
 export class Lock {
     private p: Promise<any>;

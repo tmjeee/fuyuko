@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {Role, RoleName} from '../../model/role.model';
-import {Group} from '../../model/group.model';
-import {Observable, of} from 'rxjs';
-import {User} from '../../model/user.model';
+import {Role, RoleName} from '@fuyuko-common/model/role.model';
+import {Group} from '@fuyuko-common/model/group.model';
+import {Observable} from 'rxjs';
+import {User} from '@fuyuko-common/model/user.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse, PaginableApiResponse, RegistrationResponse} from '../../model/api-response.model';
-import {map, tap} from 'rxjs/operators';
-import {SelfRegistration} from '../../model/self-registration.model';
+import {ApiResponse, PaginableApiResponse, RegistrationResponse} from '@fuyuko-common/model/api-response.model';
+import {map} from 'rxjs/operators';
+import {SelfRegistration} from '@fuyuko-common/model/self-registration.model';
 
 const URL_ALL_ROLES = () => `${config().api_host_url}/roles`;
 const URL_ALL_GROUPS_WITHOUT_ROLE = () => `${config().api_host_url}/groups/no-role/:roleName/:groupName`;

@@ -9,9 +9,9 @@ import {
     vFnHasAllUserRoles,
     vFnIsSelf
 } from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {removeFavouriteItemIds} from "../../service/item.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [

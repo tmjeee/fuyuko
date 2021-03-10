@@ -5,8 +5,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {NotificationDialogComponent} from './notification-dialog.component';
 import { NotificationComponent } from './notification.component';
-import {NotificationMessagesComponent} from "./notification-messages.component";
-import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
+import {NotificationMessagesComponent} from './notification-messages.component';
+import {SharedComponentUtilsModule} from '../shared-component-utils/shared-component-utils.module';
 
 @NgModule({
     imports: [

@@ -1,7 +1,7 @@
-import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Group} from "../../model/group.model";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Group} from '@fuyuko-common/model/group.model';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 
 @Component({

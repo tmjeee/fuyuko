@@ -1,21 +1,16 @@
-import {Router, Request, Response, NextFunction} from "express";
-import {check} from "express-validator";
+import {Router, Request, Response, NextFunction} from 'express';
+import {check} from 'express-validator';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {makeApiError, makeApiErrorObj} from "../../util";
-import {hashedPassword, sendEmail} from "../../service";
-import config from '../../config';
-import {Registry} from "../../registry";
-import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
-import {RegistrationResponse} from "../../model/api-response.model";
-import {approveSelfRegistration} from "../../service/self-registration.service";
+} from './common-middleware';
+import {Registry} from '../../registry';
+import {ROLE_ADMIN, ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {RegistrationResponse} from '@fuyuko-common/model/api-response.model';
+import {approveSelfRegistration} from '../../service';
 
 // CHECKED
 

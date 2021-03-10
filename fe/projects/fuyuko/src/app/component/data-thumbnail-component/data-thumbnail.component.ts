@@ -1,16 +1,15 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ItemAndAttributeSet, ItemValueAndAttribute} from '../../model/item-attribute.model';
-import {Item, ItemImage, ItemSearchType, TableItem} from '../../model/item.model';
+import {ItemAndAttributeSet, ItemValueAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {Item, ItemImage, ItemSearchType} from '@fuyuko-common/model/item.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ItemDataEditorDialogComponent} from './item-data-editor-dialog.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {map} from 'rxjs/operators';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
-import {createNewItem} from '../../shared-utils/ui-item-value-creator.utils';
+import {createNewItem} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import config from '../../utils/config.util';
-import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
-import {DataTableComponentEvent} from "../data-table-component/data-table.component";
+import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/carousel.component';
 
 
 export interface DataThumbnailSearchComponentEvent {
@@ -22,7 +21,7 @@ export interface DataThumbnailComponentEvent {
   type: 'modification' | 'reload' | 'favourite' | 'unfavourite';
   modifiedItems: Item[]; // only available when type is modification
   deletedItems: Item[];  // only available when type is modification
-  favouritedItems: Item[] // onmly available when type is 'favourite' or 'unfavourite'
+  favouritedItems: Item[]; // onmly available when type is 'favourite' or 'unfavourite'
 }
 
 const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
@@ -51,7 +50,7 @@ export class DataThumbnailComponent implements OnInit {
 
   constructor(private matDialog: MatDialog) {
     this.favouritedItemIds = [];
-    this.enableSearch = true
+    this.enableSearch = true;
     this.showMoreMap = new Map();
     this.selectionModel = new SelectionModel(true);
     this.pendingSaving = [];

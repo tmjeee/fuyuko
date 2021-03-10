@@ -2,9 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import { DataSource } from '@angular/cdk/table';
 import { CollectionViewer } from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Attribute} from '../../model/attribute.model';
-import {PricedItem} from '../../model/item.model';
-import {PricingStructure} from '../../model/pricing-structure.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {PricedItem} from '@fuyuko-common/model/item.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 
 
 export class InternalDataSource extends DataSource<PricedItem> {

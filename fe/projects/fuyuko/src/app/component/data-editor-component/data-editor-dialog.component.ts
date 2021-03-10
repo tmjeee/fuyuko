@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {
   AREA_UNITS,
@@ -10,8 +10,8 @@ import {
   LENGTH_UNITS,
   VOLUME_UNITS, WEIGHT_UNITS,
   WIDTH_UNITS
-} from '../../model/unit.model';
-import {Attribute, Pair2} from '../../model/attribute.model';
+} from '@fuyuko-common/model/unit.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {
   AreaValue,
   CurrencyValue,
@@ -21,8 +21,8 @@ import {
   TextValue,
   Value,
   VolumeValue, WidthValue, ItemValTypes, DATE_FORMAT, WeightValue
-} from '../../model/item.model';
-import {ItemValueAndAttribute, TableItemAndAttribute} from '../../model/item-attribute.model';
+} from '@fuyuko-common/model/item.model';
+import {ItemValueAndAttribute} from '@fuyuko-common/model/item-attribute.model';
 import {
   setItemAreaValue,
   setItemCurrencyValue,
@@ -31,15 +31,14 @@ import {
   setItemStringValue,
   setItemTextValue,
   setItemVolumeValue, setItemWeightValue, setItemWidthValue
-} from '../../shared-utils/ui-item-value-setter.util';
+} from '@fuyuko-common/shared-utils/ui-item-value-setter.util';
 import {Pair2Map, doubleSelectToObjectMap} from '../../utils/doubleselect-helper.util';
 import * as moment from 'moment';
 import {
   currencyValidator,
-  dateFormatValidator,
   dateValidator,
-  numberFormatValidator, numberValidator
-} from "../../service/custom-validators";
+  numberValidator
+} from '../../service/custom-validators';
 
 
 

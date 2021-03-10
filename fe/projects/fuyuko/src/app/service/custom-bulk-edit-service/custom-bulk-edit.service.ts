@@ -1,15 +1,15 @@
-import {Injectable} from "@angular/core";
-import {View} from "../../model/view.model";
+import {Injectable} from '@angular/core';
+import {View} from '@fuyuko-common/model/view.model';
 import {
     CustomBulkEdit,
     CustomBulkEditScriptInputValue, CustomBulkEditScriptJobSubmissionResult, CustomBulkEditScriptPreview,
     CustomBulkEditScriptValidateResult
-} from "../../model/custom-bulk-edit.model";
-import {Observable, of} from "rxjs";
-import config from "../../utils/config.util";
-import {HttpClient} from "@angular/common/http";
-import {map} from "rxjs/operators";
-import {ApiResponse} from "../../model/api-response.model";
+} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {Observable} from 'rxjs';
+import config from '../../utils/config.util';
+import {HttpClient} from '@angular/common/http';
+import {map} from 'rxjs/operators';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const URL_GET_CUSTOM_BULK_EDITS = () => `${config().api_host_url}/custom-bulk-edits`;
 const URL_POST_CUSTOM_BULK_EDIT_PREVIEW = () => `${config().api_host_url}/view/:viewId/custom-bulk-edit/:customBulkEditId/preview`;
@@ -41,7 +41,7 @@ export class CustomBulkEditService {
                 }).pipe(map((r: ApiResponse<CustomBulkEditScriptPreview>) => r.payload));
     }
 
-    submit(v: View, c: CustomBulkEdit, p: CustomBulkEditScriptPreview, i: CustomBulkEditScriptInputValue[]) : Observable<CustomBulkEditScriptJobSubmissionResult>{
+    submit(v: View, c: CustomBulkEdit, p: CustomBulkEditScriptPreview, i: CustomBulkEditScriptInputValue[]): Observable<CustomBulkEditScriptJobSubmissionResult>{
         return this.httpClient.post<ApiResponse<CustomBulkEditScriptValidateResult>>(
             URL_POST_CUSTOM_BULK_EDIT_SUBMIT_JOB()
                 .replace(':viewId', String(v.id))

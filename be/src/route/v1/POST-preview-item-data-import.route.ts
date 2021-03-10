@@ -1,18 +1,18 @@
-import {Registry} from "../../registry";
-import {NextFunction, Request, Response, Router} from "express";
-import {param, body} from "express-validator";
+import {Registry} from '../../registry';
+import {NextFunction, Request, Response, Router} from 'express';
+import {param} from 'express-validator';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {multipartParse} from "../../service";
-import {ItemDataImport} from "../../model/data-import.model";
-import {preview} from "../../service/import-csv/import-item.service";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {multipartParse} from '../../service';
+import {ItemDataImport} from '@fuyuko-common/model/data-import.model';
+import {importItemPreview} from '../../service';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from "@fuyuko-common/model/api-response.model";
 
 // CHECKED
 const httpAction: any[] = [
@@ -26,7 +26,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const {fields, files} = await multipartParse(req);
 
-        const r: {errors: string[], itemDataImport: ItemDataImport} = await preview(viewId, files.itemDataCsvFile);
+        const r: {errors: string[], itemDataImport: ItemDataImport} = await importItemPreview(viewId, files.itemDataCsvFile);
         if (r.errors && r.errors.length) {
             res.status(400).json({
                 status: 'ERROR',

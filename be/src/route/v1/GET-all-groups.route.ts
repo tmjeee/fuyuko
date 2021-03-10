@@ -7,12 +7,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {Group} from "../../model/group.model";
-import {Role, ROLE_VIEW} from "../../model/role.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {getAllGroups, getAllGroupsCount} from "../../service/group.service";
+import {Group} from '@fuyuko-common/model/group.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getAllGroups, getAllGroupsCount} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [

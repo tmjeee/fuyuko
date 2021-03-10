@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {View} from '../../model/view.model';
-import {Item} from '../../model/item.model';
-import {Attribute} from '../../model/attribute.model';
-import {Rule} from '../../model/rule.model';
-import {ValidationError, ValidationLogResult, ValidationResult} from '../../model/validation.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {Item} from '@fuyuko-common/model/item.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
+import {ValidationError, ValidationLogResult, ValidationResult} from '@fuyuko-common/model/validation.model';
 import {forkJoin, Observable, Subscription, throwError} from 'rxjs';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ItemService} from '../../service/item-service/item.service';
@@ -13,14 +13,14 @@ import {ViewService} from '../../service/view-service/view.service';
 import {catchError, finalize, map, skip, tap} from 'rxjs/operators';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import {ValidationResultTableComponentEvent} from '../../component/validation-result-component/validation-result-table.component';
-import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LoadingService} from '../../service/loading-service/loading.service';
 import {
     ValidationResultLogComponentEvent,
     ValidationResultLogReloadFn
-} from "../../component/validation-result-component/validation-result-log.component";
+} from '../../component/validation-result-component/validation-result-log.component';
 
 @Component({
     templateUrl: './view-validation-details.page.html',
@@ -55,7 +55,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy, Af
         this.attributes = [];
         this.rules = [];
         this.validationResultLogReloadFn = (event: ValidationResultLogComponentEvent): Observable<ValidationLogResult> => {
-            return this.validationService.getValidationLogResult(event.viewId, event.validationId, event.validationLogId, event.order, event.limit)
+            return this.validationService.getValidationLogResult(event.viewId, event.validationId, event.validationLogId, event.order, event.limit);
         };
     }
 

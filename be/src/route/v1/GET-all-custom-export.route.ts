@@ -1,10 +1,10 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {getAllCustomExports} from "../../service/custom-export.service";
-import {CustomDataExport} from "../../model/custom-export.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {CustomDataExport} from '@fuyuko-common/model/custom-export.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED

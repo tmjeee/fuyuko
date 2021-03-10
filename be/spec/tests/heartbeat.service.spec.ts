@@ -1,5 +1,5 @@
-import {heartbeat} from "../../src/service";
-import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {heartbeat} from '../../src/service';
+import {setupTestDatabase} from '../helpers/test-helper';
 
 describe('heartbeat.service', () => {
     beforeAll(async () => {

@@ -1,13 +1,12 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {Attribute} from '../../model/attribute.model';
-import {Rule, RULE_LEVELS, RuleLevel, ValidateClause, WhenClause} from '../../model/rule.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {Rule, RULE_LEVELS, RuleLevel, ValidateClause, WhenClause} from '@fuyuko-common/model/rule.model';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {isItemValueOperatorAndAttributeWithIdValid} from '../../utils/item-value-operator-attribute.util';
-import {OperatorType} from '../../model/operator.model';
-import {ItemValTypes, Value} from '../../model/item.model';
-import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
+import {OperatorType} from '@fuyuko-common/model/operator.model';
+import {ItemValTypes, Value} from '@fuyuko-common/model/item.model';
 
 export interface ItemValueOperatorAndAttributeWithId {
     id: number;

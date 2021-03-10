@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {combineLatest, Observable} from 'rxjs';
-import {CustomRule, CustomRuleForView} from '../../model/custom-rule.model';
+import {CustomRule, CustomRuleForView} from '@fuyuko-common/model/custom-rule.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const URL_GET_ALL_CUSTOM_RULES = () => `${config().api_host_url}/custom-rules`;
 const URL_GET_CUSTOM_RULES_BY_VIEW = () => `${config().api_host_url}/view/:viewId/custom-rules`;

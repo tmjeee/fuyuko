@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
+import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
 import {Observable, of} from 'rxjs';
-import {BulkEditItem, BulkEditPackage} from '../../model/bulk-edit.model';
+import {BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from "../../model/api-response.model";
-import {map} from "rxjs/operators";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {map} from 'rxjs/operators';
 
 const URL_BULK_EDIT = () => `${config().api_host_url}/view/:viewId/preview-bulk-edit`;
 

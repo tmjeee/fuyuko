@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {DataSource} from '@angular/cdk/table';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable } from 'rxjs';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 
 class AttributeTableDataSource extends DataSource<Attribute> {
 
@@ -23,7 +23,7 @@ class AttributeTableDataSource extends DataSource<Attribute> {
   }
 }
 
-type EventType = 'delete' | 'search' | 'add' | 'edit'
+type EventType = 'delete' | 'search' | 'add' | 'edit';
 
 export interface AttributeTableComponentEvent {
   type: EventType;
@@ -35,7 +35,7 @@ export interface AttributeTableComponentEvent {
 @Component({
   selector: 'app-attribute-table',
   templateUrl: './attribute-table.component.html',
-  styleUrls: ['./attribute-table.component.scss']
+  styleUrls: ['./attribute-table.component.scss'],
 })
 export class AttributeTableComponent implements OnChanges {
 

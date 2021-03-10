@@ -1,16 +1,16 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 import {
     CustomDataExport,
     ExportScriptInputValue,
     ExportScriptJobSubmissionResult,
     ExportScriptPreview, ExportScriptValidateResult
-} from "../../model/custom-export.model";
-import {View} from "../../model/view.model";
-import {Observable} from "rxjs";
-import config from "../../utils/config.util";
-import {HttpClient} from "@angular/common/http";
-import {map} from "rxjs/operators";
-import {ApiResponse} from "../../model/api-response.model";
+} from '@fuyuko-common/model/custom-export.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {Observable} from 'rxjs';
+import config from '../../utils/config.util';
+import {HttpClient} from '@angular/common/http';
+import {map} from 'rxjs/operators';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const URL_GET_ALL_CUSTOM_EXPORTS = () => `${config().api_host_url}/custom-exports`;
 const URL_POST_CUSTOM_EXPORT_VALIDATE_INPUTS = () => `${config().api_host_url}/view/:viewId/custom-export/:customExportId/validate-input`;

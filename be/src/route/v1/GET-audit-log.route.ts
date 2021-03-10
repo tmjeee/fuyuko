@@ -1,13 +1,13 @@
 import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_ADMIN, ROLE_VIEW} from "../../model/role.model";
-import {LimitOffset} from "../../model/limit-offset.model";
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toLimitOffset} from "../../util/utils";
-import {getAuditLogs, getAuditLogsCount} from "../../service/audit.service";
-import {AuditCategory, AuditLog} from "../../model/audit-log.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {Level} from "../../model/level.model";
+import {getAuditLogs, getAuditLogsCount} from '../../service';
+import {AuditCategory, AuditLog} from '@fuyuko-common/model/audit-log.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Level} from '@fuyuko-common/model/level.model';
 
 const httpAction: any[] = [
     [],

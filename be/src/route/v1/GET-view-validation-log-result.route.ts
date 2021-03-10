@@ -1,11 +1,11 @@
-import {param} from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {NextFunction, Request, Response, Router} from "express";
-import {ValidationLogResult} from "../../model/validation.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {Registry} from "../../registry";
-import {getViewValidationResultLog} from "../../service/validation/validation.service";
+import {param} from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {NextFunction, Request, Response, Router} from 'express';
+import {ValidationLogResult} from '@fuyuko-common/model/validation.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Registry} from '../../registry';
+import {getViewValidationResultLog} from '../../service';
 
 const httpAction: any[] = [
     [

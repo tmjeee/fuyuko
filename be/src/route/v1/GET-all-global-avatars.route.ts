@@ -1,11 +1,9 @@
-import {Router, Request, Response, NextFunction} from "express";
-import {validateMiddlewareFn} from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {GlobalAvatar} from "../../model/avatar.model";
-import {Registry} from "../../registry";
-import {ApiResponse} from "../../model/api-response.model";
-import {getAllGlobalAvatars} from "../../service/avatar.service";
+import {Router, Request, Response, NextFunction} from 'express';
+import {validateMiddlewareFn} from './common-middleware';
+import {GlobalAvatar} from '@fuyuko-common/model/avatar.model';
+import {Registry} from '../../registry';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getAllGlobalAvatars} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [

@@ -1,17 +1,16 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {MatSelectChange} from '@angular/material/select';
-import {PricingStructure} from '../../model/pricing-structure.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import {concatMap, finalize, map, tap} from 'rxjs/operators';
-import {PricedItem, TablePricedItem} from '../../model/item.model';
-import {toTablePricedItem} from '../../utils/item-to-table-items.util';
-import {Attribute} from '../../model/attribute.model';
+import {PricedItem} from '@fuyuko-common/model/item.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {PartnerService} from '../../service/partner-service/partner.service';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
-import {User} from '../../model/user.model';
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {User} from '@fuyuko-common/model/user.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
     templateUrl: './partner-data-list.page.html',

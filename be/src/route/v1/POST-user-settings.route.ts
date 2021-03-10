@@ -1,11 +1,9 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
-import { param } from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
-import {DEFAULT_SETTINGS, updateUserSettings} from "../../service/user-settings.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
+import { param } from 'express-validator';
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from './common-middleware';
+import {updateUserSettings} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 

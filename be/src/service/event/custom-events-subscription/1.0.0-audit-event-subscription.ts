@@ -166,10 +166,10 @@ import {
     GetValidationsByViewIdEvent,
     GetValidationByViewIdAndValidationIdEvent,
     AddOrUpdateViewsEvent
-} from "../event.service";
-import {BulkEditItem, BulkEditPackage} from "../../../model/bulk-edit.model";
-import {Router} from "express";
-import {Registry} from "../../../registry";
+} from '../event.service';
+import {BulkEditItem, BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
+import {Router} from 'express';
+import {Registry} from '../../../registry';
 
 
 const d: any = {

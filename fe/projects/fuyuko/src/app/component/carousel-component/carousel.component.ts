@@ -5,14 +5,13 @@ import {
   Input,
   OnChanges,
   OnInit, Output,
-  SimpleChange,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {ItemImage} from "../../model/item.model";
-import {MatDialog} from "@angular/material/dialog";
-import {UploadItemImageDialogComponent} from "./upload-item-image-dialog.component";
-import {tap} from "rxjs/operators";
+import {ItemImage} from '@fuyuko-common/model/item.model';
+import {MatDialog} from '@angular/material/dialog';
+import {UploadItemImageDialogComponent} from './upload-item-image-dialog.component';
+import {tap} from 'rxjs/operators';
 
 export interface CarouselItemImage extends ItemImage {
   imageUrl: string;
@@ -24,7 +23,7 @@ export interface CarouselComponentEvent {
   itemId: number;
   file?: File;  // only when type is 'upload'
   image?: CarouselItemImage;  // only when type is 'markAsPrimary' and 'delete'
-};
+}
 
 @Component({
   selector: 'app-carousel',
@@ -126,6 +125,6 @@ export class CarouselComponent implements OnInit, AfterViewInit, OnChanges  {
               });
             }
           })
-        ).subscribe()
+        ).subscribe();
   }
 }

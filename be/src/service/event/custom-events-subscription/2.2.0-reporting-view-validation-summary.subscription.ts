@@ -160,23 +160,23 @@ import {
     UpdateUserSettingsEvent,
     ValidationEvent,
     VerifyJwtTokenEvent
-} from "../event.service";
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../../registry";
+} from '../event.service';
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "../../../route/v1/common-middleware";
-import {ROLE_VIEW} from "../../../model/role.model";
-import {doInDbConnection, QueryA, QueryI} from "../../../db";
-import {Connection} from "mariadb";
-import { param } from "express-validator";
-import {Reporting_ViewValidationSummary} from "../../../model/reporting.model";
-import {RuleLevel} from "../../../model/rule.model";
-import {ApiResponse} from "../../../model/api-response.model";
+} from '../../../route/v1/common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {doInDbConnection, QueryA, QueryI} from '../../../db';
+import {Connection} from 'mariadb';
+import { param } from 'express-validator';
+import {Reporting_ViewValidationSummary} from '@fuyuko-common/model/reporting.model';
+import {RuleLevel} from '@fuyuko-common/model/rule.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const d: any = {

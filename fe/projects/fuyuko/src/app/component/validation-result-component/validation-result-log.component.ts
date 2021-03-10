@@ -1,16 +1,16 @@
 import {Component, Input} from '@angular/core';
-import {ValidationLogResult, ValidationResult} from '../../model/validation.model';
+import {ValidationLogResult, ValidationResult} from '@fuyuko-common/model/validation.model';
 import {sprintf} from 'sprintf';
-import {Observable} from "rxjs";
-import {tap} from "rxjs/operators";
+import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 export interface ValidationResultLogComponentEvent {
-    type: 'show-more' | 'show-previous',
-    validationLogId: number
-    viewId: number,
-    validationId: number,
-    order: 'before' | 'after',
-    limit: number,
+    type: 'show-more' | 'show-previous';
+    validationLogId: number;
+    viewId: number;
+    validationId: number;
+    order: 'before' | 'after';
+    limit: number;
 }
 
 export type ValidationResultLogReloadFn = (event: ValidationResultLogComponentEvent) => Observable<ValidationLogResult>;

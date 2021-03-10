@@ -160,9 +160,9 @@ import {
     UpdateUserSettingsEvent,
     ValidationEvent,
     VerifyJwtTokenEvent
-} from "../event.service";
-import {Router} from "express";
-import {Registry} from "../../../registry";
+} from '../event.service';
+import {Router} from 'express';
+import {Registry} from '../../../registry';
 
 
 const d: any = {

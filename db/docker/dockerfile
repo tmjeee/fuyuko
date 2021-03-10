@@ -1,8 +1,0 @@
-FROM mariadb:10.1.45
-
-COPY ./docker/mariadb.cnf /etc/mysql/
-
-ENV MYSQL_ROOT_PASSWORD=root
-ENV MYSQL_DATABASE=fuyuko
-ENV MYSQL_USER=admin
-ENV MYSQL_PASSWORD=root

@@ -1,30 +1,25 @@
-import {UPDATER_PROFILE_CARS_DATA} from "../updater";
-import {View} from "../../model/view.model";
-import {getViewByName, addOrUpdateViews} from "../../service/view.service";
-import {checkErrors, checkNotNull, checkTrue} from "../script-util";
-import {Attribute} from "../../model/attribute.model";
-import {getAttributeInViewByName, getAttributesInView, saveAttributes} from "../../service/attribute.service";
-import {i, l} from "../../logger/logger";
-import Path from "path";
-import util from "util";
-import fs from "fs";
-import {Item} from "../../model/item.model";
-import {
-    addCategory,
-    AddCategoryInput, addItemToPricingStructure,
-    addItemToViewCateogry,
-    addOrUpdateItem, addOrUpdatePricingStructures, addOrUpdateRules, getGroupByName,
-    getItemByName, getPricingStructureByName,
-    getViewCategoryByName, linkPricingStructureWithGroupId, setPrices
-} from "../../service";
-import {createNewItem} from "../../shared-utils/ui-item-value-creator.utils";
-import {setItemNumberValue, setItemStringValue} from "../../shared-utils/ui-item-value-setter.util";
-import {addItemImage} from "../../service/item-image.service";
-import {Category} from "../../model/category.model";
-import {Rule, ValidateClause} from "../../model/rule.model";
-import {AddOrUpdatePricingStructureInput} from "../../service/pricing-structure.service";
-import {PricingStructure} from "../../model/pricing-structure.model";
-import {Group, GROUP_ADMIN, GROUP_PARTNER} from "../../model/group.model";
+import {UPDATER_PROFILE_CARS_DATA} from '../updater';
+import {View} from '@fuyuko-common/model/view.model';
+import {getViewByName, addOrUpdateViews} from '../../service';
+import {getAttributeInViewByName, getAttributesInView, saveAttributes, addCategory, AddCategoryInput, addItemToPricingStructure,
+    addItemToViewCateogry, addOrUpdateItem, addOrUpdatePricingStructures, addOrUpdateRules, getGroupByName, getItemByName,
+    getPricingStructureByName, getViewCategoryByName, linkPricingStructureWithGroupId, setPrices, addItemImage,
+    AddOrUpdatePricingStructureInput
+} from '../../service';
+
+import {checkErrors, checkNotNull, checkTrue} from '../script-util';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {i, l} from '../../logger/logger';
+import Path from 'path';
+import util from 'util';
+import fs from 'fs';
+import {Item} from '@fuyuko-common/model/item.model';
+import {createNewItem} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
+import {setItemNumberValue, setItemStringValue} from '@fuyuko-common/shared-utils/ui-item-value-setter.util';
+import {Category} from '@fuyuko-common/model/category.model';
+import {Rule, ValidateClause} from '@fuyuko-common/model/rule.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
+import {Group, GROUP_ADMIN, GROUP_PARTNER} from '@fuyuko-common/model/group.model';
 
 export const profiles = [UPDATER_PROFILE_CARS_DATA];
 

@@ -4,11 +4,10 @@ import {
     PricingStructureItemWithPrice,
     PricingStructureWithItems,
     TablePricingStructureItemWithPrice
-} from '../../model/pricing-structure.model';
+} from '@fuyuko-common/model/pricing-structure.model';
 import {BehaviorSubject, Observable, pipe} from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
 import {tap} from 'rxjs/operators';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer} from '@angular/cdk/collections';
@@ -16,10 +15,10 @@ import {PricingStructurePopupComponent} from './pricing-structure-popup.componen
 import {ItemPricePopupComponent} from './item-price-popup.component';
 import {toTablePricingStructureItemWithPrice} from '../../utils/item-to-table-items.util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {View} from '../../model/view.model';
-import {Pagination} from "../../utils/pagination.utils";
-import {PaginationComponentEvent} from "../pagination-component/pagination.component";
-import {LimitOffset} from "../../model/limit-offset.model";
+import {View} from '@fuyuko-common/model/view.model';
+import {Pagination} from '../../utils/pagination.utils';
+import {PaginationComponentEvent} from '../pagination-component/pagination.component';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 
 
 export interface RowInfo {

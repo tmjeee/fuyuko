@@ -1,19 +1,19 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {param, body} from 'express-validator';
 
-import {Job} from "../../model/job.model";
-import {Attribute} from "../../model/attribute.model";
-import {runJob} from "../../service/import-csv/job-do-attribute-data-import.service";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {Job} from '@fuyuko-common/model/job.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {importAttributeRunJob} from '../../service';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED
@@ -32,7 +32,7 @@ const httpAction: any[] = [
         const dataImportId: number = Number(req.body.dataImportId);
         const attributes: Attribute[] =  req.body.attributes;
 
-        const job: Job = await runJob(viewId, dataImportId, attributes);
+        const job: Job = await importAttributeRunJob(viewId, dataImportId, attributes);
 
         res.status(200).json({
             status: 'SUCCESS',

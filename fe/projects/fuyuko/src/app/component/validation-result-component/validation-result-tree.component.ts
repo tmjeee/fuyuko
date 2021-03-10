@@ -1,11 +1,11 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
-import {Item} from '../../model/item.model';
+import {Item} from '@fuyuko-common/model/item.model';
 import {FlatTreeControl} from '@angular/cdk/tree';
-import {ValidationError, ValidationResult} from '../../model/validation.model';
+import {ValidationError, ValidationResult} from '@fuyuko-common/model/validation.model';
 import {Observable, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {Rule} from '../../model/rule.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
 
 interface Node {
     i: Item;

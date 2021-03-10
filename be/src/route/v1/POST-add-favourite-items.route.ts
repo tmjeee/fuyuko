@@ -1,6 +1,6 @@
-import {Router, Request, Response, NextFunction} from "express";
-import {Registry} from "../../registry";
-import { param, body } from "express-validator";
+import {Router, Request, Response, NextFunction} from 'express';
+import {Registry} from '../../registry';
+import { param, body } from 'express-validator';
 import {
     aFnAllTrue,
     v,
@@ -8,10 +8,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles,
     vFnIsSelf
-} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {addFavouriteItemIds} from "../../service/item.service";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {addFavouriteItemIds} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [

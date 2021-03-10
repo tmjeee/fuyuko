@@ -1,21 +1,22 @@
-import {Component, Input, OnInit, ViewChild} from "@angular/core";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {
     CustomDataImport,
     ImportScriptInputValue, ImportScriptJobSubmissionResult,
     ImportScriptPreview,
     ImportScriptValidateResult
-} from "../../model/custom-import.model";
-import {CustomImportListComponentEvent} from "./custom-import-list.component";
-import {View} from "../../model/view.model";
-import {CustomImportInputFormComponentEvent} from "./custom-import-input-form.component";
-import {Observable} from "rxjs";
-import {CustomImportPreviewComponentEvent} from "./custom-import-preview.component";
-import {MatStepper} from "@angular/material/stepper";
+} from '@fuyuko-common/model/custom-import.model';
+import {CustomImportListComponentEvent} from './custom-import-list.component';
+import {View} from '@fuyuko-common/model/view.model';
+import {CustomImportInputFormComponentEvent} from './custom-import-input-form.component';
+import {Observable} from 'rxjs';
+import {CustomImportPreviewComponentEvent} from './custom-import-preview.component';
+import {MatStepper} from '@angular/material/stepper';
 
 export type CustomImportValidateFn = (v: View, c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptValidateResult>;
 export type CustomImportPreviewFn =  (v: View, c: CustomDataImport, i: ImportScriptInputValue[]) => Observable<ImportScriptPreview>;
-export type CustomImportSubmitFn =  (v: View, c: CustomDataImport, p: ImportScriptPreview, i: ImportScriptInputValue[]) => Observable<ImportScriptJobSubmissionResult>;
+export type CustomImportSubmitFn =
+    (v: View, c: CustomDataImport, p: ImportScriptPreview, i: ImportScriptInputValue[]) => Observable<ImportScriptJobSubmissionResult>;
 
 @Component({
     selector: 'app-custom-import-wizard',
@@ -26,7 +27,7 @@ export class CustomImportWizardComponent implements OnInit {
 
     @Input() customDataImports: CustomDataImport[];
     @Input() customInputFormValidateFn: CustomImportValidateFn;
-    @Input() customImportPreviewFn: CustomImportPreviewFn
+    @Input() customImportPreviewFn: CustomImportPreviewFn;
     @Input() customImportSubmitFn: CustomImportSubmitFn;
 
     step1Ready: boolean;
@@ -56,28 +57,28 @@ export class CustomImportWizardComponent implements OnInit {
         this.step1Ready = true;
         this.formControlCustomDataImport = formBuilder.control('', [Validators.required]);
         this.firstStepFormGroup = formBuilder.group({
-            'customDataImport': this.formControlCustomDataImport
+            customDataImport: this.formControlCustomDataImport
         });
 
         // second step
         this.step2Ready = false;
         this.formControlView = formBuilder.control('', [Validators.required]);
         this.secondStepFormGroup = formBuilder.group({
-            'view': this.formControlView
+            view: this.formControlView
         });
 
         // third step
         this.step3Ready = false;
         this.formControlCustomImportInputValues = formBuilder.control('', [Validators.required]);
         this.thirdStepFormGroup = formBuilder.group({
-            'customImportInputValues':  this.formControlCustomImportInputValues
+            customImportInputValues:  this.formControlCustomImportInputValues
         });
 
         // fourth step
         this.step4Ready = false;
         this.formControlCustomImportPreview = formBuilder.control('', [Validators.required]);
         this.fourthStepFormGroup = formBuilder.group({
-            'preview': this.formControlCustomImportPreview
+            preview: this.formControlCustomImportPreview
         });
 
         // fifth step

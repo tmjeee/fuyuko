@@ -1,11 +1,9 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {validateMiddlewareFn} from "./common-middleware";
+import {NextFunction, Request, Response, Router} from 'express';
+import {validateMiddlewareFn} from './common-middleware';
 import {check} from 'express-validator';
-import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
-import {Registry} from "../../registry";
-import {BinaryContent} from "../../model/binary-content.model";
-import {getUserAvatarContent} from "../../service/user.service";
+import {Registry} from '../../registry';
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
+import {getUserAvatarContent} from '../../service';
 
 // CHECKED
 

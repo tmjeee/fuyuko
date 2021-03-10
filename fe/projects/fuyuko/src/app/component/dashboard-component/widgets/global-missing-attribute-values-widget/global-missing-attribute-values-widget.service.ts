@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import config from "../../../../utils/config.util";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {Reporting_ItemsWithMissingAttributeInfo} from "../../../../model/reporting.model";
-import {ApiResponse} from "../../../../model/api-response.model";
-import {map, take} from "rxjs/operators";
+import {Injectable} from '@angular/core';
+import config from '../../../../utils/config.util';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {Reporting_ItemsWithMissingAttributeInfo} from '@fuyuko-common/model/reporting.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {map, take} from 'rxjs/operators';
 
 const URL_GET_MISSING_ATTRIBUTE_VALUES = () => `${config().api_host_url}/reporting/missing-attribute-values`;
 

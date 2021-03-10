@@ -1,11 +1,11 @@
-import {Registry} from "../../registry";
-import {Router, NextFunction, Request, Response} from "express";
-import { param } from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {PricingStructure} from "../../model/pricing-structure.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {getPricingStructuresByView} from "../../service/pricing-structure.service";
+import {Registry} from '../../registry';
+import {Router, NextFunction, Request, Response} from 'express';
+import { param } from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getPricingStructuresByView} from '../../service';
 
 const httpAction: any[] = [
     [

@@ -1,9 +1,9 @@
-import {Component, OnInit} from "@angular/core";
-import {CategoryService} from "../../service/category-service/category.service";
-import {ViewService} from "../../service/view-service/view.service";
-import {combineAll, delay, finalize, map, tap} from "rxjs/operators";
-import {View} from "../../model/view.model";
-import {CategoryWithItems} from "../../model/category.model";
+import {Component, OnInit} from '@angular/core';
+import {CategoryService} from '../../service/category-service/category.service';
+import {ViewService} from '../../service/view-service/view.service';
+import {finalize, map, tap} from 'rxjs/operators';
+import {View} from '@fuyuko-common/model/view.model';
+import {CategoryWithItems} from '@fuyuko-common/model/category.model';
 import {
     AddFavouriteItemsFn,
     DeleteItemImageFn,
@@ -16,22 +16,21 @@ import {
     SaveItemInfoFn,
     SaveOrUpdateTableItemsFn,
     UploadItemImageFn
-} from "../../component/category-component/category.component";
-import {Attribute} from "../../model/attribute.model";
-import {forkJoin, Observable, of} from "rxjs";
-import {AttributeService} from "../../service/attribute-service/attribute.service";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
-import {Item, TableItem} from "../../model/item.model";
-import {ItemService} from "../../service/item-service/item.service";
-import {CarouselItemImage} from "../../component/carousel-component/carousel.component";
-import {Type} from "../../component/data-editor-component/item-editor.component";
-import {ItemValueAndAttribute} from "../../model/item-attribute.model";
-import {toNotifications} from "../../service/common.service";
-import {NotificationsService} from "angular2-notifications";
-import {Pagination} from "../../utils/pagination.utils";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {LoadingService} from "../../service/loading-service/loading.service";
-import {AuthService} from "../../service/auth-service/auth.service";
+} from '../../component/category-component/category.component';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {forkJoin, Observable} from 'rxjs';
+import {AttributeService} from '../../service/attribute-service/attribute.service';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Item, TableItem} from '@fuyuko-common/model/item.model';
+import {ItemService} from '../../service/item-service/item.service';
+import {CarouselItemImage} from '../../component/carousel-component/carousel.component';
+import {Type} from '../../component/data-editor-component/item-editor.component';
+import {ItemValueAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {LoadingService} from '../../service/loading-service/loading.service';
+import {AuthService} from '../../service/auth-service/auth.service';
 
 @Component({
     templateUrl: './category.page.html',
@@ -125,7 +124,7 @@ export class CategoryPageComponent implements OnInit {
             );
         };
         this.saveOrUpdateTableItemsFn = (modifiedTableItems: TableItem[], deletedTableItems: TableItem[]) => {
-            const streams:Observable<ApiResponse>[] = [];
+            const streams: Observable<ApiResponse>[] = [];
             if (modifiedTableItems && modifiedTableItems.length) {
                 streams.push(this.itemService.saveTableItems(this.view.id, modifiedTableItems));
             }
@@ -143,7 +142,7 @@ export class CategoryPageComponent implements OnInit {
                 tap((r: ApiResponse) => {
                     toNotifications(this.notificationsService, r);
                 })
-            )
+            );
         };
 
         this.viewService.asObserver().pipe(

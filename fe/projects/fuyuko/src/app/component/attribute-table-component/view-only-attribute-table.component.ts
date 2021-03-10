@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 export class InternalDataSource extends DataSource<Attribute> {

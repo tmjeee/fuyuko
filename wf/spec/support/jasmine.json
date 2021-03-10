@@ -1,5 +1,5 @@
 {
-  "spec_dir": "spec",
+  "spec_dir": "dist/spec",
   "spec_files": [
     "**/*[sS]pec.js"
   ],
@@ -7,5 +7,5 @@
     "helpers/**/*.js"
   ],
   "stopSpecOnExpectationFailure": false,
-  "random": true
+  "random": false
 }

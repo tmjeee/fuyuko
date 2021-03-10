@@ -1,4 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
 import {
     addOrUpdateRules,
     getAttributeInViewByName,
@@ -6,12 +6,11 @@ import {
     getRules,
     getViewByName,
     updateRuleStatus
-} from "../../src/service";
-import {View} from "../../src/model/view.model";
-import {Rule, ValidateClause, WhenClause} from "../../src/model/rule.model";
-import {Attribute} from "../../src/model/attribute.model";
-import {NumberValue, StringValue} from "../../src/model/item.model";
-import * as util from "util";
+} from '../../src/service';
+import {View} from '@fuyuko-common/model/view.model';
+import {Rule, ValidateClause, WhenClause} from '@fuyuko-common/model/rule.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {NumberValue, StringValue} from '@fuyuko-common/model/item.model';
 
 
 describe('rule.service', () => {
