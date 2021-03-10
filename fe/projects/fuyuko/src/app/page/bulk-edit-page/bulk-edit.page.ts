@@ -1,24 +1,24 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ViewService} from '../../service/view-service/view.service';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {finalize, map, tap} from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 import {Observable, Subscription} from 'rxjs';
-import {PaginableApiResponse} from "../../model/api-response.model";
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {
     BulkEditWizardComponentEvent,
     GetJobLogsFn,
     GetPreviewFn, ScheduleBulkEditJobFn
-} from "../../component/bulk-edit-wizard-component/bulk-edit-wizard.component";
-import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import {BulkEditPackage} from "../../model/bulk-edit.model";
-import {JobAndLogs} from "../../model/job.model";
-import {JobsService} from "../../service/jobs-service/jobs.service";
-import {BulkEditService} from "../../service/bulk-edit-service/bulk-edit.service";
-import {NotificationsService} from "angular2-notifications";
-import {LoadingService} from "../../service/loading-service/loading.service";
+} from '../../component/bulk-edit-wizard-component/bulk-edit-wizard.component';
+import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
+import {JobAndLogs} from '@fuyuko-common/model/job.model';
+import {JobsService} from '../../service/jobs-service/jobs.service';
+import {BulkEditService} from '../../service/bulk-edit-service/bulk-edit.service';
+import {NotificationsService} from 'angular2-notifications';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({
@@ -106,8 +106,8 @@ export class BulkEditPageComponent implements OnInit, OnDestroy {
     }
 
     onBulkEditWizardEvent($event: BulkEditWizardComponentEvent) {
-      switch($event.type) {
-          case "error": {
+      switch ($event.type) {
+          case 'error': {
               this.notificationsService.error('Error', $event.message);
               break;
           }

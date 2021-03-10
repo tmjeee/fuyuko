@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Rule} from '../../model/rule.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
 import { MatDialog} from '@angular/material/dialog';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 
 export interface RulesTableComponentEvent {
   type: 'add' | 'edit' | 'delete' | 'enable' | 'disable' ;

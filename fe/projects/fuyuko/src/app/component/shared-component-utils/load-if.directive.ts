@@ -1,7 +1,7 @@
-import {Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef} from "@angular/core";
-import {Subscription} from "rxjs";
-import {tap} from "rxjs/operators";
-import {GlobalCommunicationService} from "../../service/global-communication-service/global-communication.service";
+import {Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {tap} from 'rxjs/operators';
+import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
 
 
 /**
@@ -13,6 +13,7 @@ import {GlobalCommunicationService} from "../../service/global-communication-ser
  */
 
 @Directive({
+    // tslint:disable-next-line:directive-selector
     selector: '[loadIf]'
 })
 export class LoadIfDirective implements OnInit, OnDestroy {

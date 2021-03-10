@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Workflow, WorkflowDefinition, WorkflowInstanceAction, WorkflowInstanceType} from '../../model/workflow.model';
+import {Workflow, WorkflowDefinition, WorkflowInstanceAction, WorkflowInstanceType} from '@fuyuko-common/model/workflow.model';
 import config from '../../utils/config.util';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 
 const URL_ALL_WORKFLOW_DEFINITIONS = () => `${config().api_host_url}/workflow/definitions`;
 const URL_CREATE_WORKFLOW = () => `${config().api_host_url}/workflow/workflow`;

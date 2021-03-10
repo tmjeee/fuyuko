@@ -1,4 +1,4 @@
-import {Attribute} from '../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {
   AreaValue, CurrencyValue,
   DateValue, DimensionValue, DoubleSelectValue, HeightValue,
@@ -9,7 +9,7 @@ import {
   StringValue,
   TextValue,
   VolumeValue, WidthValue, Value
-} from '../model/item.model';
+} from '@fuyuko-common/model/item.model';
 
 export const hasItemValues = (attribute: Attribute, values: Value[]): boolean => {
   let b = true;
@@ -17,7 +17,7 @@ export const hasItemValues = (attribute: Attribute, values: Value[]): boolean =>
     b = b && hasItemValue(attribute, value);
   }
   return b;
-}
+};
 
 
 export const hasItemValue = (attribute: Attribute, value: Value): boolean => {

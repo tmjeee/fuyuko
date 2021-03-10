@@ -1,4 +1,3 @@
-import {LoginPageComponent} from '../login-page/login.page';
 import {Component} from '@angular/core';
 
 

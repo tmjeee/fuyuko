@@ -3,14 +3,15 @@ import {Subscription} from 'rxjs';
 import {AppNotificationService} from '../service/app-notification-service/app-notification.service';
 import {ActivatedRoute, ActivatedRouteSnapshot, Router, Event as REvent, NavigationEnd} from '@angular/router';
 import {filter, finalize, map, tap} from 'rxjs/operators';
-import {AppNotification} from '../model/notification.model';
+import {AppNotification} from '@fuyuko-common/model/notification.model';
 import {AuthService} from '../service/auth-service/auth.service';
-import {User} from '../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {SettingsService} from '../service/settings-service/settings.service';
-import {Settings} from '../model/settings.model';
-import {LoadingService} from "../service/loading-service/loading.service";
+import {Settings} from '@fuyuko-common/model/settings.model';
+import {LoadingService} from '../service/loading-service/loading.service';
 
 @Directive()
+// tslint:disable-next-line:directive-class-suffix
 export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
 
   loading: boolean;

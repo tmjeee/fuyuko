@@ -1,12 +1,12 @@
-import {Injectable} from "@angular/core";
-import {Observable, of} from "rxjs";
-import {CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
-import config from "../../utils/config.util";
-import {HttpClient} from "@angular/common/http";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
-import {combineAll, flatMap, map, reduce, tap} from "rxjs/operators";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {toQuery} from "../../utils/pagination.utils";
+import {Injectable} from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {CategorySimpleItem, CategoryWithItems} from '@fuyuko-common/model/category.model';
+import config from '../../utils/config.util';
+import {HttpClient} from '@angular/common/http';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {combineAll, map, reduce, tap} from 'rxjs/operators';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {toQuery} from '../../utils/pagination.utils';
 
 const URL_GET_CATEGORIES_WITH_ITEMS = () => `${config().api_host_url}/view/:viewId/categories-with-items`;
 const URL_GET_CATEGORY_ITEMS_IN_CATEGORY =  (limitOffset?: LimitOffset) => `${config().api_host_url}/view/:viewId/category/:categoryId/category-simple-items-in-category?${toQuery(limitOffset)}`;
@@ -30,7 +30,7 @@ export class CategoryService {
                 .replace(':viewId', String(viewId))
                 .replace(':categoryId', String(categoryId))
                 .replace(':parentId', parentId ? String(parentId) : 'null'), {}
-        )
+        );
     }
 
     getCategoriesWithItems(viewId: number): Observable<CategoryWithItems[]> {
@@ -43,14 +43,16 @@ export class CategoryService {
             );
     }
 
-    getCategorySimpleItemsInCategory(viewId: number, categoryId: number, limitOffset?: LimitOffset): Observable<PaginableApiResponse<CategorySimpleItem[]>> {
+    getCategorySimpleItemsInCategory(viewId: number, categoryId: number, limitOffset?: LimitOffset):
+        Observable<PaginableApiResponse<CategorySimpleItem[]>> {
         return this.httpClient.get<PaginableApiResponse<CategorySimpleItem[]>>(
             URL_GET_CATEGORY_ITEMS_IN_CATEGORY(limitOffset)
                 .replace(':viewId', String(viewId))
                 .replace(':categoryId', String(categoryId)));
     }
 
-    getCategorySimpleItemsNotInCategory(viewId: number, categoryId: number, limitOffset?: LimitOffset): Observable<PaginableApiResponse<CategorySimpleItem[]>> {
+    getCategorySimpleItemsNotInCategory(viewId: number, categoryId: number, limitOffset?: LimitOffset):
+        Observable<PaginableApiResponse<CategorySimpleItem[]>> {
         return this.httpClient.get<PaginableApiResponse<CategorySimpleItem[]>>(
             URL_GET_CATEGORY_ITEMS_NOT_IN_CATEGORY(limitOffset)
                 .replace(':viewId', String(viewId))
@@ -66,7 +68,7 @@ export class CategoryService {
                 parentId: parentCategoryId
             });
     }
-    
+
     deleteCategory(viewId: number, categoryId: number): Observable<ApiResponse> {
         return this.httpClient.delete<ApiResponse>(
             URL_DELETE_CATEGORY()
@@ -74,7 +76,8 @@ export class CategoryService {
                 .replace(':categoryId', String(categoryId)));
     }
 
-    updateCategory(viewId: number, parentCategoryId: number, categoryId: number, name: string, description: string): Observable<ApiResponse> {
+    updateCategory(viewId: number, parentCategoryId: number, categoryId: number, name: string, description: string):
+        Observable<ApiResponse> {
         return this.httpClient.post<ApiResponse>(
             URL_POST_UPDATE_CATEGORY()
                 .replace(':viewId', String(viewId)), {
@@ -85,7 +88,7 @@ export class CategoryService {
     }
 
     addItemsToCategory(viewId: number, categoryId: number, items: CategorySimpleItem[]): Observable<ApiResponse> {
-        const q:Observable<ApiResponse>[] = items.map((i: CategorySimpleItem) => 
+        const q: Observable<ApiResponse>[] = items.map((i: CategorySimpleItem) =>
             this.httpClient.post<ApiResponse>(URL_POST_ADD_ITEM_TO_CATEGORY()
                 .replace(':viewId', String(viewId))
                 .replace(':categoryId', String(categoryId))
@@ -95,8 +98,8 @@ export class CategoryService {
             reduce((a: ApiResponse, i: ApiResponse[]) => {
                 for (const b of i) {
                     if (b.status !== 'SUCCESS') {
-                        a.status = a.status != 'ERROR' ? b.status : a.status;
-                        a.message = a.message + ', ' + b.message
+                        a.status = a.status !== 'ERROR' ? b.status : a.status;
+                        a.message = a.message + ', ' + b.message;
                     }
                 }
                 return a;
@@ -108,7 +111,7 @@ export class CategoryService {
     }
 
     removeItemsFromCategory(viewId: number, categoryId: number, items: CategorySimpleItem[]): Observable<ApiResponse> {
-        const q:Observable<ApiResponse>[] = items.map((i: CategorySimpleItem) =>
+        const q: Observable<ApiResponse>[] = items.map((i: CategorySimpleItem) =>
             this.httpClient.delete<ApiResponse>(URL_POST_REMOVE_ITEM_FROM_CATEGORY()
                 .replace(':viewId', String(viewId))
                 .replace(':categoryId', String(categoryId))
@@ -118,8 +121,8 @@ export class CategoryService {
             reduce((a: ApiResponse, i: ApiResponse[]) => {
                 for (const b of i) {
                     if (b.status !== 'SUCCESS') {
-                        a.status = a.status != 'ERROR' ? b.status : a.status;
-                        a.message = a.message + ', ' + b.message
+                        a.status = a.status !== 'ERROR' ? b.status : a.status;
+                        a.message = a.message + ', ' + b.message;
                     }
                 }
                 return a;

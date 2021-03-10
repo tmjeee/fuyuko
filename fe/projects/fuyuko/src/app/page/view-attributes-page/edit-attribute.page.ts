@@ -1,19 +1,19 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {FormBuilder} from '@angular/forms';
-import {finalize, map, mergeMap, switchMap, tap} from 'rxjs/operators';
-import {View} from '../../model/view.model';
+import {finalize, map, switchMap, tap} from 'rxjs/operators';
+import {View} from '@fuyuko-common/model/view.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {combineLatest, of, Subscription} from 'rxjs';
+import {of, Subscription} from 'rxjs';
 import {ViewService} from '../../service/view-service/view.service';
 import {NotificationsService} from 'angular2-notifications';
 import {EditAttributeComponentEvent} from '../../component/attribute-table-component/edit-attribute.component';
-import {ApiResponse} from "../../model/api-response.model";
-import {toNotifications} from "../../service/common.service";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toNotifications} from '../../service/common.service';
+import {LoadingService} from '../../service/loading-service/loading.service';
 import {WorkflowService} from '../../service/workflow-service/workflow.service';
-import {Workflow} from '../../model/workflow.model';
+import {Workflow} from '@fuyuko-common/model/workflow.model';
 
 @Component({
     templateUrl: './edit-attribute.page.html',

@@ -3,14 +3,14 @@ import {ValidationService} from '../../service/validation-service/validation.ser
 import {ViewService} from '../../service/view-service/view.service';
 import {Subscription, throwError} from 'rxjs';
 import {catchError, finalize, tap} from 'rxjs/operators';
-import {View} from '../../model/view.model';
-import {Validation} from '../../model/validation.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {Validation} from '@fuyuko-common/model/validation.model';
 import {NotificationsService} from 'angular2-notifications';
 import {ValidationRunComponentEvent} from '../../component/validation-result-component/validation-run.component';
 import {ValidationResultListingComponentEvent} from '../../component/validation-result-component/validation-result-listing.component';
-import {ApiResponse, ScheduleValidationResponse} from "../../model/api-response.model";
-import {toNotifications} from "../../service/common.service";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {ApiResponse, ScheduleValidationResponse} from '@fuyuko-common/model/api-response.model';
+import {toNotifications} from '../../service/common.service';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
     templateUrl: './view-validation.page.html',

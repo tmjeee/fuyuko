@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import config from "../../utils/config.util";
-import {Observable} from "rxjs";
-import {DataExportArtifact} from "../../model/data-export.model";
-import {HttpClient} from "@angular/common/http";
-import {ApiResponse} from "../../model/api-response.model";
-import {map} from "rxjs/operators";
+import {Injectable} from '@angular/core';
+import config from '../../utils/config.util';
+import {Observable} from 'rxjs';
+import {DataExportArtifact} from '@fuyuko-common/model/data-export.model';
+import {HttpClient} from '@angular/common/http';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {map} from 'rxjs/operators';
 
 
 const URL_EXPORT_ARTIRACTS = () => `${config().api_host_url}/data-export-artifacts`;

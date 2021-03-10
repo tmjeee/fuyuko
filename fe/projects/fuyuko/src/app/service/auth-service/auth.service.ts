@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {User} from '../../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {ThemeService} from '../theme-service/theme.service';
 import {HttpClient} from '@angular/common/http';
 
 import config from '../../utils/config.util';
-import {delay, map, tap} from 'rxjs/operators';
-import {BrowserLocationHistoryService} from "../browser-location-history-service/browser-location-history.service";
-import {ApiResponse, LoginResponse} from "../../model/api-response.model";
+import {map, tap} from 'rxjs/operators';
+import {BrowserLocationHistoryService} from '../browser-location-history-service/browser-location-history.service';
+import {ApiResponse, LoginResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const URL_LOGIN = () => `${config().api_host_url}/login`;

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Router, Event, NavigationError} from '@angular/router';
-import {map, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 
 
 @Injectable()

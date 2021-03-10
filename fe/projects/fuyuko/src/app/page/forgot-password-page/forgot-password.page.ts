@@ -1,11 +1,10 @@
-import {Component} from "@angular/core";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {MatTabChangeEvent} from "@angular/material/tabs";
-import {AuthService} from "../../service/auth-service/auth.service";
-import {ApiResponse} from "../../model/api-response.model";
-import {tap} from "rxjs/operators";
-import {toNotifications} from "../../service/common.service";
-import {NotificationsService} from "angular2-notifications";
+import {Component} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AuthService} from '../../service/auth-service/auth.service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {tap} from 'rxjs/operators';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
     templateUrl: './forgot-password.page.html',
@@ -36,7 +35,7 @@ export class ForgotPasswordPageComponent {
             tap((r: ApiResponse) => {
                 toNotifications(this.notificationsService, r);
             })
-        ).subscribe()
+        ).subscribe();
     }
 
     onSubmitByUsername() {
@@ -44,6 +43,6 @@ export class ForgotPasswordPageComponent {
             tap((r: ApiResponse) => {
                 toNotifications(this.notificationsService, r);
             })
-        ).subscribe()
+        ).subscribe();
     }
 }

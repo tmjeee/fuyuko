@@ -70,7 +70,7 @@ import {WorkflowDefinitionListingPageComponent} from './page/workflow-definition
 import {WorkflowTaskPageComponent} from './page/workflow-task-page/workflow-task.page';
 import {WorkflowInstanceDetailsPageComponent} from './page/workflow-instance-details-page/workflow-instance-details.page';
 import {WorkflowHelpPageComponent} from './page/workflow-help-page/workflow-help.page';
-import {WorkflowListingPageComponent} from "./page/workflow-listing-page/workflow-listing.page";
+import {WorkflowListingPageComponent} from './page/workflow-listing-page/workflow-listing.page';
 
 const routes: Routes = [
 

@@ -1,6 +1,6 @@
-import {Component} from "@angular/core";
-import {HelpService} from "../../service/help.service/help.service";
-import {tap} from "rxjs/operators";
+import {Component} from '@angular/core';
+import {HelpService} from '../../service/help.service/help.service';
+import {tap} from 'rxjs/operators';
 
 
 const HELP_POSTFIX = `HELP_WORKFLOW.md`;
@@ -11,7 +11,7 @@ const HELP_POSTFIX = `HELP_WORKFLOW.md`;
 })
 export class WorkflowHelpPageComponent {
 
-   help: string = '';
+   help = '';
 
    constructor(private helpService: HelpService) {
    }

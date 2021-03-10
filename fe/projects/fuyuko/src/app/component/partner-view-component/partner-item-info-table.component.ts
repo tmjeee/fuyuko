@@ -1,7 +1,7 @@
-import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from "@angular/core";
-import {CollectionViewer, DataSource} from "@angular/cdk/collections";
-import {BehaviorSubject, Observable} from "rxjs";
-import {PricedItem, TablePricedItem} from "../../model/item.model";
+import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {PricedItem, TablePricedItem} from '@fuyuko-common/model/item.model';
 
 export type InternalDataSourceEntryType = {key: string, value: string | number, type: 'string' | 'number' | 'price'};
 

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {Rule} from '../../model/rule.model';
+import {Observable} from 'rxjs';
+import {Rule} from '@fuyuko-common/model/rule.model';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import config from '../../utils/config.util';
-import {map} from "rxjs/operators";
+import {map} from 'rxjs/operators';
 
 
 const URL_GET_ALL_RULES_BY_VIEW = () => `${config().api_host_url}/view/:viewId/rules`;

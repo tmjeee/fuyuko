@@ -3,9 +3,9 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
-import {ApiErrorContext, isApiError, isApiErrorContext} from '../model/api-error.model';
+import {isApiErrorContext} from '@fuyuko-common/model/api-error.model';
 import {GlobalCommunicationService} from '../service/global-communication-service/global-communication.service';
-import {ApiResponse} from '../model/api-response.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {AuthService, isUnauthorizationFailedRedirectable} from '../service/auth-service/auth.service';
 import {LoadingService} from '../service/loading-service/loading.service';
 

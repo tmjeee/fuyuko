@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {PricingStructure} from '../../model/pricing-structure.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {PricedItem} from '../../model/item.model';
-import {ApiResponse} from "../../model/api-response.model";
-import {map} from "rxjs/operators";
+import {PricedItem} from '@fuyuko-common/model/item.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {map} from 'rxjs/operators';
 
 const URL_PARTNER_PRICING_STRUCTURES = () => `${config().api_host_url}/user/:userId/partner-pricing-structures`;
 const URL_PARTNER_PRICE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/pricedItems`;

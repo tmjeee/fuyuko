@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {Job, JobAndLogs, JobLog} from '../../model/job.model';
+import {Job, JobAndLogs} from '@fuyuko-common/model/job.model';
 import {Observable} from 'rxjs';
 import {JobsService} from '../../service/jobs-service/jobs.service';
-import {finalize, map, tap} from 'rxjs/operators';
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {finalize, map} from 'rxjs/operators';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
     templateUrl: './jobs.page.html',

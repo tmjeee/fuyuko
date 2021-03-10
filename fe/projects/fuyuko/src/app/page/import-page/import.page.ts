@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ImportDataService} from '../../service/import-data-service/import-data.service';
 import {ViewService} from '../../service/view-service/view.service';
 import {finalize, tap} from 'rxjs/operators';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {
     ShowPreviewFn,
     SubmitDataImportFn,
@@ -11,8 +11,8 @@ import {
     AttributeDataImport, DataImportType,
     ItemDataImport,
     PriceDataImport,
-} from '../../model/data-import.model';
-import {LoadingService} from "../../service/loading-service/loading.service";
+} from '@fuyuko-common/model/data-import.model';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

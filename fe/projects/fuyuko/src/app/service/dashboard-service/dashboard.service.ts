@@ -3,14 +3,14 @@ import {
     DashboardStrategy,
     DashboardWidgetInfo,
 } from '../../component/dashboard-component/dashboard.model';
-import {User} from '../../model/user.model';
-import {Observable, of} from 'rxjs';
+import {User} from '@fuyuko-common/model/user.model';
+import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
 import {map} from 'rxjs/operators';
 import {DASHBOARD_STRATEGIES} from '../../component/dashboard-component/strategies';
 import {DASHBOARD_WIDGET_INFOS} from '../../component/dashboard-component/widgets';
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const URL_GET_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard`;
 const URL_SAVE_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard/save`;

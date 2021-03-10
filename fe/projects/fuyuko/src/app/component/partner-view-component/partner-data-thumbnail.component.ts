@@ -1,9 +1,9 @@
 import {Component, Input, ViewChild} from '@angular/core';
-import {Attribute} from '../../model/attribute.model';
-import {Item, ItemImage, PricedItem} from '../../model/item.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {Item, ItemImage, PricedItem} from '@fuyuko-common/model/item.model';
 import config from '../../utils/config.util';
 import {MatSidenav} from '@angular/material/sidenav';
-import {CarouselItemImage} from "../carousel-component/carousel.component";
+import {CarouselItemImage} from '../carousel-component/carousel.component';
 
 
 const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;

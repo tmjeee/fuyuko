@@ -1,22 +1,22 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ItemAndAttributeSet} from '../../model/item-attribute.model';
-import {View} from '../../model/view.model';
+import {ItemAndAttributeSet} from '@fuyuko-common/model/item-attribute.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {Subscription, combineLatest} from 'rxjs';
 import {DataListComponentEvent, DataListSearchComponentEvent} from '../../component/data-list-component/data-list.component';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ViewService} from '../../service/view-service/view.service';
 import {ItemService} from '../../service/item-service/item.service';
-import {Item, ItemSearchType} from '../../model/item.model';
+import {Item, ItemSearchType} from '@fuyuko-common/model/item.model';
 import {finalize, map, tap} from 'rxjs/operators';
-import {Attribute} from '../../model/attribute.model';
-import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
-import {Pagination} from "../../utils/pagination.utils";
-import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
-import {LoadingService} from "../../service/loading-service/loading.service";
-import {FormBuilder, FormControl} from "@angular/forms";
-import {AuthService} from "../../service/auth-service/auth.service";
+import {Pagination} from '../../utils/pagination.utils';
+import {PaginationComponentEvent} from '../../component/pagination-component/pagination.component';
+import {LoadingService} from '../../service/loading-service/loading.service';
+import {FormBuilder, FormControl} from '@angular/forms';
+import {AuthService} from '../../service/auth-service/auth.service';
 
 export type DataListTypes = 'ALL' | 'FAVOURITE';
 

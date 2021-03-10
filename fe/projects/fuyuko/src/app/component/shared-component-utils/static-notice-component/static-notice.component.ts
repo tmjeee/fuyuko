@@ -1,5 +1,4 @@
 import {Component, Input} from '@angular/core';
-import {Level} from '../../../model/level.model';
 
 /**
  * Usage:

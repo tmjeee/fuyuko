@@ -1,17 +1,17 @@
-import {Component, OnInit} from "@angular/core";
-import {FormBuilder} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {ViewService} from "../../service/view-service/view.service";
-import {NotificationsService} from "angular2-notifications";
-import {AttributeService} from "../../service/attribute-service/attribute.service";
-import {finalize, map, tap} from "rxjs/operators";
-import {View} from "../../model/view.model";
-import {Subscription} from "rxjs";
-import {Attribute} from "../../model/attribute.model";
-import {EditAttributeComponentEvent} from "../../component/attribute-table-component/edit-attribute.component";
-import {ApiResponse} from "../../model/api-response.model";
-import {toNotifications} from "../../service/common.service";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ViewService} from '../../service/view-service/view.service';
+import {NotificationsService} from 'angular2-notifications';
+import {AttributeService} from '../../service/attribute-service/attribute.service';
+import {finalize, map, tap} from 'rxjs/operators';
+import {View} from '@fuyuko-common/model/view.model';
+import {Subscription} from 'rxjs';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {EditAttributeComponentEvent} from '../../component/attribute-table-component/edit-attribute.component';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toNotifications} from '../../service/common.service';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

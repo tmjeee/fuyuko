@@ -1,7 +1,7 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Group} from '../../model/group.model';
+import {Group} from '@fuyuko-common/model/group.model';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipEvent, MatChipList, MatChipListChange } from '@angular/material/chips';
+import { MatChipEvent, MatChipList} from '@angular/material/chips';
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {filter, startWith, switchMap} from 'rxjs/operators';

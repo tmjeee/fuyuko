@@ -8,14 +8,12 @@ import {WorkflowService} from '../../service/workflow-service/workflow.service';
 import {NotificationsService} from 'angular2-notifications';
 import {finalize, map, tap} from 'rxjs/operators';
 import {toNotifications} from '../../service/common.service';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {ViewService} from '../../service/view-service/view.service';
-import {combineLatest, concat, merge} from 'rxjs';
-import {WorkflowDefinition} from '../../model/workflow.model';
+import {combineLatest} from 'rxjs';
+import {WorkflowDefinition} from '@fuyuko-common/model/workflow.model';
 import {LoadingService} from '../../service/loading-service/loading.service';
-import {Attribute} from '../../model/attribute.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
-import {toLimitOffset} from '../../../../../../../be/src/util/utils';
 
 
 @Component({

@@ -1,14 +1,14 @@
 import {Component, Inject} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {
     WORKFLOW_INSTANCE_ACTION,
     WORKFLOW_INSTANCE_TYPE,
     WorkflowDefinition,
     WorkflowInstanceAction, WorkflowInstanceType
-} from '../../model/workflow.model';
+} from '@fuyuko-common/model/workflow.model';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {GetAttributesByViewFn} from './workflow.component';
 import {MatSelectChange} from '@angular/material/select';

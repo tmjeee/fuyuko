@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {WorkflowDefinition} from '../../model/workflow.model';
+import {WorkflowDefinition} from '@fuyuko-common/model/workflow.model';
 import {WorkflowService} from '../../service/workflow-service/workflow.service';
 import {finalize, tap} from 'rxjs/operators';
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

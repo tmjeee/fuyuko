@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CustomRule, CustomRuleForView} from '../../model/custom-rule.model';
+import {CustomRule, CustomRuleForView} from '@fuyuko-common/model/custom-rule.model';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
 export interface CustomRuleTableComponentEvent {

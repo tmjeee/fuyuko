@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {View} from '../../model/view.model';
-import {Observable, of} from 'rxjs';
-import {Attribute} from '../../model/attribute.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {Observable} from 'rxjs';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
-import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
-import {LimitOffset} from '../../model/limit-offset.model';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toQuery} from '../../utils/pagination.utils';
 
 const URL_ALL_ATTRIBUTES_BY_VIEW = (limitOffset: LimitOffset) => `${config().api_host_url}/attributes/view/:viewId?${toQuery(limitOffset)}`;

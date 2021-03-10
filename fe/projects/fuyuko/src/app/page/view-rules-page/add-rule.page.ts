@@ -1,11 +1,11 @@
-import {ViewService} from "../../service/view-service/view.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AttributeService} from "../../service/attribute-service/attribute.service";
-import {NotificationsService} from "angular2-notifications";
-import {RuleService} from "../../service/rule-service/rule.service";
-import {Component} from "@angular/core";
-import {AbstractRulePageComponent} from "./abstract-rule.page";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {ViewService} from '../../service/view-service/view.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AttributeService} from '../../service/attribute-service/attribute.service';
+import {NotificationsService} from 'angular2-notifications';
+import {RuleService} from '../../service/rule-service/rule.service';
+import {Component} from '@angular/core';
+import {AbstractRulePageComponent} from './abstract-rule.page';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

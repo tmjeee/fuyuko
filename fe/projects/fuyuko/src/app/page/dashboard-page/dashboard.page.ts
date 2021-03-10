@@ -5,14 +5,14 @@ import {
     DashboardWidgetInfo,
 } from '../../component/dashboard-component/dashboard.model';
 import {AuthService} from '../../service/auth-service/auth.service';
-import {User} from '../../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {DashboardComponentEvent} from '../../component/dashboard-component/dashboard.component';
 import {finalize, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
-import {SerializedDashboardFormat} from '../../model/dashboard-serialzable.model';
-import {ApiResponse} from "../../model/api-response.model";
-import {toNotifications} from "../../service/common.service";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {SerializedDashboardFormat} from '@fuyuko-common/model/dashboard-serialzable.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toNotifications} from '../../service/common.service';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
   templateUrl: './dashboard.page.html',

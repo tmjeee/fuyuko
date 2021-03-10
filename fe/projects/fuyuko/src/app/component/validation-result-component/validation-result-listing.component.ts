@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Validation} from '../../model/validation.model';
+import {Validation} from '@fuyuko-common/model/validation.model';
 import {Router} from '@angular/router';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 
 export interface ValidationResultListingComponentEvent {
     type: 'delete';

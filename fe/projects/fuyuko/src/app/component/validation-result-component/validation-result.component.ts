@@ -1,15 +1,15 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TableItemAndAttributeSet} from '../../model/item-attribute.model';
-import {Item, TableItem} from '../../model/item.model';
-import {ValidationError, ValidationResult} from '../../model/validation.model';
-import {Rule} from '../../model/rule.model';
-import {View} from '../../model/view.model';
-import {Attribute} from '../../model/attribute.model';
+import {TableItemAndAttributeSet} from '@fuyuko-common/model/item-attribute.model';
+import {Item, TableItem} from '@fuyuko-common/model/item.model';
+import {ValidationError, ValidationResult} from '@fuyuko-common/model/validation.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {toTableItem} from '../../utils/item-to-table-items.util';
 import {ValidationResultTableComponentEvent} from './validation-result-table.component';
 import {ValidationResultTreeComponentEvent} from './validation-result-tree.component';
 import {BehaviorSubject} from 'rxjs';
-import {ValidationResultLogReloadFn} from "./validation-result-log.component";
+import {ValidationResultLogReloadFn} from './validation-result-log.component';
 
 @Component({
     selector: 'app-validation-result',

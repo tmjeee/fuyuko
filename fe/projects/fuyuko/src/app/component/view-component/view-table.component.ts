@@ -1,9 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer, SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {ViewService} from '../../service/view-service/view.service';
 import {tap} from 'rxjs/operators';
 import {ViewEditorComponentEvent} from './view-editor.component';
 import {ViewEditorDialogComponent} from './view-editor-dialog.component';

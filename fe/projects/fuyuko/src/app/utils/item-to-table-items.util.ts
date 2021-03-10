@@ -1,9 +1,9 @@
-import {Item, ItemImage, PricedItem, TableItem, TablePricedItem, Value} from '../model/item.model';
-import {BulkEditItem, BulkEditTableItem} from '../model/bulk-edit.model';
+import {Item, PricedItem, TableItem, TablePricedItem} from '@fuyuko-common/model/item.model';
+import {BulkEditItem, BulkEditTableItem} from '@fuyuko-common/model/bulk-edit.model';
 import {
   PricingStructureItemWithPrice,
   TablePricingStructureItemWithPrice
-} from '../model/pricing-structure.model';
+} from '@fuyuko-common/model/pricing-structure.model';
 
 ////// common
 export function copyAttrProperties(from: any, to: any) {

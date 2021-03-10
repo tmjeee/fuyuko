@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {HelpService} from "../../service/help.service/help.service";
-import {tap} from "rxjs/operators";
+import {Component, OnInit} from '@angular/core';
+import {HelpService} from '../../service/help.service/help.service';
+import {tap} from 'rxjs/operators';
 
 const HELP_POSTFIX = `HELP_IMPORT.md`;
 
@@ -8,9 +8,9 @@ const HELP_POSTFIX = `HELP_IMPORT.md`;
   templateUrl: './import-help.page.html',
   styleUrls: ['./import-help.page.scss']
 })
-export class ImportHelpPageComponent {
+export class ImportHelpPageComponent implements OnInit {
 
-  help: string = '';
+  help = '';
 
   constructor(private helpService: HelpService) {
   }

@@ -1,14 +1,12 @@
 import {Component, Input} from '@angular/core';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {MatSelectChange} from '@angular/material/select';
 import {MatDialog} from '@angular/material/dialog';
 import {WorkflowEditorDialogComponent, WorkflowEditorDialogComponentResult} from './workflow-editor-dialog.component';
 import {tap} from 'rxjs/operators';
-import {Workflow, WorkflowDefinition, WorkflowInstanceAction, WorkflowInstanceType} from '../../model/workflow.model';
-import {NotificationsService} from 'angular2-notifications';
+import {Workflow, WorkflowDefinition} from '@fuyuko-common/model/workflow.model';
 import {Observable} from 'rxjs';
-import {ApiResponse} from '../../model/api-response.model';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 
 export type CreateWorkflowFn = (r: WorkflowEditorDialogComponentResult) => void ;
 export type GetWorkflowsByViewFn = (view: View) => Observable<Workflow[]>;

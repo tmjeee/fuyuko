@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Settings} from '../../model/settings.model';
-import {User} from '../../model/user.model';
+import {Settings} from '@fuyuko-common/model/settings.model';
+import {User} from '@fuyuko-common/model/user.model';
 
 export interface SettingsComponentEvent {
     settings: Settings;

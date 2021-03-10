@@ -1,18 +1,18 @@
-import {Component, OnInit} from "@angular/core";
-import {View} from "../../model/view.model";
-import {finalize, tap} from "rxjs/operators";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {Component, OnInit} from '@angular/core';
+import {View} from '@fuyuko-common/model/view.model';
+import {finalize, tap} from 'rxjs/operators';
+import {LoadingService} from '../../service/loading-service/loading.service';
 import {
     CustomBulkEdit,
     CustomBulkEditScriptInputValue, CustomBulkEditScriptJobSubmissionResult,
     CustomBulkEditScriptPreview, CustomBulkEditScriptValidateResult
-} from "../../model/custom-bulk-edit.model";
+} from '@fuyuko-common/model/custom-bulk-edit.model';
 import {
     CustomBulkEditFormValidateFn,
     CustomBulkEditPreviewFn,
     CustomBulkEditSubmitFn
-} from "../../component/bulk-edit-wizard-component/custom-bulk-edit-wizard.component";
-import {CustomBulkEditService} from "../../service/custom-bulk-edit-service/custom-bulk-edit.service";
+} from '../../component/bulk-edit-wizard-component/custom-bulk-edit-wizard.component';
+import {CustomBulkEditService} from '../../service/custom-bulk-edit-service/custom-bulk-edit.service';
 
 @Component({
     templateUrl: './custom-bulk-edit.page.html',
@@ -51,13 +51,13 @@ export class CustomBulkEditPageComponent implements OnInit {
                     this.loadingService.stopLoading();
                 })
             );
-        }
+        };
     }
 
 
     ngOnInit(): void {
         this.ready = false;
-        this.loadingService.startLoading()
+        this.loadingService.startLoading();
         this.customBulkEditService.getAllCustomBulkEdits().pipe(
             tap((c: CustomBulkEdit[]) => {
                 this.customBulkEdits = c;

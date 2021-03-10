@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {ViewService} from '../../service/view-service/view.service';
 import {finalize, tap} from 'rxjs/operators';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {ViewTableComponentEvent} from '../../component/view-component/view-table.component';
-import {combineLatest, forkJoin} from 'rxjs';
+import {combineLatest} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

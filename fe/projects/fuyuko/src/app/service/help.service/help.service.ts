@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
-import config from "../../utils/config.util";
-import {Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import config from '../../utils/config.util';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 
 
 const URL_GET_HELP = () => `${config().api_host_url}/help/:helpPostfix`;

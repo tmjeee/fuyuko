@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ViewService} from '../../service/view-service/view.service';
 import {map} from 'rxjs/operators';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {Subscription} from 'rxjs';
 import {FormBuilder, FormControl} from '@angular/forms';
-import {MatSelectChange} from "@angular/material/select";
+import {MatSelectChange} from '@angular/material/select';
 
 
 @Component({

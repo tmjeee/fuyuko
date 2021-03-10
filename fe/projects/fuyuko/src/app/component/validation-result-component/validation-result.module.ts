@@ -13,7 +13,7 @@ import {ValidationResultTableComponent} from './validation-result-table.componen
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {ValidationRunComponent} from './validation-run.component';
 import {ValidationCreationDialogComponent} from './validation-creation-dialog.component';
-import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
+import {SharedComponentUtilsModule} from '../shared-component-utils/shared-component-utils.module';
 
 @NgModule({
    imports: [

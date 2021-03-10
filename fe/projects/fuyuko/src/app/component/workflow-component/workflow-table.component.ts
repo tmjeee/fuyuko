@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {Workflow} from '../../model/workflow.model';
+import {Workflow} from '@fuyuko-common/model/workflow.model';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer} from '@angular/cdk/collections';

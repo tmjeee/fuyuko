@@ -1,11 +1,11 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {TableItem, TablePricedItem, Value} from '../../model/item.model';
+import {TableItem, TablePricedItem, Value} from '@fuyuko-common/model/item.model';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Attribute} from '../../model/attribute.model';
-import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import {MatSidenav} from '@angular/material/sidenav';
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 export class DataTableDataSource extends DataSource<TablePricedItem> {
 

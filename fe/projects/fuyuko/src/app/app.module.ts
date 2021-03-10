@@ -68,7 +68,7 @@ import {GlobalErrorHandler} from './error-handler/global-error-handler.service';
 import {CarouselModule} from './component/carousel-component/carousel.module';
 import {ViewModule} from './component/view-component/view.module';
 import {BulkEditWizardModule} from './component/bulk-edit-wizard-component/bulk-edit-wizard.module';
-import {DATE_FORMAT, MAT_DATE_FORMAT} from './model/item.model';
+import {DATE_FORMAT, MAT_DATE_FORMAT} from '@fuyuko-common/model/item.model';
 import {BulkEditService} from './service/bulk-edit-service/bulk-edit.service';
 import {JobsPageComponent} from './page/jobs-page/jobs.page';
 import {JobsHelpPageComponent} from './page/jobs-help-page/jobs-help.page';
@@ -84,7 +84,7 @@ import {ExportDataService} from './service/export-data-service/export-data.servi
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {SettingsService} from './service/settings-service/settings.service';
 import {tap} from 'rxjs/operators';
-import {User} from './model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {SettingsModule} from './component/settings-component/settings.module';
 import {DashboardModule} from './component/dashboard-component/dashboard.module';
 import {DashboardService} from './service/dashboard-service/dashboard.service';
@@ -161,7 +161,7 @@ import {WorkflowHelpPageComponent} from './page/workflow-help-page/workflow-help
 import { HotToastModule } from '@ngneat/hot-toast';
 import {WorkflowListingPageComponent} from './page/workflow-listing-page/workflow-listing.page';
 import {WorkflowModule} from './component/workflow-component/workflow.module';
-import {WorkflowService} from "./service/workflow-service/workflow.service";
+import {WorkflowService} from './service/workflow-service/workflow.service';
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -184,7 +184,7 @@ const appInitializer = (settingsService: SettingsService,
                   }
                 })
             ).subscribe();
-        res();
+        res(undefined);
         console.log(`
          ______                 _
         |  ____|               | |

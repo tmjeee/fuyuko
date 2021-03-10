@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {finalize, map, tap} from 'rxjs/operators';
-import {GlobalAvatar} from '../../model/avatar.model';
+import {GlobalAvatar} from '@fuyuko-common/model/avatar.model';
 import {AvatarService} from '../../service/avatar-service/avatar.service';
 import {AvatarComponentEvent} from '../../component/avatar-component/avatar.component';
 import {NotificationsService} from 'angular2-notifications';
@@ -10,12 +10,12 @@ import { MatSelectChange } from '@angular/material/select';
 import {ProfileInfoComponentEvent} from '../../component/profile-info-component/profile-info.component';
 import {PasswordComponentEvent} from '../../component/password-component/password.component';
 import {AuthService} from '../../service/auth-service/auth.service';
-import {User} from '../../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
 import {FormBuilder, FormControl} from '@angular/forms';
-import {UserAvatarResponse} from "../../model/api-response.model";
-import {toNotifications} from "../../service/common.service";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {UserAvatarResponse} from '@fuyuko-common/model/api-response.model';
+import {toNotifications} from '../../service/common.service';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

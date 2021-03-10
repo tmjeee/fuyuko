@@ -1,6 +1,6 @@
-import {HelpService} from "../../service/help.service/help.service";
-import {tap} from "rxjs/operators";
-import {Component} from "@angular/core";
+import {HelpService} from '../../service/help.service/help.service';
+import {tap} from 'rxjs/operators';
+import {Component} from '@angular/core';
 
 const HELP_POSTFIX = `HELP_CATEGORY.md`;
 
@@ -10,7 +10,7 @@ const HELP_POSTFIX = `HELP_CATEGORY.md`;
 })
 export class CategoryHelpPageComponent {
 
-    help: string = '';
+    help = '';
 
     constructor(private helpService: HelpService) {
     }

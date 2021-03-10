@@ -4,7 +4,7 @@ import {AppNotificationService} from '../../service/app-notification-service/app
 import {AuthService} from '../../service/auth-service/auth.service';
 import {SettingsService} from '../../service/settings-service/settings.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
     templateUrl: './partner.layout.html',
