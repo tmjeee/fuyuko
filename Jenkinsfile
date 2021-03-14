@@ -13,6 +13,6 @@ pipeline {
         sh 'git status'
       }
     }
-
+    echo 'end'
   }
 }
