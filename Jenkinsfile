@@ -1,4 +1,4 @@
-def _pwd = ""
+def myvar = ""
 pipeline {
   agent any
   stages {
@@ -6,7 +6,7 @@ pipeline {
       steps {
         // git(url: 'https://github.com/tmjeee/fuyuko.git', branch: 'workflow')
         dir(path: 'be') {
-          _pwd = pwd(tmp: true)
+          myvar=pwd(tmp: true)
           echo "${_pwd}"
         }
 
