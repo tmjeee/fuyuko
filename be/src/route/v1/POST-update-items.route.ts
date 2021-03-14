@@ -39,7 +39,7 @@ const httpAction: any[] = [
         }
 
         if (errors && errors.length) {
-            res.status(200).json({
+            res.status(400).json({
                 status: 'ERROR',
                 message: errors.join(', ')
             } as ApiResponse);

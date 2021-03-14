@@ -67,8 +67,8 @@ import {AdministrationHelpPageComponent} from './page/administration-help-page/a
 import {CustomBulkEditPageComponent} from './page/custom-bulk-edit-page/custom-bulk-edit.page';
 import {WorkflowLayoutComponent} from './layout/workflow-layout/workflow.layout';
 import {WorkflowDefinitionListingPageComponent} from './page/workflow-definition-listing-page/workflow-definition-listing.page';
-import {WorkflowTaskPageComponent} from './page/workflow-task-page/workflow-task.page';
-import {WorkflowInstanceDetailsPageComponent} from './page/workflow-instance-details-page/workflow-instance-details.page';
+import {WorkflowInstanceTasksPageComponent} from './page/workflow-instance-tasks-page/workflow-instance-tasks.page';
+import {WorkflowInstanceTaskDetailsPageComponent} from './page/workflow-instance-task-details-page/workflow-instance-task-details.page';
 import {WorkflowHelpPageComponent} from './page/workflow-help-page/workflow-help.page';
 import {WorkflowListingPageComponent} from './page/workflow-listing-page/workflow-listing.page';
 
@@ -247,17 +247,17 @@ const routes: Routes = [
       {
         path: 'workflow-task',
         canActivate: [AuthGuard],
-        component: WorkflowTaskPageComponent,
+        component: WorkflowInstanceTasksPageComponent,
         data: {
           subSideNav: 'workflowTask'
         }
       },
       {
-        path: 'workflow-instance-details' ,
+        path: 'workflow-task-details/:workflowInstanceTaskId' ,
         canActivate: [AuthGuard],
-        component: WorkflowInstanceDetailsPageComponent,
+        component: WorkflowInstanceTaskDetailsPageComponent,
         data: {
-          subSideNav: 'workflowInstanceDetails'
+          subSideNav: 'workflowTask'
         }
       },
       {

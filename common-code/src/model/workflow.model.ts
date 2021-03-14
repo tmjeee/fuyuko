@@ -1,31 +1,12 @@
 import {View} from "./view.model";
 import {Status} from './status.model';
+import {EngineStatus} from '@fuyuko-workflow/index';
+import {UserWithoutGroupAndTheme} from './user.model';
 
 export const WORKFLOW_INSTANCE_ACTION = ['Create', 'Edit', 'Delete'] as const;
 export const WORKFLOW_INSTANCE_TYPE = ['Attribute', 'AttributeValue', 'Item', 'Price', 'Rule', 'User', 'Category'] as const;
 export type WorkflowInstanceAction = typeof WORKFLOW_INSTANCE_ACTION[number];
 export type WorkflowInstanceType = typeof WORKFLOW_INSTANCE_TYPE[number];
-
-
-
-// === WorkflowInstanceTask
-export type WorkflowInstanceTaskStatus = 'PENDING' | 'ACTIONED' | 'EXPIRED';
-export interface WorkflowInstanceTasks {
-    pending: WorkflowInstanceTask[],
-    actioned: WorkflowInstanceTask[],
-    expired: WorkflowInstanceTask[],
-}
-
-export interface WorkflowInstanceTask {
-    id: number,
-    workflowInstanceId: number,
-    creationDate: Date,
-    lastUpdate: Date,
-    workflowState: string,
-    approvalStage: string,
-    approverUserId: number,
-    status: WorkflowInstanceTaskStatus
-}
 
 
 // === WorkflowDefinition
@@ -137,18 +118,35 @@ export interface WorkflowInstance {
     workflowId: number;
     functionInputs: string;
     currentWorkflowState: string;
-    engineStatus: string; // EngineStatus;
+    engineStatus: EngineStatus;
     data: string;
-    creator: { id: number, username: string },
-    comments: WorkflowInstanceComment[];
+    creator: UserWithoutGroupAndTheme,
     creationDate: Date;
     lastUpdate: Date;
 }
 
+
 export interface WorkflowInstanceComment {
     id: number;
-    workflowInstanceId: number,
-    creator: { id: number, username: string },
+    workflowInstanceId: number;
+    comment: string;
+    creator: UserWithoutGroupAndTheme,
+    creationDate: Date;
+    lastUpdate: Date;
+}
+
+// === WorkflowTask
+export type WorkflowInstanceTaskStatus = 'PENDING' | 'ACTIONED' | 'EXPIRED'
+export interface WorkflowInstanceTask {
+    id: number;
+    name: string;
+    workflowInstance: WorkflowInstance;
+    taskTitle: string;
+    taskDescription: string;
+    workflowState:string;
+    approvalStage: string;
+    approver: UserWithoutGroupAndTheme,
+    status: WorkflowInstanceTaskStatus,
     creationDate: Date;
     lastUpdate: Date;
 }

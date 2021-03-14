@@ -9,8 +9,9 @@ import {WorkflowTableComponent} from './workflow-table.component';
 import {WorkflowEditorDialogComponent} from './workflow-editor-dialog.component';
 import {WorkflowComponent} from './workflow.component';
 import {FlexModule} from '@angular/flex-layout';
-import {WorkflowInstanceTasksComponent} from './workflow-instance-tasks.component';
+import {WorkflowInstanceTaskDetailsComponent} from './workflow-instance-task-details.component';
 import {WorkflowInstanceTaskTableComponent} from './workflow-instance-task-table.component';
+import {PaginationModule} from '../pagination-component/pagination.module';
 
 @NgModule({
     imports: [
@@ -21,13 +22,14 @@ import {WorkflowInstanceTaskTableComponent} from './workflow-instance-task-table
         AppMaterialsModule,
         SharedComponentUtilsModule,
         FlexModule,
+        PaginationModule,
     ],
     declarations: [
         WorkflowDefinitionTableComponent,
         WorkflowTableComponent,
         WorkflowEditorDialogComponent,
         WorkflowComponent,
-        WorkflowInstanceTasksComponent,
+        WorkflowInstanceTaskDetailsComponent,
         WorkflowInstanceTaskTableComponent,
     ],
     exports: [
@@ -35,7 +37,7 @@ import {WorkflowInstanceTaskTableComponent} from './workflow-instance-task-table
         WorkflowTableComponent,
         WorkflowEditorDialogComponent,
         WorkflowComponent,
-        WorkflowInstanceTasksComponent,
+        WorkflowInstanceTaskDetailsComponent,
         WorkflowInstanceTaskTableComponent,
     ],
     entryComponents: [

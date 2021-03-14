@@ -128,7 +128,7 @@ import {eventsAsObservable, fireEvent, EventType, AllEvents, IncomingHttpEvent, 
     UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry}
     from "./event/event.service";
 
-import { getAllWorkflowDefinition, getWorkflowByView, addWorkflow, getWorkflowByViewActionAndType } from './workflow.service'
+import { getAllWorkflowDefinition, getWorkflowByView, addWorkflow, getWorkflowByViewActionAndType, getWorkflowInstanceTasksById, getWorkflowInstanceTasksForUserCount, getWorkflowInstanceComments, postWorkflowInstanceComment, getWorkflowInstanceTasksForUser, getWorkflowInstanceCommentsCount } from './workflow.service'
 import { hasWorkflow, triggerAttributeWorkflow } from './workflow-trigger.service'
 
 export {
@@ -330,6 +330,8 @@ export {
 
     // workflow.service,
     getAllWorkflowDefinition, addWorkflow, getWorkflowByViewActionAndType, getWorkflowByView,
+    getWorkflowInstanceTasksById, getWorkflowInstanceTasksForUser, getWorkflowInstanceTasksForUserCount,
+    getWorkflowInstanceComments, postWorkflowInstanceComment, getWorkflowInstanceCommentsCount,
 
     // workflow-trigger.service
     hasWorkflow, triggerAttributeWorkflow,

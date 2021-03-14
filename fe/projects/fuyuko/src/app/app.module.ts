@@ -155,10 +155,10 @@ import {CustomBulkEditService} from './service/custom-bulk-edit-service/custom-b
 import config from './utils/config.util';
 import {WorkflowLayoutComponent} from './layout/workflow-layout/workflow.layout';
 import {WorkflowDefinitionListingPageComponent} from './page/workflow-definition-listing-page/workflow-definition-listing.page';
-import {WorkflowTaskPageComponent} from './page/workflow-task-page/workflow-task.page';
-import {WorkflowInstanceDetailsPageComponent} from './page/workflow-instance-details-page/workflow-instance-details.page';
+import {WorkflowInstanceTasksPageComponent} from './page/workflow-instance-tasks-page/workflow-instance-tasks.page';
+import {WorkflowInstanceTaskDetailsPageComponent} from './page/workflow-instance-task-details-page/workflow-instance-task-details.page';
 import {WorkflowHelpPageComponent} from './page/workflow-help-page/workflow-help.page';
-import { HotToastModule } from '@ngneat/hot-toast';
+import {HotToastModule} from '@ngneat/hot-toast';
 import {WorkflowListingPageComponent} from './page/workflow-listing-page/workflow-listing.page';
 import {WorkflowModule} from './component/workflow-component/workflow.module';
 import {WorkflowService} from './service/workflow-service/workflow.service';
@@ -276,8 +276,8 @@ const appInitializer = (settingsService: SettingsService,
     CustomBulkEditPageComponent,
     WorkflowDefinitionListingPageComponent,
     WorkflowListingPageComponent,
-    WorkflowTaskPageComponent,
-    WorkflowInstanceDetailsPageComponent,
+    WorkflowInstanceTasksPageComponent,
+    WorkflowInstanceTaskDetailsPageComponent,
     WorkflowHelpPageComponent,
   ],
   imports: [

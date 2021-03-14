@@ -12,3 +12,5 @@ export interface User {
   theme: string;
 }
 
+export type UserWithoutGroupAndTheme  = Omit<User, 'groups' | 'theme'>;
+

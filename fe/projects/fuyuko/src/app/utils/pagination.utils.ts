@@ -2,7 +2,7 @@ import {DEFAULT_LIMIT, LimitOffset} from '@fuyuko-common/model/limit-offset.mode
 import {PageEvent} from '@angular/material/paginator';
 
 
-export const toQuery = (limitOffset: LimitOffset): string => {
+export const toQuery = (limitOffset?: LimitOffset): string => {
    if (limitOffset) {
       return `limit=${limitOffset.limit}&offset=${limitOffset.offset} `;
    }
