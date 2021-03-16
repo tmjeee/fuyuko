@@ -9,8 +9,12 @@
     "copy-shared-utils": "",
     "copy-shared-utils-bak": "rm -fr ./src/app/shared-utils && cp -fr ../common-code/src/shared-utils ./projects/fuyuko/src/app",
     "serve": "npm run copy && npx ng serve",
+    "prebuild": "",
     "build": "npm run copy && npx ng build",
+    "postbuild": "",
+    "prebuild-prod": "",
     "build-prod": "npm run copy && npx ng build --prod",
+    "postbuild-prod": "./update-files-with-git-hash.sh",
     "test": "npm run copy && npx ng test",
     "lint": "npm run copy && npx ng lint",
     "e2e": "npm run copy && npx ng e2e"

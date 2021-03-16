@@ -23,7 +23,7 @@
     "test": "npx jasmine --reporter=jasmine-ts-console-reporter",
     "prebuild": "rm -fr ./dist && npm run copy",
     "build": "npm run tsc",
-    "postbuild": ""
+    "postbuild": "./update-files-with-git-hash.sh"
   },
   "_moduleAliases": {
     "@fuyuko-common": "./dist/common-code/src",
