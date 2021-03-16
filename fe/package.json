@@ -43,6 +43,7 @@
     "moment-timezone": "^0.5.25",
     "normalize.css": "^8.0.1",
     "numeral": "^2.0.6",
+    "replace-in-file": "^6.2.0",
     "rxjs": "~6.6.3",
     "sprintf": "^0.1.5",
     "tslib": "^2.0.0",

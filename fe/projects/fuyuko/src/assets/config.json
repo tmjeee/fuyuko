@@ -1,5 +1,6 @@
 
 {
-  "version": "1.0.0-beta",
+  "version": "development",
+  "git_version": "__GIT_VERSION__",
   "api_host_url": "http://127.0.0.1:8888/api/v1"
 }

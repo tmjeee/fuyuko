@@ -7,3 +7,5 @@ src/model/
 src/shared-utils/
 src/wf/
 !src/wf/.donotremove
+githash.js
+
