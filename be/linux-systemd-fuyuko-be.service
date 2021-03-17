@@ -1,0 +1,18 @@
+[Unit]
+Description=Fuyuko MDM / PIM
+Documentation=https://fuyuko.org
+After=network.target
+
+[Service]
+Environment="ENV_VAR_1=env var 1"
+Environment="ENV_VAR_2=env var 2"
+Type=simple
+User=tmjee
+ExecStart=/home/tmjee/linux-systemd-start-fuyuko-be.sh
+Restart=no
+StandardOutput=file:/var/log/fuyuko/log1.log
+StandardError=file:/var/log/fuyuko/log2.log
+
+[Install]
+WantedBy=multi-user.target
+
