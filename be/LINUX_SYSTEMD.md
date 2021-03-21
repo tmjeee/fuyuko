@@ -1,10 +1,22 @@
 # Installing BE as systemd service
 
-* Create logs directory `sudo mkdir -p /var/logs/fuyuko`
-* Stick `linux-systemd-fuyuko-be.service` into `/etc/systemd/system` directory
-* Stick `linux-systemd-start-fuyuko-be.sh` into `/home/tmjee` or your home directory, mind you that if you the home directory needs to be the same as in `linux-systemd-fuyuko-be.service`
+### Files required
+* `fuyuko-be.service` (systemd service unit)
+* `fyuko-be-rsyslog.conf` (rsyslog configuration)
+* `start-fuyuko-be.sh` (script that `fuyuko-be.service` called)
 
-To reload systemd after unit file (`linux-systemd-fuyuko-be.service`) changed run
+### Installation
+
+* Create logs directory `sudo mkdir -p /var/logs/fuyuko`
+* Stick `fuyuko-be.service` into `/etc/systemd/system` directory
+* Stick `start-fuyuko-be.sh` into `/home/tmjee` or your home directory, mind you that if you the home directory needs to be the same as in `fuyuko-be.service`
+* Stick `fuyuko-be-rsyslog.conf` into `/etc/rsyslog.d/`
+* Change ownership of `/var/log/fuyuko/fuyuko-be.log` to `syslog:adm` using
+```
+ $> sudo chmod syslog:adm /var/log/fuyuko/fuyuko-be.log
+```
+
+To reload systemd after service unit file (`linux-systemd-fuyuko-be.service`) changed, run
 ```bash
 $> sudo systemctl daemon-reload
 ```
