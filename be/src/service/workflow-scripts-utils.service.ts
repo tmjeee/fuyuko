@@ -122,7 +122,7 @@ class WorkflowScriptsUtilsService {
     }
 
     getPossibleApprovalStages(state: StateLike): string[] {
-        return state.args[`${state.state.name}_APPROVAL_USER_NAMES`];
+        return state.args[`${state.state.name}_APPROVAL_STAGES`];
     }
 
     addMessage(state: StateLike, message: MessageLike) {

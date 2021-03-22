@@ -12,6 +12,8 @@ import {FlexModule} from '@angular/flex-layout';
 import {WorkflowInstanceTaskDetailsComponent} from './workflow-instance-task-details.component';
 import {WorkflowInstanceTaskTableComponent} from './workflow-instance-task-table.component';
 import {PaginationModule} from '../pagination-component/pagination.module';
+import {WorkflowInstanceCommentsComponent} from './workflow-instance-comments.component';
+import {AvatarModule} from '../avatar-component/avatar.module';
 
 @NgModule({
     imports: [
@@ -23,6 +25,7 @@ import {PaginationModule} from '../pagination-component/pagination.module';
         SharedComponentUtilsModule,
         FlexModule,
         PaginationModule,
+        AvatarModule,
     ],
     declarations: [
         WorkflowDefinitionTableComponent,
@@ -31,6 +34,7 @@ import {PaginationModule} from '../pagination-component/pagination.module';
         WorkflowComponent,
         WorkflowInstanceTaskDetailsComponent,
         WorkflowInstanceTaskTableComponent,
+        WorkflowInstanceCommentsComponent,
     ],
     exports: [
         WorkflowDefinitionTableComponent,
@@ -39,6 +43,7 @@ import {PaginationModule} from '../pagination-component/pagination.module';
         WorkflowComponent,
         WorkflowInstanceTaskDetailsComponent,
         WorkflowInstanceTaskTableComponent,
+        WorkflowInstanceCommentsComponent,
     ],
     entryComponents: [
         WorkflowEditorDialogComponent,

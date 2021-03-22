@@ -14,7 +14,7 @@ import {e} from '../logger';
 import {ENABLED} from '@fuyuko-common/model/status.model';
 import {AttributeType} from '@fuyuko-common/model/attribute.model';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
-import {LIMIT_OFFSET} from '../util/utils';
+import {LIMIT_OFFSET, toLimitOffset} from '../util/utils';
 
 const q1: string = `
             SELECT 
@@ -201,10 +201,10 @@ class WorkflowService {
      * === getWorkflowInstanceTaskById
      * ===============================
      */
-    async getWorkflowInstanceTasksById(workflowInstanceTaskId: number): Promise<WorkflowInstanceTask> {
+    async getWorkflowInstanceTasksById(userId: number, workflowInstanceTaskId: number): Promise<WorkflowInstanceTask> {
         return await doInDbConnection(async conn => {
             const q: QueryA = await conn.query(q4, [workflowInstanceTaskId]);
-            const t =  q.reduce(this.reduceQueryToWorkflowInstanceTask.bind(this), []);
+            const t =  q.reduce(this.reduceQueryToWorkflowInstanceTask(userId).bind(this), []);
             return (t && t.length ? t[0] : undefined);
         });
     }
@@ -219,7 +219,7 @@ class WorkflowService {
         Promise<WorkflowInstanceTask[]> {
         return await doInDbConnection(async conn => {
             const q: QueryA = await conn.query(SQL_WORKFLOW_INSTANCE_TASKS_FOR_USER(limitOffset), [userId, status]);
-            return q.reduce(this.reduceQueryToWorkflowInstanceTask.bind(this), []);
+            return q.reduce(this.reduceQueryToWorkflowInstanceTask(userId).bind(this), []);
         });
     }
     async getWorkflowInstanceTasksForUserCount(userId: number, status: WorkflowInstanceTaskStatus):
@@ -243,7 +243,7 @@ class WorkflowService {
             return q[0].COUNT;
         });
     }
-    async getWorkflowInstanceComments(workflowInstanceId: number): Promise<WorkflowInstanceComment[]> {
+    async getWorkflowInstanceComments(workflowInstanceId: number, limitOffset?: LimitOffset): Promise<WorkflowInstanceComment[]> {
         return await doInDbConnection(async conn => {
             const q: QueryA = await conn.query(`
                 SELECT 
@@ -262,6 +262,7 @@ class WorkflowService {
                 LEFT JOIN TBL_USER AS U ON U.ID = C.USER_ID
                 WHERE C.WORKFLOW_INSTANCE_ID = ?
                 ORDER BY C.CREATION_DATE DESC
+                ${LIMIT_OFFSET(limitOffset)}
             `, [workflowInstanceId]);
 
             return q.reduce((acc: WorkflowInstanceComment[], i: QueryI) => {
@@ -306,48 +307,56 @@ class WorkflowService {
 
 
     // ===== private functions
-
-    private reduceQueryToWorkflowInstanceTask(acc: WorkflowInstanceTask[], i: QueryI): WorkflowInstanceTask[] {
-        const w: WorkflowInstanceTask = {
-            id: i.T_ID,
-            name: i.T_NAME,
-            taskTitle: i.T_TASK_TITLE,
-            taskDescription: i.T_TASK_DESCRIPTION,
-            approvalStage: i.T_APPROVAL_STAGE,
-            status: i.T_STATUS,
-            workflowState: i.T_WORKFLOW_STATE,
-            creationDate: i.T_CREATION_DATE,
-            lastUpdate: i.T_LAST_UPDATE,
-            approver: {
-                id: i.A_ID,
-                username: i.A_USERNAME,
-                firstName: i.A_FIRSTNAME,
-                lastName: i.A_LASTNAME,
-                email: i.A_EMAIL,
-            },
-            workflowInstance: {
-                id: i.I_ID,
-                name: i.I_NAME,
-                workflowId: i.I_WORKFLOW_ID,
-                functionInputs: i.I_FUNCTION_INPUTS,
-                engineStatus: i.I_ENGINE_STATUS,
-                data: i.I_DATA,
-                currentWorkflowState: i.I_CURRENT_WORFKLOW_STATE,
-                lastUpdate: i.I_LAST_UPDATE,
-                creationDate: i.I_CREATION_DATE,
-                creator: {
-                    id: i.C_ID,
-                    username: i.C_USERNAME,
+    private reduceQueryToWorkflowInstanceTask(userId: number) : (acc: WorkflowInstanceTask[], i: QueryI) => WorkflowInstanceTask[] {
+        const isUserAllowToActionOnTask = (userId: number, approverUserId: number, status: WorkflowInstanceTaskStatus): boolean => {
+            return (userId === approverUserId && status === 'PENDING');
+        };
+        const possibleUserActions = (possibleApprovalStages: string): string[] => {
+            return JSON.parse(possibleApprovalStages);  // poissibleApprovalStages - will be array in JSON stringify format
+        };
+        return (acc: WorkflowInstanceTask[], i: QueryI): WorkflowInstanceTask[] => {
+            const w: WorkflowInstanceTask = {
+                id: i.T_ID,
+                name: i.T_NAME,
+                taskTitle: i.T_TASK_TITLE,
+                taskDescription: i.T_TASK_DESCRIPTION,
+                approvalStage: i.T_APPROVAL_STAGE,
+                status: i.T_STATUS,
+                workflowState: i.T_WORKFLOW_STATE,
+                creationDate: i.T_CREATION_DATE,
+                lastUpdate: i.T_LAST_UPDATE,
+                isUserAllowedToActionOnTask: isUserAllowToActionOnTask(userId, i.T_APPROVER_USER_ID, i.T_STATUS, ) ,
+                possibleUserActions: possibleUserActions(i.T_POSSIBLE_APPROVAL_STAGES),
+                approver: {
+                    id: i.A_ID,
+                    username: i.A_USERNAME,
                     firstName: i.A_FIRSTNAME,
                     lastName: i.A_LASTNAME,
                     email: i.A_EMAIL,
                 },
-            }
-        };
-        acc.push(w);
-        return acc;
+                workflowInstance: {
+                    id: i.I_ID,
+                    name: i.I_NAME,
+                    workflowId: i.I_WORKFLOW_ID,
+                    functionInputs: i.I_FUNCTION_INPUTS,
+                    engineStatus: i.I_ENGINE_STATUS,
+                    data: i.I_DATA,
+                    currentWorkflowState: i.I_CURRENT_WORFKLOW_STATE,
+                    lastUpdate: i.I_LAST_UPDATE,
+                    creationDate: i.I_CREATION_DATE,
+                    creator: {
+                        id: i.C_ID,
+                        username: i.C_USERNAME,
+                        firstName: i.A_FIRSTNAME,
+                        lastName: i.A_LASTNAME,
+                        email: i.A_EMAIL,
+                    },
+                }
+            };
+            acc.push(w);
+            return acc;
+        }
     }
-
 
     private reduceQueryToWorkflow(acc: Map<number /* workflowId */, Workflow>, i: QueryI): Map<number /* workflowId */, Workflow> {
        const workflowId: number = i.M_ID;

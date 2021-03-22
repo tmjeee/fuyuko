@@ -1,4 +1,12 @@
-.workflow-instance-details-page {
+.workflow-instance-task-details-page {
+  margin: 10px;
+  ::ng-deep {
+
+    mat-card {
+      margin: 0 0 20px 0;
+    }
+
+  }
 
 }
 

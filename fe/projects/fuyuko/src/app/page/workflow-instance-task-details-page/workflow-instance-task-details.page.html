@@ -1,3 +1,14 @@
-<div class="workflow-instance-details-page">
-    Workflow Instance Details Page
+<div class="workflow-instance-task-details-page">
+
+    <ng-container *ngIf="ready">
+        <app-workflow-instance-task-details
+                (events)="onWorkflowInstanceTaskDetailsEvent($event)"
+                [workflowInstanceTask]="workflowInstanceTask">
+        </app-workflow-instance-task-details>
+
+        <app-workflow-instance-comments
+                [getCommentFn]="getCommentFn"
+                [workflowInstanceId]="workflowInstanceTask.workflowInstance.id">
+        </app-workflow-instance-comments>
+    </ng-container>
 </div>

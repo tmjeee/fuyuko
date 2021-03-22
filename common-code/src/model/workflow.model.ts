@@ -147,6 +147,8 @@ export interface WorkflowInstanceTask {
     approvalStage: string;
     approver: UserWithoutGroupAndTheme,
     status: WorkflowInstanceTaskStatus,
+    isUserAllowedToActionOnTask: boolean,
+    possibleUserActions: string[],
     creationDate: Date;
     lastUpdate: Date;
 }

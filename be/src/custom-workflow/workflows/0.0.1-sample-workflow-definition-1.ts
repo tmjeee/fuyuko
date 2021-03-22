@@ -49,8 +49,8 @@ const state1 = createState('state1',
             const s: StateLike  = { state: state1, args };
             u.setTitle(s, 'Approval state1');
             u.setDescription(s, 'This workflow instance is in State1 Approval stage, you will need both tmjee and admin1\'s approval');
-            await u.setApprovalUserNamesAndCreateInstanceTasks(s, 'tmjee', 'admin1');
             u.setPossibleApprovalStages(s, 'Approve', 'Reject')
+            await u.setApprovalUserNamesAndCreateInstanceTasks(s, 'tmjee', 'admin1');
         },
         processFn: async (prevState, args) => {
             const s = { state: state1, args };
