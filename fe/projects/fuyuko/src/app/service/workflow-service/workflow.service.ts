@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {
+    ContinueWorkflowResult,
     Workflow,
     WorkflowDefinition,
     WorkflowInstanceAction, WorkflowInstanceComment, WorkflowInstanceTask,
@@ -26,6 +27,10 @@ const URL_GET_WORKFLOW_INSTANCE_TASK_BY_ID = (workflowInstanceTaskId: number) =>
     `${config().api_host_url}/workflow-instance/task/${workflowInstanceTaskId}`;
 const URL_GET_WORKFLOW_INSTANCE_COMMENTS = (workflowInstanceId: number, limitOffset: LimitOffset) =>
     `${config().api_host_url}/workflow-instance/${workflowInstanceId}/comments${toQuery(limitOffset)}`;
+const URL_POST_CONTINUE_USER_WORKFLOW_INSTANCE = (userId: number, workflowInstanceId: number) =>
+    `${config().api_host_url}/workflow-instance/${workflowInstanceId}/user/${userId}/continue`;
+const URL_POST_WORKFLOW_INSTANCE_COMMENT = (workflowInstanceId: number) =>
+    `${config().api_host_url}/workflow-instance/${workflowInstanceId}/comment`;
 
 
 @Injectable()
@@ -79,5 +84,30 @@ export class WorkflowService {
         Observable<PaginableApiResponse<WorkflowInstanceComment[]>> {
         return this.httpClient
             .get<PaginableApiResponse<WorkflowInstanceComment[]>>(URL_GET_WORKFLOW_INSTANCE_COMMENTS(workflowInstanceId, limitOffset));
+    }
+
+    continueWorkflow(userId: number, username: string, workflowInstanceId: number, stateName: string, workflowAction: string):
+        Observable<ApiResponse<ContinueWorkflowResult>> {
+        const args: any = {};
+        // see eg. 0.0.1-sample-workflow-definition-1.ts
+        args[`${stateName}_INPUT_inputApprovalUserName`] = username;
+        args[`${stateName}_INPUT_inputApprovalStage`] = workflowAction;
+        return this.httpClient
+            .post<ApiResponse<any>>(
+                URL_POST_CONTINUE_USER_WORKFLOW_INSTANCE(userId, workflowInstanceId),
+                {
+                    args
+                });
+    }
+
+    addComment(workflowInstanceId: number, userId: number, comment: string): Observable<ApiResponse> {
+        return this.httpClient
+            .post<ApiResponse>(
+                URL_POST_WORKFLOW_INSTANCE_COMMENT(workflowInstanceId),
+                {
+                    userId,
+                    comment
+                }
+            );
     }
 }

@@ -12,7 +12,7 @@ import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {changeAttributeStatus, getAttributeInView} from '../../service';
 import {DELETED, Status, STATUSES} from '@fuyuko-common/model/status.model';
-import {Workflow} from '@fuyuko-common/model/workflow.model';
+import {Workflow, WorkflowTriggerResult} from '@fuyuko-common/model/workflow.model';
 import {getWorkflowByViewActionAndType, triggerAttributeWorkflow} from '../../service';
 
 // CHECKED
@@ -47,15 +47,19 @@ const httpAction: any[] = [
             const workflowType = 'Attribute';
 
             const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
+            const payload: WorkflowTriggerResult[] = [];
             if (ws && ws.length > 0) {
                 for (const w of ws) {
                     const att = await getAttributeInView(viewId, attributeId)
-                    await triggerAttributeWorkflow([att], w.workflowDefinition.id, workflowAction);
+                    const workflowTriggerResults = await triggerAttributeWorkflow([att], w.workflowDefinition.id, workflowAction);
+                    payload.push(...workflowTriggerResults);
                 }
-                res.status(200).json({
+                const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
                     status: 'INFO',
-                    message: `Workflow instance has been triggered to update attribute, workflow instance needs to be completed for actual update to take place`
-                });
+                    message: `Workflow instance has been triggered to update attribute, workflow instance needs to be completed for actual update to take place`,
+                    payload,
+                };
+                res.status(200).json(apiResponse);
                 return;
             }
         }

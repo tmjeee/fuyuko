@@ -21,6 +21,10 @@ export class Pagination {
         this.reset();
     }
 
+    firstPage() {
+        this.offset = 0;
+    }
+
     nextPage() {
         if (this.total > (this.offset + this.limit)) {
             this.offset += this.limit;

@@ -49,7 +49,7 @@ export type WorkflowInstanceTasksFn = (limitOffset: LimitOffset) => Observable<W
 export class WorkflowInstanceTaskTableComponent implements OnInit {
 
    @Input() workflowInstanceTasksFn: WorkflowInstanceTasksFn;
-   @Input() allowActionButton: boolean;
+   @Input() allowViewButton: boolean;
    @Output() events: EventEmitter<WorkflowInstanceTaskTableComponentEvent>;
 
    pagination: Pagination;
@@ -62,7 +62,7 @@ export class WorkflowInstanceTaskTableComponent implements OnInit {
 
    constructor() {
        this.dataSource = new InternalDataSource();
-       this.allowActionButton = false;
+       this.allowViewButton = false;
        this.pagination = new Pagination();
        this.events = new EventEmitter();
    }
@@ -81,7 +81,7 @@ export class WorkflowInstanceTaskTableComponent implements OnInit {
    }
 
    ngOnInit(): void {
-       if (this.allowActionButton) {
+       if (this.allowViewButton) {
            this.columnsToDisplay.push('action');
        }
        this.reload();

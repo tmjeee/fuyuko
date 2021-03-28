@@ -7,10 +7,10 @@ import {Argument} from '@fuyuko-workflow/engine-interface';
 import {
     canUserActionOnWorkflowInstance,
     continueWorkflow,
-    ContinueWorkflowResult
 } from '../../service/workflow-trigger.service';
 import {getUserById} from '../../service';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ContinueWorkflowResult} from '@fuyuko-common/model/workflow.model';
 
 const httpAction: any[] = [
     [

@@ -1,4 +1,10 @@
-import {WorkflowInstanceAction, WorkflowInstanceType} from '@fuyuko-common/model/workflow.model';
+import {
+    ContinueWorkflowResult, CurrentWorkflowStateFound, CurrentWorkflowStateResult,
+    NoWorkflowConfigured, WorkflowContinuationDone, WorkflowContinuationError, WorkflowDefinitionForWorkflowNotFound,
+    WorkflowInstanceAction, WorkflowInstanceCreated, WorkflowInstanceNotFound,
+    WorkflowInstanceType, WorkflowTriggerError,
+    WorkflowTriggerResult
+} from '@fuyuko-common/model/workflow.model';
 import {doInDbConnection, QueryA, QueryResponse} from '../db';
 import * as Path from 'path';
 import {WorkflowScript} from '../server-side-model/server-side.model';
@@ -23,57 +29,11 @@ export const ENGINE_WORKFLOW_DEFINITION_ID = `WORKFLOW_DEFINITION_ID`;
 export const ENGINE_WORKFLOW_INSTANCE_ID = `WORKFLOW_INSTANCE_ID`;
 
 
-// === WorkflowTriggerResult
-export type WorkflowTriggerResult = NoWorkflowConfigured | WorkflowInstanceCreated | WorkflowTriggerError;
-export interface NoWorkflowConfigured {
-    type: 'no-workflow-configured';
-}
-export interface WorkflowInstanceCreated {
-    type: 'workflow-instance-created'
-    workflowInstanceId: number;
-}
-export interface WorkflowTriggerError {
-    type: 'workflow-trigger-error',
-    message: string
-}
-
-// === ContinueWorkflowResult
-export type ContinueWorkflowResult = WorkflowInstanceNotFound | WorkflowDefinitionForWorkflowNotFound | WorkflowContinuationError | WorkflowContinuationDone;
-export interface WorkflowInstanceNotFound {
-    type: 'workflow-instance-not-found',
-    workflowInstanceId: number,
-}
-export interface WorkflowDefinitionForWorkflowNotFound {
-    type: 'workflow-definition-for-workflow-not-found',
-    workflowId: number,
-}
-export interface WorkflowContinuationError {
-    type: 'workflow-continuation-error',
-    message: string
-}
-export interface WorkflowContinuationDone {
-    type: 'workflow-continuation-done',
-    workflowInstanceId: number,
-    oldState: string,
-    newState: string,
-    status: EngineStatus,
-}
-
-// === CurrentWorkflowResult
-export type CurrentWorkflowStateResult = CurrentWorkflowStateFound
-export interface CurrentWorkflowStateFound {
-    type: 'workflow-state-found',
-    workflowInstanceId: number,
-    state: string,
-    status: EngineStatus,
-    title: string,
-    description: string,
-    possibleApprovalStages: string[],
-}
 
 class WorkflowTriggerService {
     // === TRIGGER Workflow
-    async triggerAttributeWorkflow(attributes: Attribute[], workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument) {
+    async triggerAttributeWorkflow(attributes: Attribute[], workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument):
+        Promise<WorkflowTriggerResult[]> {
         const viewIdAttMap = await attributes.reduce(async (acc: Promise<Map<number /* viewId */, Attribute[]>>, att: Attribute) => {
             const map = await acc;
             await doInDbConnection(async (conn) => {
@@ -91,15 +51,18 @@ class WorkflowTriggerService {
             return acc;
         }, Promise.resolve(new Map()));
 
+        const workflowTriggerResults: WorkflowTriggerResult[] = [];
         for ( const [viewId, attributes] of viewIdAttMap.entries()) {
             const oldAttributes = await getAttributesInView(viewId, attributes.map(a => a.id), {limit: Number.MAX_SAFE_INTEGER, offset:0});
             const newAttributes = [...attributes];
 
-            await this.triggerWorkflow(
+            const workflowTriggerResult = await this.triggerWorkflow(
                viewId, workflowDefinitionId, action, 'Attribute',
                JSON.stringify(oldAttributes), JSON.stringify(newAttributes),
                attributes, args);
+            workflowTriggerResults.push(workflowTriggerResult);
         }
+        return workflowTriggerResults;
     }
 
     async triggerWorkflow(viewId: number, workflowDefinitionId: number, action: WorkflowInstanceAction,
@@ -350,12 +313,13 @@ class WorkflowTriggerService {
                 const q2: QueryA = await conn.query(`
                                 SELECT 
                                     COUNT(*) AS COUNT
-                                FROM TBL_WORKFLOW_INSTANCE_STATE AS S
+                                FROM TBL_WORKFLOW_INSTANCE_TASK AS S
                                 INNER JOIN TBL_USER AS U ON U.ID = S.APPROVER_USER_ID
                                 WHERE S.WORKFLOW_INSTANCE_ID = ? AND S.WORKFLOW_STATE = ? AND U.USERNAME = ? AND S.APPROVAL_STAGE IS NOT NULL
                             `, [workflowInstanceId, currentWorkflowState, username]);
                 // user with this username has already vote in
                 if (q2[0].COUNT > 0) {
+                    // todo: return false (figure out a way to unstuck workflow)
                     return false;
                 }
                 return true;

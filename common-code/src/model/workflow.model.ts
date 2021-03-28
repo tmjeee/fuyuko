@@ -153,3 +153,50 @@ export interface WorkflowInstanceTask {
     lastUpdate: Date;
 }
 
+// === WorkflowTriggerResult
+export type WorkflowTriggerResult = NoWorkflowConfigured | WorkflowInstanceCreated | WorkflowTriggerError;
+export interface NoWorkflowConfigured {
+    type: 'no-workflow-configured';
+}
+export interface WorkflowInstanceCreated {
+    type: 'workflow-instance-created'
+    workflowInstanceId: number;
+}
+export interface WorkflowTriggerError {
+    type: 'workflow-trigger-error',
+    message: string
+}
+
+// === ContinueWorkflowResult
+export type ContinueWorkflowResult = WorkflowInstanceNotFound | WorkflowDefinitionForWorkflowNotFound | WorkflowContinuationError | WorkflowContinuationDone;
+export interface WorkflowInstanceNotFound {
+    type: 'workflow-instance-not-found',
+    workflowInstanceId: number,
+}
+export interface WorkflowDefinitionForWorkflowNotFound {
+    type: 'workflow-definition-for-workflow-not-found',
+    workflowId: number,
+}
+export interface WorkflowContinuationError {
+    type: 'workflow-continuation-error',
+    message: string
+}
+export interface WorkflowContinuationDone {
+    type: 'workflow-continuation-done',
+    workflowInstanceId: number,
+    oldState: string,
+    newState: string,
+    status: EngineStatus,
+}
+
+// === CurrentWorkflowResult
+export type CurrentWorkflowStateResult = CurrentWorkflowStateFound
+export interface CurrentWorkflowStateFound {
+    type: 'workflow-state-found',
+    workflowInstanceId: number,
+    state: string,
+    status: EngineStatus,
+    title: string,
+    description: string,
+    possibleApprovalStages: string[],
+}

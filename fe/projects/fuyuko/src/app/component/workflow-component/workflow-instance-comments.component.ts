@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {WorkflowInstanceComment} from '@fuyuko-common/model/workflow.model';
 import {DEFAULT_LIMIT, DEFAULT_OFFSET, LimitOffset} from '@fuyuko-common/model/limit-offset.model';
@@ -20,7 +20,8 @@ export interface WorkflowInstanceCommentsComponentEvent {
 @Component({
     selector: 'app-workflow-instance-comments',
     templateUrl: './workflow-instance-comments.component.html',
-    styleUrls: ['./workflow-instance-comments.component.scss']
+    styleUrls: ['./workflow-instance-comments.component.scss'],
+    exportAs: 'component',
 })
 export class WorkflowInstanceCommentsComponent implements OnInit {
 
@@ -38,7 +39,7 @@ export class WorkflowInstanceCommentsComponent implements OnInit {
 
     comments: WorkflowInstanceComment[] = [];
 
-    events: EventEmitter<WorkflowInstanceCommentsComponentEvent> = new EventEmitter();
+    @Output() events: EventEmitter<WorkflowInstanceCommentsComponentEvent> = new EventEmitter();
 
     constructor(private formBuilder: FormBuilder) {
         this.pagination = new Pagination();
@@ -49,11 +50,7 @@ export class WorkflowInstanceCommentsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getCommentFn(this.workflowInstanceId, this.pagination.limitOffset())
-            .pipe(
-                map(r => r.payload),
-                tap( comments => this.comments = comments)
-            ).subscribe();
+        this.reload();
     }
 
     submitComment() {
@@ -63,6 +60,15 @@ export class WorkflowInstanceCommentsComponent implements OnInit {
             workflowInstanceId: this.workflowInstanceId
         };
         this.events.emit(r);
+    }
+
+    reload() {
+        this.pagination.firstPage();
+        this.getCommentFn(this.workflowInstanceId, this.pagination.limitOffset())
+            .pipe(
+                map(r => r.payload),
+                tap( comments => this.comments = comments)
+            ).subscribe();
     }
 
     enterEditMode(editMode: boolean) {

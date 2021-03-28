@@ -76,7 +76,7 @@ const q3 = `
                I.NAME AS I_NAME,
                I.WORKFLOW_ID AS I_WORKFLOW_ID,
                I.FUNCTION_INPUTS AS I_FUNCTION_INPUTS,
-               I.CURRENT_WORKFLOW_STATE AS _I_CURRENT_WORKFLOW_STATE,
+               I.CURRENT_WORKFLOW_STATE AS I_CURRENT_WORKFLOW_STATE,
                I.ENGINE_STATUS AS I_ENGINE_STATUS,
                I.OLD_VALUE AS I_OLD_VALUE,
                I.NEW_VALUE AS I_NEW_VALUE,
@@ -103,6 +103,15 @@ const SQL_WORKFLOW_INSTANCE_TASKS_FOR_USER_COUNT = `
     LEFT JOIN TBL_WORKFLOW_INSTANCE AS I ON I.ID = T.WORKFLOW_INSTANCE_ID
     LEFT JOIN TBL_USER AS A ON A.ID = T.APPROVER_USER_ID
     WHERE A.ID = ? AND T.STATUS = ?
+`;
+const SQL_WORKFLOW_INSTANCE_PENDING_TASKS_FOR_USER = (limitOffset?: LimitOffset) =>
+    `${q3} WHERE A.ID = ? AND I.CURRENT_WORKFLOW_STATE = T.WORKFLOW_STATE AND T.STATUS = ? ${LIMIT_OFFSET(limitOffset)}`;
+const SQL_WORKFLOW_INSTANCE_PENDING_TASKS_FOR_USER_COUNT = `
+    SELECT COUNT(*) AS COUNT 
+    FROM TBL_WORKFLOW_INSTANCE_TASK AS T
+    LEFT JOIN TBL_WORKFLOW_INSTANCE AS I ON I.ID = T.WORKFLOW_INSTANCE_ID
+    LEFT JOIN TBL_USER AS A ON A.ID = T.APPROVER_USER_ID
+    WHERE A.ID = ? AND I.CURRENT_WORKFLOW_STATE = T.WORKFLOW_STATE AND T.STATUS = ?
 `;
 
 
@@ -218,14 +227,18 @@ class WorkflowService {
     async getWorkflowInstanceTasksForUser(userId: number, status: WorkflowInstanceTaskStatus, limitOffset?: LimitOffset):
         Promise<WorkflowInstanceTask[]> {
         return await doInDbConnection(async conn => {
-            const q: QueryA = await conn.query(SQL_WORKFLOW_INSTANCE_TASKS_FOR_USER(limitOffset), [userId, status]);
+            const q: QueryA = status === 'PENDING' ?
+                await conn.query(SQL_WORKFLOW_INSTANCE_PENDING_TASKS_FOR_USER(limitOffset), [userId, status]) :
+                await conn.query(SQL_WORKFLOW_INSTANCE_TASKS_FOR_USER(limitOffset), [userId, status]);
             return q.reduce(this.reduceQueryToWorkflowInstanceTask(userId).bind(this), []);
         });
     }
     async getWorkflowInstanceTasksForUserCount(userId: number, status: WorkflowInstanceTaskStatus):
         Promise<number> {
         return await doInDbConnection(async conn => {
-            const q: QueryA = await conn.query(SQL_WORKFLOW_INSTANCE_TASKS_FOR_USER_COUNT, [userId, status]);
+            const q: QueryA = status == 'PENDING' ?
+                await conn.query(SQL_WORKFLOW_INSTANCE_PENDING_TASKS_FOR_USER_COUNT, [userId, status]) :
+                await conn.query(SQL_WORKFLOW_INSTANCE_TASKS_FOR_USER_COUNT, [userId, status]);
             return q[0].COUNT;
         });
     }
@@ -341,7 +354,7 @@ class WorkflowService {
                     functionInputs: i.I_FUNCTION_INPUTS,
                     engineStatus: i.I_ENGINE_STATUS,
                     data: i.I_DATA,
-                    currentWorkflowState: i.I_CURRENT_WORFKLOW_STATE,
+                    currentWorkflowState: i.I_CURRENT_WORKFLOW_STATE,
                     lastUpdate: i.I_LAST_UPDATE,
                     creationDate: i.I_CREATION_DATE,
                     creator: {

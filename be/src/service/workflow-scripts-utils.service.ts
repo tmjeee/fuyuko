@@ -100,13 +100,13 @@ class WorkflowScriptsUtilsService {
         });
     }
 
-    async markWorkflowInstanceTaskAsExpred(s: StateLike, prevStateName: string) {
+    async markWorkflowInstanceTaskAsExpired(s: StateLike, prevStateName: string) {
         const workflowInstanceId = s.args[ENGINE_WORKFLOW_INSTANCE_ID];
         await doInDbConnection(async (conn) => {
             await conn.query(`
                 UPDATE TBL_WORKFLOW_INSTANCE_TASK
                 SET STATUS = ? 
-                WHERE WORKFLOW_INSTANCE_ID = ? AND WORKFLOW_STATE = ? APPROVAL_STATE = 'PENDING'        
+                WHERE WORKFLOW_INSTANCE_ID = ? AND WORKFLOW_STATE = ? AND STATUS = 'PENDING'        
             `, ['EXPIRED', workflowInstanceId, prevStateName]);
         });
     }
@@ -143,7 +143,7 @@ class WorkflowScriptsUtilsService {
         const workflowInstanceId = Number(state.args[ENGINE_WORKFLOW_INSTANCE_ID]);
         await doInDbConnection(async (conn) => {
             const q1: QueryA = await conn.query(`
-                    SELECT ID FROM TBL_USER WHERE USERNAME
+                    SELECT ID FROM TBL_USER WHERE USERNAME = ?
                 `, [approvalUserName]);
             if (q1.length) {
                 const approverUserId = q1[0].ID;
@@ -173,13 +173,13 @@ class WorkflowScriptsUtilsService {
             const workflowInstanceId = state.args[ENGINE_WORKFLOW_INSTANCE_ID];
             const q1: QueryA = await conn.query(`
                 SELECT DISTINCT 
-                   U.USERNAME 
-                FROM TBL_WORKFLOW_STATE AS S
+                   U.USERNAME AS USERNAME
+                FROM TBL_WORKFLOW_INSTANCE_TASK AS S
                 INNER JOIN TBL_USER AS U ON U.ID = S.APPROVER_USER_ID
                 WHERE S.APPROVAL_STAGE = ? AND S.WORKFLOW_STATE = ? AND S.WORKFLOW_INSTANCE_ID = ? 
             `, [approvalStage, state.state.name, workflowInstanceId])
-            return q1.reduce((acc, username) => {
-                acc.push(username);
+            return q1.reduce((acc, i) => {
+                acc.push(i.USERNAME);
                 return acc;
             }, []);
         });
@@ -200,6 +200,6 @@ export const
     getInputArg = s.getInputArg.bind(s),
     setApprovalStage = s.setApprovalStage.bind(s),
     getApproverUsernamesForStage = s.getApproverUsernamesForStage.bind(s),
-    markWorkflowInstanceTaskAsExpred = s.markWorkflowInstanceTaskAsExpred.bind(s)
+    markWorkflowInstanceTaskAsExpired = s.markWorkflowInstanceTaskAsExpired.bind(s)
 ;
 

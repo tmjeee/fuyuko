@@ -61,7 +61,7 @@ export class WorkflowInstanceTasksPageComponent implements OnInit {
     }
 
 
-    onPendingWorkflowInstanceEvents($event: WorkflowInstanceTaskTableComponentEvent) {
+    onWorkflowInstanceTaskTableEvents($event: WorkflowInstanceTaskTableComponentEvent) {
         this.router.navigate(['/workflow-layout', 'workflow-task-details', $event.workflowInstanceTask.id]);
     }
 }

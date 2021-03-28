@@ -15,9 +15,9 @@
                     </ng-template>
                     <ng-template matTabContent>
                         <app-workflow-instance-task-table
-                                [allowActionButton]="true"
+                                [allowViewButton]="true"
                                 [workflowInstanceTasksFn]="workflowInstancePendingTasksFn"
-                                (events)="onPendingWorkflowInstanceEvents($event)">
+                                (events)="onWorkflowInstanceTaskTableEvents($event)">
                         </app-workflow-instance-task-table>
                     </ng-template>
                 </mat-tab>
@@ -29,7 +29,9 @@
                     </ng-template>
                     <ng-template matTabContent>
                         <app-workflow-instance-task-table
-                                [workflowInstanceTasksFn]="workflowInstanceActionedTasksFn">
+                                [allowViewButton]="true"
+                                [workflowInstanceTasksFn]="workflowInstanceActionedTasksFn"
+                                (events)="onWorkflowInstanceTaskTableEvents($event)">
                         </app-workflow-instance-task-table>
                     </ng-template>
                 </mat-tab>
@@ -41,7 +43,9 @@
                     </ng-template>
                     <ng-template matTabContent>
                         <app-workflow-instance-task-table
-                                [workflowInstanceTasksFn]="workflowInstanceExpiredTasksFn">
+                                [allowViewButton]="true"
+                                [workflowInstanceTasksFn]="workflowInstanceExpiredTasksFn"
+                                (events)="onWorkflowInstanceTaskTableEvents($event)">
                         </app-workflow-instance-task-table>
                     </ng-template>
                 </mat-tab>

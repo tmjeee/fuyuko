@@ -55,7 +55,7 @@ const state1 = createState('state1',
         processFn: async (prevState, args) => {
             const s = { state: state1, args };
             if (prevState && prevState.name !== state1.name) { // we have advance in our workflow state
-                await u.markWorkflowInstanceTaskAsExpred(s, prevState.name);
+                await u.markWorkflowInstanceTaskAsExpired(s, prevState.name);
             }
             const inputApprovalUserName = u.getInputArg(s, 'inputApprovalUserName');
             const inputApprovalStage = u.getInputArg(s, 'inputApprovalStage');
@@ -81,18 +81,18 @@ const state1 = createState('state1',
 );
 
 // second stage of approval
-const state2 = createState('state1', {
+const state2 = createState('state2', {
         initFn: async (args) => {
             const s = {state: state2, args};
             u.setTitle(s, 'Approval state2');
             u.setDescription(s, 'This workflow instance is in State2 Approval stage, you will need either tmjee and admin2\'s approval');
-            await u.setApprovalUserNamesAndCreateInstanceTasks(s, 'tmjee', 'admin2');
             u.setPossibleApprovalStages(s, 'Approve', 'Reject')
+            await u.setApprovalUserNamesAndCreateInstanceTasks(s, 'tmjee', 'admin2');
         },
         processFn: async (prevState: State | undefined, args) => {
             const s = {state: state2, args};
             if (prevState && prevState.name !== state2.name) { // we have advance in our workflow state
-                await u.markWorkflowInstanceTaskAsExpred(s, prevState.name);
+                await u.markWorkflowInstanceTaskAsExpired(s, prevState.name);
             }
             const inputApprovalUserName = u.getInputArg(s, 'inputApprovalUserName');
             const inputApprovalStage = u.getInputArg(s, 'inputApprovalStage');
@@ -118,18 +118,18 @@ const state2 = createState('state1', {
 );
 
 // third stage of approval
-const state3 = createState('state1', {
+const state3 = createState('state3', {
         initFn: async (args) => {
             const s = {state: state3, args};
             u.setTitle(s, 'Approval state3');
             u.setDescription(s, 'This workflow is in State3 Approval stage, you will need either tmjee and admin3\'s approval');
-            await u.setApprovalUserNamesAndCreateInstanceTasks(s, 'tmjee', 'admin3');
             u.setPossibleApprovalStages(s, 'Approve', 'Reject')
+            await u.setApprovalUserNamesAndCreateInstanceTasks(s, 'tmjee', 'admin3');
         },
         processFn: async (prevState: State | undefined, args) => {
             const s = {state: state3, args};
             if (prevState && prevState.name !== state3.name) { // we have advance in our workflow state
-                await u.markWorkflowInstanceTaskAsExpred(s, prevState.name);
+                await u.markWorkflowInstanceTaskAsExpired(s, prevState.name);
             }
             const inputApprovalUserName = u.getInputArg(s, 'inputApprovalUserName');
             const inputApprovalStage = u.getInputArg(s, 'inputApprovalStage');
@@ -159,13 +159,13 @@ const approved = createState('approved', {
             const s = {state: approved, args};
             u.setTitle(s, 'Approved');
             u.setDescription(s, 'You are in APPROVED state');
-            u.setApprovalUserNamesAndCreateInstanceTasks(s, 'tmjee', 'admin3');
-            u.setPossibleApprovalStages(s, 'Approve', 'Reject')
+            // u.setPossibleApprovalStages(s, 'Approve', 'Reject')
+            // u.setApprovalUserNamesAndCreateInstanceTasks(s, 'tmjee', 'admin3');
         },
         processFn: async (prevState, args) => {
             const s = {state: approved, args};
             if (prevState && prevState.name !== approved.name) { // we have advance in our workflow state
-                await u.markWorkflowInstanceTaskAsExpred(s, prevState.name);
+                await u.markWorkflowInstanceTaskAsExpired(s, prevState.name);
             }
             return '*';
         },
@@ -179,7 +179,7 @@ const rejected = createState('rejected', {
         processFn: async (prevState, args) => {
             const s = {state: rejected, args};
             if (prevState && prevState.name !== rejected.name) { // we have advance in our workflow state
-                await u.markWorkflowInstanceTaskAsExpred(s, prevState.name);
+                await u.markWorkflowInstanceTaskAsExpired(s, prevState.name);
             }
             return '*';
         }
@@ -202,7 +202,8 @@ const _buildEngine = (): Engine => {
     return createEngine()
             .startsWith(state1)
             .register(state2)
-            .endsWith(state3);
+            .register(state3)
+            .endsWith(approved, rejected)
 };
 
 const _initEngine = (engine: Engine, args: Argument, serializedData?: string): Engine => {

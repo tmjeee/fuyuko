@@ -35,7 +35,7 @@
                 </div>
                 <div fxLayout="column">
                     <div fxFlex="1 0 auto" class="mat-body-1">{{comment.comment}}</div>
-                    <div fxFlex="0 0 auto" class="mat-caption">{{comment.creationDate | date}}</div>
+                    <div fxFlex="0 0 auto" class="mat-caption">{{comment.creationDate | date : 'medium' }}</div>
                 </div>
             </div>
         </mat-card>

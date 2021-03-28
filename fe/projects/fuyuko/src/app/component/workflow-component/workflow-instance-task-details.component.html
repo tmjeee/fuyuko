@@ -8,6 +8,7 @@
         <div>Approval Stage: {{workflowInstanceTask.approvalStage}}</div>
         <div>Approver: {{workflowInstanceTask.approver.username}}</div>
         <div>Status: {{workflowInstanceTask.status}}</div>
+        <div>Workflow Instance State: {{workflowInstanceTask.workflowInstance.currentWorkflowState}}</div>
         <div>Creation Date: {{workflowInstanceTask.creationDate | date}}</div>
         <div>Last Update: {{workflowInstanceTask.lastUpdate | date}}</div>
 
@@ -28,9 +29,10 @@
             </app-static-notice>
         </div>
 
+        {{disableWorkflowActions}} - {{workflowInstanceTask.isUserAllowedToActionOnTask}}
         <div class="controls" *ngIf="workflowInstanceTask.isUserAllowedToActionOnTask">
             <ng-container *ngFor="let action of workflowInstanceTask.possibleUserActions">
-                <button type="button" mat-flat-button color="primary" (click)="doWorkflowAction(action)">{{action}}</button>
+                <button type="button" [disabled]="disableWorkflowActions || (!workflowInstanceTask.isUserAllowedToActionOnTask)" mat-flat-button color="primary" (click)="doWorkflowAction(action)">{{action}}</button>
             </ng-container>
         </div>
 

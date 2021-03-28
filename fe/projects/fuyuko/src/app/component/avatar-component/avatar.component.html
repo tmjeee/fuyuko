@@ -1,11 +1,13 @@
 
 <div class="avatar-component">
   <img *ngIf="user"
+       matTooltip="{{user.username}}"
        [attr.src]="userAvatarUrl(user.id)"
        [ngStyle]="{width: width, height: height}"
        class="avatar">
   <img *ngIf="!user"
        class="avatar"
+       matTooltip="{{user.username}}"
        [ngStyle]="{width: width, height: height}"
        src="assets/images/avatar/no-avatar.jpg">
   <div class="edit" *ngIf="editable">
