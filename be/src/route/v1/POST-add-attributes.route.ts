@@ -9,9 +9,21 @@ import {
 } from './common-middleware';
 import {param, body} from 'express-validator';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
-import {saveAttributes, newConsoleLogger} from '../../service';
+import {
+    saveAttributes,
+    newConsoleLogger,
+    getWorkflowByView,
+    getWorkflowByViewActionAndType,
+    getAttributesInView, triggerAttributeWorkflow
+} from '../../service';
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {
+    Workflow,
+    WorkflowInstanceAction,
+    WorkflowInstanceType,
+    WorkflowTriggerResult
+} from '@fuyuko-common/model/workflow.model';
 
 // CHECKED
 
@@ -28,12 +40,31 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
 
-
         const viewId: number = Number(req.params.viewId);
         const attrs: Attribute[] = req.body.attributes;
+        const workflowAction: WorkflowInstanceAction = 'Update';
+        const workflowType: WorkflowInstanceType = 'Attribute';
 
+        // HANDLE WORKFLOW
+        const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
+        const payload: WorkflowTriggerResult[] = [];
+        if (ws && ws.length > 0) {
+            for (const w of ws) {
+                const workflowTriggerResult = await triggerAttributeWorkflow(attrs, w.workflowDefinition.id, workflowAction);
+                payload.push(...workflowTriggerResult);
+            }
+            const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                status: 'INFO',
+                message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for actual creation to take place',
+                payload,
+            };
+            res.status(200).json(apiResponse);
+            return;
+        }
+
+
+        // HANDLE NON_WORKFLOW
         const errors: string [] = await saveAttributes(viewId, attrs, newConsoleLogger);
-
         if (errors && errors.length) {
             res.status(400).json({
                 status: 'ERROR',

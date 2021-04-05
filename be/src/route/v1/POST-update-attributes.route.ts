@@ -35,9 +35,10 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
         const atts: Attribute[] = req.body.attributes;
-        const workflowAction = 'Edit';
+        const workflowAction = 'Update';
         const workflowType = 'Attribute';
 
+        // HANDLE WORKFLOW
         const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
         const payload: WorkflowTriggerResult[] = [];
         if (ws && ws.length > 0) {
@@ -54,8 +55,8 @@ const httpAction: any[] = [
             return;
         }
 
+        // HANDLE NON_WORKFLOW
         const r: {errors: string[], updatedAttributeIds: number[]} = await updateAttributes(atts);
-
         if (r.errors && r.errors.length) {
             res.status(200).json({
                 status: 'ERROR',

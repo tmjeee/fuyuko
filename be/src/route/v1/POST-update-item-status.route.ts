@@ -12,8 +12,21 @@ import {QueryA} from "../../db";
 import {Connection} from "mariadb";
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
-import {updateItemsStatus} from '../../service';
+import {
+    getItemsByIds,
+    getWorkflowByViewActionAndType,
+    triggerAttributeValueWorkflow,
+    triggerItemWorkflow,
+    updateItemsStatus
+} from '../../service';
 import {Status} from '@fuyuko-common/model/status.model';
+import {
+    Workflow,
+    WorkflowInstanceAction,
+    WorkflowInstanceType,
+    WorkflowTriggerResult
+} from '@fuyuko-common/model/workflow.model';
+import {Item, Value} from '@fuyuko-common/model/item.model';
 
 
 // CHECKED
@@ -34,6 +47,55 @@ const httpAction: any[] = [
         const status: string = req.params.status;
         const itemIds: number[] = req.body.itemIds;
 
+
+        // HANDLE WORKFLOW:
+        if ((status as Status) === 'DELETED') {
+            let workflowTriggered = false;
+            const payload: WorkflowTriggerResult[] = [];
+            const workflowAction: WorkflowInstanceAction = 'Delete';
+            const workflowType: WorkflowInstanceType = 'AttributeValue';
+            const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
+            if (ws && ws.length > 0) {
+                for (const w of ws) {
+                    const items = await getItemsByIds(viewId, itemIds, false, {limit: Number.MAX_VALUE, offset: 0});
+                    if (w.type === 'AttributeValue') { // handle attribute values
+                        const attributeIds = w.attributeIds;
+                        const p: {item: Item, attributeId: number, value: Value}[] = [];
+                        for (const attributeId of attributeIds) {
+                            for (const item of items) {
+                                const value = item[attributeId];
+                                if (value) {
+                                   p.push({ item, attributeId, value});
+                                }
+                            }
+                        }
+                        if (p.length) {
+                            const workflowTriggerResult = await triggerAttributeValueWorkflow(p, w.workflowDefinition.id, workflowAction);
+                            payload.push(...workflowTriggerResult);
+                            workflowTriggered = true;
+                        }
+                    } else if (w.type === 'Item') { // handle item
+                        if (items.length) {
+                            const workflowTriggerResult = await triggerItemWorkflow(items, w.workflowDefinition.id, workflowAction);
+                            payload.push(...workflowTriggerResult);
+                            workflowTriggered = true;
+                        }
+                    }
+                }
+            }
+            if (workflowTriggered) {
+                const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                    status: 'INFO',
+                    message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for actual creation to take place',
+                    payload,
+                };
+                res.status(200).json(apiResponse);
+                return;
+            }
+        }
+
+
+        // HANDLE NON_WORKFLOW:
         const errors: string[] = await updateItemsStatus(itemIds, status as Status);
         if (errors && errors.length) {
             res.status(400).json({

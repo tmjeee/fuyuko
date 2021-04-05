@@ -50,7 +50,6 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
             .pipe(
                 map((v: View) => {
                     if (v) {
-                        console.log('****************** view', v);
                         this.currentView = v;
                         this.reload();
                         return v;
@@ -59,14 +58,11 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
                 }),
                 switchMap((x, _) => {
                     if (x /* view */) {
-                        console.log('**************** switchmap', x);
-                        return this.workflowService.getWorkflowsByViewActionAndType(x.id, 'Edit', 'Attribute');
+                        return this.workflowService.getWorkflowsByViewActionAndType(x.id, 'Update', 'Attribute');
                     }
-                    console.log('****************** switchmap failed');
                     return of(undefined);
                 }),
                 tap((g: ApiResponse<Workflow[]> | undefined) => {
-                    console.log('*************** tap', g);
                     if (g) {
                         this.workflows = g.payload;
                     }

@@ -17,6 +17,8 @@ import {e} from '../logger';
 import {ENABLED} from "@fuyuko-common/model/status.model";
 import {v4 as uuid} from 'uuid';
 import {getAttributesInView, getThreadLocalStore} from './';
+import {Item, Value} from '@fuyuko-common/model/item.model';
+import {PricingStructureItemWithPrice} from '@fuyuko-common/model/pricing-structure.model';
 
 /**
  * Contains functions to assist
@@ -63,6 +65,34 @@ class WorkflowTriggerService {
             workflowTriggerResults.push(workflowTriggerResult);
         }
         return workflowTriggerResults;
+    }
+
+    async triggerAttributeValueWorkflow(itemInfo: {item: Item, attributeId: number, value: Value}[], workflowDefinitionId: number,
+                                        action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
+        // todo
+        return [];
+    }
+    async triggerCategoryWorkflow(): Promise<WorkflowTriggerResult[]> {
+        // todo
+        return [];
+    }
+    async triggerItemWorkflow(items: Item[], workflowDefinitionId: number, action: WorkflowInstanceAction,
+                              args?: Argument): Promise<WorkflowTriggerResult[]> {
+        // todo:
+        return [];
+    }
+    async triggerPriceWorkflow(priceItem: PricingStructureItemWithPrice[], action: WorkflowInstanceAction,
+                               args?: Argument): Promise<WorkflowTriggerResult[]> {
+        // todo:
+        return [];
+    }
+    async triggerRuleWorklow(): Promise<WorkflowTriggerResult[]> {
+        // todo:
+        return [];
+    }
+    async triggerUserWorkflow(): Promise<WorkflowTriggerResult[]> {
+        // todo:
+        return [];
     }
 
     async triggerWorkflow(viewId: number, workflowDefinitionId: number, action: WorkflowInstanceAction,
@@ -174,7 +204,7 @@ class WorkflowTriggerService {
     async continueWorkflow(workflowInstanceId: number, args?: Argument): Promise<ContinueWorkflowResult> {``
         return await doInDbConnection(async (conn) => {
            const q1: QueryA = await conn.query(`
-                SELECT ID, WORKFLOW_ID, DATA, CREATION_DATE, LAST_UPDATE FROM TBL_WORKFLOW_INSTANCE WHERE ID = ?
+                SELECT ID, WORKFLOW_ID, DATA, NEW_VALUE, CREATION_DATE, ACTIONED, LAST_UPDATE FROM TBL_WORKFLOW_INSTANCE WHERE ID = ?
            `, [workflowInstanceId]);
            if (!q1.length) {
                const r: WorkflowInstanceNotFound = {
@@ -185,6 +215,8 @@ class WorkflowTriggerService {
            }
            const workflowId = q1[0].WORKFLOW_ID;
            const data = q1[0].DATA;
+           const newValue = q1[0].NEW_VALUE;
+           const workflowInstanceActioned = q1[0].ACTIONED;
 
            const q2:QueryA = await conn.query(`
                 SELECT 
@@ -192,7 +224,9 @@ class WorkflowTriggerService {
                     WD.NAME AS WD_NAME, 
                     WD.DESCRIPTION AS WD_DESCRIPTION, 
                     WD.CREATION_DATE AS WD_CREATION_DATE, 
-                    WD.LAST_UPDATE AS WD_LAST_UPDATE 
+                    WD.LAST_UPDATE AS WD_LAST_UPDATE,
+                    W.TYPE AS W_TYPE,
+                    W.ACTION AS W_ACTION 
                 FROM TBL_WORKFLOW_DEFINITION AS WD 
                 INNER JOIN TBL_WORKFLOW AS W ON W.WORKFLOW_DEFINITION_ID = WD.ID 
                 WHERE W.ID = ?
@@ -205,40 +239,49 @@ class WorkflowTriggerService {
                return r;
            }
            const workflowDefinitionName = q2[0].WD_NAME;
+           const workflowType = q2[0].W_TYPE;
+           const workflowAction = q2[0].W_ACTION;
 
-            const workflowDefinitionFileFullPath = Path.join(__dirname, '../custom-workflow/workflows/', workflowDefinitionName);
-            const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
-            const engine = workflowScript.buildEngine();
-            workflowScript.initEngine(engine, {}, data);
-            const oldStateName = (engine as InternalEngine).currentState.name;
-            await engine.next(args);
-            const currentState = engine.currentState;
-            const engineStatus = engine.status;
-            const _data = engine.serializeData();
-            const dataAsJSON = JSON.stringify(_data);
+           const workflowDefinitionFileFullPath = Path.join(__dirname, '../custom-workflow/workflows/', workflowDefinitionName);
+           const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
+           const engine = workflowScript.buildEngine();
+           workflowScript.initEngine(engine, {}, data);
+           const oldStateName = (engine as InternalEngine).currentState.name;
+           const engineResponse = await engine.next(args);
+           const currentState = engine.currentState;
+           const engineStatus = engine.status;
+           const _data = engine.serializeData();
+           const dataAsJSON = JSON.stringify(_data);
 
-            const q3: QueryResponse = await conn.query(`
-                UPDATE TBL_WORKFLOW_INSTANCE SET 
-                    DATA = ?, 
-                    CURRENT_WORKFLOW_STATE = ?,
-                    ENGINE_STATUS = ?
-                WHERE ID = ?
-            `, [_data, currentState.name, engineStatus, workflowInstanceId]);
-            if (!q3.affectedRows) {
-                const r: WorkflowContinuationError = {
-                   type: "workflow-continuation-error",
-                   message: 'Failed to update workflow instance in db'
-                };
-                return r;
-            }
-            const rst: WorkflowContinuationDone = {
-                type: "workflow-continuation-done",
-                workflowInstanceId,
-                oldState: oldStateName,
-                newState: (engine as InternalEngine).currentState.name,
-                status: (engine as InternalEngine).status
-            };
-            return rst;
+           const q3: QueryResponse = await conn.query(`
+               UPDATE TBL_WORKFLOW_INSTANCE SET 
+                   DATA = ?, 
+                   CURRENT_WORKFLOW_STATE = ?,
+                   ENGINE_STATUS = ?
+               WHERE ID = ?
+           `, [_data, currentState.name, engineStatus, workflowInstanceId]);
+           if (!q3.affectedRows) {
+               const r: WorkflowContinuationError = {
+                  type: "workflow-continuation-error",
+                  message: 'Failed to update workflow instance in db'
+               };
+               return r;
+           }
+           const rst: WorkflowContinuationDone = {
+               type: "workflow-continuation-done",
+               workflowInstanceId,
+               oldState: oldStateName,
+               newState: (engine as InternalEngine).currentState.name,
+               status: (engine as InternalEngine).status
+           };
+
+           if (engine.status === 'ENDED' && !workflowInstanceActioned) {
+               const q4: QueryResponse = await conn.query(`UPDATE TBL_WORKFLOW_INSTANCE SET ACTIONED = ? WHERE ID= ?`,
+                   [true, workflowInstanceId]);
+               await this._update(workflowType, workflowAction, newValue);
+           }
+
+           return rst;
         })
     }
 
@@ -338,6 +381,91 @@ class WorkflowTriggerService {
             return (q[0].COUNT > 0);
         });
     }
+
+
+    async _update(workflowType: WorkflowInstanceType, workflowAction: WorkflowInstanceAction, newValue: string) {
+        const newValueAsJson = JSON.parse(newValue);
+        console.log('***** doing actual action ', workflowType, workflowAction, newValueAsJson);
+        switch(workflowType) {
+            case 'Attribute': {
+                switch(workflowAction) {
+                    case 'Update': {
+                        break;
+                    }
+                    case 'Delete': {
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'AttributeValue': {
+                switch(workflowAction) {
+                    case 'Update': {
+                        break;
+                    }
+                    case 'Delete': {
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'Category': {
+                switch(workflowAction) {
+                    case 'Update': {
+                        break;
+                    }
+                    case 'Delete': {
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'Item': {
+                switch(workflowAction) {
+                    case 'Update': {
+                        break;
+                    }
+                    case 'Delete': {
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'Price': {
+                switch(workflowAction) {
+                    case 'Update': {
+                        break;
+                    }
+                    case 'Delete': {
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'Rule': {
+                switch(workflowAction) {
+                    case 'Update': {
+                        break;
+                    }
+                    case 'Delete': {
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'User': {
+                switch(workflowAction) {
+                    case 'Update': {
+                        break;
+                    }
+                    case 'Delete': {
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
 }
 
 const s = new WorkflowTriggerService();
@@ -345,6 +473,12 @@ export const
     hasWorkflow = s.hasWorkflow.bind(s),
     triggerWorkflow = s.triggerWorkflow.bind(s),
     triggerAttributeWorkflow = s.triggerAttributeWorkflow.bind(s),
+    triggerAttributeValueWorkflow = s.triggerAttributeValueWorkflow.bind(s),
+    triggerCategoryWorkflow = s.triggerCategoryWorkflow.bind(s),
+    triggerItemWorkflow = s.triggerItemWorkflow.bind(s),
+    triggerPriceWorkflow = s.triggerPriceWorkflow.bind(s),
+    triggerRuleWorklow = s.triggerRuleWorklow.bind(s),
+    triggerUserWorkflow = s.triggerUserWorkflow.bind(s),
     continueWorkflow = s.continueWorkflow.bind(s),
     currentWorkflowInstanceState = s.currentWorkflowInstanceState.bind(s),
     canUserActionOnWorkflowInstance = s.canUserActionOnWorkflowInstance.bind(s)

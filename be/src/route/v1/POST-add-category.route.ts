@@ -29,6 +29,8 @@ const httpAction: any[] = [
             children: []
         });
 
+        // HANDLE WORKFLOW
+
         if (errors && errors.length) {
             res.status(400).json({
                 status: 'ERROR',

@@ -23,6 +23,9 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
 
+
+        // HANDLE WORKFLOW
+
         const r: boolean = await deleteUser(userId);
         if (r) {
             res.status(200).json({

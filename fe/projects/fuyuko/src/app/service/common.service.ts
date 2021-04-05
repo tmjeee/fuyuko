@@ -16,6 +16,6 @@ export const toNotifications = (
             notificationService.warn(title ? title : 'Warning', data.message);
         }
     } else {
-        console.error(`**** api response data is falsey`, data);
+        console.error(`**** api response data is falsy`, data);
     }
 };

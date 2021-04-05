@@ -12,7 +12,12 @@ import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {changeAttributeStatus, getAttributeInView} from '../../service';
 import {DELETED, Status, STATUSES} from '@fuyuko-common/model/status.model';
-import {Workflow, WorkflowTriggerResult} from '@fuyuko-common/model/workflow.model';
+import {
+    Workflow,
+    WorkflowInstanceAction,
+    WorkflowInstanceType,
+    WorkflowTriggerResult
+} from '@fuyuko-common/model/workflow.model';
 import {getWorkflowByViewActionAndType, triggerAttributeWorkflow} from '../../service';
 
 // CHECKED
@@ -41,10 +46,10 @@ const httpAction: any[] = [
             return;
         }
 
-        // trigger workflow (if needed) when delete
+        // HANDLE WORKFLOW
         if (state === DELETED) { // trying to delete trigger workflow if needed
-            const workflowAction = 'Delete';
-            const workflowType = 'Attribute';
+            const workflowAction: WorkflowInstanceAction = 'Delete' as const;
+            const workflowType: WorkflowInstanceType = 'Attribute' as const;
 
             const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
             const payload: WorkflowTriggerResult[] = [];
@@ -66,6 +71,7 @@ const httpAction: any[] = [
 
 
 
+        // HANDLE NON_WORKFLOW
         const r: boolean = await changeAttributeStatus(attributeId, state as any);
         if (r) {
             res.status(200).json({

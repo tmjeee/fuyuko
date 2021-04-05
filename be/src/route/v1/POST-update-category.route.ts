@@ -26,6 +26,9 @@ const httpAction: any[] = [
         const description: string = req.body.description;
         const parentId: number = req.body.parentId ? Number(req.body.parentId) : null;
 
+
+        // HANDLE WORKFLOW
+
         const errors: string[] = await updateCategory(viewId,  parentId, {
             id,
             name,

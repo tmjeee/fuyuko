@@ -3,7 +3,7 @@ import {Status} from './status.model';
 import {EngineStatus} from '@fuyuko-workflow/index';
 import {UserWithoutGroupAndTheme} from './user.model';
 
-export const WORKFLOW_INSTANCE_ACTION = ['Create', 'Edit', 'Delete'] as const;
+export const WORKFLOW_INSTANCE_ACTION = ['Update', 'Delete'] as const;
 export const WORKFLOW_INSTANCE_TYPE = ['Attribute', 'AttributeValue', 'Item', 'Price', 'Rule', 'User', 'Category'] as const;
 export type WorkflowInstanceAction = typeof WORKFLOW_INSTANCE_ACTION[number];
 export type WorkflowInstanceType = typeof WORKFLOW_INSTANCE_TYPE[number];

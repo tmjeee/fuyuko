@@ -11,7 +11,7 @@ import {
     WorkflowInstanceTaskStatus,
 } from '@fuyuko-common/model/workflow.model';
 import {e} from '../logger';
-import {ENABLED} from '@fuyuko-common/model/status.model';
+import {ENABLED, Status} from '@fuyuko-common/model/status.model';
 import {AttributeType} from '@fuyuko-common/model/attribute.model';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {LIMIT_OFFSET, toLimitOffset} from '../util/utils';
@@ -317,6 +317,22 @@ class WorkflowService {
         });
     }
 
+    /**
+     * ===================================
+     * === updateWorkflowStatus
+     * ===================================
+     */
+    async updateWorkflowStatus(workflowId: number, status: Status): Promise<string[]> {
+        return await doInDbConnection(async conn => {
+            const errors = [];
+            const q: QueryResponse = await conn.query(`UPDATE TBL_WORKFLOW SET STATUS = ? WHERE ID = ?`, [status, workflowId]);
+            if (!q.affectedRows) {
+                errors.push(`Failed to update status for workflow id ${workflowId}`);
+            }
+            return errors;
+        });
+    }
+
 
 
     // ===== private functions
@@ -422,4 +438,5 @@ export const
     getWorkflowInstanceTasksForUserCount = s.getWorkflowInstanceTasksForUserCount.bind(s),
     getWorkflowInstanceComments = s.getWorkflowInstanceComments.bind(s),
     getWorkflowInstanceCommentsCount = s.getWorkflowInstanceCommentsCount.bind(s),
-    postWorkflowInstanceComment = s.postWorkflowInstanceComment.bind(s)
+    postWorkflowInstanceComment = s.postWorkflowInstanceComment.bind(s),
+    updateWorkflowStatus = s.updateWorkflowStatus.bind(s)

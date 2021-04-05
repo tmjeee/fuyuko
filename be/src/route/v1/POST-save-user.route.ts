@@ -39,6 +39,9 @@ const httpAction: any[] = [
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
 
+
+        // HANDLE WORKFLOW
+
         const errors: string[] = await updateUser({userId, firstName, lastName, email, theme, password});
         const user: User = await getUserById(userId);
 

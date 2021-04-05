@@ -22,7 +22,7 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
         const customRuleId: number = Number(req.params.customRuleId);
-        const status: string = req.params.status;
+        const status: Status = req.params.status as Status;
 
         const r: boolean = await changeCustomRuleStatus(viewId, customRuleId, status as Status);
 

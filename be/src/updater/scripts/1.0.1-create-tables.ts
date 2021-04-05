@@ -141,6 +141,7 @@ const TBL_WORKFLOW_INSTANCE = async () => {
             NEW_VALUE TEXT,                           /* new changed value (in json format) */
             DATA TEXT,                                /* engine in serialized form */
             CREATOR_USER_ID INT,                      /* user who created or trigger this workflow instance */
+            ACTIONED BOOLEAN,                         /* has the update attribute etc. being executed after engine ended? */
             CREATION_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             LAST_UPDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
          );

@@ -128,8 +128,13 @@ import {eventsAsObservable, fireEvent, EventType, AllEvents, IncomingHttpEvent, 
     UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry}
     from "./event/event.service";
 
-import { getAllWorkflowDefinition, getWorkflowByView, addWorkflow, getWorkflowByViewActionAndType, getWorkflowInstanceTasksById, getWorkflowInstanceTasksForUserCount, getWorkflowInstanceComments, postWorkflowInstanceComment, getWorkflowInstanceTasksForUser, getWorkflowInstanceCommentsCount } from './workflow.service'
-import { hasWorkflow, triggerAttributeWorkflow } from './workflow-trigger.service'
+import { getAllWorkflowDefinition, getWorkflowByView, addWorkflow, getWorkflowByViewActionAndType, getWorkflowInstanceTasksById,
+    getWorkflowInstanceTasksForUserCount, getWorkflowInstanceComments, postWorkflowInstanceComment, getWorkflowInstanceTasksForUser,
+    getWorkflowInstanceCommentsCount, updateWorkflowStatus }
+    from './workflow.service'
+import { hasWorkflow, triggerAttributeWorkflow, triggerAttributeValueWorkflow, triggerItemWorkflow, triggerCategoryWorkflow, triggerPriceWorkflow,
+    triggerUserWorkflow }
+    from './workflow-trigger.service'
 
 export {
     // bulk-edit.service
@@ -332,9 +337,11 @@ export {
     getAllWorkflowDefinition, addWorkflow, getWorkflowByViewActionAndType, getWorkflowByView,
     getWorkflowInstanceTasksById, getWorkflowInstanceTasksForUser, getWorkflowInstanceTasksForUserCount,
     getWorkflowInstanceComments, postWorkflowInstanceComment, getWorkflowInstanceCommentsCount,
+    updateWorkflowStatus,
 
     // workflow-trigger.service
-    hasWorkflow, triggerAttributeWorkflow,
+    hasWorkflow, triggerAttributeWorkflow, triggerPriceWorkflow, triggerUserWorkflow, triggerCategoryWorkflow, triggerAttributeValueWorkflow,
+    triggerItemWorkflow,
 
     // workflow-scripts-utils.service
 };

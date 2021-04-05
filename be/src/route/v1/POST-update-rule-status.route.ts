@@ -28,8 +28,14 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
         const ruleId: number = Number(req.params.ruleId);
-        const status: string = req.params.status;
+        const status: Status = req.params.status as Status;
 
+        // HANDLE WORKFLOW
+        if (status === 'DELETED') {
+
+        }
+
+        // HANDLE NON_WORKFLOW
         const r: boolean = await updateRuleStatus(ruleId, status as Status);
         if (r) {
             res.status(200).json({
