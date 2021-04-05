@@ -1,0 +1,4 @@
+* change ApiResponse to accept multiple messages
+* eg. in workflow for item, need a way to just trigger attribute value and pass on the remaning to normal non-workflow change
+* workflow stuff are marked with HANDLE WORKFLOW 
+

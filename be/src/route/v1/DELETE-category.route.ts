@@ -17,6 +17,11 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const categoryId: number = Number(req.params.categoryId);
+
+
+        // HANDLE WORKFLOW
+
+
         const errors: string[] = await deleteCategory(viewId, categoryId);
         if (errors && errors.length) {
             res.status(400).json({

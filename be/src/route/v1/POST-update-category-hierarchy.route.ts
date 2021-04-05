@@ -22,7 +22,6 @@ const httpAction: any[] = [
         const categoryId: number = Number(req.params.categoryId);
         const parentId: number = req.params.parentId ? Number(req.params.parentId) : null;
 
-
         // HANDLE CATEGORY
 
         const errors: string[] = await updateCategoryHierarchy(categoryId,  parentId);
