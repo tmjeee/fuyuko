@@ -30,18 +30,23 @@ const httpAction: any[] = [
 
         const r: {errors: string[], attributeDataImport: AttributeDataImport} = await importAttributePreview(viewId, files.attributeDataCsvFile);
         if (r.errors && r.errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: ApiResponse<AttributeDataImport> = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: r.attributeDataImport
-            } as ApiResponse<AttributeDataImport>);
-
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Attribute Data Import preview ready`,
+            const apiResponse: ApiResponse<AttributeDataImport> = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Attribute Data Import preview ready`,
+                }],
                 payload: r.attributeDataImport
-            } as ApiResponse<AttributeDataImport>);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

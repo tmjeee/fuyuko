@@ -26,25 +26,31 @@ const httpAction = [
 
         const r: {errors: string[], registrationId: number, email: string, username: string} = await selfRegister(username, email, firstName, lastName, password);
         if (r.errors && r.errors.length) {
-            res.status(200).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: RegistrationResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: {
                     registrationId: r.registrationId,
                     email: r.email,
                     username: r.username,
                 }
-            } as RegistrationResponse);
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `User ${username} (${email}) registered, activation is required before account is activated`,
+            const apiResponse: RegistrationResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `User ${username} (${email}) registered, activation is required before account is activated`,
+                }],
                 payload: {
                     registrationId: r.registrationId,
                     email: r.email,
                     username: r.username,
                 }
-            } as RegistrationResponse);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

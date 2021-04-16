@@ -22,11 +22,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const jobs: Job[] = await getAllJobs();
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Jobs retrieved successfully`,
+        const apiResponse: ApiResponse<Job[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Jobs retrieved successfully`,
+            }],
             payload: jobs
-        } as ApiResponse<Job[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

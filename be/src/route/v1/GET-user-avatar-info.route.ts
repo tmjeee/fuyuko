@@ -12,11 +12,14 @@ import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 // CHECKED
 
 const send = (res: Response, i: UserAvatar) => {
-    res.status(200).json({
-        status: 'SUCCESS',
-        message: `User avatar retrieved`,
-        payload: i
-    } as ApiResponse<UserAvatar>);
+    const apiResponse: ApiResponse<UserAvatar> = {
+        messages: [{
+            status: 'SUCCESS',
+            message: `User avatar retrieved`,
+        }],
+        payload: i,
+    };
+    res.status(200).json(apiResponse);
 }
 
 const sendNoAvatar = async (res: Response, conn: Connection) => {

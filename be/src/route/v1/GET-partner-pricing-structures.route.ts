@@ -26,12 +26,14 @@ const httpAction: any[] = [
         const userId: number = Number(req.params.userId);
 
         const pricingStructures: PricingStructure[] = await getPartnerPricingStructures(userId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: 'Pricing structure retrieved',
+        const apiResponse: ApiResponse<PricingStructure[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'Pricing structure retrieved',
+            }],
             payload: pricingStructures
-        } as ApiResponse<PricingStructure[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

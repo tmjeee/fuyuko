@@ -20,12 +20,14 @@ const httpAction = [
 
         const code: string = req.params.code;
         const invitation: Invitation = await getInvitationByCode(code);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `invitation retrieved successfully`,
+        const apiResponse: ApiResponse<Invitation> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `invitation retrieved successfully`,
+            }],
             payload: invitation
-        } as ApiResponse<Invitation>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

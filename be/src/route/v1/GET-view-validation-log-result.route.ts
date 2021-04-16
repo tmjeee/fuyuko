@@ -25,14 +25,15 @@ const httpAction: any[] = [
         const validationLogId: number = req.params.validationLogId ? Number(req.params.validationLogId) : null;
         const order: string = req.params.order ? req.params.order : null;
         const limit: number = req.params.limit ? Number(req.params.limit) : null;
-
         const _r: ValidationLogResult = await getViewValidationResultLog(viewId, validationId, validationLogId, order as any, limit);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Validation log result retrieved`,
+        const apiResponse: ApiResponse<ValidationLogResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Validation log result retrieved`,
+            }],
             payload: _r
-        } as ApiResponse<ValidationLogResult>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

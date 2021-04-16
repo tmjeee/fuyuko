@@ -31,11 +31,14 @@ const httpAction: any[] = [
         const preview: CustomBulkEditScriptPreview = req.body.preview;
 
         const r: CustomBulkEditScriptJobSubmissionResult = await runCustomBulkEditJob(viewId, customBulkEditId, values, preview);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Custom Bulk Edit script job submission done`,
+        const apiResponse: ApiResponse<CustomBulkEditScriptJobSubmissionResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Custom Bulk Edit script job submission done`,
+            }],
             payload: r
-        } as ApiResponse<CustomBulkEditScriptJobSubmissionResult>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

@@ -48,8 +48,10 @@ const httpAction: any[] = [
                 payload.push(...workflowTriggerResults);
 
                 const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
-                    status: 'INFO',
-                    message: `Workflow instance has been triggered to update attribute, workflow instance needs to be completed for actual update to take place`,
+                    messages: [{
+                        status: 'INFO',
+                        message: `Workflow instance has been triggered to update attribute, workflow instance needs to be completed for actual update to take place`,
+                    }],
                     payload
                 };
                 res.status(200).json(apiResponse);
@@ -60,15 +62,21 @@ const httpAction: any[] = [
         // HANDLE NON_WORKFLOW
         const r: boolean = await updatePricingStructureStatus(pricingStructureId, status as Status);
         if (r) {
-            res.status(200).json({
-                status: "SUCCESS",
-                message: `Pricing Structure status updated`
-            } as ApiResponse)
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: "SUCCESS",
+                    message: `Pricing Structure status updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: "ERROR",
-                message: `Pricing Structure status FAILED to be updated`
-            } as ApiResponse)
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: "ERROR",
+                    message: `Pricing Structure status FAILED to be updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

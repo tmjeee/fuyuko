@@ -6,7 +6,7 @@ import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toLimitOffset} from "../../util/utils";
 import {getAuditLogs, getAuditLogsCount} from '../../service';
 import {AuditCategory, AuditLog} from '@fuyuko-common/model/audit-log.model';
-import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {Level} from '@fuyuko-common/model/level.model';
 
 const httpAction: any[] = [
@@ -24,15 +24,17 @@ const httpAction: any[] = [
 
         const total: number = await getAuditLogsCount(filterByUserId, filterByCategory, filterByLevel, filterByLogs);
         const auditLogs: AuditLog[] = await getAuditLogs(filterByUserId, filterByCategory, filterByLevel, filterByLogs, limitOffset);
-
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: 'audit logs retrived',
-           payload: auditLogs,
-           limit: limitOffset ? limitOffset.limit : total,
-           offset: limitOffset ? limitOffset.offset : 0,
-           total: total
-        } as PaginableApiResponse<AuditLog[]>)
+        const apiResponse: PaginableApiResponse<AuditLog[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'audit logs retrived',
+            }],
+            payload: auditLogs,
+            limit: limitOffset ? limitOffset.limit : total,
+            offset: limitOffset ? limitOffset.offset : 0,
+            total: total
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

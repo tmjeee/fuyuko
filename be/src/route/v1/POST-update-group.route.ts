@@ -20,15 +20,21 @@ const httpAction: any[] = [
         const g: Group = req.body as Group;
         const errors: string[] = await addOrUpdateGroup(g);
         if (errors && errors.length) {
-            res.status(400).json({
-               status: 'ERROR',
-               message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Group ${g.name} updated`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Group ${g.name} updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

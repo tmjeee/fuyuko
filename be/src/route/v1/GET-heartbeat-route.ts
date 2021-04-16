@@ -15,10 +15,13 @@ const httpAction: any[] = [
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const h: {date: string} = await heartbeat();
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `${h.date}`
-        } as ApiResponse);
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `${h.date}`
+            }]
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

@@ -34,18 +34,23 @@ const httpAction: any[] = [
         const r: {errors: string[], priceDataImport: PriceDataImport} = await importPricePreview(viewId, priceDataCsvFile);
 
         if (r.errors && r.errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: ApiResponse<PriceDataImport> = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: r.priceDataImport
-            } as ApiResponse<PriceDataImport>);
-
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Price data import preview ready`,
+            const apiResponse: ApiResponse<PriceDataImport> = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Price data import preview ready`,
+                }],
                 payload: r.priceDataImport
-            } as ApiResponse<PriceDataImport>);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

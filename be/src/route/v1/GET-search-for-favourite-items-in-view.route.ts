@@ -51,14 +51,17 @@ const httpAction: any[] = [
             total = await getAllFavouriteItemsInViewCount(viewId, userId);
             allItems = await getAllFavouriteItemsInView(viewId, userId, limitOffset);
         }
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Favourite items retrieved`,
+        const apiResponse: PaginableApiResponse<Item[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Favourite items retrieved`,
+            }],
             payload: allItems,
             total,
             limit: limitOffset ? limitOffset.limit : total,
             offset: limitOffset ? limitOffset.offset : 0,
-        } as PaginableApiResponse<Item[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

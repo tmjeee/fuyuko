@@ -23,15 +23,21 @@ const httpAction: any[] = [
 
         const errors: string[] = await removeItemFromViewCategory(categoryId, itemId);
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Item ${itemId} removed from category ${categoryId} in view ${viewId}`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Item ${itemId} removed from category ${categoryId} in view ${viewId}`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

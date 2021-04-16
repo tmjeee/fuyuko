@@ -7,6 +7,7 @@ import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-respon
 import {combineAll, map, reduce, tap} from 'rxjs/operators';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toQuery} from '../../utils/pagination.utils';
+import {isApiResponseSuccess} from '../common.service';
 
 const URL_GET_CATEGORIES_WITH_ITEMS = () => `${config().api_host_url}/view/:viewId/categories-with-items`;
 const URL_GET_CATEGORY_ITEMS_IN_CATEGORY =  (limitOffset?: LimitOffset) => `${config().api_host_url}/view/:viewId/category/:categoryId/category-simple-items-in-category?${toQuery(limitOffset)}`;
@@ -97,15 +98,17 @@ export class CategoryService {
             combineAll(),
             reduce((a: ApiResponse, i: ApiResponse[]) => {
                 for (const b of i) {
-                    if (b.status !== 'SUCCESS') {
-                        a.status = a.status !== 'ERROR' ? b.status : a.status;
-                        a.message = a.message + ', ' + b.message;
+                    if (!isApiResponseSuccess(b)) {
+                        a.messages[0].status = 'ERROR';
+                        a.messages[0].message = a.messages[0].message + ', ' + b.messages.join(', ');
                     }
                 }
                 return a;
             }, {
-                status: 'SUCCESS',
-                message: 'success'
+                messages: [{
+                    status: 'SUCCESS',
+                    message: 'success'
+                }]
             } as ApiResponse)
         );
     }
@@ -120,15 +123,17 @@ export class CategoryService {
             combineAll(),
             reduce((a: ApiResponse, i: ApiResponse[]) => {
                 for (const b of i) {
-                    if (b.status !== 'SUCCESS') {
-                        a.status = a.status !== 'ERROR' ? b.status : a.status;
-                        a.message = a.message + ', ' + b.message;
+                    if (isApiResponseSuccess(b)) {
+                        a.messages[0].status = 'ERROR';
+                        a.messages[0].message = a.messages[0].message + ', ' + b.messages.join(', ');
                     }
                 }
                 return a;
             }, {
-                status: 'SUCCESS',
-                message: 'success'
+                messages: [{
+                    status: 'SUCCESS',
+                    message: 'success'
+                }]
             } as ApiResponse)
         );
     }

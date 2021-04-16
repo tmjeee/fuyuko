@@ -19,11 +19,14 @@ const httpAction: any[] = [
 
         const r: CustomDataImport[] = await getAllCustomImports();
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Custom Data Import retrieval success`,
+        const apiResponse: ApiResponse<CustomDataImport[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Custom Data Import retrieval success`,
+            }],
             payload: r
-        } as ApiResponse<CustomDataImport[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

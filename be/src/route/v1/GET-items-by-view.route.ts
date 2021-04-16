@@ -25,15 +25,17 @@ const httpAction: any[] = [
 
         const items: Item[] = await getItemsByIds(viewId, itemIds, true, limitOffset);
         const itemsTotal: number = await getItemsByIdsCount(viewId, itemIds);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Items received successfully`,
+        const apiResponse: PaginableApiResponse<Item[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Items received successfully`,
+            }],
             payload: items,
             total: itemsTotal,
             offset: limitOffset ? limitOffset.offset : 0,
             limit: limitOffset ? limitOffset.limit : itemsTotal
-        } as PaginableApiResponse<Item[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

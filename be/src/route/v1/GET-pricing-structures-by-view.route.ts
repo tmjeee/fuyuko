@@ -17,11 +17,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const pricingStructures: PricingStructure[] = await getPricingStructuresByView(viewId);
-        res.status(200).json( {
-            status: 'SUCCESS',
-            message: `Pricing Structures retrieved`,
+        const apiResponse: ApiResponse<PricingStructure[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Pricing Structures retrieved`,
+            }],
             payload: pricingStructures
-        } as ApiResponse<PricingStructure[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

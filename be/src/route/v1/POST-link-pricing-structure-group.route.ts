@@ -22,16 +22,21 @@ const httpAction: any[] = [
         const groupId: number = Number(req.params.groupId);
         const errors: string[] = await linkPricingStructureWithGroupId(pricingStructureId, groupId);
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `pricing structure ${pricingStructureId} and group ${groupId} linked successfully`
-            } as ApiResponse);
-
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `pricing structure ${pricingStructureId} and group ${groupId} linked successfully`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

@@ -109,11 +109,14 @@ const httpAction: any[] = [
 
       const bulkEditPackage: BulkEditPackage = await bulkEditPreview(viewId, changeClauses, whenClauses);
 
-      res.status(200).json({
-          status: 'SUCCESS',
-          message: `Bulk edit package ready`,
-          payload: bulkEditPackage
-      } as ApiResponse<BulkEditPackage>);
+      const apiResponse: ApiResponse<BulkEditPackage> = {
+        messages: [{
+            status: 'SUCCESS',
+            message: `Bulk edit package ready`,
+        }],
+        payload: bulkEditPackage
+      };
+      res.status(200).json(apiResponse);
    }
 ]
 

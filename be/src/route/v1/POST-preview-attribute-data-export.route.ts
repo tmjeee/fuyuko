@@ -31,12 +31,17 @@ const httpAction: any[] = [
         const atts: Attribute[] = req.body.attributes;
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
         const attributes: Attribute[] = await exportAttributePreview(viewId, atts);
-        res.status(200).json({
+        const apiResponse: ApiResponse<AttributeDataExport> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'success'
+            }],
             payload: {
                 type: 'ATTRIBUTE',
                 attributes
-            } as AttributeDataExport
-        } as ApiResponse<AttributeDataExport>);
+            }
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

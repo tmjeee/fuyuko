@@ -47,8 +47,10 @@ const httpAction: any[] = [
                 payload.push(...workflowTriggerResults);
             }
             const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
-                status: 'INFO',
-                message: `Workflow instance has been triggered to update attribute, workflow instance needs to be completed for actual update to take place`,
+                messages: [{
+                    status: 'INFO',
+                    message: `Workflow instance has been triggered to update attribute, workflow instance needs to be completed for actual update to take place`,
+                }],
                 payload
             };
             res.status(200).json(apiResponse);
@@ -58,15 +60,21 @@ const httpAction: any[] = [
         // HANDLE NON_WORKFLOW
         const r: {errors: string[], updatedAttributeIds: number[]} = await updateAttributes(atts);
         if (r.errors && r.errors.length) {
-            res.status(200).json({
-                status: 'ERROR',
-                message: r.errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', ')
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Attributes ${r.updatedAttributeIds.join(',')} updated`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Attributes ${r.updatedAttributeIds.join(',')} updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

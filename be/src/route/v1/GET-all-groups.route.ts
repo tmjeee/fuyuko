@@ -21,12 +21,17 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const totalGroups: number = await getAllGroupsCount();
         const groups: Group[] = await getAllGroups();
-        res.status(200).json({
+        const apiResponse: PaginableApiResponse<Group[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Groups retrieved successfully`
+            }],
             total: totalGroups,
             limit: totalGroups,
             offset: 0,
             payload: groups
-        } as PaginableApiResponse<Group[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

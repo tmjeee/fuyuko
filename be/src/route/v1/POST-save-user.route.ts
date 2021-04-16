@@ -46,18 +46,24 @@ const httpAction: any[] = [
         const user: User = await getUserById(userId);
 
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', '),
+            const apiResponse: ApiResponse<User> = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', '),
+                }],
                 payload: user
-            } as ApiResponse<User>);
+            };
+            res.status(400).json(apiResponse);
 
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `User saved`,
+            const apiResponse: ApiResponse<User> = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `User saved`,
+                }],
                 payload: user
-            } as ApiResponse<User>);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

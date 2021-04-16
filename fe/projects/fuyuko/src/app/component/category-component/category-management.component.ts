@@ -18,6 +18,7 @@ import {PaginationComponentEvent} from '../pagination-component/pagination.compo
 import {MatDialog} from '@angular/material/dialog';
 import {EditCategoryPopupComponent} from './edit-category-popup.component';
 import {Action, CategoryItemTableComponentEvent} from './category-item-table.component';
+import {isApiResponseSuccess} from '../../service/common.service';
 
 export type GetCategoriesWithItemsFn = (viewId: number) => Observable<CategoryWithItems[]>;
 export type GetCategorySimpleItemsInCategoryFn =
@@ -169,7 +170,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                         this.addCategoryFn(-1, r.name, r.description)
                             .pipe(
                                 tap((res: ApiResponse) => {
-                                    if (res.status === 'SUCCESS') {
+                                    if (isApiResponseSuccess(res)) {
                                         this.reloadTree(this.viewId);
                                     }
                                 })
@@ -189,7 +190,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                     this.addCategoryFn(this.selectedTreeNode.currentCategoryWithItems.id, r.name, r.description)
                         .pipe(
                             tap((res: ApiResponse) => {
-                                if (res.status === 'SUCCESS') {
+                                if (isApiResponseSuccess(res)) {
                                     this.reloadTree(this.viewId);
                                 }
                             })
@@ -202,7 +203,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
     deleteCategory($event: MouseEvent) {
         this.deleteCategoryFn(this.selectedTreeNode.currentCategoryWithItems.id).pipe(
             tap((res: ApiResponse) => {
-                if (res.status === 'SUCCESS') {
+                if (isApiResponseSuccess(res)) {
                     this.selectedTreeNode = null;
                     this.addableCategoryTableItems = [];
                     this.removableCategoryTableItems = [];
@@ -223,7 +224,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                     if (r) {
                         this.editCategoryFn(r.id, r.name, r.description).pipe(
                             tap((res: ApiResponse) => {
-                                if (res.status === 'SUCCESS') {
+                                if (isApiResponseSuccess(res)) {
                                     this.reloadTree(this.viewId);
                                 }
                             })

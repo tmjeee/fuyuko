@@ -26,12 +26,14 @@ const httpAction: any[] = [
 
         const groupId: number = Number(req.params.groupId);
         const group: Group = await getGroupById(groupId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Group retrieved successfully`,
+        const apiResponse: ApiResponse<Group> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Group retrieved successfully`,
+            }],
             payload: group
-        } as ApiResponse<Group>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

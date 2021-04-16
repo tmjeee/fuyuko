@@ -15,11 +15,14 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const customBulkEdits: CustomBulkEdit[] = await getAllCustomBulkEdits();
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: 'Custom Bulk Edit retrieval success',
+        const apiResponse: ApiResponse<CustomDataExport[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'Custom Bulk Edit retrieval success',
+            }],
             payload: customBulkEdits
-        } as ApiResponse<CustomDataExport[]>);
+        }
+        res.status(200).json(apiResponse);
     }
 ];
 

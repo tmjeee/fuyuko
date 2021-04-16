@@ -28,12 +28,17 @@ const httpAction: any[] = [
         const totalGroups: number = await getGroupsWithRoleCount(roleName);
         const groups: Group[] = await getGroupsWithRole(roleName);
 
-        res.status(200).json({
+        const apiResponse: PaginableApiResponse<Group[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Groups obtained successfully`
+            }],
             total: totalGroups,
             limit: totalGroups,
             offset: 0,
             payload: groups
-        } as PaginableApiResponse<Group[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

@@ -31,11 +31,14 @@ const httpAction: any[] = [
         const preview: ExportScriptPreview = req.body.preview;
 
         const r: ExportScriptJobSubmissionResult = await runCustomExportJob(viewId, customExportId, values, preview);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Export script job submission done`,
+        const apiResponse: ApiResponse<ExportScriptJobSubmissionResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Export script job submission done`,
+            }],
             payload: r
-        } as ApiResponse<ExportScriptJobSubmissionResult>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

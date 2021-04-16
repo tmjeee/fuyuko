@@ -28,17 +28,23 @@ const httpAction: any[] = [
 
         const r: {errors: string[], itemDataImport: ItemDataImport} = await importItemPreview(viewId, files.itemDataCsvFile);
         if (r.errors && r.errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: ApiResponse<ItemDataImport> = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: r.itemDataImport
-            } as ApiResponse<ItemDataImport>);
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Item data import preview ready`,
+            const apiReponse: ApiResponse<ItemDataImport> = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Item data import preview ready`,
+                }],
                 payload: r.itemDataImport
-            } as ApiResponse<ItemDataImport>);
+            };
+            res.status(200).json(apiReponse);
         }
     }
 ];

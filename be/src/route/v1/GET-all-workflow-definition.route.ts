@@ -14,8 +14,10 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const workflowDefinitions = await getAllWorkflowDefinition()
         const r: ApiResponse<WorkflowDefinition[]> = {
-            status: "SUCCESS",
-            message: 'Workflow definitions retrieved successfully',
+            messages: [{
+                status: "SUCCESS",
+                message: 'Workflow definitions retrieved successfully',
+            }],
             payload: workflowDefinitions
         };
         res.status(200).json(r);

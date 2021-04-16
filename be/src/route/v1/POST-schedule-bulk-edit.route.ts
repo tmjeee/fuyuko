@@ -31,12 +31,14 @@ const httpAction = [
         const bulkEditPackage: BulkEditPackage = req.body.bulkEditPackage;
 
         const job: Job = await bulkEditRunJob(viewId, bulkEditPackage);
-
-        res.status(200).json( {
-            status: 'SUCCESS',
-            message: `Bulk edit job scheduled`,
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Bulk edit job scheduled`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

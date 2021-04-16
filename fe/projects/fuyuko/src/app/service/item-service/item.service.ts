@@ -88,14 +88,17 @@ export class ItemService {
 
   getItemsByIds(viewId: number, itemIds: number[], limitOffset?: LimitOffset): Observable<PaginableApiResponse<Item[]>> {
     if (!!!itemIds || !itemIds.length) { // no item ids
-        return of({
-            message: 'Success',
-            status: 'SUCCESS',
+        const paginableApiResponse: PaginableApiResponse<Item[]> = {
+            messages: [{
+                message: 'Success',
+                status: 'SUCCESS',
+            }],
             total: 0,
             limit: limitOffset ? limitOffset.limit : DEFAULT_LIMIT,
             offset: limitOffset ? limitOffset.offset : DEFAULT_OFFSET,
             payload: []
-        } as PaginableApiResponse<Item[]>);
+        };
+        return of(paginableApiResponse);
     }
     return this.httpClient.get<PaginableApiResponse<Item[]>>(
         URL_GET_ITEMS(limitOffset)

@@ -17,11 +17,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
         const settings: Settings = await getSettings(userId);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Settings retrieved`,
+        const apiResponse: ApiResponse<Settings> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Settings retrieved`,
+            }],
             payload: settings
-        } as ApiResponse<Settings>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

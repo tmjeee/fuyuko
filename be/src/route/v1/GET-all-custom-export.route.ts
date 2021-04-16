@@ -18,11 +18,14 @@ const httpAction: any[] = [
 
         const r: CustomDataExport[] = await getAllCustomExports();
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: 'Custom Data Export retrieval success',
+        const apiResponse: ApiResponse<CustomDataExport[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'Custom Data Export retrieval success',
+            }],
             payload: r
-        } as ApiResponse<CustomDataExport[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

@@ -3,7 +3,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
-import {isApiErrorContext} from '@fuyuko-common/model/api-error.model';
+import {isApiError, isApiErrorContext} from '@fuyuko-common/model/api-error.model';
 import {GlobalCommunicationService} from '../service/global-communication-service/global-communication.service';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {AuthService, isUnauthorizationFailedRedirectable} from '../service/auth-service/auth.service';
@@ -92,13 +92,13 @@ export class GlobalErrorHandler extends ErrorHandler {
         return ngZone;
     }
 
-    private getErrorMessages(r: HttpErrorResponse): string {
+    private getErrorMessages(r: HttpErrorResponse): string[] {
 
         // case 1: ApiErrorContext
         if (isApiErrorContext(r.error)) {
             const apiErrorContext = r.error;
             if (apiErrorContext && apiErrorContext.errors && apiErrorContext.errors.length > 0) {
-                return apiErrorContext.errors.reduce((acc: string[], err: { message?: string, msg?: string }) => {
+                return [apiErrorContext.errors.reduce((acc: string[], err: { message?: string, msg?: string }) => {
                     if (err.message) {
                         acc.push(err.message);
                     }
@@ -107,14 +107,19 @@ export class GlobalErrorHandler extends ErrorHandler {
                     }
                     return acc;
                 }, [])
-                    .map((c: string) => c).join('<br/>');
+                .map((c: string) => c).join('<br/>')];
             }
         }
 
-        // case 2: ApiResponse
+        // case 2: ApiError (we don't normally do this, it should be ApiErrorContext)
+        if (isApiError(r.error)) {
+            return [r.error.msg];
+        }
+
+        // case 3: ApiResponse
         const apiResponse: ApiResponse = r.error;
-        if (apiResponse.message && apiResponse.status) {
-                return apiResponse.message;
+        if (apiResponse.messages && apiResponse.messages.length) {
+            return apiResponse.messages.map(msg => msg.message);
         }
 
         return null;

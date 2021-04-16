@@ -23,11 +23,14 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_ADMIN])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const selfRegistrations: SelfRegistration[] = await getAllSelfRegistrations();
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Self registrations retrieved`,
+        const apiResponse: ApiResponse<SelfRegistration[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Self registrations retrieved`,
+            }],
             payload: selfRegistrations
-        } as ApiResponse<SelfRegistration[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

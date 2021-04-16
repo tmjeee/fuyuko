@@ -21,8 +21,10 @@ const httpAction: any[] = [
         const comments = await getWorkflowInstanceComments(workflowInstanceId);
         const total = await getWorkflowInstanceCommentsCount(workflowInstanceId);
         const r: PaginableApiResponse<WorkflowInstanceComment[]> = {
-            status: 'SUCCESS',
-            message: `Retrieved workflow instance comments successfully`,
+            messages: [{
+                status: 'SUCCESS',
+                message: `Retrieved workflow instance comments successfully`,
+            }],
             payload: comments,
             limit: limitOffset ? limitOffset.limit : total,
             offset: limitOffset ? limitOffset.offset : 0,

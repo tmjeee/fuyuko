@@ -33,11 +33,14 @@ const httpAction: any[] = [
         const item: Item[] = req.body.items;
 
         const job: Job = await exportItemRunJob(viewId, attributes, item);
-        res.status(200).json( {
-            status: 'SUCCESS',
-            message: `Item data export job scheduled`,
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Item data export job scheduled`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

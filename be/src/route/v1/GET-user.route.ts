@@ -25,11 +25,14 @@ const httpAction: any[] = [
    async (req: Request, res: Response, next: NextFunction) => {
       const userId: number = Number(req.params.userId);
       const user: User =  await getUserById(userId);
-      res.status(200).json({
-         status: 'SUCCESS',
-         message: `User retrieved`,
+      const apiResponse: ApiResponse<User> = {
+         messages: [{
+            status: 'SUCCESS',
+            message: `User retrieved`,
+         }],
          payload: user
-      } as ApiResponse<User>);
+      };
+      res.status(200).json(apiResponse);
    }
 ];
 

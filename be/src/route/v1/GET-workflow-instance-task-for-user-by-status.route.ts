@@ -24,8 +24,10 @@ const httpAction: any[] = [
         const workflowInstanceTasks = await getWorkflowInstanceTasksForUser(userId, status, limitOffset);
         const total = await getWorkflowInstanceTasksForUserCount(userId, status);
         const r: PaginableApiResponse<WorkflowInstanceTask[]> = {
-            status: 'SUCCESS',
-            message: 'Workflow instance task retrived successfully',
+            messages: [{
+                status: 'SUCCESS',
+                message: 'Workflow instance task retrived successfully',
+            }],
             payload: workflowInstanceTasks,
             limit: limitOffset ? limitOffset.limit : total,
             offset: limitOffset ? limitOffset.offset : 0,

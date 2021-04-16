@@ -29,15 +29,21 @@ const httpActions: any[] = [
         const errors = await addWorkflow(workflowName, viewId, workflowDefinitionId, workflowAction, workflowType, workflowAttributeIds);
 
         if (errors && errors.length) {
-            res.status(400).json({
-                status: "ERROR",
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: "ERROR",
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: "SUCCESS",
-                message: `Workflow named ${workflowName} successfully created`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: "SUCCESS",
+                    message: `Workflow named ${workflowName} successfully created`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

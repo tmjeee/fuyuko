@@ -22,12 +22,14 @@ const httpAction: any[] = [
         const attributeId: number = Number(req.params.attributeId);
 
         const attr: Attribute[] = await getAttributesInView(viewId, [attributeId]);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Attribute retrieved successfully`,
+        const apiResponse: ApiResponse<Attribute> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Attribute retrieved successfully`,
+            }],
             payload: (attr && attr.length > 0 ? attr[0] : null)
-        } as ApiResponse<Attribute>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

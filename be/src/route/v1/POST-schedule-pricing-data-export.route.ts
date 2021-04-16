@@ -35,12 +35,14 @@ const httpAction: any[] = [
         const attributes: Attribute[] = req.body.attributes;
 
         const job: Job = await exportPriceRunJob(viewId, pricingStructureId, attributes, pricedItems);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Pricing data export scheduled`,
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Pricing data export scheduled`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

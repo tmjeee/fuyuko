@@ -27,12 +27,14 @@ const httpAction: any[] = [
         const values: CustomBulkEditScriptInputValue[] = req.body.values;
 
         const r: CustomBulkEditScriptValidateResult = await validate(viewId, customBulkEditId, values);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Custom Bulk Edit script validation result ready`,
+        const apiResponse: ApiResponse<CustomBulkEditScriptValidateResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Custom Bulk Edit script validation result ready`,
+            }],
             payload: r
-        } as ApiResponse<CustomBulkEditScriptValidateResult>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

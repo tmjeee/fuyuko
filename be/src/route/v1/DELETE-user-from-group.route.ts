@@ -28,15 +28,21 @@ const httpAction: any[] = [
 
         const errors: string[] = await deleteUserFromGroup(userId, groupId);
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `User ${userId} failed to be deleted from group ${groupId}`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `User ${userId} failed to be deleted from group ${groupId}`
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `User ${userId} deleted from group ${groupId}`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `User ${userId} deleted from group ${groupId}`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

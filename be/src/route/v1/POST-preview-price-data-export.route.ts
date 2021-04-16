@@ -46,14 +46,16 @@ const httpAction: any[] = [
             pricedItems: p.i,
         });
 
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `Price data export preview ready`,
-           payload: priceDataExport
-        } as ApiResponse<PriceDataExport>);
+        const apiResponse: ApiResponse<PriceDataExport> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Price data export preview ready`,
+            }],
+            payload: priceDataExport
+        };
+        res.status(200).json(apiResponse);
     }
 ];
-
 
 const x = (router: Router, registry: Registry) => {
     const p = `/view/:viewId/export/pricingStructure/:pricingStructureId/prices/preview`;

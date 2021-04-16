@@ -22,13 +22,16 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
         const f: string = await  getUserDashboardSerializedData(userId);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Dashboard retrieved`,
+        const apiResponse: ApiResponse<{data: string}> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Dashboard retrieved`,
+            }],
             payload: {
                 data: f
             }
-        } as ApiResponse<{data: string}>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

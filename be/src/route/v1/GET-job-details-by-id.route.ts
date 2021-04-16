@@ -26,12 +26,14 @@ const httpAction: any[] = [
         const jobId = Number(req.params.jobId);
         const lastLogId = req.params.lastLogId ? Number(req.params.lastLogId) : null;
         const jobAndLogs: JobAndLogs = await getJobDetailsById(jobId, lastLogId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Job and logs retrieved`,
+        const apiResponse: ApiResponse<JobAndLogs> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Job and logs retrieved`,
+            }],
             payload: jobAndLogs
-        } as ApiResponse<JobAndLogs>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

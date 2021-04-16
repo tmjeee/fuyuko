@@ -17,11 +17,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const groupName: string = req.params.groupName;
         const groups: Group[] = await searchForGroupByName(groupName);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Groups retrieved`,
+        const apiResponse: ApiResponse<Group[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Groups retrieved`,
+            }],
             payload: groups
-        } as ApiResponse<Group[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

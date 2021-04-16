@@ -20,15 +20,21 @@ const httpAction: any[] = [
         const r: boolean = await deleteExportArtifactById(dataExportArtifactId);
 
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Data Export artifact deleted`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Data Export artifact deleted`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `Data Export artifact Failed to be deleted`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Data Export artifact Failed to be deleted`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

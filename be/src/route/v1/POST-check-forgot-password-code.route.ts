@@ -14,11 +14,14 @@ const httpAction: any[] = [
         const code = req.params.code;
 
         const r: boolean = await isValidForgottenPasswordCode(code);
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: 'Validity retrieved',
-           payload: r
-        } as ApiResponse<boolean>);
+        const apiResponse: ApiResponse<boolean> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'Validity retrieved',
+            }],
+            payload: r
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

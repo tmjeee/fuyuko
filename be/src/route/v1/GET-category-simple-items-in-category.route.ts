@@ -7,7 +7,7 @@ import {categorySimpleItemsInCategory, categorySimpleItemsInCategoryCount} from 
 import {toLimitOffset} from "../../util/utils";
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {CategorySimpleItem} from '@fuyuko-common/model/category.model';
-import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [
@@ -25,15 +25,17 @@ const httpAction: any[] = [
         const categoryId: number = Number(req.params.categoryId);
         const total: number = await categorySimpleItemsInCategoryCount(viewId, categoryId);
         const items: CategorySimpleItem[] = await categorySimpleItemsInCategory(viewId, categoryId, limitOffset);
-        
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Items retrieved successfully`,
+        const apiResponse: PaginableApiResponse<CategorySimpleItem[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Items retrieved successfully`,
+            }],
             payload: items,
             limit: limitOffset ? limitOffset.limit : total,
             offset: limitOffset ? limitOffset.offset : 0,
             total: total
-        } as PaginableApiResponse<CategorySimpleItem[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

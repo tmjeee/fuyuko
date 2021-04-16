@@ -20,10 +20,13 @@ const httpAction: any[] = [
             user = jwtPayload.user;
         }
         await logout(user);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: 'Logged out, have a nice day'
-        } as ApiResponse);
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'Logged out, have a nice day'
+            }]
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

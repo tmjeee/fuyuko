@@ -20,12 +20,14 @@ const httpAction: any[] = [
       const username: string = req.params.username;
 
        const selfRegistrations: SelfRegistration[] = await searchSelfRegistrationsByUsername(username);
-
-       res.status(200).json({
-           status: 'SUCCESS',
-           message: `Self registrations retrieved`,
+       const apiResponse: ApiResponse<SelfRegistration[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Self registrations retrieved`,
+            }],
            payload: selfRegistrations
-       } as ApiResponse<SelfRegistration[]>);
+       };
+       res.status(200).json(apiResponse);
    }
 ];
 

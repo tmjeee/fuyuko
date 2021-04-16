@@ -18,14 +18,16 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
-
         const categories: Category[] = await getViewCategories(viewId);
-
-        return res.status(200).json({
-            status: 'SUCCESS',
-            message: 'success',
+        const apiResponse: ApiResponse<Category[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'success',
+            }],
             payload: categories
-        } as ApiResponse<Category[]>);
+        };
+
+        return res.status(200).json(apiResponse);
     }
 ];
 

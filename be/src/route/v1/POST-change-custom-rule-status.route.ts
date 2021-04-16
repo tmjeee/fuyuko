@@ -27,15 +27,21 @@ const httpAction: any[] = [
         const r: boolean = await changeCustomRuleStatus(viewId, customRuleId, status as Status);
 
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Custom rule with id ${customRuleId} for view ${viewId} updated`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Custom rule with id ${customRuleId} for view ${viewId} updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `Custom rule with id ${customRuleId} for view ${viewId} FAILED to be updated`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Custom rule with id ${customRuleId} for view ${viewId} FAILED to be updated`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

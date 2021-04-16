@@ -60,8 +60,10 @@ const httpAction: any[] = [
                     payload.push(...workflowTriggerResults);
                 }
                 const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
-                    status: 'INFO',
-                    message: `Workflow instance has been triggered to update attribute, workflow instance needs to be completed for actual update to take place`,
+                    messages: [{
+                        status: 'INFO',
+                        message: `Workflow instance has been triggered to update attribute, workflow instance needs to be completed for actual update to take place`,
+                    }],
                     payload,
                 };
                 res.status(200).json(apiResponse);
@@ -74,15 +76,21 @@ const httpAction: any[] = [
         // HANDLE NON_WORKFLOW
         const r: boolean = await changeAttributeStatus(attributeId, state as any);
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Attribute ${attributeId} status changed`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Attribute ${attributeId} status changed`
+                }]
+            }
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `Attribute ${attributeId} status failed to be changed`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Attribute ${attributeId} status failed to be changed`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

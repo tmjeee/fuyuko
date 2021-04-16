@@ -28,11 +28,14 @@ const httpAction: any[] = [
         const values: ExportScriptInputValue[] = req.body.values;
 
         const p: ExportScriptPreview = await preview(viewId, customExportId, values);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Export script preview done`,
+        const apiResponse: ApiResponse<ExportScriptPreview> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Export script preview done`,
+            }],
             payload: p
-        } as ApiResponse<ExportScriptPreview>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

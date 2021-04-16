@@ -30,11 +30,14 @@ const httpAction: any[] = [
        const preview: ImportScriptPreview = req.body.preview;
 
        const r: ImportScriptJobSubmissionResult = await runCustomImportJob(viewId, customImportId, values, preview);
-       res.status(200).json({
-           status: 'SUCCESS',
-           message: `Import script job submission result ready`,
+       const apiResponse: ApiResponse<ImportScriptJobSubmissionResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Import script job submission result ready`,
+            }],
            payload: r
-       } as ApiResponse<ImportScriptJobSubmissionResult>);
+       };
+       res.status(200).json(apiResponse);
     }
 ]
 

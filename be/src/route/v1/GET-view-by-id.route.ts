@@ -20,11 +20,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const view: View = await getViewById(viewId);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `View retrieved`,
+        const apiResponse: ApiResponse<View> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `View retrieved`,
+            }],
             payload: view
-        } as ApiResponse<View>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

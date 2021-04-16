@@ -29,12 +29,14 @@ const httpAction: any[] = [
         const values: ImportScriptInputValue[] = req.body.values;
 
         const v: ImportScriptValidateResult = await validate(viewId, customImportId, values);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Import script validate result ready`,
+        const apiResponse: ApiResponse<ImportScriptValidateResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Import script validate result ready`,
+            }],
             payload: v
-        } as ApiResponse<ImportScriptValidateResult>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

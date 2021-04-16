@@ -34,12 +34,14 @@ const httpAction: any[] = [
         const userId: number = Number(req.params.userId);
 
         const itemIds: number[] = await getAllFavouriteItemIdsInView(viewId, userId);
-
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `Favourite item ids retrieved`,
-           payload: itemIds
-        } as ApiResponse<number[]>);
+        const apiResponse: ApiResponse<number[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Favourite item ids retrieved`,
+            }],
+            payload: itemIds
+        }
+        res.status(200).json(apiResponse);
     }
 ];
 

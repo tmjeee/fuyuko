@@ -7,6 +7,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {SettingsService} from '../../service/settings-service/settings.service';
 import {BrowserLocationHistoryService} from '../../service/browser-location-history-service/browser-location-history.service';
 import {LoginResponse} from '@fuyuko-common/model/api-response.model';
+import {isApiResponseSuccess, toNotifications} from '../../service/common.service';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
       .login(this.formControlUsername.value, this.formControlPassword.value, this.formControlRememberMe.value)
       .pipe(
         map((u: LoginResponse) => {
-          if (u && u.status === 'SUCCESS') {
+          if (isApiResponseSuccess(u)) {
             const lastUrl: string = this.browserLocationHistoryService.retrieveLastUrl();
             this.browserLocationHistoryService.clearStoredLastUrl();
             if (!!lastUrl) {
@@ -58,7 +59,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
               this.router.navigate(['/dashboard-layout', {outlets: {primary: ['dashboard'], help: ['dashboard-help']}}]);
             }
           } else {
-            this.notificationService.error('Error', u.message);
+              toNotifications(this.notificationService, u);
           }
           return u;
         }),

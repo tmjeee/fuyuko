@@ -15,12 +15,14 @@ const httpAction: any[] = [
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const groupName: string = req.params.groupName;
         const g: Group[] = await searchGroupsAssociatedWithPricingStructure(pricingStructureId, groupName);
-
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `successfully retrieved group`,
-           payload: g
-        } as ApiResponse<Group[]>);
+        const apiResponse: ApiResponse<Group[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `successfully retrieved group`,
+            }],
+            payload: g
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

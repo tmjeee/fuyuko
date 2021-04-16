@@ -55,11 +55,14 @@ const httpAction: any[] = [
             } as PaginableApiResponse<PricingStructureItemWithPrice[]>
         } as PricingStructureWithItems;
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Pricing structure with items successfully retrieved`,
+        const apiResponse: ApiResponse<PricingStructureWithItems> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Pricing structure with items successfully retrieved`,
+            }],
             payload: pricingStructureWithItems
-        } as ApiResponse<PricingStructureWithItems>);
+        }
+        res.status(200).json(apiResponse);
     }
 ];
 

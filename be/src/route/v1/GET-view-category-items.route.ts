@@ -7,7 +7,7 @@ import { param } from 'express-validator';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toLimitOffset} from '../../util/utils';
 import {Item} from '@fuyuko-common/model/item.model';
-import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [
@@ -24,15 +24,17 @@ const httpAction: any[] = [
 
         const total: number = await getViewCategoryItemsCount(viewId, categoryId);
         const items: Item[] = await getViewCategoryItems(viewId, categoryId, limitOffset);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: 'success',
+        const apiResponse: PaginableApiResponse<Item[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'success',
+            }],
             payload: items,
             limit: limitOffset ? limitOffset.limit : total,
             offset: limitOffset ? limitOffset.offset: 0,
             total
-        } as PaginableApiResponse<Item[]>)
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

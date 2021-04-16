@@ -32,20 +32,25 @@ const httpAction = [
         const r: {registrationId: number, errors: string[]} = await activateInvitation(code, username, email, firstName, lastName, password);
 
         if (r.errors && r.errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: ApiResponse<any> = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: {
                     email,
                     registrationId: r.registrationId,
                     message: r.errors.join(', '),
                     status: 'ERROR'
                 }
-            });
+            };
+            res.status(400).json(apiResponse);
         } else { // if no errors send before
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Successfully activated ${username} (${email})`,
+            const apiResponse: ApiResponse<Activation> = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Successfully activated ${username} (${email})`,
+                }],
                 payload: {
                     email,
                     registrationId: r.registrationId,
@@ -53,7 +58,8 @@ const httpAction = [
                     status: 'SUCCESS',
                     username
                 }
-            } as ApiResponse<Activation>);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

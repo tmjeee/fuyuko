@@ -44,8 +44,10 @@ const httpAction: any[] = [
 
         const workflows = await getWorkflowByViewActionAndType(viewId, action as WorkflowInstanceAction, type as WorkflowInstanceType);
         const r: ApiResponse<Workflow[]> = {
-            status: 'SUCCESS',
-            message: `Workflows with action ${action}, type ${type} in viewId ${viewId} retrieved successfully`,
+            messages: [{
+                status: 'SUCCESS',
+                message: `Workflows with action ${action}, type ${type} in viewId ${viewId} retrieved successfully`,
+            }],
             payload: workflows
         };
         res.status(200).json(r);

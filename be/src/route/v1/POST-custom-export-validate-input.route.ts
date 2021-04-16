@@ -30,12 +30,14 @@ const httpAction: any[] = [
         const values: ExportScriptInputValue[] = req.body.values;
 
         const r: ExportScriptValidateResult = await validate(viewId, customExportId, values);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Export script validation result ready`,
+        const apiResponse: ApiResponse<ExportScriptValidateResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Export script validation result ready`,
+            }],
             payload: r
-        } as ApiResponse<ExportScriptValidateResult>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

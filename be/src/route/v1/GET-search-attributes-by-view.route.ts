@@ -29,12 +29,14 @@ const httpAction: any[] = [
         const attribute: string = req.params.attribute ? req.params.attribute : '';
 
         const attr: Attribute[] = await searchAttributesByView(viewId, attribute);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Attributes retrieved`,
+        const apiResponse: ApiResponse<Attribute[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Attributes retrieved`,
+            }],
             payload: attr
-        } as ApiResponse<Attribute[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

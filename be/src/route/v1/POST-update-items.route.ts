@@ -94,8 +94,10 @@ const httpAction: any[] = [
         }
         if (anyWorkflowsTriggered) { // workflow(s) being triggered
             const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
-                status: 'INFO',
-                message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for actual creation to take place',
+                messages: [{
+                    status: 'INFO',
+                    message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for actual creation to take place',
+                }],
                 payload,
             };
             res.status(200).json(apiResponse);
@@ -112,15 +114,21 @@ const httpAction: any[] = [
         }
 
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }],
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `item(s) updated`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `item(s) updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

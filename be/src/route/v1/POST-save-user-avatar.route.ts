@@ -35,21 +35,27 @@ const httpAction: any[] = [
 
         const r: {userAvatarId: number, errors: string[]} = await saveUserAvatar(userId, {globalAvatarName, customAvatarFile});
         if (r.errors && r.errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: UserAvatarResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: {
                     userAvatarId: r.userAvatarId
                 }
-            } as UserAvatarResponse);
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `UserId ${userId}, Avatar updated`,
+            const apiReponse: UserAvatarResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `UserId ${userId}, Avatar updated`,
+                }],
                 payload: {
                     userAvatarId: r.userAvatarId
                 }
-            } as UserAvatarResponse);
+            };
+            res.status(200).json(apiReponse);
         }
     }
 ];

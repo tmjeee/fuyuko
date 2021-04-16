@@ -15,11 +15,14 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const pricingStructureGroupAssociations: PricingStructureGroupAssociation[] = await getPricingStructureGroupAssociations();
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `Retrieved successfully`,
-           payload: pricingStructureGroupAssociations
-        } as ApiResponse<PricingStructureGroupAssociation[]>);
+        const apiResponse: ApiResponse<PricingStructureGroupAssociation[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Retrieved successfully`,
+            }],
+            payload: pricingStructureGroupAssociations
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

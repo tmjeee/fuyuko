@@ -18,11 +18,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
         const n: AppNotification[] = await getUserNotifications(userId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `App notifications retrieved`,
+        const apiResponse: ApiResponse<AppNotification[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `App notifications retrieved`,
+            }],
             payload: n
+        };
+        res.status(200).json({
         } as ApiResponse<AppNotification[]>);
     }
 ];

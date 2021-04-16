@@ -25,12 +25,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const groupId: number = Number(req.params.groupId);
         const u: User[] = await getUsersInGroup(groupId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Users retrieved`,
+        const apiResponse: ApiResponse<User[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Users retrieved`,
+            }],
             payload: u
-        } as ApiResponse<User[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

@@ -30,11 +30,14 @@ const httpAction: any[] = [
         const attributes: Attribute[] = req.body.attributes;
 
         const job: Job = await exportAttributeRunJob(viewId, attributes);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Attribute data export job scheduled`,
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Attribute data export job scheduled`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

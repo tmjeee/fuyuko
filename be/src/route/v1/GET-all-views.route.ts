@@ -20,11 +20,14 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const views: View[] = await getAllViews();
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Views retrieved successfully`,
+        const apiResponse: ApiResponse<View[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Views retrieved successfully`,
+            }],
             payload: views
-        } as ApiResponse<View[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

@@ -24,12 +24,14 @@ const httpAction: any[] = [
         const ruleId: number = Number(req.params.ruleId);
 
         const r: Rule = await getRule(viewId, ruleId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Rule retrieved`,
+        const apiResponse: ApiResponse<Rule> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Rule retrieved`,
+            }],
             payload: r
-        } as ApiResponse<Rule>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

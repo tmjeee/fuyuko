@@ -24,11 +24,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const rules: Rule[] = await getRules(viewId);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Rules retrieved successfully`,
+        const apiResponse: ApiResponse<Rule[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Rules retrieved successfully`,
+            }],
             payload: rules
-        } as ApiResponse<Rule[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

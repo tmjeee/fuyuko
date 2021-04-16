@@ -38,15 +38,21 @@ const httpAction: any[] = [
         // HANDLE NON_WORKFLOW
         const r: boolean = await updateRuleStatus(ruleId, status as Status);
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Rule Status updated`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Rule Status updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `Rule Status Failed to be updated`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Rule Status Failed to be updated`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ]

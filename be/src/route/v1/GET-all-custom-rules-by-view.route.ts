@@ -18,11 +18,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const r: CustomRuleForView[] = await getAllCustomRulesForView(viewId);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Custom rules for view retrieved successfully`,
+        const apiResponse: ApiResponse<CustomRuleForView[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Custom rules for view retrieved successfully`,
+            }],
             payload: r
-        } as ApiResponse<CustomRuleForView[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

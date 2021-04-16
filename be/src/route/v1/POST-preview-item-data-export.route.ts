@@ -41,11 +41,14 @@ const httpAction: any[] = [
             items: previewResult.i
         };
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Item data export ready`,
+        const apiResponse: ApiResponse<ItemDataExport> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Item data export ready`,
+            }],
             payload: r
-        } as ApiResponse<ItemDataExport>)
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

@@ -26,11 +26,14 @@ const httpAction: any[] = [
         const values: CustomBulkEditScriptInputValue[] = req.body.values;
 
         const p: CustomBulkEditScriptPreview = await preview(viewId, customBulkEditId, values);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Custom Bulk Edit script preview ready`,
+        const apiResponse: ApiResponse<CustomBulkEditScriptPreview> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Custom Bulk Edit script preview ready`,
+            }],
             payload: p
-        } as ApiResponse<CustomBulkEditScriptPreview>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

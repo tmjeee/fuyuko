@@ -34,11 +34,14 @@ const httpAction: any[] = [
 
         const job: Job = await importAttributeRunJob(viewId, dataImportId, attributes);
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Attribute data import scheduled`,
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Attribute data import scheduled`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

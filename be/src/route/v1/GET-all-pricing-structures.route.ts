@@ -23,11 +23,14 @@ const httpAction: any[] = [
 
         const pricingStructures: PricingStructure[] = await getAllPricingStructures();
 
-        res.status(200).json( {
-            status: 'SUCCESS',
-            message: `Pricing structures received successfully`,
+        const apiResponse: ApiResponse<PricingStructure[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Pricing structures received successfully`,
+            }],
             payload: pricingStructures
-        } as ApiResponse<PricingStructure[]>);
+        };
+        res.status(200).json( apiResponse);
     }
 ];
 

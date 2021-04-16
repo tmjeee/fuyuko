@@ -24,12 +24,15 @@ const httpAction: any[] = [
         const validationId: number = Number(req.params.validationId);
 
         const _r: ValidationResult = await getViewValidationResult(viewId, validationId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Validation result retrieved`,
+        const apiResponse: ApiResponse<ValidationResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Validation result retrieved`,
+            }],
             payload: _r
-        } as ApiResponse<ValidationResult>);
+        };
+
+        res.status(200).json(apiResponse);
     }
 ];
 

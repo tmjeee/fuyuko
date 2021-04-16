@@ -33,17 +33,23 @@ const httpAction: any[] = [
 
         if (badUpdates.length > 0) {
             e(`bad updates`, ...badUpdates);
-            res.status(200).json({
-                status: 'ERROR',
-                message: badUpdates.join(', ')
-            } as ApiResponse)
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: badUpdates.join(', ')
+                }]
+            };
+            res.status(200).json(apiResponse);
             return;
         }
 
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `View(s) updated`
-        } as ApiResponse);
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `View(s) updated`
+            }]
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

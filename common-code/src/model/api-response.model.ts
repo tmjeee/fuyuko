@@ -1,11 +1,13 @@
-import {ResponseStatus, SimpleResponseStatus} from './api-response-status.model';
+import {ResponseStatus } from './api-response-status.model';
 import {User} from "./user.model";
 
 
 // this is used in express response
 export interface ApiResponse<P=void> {
-   status: ResponseStatus;
-   message: string;
+   messages: {
+      status: ResponseStatus;
+      message: string;
+   }[],
    payload?: P
 }
 

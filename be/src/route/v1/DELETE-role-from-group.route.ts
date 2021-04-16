@@ -23,15 +23,21 @@ const httpAction: any[] = [
         const errors: string[] = await removeRoleFromGroup(roleName, groupId);
 
         if (errors && errors.length) {
-            res.status(400).json({
-               status: 'ERROR',
-               message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Role ${roleName} deleted from group ${groupId}`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Role ${roleName} deleted from group ${groupId}`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

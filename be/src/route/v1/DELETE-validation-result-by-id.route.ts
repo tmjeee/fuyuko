@@ -22,15 +22,21 @@ const httpAction: any[] = [
       const r: boolean = await deleteValidationResult(viewId, validationId);
 
       if (r) {
-         res.status(200).json({
-            status: 'SUCCESS',
-            message: `Deleted validation result for validation id ${validationId} successfully`
-         } as ApiResponse);
+         const apiResponse: ApiResponse = {
+            messages: [{
+             status: 'SUCCESS',
+             message: `Deleted validation result for validation id ${validationId} successfully`
+            }]
+         };
+         res.status(200).json(apiResponse);
       } else {
-         res.status(400).json({
-            status: 'ERROR',
-            message: `Failed to delete validation result for validation id ${validationId}`
-         } as ApiResponse);
+          const apiResponse: ApiResponse = {
+               messages: [{
+                   status: 'ERROR',
+                   message: `Failed to delete validation result for validation id ${validationId}`
+               }]
+          };
+         res.status(400).json(apiResponse);
       }
    }
 ];

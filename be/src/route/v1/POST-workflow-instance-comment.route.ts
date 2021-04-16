@@ -24,15 +24,19 @@ const httpAction: any[] = [
         const errors: string[]  = await postWorkflowInstanceComment(workflowInstanceId, userId, comment);
 
         if (errors.length) {
-            const r: ApiResponse = {
-                status: 'ERROR',
-                message: errors.join(', ')
-            };
-            res.status(400).json(r);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            }
+            res.status(400).json(apiResponse);
         } else {
             const r: ApiResponse = {
-                status: 'SUCCESS',
-                message: `comment updated`
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `comment updated`
+                }]
             }
             res.status(200).json(r);
         }

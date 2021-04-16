@@ -15,11 +15,14 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const dataExportArtifact: DataExportArtifact[] = await getAllExportArtifacts();
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Data export artifact retrieved successfully`,
-            payload: dataExportArtifact
-        } as ApiResponse<DataExportArtifact[]>);
+        const apiResponse: ApiResponse<DataExportArtifact[]> = {
+           messages:  [{
+               status: 'SUCCESS',
+               message: `Data export artifact retrieved successfully`,
+           }],
+           payload: dataExportArtifact
+        }
+        res.status(200).json(apiResponse);
     }
 ];
 

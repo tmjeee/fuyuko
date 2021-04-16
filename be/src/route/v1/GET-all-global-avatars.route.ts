@@ -11,11 +11,14 @@ const httpAction: any[] = [
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
         const globalAvatar: GlobalAvatar[] = await getAllGlobalAvatars();
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Global avatar retrieval success`,
+        const apiResponse: ApiResponse<GlobalAvatar[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Global avatar retrieval success`,
+            }],
             payload: globalAvatar
-        } as ApiResponse<GlobalAvatar[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

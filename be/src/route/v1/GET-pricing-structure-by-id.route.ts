@@ -20,11 +20,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const pricingStructure: PricingStructure = await getPricingStructureById(pricingStructureId);
-        return res.status(200).json({
-            status: 'SUCCESS',
-            message: `Pricing structure retrieved`,
+        const apiResponse: ApiResponse<PricingStructure> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Pricing structure retrieved`,
+            }],
             payload: pricingStructure
-        } as ApiResponse<PricingStructure>);
+        };
+        return res.status(200).json(apiResponse);
     }
 ];
 

@@ -14,11 +14,14 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const r: CustomRule[] = await getAllCustomRules();
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Custom Rule Retrieval Success`,
+        const apiResponse: ApiResponse<CustomRule[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Custom Rule Retrieval Success`,
+            }],
             payload: r
-        } as ApiResponse<CustomRule[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

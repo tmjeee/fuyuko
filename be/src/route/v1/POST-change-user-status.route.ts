@@ -29,15 +29,21 @@ const httpAction: any[] = [
 
         const r: boolean = await changeUserStatus(userId, status);
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `User ${userId} status altered to (${status})`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `User ${userId} status altered to (${status})`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `User ${userId} status FAILED to be altered to(${status})`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `User ${userId} status FAILED to be altered to(${status})`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

@@ -7,7 +7,7 @@ import {Action, UserSearchFn, UserTableComponentEvent} from '../../component/use
 import {Observable, of} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
-import {toNotifications} from '../../service/common.service';
+import {isApiResponseSuccess, toNotifications} from '../../service/common.service';
 import {MatDialog} from '@angular/material/dialog';
 import {EditGroupPopupComponent} from '../../component/group-table-component/edit-group-popup.component';
 import {SUCCESS} from '@fuyuko-common/model/api-response-status.model';
@@ -66,7 +66,7 @@ export class UserGroupPageComponent implements OnInit {
                   g.reduce((a: Map<Group, User[]>, grp: Group ) => {
                       a.set(grp, []);
                       // make sure already checked group remains checked on reload
-                      if (selectedGroups && selectedGroups.find((g: Group) => g.id === grp.id)) {
+                      if (selectedGroups && selectedGroups.find((gr: Group) => gr.id === grp.id)) {
                           this.groupsSelectionModel.select(grp);
                       }
                       return a;
@@ -156,7 +156,7 @@ export class UserGroupPageComponent implements OnInit {
               tap((r: ApiResponse) => {
                   if (r) {
                       toNotifications(this.notificationsService, r);
-                      if (r.status === SUCCESS) {
+                      if (isApiResponseSuccess(r)) {
                           this.reload();
                       }
                   }
@@ -182,7 +182,7 @@ export class UserGroupPageComponent implements OnInit {
       this.userManagementService.deleteGroup(groupIds).pipe(
           tap((r: ApiResponse) => {
               toNotifications(this.notificationsService, r);
-              if (r.status === 'SUCCESS') {
+              if (isApiResponseSuccess(r)) {
                   this.reload();
               }
           })

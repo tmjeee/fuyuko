@@ -27,22 +27,27 @@ const httpAction: any[] = [
         const r: {validationId: number, errors: string[]} = await scheduleValidation(viewId, name, description);
 
         if (r.errors && r.errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: ScheduleValidationResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: {
                     validationId: r.validationId
                 }
-            } as ScheduleValidationResponse);
-
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Validation with id ${r.validationId} scheduled`,
+            const apiResponse: ScheduleValidationResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Validation with id ${r.validationId} scheduled`,
+                }],
                 payload: {
                     validationId: r.validationId
                 }
-            } as ScheduleValidationResponse);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

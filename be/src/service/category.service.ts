@@ -19,8 +19,8 @@ import {
     UpdateCategoryEvent
 } from "./event/event.service";
 
-export interface UpdateCategoryInput { id: number; name: string; description: string; };
-export interface AddCategoryInput { name: string; description: string; children: AddCategoryInput[] };
+export interface UpdateCategoryInput { id: number; name: string; description: string; }
+export interface AddCategoryInput { name: string; description: string; children: AddCategoryInput[] }
 
 class CategoryService {
     /**

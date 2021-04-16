@@ -9,7 +9,7 @@ import {
 } from './common-middleware';
 import {Registry} from '../../registry';
 import {ROLE_ADMIN, ROLE_EDIT} from '@fuyuko-common/model/role.model';
-import {RegistrationResponse} from '@fuyuko-common/model/api-response.model';
+import {ApiResponse, RegistrationResponse} from '@fuyuko-common/model/api-response.model';
 import {approveSelfRegistration} from '../../service';
 
 // CHECKED
@@ -31,25 +31,31 @@ const httpAction = [
         const r: {username: string, email: string, errors: string[]} = await approveSelfRegistration(selfRegistrationId);
 
         if (r.errors && r.errors.length) {
-            res.status(400).json({
-                message: r.errors.join(', '),
-                status: 'ERROR',
+            const apiResponse: RegistrationResponse = {
+                messages: [{
+                    message: r.errors.join(', '),
+                    status: 'ERROR',
+                }],
                 payload: {
                     registrationId: selfRegistrationId,
                     email: r.email,
                     username: r.username
                 }
-            } as RegistrationResponse);
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                message: `Self registration approval for ${r.username} (${r.email}) success`,
-                status: 'SUCCESS',
+            const apiResponse: RegistrationResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Self registration approval for ${r.username} (${r.email}) success`,
+                }],
                 payload: {
                     registrationId: selfRegistrationId,
                     email: r.email,
                     username: r.username
                 }
-            } as RegistrationResponse);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ]

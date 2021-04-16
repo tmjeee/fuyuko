@@ -32,12 +32,14 @@ const httpAction: any[] = [
         const priceDataItems: PriceDataItem[] =  req.body.priceDataItems;
 
         const job: Job = await importPriceRunJob(viewId, dataImportId, priceDataItems);
-
-        res.status(200).json ( {
-            status: 'SUCCESS',
-            message: `Pricing data import job scheduled`,
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Pricing data import job scheduled`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        };
+        res.status(200).json (apiResponse);
     }
 ];
 

@@ -27,11 +27,14 @@ const httpAction: any[] = [
         const widgetInstanceId: string = req.params.dashboardWidgetInstanceId;
 
         const d: DataMap = await getUserDashboardWidgetSerializedData(userId, widgetInstanceId);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Widget instance data retrieved`,
+        const apiResponse: ApiResponse<DataMap> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Widget instance data retrieved`,
+            }],
             payload: d
-        } as ApiResponse<DataMap>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

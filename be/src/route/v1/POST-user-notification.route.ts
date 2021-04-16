@@ -28,15 +28,21 @@ const httpAction: any[] = [
         const r: boolean = await addUserNotification(userId, newNotification);
 
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `User notification added`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+               messages: [{
+                   status: 'SUCCESS',
+                   message: `User notification added`
+               }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `User notification FAILED to be added`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `User notification FAILED to be added`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

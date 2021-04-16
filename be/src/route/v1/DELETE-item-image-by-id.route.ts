@@ -20,15 +20,21 @@ const httpAction: any[] = [
         const r: boolean = await deleteItemImage(itemId, itemImageId);
 
         if (r) {
-            res.status(200).json({
-               status: 'SUCCESS',
-               message: `Item image deleted`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Item image deleted`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `Failed to delete itemId=${itemId} with itemImageId=${itemImageId}`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Failed to delete itemId=${itemId} with itemImageId=${itemImageId}`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

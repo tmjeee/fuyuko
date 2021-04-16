@@ -36,15 +36,21 @@ const httpAction: any[] = [
 
         const errors: string[] = await addFavouriteItemIds(userId, itemIds);
         if (errors && errors.length) { // has errors
-            res.status(400).json({
-               status: 'ERROR',
-               message: errors.join(',')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(',')
+                }],
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Favourite items added`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Favourite items added`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

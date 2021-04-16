@@ -26,12 +26,14 @@ const httpAction: any[] = [
         const jobId: number = Number(req.params.jobId);
 
         const job: Job = await getJobById(jobId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Job successfully retrieved`,
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Job successfully retrieved`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

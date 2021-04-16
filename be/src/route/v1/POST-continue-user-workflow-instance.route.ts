@@ -28,8 +28,10 @@ const httpAction: any[] = [
         const user = await getUserById(userId);
         if (!user) {
             const r: ApiResponse = {
-                status: 'ERROR',
-                message: `failed to get user with id ${userId}`
+                messages: [{
+                    status: 'ERROR',
+                    message: `failed to get user with id ${userId}`
+                }]
             };
             res.status(400).json(r);
         }
@@ -37,15 +39,19 @@ const httpAction: any[] = [
         if (ok) {
             const payload: ContinueWorkflowResult = await continueWorkflow(workflowInstanceId, args);
             const r: ApiResponse<ContinueWorkflowResult> = {
-                status: 'SUCCESS',
-                message: `Successfully continued workflow`,
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Successfully continued workflow`,
+                }],
                 payload
             };
             res.status(200).json(r);
         } else {
             const r: ApiResponse = {
-                status: 'ERROR',
-                message: `user ${user.username} not allowed to action on workflow instance ${workflowInstanceId}`
+                messages: [{
+                    status: 'ERROR',
+                    message: `user ${user.username} not allowed to action on workflow instance ${workflowInstanceId}`
+                }]
             };
             res.status(400).json(r);
         }

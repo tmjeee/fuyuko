@@ -8,7 +8,7 @@ import {
 } from '../../service';
 import {Item, ItemSearchType} from '@fuyuko-common/model/item.model';
 import {Registry} from '../../registry';
-import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toLimitOffset} from '../../util/utils';
 
@@ -39,14 +39,17 @@ const httpAction: any[] = [
             total = await getAllItemsInViewCount(viewId, true);
             allItems = await getAllItemsInView(viewId, true, limitOffset);
         }
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Items retrieved`,
+        const apiResponse: PaginableApiResponse<Item[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Items retrieved`,
+            }],
             payload: allItems,
             total,
             limit: limitOffset ? limitOffset.limit : total,
             offset: limitOffset ? limitOffset.offset : 0,
-        } as PaginableApiResponse<Item[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

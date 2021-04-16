@@ -29,15 +29,21 @@ const httpAction: any[] = [
         const added = await addItemImage(itemId, file1.name, buffer);
 
         if (added) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Item image uploaded`
-            } as ApiResponse);
+            const apiResposne: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Item image uploaded`
+                }]
+            };
+            res.status(200).json(apiResposne);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `Unable to created uploaded item image ${file1.name}`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Unable to created uploaded item image ${file1.name}`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

@@ -22,8 +22,10 @@ const httpAction: any[] = [
         const workflowInstanceTaskId = Number(req.params.workflowInstanceTaskId);
         const workflowInstanceTask = await getWorkflowInstanceTasksById(user.id, workflowInstanceTaskId);
         const r: ApiResponse<WorkflowInstanceTask> = {
-            status: 'SUCCESS',
-            message: `Retrieved workflow instance task id ${workflowInstanceTaskId} successfully`,
+            messages: [{
+                status: 'SUCCESS',
+                message: `Retrieved workflow instance task id ${workflowInstanceTaskId} successfully`,
+            }],
             payload: workflowInstanceTask
         };
         res.status(200).json(r);

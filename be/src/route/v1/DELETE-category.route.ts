@@ -24,15 +24,21 @@ const httpAction: any[] = [
 
         const errors: string[] = await deleteCategory(viewId, categoryId);
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-               status: 'SUCCESS',
-               message: `Category ${categoryId} in view ${viewId} deleted`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Category ${categoryId} in view ${viewId} deleted`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];
