@@ -7,11 +7,11 @@ on:
         required: true
         default: 'master'
 jobs:
-  do-fe-build:
+  do-build:
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory: fe
+        working-directory: .
     steps:
       - name: checkout code
         uses: actions/checkout@v2
@@ -21,44 +21,17 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: npm install
+      - name: build common-code
+        working-directory: ./common-code
         run: |
-          npm install
-          npm run build       
-  do-be-build:
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: be
-    steps:
-      - name: checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: '${{github.event.inputs.branchName}}'
-      - name: setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-      - name: npm install
+          npm install     
+      - name: build be
+        working-directory: ./be
         run: |
           npm install
           npm run build
-  do-wf-build:
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: wf
-    steps:
-      - name: checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: '${{github.event.inputs.branchName}}'
-      - name: setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-      - name: npm install
+      - name: build fe
+        working-directory: ./fe
         run: |
           npm install
           npm run build
-  
