@@ -29,11 +29,13 @@ jobs:
         uses: digitalocean/action-doctl@v2.1.0
         with:
           token: ${{env.DO_TOKEN}}
-      - name: kubernetes setup
+      - name: kubernetes tools setup
         uses: stefanprodan/kube-tools@v1.5.0
-      - name: bash commands
+      - name: kubectl config setup
         run: |
-          kubectl config set-context "$KUBECONFIG" &&
+          kubectl config set-context "$KUBECONFIG"
+      - name: bash command
+        run: |
           kubectl get pods && 
           kubectl get deployment
             
