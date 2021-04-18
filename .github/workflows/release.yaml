@@ -45,6 +45,8 @@ jobs:
         with:
           node-version: '12.x'    
       - name: build package
+        env: 
+          VERSION: "${{github.event.inputs.tagName}}"
         run: |
           chmod +x ./build-package.sh;
           ./build-package.sh
