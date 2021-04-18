@@ -44,16 +44,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'    
-      - name: update fe files with git hash
-        working-directory: ./fe
-        run: |
-          npx npm install -g replace-in-file
-          ./update-files-with-git-hash.sh
-      - name: update be files with git hash
-        working-directory: ./be
-        run: |
-          npx npm install -g replace-in-file
-          ./update-files-with-git-hash.sh
       - name: build common-code
         working-directory: ./common-code
         run: |
@@ -68,6 +58,16 @@ jobs:
         run: |
           npm install
           npm run build    
+      - name: update fe files with git hash
+        working-directory: ./fe
+        run: |
+          npx npm install replace-in-file
+          ./update-files-with-git-hash.sh
+      - name: update be files with git hash
+        working-directory: ./be
+        run: |
+          npx npm install replace-in-file
+          ./update-files-with-git-hash.sh    
       - name: release
         uses: softprops/action-gh-release@v1
         env:
