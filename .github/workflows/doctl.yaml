@@ -12,7 +12,7 @@ jobs:
     environment: digitalocean-demo
     env:
       DO_TOKEN: ${{secrets.DO_TOKEN_R}} 
-      KUBECTL_CONTEXT: do-sgp1-demo-cluster
+      KUBECONFIG: do-sgp1-demo-cluster
     defaults:
       run:
         working-directory: .
