@@ -62,7 +62,7 @@ class PricedItemService {
                    V.NAME AS V_NAME,
                    V.DESCRIPTION AS V_DESCRIPTION,                     
                    V.CREATION_DATE AS V_CREATION_DATE,
-                   V.LAST_UPDATE AS V_LAST_UPDATE,
+                   V.LAST_UPDATE AS V_LAST_UPDATE
                 FROM TBL_VIEW AS V 
                 INNER JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = V.ID
                 INNER JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = PS.ID

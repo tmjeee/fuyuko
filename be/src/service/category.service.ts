@@ -258,7 +258,7 @@ class CategoryService {
                    V.NAME AS V_NAME,
                    V.DESCRIPTION AS V_DESCRIPTION,                     
                    V.CREATION_DATE AS V_CREATION_DATE,
-                   V.LAST_UPDATE AS V_LAST_UPDATE,
+                   V.LAST_UPDATE AS V_LAST_UPDATE
                 FROM TBL_VIEW AS V 
                 INNER JOIN TBL_CATEGORY AS C ON C.VIEW_ID = V.ID 
                 WHERE C.ID = ?

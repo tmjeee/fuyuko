@@ -14,26 +14,34 @@ if [ -f $ZIP_FILE ] ; then
 fi
 
 
-echo "BUILD BE" 
+echo "BUILD BE"
+(
 cd be 
-npm install 
-npm run build 
+npm install
+npm install 'replace-in-file'
+chmod +x ./update-files-with-git-hash.sh
+./update-files-with-git-hash.sh
+npm run build
+)
 
-cd ..
 
-echo "BUILD FE" 
+echo "BUILD FE"
+(
 cd fe 
 npm install  
+npm install 'replace-in-file'
+chmod +x ./update-files-with-git-hash.sh
+./update-files-with-git-hash.sh
 npm run build-prod
+)
 
-cd ..
 
 echo "ZIP BUILD"
 zip -9 -r fuyuko-${VERSION}.zip \
     LICENSE \
     README.md \
     db/docker \
-    be/src \
+    be/dist \
     be/docker \
     fe/dist/fuyuko \
     fe/docker \

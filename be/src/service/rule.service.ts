@@ -16,6 +16,7 @@ import {
     GetRulesEvent,
     UpdateRuleStatusEvent
 } from './event/event.service';
+import {View} from "@fuyuko-common/model/view.model";
 
 const SQL_1 = `
    SELECT
@@ -259,6 +260,29 @@ class RuleService {
     }
 
 
+    // =============================
+    // === getViewOfRule()
+    // =============================
+    async getViewOfRule(ruleId: number): Promise<View> {
+        return await doInDbConnection(async (conn: Connection) => {
+            await conn.query(`
+                SELECT
+                   V.ID AS V_ID,
+                   V.NAME AS V_NAME,
+                   V.DESCRIPTION AS V_DESCRIPTION,                     
+                   V.CREATION_DATE AS V_CREATION_DATE,
+                   V.LAST_UPDATE AS V_LAST_UPDATE
+                FROM TBL_VIEW AS V 
+                INNER JOIN TBL_RULE AS R ON R.VIEW_ID = V.ID
+                WHERE R.ID = ?
+            `, [ruleId]);
+        });
+    }
+
+
+
+
+
     // ================================ misc, helper functions =======================================
     private p(q: QueryA): Rule2[] {
         const rMap:     Map<string /* ruleId */,                                        Rule2> = new Map();
@@ -376,6 +400,7 @@ class RuleService {
 
 const s = new RuleService();
 export const
+    getViewOfRule = s.getViewOfRule.bind(s),
     addOrUpdateRules = s.addOrUpdateRules.bind(s),
     updateRuleStatus = s.updateRuleStatus.bind(s),
     getRules = s.getRules.bind(s),
