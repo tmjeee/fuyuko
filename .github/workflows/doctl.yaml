@@ -17,14 +17,18 @@ jobs:
       run:
         working-directory: .
     steps:
-      #- name: checkout code
-      #  uses: actions/checkout@v2
-      #  with:
-      #    ref: '${{github.event.inputs.branchName}}'
+      - name: checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: '${{github.event.inputs.branchName}}'
       #- name: setup node
       #  uses: actions/setup-node@v1
       #  with:
       #    node-version: '12.x'
+      - name: check permission
+        uses: 74th/workflow-permission-action@1.0.0
+        with:
+          listfile: .github/workflows/super-users
       - name: doctl setup
         uses: digitalocean/action-doctl@v2.1.0
         with:
