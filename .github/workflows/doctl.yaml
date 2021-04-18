@@ -29,13 +29,10 @@ jobs:
         uses: digitalocean/action-doctl@v2.1.0
         with:
           token: ${{env.DO_TOKEN}}
-      - name: doctl action
-        run: |
-          doctl account get
-      - name: kubernetes tools
+      - name: kubernetes setup
         uses: stefanprodan/kube-tools@v1.5.0
       - name: bash commands
         run: |
-          kubectl get pods && |
+          kubectl get pods && 
           kubectl get deployment
             
