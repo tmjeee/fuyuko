@@ -12,7 +12,7 @@ jobs:
     environment: digitalocean-demo
     env:
       DO_TOKEN: ${{secrets.DO_TOKEN_R}} 
-      DO_CLUSTER_NAME: do-sgp1-demo-cluster
+      DO_CLUSTER_NAME: demo-cluster
     defaults:
       run:
         working-directory: .
