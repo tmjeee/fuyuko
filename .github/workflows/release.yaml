@@ -1,0 +1,23 @@
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      branchName:
+        description: 'Branch Name to Build'
+        required: true
+        default: 'master'
+jobs:
+  do-build:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: '${{github.event.inputs.branchName}}'
+      - name: check permission
+        uses: 74th/workflow-permission-action@1.0.0
+        with:
+          listfile: .github/workflows/super-users
