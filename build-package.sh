@@ -14,6 +14,19 @@ if [ -f $ZIP_FILE ] ; then
 fi
 
 
+echo "BUILD COMMON"
+(
+cd common-code
+npm install
+)
+
+echo "BUILD WF"
+(
+cd wf
+npm install
+npm run build
+)
+
 echo "BUILD BE"
 (
 cd be 
