@@ -7,13 +7,13 @@ on:
         required: true
         default: ''
       draft:
-        description: 'Draft release?',
-        required: true,
-        default: false
+        description: 'Draft release?'
+        required: true
+        default: 'false'
       prerelease:
-        description: 'Prerelease?',
-        required: true,
-        default: false
+        description: 'Prerelease?'
+        required: true
+        default: 'false'
 
 jobs:
   do-build:
