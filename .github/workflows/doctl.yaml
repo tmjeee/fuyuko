@@ -27,7 +27,7 @@ jobs:
       - name: doctl setup
         uses: digitalocean/action-doctl@v2.1.0
         with:
-          token: ${{secrets.DO_TOKEN_R}}
+          token: ${{env.DO_TOKEN}}
       - name: doctl action
         run: |
           doctl account get
