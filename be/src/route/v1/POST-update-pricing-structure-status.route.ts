@@ -44,8 +44,10 @@ const httpAction: any[] = [
             const payload: WorkflowTriggerResult[] = [];
             const prices = await getAllPricingStructureItemsWithPrice(pricingStructureId, {limit: Number.MAX_VALUE, offset: 0});
             if (ws && ws.length > 0) {
-                const workflowTriggerResults = await triggerPriceWorkflow(prices, 'Delete');
-                payload.push(...workflowTriggerResults);
+                for (const w of ws) {
+                    const workflowTriggerResults = await triggerPriceWorkflow(prices, w.workflowDefinition.id, 'Delete');
+                    payload.push(...workflowTriggerResults);
+                }
 
                 const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
                     messages: [{

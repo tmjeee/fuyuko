@@ -53,10 +53,15 @@ const httpAction: any[] = [
         let workfowTriggered = false;
         const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, 'Update', 'Price');
         if (ws && ws.length > 0) {
-            const pricedItems = await getAllPricingStructureItemsWithPrice(pricingStructureId, {limit: Number.MAX_VALUE, offset: 0});
-            const workflowTriggerResults = await triggerPriceWorkflow(pricedItems, 'Update');
-            payload.push(...workflowTriggerResults);
-            workfowTriggered = true;
+            const pricedItems = await getAllPricingStructureItemsWithPrice(pricingStructureId, {
+                limit: Number.MAX_VALUE,
+                offset: 0
+            });
+            for (const w of ws) {
+                const workflowTriggerResults = await triggerPriceWorkflow(pricedItems, w.workflowDefinition.id, 'Update');
+                payload.push(...workflowTriggerResults);
+                workfowTriggered = true;
+            }
         }
         if (workfowTriggered) {
             const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
