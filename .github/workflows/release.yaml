@@ -28,10 +28,10 @@ jobs:
           ref: '${{github.event.inputs.tagName}}'
       - name: debug
         run: |
-          echo '$GITHUB_REF';
-          echo '$GITHUB_HEAD_REF';
-          echo '$GITHUB_BASE_REF';
-          echo '${{github.event.inputs.tagName}}';
+          echo "$GITHUB_REF";
+          echo "$GITHUB_HEAD_REF";
+          echo "$GITHUB_BASE_REF";
+          echo "${{github.event.inputs.tagName}}";
       #- name: check if tag is valid
       #  if: ${{!(startsWith(github.ref, 'refs/tags/'))}}
       #  run: |
