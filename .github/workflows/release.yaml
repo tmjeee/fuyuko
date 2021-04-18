@@ -2,10 +2,19 @@ name: release
 on:
   workflow_dispatch:
     inputs:
-      branchName:
-        description: 'Branch Name to Build'
+      tagName:
+        description: 'Tag to release'
         required: true
-        default: 'master'
+        default: ''
+      draft:
+        description: 'Draft release?',
+        required: true,
+        default: false
+      prerelease:
+        description: 'Prerelease?',
+        required: true,
+        default: false
+      
 jobs:
   do-build:
     runs-on: ubuntu-20.04
@@ -16,8 +25,47 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v2
         with:
-          ref: '${{github.event.inputs.branchName}}'
+          ref: '${{github.event.inputs.tagName}}'
+      - name: check if tag is valid
+        if: ${{!(startsWith(github.ref, 'refs/tags/'))}}
+        run: |
+          echo "A tag needs to be given"; exit 1;
       - name: check permission
         uses: 74th/workflow-permission-action@1.0.0
         with:
           listfile: .github/workflows/super-users
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'    
+      - name: update fe files with git hash
+        working-directory: ./fe
+        run: |
+          ./update-files-with-git-hash.sh
+      - name: update be files with git hash
+        working-directory: ./be
+        run: |
+          ./update-files-with-git-hash.sh
+      - name: build common-code
+        working-directory: ./common-code
+        run: |
+          npm install     
+      - name: build be
+        working-directory: ./be
+        run: |
+          npm install
+          npm run build
+      - name: build fe
+        working-directory: ./fe
+        run: |
+          npm install
+          npm run build    
+      - name: release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: '${{github.event.inputs.draft}}'
+          prerelease: '${{github.event.inputs.prerelease}}'
+          tag_name: '${{github.event.inputs.tagName}}'
