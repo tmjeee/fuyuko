@@ -32,13 +32,10 @@ jobs:
       - name: doctl action
         run: |
           doctl account get
-      - name: kubernetes action
+      - name: kubernetes tools
         uses: stefanprodan/kube-tools@v1.5.0
-        with:
-          command:
-            kubectl get pods
-      - name: commands
+      - name: bash commands
         run: |
-          kubectl get services && |
+          kubectl get pods && |
           kubectl get deployment
             
