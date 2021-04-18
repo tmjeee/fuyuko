@@ -2,9 +2,21 @@ import {Registry} from '../../registry';
 import {NextFunction, Router, Request, Response} from 'express';
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
-import {addCategory} from '../../service';
+import {
+    addCategory,
+    getWorkflowByViewActionAndType,
+    triggerAttributeWorkflow,
+    triggerCategoryWorkflow
+} from '../../service';
 import {ApiResponse} from "@fuyuko-common/model/api-response.model";
 import {body, param} from 'express-validator';
+import {
+    Workflow,
+    WorkflowInstanceAction,
+    WorkflowInstanceType,
+    WorkflowTriggerResult
+} from '@fuyuko-common/model/workflow.model';
+import {Category} from '@fuyuko-common/model/category.model';
 
 
 const httpAction: any[] = [
@@ -23,14 +35,43 @@ const httpAction: any[] = [
         const description: string = req.body.description;
         const parentId: number = req.body.parentId ? Number(req.body.parentId) : null;
 
+        const workflowAction: WorkflowInstanceAction = 'Update';
+        const workflowType: WorkflowInstanceType = 'Category';
+
+        // HANDLE WORKFLOW
+        const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
+        const payload: WorkflowTriggerResult[] = [];
+        if (ws && ws.length > 0) {
+            const newCategory: Category = {
+                id: undefined,
+                name, description,
+                status: 'ENABLED',
+                children: [],
+                creationDate:  undefined,
+                lastUpdate: undefined
+            };
+            for (const w of ws) {
+                const workflowTriggerResult = await triggerCategoryWorkflow([newCategory], parentId, w.workflowDefinition.id, workflowAction);
+                payload.push(...workflowTriggerResult);
+            }
+            const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                messages: [{
+                    status: 'INFO',
+                    message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for actual creation to take place',
+                }],
+                payload,
+            };
+            res.status(200).json(apiResponse);
+            return;
+        }
+
+
+        // HANDLE NON_WORKFLOW
         const errors: string[] = await addCategory(viewId, parentId, {
             name,
             description,
             children: []
         });
-
-        // HANDLE WORKFLOW
-
         if (errors && errors.length) {
             const apiResponse: ApiResponse = {
                 messages: [{

@@ -437,12 +437,8 @@ const httpAction: any[] = [
             }
             return null;
         });
-        
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: 'success',
-            payload: r
-        } as ApiResponse<{
+
+        const apiResponse: ApiResponse<{
             viewId: number;
             viewName: string;
             validationId: number;
@@ -453,7 +449,14 @@ const httpAction: any[] = [
                 errors: number,
                 warnings: number
             }[]
-        }>);
+        }> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'success',
+            }],
+            payload: r
+        }
+        res.status(200).json(apiResponse);
     }
 ];
 

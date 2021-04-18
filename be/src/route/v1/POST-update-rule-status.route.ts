@@ -10,8 +10,20 @@ import {
 import {check, param} from 'express-validator';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
-import {updateRuleStatus} from '../../service';
+import {
+    getAllPricingStructureItemsWithPrice, getRule,
+    getWorkflowByViewActionAndType,
+    triggerPriceWorkflow,
+    updateRuleStatus
+} from '../../service';
 import {Status} from '@fuyuko-common/model/status.model';
+import {
+    Workflow,
+    WorkflowInstanceAction,
+    WorkflowInstanceType,
+    WorkflowTriggerResult
+} from '@fuyuko-common/model/workflow.model';
+import {triggerRuleWorklow} from '../../service/workflow-trigger.service';
 
 // CHECKED
 
@@ -32,7 +44,24 @@ const httpAction: any[] = [
 
         // HANDLE WORKFLOW
         if (status === 'DELETED') {
-
+            const workflowAction: WorkflowInstanceAction = 'Delete';
+            const workflowType: WorkflowInstanceType = 'Rule';
+            const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
+            const payload: WorkflowTriggerResult[] = [];
+            const rule = await getRule(viewId, ruleId);
+            if (ws && ws.length > 0) {
+                const workflowTriggerResults = await triggerRuleWorklow([rule], workflowAction);
+                payload.push(...workflowTriggerResults);
+                const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                    messages: [{
+                        status: 'INFO',
+                        message: `Workflow instance has been triggered to update attribute, workflow instance needs to be completed for changes to take place`,
+                    }],
+                    payload
+                };
+                res.status(200).json(apiResponse);
+                return;
+            }
         }
 
         // HANDLE NON_WORKFLOW

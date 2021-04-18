@@ -441,13 +441,16 @@ const httpAction: any[] = [
             return ranges.reverse();
         });
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: 'success',
+        const apiResponse: ApiResponse<Reporting_ViewValidationRangeSummary> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'success',
+            }],
             payload: {
-               range: ranges
-            } as Reporting_ViewValidationRangeSummary
-        } as ApiResponse<Reporting_ViewValidationRangeSummary>);
+                range: ranges
+            }
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 
