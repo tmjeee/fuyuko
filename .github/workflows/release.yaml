@@ -59,4 +59,4 @@ jobs:
           prerelease: '${{github.event.inputs.prerelease}}'
           tag_name: '${{github.event.inputs.tagName}}'
           files: |
-            fuyuko-"${{github.event.inputs.tagName}}".zip
+            fuyuko-${{github.event.inputs.tagName}}.zip
