@@ -17,11 +17,12 @@ import {e} from '../logger';
 import {ENABLED} from "@fuyuko-common/model/status.model";
 import {v4 as uuid} from 'uuid';
 import {
+    addOrUpdateRules,
     getAllWorkflowDefinition,
     getAttributesInView,
-    getItemById, getPricedItems, getPricingStructureOfPricedItem,
+    getItemById, getPricedItems, getPricingStructureOfPricedItem, getRule,
     getThreadLocalStore,
-    getViewOfItem, getViewOfPriceItem, setPrices,
+    getViewOfItem, getViewOfPriceItem, getViewOfRule, setPrices,
     updateCategory, updateItem,
     updateItemValue
 } from './';
@@ -130,9 +131,16 @@ class WorkflowTriggerService {
         }
         return workflowTriggerResults;
     }
-    async triggerRuleWorklow(rule: Rule[], action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
-        // todo:
-        return [];
+    async triggerRuleWorklow(rules: Rule[], workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
+        const workflowTriggerResults: WorkflowTriggerResult[] = [];
+        for (const rule of rules) {
+            const view = await getViewOfRule(rule.id);
+            const oldRule = getRule(view.id, rule.id);
+            const workflowTriggerResult = await triggerWorkflow(view.id, workflowDefinitionId, action, 'Rule',
+                JSON.stringify(oldRule), JSON.stringify(rule), [view.id, rule], args);
+            workflowTriggerResults.push(workflowTriggerResult);
+        }
+        return workflowTriggerResults;
     }
 
     async triggerWorkflow(viewId: number, workflowDefinitionId: number, action: WorkflowInstanceAction,

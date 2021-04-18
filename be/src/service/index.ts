@@ -78,7 +78,7 @@ import {searchGroupsNotAssociatedWithPricingStructure, unlinkPricingStructureWit
         from './pricing-structure.service';
 import {setPrices, addItemToPricingStructure, getPricingStructureItem, setPricesB} from './pricing-structure-item.service';
 import {addRoleToGroup, addOrUpdateRole, getRoleByName, getAllRoles, removeRoleFromGroup} from './role.service';
-import {addOrUpdateRules, updateRuleStatus, getRule, getRules} from './rule.service';
+import {addOrUpdateRules, updateRuleStatus, getRule, getRules, getViewOfRule} from './rule.service';
 import {ApproveSelfRegistrationResult, SelfRegisterResult, approveSelfRegistration, getAllSelfRegistrations,
         searchSelfRegistrationsByUsername, deleteSelfRegistration, selfRegister}
         from './self-registration.service';
@@ -205,6 +205,7 @@ export {
 
     // custom-rule.service
     changeCustomRuleStatus, addCustomRuleToView, getAllCustomRules, deleteCustomRules, getAllCustomRulesForView,
+    getViewOfRule,
 
     // dashboard.service
     saveUserDashboardWidgetData, saveUserDashboard, getUserDashboardWidgetSerializedData, getUserDashboardSerializedData,
