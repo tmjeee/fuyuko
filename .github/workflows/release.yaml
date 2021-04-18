@@ -47,10 +47,12 @@ jobs:
       - name: update fe files with git hash
         working-directory: ./fe
         run: |
+          npx npm install -g replace-in-file
           ./update-files-with-git-hash.sh
       - name: update be files with git hash
         working-directory: ./be
         run: |
+          npx npm install -g replace-in-file
           ./update-files-with-git-hash.sh
       - name: build common-code
         working-directory: ./common-code
