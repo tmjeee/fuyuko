@@ -27,7 +27,7 @@ jobs:
       - name: doctl setup
         uses: digitalocean/action-doctl@v2.1.0
         with:
-          token: "$DO_TOKEN"
+          token: $DO_TOKEN
       - name: doctl action
         run: |
           doctl auth init --access-token "$DO_TOKEN"
