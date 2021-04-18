@@ -5,7 +5,7 @@ on:
       tagName:
         description: 'Tag to release'
         required: true
-        default: ''
+        default: 'v-testing-tag'
       draft:
         description: 'Draft release?'
         required: true
@@ -13,7 +13,7 @@ on:
       prerelease:
         description: 'Prerelease?'
         required: true
-        default: 'false'
+        default: 'true'
 
 jobs:
   do-build:
@@ -26,6 +26,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: '${{github.event.inputs.tagName}}'
+      - name: debug
+        run: |
+          echo '${{github.ref}}';
+          echo '${{github.event.inputs.tagName}}';
       - name: check if tag is valid
         if: ${{!(startsWith(github.ref, 'refs/tags/'))}}
         run: |
