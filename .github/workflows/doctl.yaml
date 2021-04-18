@@ -1,4 +1,4 @@
-name: doctl
+name: doctl-demo
 on:
   workflow_dispatch:
     inputs:
@@ -12,6 +12,7 @@ jobs:
     environment: digitalocean-demo
     env:
       DO_TOKEN: ${{secrets.DO_TOKEN_R}} 
+      KUBECTL_CONTEXT: do-sgp1-demo-cluster
     defaults:
       run:
         working-directory: .
@@ -31,4 +32,13 @@ jobs:
       - name: doctl action
         run: |
           doctl account get
+      - name: kubernetes action
+        uses: stefanprodan/kube-tools@v1.5.0
+        with:
+          command:
+            kubectl get pods
+      - name: commands
+        run: |
+          kubectl get services && |
+          kubectl get deployment
             
