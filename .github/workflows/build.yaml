@@ -17,6 +17,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: '${{github.event.inputs.branchName}}'
+      - name: check permission
+        uses: 74th/workflow-permission-action@1.0.0
+        with:
+          listfile: .github/workflows/super-users
       - name: setup node
         uses: actions/setup-node@v1
         with:
