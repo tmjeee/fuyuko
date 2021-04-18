@@ -12,7 +12,7 @@ jobs:
     environment: digitalocean-demo
     env:
       DO_TOKEN: ${{secrets.DO_TOKEN_R}} 
-      KUBECONFIG: do-sgp1-demo-cluster
+      DO_CLUSTER_NAME: do-sgp1-demo-cluster
     defaults:
       run:
         working-directory: .
@@ -31,9 +31,9 @@ jobs:
           token: ${{env.DO_TOKEN}}
       - name: kubernetes tools setup
         uses: stefanprodan/kube-tools@v1.5.0
-      - name: kubectl config setup
+      - name: doctl kubectl setup
         run: |
-          kubectl config set-context "$KUBECONFIG"
+          doctl kubernetes cluster kubeconfig save "$DO_CLUSTER_NAME"
       - name: bash command
         run: |
           kubectl get pods && 
