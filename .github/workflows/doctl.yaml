@@ -1,4 +1,4 @@
-name: build
+name: doctl
 on:
   workflow_dispatch:
     inputs:
