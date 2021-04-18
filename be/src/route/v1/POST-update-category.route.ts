@@ -3,8 +3,16 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {body, param} from 'express-validator';
 import {NextFunction, Router, Request, Response} from 'express';
-import {updateCategory} from '../../service';
+import {
+    getWorkflowByViewActionAndType,
+    triggerAttributeWorkflow,
+    triggerCategoryWorkflow,
+    updateCategory
+} from '../../service';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Workflow, WorkflowTriggerResult} from '@fuyuko-common/model/workflow.model';
+import {Category} from '@fuyuko-common/model/category.model';
+import {getViewCategoryById} from '../../service/category.service';
 
 
 const httpAction: any[] = [
@@ -25,10 +33,33 @@ const httpAction: any[] = [
         const name: string = req.body.name;
         const description: string = req.body.description;
         const parentId: number = req.body.parentId ? Number(req.body.parentId) : null;
-
+        const workflowAction = 'Update';
+        const workflowType = 'Category';
 
         // HANDLE WORKFLOW
+        const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
+        const payload: WorkflowTriggerResult[] = [];
+        if (ws && ws.length > 0) {
+            for (const w of ws) {
+                const category = await getViewCategoryById(id);
+                category.name = name;
+                category.description = description;
+                const workflowTriggerResults = await triggerCategoryWorkflow([category], parentId, w.workflowDefinition.id, workflowAction);
+                payload.push(...workflowTriggerResults);
+            }
+            const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                messages: [{
+                    status: 'INFO',
+                    message: `Workflow instance has been triggered to update category, workflow instance needs to be completed for actual update to take place`,
+                }],
+                payload
+            };
+            res.status(200).json(apiResponse);
+            return;
+        }
 
+
+        // HANDLE NON_WORKFLOW
         const errors: string[] = await updateCategory(viewId,  parentId, {
             id,
             name,

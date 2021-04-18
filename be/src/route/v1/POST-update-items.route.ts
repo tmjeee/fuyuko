@@ -23,6 +23,7 @@ import {
     WorkflowInstanceType,
     WorkflowTriggerResult
 } from '@fuyuko-common/model/workflow.model';
+import {ResponseStatus} from '@fuyuko-common/model/api-response-status.model';
 
 // CHECKED
 
@@ -42,57 +43,29 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
         const items: Item[] = req.body.items;
-
+        const effectiveItems: Item[] = items.map( i => ({
+            ...i,
+        }));
+        const messages: { status: ResponseStatus, message: string}[] = [];
 
         // HANDLE WORKFLOW:
         const payload: WorkflowTriggerResult[] = [];
-        let anyWorkflowsTriggered = false;
-        //const itemAttributeValuesForCreate: {item: Item, attributeId: number, value: Value }[] = [];       // attributeValue triggered workflow
-        //const itemAttributeValuesForEdit: {item: Item, attributeId: number, value: Value }[] = [];         // attributeValue triggered workflow
-        // const workflowTypeForAttributeValue: WorkflowInstanceType = 'AttributeValue';
-        // for (const item of items) {
-        //     const workflowAction: WorkflowInstanceAction = item.id > 0 ? 'Edit' : 'Create';
-        //     const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
-        //     if (ws && ws.length > 0) {
-        //         for (const w of ws) {
-        //             if (w.type === 'AttributeValue') { // handle attribute values
-        //                 const attributeIds = w.attributeIds;
-        //                 for (const attributeId of attributeIds) {
-        //                     const value = item[attributeId];
-        //                     if (value) {
-        //                         if (workflowAction === 'Edit') {
-        //                             itemAttributeValuesForEdit.push({item, attributeId, value})
-        //                         } else if (workflowAction === 'Create') {
-        //                             itemAttributeValuesForCreate.push({item, attributeId, value})
-        //                         }
-        //                     }
-        //                 }
-        //                 if (itemAttributeValuesForCreate.length) {
-        //                     const workflowTriggerResult = await triggerAttributeValueWorkflow(itemAttributeValuesForCreate, w.workflowDefinition.id, 'Edit');
-        //                     payload.push(...workflowTriggerResult);
-        //                     anyWorkflowsTriggered = true;
-        //                 } else if (itemAttributeValuesForEdit.length) {
-        //                     const workflowTriggerResult = await triggerAttributeValueWorkflow(itemAttributeValuesForEdit, w.workflowDefinition.id, 'Edit');
-        //                     payload.push(...workflowTriggerResult);
-        //                     anyWorkflowsTriggered = true;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        let itemWorkflowTriggered = false;
+        let attributeValueWorkflowTriggered = true;
+            //   ==== Item
         const workflowType2: WorkflowInstanceType = 'Item';
         const workflowAction: WorkflowInstanceAction = 'Update';
         const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType2);
         if (ws && ws.length > 0) {
             for (const w of ws) {
                 if (w.type === 'Item') {  // handle Item
-                   const workflowTriggerResult = await triggerItemWorkflow(items, w.workflowDefinition.id, 'Update');
-                   payload.push(...workflowTriggerResult);
-                   anyWorkflowsTriggered = true;
+                    const workflowTriggerResult = await triggerItemWorkflow(items, w.workflowDefinition.id, 'Update');
+                    payload.push(...workflowTriggerResult);
+                    itemWorkflowTriggered = true;
                 }
             }
         }
-        if (anyWorkflowsTriggered) { // workflow(s) being triggered
+        if (itemWorkflowTriggered) { // workflow(s) being triggered
             const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
                 messages: [{
                     status: 'INFO',
@@ -102,31 +75,70 @@ const httpAction: any[] = [
             };
             res.status(200).json(apiResponse);
             return;
+        } else { // if no item workflow, see if there is a attributeValue worklfow
+            const itemAttributeValuesForUpdate: { viewId: number, item: Item, attributeId: number, value: Value }[] = [];         // attributeValue triggered workflow
+            const workflowTypeForAttributeValue: WorkflowInstanceType = 'AttributeValue';
+            // for (const item of items) {
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const workflowAction: WorkflowInstanceAction = 'Update';
+                const workflowType: WorkflowInstanceType = 'AttributeValue';
+                const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
+                if (ws && ws.length > 0) {
+                    for (const w of ws) {
+                        if (w.type === 'AttributeValue') { // handle attribute values
+                            const attributeIds = w.attributeIds;
+                            for (const attributeId of attributeIds) {
+                                const value = item[attributeId];
+                                if (value) {
+                                    itemAttributeValuesForUpdate.push({ viewId, item, attributeId, value});
+                                    delete effectiveItems[i][attributeId];
+                                }
+                            }
+                            if (itemAttributeValuesForUpdate.length) {
+                                const workflowTriggerResult = await triggerAttributeValueWorkflow(itemAttributeValuesForUpdate, w.workflowDefinition.id, workflowAction);
+                                payload.push(...workflowTriggerResult);
+                                attributeValueWorkflowTriggered = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (attributeValueWorkflowTriggered) {
+                messages.push({
+                    status: 'INFO',
+                    message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for actual creation to take place',
+                })
+            }
         }
 
 
 
         // HANDLE NON_WORKFLOW:
         const errors: string[] = [];
-        for (const item of items) {
+        for (const item of effectiveItems) {
             const err: string[] = await addOrUpdateItem(viewId, item);
             errors.push(...err);
         }
 
         if (errors && errors.length) {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'ERROR',
-                    message: errors.join(', ')
-                }],
+            messages.push({
+                status: 'ERROR',
+                message: errors.join(', ')
+            });
+            const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                messages,
+                payload
             };
             res.status(400).json(apiResponse);
         } else {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'SUCCESS',
-                    message: `item(s) updated`
-                }]
+            messages.push({
+                status: 'SUCCESS',
+                message: `item(s) updated`
+            });
+            const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                messages,
+                payload
             };
             res.status(200).json(apiResponse);
         }

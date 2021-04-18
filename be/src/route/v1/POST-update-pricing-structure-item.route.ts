@@ -74,7 +74,6 @@ const httpAction: any[] = [
 
         // HANDLE NON_WORKFLOW
         const errors: string[] = await setPricesB(pricingStructureId, pricingStructureItems);
-
         if (errors && errors.length) {
             const apiResponse: ApiResponse = {
                 messages: [{

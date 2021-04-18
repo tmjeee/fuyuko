@@ -339,5 +339,8 @@ const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `audit-even
     }
 );
 
+// NOTE:
+// this will be called through the followings
+//     app.ts  -> event.service.ts  -> this entry point for a copy of EventSubscriptionRegistry
 export default s;
 

@@ -417,11 +417,14 @@ const httpAction: any[] = [
             }
         });
 
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: 'success',
-           payload: r
-        } as ApiResponse<Reporting_ViewValidationSummary>);
+        const apiResponse: ApiResponse<Reporting_ViewValidationSummary> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'success',
+            }],
+            payload: r
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

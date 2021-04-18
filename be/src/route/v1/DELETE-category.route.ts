@@ -3,8 +3,15 @@ import {Router, Request, Response, NextFunction} from "express";
 import { param } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
-import {deleteCategory} from "../../service/category.service";
+import {deleteCategory, getViewCategoryById, getViewCategoryByName} from '../../service/category.service';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {
+    Workflow,
+    WorkflowInstanceAction,
+    WorkflowInstanceType,
+    WorkflowTriggerResult
+} from '@fuyuko-common/model/workflow.model';
+import {getWorkflowByViewActionAndType, triggerAttributeWorkflow, triggerCategoryWorkflow} from '../../service';
 
 const httpAction: any[] = [
     [
@@ -17,11 +24,32 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const categoryId: number = Number(req.params.categoryId);
+        const workflowAction: WorkflowInstanceAction = 'Delete';
+        const workflowType: WorkflowInstanceType = 'Category';
 
 
         // HANDLE WORKFLOW
+        const category = await getViewCategoryById(categoryId);
+        const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
+        const payload: WorkflowTriggerResult[] = [];
+        if (ws && ws.length > 0) {
+            for (const w of ws) {
+                const workflowTriggerResult = await triggerCategoryWorkflow([category], null,  w.workflowDefinition.id, workflowAction);
+                payload.push(...workflowTriggerResult);
+            }
+            const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                messages: [{
+                    status: 'INFO',
+                    message: 'Workflow instance has been triggered to create category, workflow instance needs to be completed for changes to take place',
+                }],
+                payload,
+            };
+            res.status(200).json(apiResponse);
+            return;
+        }
 
 
+        // HANDLE NON_WORKFLOW
         const errors: string[] = await deleteCategory(viewId, categoryId);
         if (errors && errors.length) {
             const apiResponse: ApiResponse = {

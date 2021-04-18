@@ -33,8 +33,8 @@ import {SaveUserAvatarResult, AvatarInput, addGlobalImage, addGlobalAvatar, save
 import {UpdateCategoryInput, AddCategoryInput, categorySimpleItemsInCategory, categorySimpleItemsInCategoryCount, deleteCategory,
         getViewCategoryByName, addItemToViewCateogry, getViewCategories, getViewCategoriesWithItems, removeItemFromViewCategory,
         getViewCategoryItemsCount, getViewCategoryItems, addCategory, categorySimpleItemsNotInCategory, categorySimpleItemsNotInCategoryCount,
-        updateCategory,
-        updateCategoryHierarchy} from './category.service';
+        updateCategory, getViewOfCategory, updateCategoryHierarchy}
+        from './category.service';
 import {compareDoubleselect, compareSelect, compareDimension, compareVolume, compareCurrency, compareString, compareNumber,
         compareDate, convertToCm, compareWeight, compareArea, compareHeight, compareLength, compareWidth, convertToCm2,
         convertToG, convertToMl}
@@ -59,7 +59,8 @@ import {getAllItemsInViewCount, searchForItemsInViewCount, getAllFavouriteItemsI
         removeFavouriteItemIds, addFavouriteItemIds,
         getAllFavouriteItemIdsInView, getAllFavouriteItemsInView, getItemByName, getItemsByIdsCount, updateItemValue,
         updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, getAllItemsInView,
-        searchForFavouriteItemsInView, updateItem, getItemsByIds} from './item.service';
+        searchForFavouriteItemsInView, updateItem, getItemsByIds, getViewOfItem}
+        from './item.service';
 import {ItemWithFilteringResult, getItemWithFiltering} from './item-filtering.service';
 import {addItemImage, markItemImageAsPrimary, getItemPrimaryImage, getItemImageContent, deleteItemImage} from './item-image.service';
 import {getJobDetailsById, getAllJobs, getJobById} from './job.service';
@@ -68,7 +69,7 @@ import {decodeJwtToken, verifyJwtToken, createJwtToken} from './jwt.service';
 import {multipartParse} from './multipart.service';
 import {addUserNotification, getUserNotifications} from './app-notification.service';
 import {hashedPassword} from './password.service';
-import {getChildrenPricedItems, getPricedItems} from './priced-item.service';
+import {getChildrenPricedItems, getPricedItems, getViewOfPriceItem, getPricedItem, getPricingStructureOfPricedItem} from './priced-item.service';
 import {PricedItemsWithFilteringResult, getPricedItemsWithFiltering} from './priced-item-filtering.service';
 import {searchGroupsNotAssociatedWithPricingStructure, unlinkPricingStructureWithGroupId, linkPricingStructureWithGroupId,
         getPricingStructureGroupAssociations, getPricingStructureByName, getPricingStructureById, addOrUpdatePricingStructures,
@@ -133,7 +134,7 @@ import { getAllWorkflowDefinition, getWorkflowByView, addWorkflow, getWorkflowBy
     getWorkflowInstanceCommentsCount, updateWorkflowStatus }
     from './workflow.service'
 import { hasWorkflow, triggerAttributeWorkflow, triggerAttributeValueWorkflow, triggerItemWorkflow, triggerCategoryWorkflow, triggerPriceWorkflow,
-    triggerUserWorkflow }
+    }
     from './workflow-trigger.service'
 
 export {
@@ -168,7 +169,7 @@ export {
     UpdateCategoryInput, AddCategoryInput, categorySimpleItemsNotInCategory, categorySimpleItemsNotInCategoryCount,
     categorySimpleItemsInCategoryCount, categorySimpleItemsInCategory, deleteCategory, getViewCategoryByName, addItemToViewCateogry,
     getViewCategories, getViewCategoriesWithItems, removeItemFromViewCategory, getViewCategoryItemsCount, getViewCategoryItems,
-    addCategory, updateCategory, updateCategoryHierarchy,
+    addCategory, updateCategory, updateCategoryHierarchy, getViewOfCategory,
 
     // compare-attribute-values.service
     compareDoubleselect, compareSelect, compareDimension, compareVolume, compareCurrency, compareString, compareNumber,
@@ -188,7 +189,7 @@ export {
     itemValTypesRevert, itemValTypesConvert,
 
     // conversion-priced-item.service
-    pricedItemConvert, pricedItemRevert, pricedItemsConvert, pricedItemsRevert,
+    pricedItemConvert, pricedItemRevert, pricedItemsConvert, pricedItemsRevert, getPricingStructureOfPricedItem,
 
     // conversion-rule.service
     rulesConvert, ruleConvert, ruleRevert, rulesRevert,
@@ -226,7 +227,7 @@ export {
     removeFavouriteItemIds, addFavouriteItemIds,
     getAllFavouriteItemIdsInView, getAllFavouriteItemsInView, getItemByName, getItemsByIdsCount, updateItemValue,
     updateItemsStatus, searchForItemsInView, getItemById, addItem, addOrUpdateItem, getAllItemsInView,
-    searchForFavouriteItemsInView, updateItem, getItemsByIds,
+    searchForFavouriteItemsInView, updateItem, getItemsByIds, getViewOfItem,
 
     // item-filtering.service
     ItemWithFilteringResult, getItemWithFiltering,
@@ -253,7 +254,7 @@ export {
     hashedPassword,
 
     // priced-item.service
-    getChildrenPricedItems, getPricedItems,
+    getChildrenPricedItems, getPricedItems, getViewOfPriceItem, getPricedItem,
 
     // priced-item-filtering.service
     PricedItemsWithFilteringResult, getPricedItemsWithFiltering,
@@ -340,7 +341,7 @@ export {
     updateWorkflowStatus,
 
     // workflow-trigger.service
-    hasWorkflow, triggerAttributeWorkflow, triggerPriceWorkflow, triggerUserWorkflow, triggerCategoryWorkflow, triggerAttributeValueWorkflow,
+    hasWorkflow, triggerAttributeWorkflow, triggerPriceWorkflow, triggerCategoryWorkflow, triggerAttributeValueWorkflow,
     triggerItemWorkflow,
 
     // workflow-scripts-utils.service

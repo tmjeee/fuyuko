@@ -11,6 +11,13 @@ import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {check} from 'express-validator';
 import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
 import {deleteUser} from "../../service/user.service";
+import {
+    Workflow,
+    WorkflowInstanceAction,
+    WorkflowInstanceType,
+    WorkflowTriggerResult
+} from '@fuyuko-common/model/workflow.model';
+import {getWorkflowByViewActionAndType, triggerAttributeWorkflow} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [
@@ -22,10 +29,6 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_ADMIN])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
-
-
-        // HANDLE WORKFLOW
-
         const r: boolean = await deleteUser(userId);
         if (r) {
             const apiResponse: ApiResponse = {

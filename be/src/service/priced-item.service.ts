@@ -4,8 +4,150 @@ import {doInDbConnection, QueryA, QueryI} from '../db';
 import {Connection} from 'mariadb';
 import {fireEvent, GetPricedItemsEvent} from './event/event.service';
 import {pricedItemsConvert} from './conversion-priced-item.service';
+import {View} from "@fuyuko-common/model/view.model";
+import {PricingStructure} from "@fuyuko-common/model/pricing-structure.model";
 
 class PricedItemService {
+
+    /**
+     *  =======================================
+     *  === getPricingStructureOfPricedItem ===
+     *  =======================================
+     */
+    async getPricingStructureOfPricedItem(pricedItemId: number): Promise<PricingStructure> {
+        return await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
+                SELECT 
+                    PS.ID AS PS_ID,
+                    PS.VIEW_ID AS PS_VIEW_ID,
+                    PS.NAME AS PS_NAME,
+                    PS.DESCRIPTION AS PS_DESCRIPTION,
+                    PS.STATUS AS PS_STATUS,
+                    PS.CREATION_DATE AS PS_CREATION_DATE,
+                    PS.LAST_UPDATE AS PS_LAST_UPDATE,
+                    V.NAME AS V_NAME
+                FROM TBL_PRICING_STRUCTURE AS PS 
+                INNER JOIN TBL_PRICING_STRUCTURE_ITEM  AS PSI ON PSI.PRICING_STRUCTURE_ID = PS.ID
+                INNER JOIN TBL_VIEW AS V ON V.ID = PS.VIEW_ID
+                WHERE PSI.ID = ?
+            `, [pricedItemId]);
+            if (q.length) {
+                const ps: PricingStructure = {
+                    id: q[0].PS_ID,
+                    name: q[0].PS_NAME,
+                    description: q[0].PS_DESCRIPTION,
+                    viewId: q[0].PS_VIEW_ID,
+                    status: q[0].PS_STATUS,
+                    viewName: q[0].V_NAME,
+                    creationDate: q[0].PS_CREATION_DATE,
+                    lastUpdate: q[0].PS_LAST_UPDATE,
+                }
+                return ps;
+            }
+            return null
+        });
+    }
+
+
+    /**
+     *  ==============================
+     *  === getPricedItems ===
+     *  ==============================
+     */
+    async getViewOfPriceItem(priceItemId: number): Promise<View> {
+        return await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
+                SELECT 
+                   V.ID AS V_ID,
+                   V.NAME AS V_NAME,
+                   V.DESCRIPTION AS V_DESCRIPTION,                     
+                   V.CREATION_DATE AS V_CREATION_DATE,
+                   V.LAST_UPDATE AS V_LAST_UPDATE,
+                FROM TBL_VIEW AS V 
+                INNER JOIN TBL_PRICING_STRUCTURE AS PS ON PS.VIEW_ID = V.ID
+                INNER JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.PRICING_STRUCTURE_ID = PS.ID
+                WHERE PSI.ID = ?
+            `, [priceItemId]);
+            if (q.length > 0) {
+                const view: View = {
+                    id: q[0].V_ID,
+                    name: q[0].V_NAME,
+                    description: q[0].V_DESCRIPTION,
+                    creationDate: q[0].V_CREATION_DATE,
+                    lastUpdate: q[0].V_LAST_UPDATE,
+                };
+                return view;
+            }
+            return null;
+        });
+    }
+
+    /**
+     *  ==============================
+     *  === getPricedItem ===
+     *  ==============================
+     */
+    async getPricedItem(pricedItemId: number): Promise<PricedItem> {
+        const pricedItem2: PricedItem2 = await this.getPricedItem2(pricedItemId);
+        if (pricedItem2) {
+            const pricedItems: PricedItem[] = pricedItemsConvert([pricedItem2]);
+            return pricedItems[0];
+        }
+        return null;
+    }
+    async getPricedItem2(priceItemId: number): Promise<PricedItem2> {
+        const item2s: PricedItem2[] = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
+                SELECT
+                    I.ID AS I_ID,
+                    I.PARENT_ID AS I_PARENT_ID,
+                    I.VIEW_ID AS I_VIEW_ID,
+                    I.NAME AS I_NAME,
+                    I.DESCRIPTION AS I_DESCRIPTION,
+                    I.STATUS AS I_STATUS,
+                    I.CREATION_DATE AS I_CREATION_DATE,
+                    I.LAST_UPDATE AS I_LAST_UPDATE,
+                    A.ID AS A_ID,
+                    A.TYPE AS A_TYPE,
+                    A.NAME AS A_NAME,
+                    A.STATUS AS A_STATUS,
+                    A.DESCRIPTION AS A_DESCRIPTION,
+                    V.ID AS V_ID,
+                    M.ID AS M_ID,
+                    M.NAME AS M_NAME,
+                    E.ID AS E_ID,
+                    E.KEY AS E_KEY,
+                    E.VALUE AS E_VALUE,
+                    E.DATA_TYPE AS E_DATA_TYPE,
+                    IMG.ID AS IMG_ID,
+                    IMG.MIME_TYPE AS IMG_MIME_TYPE,
+                    IMG.NAME AS IMG_NAME,
+                    IMG.SIZE AS IMG_SIZE,
+                    IMG.\`PRIMARY\` AS IMG_PRIMARY,
+                    PSI.ITEM_ID AS PSI_ITEM_ID,
+                    PSI.PRICING_STRUCTURE_ID AS PSI_PRICING_STRUCTURE_ID,
+                    PSI.COUNTRY AS PSI_COUNTRY,
+                    PSI.PRICE AS PSI_PRICE
+                FROM TBL_ITEM AS I
+                LEFT JOIN TBL_VIEW_ATTRIBUTE AS A ON A.VIEW_ID = I.VIEW_ID
+                LEFT JOIN TBL_ITEM_VALUE AS V ON V.ITEM_ID = I.ID AND V.VIEW_ATTRIBUTE_ID = A.ID
+                LEFT JOIN TBL_ITEM_VALUE_METADATA AS M ON M.ITEM_VALUE_ID = V.ID
+                LEFT JOIN TBL_ITEM_VALUE_METADATA_ENTRY AS E ON E.ITEM_VALUE_METADATA_ID = M.ID   
+                LEFT JOIN TBL_ITEM_IMAGE AS IMG ON IMG.ITEM_ID = I.ID
+                LEFT JOIN TBL_PRICING_STRUCTURE_ITEM AS PSI ON PSI.ITEM_ID = I.ID
+                LEFT JOIN TBL_PRICING_STRUCTURE AS PS ON PS.ID = PSI.PRICING_STRUCTURE_ID
+                WHERE PSI.ID = ? AND I.STATUS = 'ENABLED' AND A.STATUS = 'ENABLED' AND PS.STATUS = 'ENABLED'
+            `, [priceItemId]);
+
+            return this._doQ(q);
+        });
+        if (item2s && item2s.length) {
+            return item2s[0];
+        }
+        return null;
+    }
+
+
 
     /**
      *  ==============================
@@ -241,6 +383,9 @@ class PricedItemService {
 
 const s = new PricedItemService();
 export const
+    getPricingStructureOfPricedItem = s.getPricingStructureOfPricedItem.bind(s),
+    getPricedItem = s.getPricedItem.bind(s),
     getPricedItems = s.getPricedItems.bind(s),
     getPricedItem2s = s.getPricedItem2s.bind(s),
+    getViewOfPriceItem = s.getViewOfPriceItem.bind(s),
     getChildrenPricedItems = s.getChildrenPricedItems.bind(s);

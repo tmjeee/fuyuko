@@ -25,6 +25,7 @@ import {
     UpdateItemsStatusEvent,
     UpdateItemValueEvent
 } from './event/event.service';
+import {View} from "@fuyuko-common/model/view.model";
 
 //////////////////////// SQLs //////////////////////////////////////////////////////////////////
 
@@ -227,6 +228,36 @@ class ItemService {
         }
         return errors;
     };
+
+    // =============================
+    // === getViewOfItem(...) ===
+    // =============================
+    async getViewOfItem(itemId: number): Promise<View> {
+        return await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
+                SELECT 
+                   V.ID AS V_ID,
+                   V.NAME AS V_NAME,
+                   V.DESCRIPTION AS V_DESCRIPTION,                     
+                   V.CREATION_DATE AS V_CREATION_DATE,
+                   V.LAST_UPDATE AS V_LAST_UPDATE,
+                FROM TBL_VIEW AS V 
+                INNER JOIN TBL_ITEM AS I ON I.VIEW_ID = V.ID
+                WHERE I.ID = ?
+            `, [itemId]);
+            if (q.length > 0) {
+                const view: View = {
+                    id: q[0].V_ID,
+                    name: q[0].V_NAME,
+                    description: q[0].V_DESCRIPTION,
+                    creationDate: q[0].V_CREATION_DATE,
+                    lastUpdate: q[0].V_LAST_UPDATE,
+                };
+                return view;
+            }
+            return null;
+        });
+    }
 
 
     // ============================
@@ -1003,4 +1034,5 @@ export const
     getItemsByIdsCount = s.getItemsByIdsCount.bind(s),
     getItemsByIds = s.getItemsByIds.bind(s),
     getItemById = s.getItemById.bind(s),
+    getViewOfItem = s.getViewOfItem.bind(s),
     getItemByName = s.getItemByName.bind(s);

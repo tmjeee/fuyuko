@@ -437,11 +437,14 @@ const httpAction_mostActiveUsers: any[] = [
                 activeUsers,
             } as Reporting_MostActiveUsers
         });
-        res.status(200).json({
-           status: "SUCCESS",
-           message: 'success',
-           payload: mostActiveUsersReport
-        } as ApiResponse<Reporting_MostActiveUsers>);
+        const apiResponse: ApiResponse<Reporting_MostActiveUsers> = {
+            messages: [{
+                status: "SUCCESS",
+                message: 'success',
+            }],
+            payload: mostActiveUsersReport
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 const httpAction_userVisitsInsignt: any[] = [
@@ -602,18 +605,21 @@ const httpAction_userVisitsInsignt: any[] = [
         }
         yearly.reverse();
 
-        res.status(200).json({
-            status: "SUCCESS",
-            message: 'success',
-            payload: {
-                daily, weekly, monthly, yearly
-            }
-        } as ApiResponse<{
+        const apiResponse: ApiResponse<{
             daily: {date: string, count: number}[],
             weekly: {date: string, count: number}[],
             monthly: {date: string, count: number}[],
             yearly: {date: string, count: number}[]
-        }>);
+        }> = {
+            messages: [{
+                status: "SUCCESS",
+                message: 'success',
+            }],
+            payload: {
+                daily, weekly, monthly, yearly
+            }
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 const mountRoutes_mostActiveUsers = async (v1AppRouter: Router, registry: Registry) => {

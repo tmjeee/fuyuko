@@ -1,0 +1,14 @@
+name: build
+on:
+  workflow_dispatch:
+    inputs:
+      branchName:
+        description: 'Branch Name to Build'
+        required: true
+        default: 'master'
+jobs:
+  checkout-code:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+

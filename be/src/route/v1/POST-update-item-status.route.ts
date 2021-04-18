@@ -27,6 +27,7 @@ import {
     WorkflowTriggerResult
 } from '@fuyuko-common/model/workflow.model';
 import {Item, Value} from '@fuyuko-common/model/item.model';
+import {ResponseStatus} from '@fuyuko-common/model/api-response-status.model';
 
 
 // CHECKED
@@ -50,7 +51,7 @@ const httpAction: any[] = [
 
         // HANDLE WORKFLOW:
         if ((status as Status) === 'DELETED') {
-            let workflowTriggered = false;
+            let itemWorkflowTriggered = false;
             const payload: WorkflowTriggerResult[] = [];
             const workflowAction: WorkflowInstanceAction = 'Delete';
             const workflowType: WorkflowInstanceType = 'AttributeValue';
@@ -58,38 +59,18 @@ const httpAction: any[] = [
             if (ws && ws.length > 0) {
                 for (const w of ws) {
                     const items = await getItemsByIds(viewId, itemIds, false, {limit: Number.MAX_VALUE, offset: 0});
-                    if (w.type === 'AttributeValue') { // handle attribute values
-                        const attributeIds = w.attributeIds;
-                        const p: {item: Item, attributeId: number, value: Value}[] = [];
-                        for (const attributeId of attributeIds) {
-                            for (const item of items) {
-                                const value = item[attributeId];
-                                if (value) {
-                                   p.push({ item, attributeId, value});
-                                }
-                            }
-                        }
-                        if (p.length) {
-                            const workflowTriggerResult = await triggerAttributeValueWorkflow(p, w.workflowDefinition.id, workflowAction);
-                            payload.push(...workflowTriggerResult);
-                            workflowTriggered = true;
-                        }
-                    } else if (w.type === 'Item') { // handle item
-                        if (items.length) {
-                            const workflowTriggerResult = await triggerItemWorkflow(items, w.workflowDefinition.id, workflowAction);
-                            payload.push(...workflowTriggerResult);
-                            workflowTriggered = true;
-                        }
+                    if (items.length) {
+                       const workflowTriggerResult = await triggerItemWorkflow(items, w.workflowDefinition.id, workflowAction);
+                       payload.push(...workflowTriggerResult);
+                       itemWorkflowTriggered = true;
                     }
                 }
             }
-            if (workflowTriggered) {
+            const messages: { status: ResponseStatus, message: string }[] = [];
+            if (itemWorkflowTriggered) {
                 const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
-                    messages: [{
-                        status: 'INFO',
-                        message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for actual creation to take place',
-                    }],
-                    payload,
+                    messages,
+                    payload
                 };
                 res.status(200).json(apiResponse);
                 return;

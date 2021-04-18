@@ -56,7 +56,7 @@ const httpAction: any[] = [
             const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
                 messages: [{
                     status: 'INFO',
-                    message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for actual creation to take place',
+                    message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for changes to take place',
                 }],
                 payload,
             };

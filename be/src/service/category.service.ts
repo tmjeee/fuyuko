@@ -18,6 +18,7 @@ import {
     GetViewCategoryItemsEvent, RemoveItemFromViewCategoryEvent,
     UpdateCategoryEvent
 } from "./event/event.service";
+import {View} from "@fuyuko-common/model/view.model";
 
 export interface UpdateCategoryInput { id: number; name: string; description: string; }
 export interface AddCategoryInput { name: string; description: string; children: AddCategoryInput[] }
@@ -244,6 +245,39 @@ class CategoryService {
     };
 
 
+    /**
+     * =========================
+     * === getViewOfCategory ===
+     * =========================
+     */
+    async getViewOfCategory(categoryId: number): Promise<View> {
+        return await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
+                SELECT 
+                   V.ID AS V_ID,
+                   V.NAME AS V_NAME,
+                   V.DESCRIPTION AS V_DESCRIPTION,                     
+                   V.CREATION_DATE AS V_CREATION_DATE,
+                   V.LAST_UPDATE AS V_LAST_UPDATE,
+                FROM TBL_VIEW AS V 
+                INNER JOIN TBL_CATEGORY AS C ON C.VIEW_ID = V.ID 
+                WHERE C.ID = ?
+            `, [categoryId]);
+            if (q.length > 0) {
+                const view: View = {
+                    id: q[0].V_ID,
+                    name: q[0].V_NAME,
+                    description: q[0].V_DESCRIPTION,
+                    creationDate: q[0].V_CREATION_DATE,
+                    lastUpdate: q[0].V_LAST_UPDATE,
+                };
+                return view;
+            }
+            return null;
+        });
+    }
+
+
 
     /**
      *  ======================
@@ -265,6 +299,36 @@ class CategoryService {
         } as DeleteCategoryEvent);
         return errors;
     };
+
+    /**
+     * =================================
+     * === getViewCategoryById()
+     * =================================
+     */
+    async getViewCategoryById(categoryId: number): Promise<Category> {
+        return await doInDbConnection(async (conn: Connection) => {
+           const q: QueryA = await conn.query(`
+                   SELECT 
+                       ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
+                   FROM TBL_VIEW_CATEGORY WHERE ID=?
+           `, categoryId);
+            let category: Category = null;
+            if (q && q.length) {
+                const c: Category = {
+                    id: q[0].ID,
+                    name: q[0].NAME,
+                    description: q[0].DESCRIPTION,
+                    status: q[0].STATUS,
+                    creationDate: q[0].CREATION_DATE,
+                    lastUpdate: q[0].LAST_UPDATE,
+                    children: await this.getViewCategories2(q[0].ID)
+                };
+                category = c;
+            }
+            return category;
+        });
+
+    }
 
 
     /**
@@ -314,6 +378,39 @@ class CategoryService {
             category
         } as GetViewCategoryByNameEvent);
         return category;
+    }
+
+    /**
+     * ============================
+     * === getViewCategories2
+     * ============================
+     */
+    async getViewCategories2(parentCategoryId: number) {
+        const q: QueryA = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
+                SELECT 
+                    ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
+                FROM TBL_VIEW_CATEGORY WHERE PARENT_ID=? AND STATUS=?
+            `, [parentCategoryId, ENABLED]);
+            return q;
+        });
+
+        let categories: Category[] = [];
+        for (const i of q) {
+            const categoryId: number = i.ID;
+            const c: CategoryWithItems = {
+                id: categoryId,
+                name: i.NAME,
+                description: i.DESCRIPTION,
+                status: i.STATUS,
+                creationDate: i.CREATION_DATE,
+                lastUpdate: i.LAST_UPDATE,
+                items: await this._getCategoryItemSimple2(categoryId),
+                children: await getViewCategoriesWithItems2(categoryId)
+            };
+            categories.push(c);
+        }
+        return categories;
     }
 
 
@@ -425,6 +522,65 @@ class CategoryService {
     };
 
 
+    /**
+     *  ====================================
+     *  === getViewCategoriesWithItems2() ===
+     *  ====================================
+     */
+    async getViewCategoriesWithItems2(parentCategoryId: number): Promise<CategoryWithItems[]> {
+        const q: QueryA = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
+                SELECT 
+                    ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
+                FROM TBL_VIEW_CATEGORY WHERE PARENT_ID=? AND STATUS=?
+            `, [parentCategoryId, ENABLED]);
+            return q;
+        });
+
+        const categoryWithItems: CategoryWithItems[] = [];
+        for (const i of q) {
+            const categoryId: number = i.ID;
+            const c: CategoryWithItems = {
+                id: categoryId,
+                name: i.NAME,
+                description: i.DESCRIPTION,
+                status: i.STATUS,
+                creationDate: i.CREATION_DATE,
+                lastUpdate: i.LAST_UPDATE,
+                items: await this._getCategoryItemSimple2(categoryId),
+                children: await this.getViewCategoriesWithItems2(categoryId)
+            };
+            categoryWithItems.push(c);
+        }
+        return categoryWithItems;
+    };
+    async _getCategoryItemSimple2(categoryId: number): Promise<{id: number, name: string, description: string, creationDate: Date, lastUpdate: Date}[]> {
+        const q: QueryA =  await doInDbConnection(async (conn: Connection) => {
+            const q: QueryA = await conn.query(`
+                SELECT 
+                    I.ID AS I_ID,
+                    I.NAME AS I_NAME,
+                    I.DESCRIPTION AS I_DESCRIPTION,
+                    I.PARENT_ID AS I_PARENT_ID,
+                    I.VIEW_ID AS I_VIEW_ID,
+                    I.STATUS AS I_STATUS,
+                    I.CREATION_DATE AS I_CREATION_DATE,
+                    I.LAST_UPDATE AS I_LAST_UPDATE
+                FROM TBL_LOOKUP_VIEW_CATEGORY_ITEM AS VCI 
+                LEFT JOIN TBL_ITEM AS I ON I.ID = VCI.ITEM_ID
+                WHERE VCI.VIEW_CATEGORY_ID = ? AND I.PARENT_ID IS NULL  AND I.STATUS=?
+            `, [categoryId, ENABLED]);
+            return q;
+        });
+
+        return q.reduce((a: {id: number, name: string, description: string, creationDate: Date, lastUpdate: Date}[], i: QueryI) => {
+            const itm = {
+                id: i.I_ID, name: i.I_NAME, description: i.I_DESCRIPTION, creationDate: i.I_CREATION_DATE, lastUpdate: i.I_LAST_UPDATE
+            };
+            a.push(itm);
+            return a;
+        }, []);
+    };
 
 
     /**
@@ -588,6 +744,8 @@ export const
     updateCategory = s.updateCategory.bind(s),
     addCategory = s.addCategory.bind(s),
     deleteCategory = s.deleteCategory.bind(s),
+    getViewCategoryById = s.getViewCategoryById.bind(s),
+    getViewCategoriesWithItems2 = s.getViewCategoriesWithItems2.bind(s),
     getViewCategoryByName = s.getViewCategoryByName.bind(s),
     getViewCategories = s.getViewCategories.bind(s),
     getViewCategoriesWithItems = s.getViewCategoriesWithItems.bind(s),
@@ -595,4 +753,5 @@ export const
     getViewCategoryItems = s.getViewCategoryItems.bind(s),
     addItemToViewCateogry = s.addItemToViewCateogry.bind(s),
     removeItemFromViewCategory = s.removeItemFromViewCategory.bind(s),
+    getViewOfCategory = s.getViewOfCategory.bind(s),
     updateCategoryHierarchy = s.updateCategoryHierarchy.bind(s);

@@ -94,6 +94,7 @@ export const newEventSubscriptionRegistry = (d: any, name: string, setupFn?: (v1
 
 
 const regs: EventSubscriptionRegistry[] = [];
+// entry point to event registration
 export const registerEventsSubscription = async (v1AppRouter: Router, registry: Registry) => {
     const dir: string = path.join(__dirname, 'custom-events-subscription');
     const dirEntries: string[] = await util.promisify(fs.readdir)(dir);

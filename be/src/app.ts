@@ -28,10 +28,21 @@ import {
     registerEventsSubscription
 } from './service/event/event.service';
 import {runCustomWorkflowSync} from './custom-workflow';
+import morgan from 'morgan';
+
+process.on('exit', async () => {
+    await destroyEventsSubscription();
+    i(`Fuyuko proces exit`);
+});
+process.on('uncaughtException', (e) => {
+    w(`uncaught exception (in process)`, e)
+});
+process.on('unhandledRejection', (e) => {
+    w(`unhandled rejection (in process)`, e)
+});
 
 i(`Run Timezoner`);
 runTimezoner(config.timezone);
-
 
 const port: number = Number(config.port);
 const app: Express = express();
@@ -40,6 +51,7 @@ const options: Options = {
    limit: config['request-payload-limit']
 };
 
+app.use(morgan('dev'));
 app.all('*', threadLocalMiddlewareFn);
 app.all('/api/*',  auditMiddlewareFn);
 
@@ -137,15 +149,4 @@ const fns: PromiseFn[] = [
 fns.reduce((p: Promise<any>, fn: PromiseFn) => {
     return p.then(_ => fn())
 }, Promise.resolve());
-
-process.on('exit', async () => {
-    await destroyEventsSubscription();
-    i(`Fuyuko proces exit`);
-});
-process.on('uncaughtException', (e) => {
-   w(`uncaught exception (in process)`, e)
-});
-process.on('unhandledRejection', (e) => {
-   w(`unhandled rejection (in process)`, e)
-});
 

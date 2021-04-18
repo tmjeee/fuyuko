@@ -507,11 +507,14 @@ const httpActions: any[] = [
             itemsInfo.views.push(viewInfo);
         }
 
-        res.status(200).json({
-           status: "SUCCESS",
-           message: 'success',
-           payload: itemsInfo
-        } as ApiResponse<Reporting_ItemsWithMissingAttributeInfo>);
+        const apiResponse: ApiResponse<Reporting_ItemsWithMissingAttributeInfo> = {
+            messages: [{
+                status: "SUCCESS",
+                message: 'success',
+            }],
+            payload: itemsInfo
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

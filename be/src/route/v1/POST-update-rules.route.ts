@@ -11,8 +11,15 @@ import {check, body} from 'express-validator';
 import {Rule} from '@fuyuko-common/model/rule.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
-import {addOrUpdateRules, getWorkflowByViewActionAndType} from '../../service';
-import {Workflow} from '@fuyuko-common/model/workflow.model';
+import {addOrUpdateRules, getWorkflowByViewActionAndType, triggerCategoryWorkflow} from '../../service';
+import {
+    Workflow,
+    WorkflowInstanceAction,
+    WorkflowInstanceType,
+    WorkflowTriggerResult
+} from '@fuyuko-common/model/workflow.model';
+import {getViewCategoryById} from '../../service/category.service';
+import {triggerRuleWorklow} from '../../service/workflow-trigger.service';
 
 // CHECKED
 
@@ -30,9 +37,26 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const rules: Rule[] = req.body.rules;
 
-
         // HANDLE WORKFLOW
-        const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, 'Update', 'Rule');
+        const workflowAction: WorkflowInstanceAction = 'Update';
+        const workflowType: WorkflowInstanceType = 'Rule';
+        const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
+        const payload: WorkflowTriggerResult[] = [];
+        if (ws && ws.length > 0) {
+            for (const w of ws) {
+                const workflowTriggerResults = await triggerRuleWorklow(rules, workflowAction);
+                payload.push(...workflowTriggerResults);
+            }
+            const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                messages: [{
+                    status: 'INFO',
+                    message: `Workflow instance has been triggered to update category, workflow instance needs to be completed for changes to take place`,
+                }],
+                payload
+            };
+            res.status(200).json(apiResponse);
+            return;
+        }
 
 
 
