@@ -7,10 +7,8 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {check} from 'express-validator';
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
-import {ROLE_ADMIN} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteSelfRegistration} from "../../service/self-registration.service";
 
 // CHECKED
@@ -27,15 +25,21 @@ const httpAction: any[] = [
         const boolean = await deleteSelfRegistration(selfRegistrationId);
 
         if (boolean) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Self registration ${selfRegistrationId} deleted`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Self registration ${selfRegistrationId} deleted`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                messasge: `Failed to delete self registration with id ${selfRegistrationId}`
-            })
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Failed to delete self registration with id ${selfRegistrationId}`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

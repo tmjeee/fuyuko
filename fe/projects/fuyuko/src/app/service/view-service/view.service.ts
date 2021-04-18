@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {View} from '../../model/view.model';
-import {ApiResponse} from '../../model/api-response.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';

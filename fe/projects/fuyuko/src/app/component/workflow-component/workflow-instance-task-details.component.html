@@ -1,0 +1,40 @@
+<div class="workflow-instance-task-details-component">
+    <mat-card class="mat-elevation-z5">
+        <div>id: {{workflowInstanceTask.id}}</div>
+        <div>name: {{workflowInstanceTask.name}}</div>
+        <div>Title: {{workflowInstanceTask.taskTitle}}</div>
+        <div>Description: {{workflowInstanceTask.taskDescription}}</div>
+        <div>Workflow State: {{workflowInstanceTask.workflowState}}</div>
+        <div>Approval Stage: {{workflowInstanceTask.approvalStage}}</div>
+        <div>Approver: {{workflowInstanceTask.approver.username}}</div>
+        <div>Status: {{workflowInstanceTask.status}}</div>
+        <div>Workflow Instance State: {{workflowInstanceTask.workflowInstance.currentWorkflowState}}</div>
+        <div>Creation Date: {{workflowInstanceTask.creationDate | date}}</div>
+        <div>Last Update: {{workflowInstanceTask.lastUpdate | date}}</div>
+
+
+        <div *ngIf="!workflowInstanceTask.isUserAllowedToActionOnTask">
+            <app-static-notice>
+                <div title>
+                    Unable to Action
+                </div>
+                <div content>
+                    You are not allowed to action on this worfklow task anymore, either
+                    <ul>
+                        <li>You are not allowed to action on it</li>
+                        <li>You have already actioned on it</li>
+                        <li>Others have actioned on it</li>
+                    </ul>
+                </div>
+            </app-static-notice>
+        </div>
+
+        {{disableWorkflowActions}} - {{workflowInstanceTask.isUserAllowedToActionOnTask}}
+        <div class="controls" *ngIf="workflowInstanceTask.isUserAllowedToActionOnTask">
+            <ng-container *ngFor="let action of workflowInstanceTask.possibleUserActions">
+                <button type="button" [disabled]="disableWorkflowActions || (!workflowInstanceTask.isUserAllowedToActionOnTask)" mat-flat-button color="primary" (click)="doWorkflowAction(action)">{{action}}</button>
+            </ng-container>
+        </div>
+
+    </mat-card>
+</div>

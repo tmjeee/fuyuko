@@ -1,8 +1,8 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {PricedItem, TablePricedItem} from '../../model/item.model';
+import {PricedItem, TablePricedItem} from '@fuyuko-common/model/item.model';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Attribute} from "../../model/attribute.model";
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 
 export interface ItemAndAttribute {
     attribute: Attribute;

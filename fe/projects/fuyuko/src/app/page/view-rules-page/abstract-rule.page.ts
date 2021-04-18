@@ -1,20 +1,21 @@
-import { Component, OnDestroy, OnInit, Directive } from '@angular/core';
+import {OnDestroy, OnInit, Directive } from '@angular/core';
 import {ViewService} from '../../service/view-service/view.service';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {NotificationsService} from 'angular2-notifications';
 import {RuleService} from '../../service/rule-service/rule.service';
 import {finalize, map, tap} from 'rxjs/operators';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {combineLatest, Subscription, zip} from 'rxjs';
-import {Attribute} from '../../model/attribute.model';
-import {Rule} from '../../model/rule.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RuleEditorComponentEvent} from '../../component/rules-component/rule-editor.component';
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
-import {toNotifications} from "../../service/common.service";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toNotifications} from '../../service/common.service';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Directive()
+// tslint:disable-next-line:directive-class-suffix
 export class AbstractRulePageComponent implements OnInit, OnDestroy {
 
     subscription: Subscription;

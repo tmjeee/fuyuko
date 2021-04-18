@@ -1,14 +1,12 @@
-import {Job} from "../../model/job.model";
-import {JobLogger, newJobLogger} from "../job-log.service";
-import {getJobById} from "../job.service";
-import {Item} from "../../model/item.model";
-import {addItem, getItemByName} from "../item.service";
-import {itemsRevert} from "../conversion-item.service";
-import {Item2} from "../../server-side-model/server-side.model";
-import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
-import {addItemImage} from "../item-image.service";
-import {fireEvent, ImportAttributeJobEvent, ImportItemJobEvent} from "../event/event.service";
+import {Job} from '@fuyuko-common/model/job.model';
+import {JobLogger, newJobLogger} from '../job-log.service';
+import {getJobById} from '../job.service';
+import {Item} from '@fuyuko-common/model/item.model';
+import {addItem, getItemByName} from '../item.service';
+import {doInDbConnection, QueryA} from '../../db';
+import {Connection} from 'mariadb';
+import {addItemImage} from '../item-image.service';
+import {fireEvent, ImportItemJobEvent} from '../event/event.service';
 
 const uuid = require('uuid');
 

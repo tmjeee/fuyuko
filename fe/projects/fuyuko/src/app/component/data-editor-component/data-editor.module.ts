@@ -10,11 +10,11 @@ import {ItemEditorComponent} from './item-editor.component';
 import {ItemEditorDialogComponent} from './item-editor-dialog.component';
 import {DataEditorNoPopupComponent} from './data-editor-no-popup.component';
 import {AttributeOperatorEditorComponent} from './attribute-operator-editor.component';
-import {MultiValueAttributeOperatorEditorComponent} from "./multi-value-attribute-operator-editor.component";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {ItemInfoComponent} from "./item-info.component";
-import {CarouselModule} from "../carousel-component/carousel.module";
-import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
+import {MultiValueAttributeOperatorEditorComponent} from './multi-value-attribute-operator-editor.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {ItemInfoComponent} from './item-info.component';
+import {CarouselModule} from '../carousel-component/carousel.module';
+import {SharedComponentUtilsModule} from '../shared-component-utils/shared-component-utils.module';
 
 @NgModule({
   imports: [

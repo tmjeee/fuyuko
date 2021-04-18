@@ -7,10 +7,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {PricingStructure} from "../../model/pricing-structure.model";
-import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {getAllPricingStructures} from "../../service/pricing-structure.service";
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getAllPricingStructures} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [
@@ -23,11 +23,14 @@ const httpAction: any[] = [
 
         const pricingStructures: PricingStructure[] = await getAllPricingStructures();
 
-        res.status(200).json( {
-            status: 'SUCCESS',
-            message: `Pricing structures received successfully`,
+        const apiResponse: ApiResponse<PricingStructure[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Pricing structures received successfully`,
+            }],
             payload: pricingStructures
-        } as ApiResponse<PricingStructure[]>);
+        };
+        res.status(200).json( apiResponse);
     }
 ];
 

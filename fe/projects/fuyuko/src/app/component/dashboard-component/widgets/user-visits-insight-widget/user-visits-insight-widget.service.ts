@@ -1,9 +1,9 @@
-import {Injectable} from "@angular/core";
-import config from "../../../../utils/config.util";
-import {HttpClient} from "@angular/common/http";
-import {ApiResponse} from "../../../../model/api-response.model";
-import {map, take} from "rxjs/operators";
-import {Observable} from "rxjs";
+import {Injectable} from '@angular/core';
+import config from '../../../../utils/config.util';
+import {HttpClient} from '@angular/common/http';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {map, take} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 const URL_GET_USER_VISITS_INSIGHT_INFO = () => `${config().api_host_url}/reporting/user-visits-insight`;
 

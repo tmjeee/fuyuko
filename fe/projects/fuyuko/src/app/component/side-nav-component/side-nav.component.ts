@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractSideNavComponent} from './abstract-side-nav.component';
 

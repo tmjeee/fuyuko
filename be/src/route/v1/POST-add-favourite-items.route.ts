@@ -1,6 +1,6 @@
-import {Router, Request, Response, NextFunction} from "express";
-import {Registry} from "../../registry";
-import { param, body } from "express-validator";
+import {Router, Request, Response, NextFunction} from 'express';
+import {Registry} from '../../registry';
+import { param, body } from 'express-validator';
 import {
     aFnAllTrue,
     v,
@@ -8,10 +8,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles,
     vFnIsSelf
-} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {addFavouriteItemIds} from "../../service/item.service";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {addFavouriteItemIds} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [
@@ -36,15 +36,21 @@ const httpAction: any[] = [
 
         const errors: string[] = await addFavouriteItemIds(userId, itemIds);
         if (errors && errors.length) { // has errors
-            res.status(400).json({
-               status: 'ERROR',
-               message: errors.join(',')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(',')
+                }],
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Favourite items added`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Favourite items added`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

@@ -1,17 +1,15 @@
-import {Component, OnInit, Provider} from "@angular/core";
-import {ViewAttributeValidationSummaryWidgetService} from "../view-attribute-validation-summary-widget/view-attribute-validation-summary-widget.service";
-import {DashboardWidget, DashboardWidgetInfo} from "../../dashboard.model";
-import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
+import {Component, OnInit, Provider} from '@angular/core';
+import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
+import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
 import {
    Reporting_ViewAttributeValidationRangeSummary,
-   Reporting_ViewAttributeValidationSummary
-} from "../../../../model/reporting.model";
-import {View} from "../../../../model/view.model";
-import {ChartType} from "angular-google-charts";
-import {ViewAttributeValidationRangeSummaryWidgetService} from "./view-attribute-validation-range-summary-widget.service";
-import {MatSelectChange} from "@angular/material/select";
-import {tap} from "rxjs/operators";
-import {ViewService} from "../../../../service/view-service/view.service";
+} from '@fuyuko-common/model/reporting.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {ChartType} from 'angular-google-charts';
+import {ViewAttributeValidationRangeSummaryWidgetService} from './view-attribute-validation-range-summary-widget.service';
+import {MatSelectChange} from '@angular/material/select';
+import {tap} from 'rxjs/operators';
+import {ViewService} from '../../../../service/view-service/view.service';
 
 
 @Component({
@@ -23,8 +21,10 @@ import {ViewService} from "../../../../service/view-service/view.service";
 })
 export class ViewAttributeValidationRangeSummaryWidgetComponent extends DashboardWidget implements OnInit {
 
-   static info(): DashboardWidgetInfo {
-      return { id: 'view-attribute-validation-range-summary-widget', name: 'view-attribute-validation-range-summary-widget', type: ViewAttributeValidationRangeSummaryWidgetComponent };
+   constructor(protected dashboardWidgetService: DashboardWidgetService,
+               protected viewService: ViewService,
+               protected viewAttributeValidateRangeSummaryWidgetService: ViewAttributeValidationRangeSummaryWidgetService) {
+       super(dashboardWidgetService);
    }
 
    data: any;
@@ -37,7 +37,7 @@ export class ViewAttributeValidationRangeSummaryWidgetComponent extends Dashboar
       title: 'Attribute Validation Range Summary',
       is3D: true,
       width: 800,
-      height:400,
+      height: 400,
       bars: 'horizontal',
       legend: {
          position: 'bottom'
@@ -50,10 +50,8 @@ export class ViewAttributeValidationRangeSummaryWidgetComponent extends Dashboar
    };
    type: ChartType = ChartType.BarChart;
 
-   constructor(protected dashboardWidgetService: DashboardWidgetService,
-               protected viewService: ViewService,
-               protected viewAttributeValidateRangeSummaryWidgetService: ViewAttributeValidationRangeSummaryWidgetService) {
-       super(dashboardWidgetService);
+   static info(): DashboardWidgetInfo {
+      return { id: 'view-attribute-validation-range-summary-widget', name: 'view-attribute-validation-range-summary-widget', type: ViewAttributeValidationRangeSummaryWidgetComponent };
    }
 
    ngOnInit(): void {

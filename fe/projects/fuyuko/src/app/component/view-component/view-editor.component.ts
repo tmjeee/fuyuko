@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import { MatDialog } from '@angular/material/dialog';
 import {ViewEditorDialogComponent} from './view-editor-dialog.component';
 import {tap} from 'rxjs/operators';

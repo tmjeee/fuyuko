@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Observer, Subject} from 'rxjs';
-import {Themes} from '../../model/theme.model';
+import {Themes} from '@fuyuko-common/model/theme.model';
 
 export interface Theme {
   cssClassName: string;

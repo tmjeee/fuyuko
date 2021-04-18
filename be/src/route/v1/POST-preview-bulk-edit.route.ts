@@ -1,20 +1,20 @@
-import {Registry} from "../../registry";
-import {Router, Request, Response, NextFunction} from "express";
+import {Registry} from '../../registry';
+import {Router, Request, Response, NextFunction} from 'express';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {param, body} from 'express-validator';
-import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import { ItemImage } from "../../model/item.model";
-import {BulkEditPackage} from "../../model/bulk-edit.model";
-import { ItemMetadata2, } from "../../server-side-model/server-side.model";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {preview} from "../../service/bulk-edit/bulk-edit.service";
+import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+// import { ItemImage } from '@fuyuko-common/model/item.model';
+import {BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
+// import { ItemMetadata2 } from '../../server-side-model/server-side.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {bulkEditPreview} from '../../service';
 
 
 // CHECKED
@@ -79,18 +79,18 @@ const SQL: string = `
            WHERE I.STATUS = 'ENABLED' AND I.VIEW_ID=? 
 `
 
-const SQL_WITH_NULL_PARENT = `${SQL} AND I.PARENT_ID IS NULL`;
-const SQL_WITH_PARAMETERIZED_PARENT = `${SQL} AND I.PARENT_ID = ? `;
+// const SQL_WITH_NULL_PARENT = `${SQL} AND I.PARENT_ID IS NULL`;
+// const SQL_WITH_PARAMETERIZED_PARENT = `${SQL} AND I.PARENT_ID = ? `;
 
-interface BulkEditItem2 {
-    id: number;  // itemId
-    name: string;
-    description: string;
-    images: ItemImage[];
-    parentId: number;
-    metadatas: ItemMetadata2[]
-    children: BulkEditItem2[]
-}
+// interface BulkEditItem2 {
+//     id: number;  // itemId
+//     name: string;
+//     description: string;
+//     images: ItemImage[];
+//     parentId: number;
+//     metadatas: ItemMetadata2[]
+//     children: BulkEditItem2[]
+// }
 
 const httpAction: any[] = [
     [
@@ -107,13 +107,16 @@ const httpAction: any[] = [
       const changeClauses: ItemValueAndAttribute[] = req.body.changeClauses;
       const whenClauses: ItemValueOperatorAndAttribute[] = req.body.whenClauses;
 
-      const bulkEditPackage: BulkEditPackage = await preview(viewId, changeClauses, whenClauses);
+      const bulkEditPackage: BulkEditPackage = await bulkEditPreview(viewId, changeClauses, whenClauses);
 
-      res.status(200).json({
-          status: 'SUCCESS',
-          message: `Bulk edit package ready`,
-          payload: bulkEditPackage
-      } as ApiResponse<BulkEditPackage>);
+      const apiResponse: ApiResponse<BulkEditPackage> = {
+        messages: [{
+            status: 'SUCCESS',
+            message: `Bulk edit package ready`,
+        }],
+        payload: bulkEditPackage
+      };
+      res.status(200).json(apiResponse);
    }
 ]
 

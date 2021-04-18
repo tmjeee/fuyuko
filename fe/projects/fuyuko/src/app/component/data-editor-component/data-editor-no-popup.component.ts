@@ -1,7 +1,7 @@
 import moment from 'moment';
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges, OnInit} from '@angular/core';
-import {ItemValueAndAttribute} from '../../model/item-attribute.model';
-import {Attribute} from '../../model/attribute.model';
+import {Component, EventEmitter, Input, Output, OnInit} from '@angular/core';
+import {ItemValueAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {
     AreaValue,
     CURRENCY_FORMAT,
@@ -10,7 +10,7 @@ import {
     Value,
     VolumeValue, WeightValue,
     WidthValue
-} from '../../model/item.model';
+} from '@fuyuko-common/model/item.model';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatSelectChange } from '@angular/material/select';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -22,8 +22,8 @@ import {
     HeightUnits, LENGTH_UNITS, LengthUnits, VOLUME_UNITS,
     VolumeUnits, WEIGHT_UNITS, WeightUnits, WIDTH_UNITS,
     WidthUnits
-} from '../../model/unit.model';
-import {convertToString} from '../../shared-utils/ui-item-value-converters.util';
+} from '@fuyuko-common/model/unit.model';
+import {convertToString} from '@fuyuko-common/shared-utils/ui-item-value-converters.util';
 import {
     setItemAreaValue,
     setItemCurrencyValue,
@@ -36,8 +36,8 @@ import {
     setItemTextValue,
     setItemVolumeValue, setItemWeightValue,
     setItemWidthValue
-} from '../../shared-utils/ui-item-value-setter.util';
-import {createNewItemValue} from "../../shared-utils/ui-item-value-creator.utils";
+} from '@fuyuko-common/shared-utils/ui-item-value-setter.util';
+import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import * as numeral from 'numeral';
 
 @Component({

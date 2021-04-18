@@ -1,7 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {ItemValTypes, Value} from '../../model/item.model';
-import {Attribute } from '../../model/attribute.model';
-import {convertToString } from '../../shared-utils/ui-item-value-converters.util';
+import {ItemValTypes, Value} from '@fuyuko-common/model/item.model';
+import {Attribute } from '@fuyuko-common/model/attribute.model';
+import {convertToString } from '@fuyuko-common/shared-utils/ui-item-value-converters.util';
 
 
 /**

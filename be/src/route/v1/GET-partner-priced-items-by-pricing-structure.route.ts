@@ -1,6 +1,5 @@
-import {i} from "../../logger";
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {param} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -8,12 +7,11 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {getPricedItems} from "../../service/priced-item.service";
-import {PricedItem2} from "../../server-side-model/server-side.model";
-import {PricedItem} from "../../model/item.model";
-import {ROLE_PARTNER} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {getPricedItems} from '../../service';
+import {PricedItem} from '@fuyuko-common/model/item.model';
+import {ROLE_PARTNER} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED
@@ -27,12 +25,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const pricingStructureId: number = Number(req.params.pricingStructureId);
         const pricedItems: PricedItem[] = await getPricedItems(pricingStructureId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Priced Items retrieved`,
+        const apiResponse: ApiResponse<PricedItem[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Priced Items retrieved`,
+            }],
             payload: pricedItems
-        } as ApiResponse<PricedItem[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

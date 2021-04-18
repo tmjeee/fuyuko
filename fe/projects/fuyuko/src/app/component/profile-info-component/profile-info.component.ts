@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {User} from '../../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {AuthService} from '../../service/auth-service/auth.service';
 
 export interface ProfileInfoComponentEvent {

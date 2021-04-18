@@ -7,10 +7,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {Job} from "../../model/job.model";
-import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {getAllJobs} from "../../service/job.service";
+import {Job} from '@fuyuko-common/model/job.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getAllJobs} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [
@@ -22,11 +22,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const jobs: Job[] = await getAllJobs();
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Jobs retrieved successfully`,
+        const apiResponse: ApiResponse<Job[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Jobs retrieved successfully`,
+            }],
             payload: jobs
-        } as ApiResponse<Job[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

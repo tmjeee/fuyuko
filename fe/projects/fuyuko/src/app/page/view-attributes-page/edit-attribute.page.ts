@@ -1,17 +1,19 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {FormBuilder} from '@angular/forms';
-import {finalize, map, tap} from 'rxjs/operators';
-import {View} from '../../model/view.model';
+import {finalize, map, switchMap, tap} from 'rxjs/operators';
+import {View} from '@fuyuko-common/model/view.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {of, Subscription} from 'rxjs';
 import {ViewService} from '../../service/view-service/view.service';
 import {NotificationsService} from 'angular2-notifications';
 import {EditAttributeComponentEvent} from '../../component/attribute-table-component/edit-attribute.component';
-import {ApiResponse} from "../../model/api-response.model";
-import {toNotifications} from "../../service/common.service";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toNotifications} from '../../service/common.service';
+import {LoadingService} from '../../service/loading-service/loading.service';
+import {WorkflowService} from '../../service/workflow-service/workflow.service';
+import {Workflow} from '@fuyuko-common/model/workflow.model';
 
 @Component({
     templateUrl: './edit-attribute.page.html',
@@ -26,11 +28,14 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
     viewLoading: boolean;
     attributeLoading: boolean;
 
+    workflows: Workflow[] = [];  // workflows for edit attributes (if active and available)
+
     constructor(private formBuilder: FormBuilder,
                 private route: ActivatedRoute,
                 private router: Router,
                 private viewService: ViewService,
                 private notificationService: NotificationsService,
+                private workflowService: WorkflowService,
                 private attributeService: AttributeService,
                 private loadingService: LoadingService) {
     }
@@ -47,13 +52,23 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
                     if (v) {
                         this.currentView = v;
                         this.reload();
+                        return v;
+                    }
+                    return undefined;
+                }),
+                switchMap((x, _) => {
+                    if (x /* view */) {
+                        return this.workflowService.getWorkflowsByViewActionAndType(x.id, 'Update', 'Attribute');
+                    }
+                    return of(undefined);
+                }),
+                tap((g: ApiResponse<Workflow[]> | undefined) => {
+                    if (g) {
+                        this.workflows = g.payload;
                     }
                     this.viewLoading = false;
-                }),
-                finalize(() => {
-                    this.viewLoading = false;
                     this.loadingService.stopLoading();
-                })
+                }),
             ).subscribe();
     }
 

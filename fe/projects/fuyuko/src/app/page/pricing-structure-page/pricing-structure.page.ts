@@ -1,17 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
-import {PricingStructure, PricingStructureItemWithPrice, PricingStructureWithItems} from '../../model/pricing-structure.model';
+import {PricingStructure, PricingStructureWithItems} from '@fuyuko-common/model/pricing-structure.model';
 import {PricingStructureEvent, PricingStructureInput} from '../../component/pricing-component/pricing-structure-table.component';
 import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
 import {finalize, tap} from 'rxjs/operators';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Router} from '@angular/router';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {ViewService} from '../../service/view-service/view.service';
-import {LimitOffset} from "../../model/limit-offset.model";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

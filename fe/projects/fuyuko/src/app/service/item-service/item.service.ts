@@ -2,14 +2,14 @@ import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {
     TableItem, Item, ItemSearchType
-} from '../../model/item.model';
-import {toItem, toItemIgnoreParent} from '../../utils/item-to-table-items.util';
+} from '@fuyuko-common/model/item.model';
+import {toItem} from '../../utils/item-to-table-items.util';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
-import {DEFAULT_LIMIT, DEFAULT_OFFSET, LimitOffset} from "../../model/limit-offset.model";
-import {toQuery} from "../../utils/pagination.utils";
-import {map} from "rxjs/operators";
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {DEFAULT_LIMIT, DEFAULT_OFFSET, LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {toQuery} from '../../utils/pagination.utils';
+import {map} from 'rxjs/operators';
 
 
 const URL_GET_ITEMS = (limitOffset?: LimitOffset) => `${config().api_host_url}/view/:viewId/items/:itemIds?${toQuery(limitOffset)}`;
@@ -87,15 +87,18 @@ export class ItemService {
 
 
   getItemsByIds(viewId: number, itemIds: number[], limitOffset?: LimitOffset): Observable<PaginableApiResponse<Item[]>> {
-    if(!!!itemIds || !itemIds.length) { // no item ids
-        return of({
-            message: 'Success',
-            status: 'SUCCESS',
+    if (!!!itemIds || !itemIds.length) { // no item ids
+        const paginableApiResponse: PaginableApiResponse<Item[]> = {
+            messages: [{
+                message: 'Success',
+                status: 'SUCCESS',
+            }],
             total: 0,
             limit: limitOffset ? limitOffset.limit : DEFAULT_LIMIT,
             offset: limitOffset ? limitOffset.offset : DEFAULT_OFFSET,
             payload: []
-        } as PaginableApiResponse<Item[]>);
+        };
+        return of(paginableApiResponse);
     }
     return this.httpClient.get<PaginableApiResponse<Item[]>>(
         URL_GET_ITEMS(limitOffset)

@@ -1,7 +1,6 @@
 import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
 import {AuthService} from '../../service/auth-service/auth.service';
-import {User} from '../../model/user.model';
-import {isSameMultiYearView} from "@angular/material/datepicker/multi-year-view";
+import {User} from '@fuyuko-common/model/user.model';
 
 /**
  * usage :

@@ -2,8 +2,8 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import { param } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteExportArtifactById} from "../../service/export-artifact.service";
 
 // CHECKED
@@ -20,15 +20,21 @@ const httpAction: any[] = [
         const r: boolean = await deleteExportArtifactById(dataExportArtifactId);
 
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Data Export artifact deleted`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Data Export artifact deleted`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `Data Export artifact Failed to be deleted`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Data Export artifact Failed to be deleted`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

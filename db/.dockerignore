@@ -1,7 +1,0 @@
-docker/
-!docker/mariadb.cnf
-docker-build.sh
-docker-run.sh
-node_modules/
-
-

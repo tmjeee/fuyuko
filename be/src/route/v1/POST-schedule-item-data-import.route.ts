@@ -1,6 +1,5 @@
-import {Job} from "../../model/job.model";
-import {runJob} from "../../service/import-csv/job-do-item-data-import.service";
-import {PricingStructureItemWithPrice} from "../../model/pricing-structure.model";
+import {Job} from '@fuyuko-common/model/job.model';
+import {importItemRunJob} from '../../service';
 import {body, param} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -8,12 +7,12 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../registry";
-import {Item} from "../../model/item.model";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../registry';
+import {Item} from '@fuyuko-common/model/item.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 
@@ -31,13 +30,16 @@ const httpAction: any[] = [
         const dataImportId: number = Number(req.body.dataImportId);
         const items: Item[] =  req.body.items;
 
-        const job: Job = await runJob(viewId, dataImportId, items);
+        const job: Job = await importItemRunJob(viewId, dataImportId, items);
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Item data import job scheduled`,
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Item data import job scheduled`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        }
+        res.status(200).json(apiResponse);
     }
 ];
 

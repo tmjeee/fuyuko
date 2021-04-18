@@ -1,14 +1,14 @@
 import moment from 'moment';
-import {Level, LogMessage} from "../../model/level.model";
-import {NewNotification} from "../../model/notification.model";
-import {View} from "../../model/view.model";
+import {LogMessage} from '@fuyuko-common/model/level.model';
+import {NewNotification} from '@fuyuko-common/model/notification.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {
     CustomExportContext, CustomExportJob,
     ExportScriptInput,
     ExportScriptInputValue,
     ExportScriptPreview
-} from "../../model/custom-export.model";
-import {ImportScriptPreview} from "../../model/custom-import.model";
+} from '@fuyuko-common/model/custom-export.model';
+import {ImportScriptPreview} from "@fuyuko-common/model/custom-import.model";
 
 const scriptName: string = `0.0.1-sample-custom-import-1`;
 

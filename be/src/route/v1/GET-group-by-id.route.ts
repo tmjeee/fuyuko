@@ -8,12 +8,10 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {check} from 'express-validator';
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {Group} from "../../model/group.model";
-import {Role, ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {getGroupById} from "../../service/group.service";
+import {Group} from '@fuyuko-common/model/group.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getGroupById} from '../../service';
 
 
 // CHECKED
@@ -28,12 +26,14 @@ const httpAction: any[] = [
 
         const groupId: number = Number(req.params.groupId);
         const group: Group = await getGroupById(groupId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Group retrieved successfully`,
+        const apiResponse: ApiResponse<Group> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Group retrieved successfully`,
+            }],
             payload: group
-        } as ApiResponse<Group>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

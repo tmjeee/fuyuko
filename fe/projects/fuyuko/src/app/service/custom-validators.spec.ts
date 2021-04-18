@@ -1,5 +1,5 @@
-import {currencyValidator, intValidator, numberValidator} from "./custom-validators";
-import {AbstractControl} from "@angular/forms";
+import {currencyValidator, intValidator, numberValidator} from './custom-validators';
+import {AbstractControl} from '@angular/forms';
 
 describe('custom-validators', () => {
   it(`currencyValidator should validate property`, () => {

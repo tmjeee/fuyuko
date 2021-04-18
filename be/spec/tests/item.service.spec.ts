@@ -6,7 +6,7 @@ import {
     getItemByName, getUserByUsername, removeFavouriteItemIds, searchForItemsInView,
     updateItem, updateItemsStatus,
     updateItemValue
-} from "../../src/service";
+} from '../../src/service';
 import {
     AreaValue,
     CurrencyValue,
@@ -17,10 +17,10 @@ import {
     TextValue,
     Value,
     VolumeValue, WeightValue, WidthValue
-} from "../../src/model/item.model";
-import {Attribute} from "../../src/model/attribute.model";
-import {JASMINE_TIMEOUT, setupTestDatabase, setupBeforeAll2} from "../helpers/test-helper";
-import {User} from "../../src/model/user.model";
+} from '@fuyuko-common/model/item.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {JASMINE_TIMEOUT, setupTestDatabase, setupBeforeAll2} from '../helpers/test-helper';
+import {User} from '@fuyuko-common/model/user.model';
 
 
 describe('item.service', () => {

@@ -1,8 +1,8 @@
-import {Component, Input, OnChanges, SimpleChange, SimpleChanges} from "@angular/core";
-import {Attribute} from "../../model/attribute.model";
-import {PriceDataItem} from "../../model/pricing-structure.model";
-import {CollectionViewer, DataSource} from "@angular/cdk/collections";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Component, Input, OnChanges, SimpleChange, SimpleChanges} from '@angular/core';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {PriceDataItem} from '@fuyuko-common/model/pricing-structure.model';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 export class InternalDataSource extends DataSource<PriceDataItem> {
 
@@ -46,7 +46,7 @@ export class ViewOnlyPriceDataItemsTableComponent implements OnChanges {
     displayedColumns: string[];
 
     constructor() {
-        this.displayedColumns = ['pricingStructureName', 'viewName', 'itemName', 'price', 'country']
+        this.displayedColumns = ['pricingStructureName', 'viewName', 'itemName', 'price', 'country'];
         this.dataSource = new InternalDataSource();
     }
 
@@ -55,7 +55,7 @@ export class ViewOnlyPriceDataItemsTableComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        const simpleChange: SimpleChange = changes['priceDataItems']
+        const simpleChange: SimpleChange = changes.priceDataItems;
         if (simpleChange && simpleChange.currentValue) {
             this.dataSource.update(simpleChange.currentValue);
         }

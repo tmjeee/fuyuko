@@ -2,11 +2,11 @@
 import {Request, Response, NextFunction, Router} from 'express';
 import {body} from 'express-validator';
 
-import {validateMiddlewareFn} from "./common-middleware";
+import {validateMiddlewareFn} from './common-middleware';
 
-import {Registry} from "../../registry";
-import {RegistrationResponse} from "../../model/api-response.model";
-import {selfRegister} from "../../service/self-registration.service";
+import {Registry} from '../../registry';
+import {RegistrationResponse} from '@fuyuko-common/model/api-response.model';
+import {selfRegister} from '../../service';
 
 const httpAction = [
     [
@@ -26,25 +26,31 @@ const httpAction = [
 
         const r: {errors: string[], registrationId: number, email: string, username: string} = await selfRegister(username, email, firstName, lastName, password);
         if (r.errors && r.errors.length) {
-            res.status(200).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: RegistrationResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: {
                     registrationId: r.registrationId,
                     email: r.email,
                     username: r.username,
                 }
-            } as RegistrationResponse);
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `User ${username} (${email}) registered, activation is required before account is activated`,
+            const apiResponse: RegistrationResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `User ${username} (${email}) registered, activation is required before account is activated`,
+                }],
                 payload: {
                     registrationId: r.registrationId,
                     email: r.email,
                     username: r.username,
                 }
-            } as RegistrationResponse);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

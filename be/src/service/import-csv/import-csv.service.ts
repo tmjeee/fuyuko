@@ -1,7 +1,7 @@
 
 
-import parse, {Parser} from "csv-parse";
-import {Pair1, Pair2} from "../../model/attribute.model";
+import parse, {Parser} from 'csv-parse';
+import {Pair1, Pair2} from '@fuyuko-common/model/attribute.model';
 
 export const readKeyPairs = (b: string): string[] => {
     return b.split('=').map((_: string) => _ && _.trim());

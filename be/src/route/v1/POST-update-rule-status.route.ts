@@ -1,19 +1,17 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {check, param} from 'express-validator';
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
-import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_EDIT} from "../../model/role.model";
-import {updateRuleStatus} from "../../service/rule.service";
-import {Status} from "../../model/status.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {updateRuleStatus} from '../../service';
+import {Status} from '@fuyuko-common/model/status.model';
 
 // CHECKED
 
@@ -30,19 +28,31 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
         const ruleId: number = Number(req.params.ruleId);
-        const status: string = req.params.status;
+        const status: Status = req.params.status as Status;
 
+        // HANDLE WORKFLOW
+        if (status === 'DELETED') {
+
+        }
+
+        // HANDLE NON_WORKFLOW
         const r: boolean = await updateRuleStatus(ruleId, status as Status);
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Rule Status updated`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Rule Status updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `Rule Status Failed to be updated`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Rule Status Failed to be updated`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ]

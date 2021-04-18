@@ -1,9 +1,9 @@
 import {Component, Inject} from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {PricingStructure, PricingStructureWithItems} from '../../model/pricing-structure.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 
 
 @Component({

@@ -1,10 +1,10 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {addCategory} from "../../service/category.service";
-import {ApiResponse} from "../../model/api-response.model";
-import {body, param} from "express-validator";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {addCategory} from '../../service';
+import {ApiResponse} from "@fuyuko-common/model/api-response.model";
+import {body, param} from 'express-validator';
 
 
 const httpAction: any[] = [
@@ -29,16 +29,24 @@ const httpAction: any[] = [
             children: []
         });
 
+        // HANDLE WORKFLOW
+
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `category ${name} added`
-            });
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `category ${name} added`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

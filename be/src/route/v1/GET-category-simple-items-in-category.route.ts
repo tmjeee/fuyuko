@@ -2,12 +2,12 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import { param } from "express-validator";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {categorySimpleItemsInCategory, categorySimpleItemsInCategoryCount} from "../../service/category.service";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {categorySimpleItemsInCategory, categorySimpleItemsInCategoryCount} from '../../service';
 import {toLimitOffset} from "../../util/utils";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {CategorySimpleItem} from "../../model/category.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {CategorySimpleItem} from '@fuyuko-common/model/category.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [
@@ -25,15 +25,17 @@ const httpAction: any[] = [
         const categoryId: number = Number(req.params.categoryId);
         const total: number = await categorySimpleItemsInCategoryCount(viewId, categoryId);
         const items: CategorySimpleItem[] = await categorySimpleItemsInCategory(viewId, categoryId, limitOffset);
-        
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Items retrieved successfully`,
+        const apiResponse: PaginableApiResponse<CategorySimpleItem[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Items retrieved successfully`,
+            }],
             payload: items,
             limit: limitOffset ? limitOffset.limit : total,
             offset: limitOffset ? limitOffset.offset : 0,
             total: total
-        } as PaginableApiResponse<CategorySimpleItem[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

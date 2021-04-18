@@ -1,13 +1,10 @@
 import {Router, Request, Response, NextFunction} from "express";
 import {validateMiddlewareFn} from "./common-middleware";
 import {check} from 'express-validator';
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import { Invitation } from "../../model/invitation.model";
-import {makeApiError, makeApiErrorObj} from "../../util";
-import {Registry} from "../../registry";
-import {ApiResponse} from "../../model/api-response.model";
-import {getInvitationByCode} from "../../service/invitation.service";
+import { Invitation } from '@fuyuko-common/model/invitation.model';
+import {Registry} from '../../registry';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getInvitationByCode} from '../../service';
 
 // CHECKED
 
@@ -23,12 +20,14 @@ const httpAction = [
 
         const code: string = req.params.code;
         const invitation: Invitation = await getInvitationByCode(code);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `invitation retrieved successfully`,
+        const apiResponse: ApiResponse<Invitation> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `invitation retrieved successfully`,
+            }],
             payload: invitation
-        } as ApiResponse<Invitation>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

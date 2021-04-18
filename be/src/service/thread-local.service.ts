@@ -1,26 +1,32 @@
-import {JwtPayload} from "../model/jwt.model";
+import {JwtPayload} from '@fuyuko-common/model/jwt.model';
 
+import * as h from 'cls-hooked';
 const NAMESPACE = 'F-NAMESPACE';
 const KEY = `F-KEY`;
-const continuationLocalStorage = require(`continuation-local-storage`);
-const createNamespace = continuationLocalStorage.createNamespace;
-const getNamespace = continuationLocalStorage.getNamespace;
 
-const NS = createNamespace(NAMESPACE);
+const NS = h.createNamespace(NAMESPACE);
 
 export interface ThreadLocalStore {
     reqUuid: string;
     jwtPayload: JwtPayload
 };
 
-export const threadLocalInit = (fn: (ns: any) => void) => {
-    NS.run(fn);
-};
+class ThreadLocalService {
+    threadLocalInit(fn: (ns: any) => void) {
+        NS.run(fn);
+    };
 
-export const getThreadLocalStore = (): ThreadLocalStore => {
-    return NS.get(KEY);
-};
+    getThreadLocalStore(): ThreadLocalStore {
+        return NS.get(KEY);
+    };
 
-export const setThreadLocalStore = (v: ThreadLocalStore) => {
-    NS.set(KEY, v);
-};
+    setThreadLocalStore(v: ThreadLocalStore) {
+        NS.set(KEY, v);
+    };
+}
+
+const s = new ThreadLocalService();
+export const
+    threadLocalInit = s.threadLocalInit.bind(s),
+    getThreadLocalStore = s.getThreadLocalStore.bind(s),
+    setThreadLocalStore = s.setThreadLocalStore.bind(s);

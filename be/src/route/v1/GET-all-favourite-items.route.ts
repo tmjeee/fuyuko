@@ -9,13 +9,13 @@ import {
     vFnHasAnyUserRoles,
     vFnIsSelf
 } from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import { param } from "express-validator";
 import {getAllFavouriteItemsInView, getAllFavouriteItemsInViewCount} from "../../service/item.service";
 import {toLimitOffset} from "../../util/utils";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {Item} from "../../model/item.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {Item} from '@fuyuko-common/model/item.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction:  any[] = [
         [
@@ -40,14 +40,17 @@ const httpAction:  any[] = [
             const items: Item[] = await getAllFavouriteItemsInView(viewId, userId, limitOffset);
             const total: number = await getAllFavouriteItemsInViewCount(viewId, userId);
 
-            res.status(200).json({
-               status: "SUCCESS",
-               message: 'Favourite item retrieved',
-               payload: items,
-               total,
-               limit: limitOffset ? limitOffset.limit : total,
-               offset: limitOffset ? limitOffset.offset : 0,
-            } as PaginableApiResponse<Item[]>)
+            const apiResponse: PaginableApiResponse<Item[]> =  {
+               messages: [{
+                   status: "SUCCESS",
+                   message: 'Favourite item retrieved',
+               }],
+                payload: items,
+                total,
+                limit: limitOffset ? limitOffset.limit : total,
+                offset: limitOffset ? limitOffset.offset : 0,
+            }
+            res.status(200).json(apiResponse);
         }
 ];
 

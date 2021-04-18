@@ -1,11 +1,11 @@
-import {View} from "../../model/view.model";
-import {NewNotification} from "../../model/notification.model";
-import {LogMessage} from "../../model/level.model";
+import {View} from '@fuyuko-common/model/view.model';
+import {NewNotification} from '@fuyuko-common/model/notification.model';
+import {LogMessage} from "@fuyuko-common/model/level.model";
 import {
     CustomBulkEditContext, CustomBulkEditJob,
     CustomBulkEditScriptInput,
     CustomBulkEditScriptInputValue, CustomBulkEditScriptPreview
-} from "../../model/custom-bulk-edit.model";
+} from '@fuyuko-common/model/custom-bulk-edit.model';
 
 
 /////////////////////////////////////

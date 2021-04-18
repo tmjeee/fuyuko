@@ -9,9 +9,9 @@ import {
     vFnHasAllUserRoles,
     vFnIsSelf
 } from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {removeFavouriteItemIds} from "../../service/item.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [
@@ -36,15 +36,21 @@ const httpAction: any[] = [
         const errors: string[] = await removeFavouriteItemIds(userId, itemIds);
 
         if (errors && errors.length) { // has errors
-            res.status(400).json({
-               status: 'ERROR',
-               message: errors.join(',')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(',')
+                }]
+            }
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-               status: 'SUCCESS',
-               message: `Successfully remove favourite items`
-            } as ApiResponse)
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Successfully remove favourite items`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

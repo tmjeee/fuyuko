@@ -1,18 +1,18 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {View} from "../../model/view.model";
-import {delay, finalize, tap} from "rxjs/operators";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {View} from '@fuyuko-common/model/view.model';
+import {finalize, tap} from 'rxjs/operators';
 import {
     CustomExportPreviewFn,
     CustomExportSubmitFn, CustomExportValidateFn
-} from "../../component/export-data-component/custom-export-wizard.component";
+} from '../../component/export-data-component/custom-export-wizard.component';
 import {
     CustomDataExport,
     ExportScriptInputValue,
     ExportScriptJobSubmissionResult,
     ExportScriptPreview, ExportScriptValidateResult
-} from "../../model/custom-export.model";
-import {CustomExportService} from "../../service/custom-export-service/custom-export.service";
-import {LoadingService} from "../../service/loading-service/loading.service";
+} from '@fuyuko-common/model/custom-export.model';
+import {CustomExportService} from '../../service/custom-export-service/custom-export.service';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
     templateUrl: './custom-export.page.html',
@@ -51,13 +51,13 @@ export class CustomExportPageComponent implements OnInit, OnDestroy {
                     this.loadingService.stopLoading();
                 })
             );
-        }
+        };
     }
 
 
     ngOnInit(): void {
         this.ready = false;
-        this.loadingService.startLoading()
+        this.loadingService.startLoading();
         this.customExportService.getAllCustomExports().pipe(
             tap((c: CustomDataExport[]) => {
                 this.customDataExports = c;

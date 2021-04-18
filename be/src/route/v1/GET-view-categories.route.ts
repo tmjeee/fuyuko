@@ -1,11 +1,11 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {getViewCategories} from "../../service/category.service";
-import {Category} from "../../model/category.model";
-import {ApiResponse} from "../../model/api-response.model";
-import { param } from "express-validator";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {getViewCategories} from '../../service';
+import {Category} from '@fuyuko-common/model/category.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import { param } from 'express-validator';
 
 
 const httpAction: any[] = [
@@ -18,14 +18,16 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
-
         const categories: Category[] = await getViewCategories(viewId);
-
-        return res.status(200).json({
-            status: 'SUCCESS',
-            message: 'success',
+        const apiResponse: ApiResponse<Category[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'success',
+            }],
             payload: categories
-        } as ApiResponse<Category[]>);
+        };
+
+        return res.status(200).json(apiResponse);
     }
 ];
 

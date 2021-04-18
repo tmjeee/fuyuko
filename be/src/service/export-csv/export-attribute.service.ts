@@ -1,8 +1,6 @@
-import {Attribute} from "../../model/attribute.model";
-import {getAttribute2sInView} from "../attribute.service";
-import {Attribute2} from "../../server-side-model/server-side.model";
-import {attributesConvert} from "../conversion-attribute.service";
-import {ExportAttributePreviewEvent, fireEvent} from "../event/event.service";
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ExportAttributePreviewEvent, fireEvent} from '../event/event.service';
+import {getAttributesInView} from '../';
 
 /**
  * ===============
@@ -14,8 +12,7 @@ export const preview = async (viewId: number, attributes: Attribute[]): Promise<
         // todo: lookup again from db?
         return attributes;
     }
-    const a: Attribute2[] =  await getAttribute2sInView(viewId);
-    const att: Attribute[] = attributesConvert(a);
+    const att: Attribute[] = await getAttributesInView(viewId);
     
     fireEvent({
        type: 'ExportAttributePreviewEvent',

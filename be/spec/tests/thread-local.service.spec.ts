@@ -1,5 +1,4 @@
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {getGroupByName, getUserByUsername} from "../../src/service";
+import {JASMINE_TIMEOUT, setupTestDatabase} from '../helpers/test-helper';
 
 
 describe('thread-local.service', () => {

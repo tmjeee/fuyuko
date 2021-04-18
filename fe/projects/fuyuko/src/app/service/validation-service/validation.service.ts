@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Validation, ValidationLogResult, ValidationResult} from '../../model/validation.model';
+import {Validation, ValidationLogResult, ValidationResult} from '@fuyuko-common/model/validation.model';
 import config from '../../utils/config.util';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse, ScheduleValidationResponse} from "../../model/api-response.model";
-import {map} from "rxjs/operators";
+import {ApiResponse, ScheduleValidationResponse} from '@fuyuko-common/model/api-response.model';
+import {map} from 'rxjs/operators';
 
 const URL_GET_ALL_VALIDATIONS = () => `${config().api_host_url}/view/:viewId/validations`;
 const URL_GET_VALIDATION_DETAILS = () => `${config().api_host_url}/view/:viewId/validation/:validationId`;
@@ -24,7 +24,8 @@ export class ValidationService {
             );
     }
 
-    getValidationLogResult(viewId: number, validationId: number, validationLogId?: number, order: 'before' | 'after' = 'after', limit: number = 100): Observable<ValidationLogResult> {
+    getValidationLogResult(viewId: number, validationId: number, validationLogId?: number,
+                           order: 'before' | 'after' = 'after', limit: number = 100): Observable<ValidationLogResult> {
         return this.httpClient
             .get<ApiResponse<ValidationLogResult>>(URL_GET_VALIDATION_LOG_RESULT()
                 .replace(':viewId', String(viewId))

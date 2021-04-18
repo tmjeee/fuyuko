@@ -6,10 +6,23 @@
             <mat-card-subtitle>Edit attribute related to current active view.</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
+
             <div *ngIf="!viewLoading && !attributeLoading">
+                <app-static-notice level="INFO" *ngIf="workflows && workflows.length">
+                    <div title>Workflow Found</div>
+                    <div content>
+                        Warning: following workflows exists for edit attributes, your changes will not be effective until
+                        the workflows are completed:
+                        <ul *ngFor="let workflow of workflows">
+                            <li>{{workflow.name}}</li>
+                        </ul>
+                    </div>
+                </app-static-notice>
+
                 <app-edit-attribute [attribute]="attribute" (events)="onEditAttributeEvent($event)">
                 </app-edit-attribute>
             </div>
+
         </mat-card-content>
     </mat-card>
 </div>

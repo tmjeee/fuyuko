@@ -6,9 +6,9 @@ import {
     CustomBulkEditScriptJobSubmissionResult,
     CustomBulkEditScriptPreview,
     CustomBulkEditScriptValidateResult
-} from "../model/custom-bulk-edit.model";
+} from '@fuyuko-common/model/custom-bulk-edit.model';
 import * as path from "path";
-import {View} from "../model/view.model";
+import {View} from '@fuyuko-common/model/view.model';
 import {getViewById} from "../service/view.service";
 import {LoggingCallback, newJobLogger, newLoggingCallback} from "../service/job-log.service";
 import {i} from "../logger";
@@ -17,9 +17,8 @@ import * as fs from "fs";
 import * as semver from "semver";
 import {doInDbConnection, QueryA, QueryResponse} from "../db";
 import {Connection} from "mariadb";
-import uuid = require("uuid");
+import {v4 as uuid} from 'uuid';
 import {getCustomBulkEditById} from "../service/custom-bulk-edit.service";
-import {ExportScript} from "../model/custom-export.model";
 
 const createCustomBulkEditContext = (): CustomBulkEditContext => {
     return {data: {}} as CustomBulkEditContext;
@@ -128,7 +127,7 @@ export const runCustomBulkEditJob = async (viewId: number, customBulkEditId: num
     new Promise((res, rej) => {
         try {
             job.run();
-            res();
+            res(true);
         } catch(e) {
             rej(e);
         }

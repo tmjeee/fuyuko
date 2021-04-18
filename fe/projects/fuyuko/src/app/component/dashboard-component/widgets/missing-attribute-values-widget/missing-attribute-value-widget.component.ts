@@ -1,14 +1,14 @@
-import {Component, OnInit, Provider} from "@angular/core";
-import {MissingAttributeValueWidgetService} from "./missing-attribute-value-widget.service";
-import {DashboardWidget, DashboardWidgetInfo} from "../../dashboard.model";
-import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
-import {take, tap} from "rxjs/operators";
+import {Component, OnInit, Provider} from '@angular/core';
+import {MissingAttributeValueWidgetService} from './missing-attribute-value-widget.service';
+import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
+import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
+import {take, tap} from 'rxjs/operators';
 import {
     Reporting_ItemsWithMissingAttributeInfo, Reporting_ItemWithMissingAttribute,
     Reporting_ViewWithMissingAttribute
-} from "../../../../model/reporting.model";
-import {MatSelectChange} from "@angular/material/select";
-import {ChartType} from "angular-google-charts";
+} from '@fuyuko-common/model/reporting.model';
+import {MatSelectChange} from '@angular/material/select';
+import {ChartType} from 'angular-google-charts';
 
 
 @Component({
@@ -20,8 +20,9 @@ import {ChartType} from "angular-google-charts";
 })
 export class MissingAttributeValueWidgetComponent extends DashboardWidget implements OnInit {
 
-    static info(): DashboardWidgetInfo {
-        return { id: 'missing-attribute-value-widget', name: 'missing-attribute-value-widget', type: MissingAttributeValueWidgetComponent };
+    constructor(protected dashboardWidgetService: DashboardWidgetService,
+                protected missingAttributeValueWidgetService: MissingAttributeValueWidgetService) {
+        super(dashboardWidgetService);
     }
 
     i: Reporting_ItemsWithMissingAttributeInfo;
@@ -31,7 +32,7 @@ export class MissingAttributeValueWidgetComponent extends DashboardWidget implem
         title: `Number of missing values in view`,
         is3D: true,
         width: 800,
-        height:400,
+        height: 400,
         legend: {
             position: 'bottom'
         },
@@ -44,9 +45,8 @@ export class MissingAttributeValueWidgetComponent extends DashboardWidget implem
     };
     chartType: ChartType = ChartType.PieChart;
 
-    constructor(protected dashboardWidgetService: DashboardWidgetService,
-                protected missingAttributeValueWidgetService: MissingAttributeValueWidgetService) {
-        super(dashboardWidgetService);
+    static info(): DashboardWidgetInfo {
+        return { id: 'missing-attribute-value-widget', name: 'missing-attribute-value-widget', type: MissingAttributeValueWidgetComponent };
     }
 
 
@@ -59,13 +59,13 @@ export class MissingAttributeValueWidgetComponent extends DashboardWidget implem
                     if (this.i.views && this.i.views.length) {
                         this.selectedView = this.i.views[0];
                     }
-                })).subscribe()
+                })).subscribe();
     }
 
     onViewChange($event: MatSelectChange) {
         this.selectedView = $event.value;
 
-        const d:any[] = [];
+        const d: any[] = [];
         this.selectedView.items.map((i: Reporting_ItemWithMissingAttribute) => {
             d.push([i.itemName, i.totalMissingAttributes]);
         });
@@ -75,7 +75,7 @@ export class MissingAttributeValueWidgetComponent extends DashboardWidget implem
             title: `Number of missing values in ${this.selectedView.viewName}`,
             is3D: true,
             width: 800,
-            height:400,
+            height: 400,
             legend: {
                 position: 'bottom'
             },

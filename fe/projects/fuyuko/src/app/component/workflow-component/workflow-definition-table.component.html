@@ -1,0 +1,39 @@
+<div class="workflow-definition-table">
+
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows
+           class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let workflowDefinition">{{workflowDefinition.name}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="expandedColumn">
+            <td mat-cell *matCellDef="let workflowDefinition" [attr.colspan]="columnsToDisplay.length">
+                <div class="details" [@detailExpand]="isWorkflowDefinitionColumnExpanded(workflowDefinition) ? 'expanded' : 'collapsed'">
+                    <div>id: {{workflowDefinition.id}}</div>
+                    <div>name: {{workflowDefinition.name}}</div>
+                    <div>description: {{workflowDefinition.description}}</div>
+                    <div>creation date: {{workflowDefinition.creationDate | date : 'short' }}</div>
+                    <div>last update: {{workflowDefinition.lastUpdate | date : 'short' }}</div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let workflowDefinition; columns: columnsToDisplay"
+            class="normalRow"
+            (click)="expandWorkflowDefinitionColumn(workflowDefinition)"></tr>
+        <tr mat-row *matRowDef="let workflowDefinition; columns: ['expandedColumn']"
+            [ngClass]="{
+                detailsRow: true,
+                expanded: isWorkflowDefinitionColumnExpanded(workflowDefinition),
+                hidden: !isWorkflowDefinitionColumnExpanded(workflowDefinition)
+            }"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="columnsToDisplay.length">
+                No entries
+            </td>
+        </tr>
+    </table>
+
+</div>

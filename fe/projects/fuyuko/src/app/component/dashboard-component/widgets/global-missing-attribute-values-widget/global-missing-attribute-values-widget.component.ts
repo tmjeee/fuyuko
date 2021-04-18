@@ -1,14 +1,14 @@
-import {Component, OnInit} from "@angular/core";
-import {DashboardWidget, DashboardWidgetInfo} from "../../dashboard.model";
-import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
-import {GlobalMissingAttributeValuesWidgetService} from "./global-missing-attribute-values-widget.service";
-import {tap} from "rxjs/operators";
+import {Component, OnInit} from '@angular/core';
+import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
+import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
+import {GlobalMissingAttributeValuesWidgetService} from './global-missing-attribute-values-widget.service';
+import {tap} from 'rxjs/operators';
 import {
     Reporting_ItemsWithMissingAttributeInfo,
     Reporting_ViewWithMissingAttribute
-} from "../../../../model/reporting.model";
-import {MatSelectChange} from "@angular/material/select";
-import {ChartType} from "angular-google-charts";
+} from '@fuyuko-common/model/reporting.model';
+import {MatSelectChange} from '@angular/material/select';
+import {ChartType} from 'angular-google-charts';
 
 export type Type = 'Item' | 'Attribute';
 
@@ -21,8 +21,9 @@ export type Type = 'Item' | 'Attribute';
 })
 export class GlobalMissingAttributeValuesWidgetComponent extends DashboardWidget implements OnInit {
 
-    static info(): DashboardWidgetInfo {
-        return { id: 'global-missing-attribute-values-widget', name: 'global-missing-attribute-values-widget', type: GlobalMissingAttributeValuesWidgetComponent };
+    constructor(protected dashboardWidgetService: DashboardWidgetService,
+                protected globalMissingAttributeValuesWidgetService: GlobalMissingAttributeValuesWidgetService) {
+        super(dashboardWidgetService);
     }
 
     i: Reporting_ItemsWithMissingAttributeInfo;
@@ -35,7 +36,7 @@ export class GlobalMissingAttributeValuesWidgetComponent extends DashboardWidget
         title: `Number of ${this.selectedType} with missing values`,
         is3D: true,
         width: 800,
-        height:400,
+        height: 400,
         legend: {
             position: 'bottom'
         },
@@ -47,9 +48,8 @@ export class GlobalMissingAttributeValuesWidgetComponent extends DashboardWidget
         }
     };
 
-    constructor(protected dashboardWidgetService: DashboardWidgetService, 
-                protected globalMissingAttributeValuesWidgetService: GlobalMissingAttributeValuesWidgetService) {
-        super(dashboardWidgetService);
+    static info(): DashboardWidgetInfo {
+        return { id: 'global-missing-attribute-values-widget', name: 'global-missing-attribute-values-widget', type: GlobalMissingAttributeValuesWidgetComponent };
     }
 
     ngOnInit(): void {
@@ -70,15 +70,15 @@ export class GlobalMissingAttributeValuesWidgetComponent extends DashboardWidget
 
     reload() {
         const d: any = [];
-        switch(this.selectedType) {
-            case "Item": {
+        switch (this.selectedType) {
+            case 'Item': {
                 this.i.views.forEach((v: Reporting_ViewWithMissingAttribute) => {
                     d.push([v.viewName, v.totalItemsWithMissingAttributes]);
                 });
                 this.data = d;
                 break;
             }
-            case "Attribute": {
+            case 'Attribute': {
                 this.i.views.forEach((v: Reporting_ViewWithMissingAttribute) => {
                     d.push([v.viewName, v.totalMissingAttributes]);
                 });
@@ -90,7 +90,7 @@ export class GlobalMissingAttributeValuesWidgetComponent extends DashboardWidget
             title: `Number of ${this.selectedType} with missing values`,
             is3D: true,
             width: 800,
-            height:400,
+            height: 400,
             legend: {
                 position: 'bottom'
             },

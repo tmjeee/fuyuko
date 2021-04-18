@@ -2,8 +2,8 @@ import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import { validateJwtMiddlewareFn, validateMiddlewareFn, v, aFnAnyTrue, vFnHasAnyUserRoles } from "./common-middleware";
 import {check} from "express-validator";
-import {ApiResponse} from "../../model/api-response.model";
-import {ROLE_ADMIN} from "../../model/role.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
 import {removeRoleFromGroup} from "../../service/role.service";
 
 // CHECKED
@@ -23,15 +23,21 @@ const httpAction: any[] = [
         const errors: string[] = await removeRoleFromGroup(roleName, groupId);
 
         if (errors && errors.length) {
-            res.status(400).json({
-               status: 'ERROR',
-               message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Role ${roleName} deleted from group ${groupId}`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Role ${roleName} deleted from group ${groupId}`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

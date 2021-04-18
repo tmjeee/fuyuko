@@ -1,4 +1,4 @@
-import {AbstractControl, ValidationErrors, Validator} from '@angular/forms';
+import {AbstractControl, ValidationErrors} from '@angular/forms';
 import * as moment from 'moment';
 
 export const currencyValidator = (c: AbstractControl): ValidationErrors => {

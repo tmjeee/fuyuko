@@ -1,9 +1,9 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
-import { param } from "express-validator";
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {ApiResponse} from "../../model/api-response.model";
-import {markItemImageAsPrimary} from "../../service/item-image.service";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
+import { param } from 'express-validator';
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from './common-middleware';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {markItemImageAsPrimary} from '../../service';
 
 // CHECKED
 
@@ -21,15 +21,21 @@ const httpAction: any[] = [
 
         const errors: string[] = await markItemImageAsPrimary(itemId, itemImageId);
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Image updated as primary`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Image updated as primary`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

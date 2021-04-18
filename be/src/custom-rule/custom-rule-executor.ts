@@ -5,11 +5,11 @@ import * as util from "util";
 import * as semver from 'semver';
 import {doInDbConnection, QueryA, QueryResponse} from "../db";
 import {Connection} from "mariadb";
-import {CustomValidationContext} from "../model/validation.model";
-import {Attribute} from "../model/attribute.model";
-import {Item} from "../model/item.model";
-import {View} from "../model/view.model";
-import {CustomRule, RuleScript} from "../model/custom-rule.model";
+import {CustomValidationContext} from '@fuyuko-common/model/validation.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {Item} from '@fuyuko-common/model/item.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {CustomRule, RuleScript} from '@fuyuko-common/model/custom-rule.model';
 
 
 const createCustomValidationContext = async (validationId: number, customRuleId: number, view: View, item: Item, attributes: Attribute[]): Promise<CustomValidationContext> => {

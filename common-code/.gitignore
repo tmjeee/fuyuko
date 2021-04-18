@@ -1,0 +1,5 @@
+node_modules/
+*.js
+!jest.config.js
+dist/
+.idea/

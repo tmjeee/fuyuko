@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {HelpService} from "../../service/help.service/help.service";
-import {tap} from "rxjs/operators";
+import {HelpService} from '../../service/help.service/help.service';
+import {tap} from 'rxjs/operators';
 
 const HELP_POSTFIX = `HELP_PARTNER.md`;
 
@@ -10,7 +10,7 @@ const HELP_POSTFIX = `HELP_PARTNER.md`;
 })
 export class PartnerHelpPageComponent implements OnInit {
 
-    help: string = '';
+    help = '';
 
     constructor(private helpService: HelpService) {
     }

@@ -1,4 +1,7 @@
 {
+  "version": "development",
+  "git-version": "__GIT_VERSION__",
+
   "db-host": "localhost",
   "db-user": "root",
   "db-password": "root",
@@ -7,13 +10,12 @@
   "db-connection-limit": 30,
   "db-connect-timeout": 1000000,
   "db-acquire-timeout": 1000000,
-  "version": "1.0.0",
   "port": 8888,
 
   "timezone": "Australia/Sydney",
 
   "updater-run": true,
-  "updater-profiles": ["CORE", "TEST-DATA"],
+  "updater-profiles": ["CORE", "TEST-DATA", "LEEFAHMEE-DATA"],
   "updater-profiles-help": "Available updater profiles are CORE, TEST-DATA, CARS-DATA, LEEFAHMEE-DATA",
 
   "salt": "some-salt",

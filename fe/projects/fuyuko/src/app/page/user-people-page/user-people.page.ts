@@ -3,15 +3,15 @@ import {UserManagementService} from '../../service/user-management-service/user-
 import {Observable, of} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
 import {UserSearchFn} from '../../component/user-table-component/user-table.component';
-import {User} from '../../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {
   ActionType,
   UserSearchTableComponentEvent
 } from '../../component/user-search-table-component/user-search-table.component';
 import {combineAll, finalize, map, tap} from 'rxjs/operators';
-import {ApiResponse} from '../../model/api-response.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

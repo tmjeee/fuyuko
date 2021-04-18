@@ -1,26 +1,26 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ItemAndAttributeSet} from '../../model/item-attribute.model';
-import {View} from '../../model/view.model';
+import {ItemAndAttributeSet} from '@fuyuko-common/model/item-attribute.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {combineLatest, Subscription} from 'rxjs';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {NotificationsService} from 'angular2-notifications';
 import {ViewService} from '../../service/view-service/view.service';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {finalize, map, tap} from 'rxjs/operators';
-import {Item, ItemSearchType, TableItem} from '../../model/item.model';
+import {Item, ItemSearchType} from '@fuyuko-common/model/item.model';
 import {ItemService} from '../../service/item-service/item.service';
 import {
   DataThumbnailComponentEvent,
   DataThumbnailSearchComponentEvent
 } from '../../component/data-thumbnail-component/data-thumbnail.component';
-import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
-import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
-import {Pagination} from "../../utils/pagination.utils";
-import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
-import {LoadingService} from "../../service/loading-service/loading.service";
-import {FormBuilder, FormControl} from "@angular/forms";
-import {AuthService} from "../../service/auth-service/auth.service";
+import {CarouselComponentEvent} from '../../component/carousel-component/carousel.component';
+import {Pagination} from '../../utils/pagination.utils';
+import {PaginationComponentEvent} from '../../component/pagination-component/pagination.component';
+import {LoadingService} from '../../service/loading-service/loading.service';
+import {FormBuilder, FormControl} from '@angular/forms';
+import {AuthService} from '../../service/auth-service/auth.service';
 
 export type DataListTypes = 'ALL' | 'FAVOURITE';
 
@@ -152,8 +152,8 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
   }
 
   onCarouselEvent($event: CarouselComponentEvent) {
-    switch($event.type) {
-      case "delete": {
+    switch ($event.type) {
+      case 'delete': {
         this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
             tap((r: ApiResponse) => {
               toNotifications(this.notificationService, r);
@@ -162,23 +162,23 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
         ).subscribe();
         break;
       }
-      case "markAsPrimary": {
+      case 'markAsPrimary': {
         this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
            tap((r: ApiResponse) => {
              toNotifications(this.notificationService, r);
              this.reload();
            })
-        ).subscribe()
+        ).subscribe();
         break;
       }
-      case "upload": {
+      case 'upload': {
           this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
               tap((r: ApiResponse) => {
                 toNotifications(this.notificationService, r);
                 this.reload();
               })
           ).subscribe();
-        break;
+          break;
       }
     }
   }

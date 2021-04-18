@@ -1,23 +1,22 @@
-import {Component, OnInit} from "@angular/core";
-import {ViewService} from "../../service/view-service/view.service";
-import {CategoryService} from "../../service/category-service/category.service";
-import {ItemService} from "../../service/item-service/item.service";
-import {NotificationsService} from "angular2-notifications";
-import {AttributeService} from "../../service/attribute-service/attribute.service";
-import {CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
-import {View} from "../../model/view.model";
-import {finalize, tap} from "rxjs/operators";
+import {Component, OnInit} from '@angular/core';
+import {ViewService} from '../../service/view-service/view.service';
+import {CategoryService} from '../../service/category-service/category.service';
+import {ItemService} from '../../service/item-service/item.service';
+import {NotificationsService} from 'angular2-notifications';
+import {AttributeService} from '../../service/attribute-service/attribute.service';
+import {CategorySimpleItem, CategoryWithItems} from '@fuyuko-common/model/category.model';
+import {View} from '@fuyuko-common/model/view.model';
+import {finalize, tap} from 'rxjs/operators';
 import {
     AddCategoryFn, AddItemsToCategoryFn, CategoryManagementComponentTreeDragDropEvent, DeleteCategoryFn, EditCategoryFn,
     GetCategoriesWithItemsFn,
     GetCategorySimpleItemsInCategoryFn, GetCategorySimpleItemsNotInCategoryFn, RemoveItemsFromCategoryFn
-} from "../../component/category-component/category-management.component";
-import {Observable} from "rxjs";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {toNotifications} from "../../service/common.service";
-import {LoadingService} from "../../service/loading-service/loading.service";
-import {CategoryTreeComponentDragDropEvent} from "../../component/category-component/category-tree.component";
+} from '../../component/category-component/category-management.component';
+import {Observable} from 'rxjs';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {toNotifications} from '../../service/common.service';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
    templateUrl: './category-management.page.html',
@@ -32,12 +31,12 @@ export class CategoryManagementPageComponent implements OnInit {
    getCategoriesWithItemsFn: GetCategoriesWithItemsFn;
    getCategorySimpleItemsInCatgoryFn: GetCategorySimpleItemsInCategoryFn;
    getCategorySimpleItemsNotInCategoryFn: GetCategorySimpleItemsNotInCategoryFn;
-   addCategoryFn: AddCategoryFn; 
+   addCategoryFn: AddCategoryFn;
    editCategoryFn: EditCategoryFn;
    deleteCategoryFn: DeleteCategoryFn;
    addItemsToCategoryFn: AddItemsToCategoryFn;
    removeItemsFromCategoryFn: RemoveItemsFromCategoryFn;
-    
+
 
    constructor(private viewService: ViewService,
                private categoryService: CategoryService,
@@ -63,7 +62,7 @@ export class CategoryManagementPageComponent implements OnInit {
       this.addItemsToCategoryFn = (categoryId: number, items: CategorySimpleItem[]): Observable<ApiResponse> => {
           return this.categoryService.addItemsToCategory(this.view.id, categoryId, items);
       };
-      
+
       this.removeItemsFromCategoryFn = (categoryId: number, items: CategorySimpleItem[]): Observable<ApiResponse> => {
           return this.categoryService.removeItemsFromCategory(this.view.id, categoryId, items);
       };
@@ -74,14 +73,14 @@ export class CategoryManagementPageComponent implements OnInit {
                 tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
             );
       };
-      
+
       this.editCategoryFn = (categoryId: number, name: string, description: string): Observable<ApiResponse> => {
           return this.categoryService.updateCategory(this.view.id, -1, categoryId, name, description)
               .pipe(
                   tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
               );
       };
-      
+
       this.deleteCategoryFn = (categoryId: number): Observable<ApiResponse> => {
           return this.categoryService.deleteCategory(this.view.id, categoryId)
               .pipe(
@@ -92,7 +91,7 @@ export class CategoryManagementPageComponent implements OnInit {
       this.getCategorySimpleItemsInCatgoryFn = (viewId: number, categoryId: number, limitOffset?: LimitOffset): Observable<PaginableApiResponse<CategorySimpleItem[]>> => {
           return this.categoryService.getCategorySimpleItemsInCategory(viewId, categoryId, limitOffset);
       };
-      
+
       this.getCategorySimpleItemsNotInCategoryFn = (viewId: number, categoryId: number, limitOffset?: LimitOffset): Observable<PaginableApiResponse<CategorySimpleItem[]>> => {
           return this.categoryService.getCategorySimpleItemsNotInCategory(viewId, categoryId, limitOffset);
       };
@@ -112,8 +111,8 @@ export class CategoryManagementPageComponent implements OnInit {
    }
 
     onCategoryTreeDragDropEvents($event: CategoryManagementComponentTreeDragDropEvent) {
-       switch($event.type) {
-          case "drop": {
+       switch ($event.type) {
+          case 'drop': {
               this.categoryService.updateCategoryHierarchy(
                   this.view.id,
                   $event.sourceItem.currentCategoryWithItems.id,
@@ -126,7 +125,7 @@ export class CategoryManagementPageComponent implements OnInit {
                   ).subscribe();
               break;
           }
-           case "move-to-root": {
+           case 'move-to-root': {
                this.categoryService.updateCategoryHierarchy(
                    this.view.id,
                    $event.sourceItem.currentCategoryWithItems.id)

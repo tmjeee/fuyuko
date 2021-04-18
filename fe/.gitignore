@@ -6,3 +6,4 @@ out-tsc/
 
 projects/fuyuko/src/app/model/
 projects/fuyuko/src/app/shared-utils/
+githash.js

@@ -6,11 +6,9 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {Role, ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {Role, ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {getAllRoles} from "../../service/role.service";
 
 // CHECKED
@@ -21,11 +19,14 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const roles: Role[] = await getAllRoles();
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Roles retrieved successfully`,
+        const apiResponse: ApiResponse<Role[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Roles retrieved successfully`,
+            }],
             payload: roles
-        } as ApiResponse<Role[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

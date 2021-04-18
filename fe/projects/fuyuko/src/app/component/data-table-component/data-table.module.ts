@@ -7,10 +7,10 @@ import {DataTableComponent} from './data-table.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {ItemSearchModule} from '../item-search-component/item-search.module';
 import {ViewOnlyDataTableComponent} from './view-only-data-table.component';
-import {ItemImageDialogComponent} from "./item-image-dialog.component";
-import {CarouselModule} from "../carousel-component/carousel.module";
-import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
-import {FlexLayoutModule} from "@angular/flex-layout";
+import {ItemImageDialogComponent} from './item-image-dialog.component';
+import {CarouselModule} from '../carousel-component/carousel.module';
+import {SharedComponentUtilsModule} from '../shared-component-utils/shared-component-utils.module';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 
 @NgModule({

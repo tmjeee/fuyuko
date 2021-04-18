@@ -1,11 +1,11 @@
-import {Component, OnInit} from "@angular/core";
-import {PasswordComponentEvent} from "../../component/password-component/password.component";
-import {ActivatedRoute} from "@angular/router";
-import {AuthService} from "../../service/auth-service/auth.service";
-import {ApiResponse} from "../../model/api-response.model";
-import {tap} from "rxjs/operators";
-import {toNotifications} from "../../service/common.service";
-import {NotificationsService} from "angular2-notifications";
+import {Component, OnInit} from '@angular/core';
+import {PasswordComponentEvent} from '../../component/password-component/password.component';
+import {ActivatedRoute} from '@angular/router';
+import {AuthService} from '../../service/auth-service/auth.service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {tap} from 'rxjs/operators';
+import {toNotifications} from '../../service/common.service';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
     templateUrl: './reset-password.page.html',
@@ -34,7 +34,7 @@ export class ResetPasswordPageComponent implements OnInit {
                     this.message = (r.payload ? 'Valid code' : 'Bad code');
                     this.disabled = !r.payload;
                 })
-            ).subscribe()
+            ).subscribe();
         } else {
             this.status = ('ERROR');
             this.message = 'Missing code';

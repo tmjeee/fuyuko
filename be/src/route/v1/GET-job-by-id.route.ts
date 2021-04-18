@@ -8,10 +8,10 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {param} from 'express-validator';
-import {Job} from "../../model/job.model";
-import {getJobById} from "../../service/job.service";
-import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {Job} from '@fuyuko-common/model/job.model';
+import {getJobById} from '../../service';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 const httpAction: any[] = [
@@ -26,12 +26,14 @@ const httpAction: any[] = [
         const jobId: number = Number(req.params.jobId);
 
         const job: Job = await getJobById(jobId);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Job successfully retrieved`,
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Job successfully retrieved`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

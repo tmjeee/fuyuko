@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
-import {User} from '../../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {FormBuilder, FormControl} from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import {BehaviorSubject, Observable, of} from 'rxjs';

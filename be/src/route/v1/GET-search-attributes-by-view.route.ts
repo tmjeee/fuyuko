@@ -1,21 +1,17 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {attributesConvert} from "../../service/conversion-attribute.service";
-import {Attribute2, AttributeMetadata2, AttributeMetadataEntry2} from "../../server-side-model/server-side.model";
-import {Attribute} from "../../model/attribute.model";
+} from './common-middleware';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {check} from 'express-validator';
-import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {searchAttributesByView} from "../../service/attribute.service";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {searchAttributesByView} from '../../service';
 
 // CHECKED
 
@@ -33,12 +29,14 @@ const httpAction: any[] = [
         const attribute: string = req.params.attribute ? req.params.attribute : '';
 
         const attr: Attribute[] = await searchAttributesByView(viewId, attribute);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Attributes retrieved`,
+        const apiResponse: ApiResponse<Attribute[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Attributes retrieved`,
+            }],
             payload: attr
-        } as ApiResponse<Attribute[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

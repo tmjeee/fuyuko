@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {Activation, Invitation } from '../../model/activation.model';
+import {Observable} from 'rxjs';
+import {Activation, Invitation } from '@fuyuko-common/model/activation.model';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
-import {map} from "rxjs/operators";
-import {ApiResponse} from "../../model/api-response.model";
+import {map} from 'rxjs/operators';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const URL_GET_INVITATION_BY_CODE = () => `${config().api_host_url}/invitations/:code`;
 const URL_ACTIVATE_BY_CODE = () => `${config().api_host_url}/activate-invitation/:code`;

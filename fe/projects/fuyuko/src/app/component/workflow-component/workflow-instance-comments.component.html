@@ -1,0 +1,45 @@
+<div class="workflow-instance-comments-component">
+    <mat-card class="mat-elevation-z5">
+        <div (click)="enterEditMode(true)" *ngIf="!editMode">
+            <mat-form-field>
+                <input class="non-edit-mode-input"
+                       matInput
+                       placeholder="Enter comment"
+                       [disabled]="true" />
+            </mat-form-field>
+        </div>
+
+        <form *ngIf="editMode"
+              (ngSubmit)="submitComment()">
+            <mat-form-field>
+                <mat-label>Enter comment</mat-label>
+                <textarea #textAreaElement matInput rows="10" [formControl]="formControlComment"></textarea>
+                <mat-error *ngIf="formControlComment.errors?.required">Comment cannot be empty</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput [disabled]="true" [ngStyle]="{ visibility: 'invisible'}" />
+                <button mat-flat-button  color="primary" type="submit" [disabled]="formGroup.invalid">Submit</button>
+                <button mat-flat-button (click)="enterEditMode(false)">Cancel</button>
+            </mat-form-field>
+        </form>
+    </mat-card>
+
+    <ng-container *ngIf="comments.length">
+        <mat-card *ngFor="let comment of comments" class="mat-elevation-z5">
+            <div fxLayout="row" fxLayoutGap="20px">
+                <div fxLayout="column">
+                    <div>
+                        <app-avatar [editable]="false" [user]="comment.creator"></app-avatar>
+                    </div>
+                    <div class="mat-caption" fxFlexAlign="center">{{comment.creator.username}}</div>
+                </div>
+                <div fxLayout="column">
+                    <div fxFlex="1 0 auto" class="mat-body-1">{{comment.comment}}</div>
+                    <div fxFlex="0 0 auto" class="mat-caption">{{comment.creationDate | date : 'medium' }}</div>
+                </div>
+            </div>
+        </mat-card>
+        <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
+    </ng-container>
+
+</div>

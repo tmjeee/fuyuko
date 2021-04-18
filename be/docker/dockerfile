@@ -8,7 +8,7 @@ WORKDIR /usr/src/fuyuko
 COPY ./package*.json ./
 COPY ./docker-start-cmd.sh ./
 COPY ./docker-wait-for-db.sh ./
-COPY . .
+COPY ./dist/src/ .
 
 RUN apt -y update && \
     apt -y install apt-utils && \

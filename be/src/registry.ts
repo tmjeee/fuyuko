@@ -1,4 +1,4 @@
-import {range} from "./util";
+import {range} from './util';
 
 export type RegistryItem = {path: string, description: string};
 

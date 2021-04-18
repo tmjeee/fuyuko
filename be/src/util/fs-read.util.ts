@@ -1,5 +1,5 @@
-import fs from "fs";
-import util from "util";
+import fs from 'fs';
+import util from 'util';
 
 export interface FsReadResult  {
     bytesRead: number;

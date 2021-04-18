@@ -160,25 +160,25 @@ import {
     UpdateUserSettingsEvent,
     ValidationEvent,
     VerifyJwtTokenEvent
-} from "../event.service";
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../../registry";
+} from '../event.service';
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "../../../route/v1/common-middleware";
-import {ROLE_VIEW} from "../../../model/role.model";
-import {doInDbConnection, QueryA, QueryI} from "../../../db";
-import { Connection } from "mariadb";
+} from '../../../route/v1/common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {doInDbConnection, QueryA, QueryI} from '../../../db';
+import { Connection } from 'mariadb';
 import {
     Reporting_ItemsWithMissingAttributeInfo,
     Reporting_ItemWithMissingAttribute, Reporting_MissingAttribute, Reporting_ViewWithMissingAttribute
-} from "../../../model/reporting.model";
-import {ENABLED} from "../../../model/status.model";
-import {ApiResponse} from "../../../model/api-response.model";
+} from '@fuyuko-common/model/reporting.model';
+import {ENABLED} from '@fuyuko-common/model/status.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const d: any = {

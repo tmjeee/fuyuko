@@ -1,0 +1,7 @@
+@import '../abstract-gen.layout';
+@import '../abstract-gen-sub.layout';
+
+.workflow-layout {
+  @include abstract-gen-layout-style();
+  @include abstract-gen-sub-layout-style();
+}

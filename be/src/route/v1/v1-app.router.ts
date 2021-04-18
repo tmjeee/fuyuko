@@ -148,10 +148,18 @@ import registerDeleteFavouriteItemsRoute from './DELETE-favourite-items.route';
 import registerGetSearchForFavouriteItemsInViewRoute from './GET-search-for-favourite-items-in-view.route';
 import registerGetViewValidationLogResultRoute from './GET-view-validation-log-result.route';
 import registerPostUpdateCategoryHierarchyRoute from './POST-update-category-hierarchy.route';
+import registerGetAllWorkflowDefinitionsRoute from './GET-all-workflow-definition.route';
+import registerGetAllWorkflowsByIdRoute from './GET-all-workflows-by-view.route';
+import registerPostAddWorkflowRoute from './POST-add-workflow.route';
+import registerGetAllWorkflowByViewActionAndTypeRoute  from './GET-all-workflow-by-view-action-and-type.route';
+import registerPostWorkflowInstanceCommentRoute from './POST-workflow-instance-comment.route';
+import registerGetWorkflowInstanceCommentRoute from './GET-workflow-instance-comment.route';
+import registerGetWorkflowInstanceTaskByIdRoute from './GET-workflow-instance-task-by-id.route';
+import registerGetWorkflowInstanceTaskForUserByStatusRoute from './GET-workflow-instance-task-for-user-by-status.route';
+import registerPostContinueUserWorkflowInstanceRoute from './POST-continue-user-workflow-instance.route';
 
 
 const v1AppRouter:Router  = express.Router();
-
 
 const reg = (router: Router, regi: Registry): Router => {
     const p = '/v1';
@@ -306,7 +314,18 @@ const reg = (router: Router, regi: Registry): Router => {
     registerGetSearchForFavouriteItemsInViewRoute(v1AppRouter, registry);
     registerGetViewValidationLogResultRoute(v1AppRouter, registry);
     registerPostUpdateCategoryHierarchyRoute(v1AppRouter, registry);
-    
+
+    registerGetAllWorkflowDefinitionsRoute(v1AppRouter, registry);
+    registerGetAllWorkflowsByIdRoute(v1AppRouter, registry);
+    registerPostAddWorkflowRoute(v1AppRouter, registry);
+    registerGetAllWorkflowByViewActionAndTypeRoute(v1AppRouter, registry);
+
+    registerPostWorkflowInstanceCommentRoute(v1AppRouter, registry);
+    registerGetWorkflowInstanceCommentRoute(v1AppRouter, registry);
+    registerGetWorkflowInstanceTaskByIdRoute(v1AppRouter, registry);
+    registerGetWorkflowInstanceTaskForUserByStatusRoute(v1AppRouter, registry);
+    registerPostContinueUserWorkflowInstanceRoute(v1AppRouter, registry);
+
     return v1AppRouter;
 };
 

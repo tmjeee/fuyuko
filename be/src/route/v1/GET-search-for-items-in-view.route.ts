@@ -1,20 +1,16 @@
-import {param} from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {NextFunction, Request, Response, Router} from "express";
-import {Item2} from "../../server-side-model/server-side.model";
+import {param} from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {NextFunction, Request, Response, Router} from 'express';
 import {
-    getAllItem2sInView,
     getAllItemsInView, getAllItemsInViewCount,
-    searchForItem2sInView,
     searchForItemsInView, searchForItemsInViewCount
-} from "../../service/item.service";
-import {Item, ItemSearchType} from "../../model/item.model";
-import {itemsConvert} from "../../service/conversion-item.service";
-import {Registry} from "../../registry";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {toLimitOffset} from "../../util/utils";
+} from '../../service';
+import {Item, ItemSearchType} from '@fuyuko-common/model/item.model';
+import {Registry} from '../../registry';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {toLimitOffset} from '../../util/utils';
 
 
 // CHECKED
@@ -43,14 +39,17 @@ const httpAction: any[] = [
             total = await getAllItemsInViewCount(viewId, true);
             allItems = await getAllItemsInView(viewId, true, limitOffset);
         }
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Items retrieved`,
+        const apiResponse: PaginableApiResponse<Item[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Items retrieved`,
+            }],
             payload: allItems,
             total,
             limit: limitOffset ? limitOffset.limit : total,
             offset: limitOffset ? limitOffset.offset : 0,
-        } as PaginableApiResponse<Item[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

@@ -1,9 +1,9 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
-import { body } from "express-validator";
-import {validateMiddlewareFn} from "./common-middleware";
-import {forgotPassword} from "../../service/auth.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
+import { body } from 'express-validator';
+import {validateMiddlewareFn} from './common-middleware';
+import {forgotPassword} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const httpAction: any = [
@@ -18,10 +18,13 @@ const httpAction: any = [
            email: req.body.email
         });
         if (errors && errors.length) {
-            res.status(400).json({
-               status: 'ERROR',
-               message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
             res.status(200).json({
                 status: 'SUCCESS',

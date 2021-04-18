@@ -7,13 +7,11 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {check, param} from 'express-validator';
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {Group} from "../../model/group.model";
-import {Role, ROLE_VIEW} from "../../model/role.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {searchForGroupsWithNoSuchRole, searchForGroupsWithNoSuchRoleCount} from "../../service/group.service";
+import {param} from 'express-validator';
+import {Group} from '@fuyuko-common/model/group.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {searchForGroupsWithNoSuchRole, searchForGroupsWithNoSuchRoleCount} from '../../service';
 
 // CHECKED
 
@@ -31,12 +29,17 @@ const httpAction: any[] = [
 
         const totalGroups: number = await searchForGroupsWithNoSuchRoleCount(roleName, groupName);
         const groups: Group[] = await searchForGroupsWithNoSuchRole(roleName, groupName);
-        res.status(200).json({
+        const apiResponse: PaginableApiResponse<Group[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Groups retrieved successfully`
+            }],
             total: totalGroups,
             limit: totalGroups,
             offset: 0,
             payload: groups
-        } as PaginableApiResponse<Group[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

@@ -1,17 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {PartnerService} from '../../service/partner-service/partner.service';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {concatMap, finalize, map, tap} from 'rxjs/operators';
-import {User} from '../../model/user.model';
-import {PricingStructure} from '../../model/pricing-structure.model';
+import {User} from '@fuyuko-common/model/user.model';
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {MatSelectChange} from '@angular/material/select';
-import {PricedItem, TablePricedItem} from '../../model/item.model';
-import {toTablePricedItem} from "../../utils/item-to-table-items.util";
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {View} from "../../model/view.model";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {PricedItem, TablePricedItem} from '@fuyuko-common/model/item.model';
+import {toTablePricedItem} from '../../utils/item-to-table-items.util';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

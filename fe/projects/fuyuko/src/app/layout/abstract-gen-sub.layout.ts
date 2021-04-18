@@ -4,10 +4,11 @@ import {AppNotificationService} from '../service/app-notification-service/app-no
 import {AuthService} from '../service/auth-service/auth.service';
 import {SettingsService} from '../service/settings-service/settings.service';
 import { OnInit, Directive } from '@angular/core';
-import {LoadingService} from "../service/loading-service/loading.service";
+import {LoadingService} from '../service/loading-service/loading.service';
 
 
 @Directive()
+// tslint:disable-next-line:directive-class-suffix
 export class AbstractGenSubLayoutComponent extends AbstractGenLayoutComponent implements OnInit {
 
   constructor(notificationService: AppNotificationService,

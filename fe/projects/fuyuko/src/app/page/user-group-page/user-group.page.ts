@@ -1,19 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
-import {Group} from '../../model/group.model';
+import {Group} from '@fuyuko-common/model/group.model';
 import {combineAll, finalize, flatMap, map, mergeAll, tap} from 'rxjs/operators';
-import {User} from '../../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {Action, UserSearchFn, UserTableComponentEvent} from '../../component/user-table-component/user-table.component';
-import {forkJoin, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse} from '../../model/api-response.model';
-import {toNotifications} from '../../service/common.service';
-import {MatDialog} from "@angular/material/dialog";
-import {EditGroupPopupComponent} from "../../component/group-table-component/edit-group-popup.component";
-import {SUCCESS} from "../../model/api-response-status.model";
-import {MatCheckboxChange} from "@angular/material/checkbox";
-import {SelectionModel} from "@angular/cdk/collections";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {isApiResponseSuccess, toNotifications} from '../../service/common.service';
+import {MatDialog} from '@angular/material/dialog';
+import {EditGroupPopupComponent} from '../../component/group-table-component/edit-group-popup.component';
+import {SUCCESS} from '@fuyuko-common/model/api-response-status.model';
+import {MatCheckboxChange} from '@angular/material/checkbox';
+import {SelectionModel} from '@angular/cdk/collections';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({
@@ -66,7 +66,7 @@ export class UserGroupPageComponent implements OnInit {
                   g.reduce((a: Map<Group, User[]>, grp: Group ) => {
                       a.set(grp, []);
                       // make sure already checked group remains checked on reload
-                      if (selectedGroups && selectedGroups.find((g: Group) => g.id === grp.id)) {
+                      if (selectedGroups && selectedGroups.find((gr: Group) => gr.id === grp.id)) {
                           this.groupsSelectionModel.select(grp);
                       }
                       return a;
@@ -81,14 +81,14 @@ export class UserGroupPageComponent implements OnInit {
           ).subscribe();
   }
 
-  reloadGroupUsers(fn?: ()=>void) {
+  reloadGroupUsers(fn?: () => void) {
     this.loadingService.startLoading();
     this.groupsUsersReady = false;
     const allGroups: Group[] = Array.from(this.allGroupsUsers.keys());
     of(...allGroups.map((g: Group) => this.userManagementService.findUsersInGroup(g))).pipe(
         combineAll(),
         tap((r: User[][]) => {
-            for (let i=0; i<allGroups.length; i++) {
+            for (let i = 0; i < allGroups.length; i++) {
                 const group: Group = allGroups[i];
                 const usersInGroup: User[] = r[i];
                 this.allGroupsUsers.set(group, usersInGroup);
@@ -156,7 +156,7 @@ export class UserGroupPageComponent implements OnInit {
               tap((r: ApiResponse) => {
                   if (r) {
                       toNotifications(this.notificationsService, r);
-                      if (r.status === SUCCESS) {
+                      if (isApiResponseSuccess(r)) {
                           this.reload();
                       }
                   }
@@ -182,7 +182,7 @@ export class UserGroupPageComponent implements OnInit {
       this.userManagementService.deleteGroup(groupIds).pipe(
           tap((r: ApiResponse) => {
               toNotifications(this.notificationsService, r);
-              if (r.status === 'SUCCESS') {
+              if (isApiResponseSuccess(r)) {
                   this.reload();
               }
           })

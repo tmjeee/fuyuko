@@ -2,10 +2,10 @@ import {Registry} from "../../registry";
 import {NextFunction, Router, Request, Response} from "express";
 import {param} from 'express-validator';
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {Validation} from "../../model/validation.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {getAllViewValidations} from "../../service/validation/validation.service";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {Validation} from '@fuyuko-common/model/validation.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getAllViewValidations} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [
@@ -19,11 +19,14 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const v: Validation[] = await getAllViewValidations(viewId);
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Validations retrieved successfully`,
+        const apiResponse: ApiResponse<Validation[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Validations retrieved successfully`,
+            }],
             payload: v
-        } as ApiResponse<Validation[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

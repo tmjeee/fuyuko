@@ -7,12 +7,10 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {Group} from "../../model/group.model";
-import {Role, ROLE_VIEW} from "../../model/role.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {getAllGroups, getAllGroupsCount} from "../../service/group.service";
+import {Group} from '@fuyuko-common/model/group.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getAllGroups, getAllGroupsCount} from '../../service';
 
 // CHECKED
 const httpAction: any[] = [
@@ -23,12 +21,17 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const totalGroups: number = await getAllGroupsCount();
         const groups: Group[] = await getAllGroups();
-        res.status(200).json({
+        const apiResponse: PaginableApiResponse<Group[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Groups retrieved successfully`
+            }],
             total: totalGroups,
             limit: totalGroups,
             offset: 0,
             payload: groups
-        } as PaginableApiResponse<Group[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

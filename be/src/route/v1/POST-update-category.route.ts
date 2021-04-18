@@ -1,10 +1,10 @@
-import {Registry} from "../../registry";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {body, param} from "express-validator";
-import {NextFunction, Router, Request, Response} from "express";
-import {updateCategory} from "../../service/category.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {Registry} from '../../registry';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {body, param} from 'express-validator';
+import {NextFunction, Router, Request, Response} from 'express';
+import {updateCategory} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const httpAction: any[] = [
@@ -26,6 +26,9 @@ const httpAction: any[] = [
         const description: string = req.body.description;
         const parentId: number = req.body.parentId ? Number(req.body.parentId) : null;
 
+
+        // HANDLE WORKFLOW
+
         const errors: string[] = await updateCategory(viewId,  parentId, {
             id,
             name,
@@ -33,15 +36,21 @@ const httpAction: any[] = [
         });
 
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `category ${name} updated`
-            });
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `category ${name} updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

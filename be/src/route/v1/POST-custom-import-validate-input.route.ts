@@ -1,11 +1,11 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
-import { param, body } from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {validate} from "../../custom-import/custom-import-executor";
-import {ImportScriptInputValue, ImportScriptValidateResult} from "../../model/custom-import.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
+import { param, body } from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {validate} from '../../custom-import';
+import {ImportScriptInputValue, ImportScriptValidateResult} from '@fuyuko-common/model/custom-import.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 
@@ -29,12 +29,14 @@ const httpAction: any[] = [
         const values: ImportScriptInputValue[] = req.body.values;
 
         const v: ImportScriptValidateResult = await validate(viewId, customImportId, values);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Import script validate result ready`,
+        const apiResponse: ApiResponse<ImportScriptValidateResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Import script validate result ready`,
+            }],
             payload: v
-        } as ApiResponse<ImportScriptValidateResult>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

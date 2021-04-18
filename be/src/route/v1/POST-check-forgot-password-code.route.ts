@@ -1,9 +1,9 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
-import { param } from "express-validator";
-import {validateMiddlewareFn} from "./common-middleware";
-import {isValidForgottenPasswordCode} from "../../service/auth.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
+import { param } from 'express-validator';
+import {validateMiddlewareFn} from './common-middleware';
+import {isValidForgottenPasswordCode} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 const httpAction: any[] = [
     [
@@ -14,11 +14,14 @@ const httpAction: any[] = [
         const code = req.params.code;
 
         const r: boolean = await isValidForgottenPasswordCode(code);
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: 'Validity retrieved',
-           payload: r
-        } as ApiResponse<boolean>);
+        const apiResponse: ApiResponse<boolean> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'Validity retrieved',
+            }],
+            payload: r
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

@@ -1,20 +1,20 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
-import {Attribute} from '../../model/attribute.model';
-import {TableItem, ItemValTypes, StringValue, Value, Item, ItemImage} from '../../model/item.model';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {TableItem, ItemValTypes, Value, ItemImage} from '@fuyuko-common/model/item.model';
 import {DataSource} from '@angular/cdk/table';
 import {CollectionViewer, SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import {ItemValueAndAttribute, TableItemAndAttribute, TableItemAndAttributeSet} from '../../model/item-attribute.model';
-import {createNewItemValue, createNewTableItem} from '../../shared-utils/ui-item-value-creator.utils';
+import {ItemValueAndAttribute, TableItemAndAttributeSet} from '@fuyuko-common/model/item-attribute.model';
+import {createNewItemValue, createNewTableItem} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ItemSearchComponentEvent} from '../item-search-component/item-search.component';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
-import {MatDialog} from "@angular/material/dialog";
-import {ItemImageDialogComponent} from "./item-image-dialog.component";
-import {tap} from "rxjs/operators";
-import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
-import config from "../../utils/config.util";
+import {MatDialog} from '@angular/material/dialog';
+import {ItemImageDialogComponent} from './item-image-dialog.component';
+import {tap} from 'rxjs/operators';
+import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/carousel.component';
+import config from '../../utils/config.util';
 
 export class DataTableDataSource extends DataSource<TableItem> {
 
@@ -36,7 +36,7 @@ export class DataTableDataSource extends DataSource<TableItem> {
 
 export interface DataTableComponentEvent {
   type: 'reload' | 'modification' | 'favourite' | 'unfavourite';
-  deletedItems?: TableItem[]        // on 'reload' or 'modification' events
+  deletedItems?: TableItem[];        // on 'reload' or 'modification' events
   modifiedItems?: TableItem[];      // on 'reload' or 'modification' events
   newItems?: TableItem[];           // on 'reload' or 'modification' events
   favouritedItems?: TableItem[];     // on 'favourite' | 'unfavourite' events
@@ -451,7 +451,7 @@ export class DataTableComponent implements OnInit, OnChanges {
                 this.carouselEvent.emit(r);
               }
             })
-        ).subscribe()
+        ).subscribe();
   }
 
   onFavouriteItem(tableItem: TableItem) {

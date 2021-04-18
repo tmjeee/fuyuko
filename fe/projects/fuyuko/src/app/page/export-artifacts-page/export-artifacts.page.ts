@@ -1,12 +1,12 @@
-import {Component, OnInit} from "@angular/core";
-import {DataExportArtifact} from "../../model/data-export.model";
-import {finalize, tap} from "rxjs/operators";
-import {ExportArtifactsComponentEvent} from "../../component/export-data-component/export-artifacts.component";
-import {NotificationsService} from "angular2-notifications";
-import {ExportArtifactService} from "../../service/export-artifact-service/export-artifact.service";
-import {toNotifications} from "../../service/common.service";
-import {ApiResponse} from "../../model/api-response.model";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {Component, OnInit} from '@angular/core';
+import {DataExportArtifact} from '@fuyuko-common/model/data-export.model';
+import {finalize, tap} from 'rxjs/operators';
+import {ExportArtifactsComponentEvent} from '../../component/export-data-component/export-artifacts.component';
+import {NotificationsService} from 'angular2-notifications';
+import {ExportArtifactService} from '../../service/export-artifact-service/export-artifact.service';
+import {toNotifications} from '../../service/common.service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({
@@ -42,7 +42,7 @@ export class ExportArtifactsPageComponent implements OnInit {
     }
 
     onExportArtifactEvents($event: ExportArtifactsComponentEvent) {
-        switch($event.type) {
+        switch ($event.type) {
             case 'DELETE':
                 const dataExportArtifact: DataExportArtifact = $event.dataExportArtifact;
                 this.exportArtifactService.deleteExportArtifact(dataExportArtifact.id).pipe(

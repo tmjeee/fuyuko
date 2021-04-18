@@ -1,0 +1,77 @@
+<div class="workflow-instance-task-table">
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let workflowInstanceTask">{{workflowInstanceTask.name}}</td>
+        </ng-container>
+        <ng-container matColumnDef="workflowInstanceName">
+            <th mat-header-cell *matHeaderCellDef>Workflow Instance Name</th>
+            <td mat-cell *matCellDef="let workflowInstanceTask">{{workflowInstanceTask.workflowInstance.name}}</td>
+        </ng-container>
+        <ng-container matColumnDef="taskTitle">
+            <th mat-header-cell *matHeaderCellDef>Task Title</th>
+            <td mat-cell *matCellDef="let workflowInstanceTask">{{workflowInstanceTask.taskTitle}}</td>
+        </ng-container>
+        <ng-container matColumnDef="workflowState">
+            <th mat-header-cell *matHeaderCellDef>Workflow State</th>
+            <td mat-cell *matCellDef="let workflowInstanceTask">{{workflowInstanceTask.workflowState}}</td>
+        </ng-container>
+        <ng-container matColumnDef="approverUsername">
+            <th mat-header-cell *matHeaderCellDef>Approver Username</th>
+            <td mat-cell *matCellDef="let workflowInstanceTask">{{workflowInstanceTask.approver.username}}</td>
+        </ng-container>
+        <ng-container matColumnDef="creationDate">
+            <th mat-header-cell *matHeaderCellDef>Creation Date</th>
+            <td mat-cell *matCellDef="let workflowInstanceTask">{{workflowInstanceTask.creationDate | date   }}</td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let workflowInstanceTask">
+                <button mat-flat-button color="primary" (click)="actionOnWorkflowInstanceTask($event, workflowInstanceTask)">Details</button>
+            </td>
+        </ng-container>
+
+
+
+        <!-- expanded column section -->
+        <ng-container matColumnDef="expandedColumn">
+            <td mat-cell *matCellDef="let workflowInstanceTask" [attr.colspan]="columnsToDisplay.length">
+               <div class="details" [@detailExpand]="isWorkflowInstanceTaskRowExpanded(workflowInstanceTask) ? 'expanded' : 'collapsed'">
+                   <div>id: {{workflowInstanceTask.id}}</div>
+                   <div>name: {{workflowInstanceTask.name}}</div>
+                   <div>workflowInstance: {{workflowInstanceTask.workflowInstance.name}}</div>
+                   <div>taskTitle: {{workflowInstanceTask.taskTitle}}</div>
+                   <div>taskDescription: {{workflowInstanceTask.taskDescription}}</div>
+                   <div>workflowState: {{workflowInstanceTask.workflowState}}</div>
+                   <div>approvalStage: {{workflowInstanceTask.aprovalStage}}</div>
+                   <div>approver: {{workflowInstanceTask.approver.username}}</div>
+                   <div>status: {{workflowInstanceTask.status}}</div>
+                   <div>creationDate: {{workflowInstanceTask.creationDate | date}}</div>
+                   <div>lastUpdate: {{workflowInstanceTask.lastUdpate | date}}</div>
+               </div>
+            </td>
+        </ng-container>
+
+
+
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let workflowInstanceTask; columns: columnsToDisplay" class="normalRow"
+            (click)="expandWorkflowInstanceTaskRow(workflowInstanceTask)"></tr>
+        <tr mat-row *matRowDef="let workflowInstanceTask; columns: ['expandedColumn']"
+            [ngClass]="{
+                detailsRow: true,
+                expanded: isWorkflowInstanceTaskRowExpanded(workflowInstanceTask),
+                hidden: !isWorkflowInstanceTaskRowExpanded(workflowInstanceTask)
+            }"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="columnsToDisplay.length">
+                No Entries
+            </td>
+        </tr>
+    </table>
+
+    <app-pagination [pagination]="pagination" (events)="onPaginationEvent($event)"></app-pagination>
+
+
+</div>

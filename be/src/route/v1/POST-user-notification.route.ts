@@ -1,13 +1,11 @@
-import {Registry} from "../../registry";
-import {Router, Request, Response, NextFunction} from "express";
-import { param, body } from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT, ROLE_VIEW} from "../../model/role.model";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {NewNotification} from "../../model/notification.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {addUserNotification} from "../../service/notification.service";
+import {Registry} from '../../registry';
+import {Router, Request, Response, NextFunction} from 'express';
+import { param, body } from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {NewNotification} from '@fuyuko-common/model/notification.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {addUserNotification} from '../../service';
 
 // CHECKED
 
@@ -30,15 +28,21 @@ const httpAction: any[] = [
         const r: boolean = await addUserNotification(userId, newNotification);
 
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `User notification added`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+               messages: [{
+                   status: 'SUCCESS',
+                   message: `User notification added`
+               }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `User notification FAILED to be added`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `User notification FAILED to be added`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

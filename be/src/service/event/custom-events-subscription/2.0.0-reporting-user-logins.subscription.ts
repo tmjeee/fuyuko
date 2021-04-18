@@ -160,26 +160,26 @@ import {
     UpdateUserSettingsEvent,
     ValidationEvent,
     VerifyJwtTokenEvent
-} from "../event.service";
-import {doInDbConnection, QueryA, QueryI} from "../../../db";
-import {Connection} from "mariadb";
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../../registry";
+} from '../event.service';
+import {doInDbConnection, QueryA, QueryI} from '../../../db';
+import {Connection} from 'mariadb';
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "../../../route/v1/common-middleware";
-import {ROLE_VIEW} from "../../../model/role.model";
-import {JwtPayload} from "../../../model/jwt.model";
-import * as jwt from "jsonwebtoken";
+} from '../../../route/v1/common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {JwtPayload} from "@fuyuko-common/model/jwt.model";
+import * as jwt from 'jsonwebtoken';
 import moment from 'moment';
-import {User} from "../../../model/user.model";
-import {Reporting_ActiveUser, Reporting_MostActiveUsers} from "../../../model/reporting.model";
-import {ApiResponse} from "../../../model/api-response.model";
-import {Lock} from "../../../util";
+import {User} from '@fuyuko-common/model/user.model';
+import {Reporting_ActiveUser, Reporting_MostActiveUsers} from '@fuyuko-common/model/reporting.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Lock} from '../../../util';
 
 
 const d: any = {
@@ -374,16 +374,18 @@ export default s;
 const lock = new Lock();
 
 const updateLoginInfos = async (user: User) => {
-    await lock.doInLock(async () => {
-        await doInDbConnection(async (conn: Connection) => {
-            const m = moment();
-            const d = moment(m).startOf('day');
-            const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_REPORTING_USER_LOGINS WHERE \`DATE\`=? AND USER_ID=? `, [d.toDate(), user.id]);
-            if (q[0].COUNT <= 0) { // this user access has not been logged yet
-                await conn.query(`INSERT INTO TBL_REPORTING_USER_LOGINS (\`DATE\`, \`DATETIME\`, USER_ID) VALUES (?, ?, ?)`, [d.toDate(), m.toDate(), user.id])
-            }
+    if (user) {
+        await lock.doInLock(async () => {
+            await doInDbConnection(async (conn: Connection) => {
+                const m = moment();
+                const d = moment(m).startOf('day');
+                const q: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_REPORTING_USER_LOGINS WHERE \`DATE\`=? AND USER_ID=? `, [d.toDate(), user.id]);
+                if (q[0].COUNT <= 0) { // this user access has not been logged yet
+                    await conn.query(`INSERT INTO TBL_REPORTING_USER_LOGINS (\`DATE\`, \`DATETIME\`, USER_ID) VALUES (?, ?, ?)`, [d.toDate(), m.toDate(), user.id])
+                }
+            });
         });
-    });
+    }
 }
 
 const autoCreateTables = async () => {

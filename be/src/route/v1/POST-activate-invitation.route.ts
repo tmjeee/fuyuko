@@ -1,16 +1,10 @@
-import {NextFunction, Router, Request, Response} from "express";
+import {NextFunction, Router, Request, Response} from 'express';
 import {param, body} from 'express-validator';
-import {validateMiddlewareFn} from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {makeApiError, makeApiErrorObj} from "../../util";
-import {hashedPassword} from "../../service";
-import config from '../../config';
-import {Activation} from "../../model/activation.model";
-import {Registry} from "../../registry";
-import {ApiResponse} from "../../model/api-response.model";
-import {DELETED, ENABLED} from "../../model/status.model";
-import {activateInvitation} from "../../service/invitation.service";
+import {validateMiddlewareFn} from './common-middleware';
+import {Activation} from '@fuyuko-common/model/activation.model';
+import {Registry} from '../../registry';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {activateInvitation} from '../../service';
 
 // CHECKED
 
@@ -38,20 +32,25 @@ const httpAction = [
         const r: {registrationId: number, errors: string[]} = await activateInvitation(code, username, email, firstName, lastName, password);
 
         if (r.errors && r.errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: ApiResponse<any> = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: {
                     email,
                     registrationId: r.registrationId,
                     message: r.errors.join(', '),
                     status: 'ERROR'
                 }
-            });
+            };
+            res.status(400).json(apiResponse);
         } else { // if no errors send before
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Successfully activated ${username} (${email})`,
+            const apiResponse: ApiResponse<Activation> = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Successfully activated ${username} (${email})`,
+                }],
                 payload: {
                     email,
                     registrationId: r.registrationId,
@@ -59,7 +58,8 @@ const httpAction = [
                     status: 'SUCCESS',
                     username
                 }
-            } as ApiResponse<Activation>);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

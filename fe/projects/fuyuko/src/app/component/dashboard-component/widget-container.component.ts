@@ -1,17 +1,15 @@
 import {
-    AfterViewChecked, AfterViewInit,
+    AfterViewInit,
     Component,
     ComponentFactory,
     ComponentFactoryResolver, ComponentRef,
     Input,
     OnInit,
-    TemplateRef,
-    Type,
     ViewChild, ViewContainerRef
 } from '@angular/core';
 import {DashboardWidget, DashboardWidgetInstance} from './dashboard.model';
-import {DashboardWidgetService} from "../../service/dashboard-service/dashboard-widget.service";
-import {User} from "../../model/user.model";
+import {DashboardWidgetService} from '../../service/dashboard-service/dashboard-widget.service';
+import {User} from '@fuyuko-common/model/user.model';
 
 
 @Component({

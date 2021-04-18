@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {User} from '../../model/user.model';
-import {Settings} from '../../model/settings.model';
+import {User} from '@fuyuko-common/model/user.model';
+import {Settings} from '@fuyuko-common/model/settings.model';
 import {Observable, of} from 'rxjs';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {concatMap, map, tap} from 'rxjs/operators';
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const URL_GET_USER_SETTINGS = () => `${config().api_host_url}/user/:userId/settings`;

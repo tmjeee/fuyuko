@@ -1,11 +1,11 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {Registry} from "../../registry";
-import {body, param} from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {CustomBulkEditScriptInputValue, CustomBulkEditScriptValidateResult} from "../../model/custom-bulk-edit.model";
-import {validate} from "../../custom-bulk-edit/custom-bulk-edit-executor";
+import {NextFunction, Request, Response, Router} from 'express';
+import {Registry} from '../../registry';
+import {body, param} from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {CustomBulkEditScriptInputValue, CustomBulkEditScriptValidateResult} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {validate} from '../../custom-bulk-edit';
 
 const httpAction: any[] = [
 
@@ -27,12 +27,14 @@ const httpAction: any[] = [
         const values: CustomBulkEditScriptInputValue[] = req.body.values;
 
         const r: CustomBulkEditScriptValidateResult = await validate(viewId, customBulkEditId, values);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Custom Bulk Edit script validation result ready`,
+        const apiResponse: ApiResponse<CustomBulkEditScriptValidateResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Custom Bulk Edit script validation result ready`,
+            }],
             payload: r
-        } as ApiResponse<CustomBulkEditScriptValidateResult>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

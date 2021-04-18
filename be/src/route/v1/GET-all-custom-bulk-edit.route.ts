@@ -1,11 +1,11 @@
 import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {getAllCustomBulkEdits} from "../../service/custom-bulk-edit.service";
-import {CustomBulkEdit} from "../../model/custom-bulk-edit.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {CustomDataExport} from "../../model/custom-export.model";
+import {CustomBulkEdit} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {CustomDataExport} from '@fuyuko-common/model/custom-export.model';
 
 const httpAction: any[] = [
     [
@@ -15,11 +15,14 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const customBulkEdits: CustomBulkEdit[] = await getAllCustomBulkEdits();
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: 'Custom Bulk Edit retrieval success',
+        const apiResponse: ApiResponse<CustomDataExport[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'Custom Bulk Edit retrieval success',
+            }],
             payload: customBulkEdits
-        } as ApiResponse<CustomDataExport[]>);
+        }
+        res.status(200).json(apiResponse);
     }
 ];
 

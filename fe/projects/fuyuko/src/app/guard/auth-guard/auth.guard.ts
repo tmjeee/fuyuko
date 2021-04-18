@@ -1,7 +1,7 @@
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
 import {AuthService} from '../../service/auth-service/auth.service';
-import {User} from '../../model/user.model';
+import {User} from '@fuyuko-common/model/user.model';
 import {Injectable} from '@angular/core';
 
 @Injectable()

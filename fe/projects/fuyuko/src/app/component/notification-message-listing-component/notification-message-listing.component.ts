@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Messages} from '../../model/notification-listing.model';
+import {Messages} from '@fuyuko-common/model/notification-listing.model';
 
 
 @Component({

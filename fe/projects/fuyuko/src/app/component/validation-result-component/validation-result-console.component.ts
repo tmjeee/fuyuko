@@ -1,9 +1,8 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Item} from '../../model/item.model';
-import {Validation, ValidationError, ValidationResult} from '../../model/validation.model';
-import {Rule} from '../../model/rule.model';
-import {Observable, Subscription} from "rxjs";
-import {tap} from "rxjs/operators";
+import {Item} from '@fuyuko-common/model/item.model';
+import {ValidationError, ValidationResult} from '@fuyuko-common/model/validation.model';
+import {Observable, Subscription} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 
 @Component({

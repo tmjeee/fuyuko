@@ -1,0 +1,19 @@
+<div class="workflow-listing-page">
+    <mat-card class="mat-elevation-z-20">
+        <mat-card-header>
+            <mat-card-title>Workflow Listing</mat-card-title>
+            <mat-card-subtitle>
+                Workflow Listings
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <app-workflow #workflowComponent
+                          [createWorkflowFn]="createWorkflowFn"
+                          [getWorkflowsByViewFn]="getWorkflowsByViewFn"
+                          [getAttributesByViewFn]="getAttributesByViewFn"
+                          [workflowDefinitions]="workflowDefinitions"
+                          [views]="views">
+            </app-workflow>
+        </mat-card-content>
+    </mat-card>
+</div>

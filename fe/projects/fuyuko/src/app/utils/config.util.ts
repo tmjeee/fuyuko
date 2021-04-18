@@ -10,11 +10,12 @@ export interface ConfigType {
 
 let currentConfig: ConfigType = _config;
 
-export const reload = (httpClient: HttpClient, callback?: ()=>void) => {
+export const reload = (httpClient: HttpClient, callback?: () => void) => {
    httpClient.get('/assets/config.json')
        .pipe(
            tap((j: any) => {
                currentConfig = j;
+               // tslint:disable-next-line:no-unused-expression
                callback && callback();
            })
        ).subscribe();

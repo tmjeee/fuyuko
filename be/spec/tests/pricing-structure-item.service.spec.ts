@@ -5,11 +5,11 @@ import {
     getPricingStructureByName, getPricingStructureItem,
     getViewByName,
     setPrices
-} from "../../src/service";
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {PricingStructure, PricingStructureItemWithPrice} from "../../src/model/pricing-structure.model";
-import {Item} from "../../src/model/item.model";
-import {View} from "../../src/model/view.model";
+} from '../../src/service';
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
+import {PricingStructure, PricingStructureItemWithPrice} from '@fuyuko-common/model/pricing-structure.model';
+import {Item} from '@fuyuko-common/model/item.model';
+import {View} from '@fuyuko-common/model/view.model';
 
 
 describe('pricing-structure-item', () => {

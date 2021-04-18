@@ -1,19 +1,16 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {check} from 'express-validator';
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {ApiResponse} from "../../model/api-response.model";
-import {makeApiError, makeApiErrorObj} from "../../util";
-import {ROLE_ADMIN, ROLE_EDIT} from "../../model/role.model";
-import {addRoleToGroup} from "../../service/role.service";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
+import {addRoleToGroup} from '../../service';
 
 // CHECKED
 
@@ -32,15 +29,21 @@ const httpAction: any[] = [
 
         const errors: string[] = await addRoleToGroup(groupId, roleName);
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Role ${roleName} added to group ${groupId}`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Role ${roleName} added to group ${groupId}`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

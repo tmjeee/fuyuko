@@ -1,24 +1,18 @@
-import {NextFunction, Router, Request, Response} from "express";
+import {NextFunction, Router, Request, Response} from 'express';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
+} from './common-middleware';
 import {Fields, Files, File} from 'formidable';
-import {multipartParse} from "../../service";
-import {makeApiError, makeApiErrorObj} from "../../util";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import fileType from 'file-type';
-import util from 'util';
-import fs from 'fs';
-import {Registry} from "../../registry";
+import {multipartParse} from '../../service';
+import {Registry} from '../../registry';
 import {param} from 'express-validator';
-import {ROLE_EDIT} from "../../model/role.model";
-import {UserAvatarResponse} from "../../model/api-response.model";
-import {saveUserAvatar} from "../../service/avatar.service";
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {UserAvatarResponse} from '@fuyuko-common/model/api-response.model';
+import {saveUserAvatar} from '../../service';
 
 // CHECKED
 
@@ -41,21 +35,27 @@ const httpAction: any[] = [
 
         const r: {userAvatarId: number, errors: string[]} = await saveUserAvatar(userId, {globalAvatarName, customAvatarFile});
         if (r.errors && r.errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: r.errors.join(', '),
+            const apiResponse: UserAvatarResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: r.errors.join(', '),
+                }],
                 payload: {
                     userAvatarId: r.userAvatarId
                 }
-            } as UserAvatarResponse);
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `UserId ${userId}, Avatar updated`,
+            const apiReponse: UserAvatarResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `UserId ${userId}, Avatar updated`,
+                }],
                 payload: {
                     userAvatarId: r.userAvatarId
                 }
-            } as UserAvatarResponse);
+            };
+            res.status(200).json(apiReponse);
         }
     }
 ];

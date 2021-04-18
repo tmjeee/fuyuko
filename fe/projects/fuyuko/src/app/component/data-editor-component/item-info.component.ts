@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Item, ItemImage} from "../../model/item.model";
-import {Attribute} from "../../model/attribute.model";
-import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
-import config from "../../utils/config.util";
-import {ItemEditorComponentEvent} from "./item-editor.component";
-import {ItemValueAndAttribute} from "../../model/item-attribute.model";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Item, ItemImage} from '@fuyuko-common/model/item.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/carousel.component';
+import config from '../../utils/config.util';
+import {ItemEditorComponentEvent} from './item-editor.component';
+import {ItemValueAndAttribute} from '@fuyuko-common/model/item-attribute.model';
 
 
 const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
@@ -12,8 +12,8 @@ const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImage
 
 export interface DataEditorEvent {
    item: Item;
-   itemValueAndAttribute: ItemValueAndAttribute
-};
+   itemValueAndAttribute: ItemValueAndAttribute;
+}
 
 @Component({
    selector: 'app-item-info',

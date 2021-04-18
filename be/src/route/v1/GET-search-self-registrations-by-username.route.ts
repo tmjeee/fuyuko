@@ -1,12 +1,10 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
 import {param} from 'express-validator';
-import {validateJwtMiddlewareFn, validateMiddlewareFn} from "./common-middleware";
-import {doInDbConnection, QueryA, QueryI} from "../../db";
-import {Connection} from "mariadb";
-import {SelfRegistration} from "../../model/self-registration.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {searchSelfRegistrationsByUsername} from "../../service/self-registration.service";
+import {validateJwtMiddlewareFn, validateMiddlewareFn} from './common-middleware';
+import {SelfRegistration} from '@fuyuko-common/model/self-registration.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {searchSelfRegistrationsByUsername} from '../../service';
 
 
 // CHECKED
@@ -22,12 +20,14 @@ const httpAction: any[] = [
       const username: string = req.params.username;
 
        const selfRegistrations: SelfRegistration[] = await searchSelfRegistrationsByUsername(username);
-
-       res.status(200).json({
-           status: 'SUCCESS',
-           message: `Self registrations retrieved`,
+       const apiResponse: ApiResponse<SelfRegistration[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Self registrations retrieved`,
+            }],
            payload: selfRegistrations
-       } as ApiResponse<SelfRegistration[]>);
+       };
+       res.status(200).json(apiResponse);
    }
 ];
 

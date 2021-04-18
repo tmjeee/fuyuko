@@ -1,10 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges} from '@angular/core';
-import {TableItem} from '../../model/item.model';
-import {Attribute} from '../../model/attribute.model';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {DataEditorDialogComponent} from './data-editor-dialog.component';
 import {map} from 'rxjs/operators';
-import {ItemValueAndAttribute, TableItemAndAttribute} from '../../model/item-attribute.model';
+import {ItemValueAndAttribute, TableItemAndAttribute} from '@fuyuko-common/model/item-attribute.model';
 
 export interface DataEditorComponentEvent {
   temAndAttribute: TableItemAndAttribute;

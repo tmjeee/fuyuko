@@ -1,5 +1,5 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
 import {body, param} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -7,13 +7,13 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {Attribute} from "../../model/attribute.model";
-import {ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import {ItemDataExport} from "../../model/data-export.model";
-import {preview, PreviewResult} from "../../service/export-csv/export-item.service";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {ItemDataExport} from '@fuyuko-common/model/data-export.model';
+import {exportItemPreview, ExportItemPreviewResult } from '../../service';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED
@@ -33,7 +33,7 @@ const httpAction: any[] = [
         const attributes: Attribute[] = req.body.attributes;
         const filter: ItemValueOperatorAndAttribute[] = req.body.filter;
 
-        const previewResult: PreviewResult = await preview(viewId, filter);
+        const previewResult: ExportItemPreviewResult = await exportItemPreview(viewId, filter);
 
         const r: ItemDataExport = {
             type: 'ITEM',
@@ -41,11 +41,14 @@ const httpAction: any[] = [
             items: previewResult.i
         };
 
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Item data export ready`,
+        const apiResponse: ApiResponse<ItemDataExport> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Item data export ready`,
+            }],
             payload: r
-        } as ApiResponse<ItemDataExport>)
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

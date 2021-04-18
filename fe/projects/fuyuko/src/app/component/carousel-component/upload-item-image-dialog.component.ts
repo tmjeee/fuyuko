@@ -1,6 +1,6 @@
-import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Item} from "../../model/item.model";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Item} from '@fuyuko-common/model/item.model';
 
 @Component({
     templateUrl: './upload-item-image-dialog.component.html',

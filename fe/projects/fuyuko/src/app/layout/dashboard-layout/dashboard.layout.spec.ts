@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {DashboardLayoutComponent} from './dashboard.layout';
 import {AppMaterialsModule} from '../../app-materials.module';
 import {AvatarComponent} from '../../component/avatar-component/avatar.component';
@@ -13,8 +13,8 @@ import {SettingsService} from '../../service/settings-service/settings.service';
 import {RouterTestingModule} from '@angular/router/testing';
 import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
 import {BrowserLocationHistoryService} from '../../service/browser-location-history-service/browser-location-history.service';
-import {of} from "rxjs";
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {of} from 'rxjs';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 describe('DashboardLayoutComponent', () => {
@@ -22,7 +22,7 @@ describe('DashboardLayoutComponent', () => {
     let fixture: ComponentFixture<DashboardLayoutComponent>;
     let component: DashboardLayoutComponent;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [AppMaterialsModule, RouterTestingModule, HttpClientTestingModule],
             declarations: [DashboardLayoutComponent, AvatarComponent, NotificationComponent, SideNavComponent],

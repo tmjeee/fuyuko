@@ -1,19 +1,17 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
-import {param, body} from 'express-validator';
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
+import {param} from 'express-validator';
 import {
     aFnAnyTrue,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
-import {DataMap} from "../../model/dashboard-serialzable.model";
-import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {getUserDashboardWidgetSerializedData} from "../../service/dashboard.service";
+} from './common-middleware';
+import {DataMap} from '@fuyuko-common/model/dashboard-serialzable.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getUserDashboardWidgetSerializedData} from '../../service';
 
 // CHECKED
 
@@ -29,11 +27,14 @@ const httpAction: any[] = [
         const widgetInstanceId: string = req.params.dashboardWidgetInstanceId;
 
         const d: DataMap = await getUserDashboardWidgetSerializedData(userId, widgetInstanceId);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Widget instance data retrieved`,
+        const apiResponse: ApiResponse<DataMap> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Widget instance data retrieved`,
+            }],
             payload: d
-        } as ApiResponse<DataMap>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

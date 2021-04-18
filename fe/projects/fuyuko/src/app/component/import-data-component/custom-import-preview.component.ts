@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {CustomDataImport, ImportScriptInputValue, ImportScriptPreview} from "../../model/custom-import.model";
-import {Observable} from "rxjs";
-import {CustomImportPreviewFn} from "./custom-import-wizard.component";
-import {finalize, tap} from "rxjs/operators";
-import {View} from "../../model/view.model";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {CustomDataImport, ImportScriptInputValue, ImportScriptPreview} from '@fuyuko-common/model/custom-import.model';
+import {CustomImportPreviewFn} from './custom-import-wizard.component';
+import {finalize, tap} from 'rxjs/operators';
+import {View} from '@fuyuko-common/model/view.model';
 
 
 export interface CustomImportPreviewComponentEvent {
@@ -45,17 +44,17 @@ export class CustomImportPreviewComponent implements OnInit {
        this.previewFn(this.view, this.customDataImport, this.inputValues).pipe(
            tap((r: ImportScriptPreview) => {
               this.preview = r;
-               for (const row of this.preview.rows) {
+              for (const row of this.preview.rows) {
                    const o = this.preview.columns.reduce((o: {[k: string]: string}, col: string) => {
                        o[col] = row[col];
                        return o;
                    }, {});
                    this.datasource.push(o);
                }
-               this.events.emit({
+              this.events.emit({
                    preview: this.preview
                });
-               this.ready = true;
+              this.ready = true;
            }),
            finalize(() => this.ready = true)
        ).subscribe();

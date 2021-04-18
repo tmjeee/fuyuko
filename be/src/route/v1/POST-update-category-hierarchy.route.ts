@@ -1,10 +1,10 @@
-import {Registry} from "../../registry";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {body, param} from "express-validator";
-import {NextFunction, Router, Request, Response} from "express";
-import {updateCategory, updateCategoryHierarchy} from "../../service/category.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {Registry} from '../../registry';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {param} from 'express-validator';
+import {NextFunction, Router, Request, Response} from 'express';
+import {updateCategoryHierarchy} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const httpAction: any[] = [
@@ -22,18 +22,26 @@ const httpAction: any[] = [
         const categoryId: number = Number(req.params.categoryId);
         const parentId: number = req.params.parentId ? Number(req.params.parentId) : null;
 
+        // HANDLE CATEGORY
+
         const errors: string[] = await updateCategoryHierarchy(categoryId,  parentId);
 
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `category ${categoryId} hierarchy updated`
-            });
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `category ${categoryId} hierarchy updated`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

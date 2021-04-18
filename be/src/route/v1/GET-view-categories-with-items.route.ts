@@ -1,11 +1,11 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response} from "express";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {param} from "express-validator";
-import {Category, CategoryWithItems} from "../../model/category.model";
-import {getViewCategories, getViewCategoriesWithItems} from "../../service/category.service";
-import {ApiResponse} from "../../model/api-response.model";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response} from 'express';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {param} from 'express-validator';
+import {Category, CategoryWithItems} from '@fuyuko-common/model/category.model';
+import {getViewCategoriesWithItems} from '../../service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 const httpAction: any[] = [
@@ -18,14 +18,16 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
-
         const categories: CategoryWithItems[] = await getViewCategoriesWithItems(viewId);
-
-        return res.status(200).json({
-            status: 'SUCCESS',
-            message: 'success',
+        const apiResponse: ApiResponse<Category[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: 'success',
+            }],
             payload: categories
-        } as ApiResponse<Category[]>);
+        };
+
+        return res.status(200).json(apiResponse);
     }
 ];
 

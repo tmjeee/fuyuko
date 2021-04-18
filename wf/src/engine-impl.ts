@@ -8,27 +8,35 @@ import {
     State,
     StateProcessFn
 } from "./index";
+import {EngineSerializedData, StateInitFn} from './engine-interface';
 
 interface SerializedState {
     name: string,
     currentEvent: string,
-    transition: {[k:string]: any}
+    // transition: {[k:string]: any}
 }
 
 
+/**
+ * =======================
+ * === InternalState
+ * =======================
+ */
 export class InternalState implements State, NextState {
 
-    name: string;
-    fn: StateProcessFn;   // perform state operation and return next an event optionally
+    name: string; /* saved state */
+    initFn: StateInitFn;         // perform state init operation
+    processFn: StateProcessFn;   // perform state operation and return next an event optionally
 
     // transition map, indicating when 'event' occurred we proceed to the given State
-    map: Map<string /* event */, State> = new Map();
+    eventToStateMap: Map<string /* event */, State> = new Map();
 
-    currentEvent: string;
+    currentEvent: string | undefined;
 
-    constructor(name: string, fn: StateProcessFn) {
+    constructor(name: string, initFn?: StateInitFn, processFn?: StateProcessFn) {
         this.name = name;
-        this.fn = fn ? fn : () => null ;
+        this.initFn = initFn ? initFn : async ()=>{};
+        this.processFn = processFn ? processFn : async () => '*' ;
     }
 
     on(event?: string): NextState {
@@ -37,109 +45,61 @@ export class InternalState implements State, NextState {
     }
 
     to(nextState: State): State {
-        this.map.set(this.currentEvent, nextState);
-        this.currentEvent = null;
-        return this;
-    }
-
-    serialize(): string {
-        return JSON.stringify({
-            name,
-            currentEvent: this.currentEvent,
-            transition: [...this.map.entries()].reduce((acc: {[k: string]: any}, e: [string, State]) => {
-                acc[e[0]] = e[1].serialize();
-                return acc;
-            }, {})
-        });
-    }
-
-    deserialize(data: string): void {
-        const d: SerializedState = JSON.parse(data);
-        this.name = d.name;
-        this.currentEvent = d.currentEvent;
-        for (const t in d.transition) {
-            this.map.get(t).deserialize(d.transition[t]);
+        if (!this.currentEvent) {
+            throw Error('Bad usage need to call on(...) before to(...)')
         }
+        this.eventToStateMap.set(this.currentEvent, nextState);
+        this.currentEvent = undefined;
+        return this;
     }
 }
 
+/**
+ * =======================
+ * === InternalEngine
+ * =======================
+ */
 export class InternalEngine implements Engine {
 
-    startState: State;
-    states: State[] = [];
-    endState: State;
-    args: Argument;
+    private startState: State | undefined;
+    private states: State[] = [];
+    private endStates: State[] = [];
 
-    transitionMap: Map<string /* from_state_name_event */, string /* to_state_name */>;
-    stateMap: Map<string /* state name */, State>;
+    private transitionMap: Map<string /* <from_state_name>_<event> */, string /* <to_state_name> */>;
+    private stateMap: Map<string /* state name */, State>;
 
-    status: EngineStatus;
-    currentState: State;
+    args: Argument;                                 /* saved state */
+    status: EngineStatus;                           /* saved state */
+    private previousState: State | undefined;       /* saved state */
+    currentState: State | undefined;                /* saved state */
+    private initedStateNames: string[] = [];        /* saved state */
 
     constructor() {
+        this.args = {};
         this.transitionMap = new Map();
         this.stateMap = new Map();
         this.status = 'UNIITIALIZED';
     }
 
-    serialize(): string {
-       return JSON.stringify({
-          startState: this.startState.serialize(),
-          states: this.states.map((s: State) => s.serialize()),
-          endState: this.endState.serialize(),
-          arg: this.args.serialize(),
-          transitionMap: [...this.transitionMap.entries()].reduce((acc: {[k: string]: any}, e: [string, string]) => {
-              return acc;
-          }, {}),
-          stateMap: [...this.stateMap.entries()].reduce((acc: {[k: string]: State}, e: [string, State]) => {
-              return acc;
-          }, {}),
-          status: this.status,
-          currentState: this.currentState.serialize(),
-       });
+    serializeData(): string {
+       const engineSerializedData: EngineSerializedData = {
+           args: this.args,
+           status: this.status,
+           previousState: this.previousState ? { name: this.previousState.name } : undefined,
+           currentState: this.currentState ? { name: this.currentState.name } : undefined,
+           initedStateNames: this.initedStateNames
+       };
+       return JSON.stringify(engineSerializedData);
     }
-
-    deserialize(data: string) {
-        const d: {
-           startState: string,
-           states: string[],
-           endState: string,
-           args: string,
-           transitionMap: {[k: string]: string},
-           stateMap: {[k: string]: string},
-           status: string,
-           currentState: string
-        } = JSON.parse(data);
-
-        this.startState.deserialize(d.startState);
-        for (const s in d.states) {
-           const _st: SerializedState = JSON.parse(s);
-           const sta: State = this.states.find((st: State) => st.name === _st.name);
-           if (sta) {
-               sta.deserialize(s);
-           }
-        }
-        this.endState.deserialize(d.endState);
-        this.args = deserializeArgument(d.args);
-        for (const t in d.transitionMap) {
-            this.transitionMap.set(t, d.transitionMap[t]);
-        }
-        for (const t in d.stateMap) {
-            if (this.stateMap.has(t)) {
-                this.stateMap.get(t).deserialize(d.stateMap[t]);
-            }
-        }
-        this.status = d.status as EngineStatus;
-        this.currentState.deserialize(d.currentState);
-    }
-
 
     startsWith(state: State): Engine {
         if (this.startState) {
             throw Error(`A start state was already defined`);
         }
         this.startState = state;
-        this.states.push(state);
+        if (!this.states.includes(state)) {
+            this.states.push(state);
+        }
         return this;
     }
 
@@ -151,71 +111,118 @@ export class InternalEngine implements Engine {
         return this;
     }
 
-    endsWith(state: State): Engine {
-        if (this.endState) {
-            throw Error(`An end state was already defined`);
+    endsWith(...states: State[]): Engine {
+        if (this.endStates && this.endStates.length) {
+            throw Error(`End state(s) was / were already defined`);
         }
-        this.states.push(state);
-        this.endState = state;
+        for (const state of states) {
+            if (!this.states.includes(state)) {
+                this.states.push(state);
+            }
+        }
+        this.endStates = [...states];
         return this;
     }
 
-    init(arg: Argument): Engine {
-        this.args = arg;
+    init(arg: Argument, serializedData?: string): Engine {
+        this.combineArgs(arg);
         for (const state of this.states) {
             const fromState: InternalState = state as InternalState;
             this.stateMap.set(fromState.name, fromState);
-            const m: Map<string, InternalState> = fromState.map as Map<string, InternalState>;
-            for (const fromStateEvent of m.keys()) {
-                const toState: InternalState = m.get(fromStateEvent);
-                this.transitionMap.set(`${fromState.name}_${fromStateEvent}`, `${toState.name}`);
-                this.stateMap.set(toState.name, toState);
+            const eventToStateMap: Map<string /* event */, InternalState> = fromState.eventToStateMap as Map<string, InternalState>;
+            for (const [fromStateEvent, toState] of eventToStateMap.entries()) {
+                if (toState) {
+                    console.log(`init() call: mapping ${fromState.name}_${fromStateEvent} -> ${toState.name}`);
+                    this.transitionMap.set(`${fromState.name}_${fromStateEvent}`, `${toState.name}`);
+                    this.stateMap.set(toState.name, toState);
+                }
             }
         }
         this.status = 'INIT';
         this.currentState = this.startState;
 
+        // deserialize data
+        const hasSerializedData = !!serializedData;
+        const serializedDataObj: EngineSerializedData | undefined = hasSerializedData ? JSON.parse(serializedData!) : undefined;
+        if( hasSerializedData) {
+            this.combineArgs(serializedDataObj!.args);
+            this.status = serializedDataObj!.status;
+            this.initedStateNames = serializedDataObj!.initedStateNames;
+            if (serializedDataObj!.previousState) {
+                this.previousState = this.stateMap.get(serializedDataObj!.previousState.name)
+            }
+            if (serializedDataObj!.currentState) {
+                this.currentState = this.stateMap.get(serializedDataObj!.currentState.name);
+            }
+        }
+
+        // init fn
+        for (const state of this.states) {
+            this.runInitFn(state);
+        }
+
         return this;
     }
 
-    async next(): Promise<EngineResponse> {
+    async next(inputArg?: Argument): Promise<EngineResponse> {
         if (this.status === 'INIT') {
             this.status = 'STARTED';
         }
         if (this.status === 'ENDED') {
-            return { end: true } as EngineResponse;
+            return { end: true, status: this.status };
         }
 
+        this.combineArgs(inputArg);
         const currentState: InternalState = this.currentState as InternalState;
         try {
-            const event: string = await currentState.fn();
-            console.log('**', currentState.name);
+            // get current state to processFn(..) and get back an event for transitioning to next state
+            const event: string | undefined = await currentState.processFn(this.previousState, this.args || {});
+            let nextStateName: string | undefined = this.transitionMap.get(`${currentState.name}_${event}`);
 
-            if (currentState.name === (this.endState as InternalState).name) { // end
-                this.status = 'ENDED';
-                return {end: true, status: this.status} as EngineResponse;
+            // with the event returned, we can't find a state to transition to, try generic event
+            if (!nextStateName) {
+                nextStateName = this.transitionMap.get(`${currentState.name}_*`);
             }
 
-            const nextStateName: string = this.transitionMap.get(`${currentState.name}_${event}`);
-            let nextState: InternalState = this.stateMap.get(nextStateName) as InternalState;
+            if (nextStateName) {
+                let nextState: InternalState = this.stateMap.get(nextStateName) as InternalState;
 
-            if (!nextState) {
-                // try to find a generic transition
-                const nextWildcardStateName: string = this.transitionMap.get(`${currentState.name}_*`);
-                nextState = this.stateMap.get(nextWildcardStateName) as InternalState;
-
+                // the next state is not registered / found
                 if (!nextState) {
-                    this.status = 'ERROR';
-                    throw new Error(`current state named ${currentState.name} fired event ${event} result in no possible next state`);
+                    throw new Error(`next transition state named ${nextStateName} is not registered / found`);
                 }
+
+                this.previousState = this.currentState;
+                this.currentState = nextState;
+            } else {
+                // still can't find a state to transition to? stay in this state
+                throw new Error(`current state named ${currentState.name} fired event ${event} result in no possible next state`);
             }
 
-            this.currentState = nextState;
 
-            return {end: false, status: this.status } as EngineResponse;
+            console.log(`*** next() call: prev=${this.previousState ? this.previousState.name : 'no-previous-state'}, current=${this.currentState.name}, event=${event}`);
+            if (this.endStates.map((s) => s.name).includes(this.currentState.name)) { // end
+                this.status = 'ENDED';
+                // if it is the end state, we want to call it's processFn anyways
+                (this.currentState as InternalState).processFn(this.previousState, this.args || {});
+            }
+            return {end: (this.status === 'ENDED'), status: this.status };
         } catch (e) {
             this.status = 'ERROR';
             throw e;
+        }
+    }
+
+    private runInitFn(state: State | undefined) {
+        if (state && !this.initedStateNames.includes(state.name)) {
+            this.initedStateNames.push(state.name);
+            (state as InternalState).initFn(this.args || {});
+        }
+    }
+
+    private combineArgs(inputArg?: Argument) {
+        if (inputArg) {
+            this.args = {...this.args, ...inputArg};
         }
     }
 }

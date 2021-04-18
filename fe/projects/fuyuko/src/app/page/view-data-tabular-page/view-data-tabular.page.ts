@@ -1,25 +1,25 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ItemService} from '../../service/item-service/item.service';
-import {combineLatest, forkJoin, Subscription, concat, Observable} from 'rxjs';
-import {concatAll, concatMap, finalize, map, tap} from 'rxjs/operators';
-import {Item, ItemSearchType, TableItem} from '../../model/item.model';
-import {Attribute} from '../../model/attribute.model';
-import {TableItemAndAttributeSet} from '../../model/item-attribute.model';
+import {forkJoin, Subscription, concat, Observable} from 'rxjs';
+import {finalize, map, tap} from 'rxjs/operators';
+import {Item, ItemSearchType, TableItem} from '@fuyuko-common/model/item.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {TableItemAndAttributeSet} from '@fuyuko-common/model/item-attribute.model';
 import {ViewService} from '../../service/view-service/view.service';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {DataTableComponentEvent} from '../../component/data-table-component/data-table.component';
 import {toTableItem} from '../../utils/item-to-table-items.util';
 import {ItemSearchComponentEvent} from '../../component/item-search-component/item-search.component';
-import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
-import {CarouselComponentEvent} from "../../component/carousel-component/carousel.component";
-import {Pagination} from "../../utils/pagination.utils";
-import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
-import {LoadingService} from "../../service/loading-service/loading.service";
-import {AuthService} from "../../service/auth-service/auth.service";
-import {FormBuilder, FormControl} from "@angular/forms";
+import {CarouselComponentEvent} from '../../component/carousel-component/carousel.component';
+import {Pagination} from '../../utils/pagination.utils';
+import {PaginationComponentEvent} from '../../component/pagination-component/pagination.component';
+import {LoadingService} from '../../service/loading-service/loading.service';
+import {AuthService} from '../../service/auth-service/auth.service';
+import {FormBuilder, FormControl} from '@angular/forms';
 
 
 export type DataListTypes = 'ALL' | 'FAVOURITE';
@@ -190,15 +190,15 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
   onCarouselEvent($event: CarouselComponentEvent) {
     switch ($event.type) {
-      case "upload":
+      case 'upload':
           this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
               tap((r: ApiResponse) => {
                 toNotifications(this.notificationService, r);
                 this.reload();
               })
           ).subscribe();
-        break;
-      case "markAsPrimary":
+          break;
+      case 'markAsPrimary':
         this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
             tap((r: ApiResponse) => {
               toNotifications(this.notificationService, r);
@@ -206,7 +206,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
             })
         ).subscribe();
         break;
-      case "delete":
+      case 'delete':
         this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
             tap((r: ApiResponse) => {
               toNotifications(this.notificationService, r);

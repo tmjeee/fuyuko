@@ -1,6 +1,6 @@
-import {activateInvitation, ActivateInvitationResult, createInvitation, getInvitationByCode} from "../../src/service";
-import {Invitation} from "../../src/model/invitation.model";
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {activateInvitation, ActivateInvitationResult, createInvitation, getInvitationByCode} from '../../src/service';
+import {Invitation} from '@fuyuko-common/model/invitation.model';
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
 
 
 describe(`invitation.service`, () => {

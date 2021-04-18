@@ -2,14 +2,14 @@ import {NextFunction, Router, Request, Response} from "express";
 import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import { param, body } from "express-validator";
-import {ROLE_EDIT} from "../../model/role.model";
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {
     ImportScriptInputValue,
     ImportScriptJobSubmissionResult,
     ImportScriptPreview
-} from "../../model/custom-import.model";
-import {runCustomImportJob} from "../../custom-import/custom-import-executor";
-import {ApiResponse} from "../../model/api-response.model";
+} from '@fuyuko-common/model/custom-import.model';
+import {runCustomImportJob} from '../../custom-import';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 // CHECKED
 
@@ -30,11 +30,14 @@ const httpAction: any[] = [
        const preview: ImportScriptPreview = req.body.preview;
 
        const r: ImportScriptJobSubmissionResult = await runCustomImportJob(viewId, customImportId, values, preview);
-       res.status(200).json({
-           status: 'SUCCESS',
-           message: `Import script job submission result ready`,
+       const apiResponse: ApiResponse<ImportScriptJobSubmissionResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Import script job submission result ready`,
+            }],
            payload: r
-       } as ApiResponse<ImportScriptJobSubmissionResult>);
+       };
+       res.status(200).json(apiResponse);
     }
 ]
 

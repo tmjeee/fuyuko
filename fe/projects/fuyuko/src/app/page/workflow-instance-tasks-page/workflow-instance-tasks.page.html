@@ -1,0 +1,55 @@
+<div class="workflow-task-page">
+    <mat-card class="mat-elevation-z-20">
+        <mat-card-header>
+            <mat-card-title>Workflow Tasks</mat-card-title>
+            <mat-card-subtitle>
+                Workflow Tasks listing
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-tab-group>
+                <!-- pending -->
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        Pending
+                    </ng-template>
+                    <ng-template matTabContent>
+                        <app-workflow-instance-task-table
+                                [allowViewButton]="true"
+                                [workflowInstanceTasksFn]="workflowInstancePendingTasksFn"
+                                (events)="onWorkflowInstanceTaskTableEvents($event)">
+                        </app-workflow-instance-task-table>
+                    </ng-template>
+                </mat-tab>
+
+                <!-- actioned -->
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        Actioned
+                    </ng-template>
+                    <ng-template matTabContent>
+                        <app-workflow-instance-task-table
+                                [allowViewButton]="true"
+                                [workflowInstanceTasksFn]="workflowInstanceActionedTasksFn"
+                                (events)="onWorkflowInstanceTaskTableEvents($event)">
+                        </app-workflow-instance-task-table>
+                    </ng-template>
+                </mat-tab>
+
+                <!-- expired -->
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        Expired
+                    </ng-template>
+                    <ng-template matTabContent>
+                        <app-workflow-instance-task-table
+                                [allowViewButton]="true"
+                                [workflowInstanceTasksFn]="workflowInstanceExpiredTasksFn"
+                                (events)="onWorkflowInstanceTaskTableEvents($event)">
+                        </app-workflow-instance-task-table>
+                    </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card-content>
+    </mat-card>
+</div>

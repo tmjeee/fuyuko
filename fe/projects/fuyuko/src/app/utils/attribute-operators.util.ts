@@ -1,4 +1,4 @@
-import {Attribute} from '../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {
     AREA_OPERATOR_TYPES,
     CURRENCY_OPERATOR_TYPES,
@@ -15,11 +15,11 @@ import {
     TEXT_OPERATOR_TYPES,
     VOLUME_OPERATOR_TYPES,
     WIDTH_OPERATOR_TYPES
-} from '../model/operator.model';
+} from '@fuyuko-common/model/operator.model';
 
 export const operatorNeedsItemValue = (operator: OperatorType) => {
     return (OPERATORS_WITHOUT_CONFIGURATBLE_VALUES.findIndex((o: OperatorType) => o === operator) < 0);
-}
+};
 
 export const operatorsForAttribute = (attribute: Attribute): OperatorType[] => {
     let operators: OperatorType[] = [];

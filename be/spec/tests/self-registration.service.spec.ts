@@ -3,10 +3,9 @@ import {
     ApproveSelfRegistrationResult, deleteSelfRegistration, getAllSelfRegistrations, searchSelfRegistrationsByUsername,
     selfRegister,
     SelfRegisterResult
-} from "../../src/service";
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {SelfRegistration} from "../../src/model/self-registration.model";
-import * as util from "util";
+} from '../../src/service';
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
+import {SelfRegistration} from '@fuyuko-common/model/self-registration.model';
 
 describe('self-registration.service', () => {
 

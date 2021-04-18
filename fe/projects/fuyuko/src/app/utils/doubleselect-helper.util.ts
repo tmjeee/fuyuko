@@ -1,4 +1,4 @@
-import {Attribute, Pair2} from '../model/attribute.model';
+import {Attribute, Pair2} from '@fuyuko-common/model/attribute.model';
 
 export type doubleSelectToMapType = (attribute: Attribute) => Pair2Map;
 

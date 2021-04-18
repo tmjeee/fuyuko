@@ -1,4 +1,4 @@
-import {ApiError, ApiErrorContext} from '../model/api-error.model';
+import {ApiError, ApiErrorContext} from '@fuyuko-common/model/api-error.model';
 
 export const makeApiErrorObj = (...errors: ApiError[]): ApiErrorContext => {
     return makeApiErrorObjWithContext('default', [...errors]);

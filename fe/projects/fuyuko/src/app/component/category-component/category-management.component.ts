@@ -1,5 +1,4 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component, EventEmitter,
     Input,
@@ -7,22 +6,25 @@ import {
     OnInit, Output,
     SimpleChange,
     SimpleChanges
-} from "@angular/core";
-import {Category, CategorySimpleItem, CategoryWithItems} from "../../model/category.model";
-import {Observable} from "rxjs";
-import {finalize, tap} from "rxjs/operators";
-import {CategoryTreeComponentDragDropEvent, CategoryTreeComponentEvent, TreeNode} from "./category-tree.component";
-import {ApiResponse, PaginableApiResponse} from "../../model/api-response.model";
-import {Pagination} from "../../utils/pagination.utils";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {PaginationComponentEvent} from "../pagination-component/pagination.component";
-import {MatDialog} from "@angular/material/dialog";
-import {EditCategoryPopupComponent} from "./edit-category-popup.component";
-import {Action, CategoryItemTableComponentEvent} from "./category-item-table.component";
+} from '@angular/core';
+import {Category, CategorySimpleItem, CategoryWithItems} from '@fuyuko-common/model/category.model';
+import {Observable} from 'rxjs';
+import {finalize, tap} from 'rxjs/operators';
+import {CategoryTreeComponentDragDropEvent, CategoryTreeComponentEvent, TreeNode} from './category-tree.component';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Pagination} from '../../utils/pagination.utils';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {PaginationComponentEvent} from '../pagination-component/pagination.component';
+import {MatDialog} from '@angular/material/dialog';
+import {EditCategoryPopupComponent} from './edit-category-popup.component';
+import {Action, CategoryItemTableComponentEvent} from './category-item-table.component';
+import {isApiResponseSuccess} from '../../service/common.service';
 
 export type GetCategoriesWithItemsFn = (viewId: number) => Observable<CategoryWithItems[]>;
-export type GetCategorySimpleItemsInCategoryFn = (viewId: number, categoryId: number, limitOffset?: LimitOffset) => Observable<PaginableApiResponse<CategorySimpleItem[]>>;
-export type GetCategorySimpleItemsNotInCategoryFn = (viewId: number, categoryId: number, limitOffset?: LimitOffset) => Observable<PaginableApiResponse<CategorySimpleItem[]>>;
+export type GetCategorySimpleItemsInCategoryFn =
+    (viewId: number, categoryId: number, limitOffset?: LimitOffset) => Observable<PaginableApiResponse<CategorySimpleItem[]>>;
+export type GetCategorySimpleItemsNotInCategoryFn =
+    (viewId: number, categoryId: number, limitOffset?: LimitOffset) => Observable<PaginableApiResponse<CategorySimpleItem[]>>;
 export type AddCategoryFn = (parentCategoryId: number, name: string, description: string) => Observable<ApiResponse>;
 export type EditCategoryFn = (categoryId: number, name: string, description: string) => Observable<ApiResponse>;
 export type DeleteCategoryFn = (categoryId: number) => Observable<ApiResponse>;
@@ -32,9 +34,9 @@ export type RemoveItemsFromCategoryFn = (categoryId: number, items: CategorySimp
 export interface CategoryManagementComponentTreeDragDropEvent {
     type: 'drop' | 'move-to-root';
     sourceItem: TreeNode;
-    destinationItem? : TreeNode;        // only when type is 'drop'
+    destinationItem?: TreeNode;        // only when type is 'drop'
     reloadTreeFn: () => void;
-};
+}
 
 @Component({
     selector: 'app-category-management',
@@ -72,7 +74,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
         this.addableCategoryTableItemsPagination = new Pagination();
         this.removableCategoryTableItemsPagination = new Pagination();
         this.removeableCategoryTableActions = [
-            {id: 'removeItemFromCategory', name: 'Remove', description: 'Remove items from selected category'}   
+            {id: 'removeItemFromCategory', name: 'Remove', description: 'Remove items from selected category'}
         ];
         this.addableCategoryTableActions = [
             {id: 'addItemToCategory', name: 'Add', description: 'Add items to selected category'}
@@ -89,7 +91,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
             }
         }
     }
-    
+
     reloadTree(viewId: number) {
         if (viewId) {
             this.treeLoading = true;
@@ -98,14 +100,14 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                     this.categoriesWithItems = r;
                 }),
                 finalize(() => this.treeLoading = false)
-            ).subscribe()
+            ).subscribe();
         }
     }
 
     hasCategory(): boolean {
-        return (this.categoriesWithItems && !!this.categoriesWithItems.length)
+        return (this.categoriesWithItems && !!this.categoriesWithItems.length);
     }
-    
+
     hasTreeNodeSelected(): boolean {
         return (!!this.selectedTreeNode);
     }
@@ -115,10 +117,10 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
 
 
     onCategoryTreeEvents($event: CategoryTreeComponentEvent) {
-        switch($event.type) {
-            case "node-selected":
+        switch ($event.type) {
+            case 'node-selected':
                 this.selectedTreeNode = $event.node;
-                const categoryWithItems: CategoryWithItems = $event.node.currentCategoryWithItems; 
+                const categoryWithItems: CategoryWithItems = $event.node.currentCategoryWithItems;
                 if (categoryWithItems) {
                     this.reloadAddableItemsTable(this.viewId, categoryWithItems.id);
                     this.reloadRemoveableItemsTable(this.viewId, categoryWithItems.id);
@@ -126,7 +128,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                 break;
         }
     }
-    
+
     reloadAddableItemsTable(viewId: number, categoryId: number) {
         if (categoryId && viewId) {
             this.getCategorySimpleItemsNotInCategoryFn(viewId, categoryId, this.addableCategoryTableItemsPagination.limitOffset())
@@ -135,7 +137,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                         this.addableCategoryTableItemsPagination.update(r);
                         this.addableCategoryTableItems = r.payload;
                     })
-                ).subscribe()
+                ).subscribe();
         }
     }
 
@@ -147,7 +149,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                         this.removableCategoryTableItemsPagination.update(r);
                         this.removableCategoryTableItems = r.payload;
                     })
-                ).subscribe()
+                ).subscribe();
         }
     }
 
@@ -168,15 +170,15 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                         this.addCategoryFn(-1, r.name, r.description)
                             .pipe(
                                 tap((res: ApiResponse) => {
-                                    if (res.status === "SUCCESS") {
+                                    if (isApiResponseSuccess(res)) {
                                         this.reloadTree(this.viewId);
                                     }
                                 })
-                            ).subscribe()
+                            ).subscribe();
                     }
                 })
-        ).subscribe()
-        
+        ).subscribe();
+
     }
 
     addChildCategory($event: MouseEvent) {
@@ -188,7 +190,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                     this.addCategoryFn(this.selectedTreeNode.currentCategoryWithItems.id, r.name, r.description)
                         .pipe(
                             tap((res: ApiResponse) => {
-                                if (res.status === 'SUCCESS') {
+                                if (isApiResponseSuccess(res)) {
                                     this.reloadTree(this.viewId);
                                 }
                             })
@@ -201,7 +203,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
     deleteCategory($event: MouseEvent) {
         this.deleteCategoryFn(this.selectedTreeNode.currentCategoryWithItems.id).pipe(
             tap((res: ApiResponse) => {
-                if (res.status === 'SUCCESS') {
+                if (isApiResponseSuccess(res)) {
                     this.selectedTreeNode = null;
                     this.addableCategoryTableItems = [];
                     this.removableCategoryTableItems = [];
@@ -222,7 +224,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                     if (r) {
                         this.editCategoryFn(r.id, r.name, r.description).pipe(
                             tap((res: ApiResponse) => {
-                                if (res.status === 'SUCCESS') {
+                                if (isApiResponseSuccess(res)) {
                                     this.reloadTree(this.viewId);
                                 }
                             })
@@ -251,7 +253,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
        this.reloadAddableItemsTable(this.viewId, categoryId);
        this.addItemsToCategoryFn(categoryId, items).pipe(
            tap((r: ApiResponse) => {
-              // this.reloadTree(this.viewId); 
+              // this.reloadTree(this.viewId);
               this.reloadAddableItemsTable(this.viewId, categoryId);
               this.reloadRemoveableItemsTable(this.viewId, categoryId);
            })
@@ -273,11 +275,11 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
 
     onCategoryTreeDragDropEvents($event: CategoryTreeComponentDragDropEvent) {
         this.categoryTreeDragDropEvents.emit({
-           type: "drop",
+           type: 'drop',
            sourceItem: $event.sourceItem,
            destinationItem: $event.destinationItem,
            reloadTreeFn: () => {
-               this.reloadTree(this.viewId)
+               this.reloadTree(this.viewId);
            }
         } as CategoryManagementComponentTreeDragDropEvent);
     }

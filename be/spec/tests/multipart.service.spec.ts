@@ -1,4 +1,4 @@
-import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {setupTestDatabase} from '../helpers/test-helper';
 
 describe('multipart.service', () => {
     beforeAll(async () => {

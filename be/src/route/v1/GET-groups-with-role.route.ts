@@ -8,10 +8,10 @@ import {
     vFnHasAnyUserRoles
 } from "./common-middleware";
 import {check} from 'express-validator';
-import {Group} from "../../model/group.model";
-import {ROLE_VIEW} from "../../model/role.model";
-import {PaginableApiResponse} from "../../model/api-response.model";
-import {getGroupsWithRole, getGroupsWithRoleCount} from "../../service/group.service";
+import {Group} from '@fuyuko-common/model/group.model';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {getGroupsWithRole, getGroupsWithRoleCount} from '../../service';
 
 
 // CHECKED
@@ -28,12 +28,17 @@ const httpAction: any[] = [
         const totalGroups: number = await getGroupsWithRoleCount(roleName);
         const groups: Group[] = await getGroupsWithRole(roleName);
 
-        res.status(200).json({
+        const apiResponse: PaginableApiResponse<Group[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Groups obtained successfully`
+            }],
             total: totalGroups,
             limit: totalGroups,
             offset: 0,
             payload: groups
-        } as PaginableApiResponse<Group[]>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

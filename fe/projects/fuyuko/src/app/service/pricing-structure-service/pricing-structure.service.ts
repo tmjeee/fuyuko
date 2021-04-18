@@ -4,13 +4,13 @@ import {
     PricingStructure, PricingStructureGroupAssociation,
     PricingStructureWithItems,
     TablePricingStructureItemWithPrice
-} from '../../model/pricing-structure.model';
+} from '@fuyuko-common/model/pricing-structure.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {ApiResponse} from '../../model/api-response.model';
-import {map} from "rxjs/operators";
-import {LimitOffset} from "../../model/limit-offset.model";
-import {toQuery} from "../../utils/pagination.utils";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {map} from 'rxjs/operators';
+import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {toQuery} from '../../utils/pagination.utils';
 
 const URL_ALL_PRICING_STRUCTURES = () => `${config().api_host_url}/pricingStructures`;
 const URL_PRICING_STRUCTURE_BY_VIEW = () => `${config().api_host_url}/view/:viewId/pricingStructures`;
@@ -107,7 +107,7 @@ export class PricingStructureService {
             URL_POST_LINK_PRICING_STRUCTURE_GROUP()
                 .replace(':pricingStructureId', String(pricingStructureId))
                 .replace(':groupId', String(groupId))
-        ,{});
+        , {});
     }
 
     unlinkPricingStructureGroup(pricingStructureId: number, groupId: number): Observable<ApiResponse> {
@@ -115,7 +115,7 @@ export class PricingStructureService {
             URL_POST_UNLINK_PRICING_STRUCTURE_GROUP()
                 .replace(':pricingStructureId', String(pricingStructureId))
                 .replace(':groupId', String(groupId))
-            ,{});
+            , {});
     }
 
 }

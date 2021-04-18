@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {CollectionViewer, DataSource} from "@angular/cdk/collections";
-import {BehaviorSubject, Observable} from "rxjs";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {MatRadioChange} from "@angular/material/radio";
-import {CustomBulkEdit} from "../../model/custom-bulk-edit.model";
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {MatRadioChange} from '@angular/material/radio';
+import {CustomBulkEdit} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 
 export class InternalDataSource implements DataSource<CustomBulkEdit> {
@@ -58,12 +58,12 @@ export class CustomBulkEditListComponent {
    formGroup: FormGroup;
    formControl: FormControl;
 
-   expandedCustomBulkEdit: CustomBulkEdit // customBulkEdit that is row expanded
+   expandedCustomBulkEdit: CustomBulkEdit; // customBulkEdit that is row expanded
 
    constructor(private formBuilder: FormBuilder) {
       this.formControl = this.formBuilder.control('');
       this.formGroup = this.formBuilder.group({
-         "radio": this.formControl
+         radio: this.formControl
       });
       this.columnsToDisplay = ['select', 'action', 'name', 'description'];
       this.expandedColumnsToDisplay = ['expanded'];

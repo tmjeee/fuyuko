@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {HelpService} from "../../service/help.service/help.service";
-import {tap} from "rxjs/operators";
+import {Component, OnInit} from '@angular/core';
+import {HelpService} from '../../service/help.service/help.service';
+import {tap} from 'rxjs/operators';
 
 const HELP_POSTFIX = `HELP_BULK_EDIT.md`;
 
@@ -8,9 +8,9 @@ const HELP_POSTFIX = `HELP_BULK_EDIT.md`;
   templateUrl: './bulk-edit-help.page.html',
   styleUrls: ['./bulk-edit-help.page.scss']
 })
-export class BulkEditHelpPageComponent {
+export class BulkEditHelpPageComponent implements OnInit {
 
-  help: string = '';
+  help = '';
 
   constructor(private helpService: HelpService) {
   }

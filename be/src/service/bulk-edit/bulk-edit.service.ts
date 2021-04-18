@@ -7,20 +7,20 @@ import {
     StringValue,
     TextValue,
     Value, VolumeValue, WeightValue, WidthValue
-} from "../../model/item.model";
+} from '@fuyuko-common/model/item.model';
 import {
     Attribute2,
     AttributeMetadata2, AttributeMetadataEntry2,
     ItemMetadata2,
     ItemMetadataEntry2, ItemValue2
 } from "../../server-side-model/server-side.model";
-import {BulkEditItem, BulkEditPackage} from "../../model/bulk-edit.model";
-import {doInDbConnection, QueryA} from "../../db";
-import {Connection} from "mariadb";
-import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from "../../model/item-attribute.model";
-import {Attribute} from "../../model/attribute.model";
-import {attributeConvert} from "../conversion-attribute.service";
-import {OperatorType} from "../../model/operator.model";
+import {BulkEditItem, BulkEditPackage} from '@fuyuko-common/model/bulk-edit.model';
+import {doInDbConnection, QueryA} from '../../db';
+import {Connection} from 'mariadb';
+import {ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {attributeConvert} from '../conversion-attribute.service';
+import {OperatorType} from '@fuyuko-common/model/operator.model';
 import {
     compareArea,
     compareCurrency,
@@ -35,11 +35,11 @@ import {
     HeightUnits,
     LengthUnits,
     VolumeUnits, WeightUnits, WidthUnits
-} from "../../model/unit.model";
-import moment from "moment";
-import {itemValueConvert} from "../conversion-item-value.service";
-import {getAttributeInView} from "../attribute.service";
-import {BulkEditPreviewEvent, fireEvent} from "..//event/event.service";
+} from '@fuyuko-common/model/unit.model';
+import moment from 'moment';
+import {itemValueConvert} from '../conversion-item-value.service';
+import {getAttributeInView} from '../attribute.service';
+import {BulkEditPreviewEvent, fireEvent} from '../event/event.service';
 
 const SQL: string = `
            SELECT 

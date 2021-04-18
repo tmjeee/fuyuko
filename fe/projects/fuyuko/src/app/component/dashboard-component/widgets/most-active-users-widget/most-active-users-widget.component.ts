@@ -1,13 +1,11 @@
-import {Component, OnInit, Provider} from "@angular/core";
-import {DashboardWidget, DashboardWidgetInfo} from "../../dashboard.model";
-import {MostActiveUsersWidgetService} from "./most-active-users-widget.service";
-import config from "../../../../utils/config.util";
-import {HttpClient} from "@angular/common/http";
-import {DashboardWidgetService} from "../../../../service/dashboard-service/dashboard-widget.service";
-import {Reporting_ActiveUser, Reporting_MostActiveUsers} from "../../../../model/reporting.model";
-import {tap} from "rxjs/operators";
-import {ChartType} from "angular-google-charts";
-import uuid from "uuid";
+import {Component, OnInit, Provider} from '@angular/core';
+import {DashboardWidget, DashboardWidgetInfo} from '../../dashboard.model';
+import {MostActiveUsersWidgetService} from './most-active-users-widget.service';
+import {DashboardWidgetService} from '../../../../service/dashboard-service/dashboard-widget.service';
+import {Reporting_ActiveUser, Reporting_MostActiveUsers} from '@fuyuko-common/model/reporting.model';
+import {tap} from 'rxjs/operators';
+import {ChartType} from 'angular-google-charts';
+import uuid from 'uuid';
 
 
 @Component({
@@ -18,12 +16,14 @@ import uuid from "uuid";
     ]
 })
 export class MostActiveUsersWidgetComponent extends DashboardWidget implements OnInit{
-    
-    uid: string = uuid();
 
-    static info(): DashboardWidgetInfo {
-        return { id: 'most-active-users-widget', name: 'most-active-users-widget', type: MostActiveUsersWidgetComponent };
+    constructor(protected mostActiveUsersWidgetService: MostActiveUsersWidgetService,
+                protected  dashboardWidgetService: DashboardWidgetService) {
+        super(dashboardWidgetService);
+        this.type = ChartType.PieChart;
     }
+
+    uid: string = uuid();
 
     type: ChartType;
     mostActiveUsers: Reporting_MostActiveUsers;
@@ -32,7 +32,7 @@ export class MostActiveUsersWidgetComponent extends DashboardWidget implements O
         title: 'Most Active Users',
         is3D: true,
         width: 800,
-        height:400,
+        height: 400,
         legend: {
             position: 'bottom'
         },
@@ -44,10 +44,8 @@ export class MostActiveUsersWidgetComponent extends DashboardWidget implements O
         }
     };
 
-    constructor(protected mostActiveUsersWidgetService: MostActiveUsersWidgetService,
-                protected  dashboardWidgetService: DashboardWidgetService) {
-        super(dashboardWidgetService);
-        this.type = ChartType.PieChart;
+    static info(): DashboardWidgetInfo {
+        return { id: 'most-active-users-widget', name: 'most-active-users-widget', type: MostActiveUsersWidgetComponent };
     }
 
     ngOnInit(): void {

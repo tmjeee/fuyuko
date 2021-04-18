@@ -1,10 +1,10 @@
-import {Registry} from "../../registry";
-import {NextFunction, Request, Response, Router} from "express";
-import {body, param} from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {CustomBulkEditScriptInputValue, CustomBulkEditScriptPreview} from "../../model/custom-bulk-edit.model";
+import {Registry} from '../../registry';
+import {NextFunction, Request, Response, Router} from 'express';
+import {body, param} from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {CustomBulkEditScriptInputValue, CustomBulkEditScriptPreview} from '@fuyuko-common/model/custom-bulk-edit.model';
 import {preview} from "../../custom-bulk-edit/custom-bulk-edit-executor";
 
 const httpAction: any[] = [
@@ -26,11 +26,14 @@ const httpAction: any[] = [
         const values: CustomBulkEditScriptInputValue[] = req.body.values;
 
         const p: CustomBulkEditScriptPreview = await preview(viewId, customBulkEditId, values);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Custom Bulk Edit script preview ready`,
+        const apiResponse: ApiResponse<CustomBulkEditScriptPreview> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Custom Bulk Edit script preview ready`,
+            }],
             payload: p
-        } as ApiResponse<CustomBulkEditScriptPreview>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

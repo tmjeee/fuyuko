@@ -1,7 +1,7 @@
 import {CollectionViewer, DataSource, SelectionModel} from '@angular/cdk/collections';
-import {Item, ItemValTypes, TableItem, Value} from '../../model/item.model';
+import {Item, ItemValTypes, TableItem, Value} from '@fuyuko-common/model/item.model';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {
     ChangeDetectorRef,
     Component,
@@ -15,15 +15,14 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {ItemValueAndAttribute, TableItemAndAttributeSet} from '../../model/item-attribute.model';
+import {ItemValueAndAttribute, TableItemAndAttributeSet} from '@fuyuko-common/model/item-attribute.model';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
-import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
+import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import {MatRadioChange} from '@angular/material/radio';
 import {tap} from 'rxjs/operators';
-import {Validation, ValidationError, ValidationResult} from "../../model/validation.model";
-import {Rule} from "../../model/rule.model";
-import {ValidationErrors} from "@angular/forms";
+import {ValidationError, ValidationResult} from '@fuyuko-common/model/validation.model';
+import {Rule} from '@fuyuko-common/model/rule.model';
 
 export class ValidationResultTableDataSource extends DataSource<TableItem> {
 

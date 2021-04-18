@@ -1,14 +1,13 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from '@angular/core';
 import {
     CustomDataImport,
     ImportScriptInputValue,
     ImportScriptJobSubmissionResult,
     ImportScriptPreview
-} from "../../model/custom-import.model";
-import {Observable} from "rxjs";
-import {CustomImportSubmitFn} from "./custom-import-wizard.component";
-import {finalize, tap} from "rxjs/operators";
-import {View} from "../../model/view.model";
+} from '@fuyuko-common/model/custom-import.model';
+import {CustomImportSubmitFn} from './custom-import-wizard.component';
+import {finalize, tap} from 'rxjs/operators';
+import {View} from '@fuyuko-common/model/view.model';
 
 
 @Component({

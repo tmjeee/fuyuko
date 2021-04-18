@@ -1,18 +1,16 @@
-import {Item, ItemImage} from "../../src/model/item.model";
+import {Item, ItemImage} from '@fuyuko-common/model/item.model';
 import {
     addItemImage, deleteItemImage,
     getItemById,
     getItemByName, getItemImageContent,
     getItemPrimaryImage,
-    getUserByUsername,
     markItemImageAsPrimary
-} from "../../src/service";
-import * as util from "util";
-import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
-import {BinaryContent} from "../../src/model/binary-content.model";
-import * as fs from "fs";
-import {pathToFileURL} from "url";
-import * as path from "path";
+} from '../../src/service';
+import * as util from 'util';
+import {JASMINE_TIMEOUT, setupBeforeAll2, setupTestDatabase} from '../helpers/test-helper';
+import {BinaryContent} from '@fuyuko-common/model/binary-content.model';
+import * as fs from 'fs';
+import * as path from 'path';
 
 describe('item-image.service', () => {
 

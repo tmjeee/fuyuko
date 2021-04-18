@@ -1,18 +1,18 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {PricingStructure, PricingStructureGroupAssociation} from "../../model/pricing-structure.model";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {PricingStructure, PricingStructureGroupAssociation} from '@fuyuko-common/model/pricing-structure.model';
 import {
     Action,
     GroupSearchFn,
     GroupTableComponentEvent,
     SEARCH_ACTION_TYPE
-} from "../group-table-component/group-table.component";
-import {Group} from "../../model/group.model";
+} from '../group-table-component/group-table.component';
+import {Group} from '@fuyuko-common/model/group.model';
 
 
 export interface PricingStructureGroupAssociationComponentEvent {
-    type: 'link' | 'unlink',
-    group: Group,
-    pricingStructure: PricingStructure
+    type: 'link' | 'unlink';
+    group: Group;
+    pricingStructure: PricingStructure;
 }
 
 @Component({
@@ -42,7 +42,7 @@ export class PricingStructureGroupAssociationComponent implements OnInit {
 
 
     onGroupTableEvent($event: GroupTableComponentEvent, pricingStructure: PricingStructure) {
-       switch($event.type) {
+       switch ($event.type) {
            case 'unlink': {
                const g: Group = $event.group;
                this.events.emit({

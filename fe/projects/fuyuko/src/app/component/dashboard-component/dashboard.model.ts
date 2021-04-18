@@ -1,8 +1,8 @@
 import {Type} from '@angular/core';
 import {DashboardWidgetService} from '../../service/dashboard-service/dashboard-widget.service';
-import {DataMap, SerializedDashboardWidgetInstanceFormat} from '../../model/dashboard-serialzable.model';
+import {DataMap, SerializedDashboardWidgetInstanceFormat} from '@fuyuko-common/model/dashboard-serialzable.model';
 import {Observable} from 'rxjs';
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 export interface DashboardStrategy {

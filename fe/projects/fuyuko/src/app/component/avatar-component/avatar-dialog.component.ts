@@ -1,12 +1,12 @@
 import {Component, ElementRef, Inject, Renderer2, ViewChild} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {GlobalAvatar} from '../../model/avatar.model';
-import {User} from '../../model/user.model';
+import {GlobalAvatar} from '@fuyuko-common/model/avatar.model';
+import {UserWithoutGroupAndTheme} from '@fuyuko-common/model/user.model';
 
 import config from '../../utils/config.util';
 
 export interface AvatarDialogComponentData {
-  user: User;
+  user: UserWithoutGroupAndTheme;
   allPredefinedAvatars: GlobalAvatar[];
 }
 

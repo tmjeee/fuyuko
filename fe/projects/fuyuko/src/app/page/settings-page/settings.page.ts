@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from '../../model/user.model';
-import {Settings} from '../../model/settings.model';
+import {User} from '@fuyuko-common/model/user.model';
+import {Settings} from '@fuyuko-common/model/settings.model';
 import {SettingsComponentEvent} from '../../component/settings-component/settings.component';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {SettingsService} from '../../service/settings-service/settings.service';
 import {finalize, tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
-import {LoadingService} from "../../service/loading-service/loading.service";
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 
 @Component({

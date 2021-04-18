@@ -1,19 +1,19 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {Attribute} from '../../model/attribute.model';
-import {ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
+import {Observable} from 'rxjs';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
 import {
     AttributeDataExport,
     DataExportType,
     ItemDataExport,
     PriceDataExport
-} from '../../model/data-export.model';
-import {Job} from '../../model/job.model';
+} from '@fuyuko-common/model/data-export.model';
+import {Job} from '@fuyuko-common/model/job.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
-import {PricingStructure} from '../../model/pricing-structure.model';
-import {ApiResponse} from "../../model/api-response.model";
-import {map} from "rxjs/operators";
+import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {map} from 'rxjs/operators';
 
 const URL_PREVIEW_ATTRIBUTES = () => `${config().api_host_url}/view/:viewId/export/attributes/preview`;
 const URL_PREVIEW_ITEMS = () => `${config().api_host_url}/view/:viewId/export/items/preview`;

@@ -1,11 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {CustomDataImport} from "../../model/custom-import.model";
-import {CollectionViewer, DataSource} from "@angular/cdk/collections";
-import {BehaviorSubject, Observable} from "rxjs";
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {TableItem} from "../../model/item.model";
-import {MatRadioChange} from "@angular/material/radio";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {CustomDataImport} from '@fuyuko-common/model/custom-import.model';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {MatRadioChange} from '@angular/material/radio';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
 export class InternalDataSource implements DataSource<CustomDataImport> {
 
@@ -58,12 +57,12 @@ export class CustomImportListComponent implements OnInit {
     formGroup: FormGroup;
     formControl: FormControl;
 
-    expandedCustomDataImport: CustomDataImport // customDataImport that is row expanded
+    expandedCustomDataImport: CustomDataImport; // customDataImport that is row expanded
 
     constructor(private formBuilder: FormBuilder) {
         this.formControl = this.formBuilder.control('');
         this.formGroup = this.formBuilder.group({
-            "radio": this.formControl
+            radio: this.formControl
         });
         this.columnsToDisplay = ['select', 'action', 'name', 'description'];
         this.expandedColumnsToDisplay = ['expanded'];

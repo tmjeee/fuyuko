@@ -10,8 +10,8 @@ import {
     vFnHasAnyUserRoles,
     vFnIsSelf
 } from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {getAllFavouriteItemIdsInView} from "../../service/item.service";
 
 const httpAction: any[] = [
@@ -34,12 +34,14 @@ const httpAction: any[] = [
         const userId: number = Number(req.params.userId);
 
         const itemIds: number[] = await getAllFavouriteItemIdsInView(viewId, userId);
-
-        res.status(200).json({
-           status: 'SUCCESS',
-           message: `Favourite item ids retrieved`,
-           payload: itemIds
-        } as ApiResponse<number[]>);
+        const apiResponse: ApiResponse<number[]> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Favourite item ids retrieved`,
+            }],
+            payload: itemIds
+        }
+        res.status(200).json(apiResponse);
     }
 ];
 

@@ -1,6 +1,6 @@
-import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {CarouselComponentEvent, CarouselItemImage} from "../carousel-component/carousel.component";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/carousel.component';
 
 
 @Component({

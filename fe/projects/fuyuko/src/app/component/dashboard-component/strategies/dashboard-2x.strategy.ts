@@ -2,7 +2,7 @@ import {DashboardStrategy, DashboardWidgetInfo, DashboardWidgetInstance} from '.
 import {
     SerializedDashboardFormat,
     SerializedDashboardWidgetInstanceFormat
-} from '../../../model/dashboard-serialzable.model';
+} from '@fuyuko-common/model/dashboard-serialzable.model';
 import {DASHBOARD_WIDGET_INFOS} from '../widgets';
 import {stickInTypes, StickInTypesArgs} from './dashboard-strategy-util';
 

@@ -6,9 +6,9 @@ import {AppMaterialsModule} from '../../app-materials.module';
 import {RulesTableComponent} from './rules-table.component';
 import {DataEditorModule} from '../data-editor-component/data-editor.module';
 import {RuleEditorComponent} from './rule-editor.component';
-import {CustomRuleTableComponent} from "./custom-rule-table.component";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
+import {CustomRuleTableComponent} from './custom-rule-table.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {SharedComponentUtilsModule} from '../shared-component-utils/shared-component-utils.module';
 
 
 @NgModule({

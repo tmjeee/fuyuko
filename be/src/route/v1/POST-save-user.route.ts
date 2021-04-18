@@ -1,22 +1,19 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
-import {check, body} from 'express-validator';
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
+import {body} from 'express-validator';
 import {
     aFnAnyTrue,
     getJwtPayload, v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {doInDbConnection} from "../../db";
-import {Connection} from "mariadb";
-import {JwtPayload} from "../../model/jwt.model";
-import {getUserById, hashedPassword} from "../../service";
-import {User} from "../../model/user.model";
-import {ROLE_EDIT} from "../../model/role.model";
-import {QueryA} from "../../db/db";
-import {ApiResponse} from "../../model/api-response.model";
-import {updateUser} from "../../service/user.service";
+} from './common-middleware';
+import {JwtPayload} from '@fuyuko-common/model/jwt.model';
+import {getUserById} from "../../service";
+import {User} from '@fuyuko-common/model/user.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from "@fuyuko-common/model/api-response.model";
+import {updateUser} from '../../service';
 
 // CHECKED
 
@@ -42,22 +39,31 @@ const httpAction: any[] = [
         const jwtPayload: JwtPayload = getJwtPayload(res);
         const userId: number = jwtPayload.user.id;
 
+
+        // HANDLE WORKFLOW
+
         const errors: string[] = await updateUser({userId, firstName, lastName, email, theme, password});
         const user: User = await getUserById(userId);
 
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', '),
+            const apiResponse: ApiResponse<User> = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', '),
+                }],
                 payload: user
-            } as ApiResponse<User>);
+            };
+            res.status(400).json(apiResponse);
 
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `User saved`,
+            const apiResponse: ApiResponse<User> = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `User saved`,
+                }],
                 payload: user
-            } as ApiResponse<User>);
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

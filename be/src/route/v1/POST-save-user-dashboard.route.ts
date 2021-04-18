@@ -1,5 +1,5 @@
-import {Registry} from "../../registry";
-import {NextFunction, Router, Request, Response } from "express";
+import {Registry} from '../../registry';
+import {NextFunction, Router, Request, Response } from 'express';
 import {param, body} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -7,13 +7,11 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {SerializedDashboardFormat} from "../../model/dashboard-serialzable.model";
-import {doInDbConnection, QueryA, QueryResponse} from "../../db";
-import {Connection} from "mariadb";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {saveUserDashboard} from "../../service/dashboard.service";
+} from './common-middleware';
+import {SerializedDashboardFormat} from '@fuyuko-common/model/dashboard-serialzable.model';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {saveUserDashboard} from '../../service';
 
 
 // CHECKED
@@ -34,17 +32,22 @@ const httpAction: any[] = [
 
         const errors: string[] = await saveUserDashboard(userId, serializeFormat);
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'ERROR',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Dashboard saved`
-            } as ApiResponse);
+            const apiReponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Dashboard saved`
+                }]
+            };
+            res.status(200).json(apiReponse);
         }
-
     }
 ]
 

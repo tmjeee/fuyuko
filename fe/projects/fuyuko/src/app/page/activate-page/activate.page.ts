@@ -3,7 +3,7 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '
 import {ActivatedRoute} from '@angular/router';
 import {ActivationService} from '../../service/activation-service/activation.service';
 import {tap} from 'rxjs/operators';
-import {Activation, Invitation} from '../../model/activation.model';
+import {Activation, Invitation} from '@fuyuko-common/model/activation.model';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MyErrorStateMatcher} from '../../utils/my-error-state-matcher.util';
 

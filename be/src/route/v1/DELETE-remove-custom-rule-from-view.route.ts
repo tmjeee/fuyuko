@@ -2,8 +2,8 @@ import {NextFunction, Router, Request, Response } from "express";
 import {Registry} from "../../registry";
 import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
 import {param, body} from "express-validator";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteCustomRules} from "../../service/custom-rule.service";
 
 // CHECKED:
@@ -23,15 +23,21 @@ const httpAction: any[] = [
         const errors: string[] = await deleteCustomRules(viewId, customRuleIds);
 
         if (errors && errors.length) {
-            res.status(400).json({
-                status: 'WARN',
-                message: errors.join(', ')
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'WARN',
+                    message: errors.join(', ')
+                }]
+            };
+            res.status(400).json(apiResponse);
         } else {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `Custom rule successfully deleted`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `Custom rule successfully deleted`
+                }]
+            };
+            res.status(200).json(apiResponse);
         }
     }
 ];

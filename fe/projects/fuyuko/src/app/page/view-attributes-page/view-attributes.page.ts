@@ -2,16 +2,16 @@ import {Component, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
 import {ViewService} from '../../service/view-service/view.service';
 import {finalize, map} from 'rxjs/operators';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {Subscription} from 'rxjs';
-import {Attribute} from '../../model/attribute.model';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {AttributeTableComponentEvent} from '../../component/attribute-table-component/attribute-table.component';
 import {NotificationsService} from 'angular2-notifications';
-import {ApiResponse, PaginableApiResponse} from '../../model/api-response.model';
+import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
-import {Router} from "@angular/router";
-import {Pagination} from "../../utils/pagination.utils";
-import {PaginationComponentEvent} from "../../component/pagination-component/pagination.component";
+import {Router} from '@angular/router';
+import {Pagination} from '../../utils/pagination.utils';
+import {PaginationComponentEvent} from '../../component/pagination-component/pagination.component';
 
 @Injectable()
 export class Prov {
@@ -102,7 +102,7 @@ export class ViewAttributesPageComponent implements OnInit, OnDestroy {
       case 'add':
           await this.router.navigate(['/view-layout',
               {outlets: {primary: ['add-attribute'], help: ['view-help']}}]);
-        break;
+          break;
       case 'edit':
         await this.router.navigate(['/view-layout',
               {outlets: {primary: ['edit-attribute', `${$event.attribute.id}`], help: ['view-help']}}]);

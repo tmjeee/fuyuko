@@ -6,7 +6,7 @@ import {RegistrationService} from '../../service/registration-service/registrati
 import {tap} from 'rxjs/operators';
 import {NotificationsService} from 'angular2-notifications';
 import {toNotifications} from '../../service/common.service';
-import {RegistrationResponse} from "../../model/api-response.model";
+import {RegistrationResponse} from '@fuyuko-common/model/api-response.model';
 
 @Component({
   templateUrl: './register.page.html',

@@ -1,5 +1,5 @@
-import {Registry} from "../../registry";
-import {Router, Request, Response, NextFunction} from "express";
+import {Registry} from '../../registry';
+import {Router, Request, Response, NextFunction} from 'express';
 import {param, body} from 'express-validator';
 import {
     aFnAnyTrue,
@@ -7,12 +7,12 @@ import {
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
     vFnHasAnyUserRoles
-} from "./common-middleware";
-import {Attribute} from "../../model/attribute.model";
-import {Job} from "../../model/job.model";
-import {runJob} from "../../service/export-csv/job-do-attribute-data-export.service";
-import {ROLE_EDIT} from "../../model/role.model";
-import {ApiResponse} from "../../model/api-response.model";
+} from './common-middleware';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {Job} from '@fuyuko-common/model/job.model';
+import {exportAttributeRunJob} from '../../service';
+import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED
@@ -29,12 +29,15 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const attributes: Attribute[] = req.body.attributes;
 
-        const job: Job = await runJob(viewId, attributes);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Attribute data export job scheduled`,
+        const job: Job = await exportAttributeRunJob(viewId, attributes);
+        const apiResponse: ApiResponse<Job> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Attribute data export job scheduled`,
+            }],
             payload: job
-        } as ApiResponse<Job>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

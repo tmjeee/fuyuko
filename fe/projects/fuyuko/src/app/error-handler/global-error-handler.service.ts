@@ -3,11 +3,11 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {BrowserLocationHistoryService} from '../service/browser-location-history-service/browser-location-history.service';
-import {ApiErrorContext} from "../model/api-error.model";
-import {GlobalCommunicationService} from "../service/global-communication-service/global-communication.service";
-import {ApiResponse} from "../model/api-response.model";
-import {AuthService, isUnauthorizationFailedRedirectable} from "../service/auth-service/auth.service";
-import {LoadingService} from "../service/loading-service/loading.service";
+import {isApiError, isApiErrorContext} from '@fuyuko-common/model/api-error.model';
+import {GlobalCommunicationService} from '../service/global-communication-service/global-communication.service';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {AuthService, isUnauthorizationFailedRedirectable} from '../service/auth-service/auth.service';
+import {LoadingService} from '../service/loading-service/loading.service';
 
 @Injectable()
 export class GlobalErrorHandler extends ErrorHandler {
@@ -48,13 +48,14 @@ export class GlobalErrorHandler extends ErrorHandler {
                     this.loadingService.stopLoading();
                     if (isUnauthorizationFailedRedirectable(location.href)) {
                         this.getNgZone().run(() => {
-                            this.notificationService.error('Unauthorized', httpErrorResponse.error.errors.map((e: {msg: string}) => e.msg).join(', '));
+                            this.notificationService.error(
+                                'Unauthorized', httpErrorResponse.error.errors.map((e: {msg: string}) => e.msg).join(', '));
                             this.getRouter().navigate(['/login-layout', 'login']);
                         });
                     }
                 } else if (httpErrorResponse.status === 403) {
                     // forbidden - 403
-                    const msg = `Not allowed access to  ${httpErrorResponse.url}`
+                    const msg = `Not allowed access to  ${httpErrorResponse.url}`;
                     this.notificationService.error('Forbidden', msg);
                     this.globalCommunicationService.publishGlobalError(msg);
                     this.loadingService.stopLoading();
@@ -91,27 +92,34 @@ export class GlobalErrorHandler extends ErrorHandler {
         return ngZone;
     }
 
-    private getErrorMessages(r: HttpErrorResponse): string {
+    private getErrorMessages(r: HttpErrorResponse): string[] {
 
-        // case 1:
-        const apiErrorContext: ApiErrorContext = r.error;
-        if (apiErrorContext && apiErrorContext.errors && apiErrorContext.errors.length > 0) {
-            return apiErrorContext.errors.reduce((acc: string[], err: {message?: string, msg?: string}) => {
-                if (err.message) {
-                    acc.push(err.message);
-                }
-                if (err.msg) {
-                    acc.push(err.msg);
-                }
-                return acc;
-            }, [])
-            .map((c: string) => c).join('<br/>');
+        // case 1: ApiErrorContext
+        if (isApiErrorContext(r.error)) {
+            const apiErrorContext = r.error;
+            if (apiErrorContext && apiErrorContext.errors && apiErrorContext.errors.length > 0) {
+                return [apiErrorContext.errors.reduce((acc: string[], err: { message?: string, msg?: string }) => {
+                    if (err.message) {
+                        acc.push(err.message);
+                    }
+                    if (err.msg) {
+                        acc.push(err.msg);
+                    }
+                    return acc;
+                }, [])
+                .map((c: string) => c).join('<br/>')];
+            }
         }
 
-        // case 2:
+        // case 2: ApiError (we don't normally do this, it should be ApiErrorContext)
+        if (isApiError(r.error)) {
+            return [r.error.msg];
+        }
+
+        // case 3: ApiResponse
         const apiResponse: ApiResponse = r.error;
-        if (apiResponse.message && apiResponse.status) {
-            return apiResponse.message;
+        if (apiResponse.messages && apiResponse.messages.length) {
+            return apiResponse.messages.map(msg => msg.message);
         }
 
         return null;

@@ -1,20 +1,24 @@
-import {Component, Input, ViewChild} from "@angular/core";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {MatStepper} from "@angular/material/stepper";
-import {View} from "../../model/view.model";
+import {Component, Input, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {MatStepper} from '@angular/material/stepper';
+import {View} from '@fuyuko-common/model/view.model';
 import {
     CustomBulkEdit,
     CustomBulkEditScriptInputValue, CustomBulkEditScriptJobSubmissionResult,
     CustomBulkEditScriptPreview, CustomBulkEditScriptValidateResult
-} from "../../model/custom-bulk-edit.model";
-import {Observable} from "rxjs";
-import {CustomBulkEditListComponentEvent} from "./custom-bulk-edit-list.component";
-import {CustomBulkEditInputFormComponentEvent} from "./custom-bulk-edit-input-form.component";
-import {CustomBulkEditPreviewComponentEvent} from "./custom-bulk-edit-preview.component";
+} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {Observable} from 'rxjs';
+import {CustomBulkEditListComponentEvent} from './custom-bulk-edit-list.component';
+import {CustomBulkEditInputFormComponentEvent} from './custom-bulk-edit-input-form.component';
+import {CustomBulkEditPreviewComponentEvent} from './custom-bulk-edit-preview.component';
 
-export type CustomBulkEditFormValidateFn = (v: View, c: CustomBulkEdit, i: CustomBulkEditScriptInputValue[]) => Observable<CustomBulkEditScriptValidateResult>;
-export type CustomBulkEditPreviewFn  = (v: View, c: CustomBulkEdit, i: CustomBulkEditScriptInputValue[]) => Observable<CustomBulkEditScriptPreview>;
-export type CustomBulkEditSubmitFn  =  (v: View, c: CustomBulkEdit, p: CustomBulkEditScriptPreview, i: CustomBulkEditScriptInputValue[]) => Observable<CustomBulkEditScriptJobSubmissionResult>;
+export type CustomBulkEditFormValidateFn =
+    (v: View, c: CustomBulkEdit, i: CustomBulkEditScriptInputValue[]) => Observable<CustomBulkEditScriptValidateResult>;
+export type CustomBulkEditPreviewFn  =
+    (v: View, c: CustomBulkEdit, i: CustomBulkEditScriptInputValue[]) => Observable<CustomBulkEditScriptPreview>;
+export type CustomBulkEditSubmitFn  =
+    (v: View, c: CustomBulkEdit, p: CustomBulkEditScriptPreview, i: CustomBulkEditScriptInputValue[]) =>
+        Observable<CustomBulkEditScriptJobSubmissionResult>;
 
 @Component({
     selector: 'app-custom-bulk-edit-wizard',
@@ -25,7 +29,7 @@ export class CustomBulkEditWizardComponent {
 
     @Input() customBulkEdits: CustomBulkEdit[];
     @Input() customBulkEditFormValidateFn: CustomBulkEditFormValidateFn;
-    @Input() customBulkEditPreviewFn: CustomBulkEditPreviewFn
+    @Input() customBulkEditPreviewFn: CustomBulkEditPreviewFn;
     @Input() customBulkEditSubmitFn: CustomBulkEditSubmitFn;
 
     step1Ready: boolean;
@@ -55,28 +59,28 @@ export class CustomBulkEditWizardComponent {
         this.step1Ready = true;
         this.formControlCustomBulkEdit = formBuilder.control('', [Validators.required]);
         this.firstStepFormGroup = formBuilder.group({
-            'customBulkEdit': this.formControlCustomBulkEdit
+            customBulkEdit: this.formControlCustomBulkEdit
         });
 
         // second step
         this.step2Ready = false;
         this.formControlView = formBuilder.control('', [Validators.required]);
         this.secondStepFormGroup = formBuilder.group({
-            'view': this.formControlView
+            view: this.formControlView
         });
 
         // third step
         this.step3Ready = false;
         this.formControlCustomBulkEditInputValues = formBuilder.control('', [Validators.required]);
         this.thirdStepFormGroup = formBuilder.group({
-            'customBulkEditInputValues':  this.formControlCustomBulkEditInputValues
+            customBulkEditInputValues:  this.formControlCustomBulkEditInputValues
         });
 
         // fourth step
         this.step4Ready = false;
         this.formControlCustomBulkEditPreview = formBuilder.control('', [Validators.required]);
         this.fourthStepFormGroup = formBuilder.group({
-            'preview': this.formControlCustomBulkEditPreview
+            preview: this.formControlCustomBulkEditPreview
         });
 
         // fifth step

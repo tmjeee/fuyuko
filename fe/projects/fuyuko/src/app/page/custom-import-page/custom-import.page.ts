@@ -1,17 +1,17 @@
-import {Component, Input, OnDestroy, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
     CustomDataImport,
     ImportScriptInputValue, ImportScriptJobSubmissionResult,
     ImportScriptPreview, ImportScriptValidateResult,
-} from "../../model/custom-import.model";
-import {CustomImportService} from "../../service/custom-import-service/custom-import.service";
-import {delay, finalize, tap} from "rxjs/operators";
+} from '@fuyuko-common/model/custom-import.model';
+import {CustomImportService} from '../../service/custom-import-service/custom-import.service';
+import {delay, finalize, tap} from 'rxjs/operators';
 import {
    CustomImportPreviewFn, CustomImportSubmitFn,
    CustomImportValidateFn
-} from "../../component/import-data-component/custom-import-wizard.component";
-import {View} from "../../model/view.model";
-import {LoadingService} from "../../service/loading-service/loading.service";
+} from '../../component/import-data-component/custom-import-wizard.component';
+import {View} from '@fuyuko-common/model/view.model';
+import {LoadingService} from '../../service/loading-service/loading.service';
 
 @Component({
    templateUrl: './custom-import.page.html',
@@ -45,12 +45,12 @@ export class CustomImportPageComponent implements OnInit, OnDestroy{
       };
       this.customImportSubmitFn = (v: View, c: CustomDataImport, p: ImportScriptPreview,  i: ImportScriptInputValue[]) => {
           this.loadingService.startLoading();
-         return this.customImportService.submit(v, c, p, i).pipe(
+          return this.customImportService.submit(v, c, p, i).pipe(
              tap((r: ImportScriptJobSubmissionResult) => {
                  this.loadingService.stopLoading();
              })
          );
-      }
+      };
    }
 
 

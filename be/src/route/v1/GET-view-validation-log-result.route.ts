@@ -1,11 +1,11 @@
-import {param} from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {NextFunction, Request, Response, Router} from "express";
-import {ValidationLogResult} from "../../model/validation.model";
-import {ApiResponse} from "../../model/api-response.model";
-import {Registry} from "../../registry";
-import {getViewValidationResultLog} from "../../service/validation/validation.service";
+import {param} from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {NextFunction, Request, Response, Router} from 'express';
+import {ValidationLogResult} from '@fuyuko-common/model/validation.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {Registry} from '../../registry';
+import {getViewValidationResultLog} from '../../service';
 
 const httpAction: any[] = [
     [
@@ -25,14 +25,15 @@ const httpAction: any[] = [
         const validationLogId: number = req.params.validationLogId ? Number(req.params.validationLogId) : null;
         const order: string = req.params.order ? req.params.order : null;
         const limit: number = req.params.limit ? Number(req.params.limit) : null;
-
         const _r: ValidationLogResult = await getViewValidationResultLog(viewId, validationId, validationLogId, order as any, limit);
-
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `Validation log result retrieved`,
+        const apiResponse: ApiResponse<ValidationLogResult> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Validation log result retrieved`,
+            }],
             payload: _r
-        } as ApiResponse<ValidationLogResult>);
+        };
+        res.status(200).json(apiResponse);
     }
 ];
 

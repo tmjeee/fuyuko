@@ -7,9 +7,9 @@ import {
     validateMiddlewareFn,
     vFnHasAnyUserRoles
 } from "./common-middleware";
-import {ApiResponse} from "../../model/api-response.model";
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {check} from 'express-validator';
-import {ROLE_ADMIN} from "../../model/role.model";
+import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
 import {deleteUser} from "../../service/user.service";
 
 // CHECKED
@@ -23,17 +23,26 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
 
+
+        // HANDLE WORKFLOW
+
         const r: boolean = await deleteUser(userId);
         if (r) {
-            res.status(200).json({
-                status: 'SUCCESS',
-                message: `User ${userId} deleted`
-            } as ApiResponse );
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'SUCCESS',
+                    message: `User ${userId} deleted`
+                }]
+            };
+            res.status(200).json(apiResponse);
         } else {
-            res.status(400).json({
-                status: 'ERROR',
-                message: `Failed to delete user with id ${userId}`
-            } as ApiResponse);
+            const apiResponse: ApiResponse = {
+                messages: [{
+                    status: 'ERROR',
+                    message: `Failed to delete user with id ${userId}`
+                }]
+            };
+            res.status(400).json(apiResponse);
         }
     }
 ];

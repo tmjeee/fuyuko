@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import {AvatarDialogComponent, AvatarDialogComponentData} from './avatar-dialog.component';
 import {map, tap} from 'rxjs/operators';
-import {GlobalAvatar} from '../../model/avatar.model';
-import {User} from '../../model/user.model';
+import {GlobalAvatar} from '@fuyuko-common/model/avatar.model';
+import {UserWithoutGroupAndTheme} from '@fuyuko-common/model/user.model';
 import config from '../../utils/config.util';
 import {GlobalCommunicationService} from '../../service/global-communication-service/global-communication.service';
 import {Subscription} from 'rxjs';
@@ -21,7 +21,7 @@ const URL_USER_AVATAR = () => `${config().api_host_url}/user/:userId/avatar`;
 })
 export class AvatarComponent implements OnInit, OnDestroy {
 
-  @Input() user: User;
+  @Input() user: UserWithoutGroupAndTheme;
   @Input() width: string;
   @Input() height: string;
   @Input() editable: boolean;

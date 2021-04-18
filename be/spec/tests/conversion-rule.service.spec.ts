@@ -1,12 +1,9 @@
-import {ruleConvert, ruleRevert} from "../../src/service";
-import {Rule2} from "../../src/server-side-model/server-side.model";
-import {Rule, ValidateClause, WhenClause} from "../../src/model/rule.model";
-import {ENABLED} from "../../src/model/status.model";
-import {ItemValTypes, NumberValue, StringValue} from "../../src/model/item.model";
-import {AttributeType} from "../../src/model/attribute.model";
-import {OperatorType} from "../../src/model/operator.model";
-import * as util from "util";
-import {setupBeforeAll2, setupTestDatabase} from "../helpers/test-helper";
+import {ruleConvert, ruleRevert} from '../../src/service';
+import {Rule2} from '../../src/server-side-model/server-side.model';
+import {Rule, ValidateClause, WhenClause} from '@fuyuko-common/model/rule.model';
+import {ENABLED} from '@fuyuko-common/model/status.model';
+import {NumberValue, StringValue} from '@fuyuko-common/model/item.model';
+import {setupTestDatabase} from "../helpers/test-helper";
 
 
 describe('conversion-rule.service', () => {

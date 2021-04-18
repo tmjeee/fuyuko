@@ -1,11 +1,11 @@
-import {NextFunction, Router, Request, Response} from "express";
-import {Registry} from "../../registry";
-import { param } from "express-validator";
-import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from "./common-middleware";
-import {ROLE_VIEW} from "../../model/role.model";
-import {getViewById} from "../../service/view.service";
-import {View} from "../../model/view.model";
-import {ApiResponse} from "../../model/api-response.model";
+import {NextFunction, Router, Request, Response} from 'express';
+import {Registry} from '../../registry';
+import { param } from 'express-validator';
+import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyUserRoles} from './common-middleware';
+import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
+import {getViewById} from '../../service';
+import {View} from '@fuyuko-common/model/view.model';
+import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 
 
 // CHECKED
@@ -20,11 +20,14 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
         const view: View = await getViewById(viewId);
-        res.status(200).json({
-            status: 'SUCCESS',
-            message: `View retrieved`,
+        const apiResponse: ApiResponse<View> = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `View retrieved`,
+            }],
             payload: view
-        } as ApiResponse<View>);
+        };
+        res.status(200).json(apiResponse);
     }
 ]
 

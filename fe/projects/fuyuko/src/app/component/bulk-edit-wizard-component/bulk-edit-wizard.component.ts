@@ -10,20 +10,20 @@ import {
     ViewChild
 } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors} from '@angular/forms';
-import {Attribute} from '../../model/attribute.model';
-import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '../../model/item-attribute.model';
-import {Value} from '../../model/item.model';
-import {createNewItemValue} from '../../shared-utils/ui-item-value-creator.utils';
+import {Attribute} from '@fuyuko-common/model/attribute.model';
+import {ItemValueAndAttribute, ItemValueOperatorAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {Value} from '@fuyuko-common/model/item.model';
+import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import {hasItemValue} from '../../utils/ui-item-value-getter.util';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {operatorNeedsItemValue, operatorsForAttribute} from '../../utils/attribute-operators.util';
-import {OperatorType} from '../../model/operator.model';
-import {BulkEditItem, BulkEditPackage, BulkEditTableItem} from '../../model/bulk-edit.model';
+import {OperatorType} from '@fuyuko-common/model/operator.model';
+import {BulkEditItem, BulkEditPackage, BulkEditTableItem} from '@fuyuko-common/model/bulk-edit.model';
 import {finalize, tap} from 'rxjs/operators';
 import {toBulkEditTableItem} from '../../utils/item-to-table-items.util';
 import {StepperSelectionEvent} from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
-import {Job, JobAndLogs} from '../../model/job.model';
+import {Job, JobAndLogs} from '@fuyuko-common/model/job.model';
 import {Observable} from 'rxjs';
 
 export interface BulkEditWizardComponentEvent {

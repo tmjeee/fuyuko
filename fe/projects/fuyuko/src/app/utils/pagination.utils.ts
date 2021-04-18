@@ -1,8 +1,8 @@
-import {DEFAULT_LIMIT, LimitOffset} from "../model/limit-offset.model";
-import {PageEvent} from "@angular/material/paginator";
+import {DEFAULT_LIMIT, LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {PageEvent} from '@angular/material/paginator';
 
 
-export const toQuery = (limitOffset: LimitOffset): string => {
+export const toQuery = (limitOffset?: LimitOffset): string => {
    if (limitOffset) {
       return `limit=${limitOffset.limit}&offset=${limitOffset.offset} `;
    }
@@ -19,6 +19,10 @@ export class Pagination {
 
     constructor() {
         this.reset();
+    }
+
+    firstPage() {
+        this.offset = 0;
     }
 
     nextPage() {
@@ -59,6 +63,6 @@ export class Pagination {
         const total: number  = pageEvent.length;
         this.update({
             limit, offset, total
-        })
+        });
     }
-};
+}

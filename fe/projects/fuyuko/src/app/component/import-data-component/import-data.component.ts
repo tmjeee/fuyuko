@@ -1,17 +1,16 @@
 import {Component, ElementRef, Input, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {View} from '../../model/view.model';
+import {View} from '@fuyuko-common/model/view.model';
 import {
     AttributeDataImport, DataImportType,
     ItemDataImport,
     PriceDataImport,
-} from '../../model/data-import.model';
+} from '@fuyuko-common/model/data-import.model';
 import {Observable} from 'rxjs';
-import {Job} from '../../model/job.model';
+import {Job} from '@fuyuko-common/model/job.model';
 import {tap} from 'rxjs/operators';
 import {MatStepper} from '@angular/material/stepper';
 import {MatSelectChange} from '@angular/material/select';
-import {PriceDataItem} from "../../model/pricing-structure.model";
 
 export type ShowPreviewFn =
     (viewId: number, uploadType: DataImportType, file: File) => Observable<AttributeDataImport | ItemDataImport | PriceDataImport>;
