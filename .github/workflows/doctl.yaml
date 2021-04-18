@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     environment: digitalocean-demo
     env:
-      DO_TOKEN: ${{secrets.DO_TOKEN_R}} 
+      DO_TOKEN: ${{secrets.DO_TOKEN_RW}} 
     defaults:
       run:
         working-directory: .
@@ -27,7 +27,7 @@ jobs:
       - name: doctl setup
         uses: digitalocean/action-doctl@v2.1.0
         with:
-          token: $DO_TOKEN
+          token: ${{secrets.DO_TOKEN_RW}}
       - name: doctl action
         run: |
           doctl auth init --access-token "$DO_TOKEN"
