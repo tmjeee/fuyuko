@@ -33,6 +33,7 @@ jobs:
         uses: stefanprodan/kube-tools@v1.5.0
       - name: bash commands
         run: |
+          kubectl config set-context "$KUBECONFIG" &&
           kubectl get pods && 
           kubectl get deployment
             
