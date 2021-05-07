@@ -1,0 +1,48 @@
+name: k8s-deploy-do-demo
+on:
+  workflow_dispatch:
+    inputs:
+      branchName:
+        description: 'Branch Name to Build'
+        required: true
+        default: 'master'
+      dockerImageName:
+        description: 'fe docker image name'
+        required: true
+        default: 'tmjee/fuyuko-fe'
+      dockerImageVersion:
+        description: 'fe docker version tag'
+        required: true
+        default: 'latest'
+jobs:
+  deploy-to-docker:
+    runs-on: ubuntu-20.04
+    environment: digitalocean-demo
+    env:
+      DOCKER_ACCESS_TOKEN: ${{secrets.DOCKER_ACCESS_TOKEN}}
+      DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: '${{github.event.inputs.branchName}}'
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{env.DOCKER_USERNAME}}
+          password: ${{env.DOCKER_ACCESS_TOKEN}}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          file: ./fe/docker/dockerfile
+          context: .
+          push: true
+          tags: ${{github.event.inputs.dockerImageName}}:${{github.event.inputs.dockerImageVersion}}
+

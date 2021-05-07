@@ -1,0 +1,16 @@
+{
+  "name": "ui-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cypress": "npx cypress open",
+    "tsc": "npx tsc"
+  },
+  "author": "",
+  "license": "LGPLv3",
+  "dependencies": {
+    "cypress": "^7.1.0",
+    "typescript": "^4.2.4"
+  }
+}

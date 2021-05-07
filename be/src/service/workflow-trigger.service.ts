@@ -203,7 +203,7 @@ class WorkflowTriggerService {
                 VALUES (?,?,?,?,?,?,?,?,?)
             `, [workflowId, workflowInstanceName, null, functionInputsAsJSON, (engine.currentState?.name ?? null),
                 engine.status, oldValue, newValue, userId]);
-            if (qr2.affectedRows == 0) {
+            if (qr2.affectedRows === 0) {
                 // todo: failed to insert row
                 e(`Failed to insert row in TBL_WORKFLOW_INSTANCE`);
                 const r: WorkflowTriggerError = {
@@ -230,7 +230,7 @@ class WorkflowTriggerService {
                     ENGINE_STATUS = ?
                 WHERE ID = ?
             `, [data, currentState.name , engineStatus, workflowInstanceId]);
-            if (qr3.affectedRows == 0) {
+            if (qr3.affectedRows === 0) {
                // todo: failed to update row
                e(`Failed to update row in TBL_WORKFLOW_INSTANCE`);
                 const r: WorkflowTriggerError = {
@@ -436,6 +436,7 @@ class WorkflowTriggerService {
         console.log('***** doing actual action ', workflowType, workflowAction, newValueAsJson);
         switch(workflowType) {
             case 'Attribute': {
+                // const attributes: Attribute[] = JSON.parse(newValueAsJson);
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
