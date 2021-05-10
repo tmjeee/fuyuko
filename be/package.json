@@ -51,7 +51,7 @@
     "json2csv": "^4.5.4",
     "jsonwebtoken": "^8.5.1",
     "jszip": "^3.5.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "mariadb": "^2.1.1",
     "module-alias": "^2.2.2",
     "moment": "^2.24.0",
