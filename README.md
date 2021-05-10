@@ -57,6 +57,3 @@ Bug, Issues, features requests, enhancements etc. trackings are [here](https://g
 
 # Docker Images
 Docker images can be found [here](https://hub.docker.com/repositories/tmjee)
-
-# Build & Integration 
-Integration build available [here](https://jenkins.fuyuko.org)
