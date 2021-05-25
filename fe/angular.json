@@ -18,7 +18,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "aot": true,
             "outputPath": "dist/fuyuko",
             "index": "projects/fuyuko/src/index.html",
             "main": "projects/fuyuko/src/main.ts",
@@ -36,7 +35,13 @@
             "allowedCommonJsDependencies": [
               "uuid",
               "numeral"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -48,9 +53,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
