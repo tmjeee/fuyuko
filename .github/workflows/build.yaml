@@ -1,3 +1,10 @@
+#
+# Build each component of fuyuko, a good sanity test to run to make sure build runs without errors
+#   - common
+#   - be
+#   - fe
+#
+
 name: build
 on:
   workflow_dispatch:

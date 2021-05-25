@@ -96,7 +96,8 @@ const q3 = `
 `;
 
 const q4 = `${q3} WHERE T.ID = ? `;
-const SQL_WORKFLOW_INSTANCE_TASKS_FOR_USER = (limitOffset?: LimitOffset) => `${q3} WHERE A.ID = ? AND T.STATUS = ? ${LIMIT_OFFSET(limitOffset)}`;
+const SQL_WORKFLOW_INSTANCE_TASKS_FOR_USER = (limitOffset?: LimitOffset) =>
+    `${q3} WHERE A.ID = ? AND T.STATUS = ? ${LIMIT_OFFSET(limitOffset)}`;
 const SQL_WORKFLOW_INSTANCE_TASKS_FOR_USER_COUNT = `
     SELECT COUNT(*) AS COUNT 
     FROM TBL_WORKFLOW_INSTANCE_TASK AS T

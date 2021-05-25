@@ -1,3 +1,10 @@
+#
+# Perform a github release
+#   - checkout a git tag
+#   - do build, creating package
+#   - upload package to github
+#
+
 name: release
 on:
   workflow_dispatch:

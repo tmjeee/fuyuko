@@ -1,3 +1,8 @@
+#
+# Connect to digital ocean kubernetes cluster and run command (this is a template so we can run
+#  more kubectl commands on it)
+#
+
 name: doctl-demo
 on:
   workflow_dispatch:

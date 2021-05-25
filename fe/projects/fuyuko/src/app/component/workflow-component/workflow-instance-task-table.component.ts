@@ -55,7 +55,7 @@ export class WorkflowInstanceTaskTableComponent implements OnInit {
    pagination: Pagination;
 
    columnsToDisplay: string[] = ['name', 'workflowInstanceName', 'taskTitle', 'workflowState',
-       'approverUsername', 'creationDate'];
+       'approverUsername', 'approvalStage', 'creationDate'];
    rowExpandMap = new Map<number /* workflowInstanceTask id */, boolean /* is expanded */>();
    dataSource: InternalDataSource;
 
