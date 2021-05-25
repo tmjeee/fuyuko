@@ -1,16 +1,16 @@
+@use '~@angular/material' as mat;
 
-@import '~@angular/material/theming';
 
-$theme-indigo-lightblue-primary: mat-palette($mat-indigo);
-$theme-indigo-lightblue-accent: mat-palette($mat-light-blue);
-$theme-indigo-lightblue-warn: mat-palette($mat-deep-orange);
+$theme-indigo-lightblue-primary: mat.define-palette(mat.$indigo-palette);
+$theme-indigo-lightblue-accent: mat.define-palette(mat.$light-blue-palette);
+$theme-indigo-lightblue-warn: mat.define-palette(mat.$deep-orange-palette);
 
-$theme-indigo-lightblue-light: mat-light-theme(
+$theme-indigo-lightblue-light: mat.define-light-theme(
     $theme-indigo-lightblue-primary,
     $theme-indigo-lightblue-accent,
     $theme-indigo-lightblue-warn);
 
-$theme-indigo-lightblue-dark: mat-dark-theme(
+$theme-indigo-lightblue-dark: mat.define-dark-theme(
     $theme-indigo-lightblue-primary,
     $theme-indigo-lightblue-accent,
     $theme-indigo-lightblue-warn);

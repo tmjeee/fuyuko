@@ -1,15 +1,15 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
-$theme-pink-bluegrey-primary: mat-palette($mat-pink);
-$theme-pink-bluegrey-accent: mat-palette($mat-blue-grey);
-$theme-pink-bluegrey-warn: mat-palette($mat-deep-orange);
+$theme-pink-bluegrey-primary: mat.define-palette(mat.$pink-palette);
+$theme-pink-bluegrey-accent: mat.define-palette(mat.$blue-grey-palette);
+$theme-pink-bluegrey-warn: mat.define-palette(mat.$deep-orange-palette);
 
-$theme-pink-bluegrey-light: mat-light-theme(
+$theme-pink-bluegrey-light: mat.define-light-theme(
     $theme-pink-bluegrey-primary,
     $theme-pink-bluegrey-accent,
     $theme-pink-bluegrey-warn);
 
-$theme-pink-bluegrey-dark: mat-dark-theme(
+$theme-pink-bluegrey-dark: mat.define-dark-theme(
     $theme-pink-bluegrey-primary,
     $theme-pink-bluegrey-accent,
     $theme-pink-bluegrey-warn);

@@ -1,16 +1,16 @@
+@use '~@angular/material' as mat;
 
-@import '~@angular/material/theming';
 
-$theme-deeppurple-amber-primary: mat-palette($mat-deep-purple, 700, 300, 900);
-$theme-deeppurple-amber-accent: mat-palette($mat-amber);
-$theme-deeppurple-amber-warn: mat-palette($mat-orange, A200);
+$theme-deeppurple-amber-primary: mat.define-palette(mat.$deep-purple-palette, 700, 300, 900);
+$theme-deeppurple-amber-accent: mat.define-palette(mat.$amber-palette);
+$theme-deeppurple-amber-warn: mat.define-palette(mat.$orange-palette, A200);
 
-$theme-deeppurple-amber-light: mat-light-theme(
+$theme-deeppurple-amber-light: mat.define-light-theme(
   $theme-deeppurple-amber-primary,
   $theme-deeppurple-amber-accent,
   $theme-deeppurple-amber-warn);
 
-$theme-deeppurple-amber-dark: mat-dark-theme(
+$theme-deeppurple-amber-dark: mat.define-dark-theme(
   $theme-deeppurple-amber-primary,
   $theme-deeppurple-amber-accent,
   $theme-deeppurple-amber-warn);
