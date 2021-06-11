@@ -3,6 +3,7 @@
 cypress/cypress/videos/
 *.zip
 ./dist/
+./src/*.js
 
 
 /.project

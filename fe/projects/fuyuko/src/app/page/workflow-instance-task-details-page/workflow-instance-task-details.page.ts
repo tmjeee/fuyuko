@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {WorkflowService} from '../../service/workflow-service/workflow.service';
-import {finalize, map, switchMap, tap} from 'rxjs/operators';
+import {concat, concatMap, finalize, map, switchMap, tap} from 'rxjs/operators';
 import {
     ContinueWorkflowResult,
     WorkflowInstanceComment,
@@ -57,7 +57,13 @@ export class WorkflowInstanceTaskDetailsPageComponent implements OnInit {
               map(workflowInstanceTask => {
                  this.workflowInstanceTask = workflowInstanceTask;
                  console.log('********************** workflowInstanceTask', workflowInstanceTask);
+                 return workflowInstanceTask;
               }),
+              // concatMap( workflowInstanceTask => {
+              //     const workflowId = workflowInstanceTask.workflowInstance.id;
+              //
+              //     return this.workflowService.getWorkflowIn
+              // })
               finalize( () => {
                   this.ready = true;
               }),

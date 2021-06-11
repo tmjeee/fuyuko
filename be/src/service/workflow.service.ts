@@ -9,6 +9,11 @@ import {
     WorkflowForAttributeValue,
     WorkflowInstanceTask,
     WorkflowInstanceTaskStatus,
+    WorkflowInstance,
+    WorkflowForAttribute,
+    WorkflowForItem,
+    WorkflowForPrice,
+    WorkflowForRule, WorkflowForUser, WorkflowForCategory,
 } from '@fuyuko-common/model/workflow.model';
 import {e} from '../logger';
 import {ENABLED, Status} from '@fuyuko-common/model/status.model';
@@ -334,7 +339,306 @@ class WorkflowService {
         });
     }
 
+    /**
+     * =================================
+     * === getWorkflowId
+     * =================================
+     */
+    async getWorkflowById(workflowId: number): Promise<Workflow> {
+        return await doInDbConnection(async conn => {
+            const r: QueryA = await conn.query(`
+                SELECT 
+                    W.ID AS W_ID,
+                    W.NAME AS W_NAME,
+                    W.VIEW_ID AS W_VIEW_ID,
+                    W.WORKFLOW_DEFINITION_ID AS W_WORKFLOW_DEFINITION_ID,
+                    W.TYPE AS W_TYPE,
+                    W.ACTION AS W_ACTION,
+                    W.STATUS AS W_STATUS,
+                    W.CREATION_DATE AS W_CREATION_DATE,
+                    W.LAST_UPDATE AS W_LAST_UPDATE,
+                    V.ID AS V_ID,
+                    V.NAME AS V_NAME,
+                    V.DESCRIPTION AS V_DESCRIPTION,
+                    V.CREATION_DATE AS V_CREATION_DATE,
+                    V.LAST_UPDATE AS V_LAST_UPDATE,
+                    D.ID AS D_ID,
+                    D.NAME AS D_NAME,
+                    D.DESCRIPTION AS D_DESCRIPTION,
+                    D.CREATION_DATE AS D_CREATION_DATE,
+                    D.LAST_UPDATE AS D_LAST_UPDATE
+                FROM TBL_WORKFLOW  AS W
+                LEFT JOIN TBL_VIEW AS V ON V.ID = W.VIEW_ID
+                LEFT JOIN TBL_WORKFLOW_DEFINITION AS D ON W.WORKFLOW_DEFINITION_ID = D.ID
+                WHERE ID = ?
+            `, [workflowId]);
 
+            if (r.length) {
+                switch (r[0].TYPE) {
+                    case 'Attribute': {
+                        const attributeWorkfow: WorkflowForAttribute = {
+                           id: r[0].W_ID,
+                           name: r[0].W_NAME,
+                           action: r[0].W_ACTION,
+                           status: r[0].W_STATUS,
+                           type: r[0].W_TYPE,
+                           creationDate: r[0].W_CREATION_DATE,
+                           lastUpdate: r[0].W_LAST_UPDATE,
+                           view: {
+                               id: r[0].V_ID,
+                               name: r[0].V_NAME,
+                               description: r[0].V_DESCRIPTION,
+                               creationDate: r[0].V_CREATION_DATE,
+                               lastUpdate: r[0].V_LAST_UPDATE,
+                           },
+                           workflowDefinition: {
+                               id: r[0].D_ID,
+                               name: r[0].D_NAME,
+                               description: r[0].D_DESCRIPTION,
+                               creationDate: r[0].D_CREATION_DATE,
+                               lastUpdate: r[0].D_LAST_UPDATE,
+                           },
+                        }
+                        return attributeWorkfow;
+                        break;
+                    }
+                    case 'AttributeValue': {
+                        const q: QueryA = await doInDbConnection(async conn => {
+                            return await conn.query(`
+                                SELECT 
+                                    ID, WORKFLOW_ID, ATTRIBUTE_ID, CREATION_DATE, LAST_UPDATE
+                                FROM TBL_WORKFLOW_ATTRIBUTE
+                                WHERE WORKFLOW_ID = ?
+                            `, [workflowId]);
+                        });
+                        const attributeIds = q.reduce((a, c, i, arr) => {
+                            a.push(c.ATTRIBUTE_ID)
+                            return a;
+                        }, []);
+                        const attributeValueWorkflow: WorkflowForAttributeValue = {
+                           id: r[0].W_ID,
+                           name: r[0].W_NAME,
+                           attributeIds,
+                           status: r[0].W_STATUS,
+                           type: r[0].W_TYPE,
+                           action: r[0].W_ACTION,
+                           creationDate: r[0].W_CREATION_DATE,
+                           lastUpdate: r[0].W_LAST_UPDATE,
+                           view: {
+                               id: r[0].V_ID,
+                               name: r[0].V_NAME,
+                               description: r[0].V_DESCRIPTION,
+                               creationDate: r[0].V_CREATION_DATE,
+                               lastUpdate: r[0].V_LAST_UPDATE,
+                           },
+                           workflowDefinition: {
+                               id: r[0].D_ID,
+                               name: r[0].D_NAME,
+                               description: r[0].D_DESCRIPTION,
+                               creationDate: r[0].D_CREATION_DATE,
+                               lastUpdate: r[0].D_LAST_UPDATE,
+                           },
+                        }
+                        return attributeValueWorkflow;
+                        break;
+                    }
+                    case 'Item': {
+                        const itemWorkflow: WorkflowForItem = {
+                            id: r[0].W_ID,
+                            name: r[0].W_NAME,
+                            action: r[0].W_ACTION,
+                            status: r[0].W_STATUS,
+                            type: r[0].W_TYPE,
+                            creationDate: r[0].W_CREATION_DATE,
+                            lastUpdate: r[0].W_LAST_UPDATE,
+                            view: {
+                                id: r[0].V_ID,
+                                name: r[0].V_NAME,
+                                description: r[0].V_DESCRIPTION,
+                                creationDate: r[0].V_CREATION_DATE,
+                                lastUpdate: r[0].V_LAST_UPDATE,
+                            },
+                            workflowDefinition: {
+                                id: r[0].D_ID,
+                                name: r[0].D_NAME,
+                                description: r[0].D_DESCRIPTION,
+                                creationDate: r[0].D_CREATION_DATE,
+                                lastUpdate: r[0].D_LAST_UPDATE,
+                            },
+                        }
+                        return itemWorkflow;
+                        break;
+                    }
+                    case 'Price': {
+                        const priceWorkflow: WorkflowForPrice = {
+                            id: r[0].W_ID,
+                            name: r[0].W_NAME,
+                            action: r[0].W_ACTION,
+                            status: r[0].W_STATUS,
+                            type: r[0].W_TYPE,
+                            creationDate: r[0].W_CREATION_DATE,
+                            lastUpdate: r[0].W_LAST_UPDATE,
+                            view: {
+                                id: r[0].V_ID,
+                                name: r[0].V_NAME,
+                                description: r[0].V_DESCRIPTION,
+                                creationDate: r[0].V_CREATION_DATE,
+                                lastUpdate: r[0].V_LAST_UPDATE,
+                            },
+                            workflowDefinition: {
+                                id: r[0].D_ID,
+                                name: r[0].D_NAME,
+                                description: r[0].D_DESCRIPTION,
+                                creationDate: r[0].D_CREATION_DATE,
+                                lastUpdate: r[0].D_LAST_UPDATE,
+                            },
+                        }
+                        return priceWorkflow;
+                        break;
+                    }
+                    case 'Rule': {
+                        const ruleWorkflow: WorkflowForRule = {
+                            id: r[0].W_ID,
+                            name: r[0].W_NAME,
+                            action: r[0].W_ACTION,
+                            status: r[0].W_STATUS,
+                            type: r[0].W_TYPE,
+                            creationDate: r[0].W_CREATION_DATE,
+                            lastUpdate: r[0].W_LAST_UPDATE,
+                            view: {
+                                id: r[0].V_ID,
+                                name: r[0].V_NAME,
+                                description: r[0].V_DESCRIPTION,
+                                creationDate: r[0].V_CREATION_DATE,
+                                lastUpdate: r[0].V_LAST_UPDATE,
+                            },
+                            workflowDefinition: {
+                                id: r[0].D_ID,
+                                name: r[0].D_NAME,
+                                description: r[0].D_DESCRIPTION,
+                                creationDate: r[0].D_CREATION_DATE,
+                                lastUpdate: r[0].D_LAST_UPDATE,
+                            },
+                        }
+                        return ruleWorkflow;
+                        break;
+                    }
+                    case 'User': {
+                        const userWorkflow: WorkflowForUser = {
+                            id: r[0].W_ID,
+                            name: r[0].W_NAME,
+                            action: r[0].W_ACTION,
+                            status: r[0].W_STATUS,
+                            type: r[0].W_TYPE,
+                            creationDate: r[0].W_CREATION_DATE,
+                            lastUpdate: r[0].W_LAST_UPDATE,
+                            view: {
+                                id: r[0].V_ID,
+                                name: r[0].V_NAME,
+                                description: r[0].V_DESCRIPTION,
+                                creationDate: r[0].V_CREATION_DATE,
+                                lastUpdate: r[0].V_LAST_UPDATE,
+                            },
+                            workflowDefinition: {
+                                id: r[0].D_ID,
+                                name: r[0].D_NAME,
+                                description: r[0].D_DESCRIPTION,
+                                creationDate: r[0].D_CREATION_DATE,
+                                lastUpdate: r[0].D_LAST_UPDATE,
+                            },
+                        };
+                        return userWorkflow;
+                        break;
+                    }
+                    case 'Category': {
+                        const categoryWorkflow: WorkflowForCategory = {
+                            id: r[0].W_ID,
+                            name: r[0].W_NAME,
+                            action: r[0].W_ACTION,
+                            status: r[0].W_STATUS,
+                            type: r[0].W_TYPE,
+                            creationDate: r[0].W_CREATION_DATE,
+                            lastUpdate: r[0].W_LAST_UPDATE,
+                            view: {
+                                id: r[0].V_ID,
+                                name: r[0].V_NAME,
+                                description: r[0].V_DESCRIPTION,
+                                creationDate: r[0].V_CREATION_DATE,
+                                lastUpdate: r[0].V_LAST_UPDATE,
+                            },
+                            workflowDefinition: {
+                                id: r[0].D_ID,
+                                name: r[0].D_NAME,
+                                description: r[0].D_DESCRIPTION,
+                                creationDate: r[0].D_CREATION_DATE,
+                                lastUpdate: r[0].D_LAST_UPDATE,
+                            },
+                        }
+                        return categoryWorkflow;
+                        break;
+                    }
+                }
+            }
+            return null;
+        });
+    }
+
+    /**
+     * ==================================
+     * === getWorkflowInstanceById
+     * ==================================
+     */
+    async getWorkflowInstanceById(workflowInstanceId: number): Promise<WorkflowInstance> {
+        return doInDbConnection(async conn => {
+            const q: QueryA = await conn.query(`
+                SELECT
+                    I.ID AS I_ID, 
+                    I.NAME AS I_NAME, 
+                    I.WORKFLOW_ID AS I_WORKFLOW_ID, 
+                    I.FUNCTION_INPUTS AS I_FUNCTION_INPUTS, 
+                    I.CURRENT_WORKFLOW_STATE AS I_CURRENT_WORKFLOW_STATE,  
+                    I.ENGINE_STATUS AS I_ENGINE_STATUE, 
+                    I.OLD_VALUE AS I_OLD_VALUE, 
+                    I.NEW_VALUE AS I_NEW_VALUE, 
+                    I.DATA AS I_DATA, 
+                    I.CREATOR_USER_ID AS I_CREATOR_USER_ID, 
+                    I.ACTIONED AS I_ACTIONED, 
+                    I.CREATION_DATE AS I_CREATION_DATE, 
+                    I.LAST_UPDATE AS I_LAST_UPDATE,
+                    U.ID AS U_ID,
+                    U.EMAIL AS U_EMAIL,
+                    U.FIRSTNAME AS U_FIRSTNAME,
+                    U.LASTNAME AS U_LASTNAME,
+                    U.USERNAME AS U_USERNAME
+                FROM TBL_WORKFLOW_INSTANCE AS I 
+                LEFT JOINT TBL_USER AS U ON I.CREATOR_USER_ID = U.ID
+                WHERE ID = ?
+            `, [workflowInstanceId]);
+
+            if (q.length) {
+                const workflowInstance: WorkflowInstance = {
+                    id: q[0].ID,
+                    name: q[0].NAME,
+                    workflowId: q[0].WORKFLOW_ID,
+                    data: q[0].DATA,
+                    creationDate: q[0].CREATION_DATE,
+                    lastUpdate: q[0].LAST_UPDATE,
+                    currentWorkflowState: q[0].CURRENT_WORKFLOW_STATE,
+                    creator: {
+                        id: q[0].U_ID,
+                        email: q[0].U_EMAIL ,
+                        firstName: q[0].U_FIRSTNAME,
+                        lastName: q[0].U_LASTNAME,
+                        username: q[0].U_USERNAME,
+                    },
+                    engineStatus: q[0].ENGINE_STATUS,
+                    functionInputs: q[0].FUNCTION_INPUTS,
+                };
+                return workflowInstance;
+            }
+            return null;
+        });
+    }
 
     // ===== private functions
     private reduceQueryToWorkflowInstanceTask(userId: number) : (acc: WorkflowInstanceTask[], i: QueryI) => WorkflowInstanceTask[] {
@@ -426,10 +730,15 @@ class WorkflowService {
 
        return acc;
     }
+
+
+
 }
 
 const s = new WorkflowService();
 export const
+    getWorkflowById = s.getWorkflowById.bind(s),
+    getWorkflowInstanceById = s.getWorkflowInstanceById.bind(s),
     addWorkflow = s.addWorkflow.bind(s),
     getAllWorkflowDefinition = s.getAllWorkflowDefinitions.bind(s),
     getWorkflowByView = s.getWorkflowByView.bind(s),

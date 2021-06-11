@@ -9,7 +9,7 @@
           display: none;
         }
         &.expanded {
-          display: block;
+          display: inherit;
           & td {
             .details {
               margin: 20px;

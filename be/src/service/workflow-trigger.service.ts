@@ -17,12 +17,12 @@ import {e} from '../logger';
 import {ENABLED} from "@fuyuko-common/model/status.model";
 import {v4 as uuid} from 'uuid';
 import {
-    addOrUpdateRules,
+    addOrUpdateRules, changeAttributeStatus,
     getAllWorkflowDefinition,
     getAttributesInView,
     getItemById, getPricedItems, getPricingStructureOfPricedItem, getRule,
     getThreadLocalStore,
-    getViewOfItem, getViewOfPriceItem, getViewOfRule, setPrices,
+    getViewOfItem, getViewOfPriceItem, getViewOfRule, setPrices, updateAttributes,
     updateCategory, updateItem,
     updateItemValue
 } from './';
@@ -435,15 +435,29 @@ class WorkflowTriggerService {
         const newValueAsJson = JSON.parse(newValue);
         console.log('***** doing actual action ', workflowType, workflowAction, newValueAsJson);
         switch(workflowType) {
+            /**
+             * ***** doing actual action  Attribute Update [
+                {
+                   id: 1,
+                   name: 'string attribute',
+                   description: 'string attribute description',
+                   type: 'string',
+                   creationDate: '2021-05-30T05:58:42.000Z',
+                   lastUpdate: '2021-05-30T05:58:42.000Z'
+                }
+             ]
+             */
             case 'Attribute': {
-                // const attributes: Attribute[] = JSON.parse(newValueAsJson);
+                const attributes: Attribute[] = JSON.parse(newValueAsJson);
                 switch(workflowAction) {
                     case 'Update': {
-                        // todo:
+                        await updateAttributes(attributes)
                         break;
                     }
                     case 'Delete': {
-                        // todo:
+                        for (const attribute of attributes) {
+                            await changeAttributeStatus(attribute.id, 'DELETED');
+                        }
                         break;
                     }
                 }
