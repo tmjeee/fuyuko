@@ -32,6 +32,7 @@ import {Category} from '@fuyuko-common/model/category.model';
 import {Rule} from '@fuyuko-common/model/rule.model';
 import {getViewCategoryById, getViewOfCategory} from "./category.service";
 import {getPricedItem} from "./priced-item.service";
+import {createNewItemValue} from "@fuyuko-common/shared-utils/ui-item-value-creator.utils";
 
 /**
  * Contains functions to assist
@@ -43,8 +44,12 @@ export const ENGINE_WORKFLOW_ID = `WORKFLOW_ID`;
 export const ENGINE_WORKFLOW_DEFINITION_ID = `WORKFLOW_DEFINITION_ID`;
 export const ENGINE_WORKFLOW_INSTANCE_ID = `WORKFLOW_INSTANCE_ID`;
 
+export interface ItemInfo {
+    viewId: number, item: Item, attributeId: number, value: Value
+};
+
 class WorkflowTriggerService {
-    // === TRIGGER Workflow
+    // === TRIGGER 'Attribute' Workflow
     async triggerAttributeWorkflow(attributes: Attribute[], workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument):
         Promise<WorkflowTriggerResult[]> {
         const viewIdAttMap = await attributes.reduce(async (acc: Promise<Map<number /* viewId */, Attribute[]>>, att: Attribute) => {
@@ -77,7 +82,9 @@ class WorkflowTriggerService {
         return workflowTriggerResults;
     }
 
-    async triggerAttributeValueWorkflow(itemInfos: { viewId: number, item: Item, attributeId: number, value: Value}[], workflowDefinitionId: number,
+    // === TRIGGER 'AttributeValue' workflow
+    async triggerAttributeValueWorkflow(itemInfos: ItemInfo[],
+                                        workflowDefinitionId: number,
                                         action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
         for (const itemInfo of itemInfos) {
@@ -92,6 +99,8 @@ class WorkflowTriggerService {
         }
         return workflowTriggerResults;
     }
+
+    // === TRIGGER 'Category' workflow
     async triggerCategoryWorkflow(categories: Category[], parentCategoryId: number, workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
         for (const category of categories) {
@@ -104,6 +113,8 @@ class WorkflowTriggerService {
         }
         return workflowTriggerResults;
     }
+
+    // === TRIGGER 'item' workflow
     async triggerItemWorkflow(items: Item[], workflowDefinitionId: number, action: WorkflowInstanceAction,
                               args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
@@ -117,6 +128,8 @@ class WorkflowTriggerService {
         }
         return workflowTriggerResults;
     }
+
+    // === TRIGGER 'priceItem' workflow
     async triggerPriceWorkflow(priceItems: PricingStructureItemWithPrice[], workflowDefinitionId: number, action: WorkflowInstanceAction,
                                args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
@@ -131,6 +144,8 @@ class WorkflowTriggerService {
         }
         return workflowTriggerResults;
     }
+
+    // === TRIGGER 'rule' workflow
     async triggerRuleWorklow(rules: Rule[], workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
         for (const rule of rules) {
@@ -143,6 +158,7 @@ class WorkflowTriggerService {
         return workflowTriggerResults;
     }
 
+    // === TRIGGER generic workflow
     async triggerWorkflow(viewId: number, workflowDefinitionId: number, action: WorkflowInstanceAction,
                           type: WorkflowInstanceType, oldValue: string /* in JSON */, newValue: string /* in JSON */,
                           functionInputs: any[], args?: Argument): Promise<WorkflowTriggerResult> {
@@ -448,7 +464,7 @@ class WorkflowTriggerService {
              ]
              */
             case 'Attribute': {
-                const attributes: Attribute[] = JSON.parse(newValueAsJson);
+                const attributes: Attribute[] = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
                         await updateAttributes(attributes)
@@ -464,22 +480,31 @@ class WorkflowTriggerService {
                 break;
             }
             case 'AttributeValue': {
+                const itemInfo: ItemInfo = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
-                        // todo:
+                        await updateItemValue(itemInfo.viewId, itemInfo.item.id,  itemInfo.value)
                         break;
                     }
                     case 'Delete': {
-                        // todo:
+                        const atts = await getAttributesInView(itemInfo.viewId, [itemInfo.attributeId]);
+                        if (atts.length) {
+                            const val = createNewItemValue(atts[0]);
+                            await updateItemValue(itemInfo.viewId, itemInfo.item.id, val);
+                        } else {
+                            e(`Unable to find attribute with id ${itemInfo.attributeId}`);
+                        }
                         break;
                     }
                 }
                 break;
             }
             case 'Category': {
+                const categoy: Category = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
+                        // updateCategory(category.viewId, )
                         break;
                     }
                     case 'Delete': {
@@ -490,6 +515,7 @@ class WorkflowTriggerService {
                 break;
             }
             case 'Item': {
+                const item: Item = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
@@ -503,6 +529,7 @@ class WorkflowTriggerService {
                 break;
             }
             case 'Price': {
+                const pricingStructureItemWithPrice: PricingStructureItemWithPrice = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
@@ -516,6 +543,7 @@ class WorkflowTriggerService {
                 break;
             }
             case 'Rule': {
+                const rule: Rule = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:

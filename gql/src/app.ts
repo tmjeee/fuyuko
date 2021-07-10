@@ -9,9 +9,15 @@ const port = 7777;
 const app = express();
 
 const schema: any = buildSchemaSync({
+    emitSchemaFile: {
+        path: './dist/gql/gql-schema',
+        sortedSchema: true,
+        commentDescriptions: true
+    },
     resolvers: [
         MyResolver,
-    ]
+    ],
+    dateScalarMode: 'isoDate',
 });
 
 app.use(
@@ -28,7 +34,7 @@ app.use(
 );
 
 app.listen(port, () => {
-  console.log(`*** GraphQL API started at port ${port}`);
+  console.log(`*** GraphQL API started at port ${port} ***`);
 });
 
 

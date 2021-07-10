@@ -4,6 +4,6 @@ import {Field, ID, ObjectType} from "type-graphql";
 export class MyDomain {
 
     @Field(type => ID)
-    id: string | undefined;
+    id: string = '';
 
 }
