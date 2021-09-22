@@ -1,6 +1,6 @@
 import {Connection} from 'mariadb';
 import {PricingStructureItemWithPrice} from '@fuyuko-common/model/pricing-structure.model';
-import {doInDbConnection, QueryA, QueryResponse} from '../db';
+import {doInDbConnection, QueryA, QueryI, QueryResponse} from '../db';
 import {LoggingCallback, newLoggingCallback} from './job-log.service';
 import {CountryCurrencyUnits} from '@fuyuko-common/model/unit.model';
 import {
@@ -130,6 +130,26 @@ class PricingStructureItemService {
         return result;
     }
 
+
+    /**
+     * ===================================
+     * === addItemToPricingStructure ===
+     * ===================================
+     */
+    async removeItemFromPricingStructure(pricingStructureId: number, itemId: number): Promise<boolean> {
+        const result: boolean = await doInDbConnection(async (conn: Connection) => {
+            const q: QueryResponse = await conn.query(`
+                DELETE FROM TBL_PRICING_STRUCTURE_ITEM WHERE TBL_PRICING_STRUCTURE_ID = ? AND ITEM_ID = ?
+            `, [pricingStructureId, itemId]);
+            return !!q.affectedRows;
+        });
+        return result;
+    }
+
+
+
+
+
     /**
      *  ===============================
      *  === getPricingStructureItem ===
@@ -252,4 +272,5 @@ export const
     setPricesB = s.setPricesB.bind(s),
     addItemToPricingStructure = s.addItemToPricingStructure.bind(s),
     getPricingStructureItem = s.getPricingStructureItem.bind(s),
+    removeItemFromPricingStructure = s.removeItemFromPricingStructure.bind(s),
     getChildrenWithConn = s.getChildrenWithConn.bind(s);

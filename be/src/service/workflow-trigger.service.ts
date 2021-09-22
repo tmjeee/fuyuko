@@ -17,22 +17,26 @@ import {e} from '../logger';
 import {ENABLED} from "@fuyuko-common/model/status.model";
 import {v4 as uuid} from 'uuid';
 import {
-    addOrUpdateRules, changeAttributeStatus,
+    addOrUpdatePricingStructures,
+    addOrUpdateRules, changeAttributeStatus, deleteCategory,
     getAllWorkflowDefinition,
     getAttributesInView,
-    getItemById, getPricedItems, getPricingStructureOfPricedItem, getRule,
+    getItemById, getPricedItems, getPricingStructureById, getPricingStructureOfPricedItem, getRule,
     getThreadLocalStore,
     getViewOfItem, getViewOfPriceItem, getViewOfRule, setPrices, updateAttributes,
     updateCategory, updateItem,
-    updateItemValue
+    updateItemValue, updateRuleStatus
 } from './';
+import {updateItemsStatus} from './item.service';
 import {Item, Value} from '@fuyuko-common/model/item.model';
-import {PricingStructureItemWithPrice} from '@fuyuko-common/model/pricing-structure.model';
+import {PricingStructure, PricingStructureItemWithPrice} from '@fuyuko-common/model/pricing-structure.model';
 import {Category} from '@fuyuko-common/model/category.model';
 import {Rule} from '@fuyuko-common/model/rule.model';
-import {getViewCategoryById, getViewOfCategory} from "./category.service";
+import {getParentCategory, getViewCategoryById, getViewOfCategory} from "./category.service";
 import {getPricedItem} from "./priced-item.service";
 import {createNewItemValue} from "@fuyuko-common/shared-utils/ui-item-value-creator.utils";
+import {View} from "@fuyuko-common/model/view.model";
+import {removeItemFromPricingStructure} from "./pricing-structure-item.service";
 
 /**
  * Contains functions to assist
@@ -500,15 +504,20 @@ class WorkflowTriggerService {
                 break;
             }
             case 'Category': {
-                const categoy: Category = JSON.parse(newValue);
+                const category: Category = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
-                        // todo:
-                        // updateCategory(category.viewId, )
+                        const parentCategory = await getParentCategory(category.id);
+                        const view: View = await getViewOfCategory(category.id);
+                        await updateCategory(view.id, parentCategory.id, { id: category.id, name: category.name, description: category.description});
                         break;
                     }
                     case 'Delete': {
-                        // todo:
+                        const view: View = await getViewOfCategory(category.id);
+                        const msg = await deleteCategory(view.id, category.id);
+                        if (msg && msg.length) {
+                            e(`failed to delete category ${msg.join(',')}`);
+                        }
                         break;
                     }
                 }
@@ -519,10 +528,13 @@ class WorkflowTriggerService {
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
+                        const view = await getViewOfItem(item.id);
+                        const msgs = await updateItem(view.id, item);
                         break;
                     }
                     case 'Delete': {
                         // todo:
+                        const msgs = await updateItemsStatus([item.id], 'DELETED');
                         break;
                     }
                 }
@@ -533,10 +545,19 @@ class WorkflowTriggerService {
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
+                        await setPrices([{
+                            pricingStructureId: pricingStructureItemWithPrice.id,
+                            item: {
+                                itemId: pricingStructureItemWithPrice.itemId,
+                                price: pricingStructureItemWithPrice.price,
+                                country: pricingStructureItemWithPrice.country,
+                            }
+                        }]);
                         break;
                     }
                     case 'Delete': {
                         // todo:
+                        const r = await removeItemFromPricingStructure(pricingStructureItemWithPrice.id, pricingStructureItemWithPrice.itemId);
                         break;
                     }
                 }
@@ -547,10 +568,13 @@ class WorkflowTriggerService {
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
+                        const view = await getViewOfRule(rule.id);
+                        const msgs = await addOrUpdateRules(view.id, [rule]);
                         break;
                     }
                     case 'Delete': {
                         // todo:
+                        const msgs = await updateRuleStatus(rule.id, 'DELETED');
                         break;
                     }
                 }

@@ -1,13 +1,14 @@
 import {ResponseStatus } from './api-response-status.model';
 import {User} from "./user.model";
 
+export interface ApiResponseMessage {
+   status: ResponseStatus;
+   message: string;
+}
 
 // this is used in express response
 export interface ApiResponse<P=void> {
-   messages: {
-      status: ResponseStatus;
-      message: string;
-   }[],
+   messages: ApiResponseMessage[],
    payload?: P
 }
 

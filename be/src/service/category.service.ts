@@ -19,10 +19,12 @@ import {
     UpdateCategoryEvent
 } from "./event/event.service";
 import {View} from "@fuyuko-common/model/view.model";
+import {Service} from "typedi";
 
 export interface UpdateCategoryInput { id: number; name: string; description: string; }
 export interface AddCategoryInput { name: string; description: string; children: AddCategoryInput[] }
 
+@Service()
 class CategoryService {
     /**
      *  =======================================
@@ -733,6 +735,23 @@ class CategoryService {
             return errors;
         });
     }
+
+    /**
+     * =================================
+     * === getParentCategory ===
+     * =================================
+     */
+    async getParentCategory(categoryId: number): Promise<Category> {
+        return await doInDbConnection(async (conn: Connection) => {
+            const q1: QueryA = await conn.query(`SELECT PARENT_ID FROM TBL_VIEW_CATEGORY WHERE ID = ?`, [categoryId]);
+            if (q1.length) { // there is a parent category
+                const parentCategoryId = q1[0].PARENT_ID;
+                return getViewCategoryById(parentCategoryId);
+            } else {
+                return null;
+            }
+        });
+    }
 }
 
 const s = new CategoryService()
@@ -754,4 +773,6 @@ export const
     addItemToViewCateogry = s.addItemToViewCateogry.bind(s),
     removeItemFromViewCategory = s.removeItemFromViewCategory.bind(s),
     getViewOfCategory = s.getViewOfCategory.bind(s),
+    getParentCategory = s.getParentCategory.bind(s),
     updateCategoryHierarchy = s.updateCategoryHierarchy.bind(s);
+

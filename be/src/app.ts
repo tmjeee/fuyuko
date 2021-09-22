@@ -1,6 +1,7 @@
 // import 'module-alias/register';   // module-alise for @fuyuko-*
+import moment from 'moment';
 import 'source-map-support/register';
-import express, {Express, Router} from 'express';
+import express, {Express, Router, Request as ExpressRequest, Response as ExpressResponse} from 'express';
 import 'express-async-errors';    // catch async errors
 import cookieParser from 'cookie-parser';
 import registerV1AppRouter from './route/v1/v1-app.router';
@@ -29,6 +30,27 @@ import {
 } from './service/event/event.service';
 import {runCustomWorkflowSync} from './custom-workflow';
 import morgan from 'morgan';
+import {graphqlUploadExpress} from "graphql-upload";
+import {graphqlHTTP, GraphQLParams} from "express-graphql";
+import {buildAppSchema} from "./gql-schema";
+import {GraphQLError, GraphQLFormattedError, print} from 'graphql';
+import {IncomingMessage, ServerResponse} from "http";
+
+
+export type Request = ExpressRequest & IncomingMessage & {
+    url: string;
+};
+export type Response = ExpressResponse & ServerResponse & {
+    json?: (data: unknown) => void;
+};
+export interface GqlContext {
+    req: Request,
+    res: Response,
+    gqlParams: GraphQLParams | undefined,
+}
+
+
+
 
 process.on('exit', async () => {
     await destroyEventsSubscription();
@@ -64,6 +86,36 @@ app.use(cookieParser());
 app.use(httpLogMiddlewareFn);
 app.use(catchErrorMiddlewareFn);
 app.use(cors());
+app.use(
+    '/gql',
+    [
+        graphqlUploadExpress({maxFileSize: 1000000000, maxFiles: 1000}),
+        graphqlHTTP((req, res, gqlParams) => {
+            const context: GqlContext = {
+                req: (req as Request),
+                res: (res as Response),
+                gqlParams
+            };
+            return {
+               schema: buildAppSchema(),
+               pretty: true,
+               graphiql: true,
+               rootValue: {},
+               context,
+               extensions: (requestInfo) => {
+                   i(`${requestInfo.operationName ?? '<unknown>' } - ${print(requestInfo.document)}`);
+                   return undefined;
+               },
+               customFormatErrorFn: (err: GraphQLError): GraphQLFormattedError => {
+                   return {
+                       ...err,
+                       'date': moment(),
+                   } as any;
+               }
+            }
+        }),
+    ]
+);
 
 const registry: Registry = Registry.newRegistry('api');
 const apiRouter: Router = express.Router();
