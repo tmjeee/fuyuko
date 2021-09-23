@@ -16,7 +16,7 @@
     "prebuild": "rm -fr ./dist",
     "build": "npm run tsc",
     "postbuild": "./update-files-with-git-hash.sh",
-    "generate": "npx del-cli --force ./dist/be/src/schema.gql && npx tsc && node -r module-alias/register -r source-map-support/register -- dist/be/src/generate-gql-schema.js"
+    "generate": "npx del-cli --force ./dist/be/src/schema.gql && npm run tsc && node -r module-alias/register -r source-map-support/register -- dist/be/src/generate-gql-schema.js"
   },
   "_moduleAliases": {
     "@fuyuko-common": "./dist/common-code/src",
@@ -89,6 +89,7 @@
     "@types/json2csv": "^4.5.0",
     "@types/jsonwebtoken": "^8.3.5",
     "@types/lodash": "^4.14.168",
+    "@types/module-alias": "^2.0.1",
     "@types/moment": "^2.13.0",
     "@types/morgan": "^1.9.2",
     "@types/node": "^12.7.2",

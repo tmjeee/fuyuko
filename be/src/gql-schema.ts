@@ -1,12 +1,12 @@
-import {buildSchemaSync} from "type-graphql";
+import {buildSchemaSync, buildSchema} from "type-graphql";
 import {GraphQLUpload, Upload} from "graphql-upload";
 import {Container} from "typedi";
-import {resolvers as versionResolvers} from './gql/resolver/version.resolver';
-import {resolvers as deleteCategoryResolvers} from './gql/resolver/delete-category.resolver';
+import {VersionResolver} from './gql/resolver/version.resolver';
+import {DeleteCategoryResolver} from './gql/resolver/delete-category.resolver';
 
 
 export const buildAppSchema = () => {
-    return buildSchemaSync({
+    return buildSchema({
         scalarsMap: [
             {type: Upload, scalar: GraphQLUpload},
         ],
@@ -18,8 +18,8 @@ export const buildAppSchema = () => {
         container: Container,
         globalMiddlewares: [],
         resolvers: [
-            ...versionResolvers(),
-            ...deleteCategoryResolvers(),
+            VersionResolver,
+            DeleteCategoryResolver,
         ],
         orphanedTypes: [
         ]

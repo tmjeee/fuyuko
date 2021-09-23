@@ -7,10 +7,6 @@ import {ApiResponse, ApiResponseMessage} from "@fuyuko-common/model/api-response
 import {WorkflowForRule, WorkflowTriggerResult} from "@fuyuko-common/model/workflow.model";
 import {WorkflowTriggerResultUnion} from "../custom-types/custom-types";
 
-export const resolvers = (): NonEmptyArray<Function> => [
-    DeleteCategoryResolver,
-];
-
 @InputType()
 export class DeleteCategoryInput {
     @Field() viewId: number;

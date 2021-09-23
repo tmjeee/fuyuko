@@ -31,7 +31,7 @@ import {
 import {runCustomWorkflowSync} from './custom-workflow';
 import morgan from 'morgan';
 import {graphqlUploadExpress} from "graphql-upload";
-import {graphqlHTTP, GraphQLParams} from "express-graphql";
+import {graphqlHTTP, GraphQLParams, RequestInfo} from "express-graphql";
 import {buildAppSchema} from "./gql-schema";
 import {GraphQLError, GraphQLFormattedError, print} from 'graphql';
 import {IncomingMessage, ServerResponse} from "http";
@@ -90,19 +90,19 @@ app.use(
     '/gql',
     [
         graphqlUploadExpress({maxFileSize: 1000000000, maxFiles: 1000}),
-        graphqlHTTP((req, res, gqlParams) => {
+        graphqlHTTP(async (req, res, gqlParams) => {
             const context: GqlContext = {
                 req: (req as Request),
                 res: (res as Response),
                 gqlParams
             };
             return {
-               schema: buildAppSchema(),
+               schema: await buildAppSchema(),
                pretty: true,
                graphiql: true,
                rootValue: {},
                context,
-               extensions: (requestInfo) => {
+               extensions: (requestInfo: RequestInfo): any => {
                    i(`${requestInfo.operationName ?? '<unknown>' } - ${print(requestInfo.document)}`);
                    return undefined;
                },

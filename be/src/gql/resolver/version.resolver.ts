@@ -1,14 +1,12 @@
 import 'reflect-metadata';
 import {Service} from "typedi";
-import {NonEmptyArray, ObjectType, Query, Resolver, UseMiddleware} from "type-graphql";
+import {NonEmptyArray, ObjectType, Query, Resolver, Field, UseMiddleware} from "type-graphql";
 import {createGqlResponseClass} from "../util/gql-utils";
 
-export const resolvers = (): NonEmptyArray<Function> => [
-    VersionResolver
-];
 
 @ObjectType()
 export class VersionOutputPayload {
+    @Field() test: string;
 }
 
 @ObjectType()
