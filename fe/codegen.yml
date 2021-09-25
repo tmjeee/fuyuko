@@ -1,6 +1,6 @@
 schema: './../be/dist/be/src/schema.gql'
 documents:
-  - ./projects/fuyuko/src/app/**/*.graphql.ts
+  - ./projects/fuyuko/src/app/gql/*.graphql.ts
 generates:
   ./projects/fuyuko/src/app/generated/generated-graphql-types.gql.ts:
     plugins:
