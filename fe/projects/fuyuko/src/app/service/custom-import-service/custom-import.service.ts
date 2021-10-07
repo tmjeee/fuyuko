@@ -11,6 +11,7 @@ import {
 import {View} from '@fuyuko-common/model/view.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from "../../utils/common.util";
 
 const URL_GET_ALL_CUSTOM_IMPORTS = () => `${config().api_host_url}/custom-imports`;
 const URL_POST_CUSTOM_IMPORT_VALIDATE_INPUTS = () => `${config().api_host_url}/view/:viewId/custom-import/:customImportId/validate-input`;
@@ -26,7 +27,7 @@ export class CustomImportService {
         return this.httpClient
             .get<ApiResponse<CustomDataImport[]>>(URL_GET_ALL_CUSTOM_IMPORTS())
             .pipe(
-                map((r: ApiResponse<CustomDataImport[]>) => r.payload)
+                map((r: ApiResponse<CustomDataImport[]>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -36,7 +37,7 @@ export class CustomImportService {
                 .replace(':viewId', String(v.id))
                 .replace(':customImportId', String(c.id)), {
                 values: i
-            }).pipe(map((r: ApiResponse<ImportScriptValidateResult>) => r.payload));
+            }).pipe(map((r: ApiResponse<ImportScriptValidateResult>) => assertDefinedReturn(r.payload)));
     }
 
     preview(v: View, c: CustomDataImport, i: ImportScriptInputValue[]): Observable<ImportScriptPreview> {
@@ -45,7 +46,7 @@ export class CustomImportService {
                 .replace(':viewId', String(v.id))
                 .replace(':customImportId', String(c.id)), {
                 values: i
-            }).pipe(map((r: ApiResponse<ImportScriptPreview>) => r.payload));
+            }).pipe(map((r: ApiResponse<ImportScriptPreview>) => assertDefinedReturn(r.payload)));
     }
 
     submit(v: View, c: CustomDataImport, p: ImportScriptPreview, i: ImportScriptInputValue[]): Observable<ImportScriptJobSubmissionResult> {
@@ -55,6 +56,6 @@ export class CustomImportService {
                 .replace(':customImportId', String(c.id)), {
                 values: i,
                 preview: p
-            }).pipe(map((r: ApiResponse<ImportScriptJobSubmissionResult>) => r.payload));
+            }).pipe(map((r: ApiResponse<ImportScriptJobSubmissionResult>) => assertDefinedReturn(r.payload)));
     }
 }

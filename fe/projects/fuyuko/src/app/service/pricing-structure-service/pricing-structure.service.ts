@@ -11,16 +11,18 @@ import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toQuery} from '../../utils/pagination.utils';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_ALL_PRICING_STRUCTURES = () => `${config().api_host_url}/pricingStructures`;
 const URL_PRICING_STRUCTURE_BY_VIEW = () => `${config().api_host_url}/view/:viewId/pricingStructures`;
-const URL_ALL_ITEMS_WITH_PRICE = (limitOffset: LimitOffset) => `${config().api_host_url}/pricingStructuresWithItems/:pricingStructureId?${toQuery(limitOffset)}`;
+const URL_ALL_ITEMS_WITH_PRICE = (limitOffset?: LimitOffset) => `${config().api_host_url}/pricingStructuresWithItems/:pricingStructureId?${toQuery(limitOffset)}`;
 const URL_UPDATE_PRICING_STRUCTURE_STATUS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/status/:status`;
 const URL_UPDATE_PRICING_STRUCTURE = () => `${config().api_host_url}/pricingStructures`;
 const URL_UPDATE_PRICING_STRUCTURE_ITEM = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/item`;
 const URL_GET_PRICING_STRUCTURE_GROUP_ASSOCIATIONS = () => `${config().api_host_url}/pricing-structure-group-associations`;
 const URL_POST_LINK_PRICING_STRUCTURE_GROUP = () => `${config().api_host_url}/pricing-structure/:pricingStructureId/group/:groupId/link`;
-const URL_POST_UNLINK_PRICING_STRUCTURE_GROUP = () => `${config().api_host_url}/pricing-structure/:pricingStructureId/group/:groupId/unlink`;
+const URL_POST_UNLINK_PRICING_STRUCTURE_GROUP = () =>
+    `${config().api_host_url}/pricing-structure/:pricingStructureId/group/:groupId/unlink`;
 
 
 const URL_PRICING_STRUCTURE_BY_ID = () => `${config().api_host_url}/pricingStructure/:pricingStructureId`;
@@ -36,7 +38,7 @@ export class PricingStructureService {
         return this.httpClient
             .get<ApiResponse<PricingStructure[]>>(URL_ALL_PRICING_STRUCTURES())
             .pipe(
-                map((r: ApiResponse<PricingStructure[]>) => r.payload)
+                map((r: ApiResponse<PricingStructure[]>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -44,7 +46,7 @@ export class PricingStructureService {
         return this.httpClient
             .get<ApiResponse<PricingStructureWithItems>>(URL_ALL_ITEMS_WITH_PRICE(limitOffset).replace(':pricingStructureId', `${pricingStructureId}`))
             .pipe(
-                map((r: ApiResponse<PricingStructureWithItems>) => r.payload)
+                map((r: ApiResponse<PricingStructureWithItems>) => assertDefinedReturn(r.payload))
             );
     }
     ////////
@@ -84,20 +86,20 @@ export class PricingStructureService {
         return this.httpClient.get<ApiResponse<PricingStructure>>(
             URL_PRICING_STRUCTURE_BY_ID().replace(':pricingStructureId', String(pricingStructureId)))
             .pipe(
-                map((r: ApiResponse<PricingStructure>) => r.payload)
+                map((r: ApiResponse<PricingStructure>) => assertDefinedReturn(r.payload))
             );
     }
 
     getAllPricingStructuresByView(viewId: number): Observable<PricingStructure[]> {
         return this.httpClient.get<ApiResponse<PricingStructure[]>>(
             URL_PRICING_STRUCTURE_BY_VIEW().replace(':viewId', String(viewId)))
-            .pipe(map((r: ApiResponse<PricingStructure[]>) => r.payload));
+            .pipe(map((r: ApiResponse<PricingStructure[]>) => assertDefinedReturn(r.payload)));
     }
 
     getPricingStructureGroupAssociation(): Observable<PricingStructureGroupAssociation[]> {
         return this.httpClient.get<ApiResponse<PricingStructureGroupAssociation[]>>(
             URL_GET_PRICING_STRUCTURE_GROUP_ASSOCIATIONS()).pipe(
-            map((r: ApiResponse<PricingStructureGroupAssociation[]>) => r.payload)
+            map((r: ApiResponse<PricingStructureGroupAssociation[]>) => assertDefinedReturn(r.payload))
         );
     }
 

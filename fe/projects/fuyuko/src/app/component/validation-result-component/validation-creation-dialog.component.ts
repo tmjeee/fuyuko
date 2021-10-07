@@ -33,6 +33,6 @@ export class ValidationCreationDialogComponent {
     }
 
     onCancel($event: MouseEvent) {
-        this.matDialogRef.close(null);
+        this.matDialogRef.close(undefined);
     }
 }

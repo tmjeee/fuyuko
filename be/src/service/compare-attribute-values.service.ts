@@ -17,7 +17,7 @@ class CompareAttributeValuesService {
         return (v !== null && v !== undefined);
     }
 
-    convertToCm(v: number, u: DimensionUnits | WidthUnits | LengthUnits | HeightUnits): number {
+    convertToCm(v: number | null | undefined, u: DimensionUnits | WidthUnits | LengthUnits | HeightUnits | null | undefined): number | null | undefined {
         if (v == null || v == undefined) {
             return v;
         }
@@ -33,7 +33,7 @@ class CompareAttributeValuesService {
         }
     }
 
-    convertToG(v: number, u: WeightUnits): number {
+    convertToG(v: number | null | undefined, u: WeightUnits | null | undefined): number | null | undefined {
         if (v == null || v == undefined) {
             return v;
         }
@@ -47,7 +47,7 @@ class CompareAttributeValuesService {
         }
     }
 
-    convertToCm2(v: number, u: AreaUnits): number {
+    convertToCm2(v: number | null | undefined, u: AreaUnits | null | undefined): number | null | undefined {
         if (v == null || v == undefined) {
             return v;
         }
@@ -63,7 +63,7 @@ class CompareAttributeValuesService {
         }
     }
 
-    convertToMl(v: number, u: VolumeUnits): number {
+    convertToMl(v: number | null | undefined, u: VolumeUnits | null | undefined): number | null | undefined {
         if (v == null || v == undefined) {
             return v;
         }
@@ -77,34 +77,34 @@ class CompareAttributeValuesService {
         }
     }
 
-    compareDate(condition: moment.Moment,  /* from REST Api */
-                                actual: moment.Moment,  /* from actual item attribute value */
-                                operator: OperatorType): boolean {
+    compareDate(condition: moment.Moment | null | undefined,    /* from REST Api */
+                actual: moment.Moment | null | undefined,       /* from actual item attribute value */
+                operator: OperatorType): boolean {
         switch (operator) {
             case "empty":
                 return (!!!actual); // when a is falsy
             case "eq":
-                return actual && actual.isSame(condition);
+                return !!actual && !!condition && actual.isSame(condition);
             case "gt":
-                return actual && actual.isAfter(condition);
+                return !!actual && !!condition && actual.isAfter(condition);
             case "gte":
-                return actual && actual.isSameOrAfter(condition);
+                return !!actual && !!condition && actual.isSameOrAfter(condition);
             case "lt":
-                return actual && actual.isBefore(condition);
+                return !!actual && !!condition && actual.isBefore(condition);
             case "lte":
-                return actual && actual.isSameOrBefore(condition);
+                return !!actual && !!condition && actual.isSameOrBefore(condition);
             case "not empty":
                 return (!!actual);
             case "not eq":
-                return (actual && (!actual.isSame(condition)));
+                return (!!actual && !!condition && (!actual.isSame(condition)));
             case "not gt":
-                return (actual && (!actual.isAfter(condition)));
+                return (!!actual && !!condition && (!actual.isAfter(condition)));
             case "not gte":
-                return (actual && (!actual.isSameOrAfter(condition)));;
+                return (!!actual && !!condition && (!actual.isSameOrAfter(condition)));
             case "not lt":
-                return (actual && (!actual.isBefore(condition)));
+                return (!!actual && !!condition && (!actual.isBefore(condition)));
             case "not lte":
-                return (actual && (!actual.isSameOrBefore(condition)));
+                return (!!actual && !!condition && (!actual.isSameOrBefore(condition)));
             case 'contain':
                 throw new Error(`Unsupported operation on ${operator} for value of type date`);
             case 'not contain':
@@ -116,34 +116,34 @@ class CompareAttributeValuesService {
         }
     }
 
-    compareNumber(condition: number, /* from REST api */
-                                  actual: number, /* from actual item attribute value */
-                                  operator: OperatorType): boolean {
+    compareNumber(condition: number | null | undefined, /* from REST api */
+                  actual: number | null | undefined,    /* from actual item attribute value */
+                  operator: OperatorType): boolean {
         switch (operator) {
             case "empty":
                 return (!!!actual);
             case "eq":
-                return (this.notNullOrUndefined(actual) && actual == condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual == condition);
             case "gt":
-                return (this.notNullOrUndefined(actual) && actual > condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! > condition!);
             case "gte":
-                return (this.notNullOrUndefined(actual) && actual >= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >= condition!);
             case "lt":
-                return (this.notNullOrUndefined(actual) && actual < condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! < condition!);
             case "lte":
-                return (this.notNullOrUndefined(actual) && actual <= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <= condition!);
             case "not empty":
                 return (!!actual)
             case "not eq":
-                return (this.notNullOrUndefined(actual) && actual != condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual != condition);
             case "not gt":
-                return (this.notNullOrUndefined(actual) && !(actual > condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! > condition!));
             case "not gte":
-                return (this.notNullOrUndefined(actual) && !(actual >= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >= condition!));
             case "not lt":
-                return (this.notNullOrUndefined(actual) && !(actual < condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! < condition!));
             case "not lte":
-                return (this.notNullOrUndefined(actual) && !(actual <= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <= condition!));
             case 'contain':
                 throw new Error(`Unsupported operation on ${operator} for value of type number`);
             case 'not contain':
@@ -155,9 +155,9 @@ class CompareAttributeValuesService {
         }
     }
 
-    compareString(condition: string /* from REST Api */,
-                                  actual: string /* from actual item attribute value */,
-                                  operator: OperatorType): boolean {
+    compareString(condition: string | null | undefined      /* from REST Api */,
+                  actual: string | null | undefined         /* from actual item attribute value */,
+                  operator: OperatorType): boolean {
         switch (operator) {
             case "empty":
                 return (!!!actual);
@@ -184,22 +184,22 @@ class CompareAttributeValuesService {
             case "not lte":
                 throw new Error(`Unsupported operation on ${operator} for value of type string`);
             case 'contain':
-                return !!(actual && actual.indexOf(condition) >= 0);
+                return !!(actual && condition && actual.indexOf(condition) >= 0);
             case 'not contain':
-                return !!(actual && actual.indexOf(condition) < 0);
+                return !!(actual && condition && actual.indexOf(condition) < 0);
             case 'regexp':
-                return !!(actual && (!!actual.match(condition)));
+                return !!(actual && condition && (!!actual.match(condition)));
             default:
                 throw new Error(`unrecognised operator ${operator} for string ${actual} and condition ${condition} comparison`);
         }
     }
 
     // currency
-    compareCurrency(condition: number /* from REST Api */,
-                                    conditionUnit: CountryCurrencyUnits,
-                                    actual: number /* from actual item attribute value */,
-                                    actualUnit: CountryCurrencyUnits,
-                                    operator: OperatorType): boolean {
+    compareCurrency(condition: number | null | undefined /* from REST Api */,
+                    conditionUnit: CountryCurrencyUnits | null | undefined,
+                    actual: number | null | undefined /* from actual item attribute value */,
+                    actualUnit: CountryCurrencyUnits | null | undefined,
+                    operator: OperatorType): boolean {
         if (operator !== 'empty' && operator !== 'not empty' && conditionUnit !== actualUnit) {
             return false;
         }
@@ -207,27 +207,27 @@ class CompareAttributeValuesService {
             case "empty":
                 return (!!!actual);
             case "eq":
-                return (this.notNullOrUndefined(actual) && actual == condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual == condition);
             case "gt":
-                return (this.notNullOrUndefined(actual) && actual > condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! > condition!);
             case "gte":
-                return (this.notNullOrUndefined(actual) && actual >= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >= condition!);
             case "lt":
-                return (this.notNullOrUndefined(actual) && actual < condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! < condition!);
             case "lte":
-                return (this.notNullOrUndefined(actual) && actual <= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <= condition!);
             case "not empty":
                 return (!!actual)
             case "not eq":
-                return (this.notNullOrUndefined(actual) && actual != condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(actual) && actual != condition);
             case "not gt":
-                return (this.notNullOrUndefined(actual) && !(actual > condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(actual) && !(actual! > condition!));
             case "not gte":
-                return (this.notNullOrUndefined(actual) && !(actual >= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(actual) && !(actual! >= condition!));
             case "not lt":
-                return (this.notNullOrUndefined(actual) && !(actual < condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(actual) && !(actual! < condition!));
             case "not lte":
-                return (this.notNullOrUndefined(actual) && !(actual <= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(actual) && !(actual! <= condition!));
             case 'contain':
                 throw new Error(`Unsupported operation on ${operator} for value of type currency`);
             case 'not contain':
@@ -240,11 +240,11 @@ class CompareAttributeValuesService {
     }
 
     // volume
-    compareVolume(_condition: number /* from REST Api */,
-                                  _conditionUnit: VolumeUnits,
-                                  _actual: number /* from actual item attribute value */,
-                                  _actualUnit: VolumeUnits,
-                                  operator: OperatorType): boolean {
+    compareVolume(_condition: number | null | undefined /* from REST Api */,
+                  _conditionUnit: VolumeUnits | null | undefined,
+                  _actual: number | null | undefined /* from actual item attribute value */,
+                  _actualUnit: VolumeUnits | null | undefined,
+                  operator: OperatorType): boolean {
         const condition = convertToMl(_condition, _conditionUnit);
         const actual = convertToMl(_actual, _actualUnit);
 
@@ -252,27 +252,27 @@ class CompareAttributeValuesService {
             case "empty":
                 return (!!!actual);
             case "eq":
-                return (this.notNullOrUndefined(actual) && actual == condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual == condition);
             case "gt":
-                return (this.notNullOrUndefined(actual) && actual > condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! > condition!);
             case "gte":
-                return (this.notNullOrUndefined(actual) && actual >= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >= condition!);
             case "lt":
-                return (this.notNullOrUndefined(actual) && actual < condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! < condition!);
             case "lte":
-                return (this.notNullOrUndefined(actual) && actual <= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <= condition!);
             case "not empty":
                 return (!!actual)
             case "not eq":
-                return (this.notNullOrUndefined(actual) && actual != condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual != condition);
             case "not gt":
-                return (this.notNullOrUndefined(actual) && !(actual > condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! > condition!));
             case "not gte":
-                return (this.notNullOrUndefined(actual) && !(actual >= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >= condition!));
             case "not lt":
-                return (this.notNullOrUndefined(actual) && !(actual < condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! < condition!));
             case "not lte":
-                return (this.notNullOrUndefined(actual) && !(actual <= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <= condition!));
             case 'contain':
                 throw new Error(`Unsupported operation on ${operator} for value of type volume`);
             case 'not contain':
@@ -285,15 +285,15 @@ class CompareAttributeValuesService {
 
     }
     // dimension
-    compareDimension(_conditionLength: number /* from REST Api */,
-                                     _conditionWidth: number,
-                                     _conditionHeight: number,
-                                     _conditionUnit: DimensionUnits,
-                                     _actualLength: number /* from actual item attribute value */,
-                                     _actualWidth: number,
-                                     _actualHeight: number,
-                                     _actualUnit: DimensionUnits,
-                                     operator: OperatorType): boolean {
+    compareDimension(_conditionLength: number | null | undefined /* from REST Api */,
+                     _conditionWidth: number | null | undefined,
+                     _conditionHeight: number | null | undefined,
+                     _conditionUnit: DimensionUnits | null | undefined,
+                     _actualLength: number | null | undefined /* from actual item attribute value */,
+                     _actualWidth: number | null | undefined,
+                     _actualHeight: number | null | undefined,
+                     _actualUnit: DimensionUnits | null | undefined,
+                     operator: OperatorType): boolean {
         const conditionLength = convertToCm(_conditionLength, _conditionUnit);
         const conditionWidth = convertToCm(_conditionWidth, _conditionUnit);
         const conditionHeight = convertToCm(_conditionHeight, _conditionUnit);
@@ -304,34 +304,34 @@ class CompareAttributeValuesService {
         switch (operator) {
             case 'eq':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) == (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight));
+                    (Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) == (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!));
             case 'not eq':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) != (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight));
+                    (Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) != (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!));
             case 'lt':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) < (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight));
+                    (Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) < (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!));
             case 'not lt':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (!((Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) < (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight))));
+                    (!((Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) < (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!))));
             case 'gt':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) > (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight));
+                    (Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) > (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!));
             case 'not gt':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (!((Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) > (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight))));
+                    (!((Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) > (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!))));
             case 'gte':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) >= (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight));
+                    (Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) >= (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!));
             case 'not gte':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (!((Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) >= (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight))));
+                    (!((Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) >= (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!))));
             case 'lte':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) <= (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight));
+                    (Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) <= (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!));
             case 'not lte':
                 return this.notNullOrUndefined(actualLength) && this.notNullOrUndefined(actualWidth) && this.notNullOrUndefined(actualHeight) &&
-                    (!((Math.abs(actualLength) * Math.abs(actualWidth) * Math.abs(actualHeight)) == (Math.abs(conditionLength) * Math.abs(conditionWidth) * Math.abs(conditionHeight))));
+                    (!((Math.abs(actualLength!) * Math.abs(actualWidth!) * Math.abs(actualHeight!)) == (Math.abs(conditionLength!) * Math.abs(conditionWidth!) * Math.abs(conditionHeight!))));
             case 'empty':
                 return (!!!actualLength) && (!!!actualWidth) && (!!!actualHeight);
             case 'not empty':
@@ -347,11 +347,11 @@ class CompareAttributeValuesService {
         }
     }
     // area
-    compareArea(_condition: number /* from REST Api */,
-                                _conditionUnit: AreaUnits,
-                                _actual: number /* from actual item attribute value */,
-                                _actualUnit: AreaUnits,
-                                operator: OperatorType): boolean {
+    compareArea(_condition: number | null | undefined /* from REST Api */,
+                _conditionUnit: AreaUnits | null | undefined,
+                _actual: number | null | undefined /* from actual item attribute value */,
+                _actualUnit: AreaUnits | null | undefined,
+                operator: OperatorType): boolean {
         const condition = convertToCm2(_condition, _conditionUnit);
         const actual = convertToCm2(_actual, _actualUnit);
 
@@ -359,27 +359,27 @@ class CompareAttributeValuesService {
             case "empty":
                 return (!!!actual);
             case "eq":
-                return (this.notNullOrUndefined(actual) && actual == condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! == condition!);
             case "gt":
-                return (this.notNullOrUndefined(actual) && actual > condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >  condition!);
             case "gte":
-                return (this.notNullOrUndefined(actual) && actual >= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >= condition!);
             case "lt":
-                return (this.notNullOrUndefined(actual) && actual < condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <  condition!);
             case "lte":
-                return (this.notNullOrUndefined(actual) && actual <= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <= condition!);
             case "not empty":
                 return (!!actual)
             case "not eq":
-                return (this.notNullOrUndefined(actual) && actual != condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) &&  actual! != condition!);
             case "not gt":
-                return (this.notNullOrUndefined(actual) && !(actual > condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >  condition!));
             case "not gte":
-                return (this.notNullOrUndefined(actual) && !(actual >= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >= condition!));
             case "not lt":
-                return (this.notNullOrUndefined(actual) && !(actual < condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <  condition!));
             case "not lte":
-                return (this.notNullOrUndefined(actual) && !(actual <= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <= condition!));
             case 'contain':
                 throw new Error(`Unsupported operation on ${operator} for value of type area`);
             case 'not contain':
@@ -391,11 +391,11 @@ class CompareAttributeValuesService {
         }
     }
     // width
-    compareWidth (_condition: number /* from REST Api */,
-                                 _conditionUnit: WidthUnits,
-                                 _actual: number /* from actual item attribute value */,
-                                 _actualUnit: WidthUnits,
-                                 operator: OperatorType): boolean {
+    compareWidth (_condition: number | null | undefined /* from REST Api */,
+                  _conditionUnit: WidthUnits | null | undefined,
+                  _actual: number | null | undefined /* from actual item attribute value */,
+                  _actualUnit: WidthUnits | null | undefined,
+                  operator: OperatorType): boolean {
         const condition = convertToCm(_condition, _conditionUnit);
         const actual = convertToCm(_actual, _actualUnit);
 
@@ -404,27 +404,27 @@ class CompareAttributeValuesService {
             case "empty":
                 return (!!!actual);
             case "eq":
-                return (this.notNullOrUndefined(actual) && actual == condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual == condition);
             case "gt":
-                return (this.notNullOrUndefined(actual) && actual > condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! > condition!);
             case "gte":
-                return (this.notNullOrUndefined(actual) && actual >= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >= condition!);
             case "lt":
-                return (this.notNullOrUndefined(actual) && actual < condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! < condition!);
             case "lte":
-                return (this.notNullOrUndefined(actual) && actual <= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <= condition!);
             case "not empty":
                 return (!!actual)
             case "not eq":
-                return (this.notNullOrUndefined(actual) && actual != condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual != condition);
             case "not gt":
-                return (this.notNullOrUndefined(actual) && !(actual > condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >  condition!));
             case "not gte":
-                return (this.notNullOrUndefined(actual) && !(actual >= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >= condition!));
             case "not lt":
-                return (this.notNullOrUndefined(actual) && !(actual < condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <  condition!));
             case "not lte":
-                return (this.notNullOrUndefined(actual) && !(actual <= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <= condition!));
             case 'contain':
                 throw new Error(`Unsupported operation on ${operator} for value of type width`);
             case 'not contain':
@@ -436,11 +436,11 @@ class CompareAttributeValuesService {
         }
     }
     // weight
-    compareWeight(_condition: number /* from REST Api */,
-                                  _conditionUnit: WeightUnits,
-                                  _actual: number /* from actual item attribute value */,
-                                  _actualUnit: WeightUnits,
-                                  operator: OperatorType): boolean {
+    compareWeight(_condition: number | null | undefined /* from REST Api */,
+                  _conditionUnit: WeightUnits | null | undefined,
+                  _actual: number | null | undefined /* from actual item attribute value */,
+                  _actualUnit: WeightUnits | null | undefined,
+                  operator: OperatorType): boolean {
         const condition = convertToG(_condition, _conditionUnit);
         const actual = convertToG(_actual, _actualUnit);
 
@@ -449,27 +449,27 @@ class CompareAttributeValuesService {
             case "empty":
                 return (!!!actual);
             case "eq":
-                return (this.notNullOrUndefined(actual) && actual == condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! == condition!);
             case "gt":
-                return (this.notNullOrUndefined(actual) && actual > condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >  condition!);
             case "gte":
-                return (this.notNullOrUndefined(actual) && actual >= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >= condition!);
             case "lt":
-                return (this.notNullOrUndefined(actual) && actual < condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <  condition!);
             case "lte":
-                return (this.notNullOrUndefined(actual) && actual <= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <= condition!);
             case "not empty":
                 return (!!actual)
             case "not eq":
-                return (this.notNullOrUndefined(actual) && actual != condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual != condition);
             case "not gt":
-                return (this.notNullOrUndefined(actual) && !(actual > condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >  condition!));
             case "not gte":
-                return (this.notNullOrUndefined(actual) && !(actual >= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >= condition!));
             case "not lt":
-                return (this.notNullOrUndefined(actual) && !(actual < condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <  condition!));
             case "not lte":
-                return (this.notNullOrUndefined(actual) && !(actual <= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <= condition!));
             case 'contain':
                 throw new Error(`Unsupported operation on ${operator} for value of type weight`);
             case 'not contain':
@@ -482,11 +482,11 @@ class CompareAttributeValuesService {
     }
 
     // height
-    compareHeight(_condition: number /* from REST Api */,
-                                  _conditionUnit: HeightUnits,
-                                  _actual: number /* from actual item attribute value */,
-                                  _actualUnit: HeightUnits,
-                                  operator: OperatorType): boolean {
+    compareHeight(_condition: number | null | undefined /* from REST Api */,
+                  _conditionUnit: HeightUnits | null | undefined,
+                  _actual: number | null | undefined /* from actual item attribute value */,
+                  _actualUnit: HeightUnits | null | undefined,
+                  operator: OperatorType): boolean {
         const condition = convertToCm(_condition, _conditionUnit);
         const actual = convertToCm(_actual, _actualUnit);
         /////////////////////////////////
@@ -494,27 +494,27 @@ class CompareAttributeValuesService {
             case "empty":
                 return (!!!actual);
             case "eq":
-                return (this.notNullOrUndefined(actual) && actual == condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual == condition);
             case "gt":
-                return (this.notNullOrUndefined(actual) && actual > condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >  condition!);
             case "gte":
-                return (this.notNullOrUndefined(actual) && actual >= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >= condition!);
             case "lt":
-                return (this.notNullOrUndefined(actual) && actual < condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <  condition!);
             case "lte":
-                return (this.notNullOrUndefined(actual) && actual <= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <= condition!);
             case "not empty":
                 return (!!actual)
             case "not eq":
-                return (this.notNullOrUndefined(actual) && actual != condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual != condition);
             case "not gt":
-                return (this.notNullOrUndefined(actual) && !(actual > condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >  condition!));
             case "not gte":
-                return (this.notNullOrUndefined(actual) && !(actual >= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >= condition!));
             case "not lt":
-                return (this.notNullOrUndefined(actual) && !(actual < condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <  condition!));
             case "not lte":
-                return (this.notNullOrUndefined(actual) && !(actual <= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <= condition!));
             case 'contain':
                 throw new Error(`Unsupported operation on ${operator} for value of type height`);
             case 'not contain':
@@ -526,11 +526,11 @@ class CompareAttributeValuesService {
         }
     }
     // length
-    compareLength(_condition: number /* from REST Api */,
-                                  _conditionUnit: LengthUnits,
-                                  _actual: number /* from actual item attribute value */,
-                                  _actualUnit: LengthUnits,
-                                  operator: OperatorType): boolean {
+    compareLength(_condition: number | null | undefined /* from REST Api */,
+                  _conditionUnit: LengthUnits | null | undefined,
+                  _actual: number | null | undefined /* from actual item attribute value */,
+                  _actualUnit: LengthUnits | null | undefined,
+                  operator: OperatorType): boolean {
         const condition = convertToCm(_condition, _conditionUnit);
         const actual = convertToCm(_actual, _actualUnit);
         ///////////////////////////
@@ -538,27 +538,27 @@ class CompareAttributeValuesService {
             case "empty":
                 return (!!!actual);
             case "eq":
-                return (this.notNullOrUndefined(actual) && actual == condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! == condition!);
             case "gt":
-                return (this.notNullOrUndefined(actual) && actual > condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual!  > condition!);
             case "gte":
-                return (this.notNullOrUndefined(actual) && actual >= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! >= condition!);
             case "lt":
-                return (this.notNullOrUndefined(actual) && actual < condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual!  < condition!);
             case "lte":
-                return (this.notNullOrUndefined(actual) && actual <= condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! <= condition!);
             case "not empty":
                 return (!!actual)
             case "not eq":
-                return (this.notNullOrUndefined(actual) && actual != condition);
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && actual! != condition!);
             case "not gt":
-                return (this.notNullOrUndefined(actual) && !(actual > condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >  condition!));
             case "not gte":
-                return (this.notNullOrUndefined(actual) && !(actual >= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! >= condition!));
             case "not lt":
-                return (this.notNullOrUndefined(actual) && !(actual < condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <  condition!));
             case "not lte":
-                return (this.notNullOrUndefined(actual) && !(actual <= condition));
+                return (this.notNullOrUndefined(actual) && this.notNullOrUndefined(condition) && !(actual! <= condition!));
             case 'contain':
                 throw new Error(`Unsupported operation on ${operator} for value of type length`);
             case 'not contain':
@@ -570,9 +570,9 @@ class CompareAttributeValuesService {
         }
     }
     // select
-    compareSelect(condition: string /* from REST Api */,
-                                  actual: string /* from actual item attribute value */,
-                                  operator: OperatorType): boolean {
+    compareSelect(condition: string | null | undefined /* from REST Api */,
+                  actual: string | null | undefined /* from actual item attribute value */,
+                  operator: OperatorType): boolean {
         switch (operator) {
             case "empty":
                 return (!!!actual);
@@ -609,11 +609,11 @@ class CompareAttributeValuesService {
         }
     }
     // doubleselect
-    compareDoubleselect(_conditionkey1: string /* from REST Api */,
-                                        _conditionkey2: string,
-                                        _actualkey1: string /* from actual item attribute value */,
-                                        _actualkey2: string,
-                                        operator: OperatorType): boolean {
+    compareDoubleselect(_conditionkey1: string | null | undefined /* from REST Api */,
+                        _conditionkey2: string | null | undefined,
+                        _actualkey1: string | null | undefined /* from actual item attribute value */,
+                        _actualkey2: string | null | undefined,
+                        operator: OperatorType): boolean {
         switch (operator) {
             case 'eq':
                 return ((_actualkey1 == _conditionkey1) && (_actualkey2 == _conditionkey2));

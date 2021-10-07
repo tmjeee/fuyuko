@@ -20,11 +20,11 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class AddAttributePageComponent implements OnInit {
 
-    subscription: Subscription;
-    currentView: View;
-    attribute: Attribute;
+    subscription?: Subscription;
+    currentView?: View;
+    attribute?: Attribute;
 
-    viewLoading: boolean;
+    viewLoading = true;
 
     constructor(private formBuilder: FormBuilder,
                 private route: ActivatedRoute,
@@ -41,7 +41,7 @@ export class AddAttributePageComponent implements OnInit {
         this.subscription = this.viewService
             .asObserver()
             .pipe(
-                map((v: View) => {
+                map((v: View | undefined) => {
                     if (v) {
                         this.currentView = v;
                         this.reload();
@@ -59,12 +59,14 @@ export class AddAttributePageComponent implements OnInit {
     async onEditAttributeEvent($event: EditAttributeComponentEvent) {
         switch ($event.type) {
             case 'update':
-                this.attributeService.addAttribute(this.currentView, $event.attribute).pipe(
-                    tap((_: ApiResponse) => {
-                        toNotifications(this.notificationService, _);
-                        this.reload();
-                    })
-                ).subscribe();
+                if (this.currentView && $event.attribute) {
+                    this.attributeService.addAttribute(this.currentView, $event.attribute).pipe(
+                        tap((_: ApiResponse) => {
+                            toNotifications(this.notificationService, _);
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             case 'cancel':
                 await this.router.navigate(['/view-layout', {outlets: {primary: ['attributes'], help: ['view-help'] }}]);

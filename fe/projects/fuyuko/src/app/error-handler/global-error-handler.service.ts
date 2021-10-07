@@ -119,10 +119,12 @@ export class GlobalErrorHandler extends ErrorHandler {
         // case 3: ApiResponse
         const apiResponse: ApiResponse = r.error;
         if (apiResponse.messages && apiResponse.messages.length) {
-            return apiResponse.messages.map(msg => msg.message);
+            return (apiResponse.messages
+                .map(msg => msg.message)
+                .filter(msg => !msg) as string[])
         }
 
-        return null;
+        return [];
     }
 }
 

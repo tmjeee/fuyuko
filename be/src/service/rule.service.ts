@@ -323,7 +323,10 @@ class RuleService {
                     metadatas: []
                 } as ValidateClause2;
                 vcMap.set(vcMapKey, vc);
-                rMap.get(rMapKey).validateClauses.push(vc);
+                const rule2 = rMap.get(rMapKey);
+                if (rule2) {
+                    rule2.validateClauses.push(vc);
+                }
             }
 
             const vcmId: number = i.VCM_ID;
@@ -335,7 +338,10 @@ class RuleService {
                     entries: []
                 } as ValidateClauseMetadata2;
                 vcmMap.set(vcmMapKey, vcm);
-                vcMap.get(vcMapKey).metadatas.push(vcm);
+                const validateClause2 = vcMap.get(vcMapKey);
+                if (validateClause2) {
+                    validateClause2.metadatas.push(vcm);
+                }
             }
 
             const vcmeId: number = i.VCME_ID;
@@ -348,7 +354,10 @@ class RuleService {
                     dataType: i.VCME_DATA_TYPE
                 } as ValidateClauseMetadataEntry2;
                 vcmeMap.set(vcmeMapKey, vcme);
-                vcmMap.get(vcmMapKey).entries.push(vcme);
+                const validateClauseMetadata2 = vcmMap.get(vcmMapKey);
+                if (validateClauseMetadata2) {
+                    validateClauseMetadata2.entries.push(vcme);
+                }
             }
 
             const wcId: number = i.WC_ID;
@@ -363,7 +372,10 @@ class RuleService {
                     metadatas: []
                 } as WhenClause2;
                 wcMap.set(wcMapKey, wc);
-                rMap.get(rMapKey).whenClauses.push(wc);
+                const rule2 = rMap.get(rMapKey);
+                if (rule2) {
+                    rule2.whenClauses.push(wc);
+                }
             }
 
             const wcmId: number = i.WCM_ID;
@@ -375,7 +387,10 @@ class RuleService {
                     entries: []
                 } as WhenClauseMetadata2;
                 wcmMap.set(wcmMapKey, wcm);
-                wcMap.get(wcMapKey).metadatas.push(wcm);
+                const validateClause2 = wcMap.get(wcMapKey);
+                if (validateClause2) {
+                    validateClause2.metadatas.push(wcm);
+                }
             }
 
             const wcmeId: number = i.WCME_ID;
@@ -388,7 +403,10 @@ class RuleService {
                     dataType: i.WCME_DATA_TYPE
                 } as WhenClauseMetadataEntry2;
                 wcmeMap.set(wcmeMapKey, wcme);
-                wcmMap.get(wcmMapKey).entries.push(wcme);
+                const validateClauseMetadata2 = wcmMap.get(wcmMapKey);
+                if (validateClauseMetadata2) {
+                    validateClauseMetadata2.entries.push(wcme);
+                }
             }
 
             return acc;

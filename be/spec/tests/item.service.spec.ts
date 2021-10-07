@@ -57,28 +57,28 @@ describe('item.service', () => {
 
         user = await getUserByUsername('cypress');
 
-        item1 = await getItemByName(viewId, 'Item-1');
-        item2 = await getItemByName(viewId, 'Item-2');
-        item3 = await getItemByName(viewId, 'Item-3');
-        item4 = await getItemByName(viewId, 'Item-4');
-        item5 = await getItemByName(viewId, 'Item-5');
-        item6 = await getItemByName(viewId, 'Item-6');
-        item7 = await getItemByName(viewId, 'Item-7');
+        item1 = await getItemByName(viewId, 'Item-1') as Item;
+        item2 = await getItemByName(viewId, 'Item-2') as Item;
+        item3 = await getItemByName(viewId, 'Item-3') as Item;
+        item4 = await getItemByName(viewId, 'Item-4') as Item;
+        item5 = await getItemByName(viewId, 'Item-5') as Item;
+        item6 = await getItemByName(viewId, 'Item-6') as Item;
+        item7 = await getItemByName(viewId, 'Item-7') as Item;
 
-        stringAtt = await getAttributeInViewByName(viewId, 'string attribute');
-        textAtt = await getAttributeInViewByName(viewId, 'text attribute');
-        numberAtt = await getAttributeInViewByName(viewId, 'number attribute');
-        dateAtt = await getAttributeInViewByName(viewId, 'date attribute');
-        currencyAtt = await getAttributeInViewByName(viewId, 'currency attribute');
-        volumeAtt = await getAttributeInViewByName(viewId, 'volume attribute');
-        dimensionAtt = await getAttributeInViewByName(viewId, 'dimension attribute');
-        areaAtt = await getAttributeInViewByName(viewId, 'area attribute');
-        lengthAtt = await getAttributeInViewByName(viewId, 'length attribute');
-        widthAtt = await getAttributeInViewByName(viewId, 'width attribute');
-        heightAtt = await getAttributeInViewByName(viewId, 'height attribute');
-        weightAtt = await getAttributeInViewByName(viewId, 'weight attribute');
-        selectAtt = await getAttributeInViewByName(viewId, 'select attribute');
-        doubleSelectAtt = await getAttributeInViewByName(viewId, 'doubleselect attribute');
+        stringAtt = await getAttributeInViewByName(viewId, 'string attribute') as Attribute;
+        textAtt = await getAttributeInViewByName(viewId, 'text attribute') as Attribute;
+        numberAtt = await getAttributeInViewByName(viewId, 'number attribute') as Attribute;
+        dateAtt = await getAttributeInViewByName(viewId, 'date attribute') as Attribute;
+        currencyAtt = await getAttributeInViewByName(viewId, 'currency attribute') as Attribute;
+        volumeAtt = await getAttributeInViewByName(viewId, 'volume attribute') as Attribute;
+        dimensionAtt = await getAttributeInViewByName(viewId, 'dimension attribute') as Attribute;
+        areaAtt = await getAttributeInViewByName(viewId, 'area attribute') as Attribute;
+        lengthAtt = await getAttributeInViewByName(viewId, 'length attribute') as Attribute;
+        widthAtt = await getAttributeInViewByName(viewId, 'width attribute') as Attribute;
+        heightAtt = await getAttributeInViewByName(viewId, 'height attribute') as Attribute;
+        weightAtt = await getAttributeInViewByName(viewId, 'weight attribute') as Attribute;
+        selectAtt = await getAttributeInViewByName(viewId, 'select attribute') as Attribute;
+        doubleSelectAtt = await getAttributeInViewByName(viewId, 'doubleselect attribute') as Attribute;
     }, JASMINE_TIMEOUT);
 
     it(`favourite items`, async () => {
@@ -146,13 +146,14 @@ describe('item.service', () => {
         } as Item);
 
 
-        const item: Item = await getItemByName(viewId, itemName);
-        expect(item.name).toBe(itemName);
-        expect(item.description).toBe(itemName);
+        const item: Item = await getItemByName(viewId, itemName) as Item;
+        expect(item).toBeDefined();
+        expect(item!.name).toBe(itemName);
+        expect(item!.description).toBe(itemName);
 
         // update item value
         // stringAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
            attributeId: stringAtt.id,
             val: {
               type: "string",
@@ -161,7 +162,7 @@ describe('item.service', () => {
         } as Value);
 
         // textAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
            attributeId: textAtt.id,
            val: {
               type: "text",
@@ -170,7 +171,7 @@ describe('item.service', () => {
         } as Value);
 
         // numberAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: numberAtt.id,
             val: {
                type: "number",
@@ -179,7 +180,7 @@ describe('item.service', () => {
         });
 
         // dateAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: dateAtt.id,
             val: {
                 type: "date",
@@ -188,7 +189,7 @@ describe('item.service', () => {
         });
 
         // currencyAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: currencyAtt.id,
             val: {
                type: "currency",
@@ -198,7 +199,7 @@ describe('item.service', () => {
         });
 
         // volumeAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: volumeAtt.id,
             val: {
                type: 'volume',
@@ -208,7 +209,7 @@ describe('item.service', () => {
         });
 
         // dimensionAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: dimensionAtt.id,
             val: {
                type: "dimension",
@@ -220,7 +221,7 @@ describe('item.service', () => {
         });
 
         // areaAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: areaAtt.id,
             val: {
                type: "area",
@@ -230,7 +231,7 @@ describe('item.service', () => {
         });
 
         // lengthAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: lengthAtt.id,
             val: {
                 type: "length",
@@ -240,7 +241,7 @@ describe('item.service', () => {
         });
 
         // widthAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: widthAtt.id,
             val: {
                type: "width",
@@ -250,7 +251,7 @@ describe('item.service', () => {
         });
 
         // heightAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: heightAtt.id,
             val: {
                type: "height",
@@ -260,7 +261,7 @@ describe('item.service', () => {
         });
 
         // weightAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: weightAtt.id,
             val: {
                type: "weight",
@@ -270,7 +271,7 @@ describe('item.service', () => {
         });
 
         // selectAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: selectAtt.id,
             val: {
                 type: "select",
@@ -279,7 +280,7 @@ describe('item.service', () => {
         });
 
         // doubleSelectAtt: Attribute;
-        await updateItemValue(viewId, item.id, {
+        await updateItemValue(viewId, item!.id, {
             attributeId: doubleSelectAtt.id,
             val: {
                type: "doubleselect",
@@ -290,99 +291,100 @@ describe('item.service', () => {
         });
 
         // get item and verify item
-        const item2: Item = await getItemById(viewId, item.id);
-        
-        expect(item2.id).toBe(item.id);
-        expect(item2.name).toBe(itemName);
-        expect(item2.description).toBe(itemName);
+        const item2: Item = await getItemById(viewId, item!.id) as Item;
+
+        expect(item2).toBeDefined();
+        expect(item2!.id).toBe(item!.id);
+        expect(item2!.name).toBe(itemName);
+        expect(item2!.description).toBe(itemName);
         
         // stringAtt
-        expect(item2[stringAtt.id].attributeId).toBe(stringAtt.id);
-        expect((item2[stringAtt.id].val as StringValue).type).toBe('string');
-        expect((item2[stringAtt.id].val as StringValue).value).toBe('xxxxx');
+        expect(item2![stringAtt.id].attributeId).toBe(stringAtt.id);
+        expect((item2![stringAtt.id].val as StringValue).type).toBe('string');
+        expect((item2![stringAtt.id].val as StringValue).value).toBe('xxxxx');
 
         // textAtt: Attribute;
-        expect(item2[textAtt.id].attributeId).toBe(textAtt.id);
-        expect((item2[textAtt.id].val as TextValue).type).toBe('text');
-        expect((item2[textAtt.id].val as TextValue).value).toBe('yyyyy');
+        expect(item2![textAtt.id].attributeId).toBe(textAtt.id);
+        expect((item2![textAtt.id].val as TextValue).type).toBe('text');
+        expect((item2![textAtt.id].val as TextValue).value).toBe('yyyyy');
         
         // numberAtt: Attribute;
-        expect((item2[numberAtt.id].attributeId)).toBe(numberAtt.id);
-        expect((item2[numberAtt.id].val as NumberValue).type).toBe('number');
-        expect((item2[numberAtt.id].val as NumberValue).value).toBe(8888);
+        expect((item2![numberAtt.id].attributeId)).toBe(numberAtt.id);
+        expect((item2![numberAtt.id].val as NumberValue).type).toBe('number');
+        expect((item2![numberAtt.id].val as NumberValue).value).toBe(8888);
 
         // dateAtt: Attribute;
-        expect((item2[dateAtt.id].attributeId)).toBe(dateAtt.id);
-        expect((item2[dateAtt.id].val as DateValue).type).toBe('date');
-        expect((item2[dateAtt.id].val as DateValue).value).toBe('10-12-1999');
+        expect((item2![dateAtt.id].attributeId)).toBe(dateAtt.id);
+        expect((item2![dateAtt.id].val as DateValue).type).toBe('date');
+        expect((item2![dateAtt.id].val as DateValue).value).toBe('10-12-1999');
 
         // currencyAtt: Attribute;
-        expect((item2[currencyAtt.id].attributeId)).toBe(currencyAtt.id);
-        expect((item2[currencyAtt.id].val as CurrencyValue).type).toBe('currency');
-        expect((item2[currencyAtt.id].val as CurrencyValue).value).toBe(88.88);
+        expect((item2![currencyAtt.id].attributeId)).toBe(currencyAtt.id);
+        expect((item2![currencyAtt.id].val as CurrencyValue).type).toBe('currency');
+        expect((item2![currencyAtt.id].val as CurrencyValue).value).toBe(88.88);
 
         // volumeAtt: Attribute;
-        expect((item2[volumeAtt.id].attributeId)).toBe(volumeAtt.id);
-        expect((item2[volumeAtt.id].val as VolumeValue).type).toBe('volume');
-        expect((item2[volumeAtt.id].val as VolumeValue).unit).toBe('ml');
-        expect((item2[volumeAtt.id].val as VolumeValue).value).toBe(88.88);
+        expect((item2![volumeAtt.id].attributeId)).toBe(volumeAtt.id);
+        expect((item2![volumeAtt.id].val as VolumeValue).type).toBe('volume');
+        expect((item2![volumeAtt.id].val as VolumeValue).unit).toBe('ml');
+        expect((item2![volumeAtt.id].val as VolumeValue).value).toBe(88.88);
         
         // dimensionAtt: Attribute;
-        expect((item2[dimensionAtt.id].attributeId)).toBe(dimensionAtt.id);
-        expect((item2[dimensionAtt.id].val as DimensionValue).type).toBe('dimension');
-        expect((item2[dimensionAtt.id].val as DimensionValue).length).toBe(88.88);
-        expect((item2[dimensionAtt.id].val as DimensionValue).width).toBe(99.99);
-        expect((item2[dimensionAtt.id].val as DimensionValue).height).toBe(10.10);
-        expect((item2[dimensionAtt.id].val as DimensionValue).unit).toBe('cm');
+        expect((item2![dimensionAtt.id].attributeId)).toBe(dimensionAtt.id);
+        expect((item2![dimensionAtt.id].val as DimensionValue).type).toBe('dimension');
+        expect((item2![dimensionAtt.id].val as DimensionValue).length).toBe(88.88);
+        expect((item2![dimensionAtt.id].val as DimensionValue).width).toBe(99.99);
+        expect((item2![dimensionAtt.id].val as DimensionValue).height).toBe(10.10);
+        expect((item2![dimensionAtt.id].val as DimensionValue).unit).toBe('cm');
         
         // areaAtt: Attribute;
-        expect((item2[areaAtt.id].attributeId)).toBe(areaAtt.id);
-        expect((item2[areaAtt.id].val as AreaValue).type).toBe('area');
-        expect((item2[areaAtt.id].val as AreaValue).value).toBe(88.88);
-        expect((item2[areaAtt.id].val as AreaValue).unit).toBe('cm2');
+        expect((item2![areaAtt.id].attributeId)).toBe(areaAtt.id);
+        expect((item2![areaAtt.id].val as AreaValue).type).toBe('area');
+        expect((item2![areaAtt.id].val as AreaValue).value).toBe(88.88);
+        expect((item2![areaAtt.id].val as AreaValue).unit).toBe('cm2');
         
         // lengthAtt: Attribute;
-        expect((item2[lengthAtt.id].attributeId)).toBe(lengthAtt.id);
-        expect((item2[lengthAtt.id].val as LengthValue).type).toBe('length');
-        expect((item2[lengthAtt.id].val as LengthValue).value).toBe(88.88);
-        expect((item2[lengthAtt.id].val as LengthValue).unit).toBe('cm');
+        expect((item2![lengthAtt.id].attributeId)).toBe(lengthAtt.id);
+        expect((item2![lengthAtt.id].val as LengthValue).type).toBe('length');
+        expect((item2![lengthAtt.id].val as LengthValue).value).toBe(88.88);
+        expect((item2![lengthAtt.id].val as LengthValue).unit).toBe('cm');
         
         // widthAtt: Attribute;
-        expect((item2[widthAtt.id].attributeId)).toBe(widthAtt.id);
-        expect((item2[widthAtt.id].val as WidthValue).type).toBe('width');
-        expect((item2[widthAtt.id].val as WidthValue).value).toBe(88.88);
-        expect((item2[widthAtt.id].val as WidthValue).unit).toBe('cm');
+        expect((item2![widthAtt.id].attributeId)).toBe(widthAtt.id);
+        expect((item2![widthAtt.id].val as WidthValue).type).toBe('width');
+        expect((item2![widthAtt.id].val as WidthValue).value).toBe(88.88);
+        expect((item2![widthAtt.id].val as WidthValue).unit).toBe('cm');
         
         // heightAtt: Attribute;
-        expect((item2[heightAtt.id].attributeId)).toBe(heightAtt.id);
-        expect((item2[heightAtt.id].val as HeightValue).type).toBe('height');
-        expect((item2[heightAtt.id].val as HeightValue).value).toBe(88.88);
-        expect((item2[heightAtt.id].val as HeightValue).unit).toBe('cm');
+        expect((item2![heightAtt.id].attributeId)).toBe(heightAtt.id);
+        expect((item2![heightAtt.id].val as HeightValue).type).toBe('height');
+        expect((item2![heightAtt.id].val as HeightValue).value).toBe(88.88);
+        expect((item2![heightAtt.id].val as HeightValue).unit).toBe('cm');
         
         // weightAtt: Attribute;
-        expect((item2[weightAtt.id].attributeId)).toBe(weightAtt.id);
-        expect((item2[weightAtt.id].val as WeightValue).type).toBe('weight');
-        expect((item2[weightAtt.id].val as WeightValue).value).toBe(88.88);
-        expect((item2[weightAtt.id].val as WeightValue).unit).toBe('kg');
+        expect((item2![weightAtt.id].attributeId)).toBe(weightAtt.id);
+        expect((item2![weightAtt.id].val as WeightValue).type).toBe('weight');
+        expect((item2![weightAtt.id].val as WeightValue).value).toBe(88.88);
+        expect((item2![weightAtt.id].val as WeightValue).unit).toBe('kg');
         
         // selectAtt: Attribute;
-        expect((item2[selectAtt.id].attributeId)).toBe(selectAtt.id);
-        expect((item2[selectAtt.id].val as SelectValue).type).toBe('select');
-        expect((item2[selectAtt.id].val as SelectValue).key).toBe('key3');
+        expect((item2![selectAtt.id].attributeId)).toBe(selectAtt.id);
+        expect((item2![selectAtt.id].val as SelectValue).type).toBe('select');
+        expect((item2![selectAtt.id].val as SelectValue).key).toBe('key3');
         
         // doubleSelectAtt: Attribute;
-        expect((item2[doubleSelectAtt.id].attributeId)).toBe(doubleSelectAtt.id);
-        expect((item2[doubleSelectAtt.id].val as DoubleSelectValue).type).toBe('doubleselect');
-        expect((item2[doubleSelectAtt.id].val as DoubleSelectValue).key1).toBe('key3');
-        expect((item2[doubleSelectAtt.id].val as DoubleSelectValue).key2).toBe('xkey33');
+        expect((item2![doubleSelectAtt.id].attributeId)).toBe(doubleSelectAtt.id);
+        expect((item2![doubleSelectAtt.id].val as DoubleSelectValue).type).toBe('doubleselect');
+        expect((item2![doubleSelectAtt.id].val as DoubleSelectValue).key1).toBe('key3');
+        expect((item2![doubleSelectAtt.id].val as DoubleSelectValue).key2).toBe('xkey33');
         
         
         // update item
-        item2.name = newItemName;
-        item2.description = newItemName;
+        item2!.name = newItemName;
+        item2!.description = newItemName;
         
         // stringAtt: Attribute
-        item2[stringAtt.id] = {
+        item2![stringAtt.id] = {
             attributeId: stringAtt.id,
             val: {
                type: "string",
@@ -391,7 +393,7 @@ describe('item.service', () => {
         } as Value;
         
         // textAtt: Attribute;
-        item2[textAtt.id] = {
+        item2![textAtt.id] = {
             attributeId: textAtt.id,
             val: {
                type: "text",
@@ -400,7 +402,7 @@ describe('item.service', () => {
         } as Value;
 
         // numberAtt: Attribute;
-        item2[numberAtt.id] = {
+        item2![numberAtt.id] = {
             attributeId: numberAtt.id,
             val: {
                 type: "number",
@@ -409,7 +411,7 @@ describe('item.service', () => {
         };
 
         // dateAtt: Attribute;
-        item2[dateAtt.id] = {
+        item2![dateAtt.id] = {
             attributeId: dateAtt.id,
             val: {
                 type: "date",
@@ -418,7 +420,7 @@ describe('item.service', () => {
         };
 
         // currencyAtt: Attribute;
-        item2[currencyAtt.id] = {
+        item2![currencyAtt.id] = {
             attributeId: currencyAtt.id,
             val: {
                 type: 'currency',
@@ -428,7 +430,7 @@ describe('item.service', () => {
         };
         
         // volumeAtt: Attribute;
-        item2[volumeAtt.id] = {
+        item2![volumeAtt.id] = {
             attributeId: volumeAtt.id,
             val: {
                 type: "volume",
@@ -438,7 +440,7 @@ describe('item.service', () => {
         };
         
         // dimensionAtt: Attribute;
-        item2[dimensionAtt.id] = {
+        item2![dimensionAtt.id] = {
             attributeId: dimensionAtt.id,
             val: {
                 type: 'dimension',
@@ -450,7 +452,7 @@ describe('item.service', () => {
         };
         
         // areaAtt: Attribute;
-        item2[areaAtt.id] = {
+        item2![areaAtt.id] = {
             attributeId: areaAtt.id,
             val: {
                 type: "area",
@@ -460,7 +462,7 @@ describe('item.service', () => {
         };
         
         // lengthAtt: Attribute;
-        item2[lengthAtt.id] = {
+        item2![lengthAtt.id] = {
             attributeId: lengthAtt.id,
             val: {
                type: "length",
@@ -470,7 +472,7 @@ describe('item.service', () => {
         };
 
         // widthAtt: Attribute;
-        item2[widthAtt.id] = {
+        item2![widthAtt.id] = {
             attributeId: widthAtt.id,
             val: {
                 type: "width",
@@ -480,7 +482,7 @@ describe('item.service', () => {
         };
 
         // heightAtt: Attribute;
-        item2[heightAtt.id] = {
+        item2![heightAtt.id] = {
             attributeId: heightAtt.id,
             val: {
                type: "height",
@@ -490,7 +492,7 @@ describe('item.service', () => {
         };
 
         // weightAtt: Attribute;
-        item2[weightAtt.id] = {
+        item2![weightAtt.id] = {
             attributeId: weightAtt.id,
             val: {
                type: "weight",
@@ -500,7 +502,7 @@ describe('item.service', () => {
         };
         
         // selectAtt: Attribute;
-        item2[selectAtt.id] = {
+        item2![selectAtt.id] = {
             attributeId: selectAtt.id,
             val: {
                type: "select",
@@ -509,7 +511,7 @@ describe('item.service', () => {
         };
         
         // doubleSelectAtt: Attribute;
-        item2[doubleSelectAtt.id] = {
+        item2![doubleSelectAtt.id] = {
            attributeId: doubleSelectAtt.id,
            val: {
                type: "doubleselect",
@@ -521,9 +523,9 @@ describe('item.service', () => {
 
 
         // get item and verify item
-        const item3: Item = await getItemById(viewId, item.id);
+        const item3: Item = await getItemById(viewId, item!.id) as Item;
 
-        expect(item3.id).toBe(item.id);
+        expect(item3.id).toBe(item!.id);
         expect(item3.name).toBe(newItemName);
         expect(item3.description).toBe(newItemName);
 
@@ -618,7 +620,7 @@ describe('item.service', () => {
             description: iName,
         } as Item);
 
-        const i1: Item =  await getItemByName(viewId, iName);
+        const i1: Item =  await getItemByName(viewId, iName) as Item;
         expect(i1.id).not.toBe(-1);
         expect(i1.name).toBe(iName);
         expect(i1.description).toBe(iName);
@@ -626,14 +628,16 @@ describe('item.service', () => {
         i1.name = iName2;
         i1.description = iName2;
         await addOrUpdateItem(viewId, i1);
-        const i2: Item = await getItemByName(viewId, iName2);
+        const i2: Item = await getItemByName(viewId, iName2) as Item;
+        expect(i2).toBeDefined();
         expect(i2.name).toBe(iName2);
         expect(i2.description).toBe(iName2);
         
         
         // set status
         const errs: string[] = await updateItemsStatus([i2.id], "DISABLED");
-        const i3: Item = await getItemById(viewId, i2.id);
+        const i3: Item = await getItemById(viewId, i2.id) as Item;
+        expect(i3).toBeDefined();
         expect(errs.length).toBe(0);
         expect(i3).toBeFalsy();
     });

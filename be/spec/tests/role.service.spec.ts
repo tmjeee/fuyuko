@@ -58,8 +58,8 @@ describe('role.service', () => {
         expect(err1.length).toBe(0);
 
         const gs: Group[] = await getGroupsWithRole(adminRole.name);
-        const g: Group = gs.find((_g: Group) => _g.id == viewGroup.id);
-        const r: Role = g.roles.find((_r: Role) => _r.name == adminRole.name);
+        const g = gs.find((_g: Group) => _g.id == viewGroup.id);
+        const r = g!.roles.find((_r: Role) => _r.name == adminRole.name);
 
         expect(g).toBeTruthy();
         expect(r).toBeTruthy();
@@ -68,7 +68,7 @@ describe('role.service', () => {
         expect(err1.length).toBe(0);
 
         const gs1: Group[] = await getGroupsWithRole(adminRole.name);
-        const g1: Group = gs1.find((_g: Group) => _g.id == viewGroup.id);
+        const g1 = gs1.find((_g: Group) => _g.id == viewGroup.id);
 
         expect(g1).toBeFalsy();
     });

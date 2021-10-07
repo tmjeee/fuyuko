@@ -8,7 +8,7 @@ const NS = h.createNamespace(NAMESPACE);
 
 export interface ThreadLocalStore {
     reqUuid: string;
-    jwtPayload: JwtPayload
+    jwtPayload?: JwtPayload
 };
 
 class ThreadLocalService {

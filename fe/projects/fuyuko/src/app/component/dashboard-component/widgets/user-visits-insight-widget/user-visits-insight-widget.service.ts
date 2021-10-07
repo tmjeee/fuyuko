@@ -33,7 +33,7 @@ export class UserVisitsInsightWidgetService {
                     monthly: {date: string, count: number}[],
                     yearly: {date: string, count: number}[]
                 }>) => {
-               return r.payload;
+               return r.payload!;
             }));
     }
 }

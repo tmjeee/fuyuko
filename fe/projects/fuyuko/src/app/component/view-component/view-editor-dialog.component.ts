@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {View} from '@fuyuko-common/model/view.model';
 import {Type} from './view-editor.component';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {assertDefinedReturn} from "../../utils/common.util";
 
 @Component({
     templateUrl: './view-editor-dialog.component.html',
@@ -11,8 +12,8 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 export class ViewEditorDialogComponent {
 
     formGroup: FormGroup;
-    formControlName: FormControl;
-    formControlDescription: FormControl;
+    formControlName?: FormControl;
+    formControlDescription?: FormControl;
 
 
     constructor(private matDialogRef: MatDialogRef<ViewEditorDialogComponent>,
@@ -40,14 +41,14 @@ export class ViewEditorDialogComponent {
     onSubmit() {
         switch (this.data.type) {
             case 'name':
-                this.data.view.name = this.formControlName.value;
+                this.data.view.name = assertDefinedReturn(this.formControlName).value;
                 break;
             case 'description':
-                this.data.view.description = this.formControlDescription.value;
+                this.data.view.description = assertDefinedReturn(this.formControlDescription).value;
                 break;
             case 'all':
-                this.data.view.name = this.formControlName.value;
-                this.data.view.description = this.formControlDescription.value;
+                this.data.view.name = assertDefinedReturn(this.formControlName).value;
+                this.data.view.description = assertDefinedReturn(this.formControlDescription).value;
                 break;
         }
         this.matDialogRef.close(this.data.view);

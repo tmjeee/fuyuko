@@ -8,7 +8,7 @@ import {Item} from '@fuyuko-common/model/item.model';
 })
 export class UploadItemImageDialogComponent {
 
-    private selectedFile: File;
+    private selectedFile?: File;
 
     constructor(private dialogRef: MatDialogRef<UploadItemImageDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) private data: Item) {
@@ -23,7 +23,7 @@ export class UploadItemImageDialogComponent {
     }
 
     onFileChange($event: Event) {
-        const fileList: FileList = ($event.target as HTMLInputElement).files;
-        this.selectedFile = fileList[0];
+        const fileList: FileList | null  = ($event.target as HTMLInputElement).files;
+        this.selectedFile = (fileList && fileList.length) ? fileList[0] : undefined;
     }
 }

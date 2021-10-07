@@ -15,7 +15,7 @@ export interface BulkEditItem {
     name: string;
     description: string;
     images: ItemImage[];
-    parentId: number;
+    parentId?: number;
     changes: {
         [attributeId: number]: {
             old: Value,

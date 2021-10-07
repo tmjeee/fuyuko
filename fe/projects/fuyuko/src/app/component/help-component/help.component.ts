@@ -8,7 +8,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 })
 export class HelpComponent {
 
-    @Input() help: string;
+    @Input() help!: string;
 
     constructor(private domSanitizer: DomSanitizer) {
     }

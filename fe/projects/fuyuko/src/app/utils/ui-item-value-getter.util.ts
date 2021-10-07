@@ -60,10 +60,11 @@ export const hasItemValue = (attribute: Attribute, value: Value): boolean => {
             (!!(value.val as DoubleSelectValue).key2)
         );
     }
+    return false;
 };
 
-const internalGetItemValue = (attribute: Attribute, item: TableItem | Item): ItemValTypes => {
-  const v: ItemValTypes = item[attribute.id].val;
+const internalGetItemValue = (attribute: Attribute, item: TableItem | Item): ItemValTypes | undefined => {
+  const v: ItemValTypes | undefined = item[attribute.id].val;
   return v;
 };
 export const getItemStringValue = (attribute: Attribute, item: TableItem | Item): StringValue => {

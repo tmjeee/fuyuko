@@ -9,13 +9,13 @@ import {WorkflowTriggerResultUnion} from "../custom-types/custom-types";
 
 @InputType()
 export class DeleteCategoryInput {
-    @Field() viewId: number;
-    @Field() categoryId: number;
+    @Field() viewId!: number;
+    @Field() categoryId!: number;
 }
 
 @ObjectType()
 export class DeleteCategoryOutputPayload {
-   @Field() isWorkflow: boolean;
+   @Field() isWorkflow!: boolean;
    @Field(_ => [WorkflowTriggerResultUnion]) workflows?: WorkflowTriggerResult[];
 }
 

@@ -20,8 +20,8 @@ export interface DashboardStrategy {
 }
 
 export abstract class DashboardWidget {
-    id: string;
-    name: string;
+    id!: string;
+    name!: string;
 
     constructor(protected dashboardWidgetService: DashboardWidgetService) { }
 

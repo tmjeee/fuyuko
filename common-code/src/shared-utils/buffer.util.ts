@@ -2,11 +2,7 @@ import {FileDataObject} from "../model/file.model";
 
 export const fromFileToFileDataObject = async (file: File): Promise<FileDataObject> => {
    const dataString: string = await fromFileToString(file);
-   const fileDataObject: FileDataObject =  new FileDataObject();
-   fileDataObject.name = file.name;
-   fileDataObject.size = file.size;
-   fileDataObject.type = file.type;
-   fileDataObject.data = dataString;
+   const fileDataObject: FileDataObject =  new FileDataObject(file.name, file.size, file.type, dataString);
    return fileDataObject;
 };
 

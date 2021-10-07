@@ -18,16 +18,16 @@ export interface CustomImportPreviewComponentEvent {
 })
 export class CustomImportPreviewComponent implements OnInit {
 
-   @Input() view: View;
-   @Input() customDataImport: CustomDataImport;
-   @Input() inputValues: ImportScriptInputValue[];
-   @Input() previewFn: CustomImportPreviewFn;
+   @Input() view!: View;
+   @Input() customDataImport!: CustomDataImport;
+   @Input() inputValues: ImportScriptInputValue[] = [];
+   @Input() previewFn!: CustomImportPreviewFn;
 
    @Output() events: EventEmitter<CustomImportPreviewComponentEvent>;
 
-   preview: ImportScriptPreview;
-   datasource: {[key: string]: string}[];
-   ready: boolean;
+   preview?: ImportScriptPreview;
+   datasource: {[key: string]: string}[] = [];
+   ready = false ;
 
 
     constructor() {
@@ -44,16 +44,18 @@ export class CustomImportPreviewComponent implements OnInit {
        this.previewFn(this.view, this.customDataImport, this.inputValues).pipe(
            tap((r: ImportScriptPreview) => {
               this.preview = r;
-              for (const row of this.preview.rows) {
-                   const o = this.preview.columns.reduce((o: {[k: string]: string}, col: string) => {
-                       o[col] = row[col];
-                       return o;
-                   }, {});
-                   this.datasource.push(o);
-               }
-              this.events.emit({
-                   preview: this.preview
-               });
+              if (this.preview && this.preview.rows && this.preview.columns) {
+                  for (const row of this.preview.rows) {
+                      const o2 = this.preview.columns.reduce((o: { [k: string]: string }, col: string) => {
+                          o[col] = row[col];
+                          return o;
+                      }, {});
+                      this.datasource.push(o2);
+                  }
+                  this.events.emit({
+                      preview: this.preview
+                  });
+              }
               this.ready = true;
            }),
            finalize(() => this.ready = true)

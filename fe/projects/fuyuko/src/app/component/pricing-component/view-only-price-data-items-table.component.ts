@@ -6,7 +6,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 
 export class InternalDataSource extends DataSource<PriceDataItem> {
 
-    subject: BehaviorSubject<PriceDataItem[]>;
+    subject?: BehaviorSubject<PriceDataItem[]>;
 
     connect(collectionViewer: CollectionViewer): Observable<PriceDataItem[] | ReadonlyArray<PriceDataItem>> {
         if (!this.subject) {
@@ -19,7 +19,7 @@ export class InternalDataSource extends DataSource<PriceDataItem> {
         if (this.subject) {
             this.subject.complete();
         }
-        this.subject = null;
+        this.subject = undefined;
     }
 
     update(priceDataItems: PriceDataItem[]) {
@@ -39,8 +39,8 @@ export class InternalDataSource extends DataSource<PriceDataItem> {
 })
 export class ViewOnlyPriceDataItemsTableComponent implements OnChanges {
 
-    @Input() attributes: Attribute[];
-    @Input() priceDataItems: PriceDataItem[];
+    @Input() attributes: Attribute[] = [];
+    @Input() priceDataItems: PriceDataItem[] = [];
 
     dataSource: InternalDataSource;
     displayedColumns: string[];

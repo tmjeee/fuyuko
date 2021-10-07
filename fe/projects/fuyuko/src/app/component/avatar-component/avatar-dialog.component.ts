@@ -17,10 +17,10 @@ export interface AvatarDialogComponentData {
 })
 export class AvatarDialogComponent {
 
-  selectedAvatar: GlobalAvatar;
-  selectedFile: File;
+  selectedAvatar?: GlobalAvatar;
+  selectedFile?: File;
 
-  @ViewChild('fileInput', {static: true}) fileInput: ElementRef;
+  @ViewChild('fileInput', {static: true}) fileInput!: ElementRef;
 
   constructor(private matDialogRef: MatDialogRef<AvatarDialogComponent>,
               private renderer: Renderer2,
@@ -36,15 +36,15 @@ export class AvatarDialogComponent {
 
   onPredefinedAvatarClicked(event: Event, avatar: GlobalAvatar) {
       this.selectedAvatar = avatar;
-      this.selectedFile = null;
+      this.selectedFile = undefined;
       this.renderer.setValue(this.fileInput.nativeElement, '');
       this.fileInput.nativeElement.value = '';
   }
 
   onFileInputChange($event: Event) {
-    const fileList: FileList = ($event.target as HTMLInputElement).files;
-    this.selectedFile = fileList[0];
-    this.selectedAvatar = null;
+    const fileList = ($event.target as HTMLInputElement).files;
+    this.selectedFile = (fileList && fileList.length ? fileList[0] : undefined);
+    this.selectedAvatar = undefined;
   }
 
   globalAvatarUrl(predefinedAvatar: GlobalAvatar): string {

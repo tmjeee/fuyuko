@@ -31,6 +31,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {LoadingService} from '../../service/loading-service/loading.service';
 import {AuthService} from '../../service/auth-service/auth.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 @Component({
     templateUrl: './category.page.html',
@@ -38,20 +39,20 @@ import {AuthService} from '../../service/auth-service/auth.service';
 })
 export class CategoryPageComponent implements OnInit {
 
-    treeLoading: boolean;
-    categoriesWithItems: CategoryWithItems[];
-    view: View;
-    getAttributesFn: GetAttributesFn;
-    getItemsFn: GetItemsFn;
-    deleteItemImageFn: DeleteItemImageFn;
-    markItemImageAsPrimaryFn: MarkItemImageAsPrimaryFn;
-    saveItemAttributeValueFn: SaveItemAttributeValueFn;
-    saveItemInfoFn: SaveItemInfoFn;
-    saveOrUpdateTableItemsFn: SaveOrUpdateTableItemsFn;
-    uploadItemImageFn: UploadItemImageFn;
-    getFavouriteItemIdsFn: GetFavouriteItemIdsFn;
-    addFavouriteItemsFn: AddFavouriteItemsFn;
-    removeFavouriteItemsFn: RemoveFavouriteItemsFn;
+    treeLoading = true;
+    categoriesWithItems: CategoryWithItems[] = [];
+    view?: View;
+    getAttributesFn!: GetAttributesFn;
+    getItemsFn!: GetItemsFn;
+    deleteItemImageFn!: DeleteItemImageFn;
+    markItemImageAsPrimaryFn!: MarkItemImageAsPrimaryFn;
+    saveItemAttributeValueFn!: SaveItemAttributeValueFn;
+    saveItemInfoFn!: SaveItemInfoFn;
+    saveOrUpdateTableItemsFn!: SaveOrUpdateTableItemsFn;
+    uploadItemImageFn!: UploadItemImageFn;
+    getFavouriteItemIdsFn!: GetFavouriteItemIdsFn;
+    addFavouriteItemsFn!: AddFavouriteItemsFn;
+    removeFavouriteItemsFn!: RemoveFavouriteItemsFn;
 
     constructor(private viewService: ViewService,
                 private categoryService: CategoryService,
@@ -65,22 +66,22 @@ export class CategoryPageComponent implements OnInit {
 
     ngOnInit(): void {
         this.addFavouriteItemsFn = (viewId: number, itemIds: number[]): Observable<ApiResponse> => {
-            return this.itemService.addFavouriteItems(viewId, this.authService.myself().id, itemIds).pipe(
+            return this.itemService.addFavouriteItems(viewId, assertDefinedReturn(this.authService.myself()).id, itemIds).pipe(
                 tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
             );
         };
         this.removeFavouriteItemsFn = (viewId: number, itemIds: number[]): Observable<ApiResponse> => {
-            return this.itemService.removeFavouriteItems(viewId, this.authService.myself().id, itemIds).pipe(
+            return this.itemService.removeFavouriteItems(viewId, assertDefinedReturn(this.authService.myself()).id, itemIds).pipe(
                 tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
             );
         };
         this.getFavouriteItemIdsFn = (viewId: number): Observable<number[]> => {
-            return this.itemService.getFavouriteItemIds(viewId, this.authService.myself().id);
+            return this.itemService.getFavouriteItemIds(viewId, assertDefinedReturn(this.authService.myself()).id);
         };
         this.getAttributesFn = (viewId: number): Observable<Attribute[]> => {
             this.loadingService.startLoading();
             return this.attributeService.getAllAttributesByView(viewId).pipe(
-                map((r: PaginableApiResponse<Attribute[]>) => r.payload),
+                map((r: PaginableApiResponse<Attribute[]>) => r.payload ?? []),
                 finalize(() => {
                     this.loadingService.stopLoading();
                 })
@@ -110,14 +111,16 @@ export class CategoryPageComponent implements OnInit {
         };
         this.saveItemAttributeValueFn = (item: Item, itemValueAndAttribute: ItemValueAndAttribute) => {
             item[itemValueAndAttribute.attribute.id] = itemValueAndAttribute.itemValue;
-            return this.itemService.saveItems(this.view.id, [item]).pipe(
+            return this.itemService.saveItems(
+                assertDefinedReturn(this.view).id, [item]).pipe(
                 tap((r: ApiResponse) => {
                    toNotifications(this.notificationsService, r);
                 })
             );
         };
         this.saveItemInfoFn = (type: Type, item: Item) => {
-            return this.itemService.saveItems(this.view.id, [item]).pipe(
+            return this.itemService.saveItems(
+                assertDefinedReturn(this.view).id, [item]).pipe(
                 tap((r: ApiResponse) => {
                     toNotifications(this.notificationsService, r);
                 })
@@ -126,14 +129,16 @@ export class CategoryPageComponent implements OnInit {
         this.saveOrUpdateTableItemsFn = (modifiedTableItems: TableItem[], deletedTableItems: TableItem[]) => {
             const streams: Observable<ApiResponse>[] = [];
             if (modifiedTableItems && modifiedTableItems.length) {
-                streams.push(this.itemService.saveTableItems(this.view.id, modifiedTableItems));
+                streams.push(this.itemService.saveTableItems(
+                    assertDefinedReturn(this.view).id, modifiedTableItems));
             }
             if (deletedTableItems && deletedTableItems.length) {
-                streams.push(this.itemService.deleteTableItems(this.view.id, deletedTableItems));
+                streams.push(this.itemService.deleteTableItems(
+                    assertDefinedReturn(this.view).id, deletedTableItems));
             }
             return forkJoin(streams).pipe(
                 tap((r: ApiResponse[]) => {
-                    r.forEach((_r: ApiResponse) => toNotifications(this.notificationsService, _r));
+                    r.forEach((r2: ApiResponse) => toNotifications(this.notificationsService, r2));
                 })
             );
         };
@@ -146,7 +151,7 @@ export class CategoryPageComponent implements OnInit {
         };
 
         this.viewService.asObserver().pipe(
-            tap((v: View) => {
+            tap((v: View | undefined) => {
                 this.view = v;
                 if (v) {
                     this.treeLoading = true;

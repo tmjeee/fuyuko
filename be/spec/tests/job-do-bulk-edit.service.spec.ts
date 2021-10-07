@@ -26,7 +26,7 @@ describe(`job-do-bulk-edit.service.spec.ts`, () => {
     await setupBeforeAll2();
   }, JASMINE_TIMEOUT);
 
-  const createChanges = (): { [attributeId: number]: { old: Value, new: Value} } => {
+  const createChanges = (): { [attributeId: number]: { old: Value | null, new: Value} } => {
     return {
       [stringAttribute.id /* attribute id */]: {
         old: null,
@@ -90,33 +90,33 @@ describe(`job-do-bulk-edit.service.spec.ts`, () => {
   const validateItem = (i1: Item) => {
     // string
     expect(i1[stringAttribute.id].attributeId).toBe(stringAttribute.id);
-    expect(i1[stringAttribute.id].val.type).toBe('string');
+    expect(i1[stringAttribute.id].val!.type).toBe('string');
     expect((i1[stringAttribute.id].val as StringValue).value).toBe(`xxx_string_value`);
 
     // text
     expect(i1[textAttribute.id].attributeId).toBe(textAttribute.id);
-    expect(i1[textAttribute.id].val.type).toBe('text');
+    expect(i1[textAttribute.id].val!.type).toBe('text');
     expect((i1[textAttribute.id].val as TextValue).value).toBe(`xxx_text_value`);
 
     // number
     expect(i1[numberAttribute.id].attributeId).toBe(numberAttribute.id);
-    expect(i1[numberAttribute.id].val.type).toBe('number');
+    expect(i1[numberAttribute.id].val!.type).toBe('number');
     expect((i1[numberAttribute.id].val as NumberValue).value).toBe(99.99);
 
     // date
     expect(i1[dateAttribute.id].attributeId).toBe(dateAttribute.id);
-    expect(i1[dateAttribute.id].val.type).toBe('date');
+    expect(i1[dateAttribute.id].val!.type).toBe('date');
     expect((i1[dateAttribute.id].val as DateValue).value).toBe(`29-11-2020`);
 
     // currency
     expect(i1[currencyAttribute.id].attributeId).toBe(currencyAttribute.id);
-    expect(i1[currencyAttribute.id].val.type).toBe('currency');
+    expect(i1[currencyAttribute.id].val!.type).toBe('currency');
     expect((i1[currencyAttribute.id].val as CurrencyValue).value).toBe(99.99);
     expect((i1[currencyAttribute.id].val as CurrencyValue).country).toBe('AUD');
 
     // dimension
     expect(i1[dimensionAttribute.id].attributeId).toBe(dimensionAttribute.id);
-    expect(i1[dimensionAttribute.id].val.type).toBe('dimension');
+    expect(i1[dimensionAttribute.id].val!.type).toBe('dimension');
     expect((i1[dimensionAttribute.id].val as DimensionValue).length).toBe(99.99);
     expect((i1[dimensionAttribute.id].val as DimensionValue).width).toBe(98.99);
     expect((i1[dimensionAttribute.id].val as DimensionValue).height).toBe(97.99);
@@ -124,48 +124,48 @@ describe(`job-do-bulk-edit.service.spec.ts`, () => {
 
     // volume
     expect(i1[volumeAttribute.id].attributeId).toBe(volumeAttribute.id);
-    expect(i1[volumeAttribute.id].val.type).toBe('volume');
+    expect(i1[volumeAttribute.id].val!.type).toBe('volume');
     expect((i1[volumeAttribute.id].val as VolumeValue).value).toBe(99.99);
     expect((i1[volumeAttribute.id].val as VolumeValue).unit).toBe('ml');
 
     // area
     expect(i1[areaAttribute.id].attributeId).toBe(areaAttribute.id);
-    expect(i1[areaAttribute.id].val.type).toBe('area');
+    expect(i1[areaAttribute.id].val!.type).toBe('area');
     expect((i1[areaAttribute.id].val as AreaValue).value).toBe(99.99);
     expect((i1[areaAttribute.id].val as AreaValue).unit).toBe('cm2');
 
     // length
     expect(i1[lengthAttribute.id].attributeId).toBe(lengthAttribute.id);
-    expect(i1[lengthAttribute.id].val.type).toBe('length');
+    expect(i1[lengthAttribute.id].val!.type).toBe('length');
     expect((i1[lengthAttribute.id].val as LengthValue).value).toBe(99.99);
     expect((i1[lengthAttribute.id].val as LengthValue).unit).toBe('cm');
 
     // width
     expect(i1[widthAttribute.id].attributeId).toBe(widthAttribute.id);
-    expect(i1[widthAttribute.id].val.type).toBe('width');
+    expect(i1[widthAttribute.id].val!.type).toBe('width');
     expect((i1[widthAttribute.id].val as WidthValue).value).toBe(99.99);
     expect((i1[widthAttribute.id].val as WidthValue).unit).toBe('cm');
 
     // height
     expect(i1[heightAttribute.id].attributeId).toBe(heightAttribute.id);
-    expect(i1[heightAttribute.id].val.type).toBe('height');
+    expect(i1[heightAttribute.id].val!.type).toBe('height');
     expect((i1[heightAttribute.id].val as HeightValue).value).toBe(99.99);
     expect((i1[heightAttribute.id].val as HeightValue).unit).toBe('cm');
 
     // weight
     expect(i1[weightAttribute.id].attributeId).toBe(weightAttribute.id);
-    expect(i1[weightAttribute.id].val.type).toBe('weight');
+    expect(i1[weightAttribute.id].val!.type).toBe('weight');
     expect((i1[weightAttribute.id].val as WeightValue).value).toBe(99.99);
     expect((i1[weightAttribute.id].val as WeightValue).unit).toBe('g');
 
     // select
     expect(i1[selectAttribute.id].attributeId).toBe(selectAttribute.id);
-    expect(i1[selectAttribute.id].val.type).toBe('select');
+    expect(i1[selectAttribute.id].val!.type).toBe('select');
     expect((i1[selectAttribute.id].val as SelectValue).key).toBe('key2');
 
     // doubleselect
     expect(i1[doubleSelectAttribute.id].attributeId).toBe(doubleSelectAttribute.id);
-    expect(i1[doubleSelectAttribute.id].val.type).toBe('doubleselect');
+    expect(i1[doubleSelectAttribute.id].val!.type).toBe('doubleselect');
     expect((i1[doubleSelectAttribute.id].val as DoubleSelectValue).key1).toBe('key2');
     expect((i1[doubleSelectAttribute.id].val as DoubleSelectValue).key2).toBe('key22');
   };
@@ -203,23 +203,23 @@ describe(`job-do-bulk-edit.service.spec.ts`, () => {
     try {
       view = await getViewByName('Test View 1');
 
-      stringAttribute = await getAttributeInViewByName(view.id, 'string attribute');
-      textAttribute = await getAttributeInViewByName(view.id, 'text attribute');
-      numberAttribute = await getAttributeInViewByName(view.id, 'number attribute');
-      dateAttribute = await getAttributeInViewByName(view.id, 'date attribute');
-      currencyAttribute = await getAttributeInViewByName(view.id, 'currency attribute');
-      volumeAttribute = await getAttributeInViewByName(view.id, 'volume attribute');
-      dimensionAttribute = await getAttributeInViewByName(view.id, 'dimension attribute');
-      areaAttribute = await getAttributeInViewByName(view.id, 'area attribute');
-      lengthAttribute = await getAttributeInViewByName(view.id, 'length attribute');
-      widthAttribute = await getAttributeInViewByName(view.id, 'width attribute');
-      heightAttribute = await getAttributeInViewByName(view.id, 'height attribute');
-      weightAttribute = await getAttributeInViewByName(view.id, 'weight attribute');
-      selectAttribute = await getAttributeInViewByName(view.id, 'select attribute');
-      doubleSelectAttribute = await getAttributeInViewByName(view.id, 'doubleselect attribute');
+      stringAttribute = await getAttributeInViewByName(view.id, 'string attribute') as Attribute;
+      textAttribute = await getAttributeInViewByName(view.id, 'text attribute') as Attribute;
+      numberAttribute = await getAttributeInViewByName(view.id, 'number attribute') as Attribute;
+      dateAttribute = await getAttributeInViewByName(view.id, 'date attribute') as Attribute;
+      currencyAttribute = await getAttributeInViewByName(view.id, 'currency attribute') as Attribute;
+      volumeAttribute = await getAttributeInViewByName(view.id, 'volume attribute') as Attribute;
+      dimensionAttribute = await getAttributeInViewByName(view.id, 'dimension attribute') as Attribute;
+      areaAttribute = await getAttributeInViewByName(view.id, 'area attribute') as Attribute;
+      lengthAttribute = await getAttributeInViewByName(view.id, 'length attribute') as Attribute;
+      widthAttribute = await getAttributeInViewByName(view.id, 'width attribute') as Attribute;
+      heightAttribute = await getAttributeInViewByName(view.id, 'height attribute') as Attribute;
+      weightAttribute = await getAttributeInViewByName(view.id, 'weight attribute') as Attribute;
+      selectAttribute = await getAttributeInViewByName(view.id, 'select attribute') as Attribute;
+      doubleSelectAttribute = await getAttributeInViewByName(view.id, 'doubleselect attribute') as Attribute;
 
-      item1 = await getItemByName(view.id, `Item-1`);
-      item2 = await getItemByName(view.id, `Item-2`);
+      item1 = await getItemByName(view.id, `Item-1`) as Item;
+      item2 = await getItemByName(view.id, `Item-2`) as Item;
 
       done();
     } catch(e) {
@@ -287,14 +287,14 @@ describe(`job-do-bulk-edit.service.spec.ts`, () => {
 
 
     // validate item 1
-    const i1: Item = await getItemById(viewId, item1.id);
+    const i1: Item = await getItemById(viewId, item1.id) as Item;
     validateItem(i1);
     for(const childItem of i1.children) {
       validateItem(childItem);
     }
 
     // validate item 2
-    const i2: Item = await getItemById(viewId, item2.id);
+    const i2: Item = await getItemById(viewId, item2.id) as Item;
     validateItem(i2);
     for(const childItem of i2.children) {
       validateItem(childItem);

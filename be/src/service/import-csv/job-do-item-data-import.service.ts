@@ -28,7 +28,7 @@ export const runJob = async (viewId: number, dataImportId: number, items: Item[]
         jobId: jobLogger.jobId
     } as ImportItemJobEvent);
     
-    (async ()=> {
+    await (async ()=> {
        await jobLogger.logInfo(`starting job ${name}`);
        // const item2s: Item2[] = itemsRevert(items);
        await jobLogger.logInfo(`converted to Items2s`);
@@ -52,9 +52,12 @@ export const runJob = async (viewId: number, dataImportId: number, items: Item[]
                 for (const error of errors) {
                     await jobLogger.logError(`error from addItem service: ${error}`);
                 }
-                const i: Item = await getItemByName(viewId, effectiveItem.name);
+                const i: Item | undefined = await getItemByName(viewId, effectiveItem.name);
+                if (!i) {
+                    await jobLogger.logError(`Unable to find item with name ${effectiveItem.name} in view id ${viewId}`);
+                }
 
-                if (effectiveItem.images) {
+                if (i && effectiveItem.images) {
                     for (const effectiveItem2Image of effectiveItem.images) {
 
                         await doInDbConnection(async (conn: Connection) => {

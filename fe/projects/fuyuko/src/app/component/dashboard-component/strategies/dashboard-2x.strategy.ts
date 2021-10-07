@@ -22,13 +22,16 @@ export class DashboardStrategy2x implements DashboardStrategy {
     }
     addDashboardWidgetInstances(serializeInstanceFormats: SerializedDashboardWidgetInstanceFormat[]) {
         serializeInstanceFormats.forEach((t: SerializedDashboardWidgetInstanceFormat) => {
-            const dashboardWidgetInfo: DashboardWidgetInfo = DASHBOARD_WIDGET_INFOS.find((dwi: DashboardWidgetInfo) => dwi.id === t.typeId);
-            this.dashboardWidgetInstances[this.i % this.NUM].push({
-                instanceId: t.instanceId,
-                typeId: t.typeId,
-                type: dashboardWidgetInfo.type
-            } as DashboardWidgetInstance);
-            this.i += 1;
+            const dashboardWidgetInfo: DashboardWidgetInfo | undefined =
+                DASHBOARD_WIDGET_INFOS.find((dwi: DashboardWidgetInfo) => dwi.id === t.typeId);
+            if (dashboardWidgetInfo) {
+                this.dashboardWidgetInstances[this.i % this.NUM].push({
+                    instanceId: t.instanceId,
+                    typeId: t.typeId,
+                    type: dashboardWidgetInfo.type
+                } as DashboardWidgetInstance);
+                this.i += 1;
+            }
         });
     }
     removeDashboardWidgetInstances(instanceIds: string[]) {
@@ -64,11 +67,11 @@ export class DashboardStrategy2x implements DashboardStrategy {
         const strategyId = this.id;
         const x: SerializedDashboardFormat = JSON.parse(data);
         if (x.strategyId === strategyId) { // deserializing from same strategy id
-            const _x_special: StickInTypesArgs = stickInTypes(x.special);
-            this.dashboardWidgetInstances = _x_special as DashboardWidgetInstance[][];
+            const xSpecial: StickInTypesArgs = stickInTypes(x.special);
+            this.dashboardWidgetInstances = xSpecial as DashboardWidgetInstance[][];
         } else if (x.instances) {
-            const _x_instances: StickInTypesArgs = stickInTypes(x.instances);
-            this.addDashboardWidgetInstances(_x_instances as DashboardWidgetInstance[]);
+            const xInstances: StickInTypesArgs = stickInTypes(x.instances);
+            this.addDashboardWidgetInstances(xInstances as DashboardWidgetInstance[]);
         }
     }
 }

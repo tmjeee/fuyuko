@@ -16,7 +16,7 @@ import {Component, Input} from '@angular/core';
 })
 export class StaticNoticeComponent {
 
-   @Input() level: 'INFO' | 'SUCCESS' | 'WARN' | 'ERROR';
+   @Input() level!: 'INFO' | 'SUCCESS' | 'WARN' | 'ERROR';
 
 
 }

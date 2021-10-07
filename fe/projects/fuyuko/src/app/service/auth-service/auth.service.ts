@@ -8,6 +8,7 @@ import config from '../../utils/config.util';
 import {map, tap} from 'rxjs/operators';
 import {BrowserLocationHistoryService} from '../browser-location-history-service/browser-location-history.service';
 import {ApiResponse, LoginResponse} from '@fuyuko-common/model/api-response.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 const URL_LOGIN = () => `${config().api_host_url}/login`;
@@ -40,16 +41,16 @@ export const isUnauthorizationFailedRedirectable = (url: string): boolean => {
 @Injectable()
 export class AuthService {
 
-  private subject: BehaviorSubject<User>;
+  private subject: BehaviorSubject<User | undefined>;
 
  constructor(private httpClient: HttpClient,
              private browserLocationHistoryService: BrowserLocationHistoryService,
              private themeService: ThemeService) {
-   const myself: User = this.myself();
+   const myself: User | undefined = this.myself();
    this.subject = new BehaviorSubject(myself);
  }
 
- asObservable(): Observable<User> {
+ asObservable(): Observable<User | undefined> {
    return this.subject.asObservable();
  }
 
@@ -58,11 +59,12 @@ export class AuthService {
             username, password
         }).pipe(
             tap((r: LoginResponse) => {
+                const p = assertDefinedReturn(r.payload);
                 this.storeToken(rememberMe, {
-                    token: r.payload.jwtToken,
-                    myself: r.payload.user
+                    token: p.jwtToken,
+                    myself: p.user
                 } as StorageToken);
-                this.subject.next(r.payload.user);
+                this.subject.next(p.user);
             })
         );
   }
@@ -73,7 +75,7 @@ export class AuthService {
          tap((x: ApiResponse) => {
              this.browserLocationHistoryService.clearStoredLastUrl();
              this.destroyToken();
-             this.subject.next(null);
+             this.subject.next(undefined);
          })
      );
   }
@@ -85,7 +87,7 @@ export class AuthService {
         lastName: myself.lastName,
         email: myself.email
     }).pipe(
-        map((r: ApiResponse<User>) => r.payload),
+        map((r: ApiResponse<User>) => assertDefinedReturn(r.payload)),
         tap((u: User) => this.afterSaveCallback(u))
     );
   }
@@ -95,7 +97,7 @@ export class AuthService {
         userId: myself.id,
         theme
     }).pipe(
-        map((r: ApiResponse<User>) => r.payload),
+        map((r: ApiResponse<User>) => assertDefinedReturn(r.payload)),
         tap(this.afterSaveCallback.bind(this) as (u: User) => void)
     );
   }
@@ -105,13 +107,15 @@ export class AuthService {
           userId: myself.id,
           password
       }).pipe(
-          map((r: ApiResponse<User>) => r.payload),
+          map((r: ApiResponse<User>) => assertDefinedReturn(r.payload)),
           tap(this.afterSaveCallback.bind(this) as (u: User) => void)
       );
   }
   private afterSaveCallback(u: User) {
-      const token: StorageToken = this.getToken();
-      token.myself = u;
+      const token: StorageToken | undefined = this.getToken();
+      if (token) {
+          token.myself = u;
+      }
       this.updateToken(token);
       this.subject.next(u);
   }
@@ -126,20 +130,20 @@ export class AuthService {
      }
   }
 
-  private getToken(): StorageToken {
-      const storageToken: string = sessionStorage.getItem(KEY) ? sessionStorage.getItem(KEY) : localStorage.getItem(KEY);
+  private getToken(): StorageToken | undefined {
+      const storageToken: string | null = sessionStorage.getItem(KEY) ? sessionStorage.getItem(KEY) : localStorage.getItem(KEY);
       if (storageToken) {
           const token: StorageToken =  JSON.parse(storageToken);
           return token;
       }
-      return null;
+      return undefined;
   }
 
-  private updateToken(token: StorageToken) {
+  private updateToken(token: StorageToken | undefined) {
      if (localStorage.getItem(KEY)) {
-         localStorage.setItem(KEY, JSON.stringify(token));
+         token ? localStorage.setItem(KEY, JSON.stringify(token)) : localStorage.removeItem(KEY);
      } else if (sessionStorage.getItem(KEY)) {
-         sessionStorage.setItem(KEY, JSON.stringify(token));
+         token ? sessionStorage.setItem(KEY, JSON.stringify(token)) : sessionStorage.removeItem(KEY);
      }
   }
 
@@ -147,20 +151,20 @@ export class AuthService {
     localStorage.removeItem(KEY);
   }
 
-  jwtToken(): string {
-      const storageToken: StorageToken = this.getToken();
+  jwtToken(): string | undefined {
+      const storageToken: StorageToken | undefined = this.getToken();
       if (storageToken) {
           return storageToken.token;
       }
-      return null;
+      return undefined;
   }
 
-  myself(): User {
-    const storageToken: StorageToken = this.getToken();
+  myself(): User | undefined {
+    const storageToken: StorageToken | undefined = this.getToken();
     if (storageToken) {
       return storageToken.myself;
     }
-    return null;
+    return undefined;
   }
 
   forgotPassword(i: {username?: string, email?: string}): Observable<ApiResponse> {

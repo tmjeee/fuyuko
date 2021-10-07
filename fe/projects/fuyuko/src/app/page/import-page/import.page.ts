@@ -20,10 +20,11 @@ import {LoadingService} from '../../service/loading-service/loading.service';
   styleUrls: ['./import.page.scss']
 })
 export class ImportPageComponent implements OnInit {
-  ready: boolean;
+
+  ready = false ;
   allViews: View[] = [];
-  showPreviewFn: ShowPreviewFn;
-  submitDataImportFn: SubmitDataImportFn;
+  showPreviewFn!: ShowPreviewFn;
+  submitDataImportFn!: SubmitDataImportFn;
 
   constructor(private importDataService: ImportDataService,
               private viewService: ViewService,

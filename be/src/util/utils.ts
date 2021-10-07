@@ -33,7 +33,7 @@ export const isOffset = (offset: string): boolean => {
     return (!isNaN(Number(offset)) && Number.isInteger(Number(offset)) && Number(offset) >= 0) ? true : false;
 }
 
-export const toLimitOffset = (req: Request): LimitOffset => {
+export const toLimitOffset = (req: Request): LimitOffset | undefined => {
     const limit = req.query.limit;
     const offset = req.query.offset;
     const _isLimit = isLimit(limit);

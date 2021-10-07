@@ -26,10 +26,10 @@ export type CustomExportSubmitFn  =
 })
 export class CustomExportWizardComponent {
 
-   @Input() customDataExports: CustomDataExport[];
-   @Input() customExportFormValidateFn: CustomExportValidateFn;
-   @Input() customExportPreviewFn: CustomExportPreviewFn;
-   @Input() customExportSubmitFn: CustomExportSubmitFn;
+   @Input() customDataExports: CustomDataExport[] = [];
+   @Input() customExportFormValidateFn!: CustomExportValidateFn;
+   @Input() customExportPreviewFn!: CustomExportPreviewFn;
+   @Input() customExportSubmitFn!: CustomExportSubmitFn;
 
    step1Ready: boolean;
    firstStepFormGroup: FormGroup;
@@ -50,7 +50,7 @@ export class CustomExportWizardComponent {
    step5Ready: boolean;
    fifthStepFormGroup: FormGroup;
 
-   @ViewChild('stepper') stepper: MatStepper;
+   @ViewChild('stepper') stepper!: MatStepper;
 
    constructor(private formBuilder: FormBuilder) {
 

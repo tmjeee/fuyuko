@@ -11,7 +11,7 @@ const SelfReloadJson = require('self-reload-json');
 const overrideWithProcessArgv = async (config: any) => {
   const args: string[] = process.argv.slice(2);
   for (const arg of args) {
-      const match: string[] = arg.match(regexp);
+      const match: string[] | null = arg.match(regexp);
       if (match && match.length == 3) {
           try {
               i(`process argv ${arg}`);

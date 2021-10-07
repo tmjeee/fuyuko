@@ -21,6 +21,7 @@ import {
     ValidationResultLogComponentEvent,
     ValidationResultLogReloadFn
 } from '../../component/validation-result-component/validation-result-log.component';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 @Component({
     templateUrl: './view-validation-details.page.html',
@@ -28,17 +29,17 @@ import {
 })
 export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    view: View;
+    view?: View;
     items: Item[];
     attributes: Attribute[];
     rules: Rule[];
-    validationResult: ValidationResult;
-    validationResultLogReloadFn: ValidationResultLogReloadFn;
+    validationResult?: ValidationResult;
+    validationResultLogReloadFn!: ValidationResultLogReloadFn;
 
-    subscription: Subscription;
-    viewId: string;
-    validationId: string;
-    loading: boolean;
+    subscription?: Subscription;
+    viewId!: string;
+    validationId!: string;
+    loading = true;
 
 
 
@@ -55,7 +56,8 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy, Af
         this.attributes = [];
         this.rules = [];
         this.validationResultLogReloadFn = (event: ValidationResultLogComponentEvent): Observable<ValidationLogResult> => {
-            return this.validationService.getValidationLogResult(event.viewId, event.validationId, event.validationLogId, event.order, event.limit);
+            return this.validationService.getValidationLogResult(event.viewId, event.validationId,
+                event.validationLogId, event.order, event.limit);
         };
     }
 
@@ -66,7 +68,7 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy, Af
     ngAfterViewInit(): void {
         this.subscription = this.viewService.asObserver().pipe(
             skip(1), // the second change means view changes when we are in validation details page, redirect back to validation main page
-            tap((v: View) => {
+            tap((v: View | undefined) => {
                 if (v) {
                     this.router.navigate(['/view-layout', 'validation']);
                 }
@@ -86,40 +88,42 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy, Af
         this.viewId = this.route.snapshot.params.viewId;
         this.validationId = this.route.snapshot.params.validationId;
         this.viewService.getViewById(this.viewId).pipe(
-            tap((v: View) => {
-                this.view = v;
-                forkJoin({
-                    attributes: this.attributeService.getAllAttributesByView(this.view.id)
-                        .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
-                    rules: this.ruleService.getAllRulesByView(this.view.id),
-                    validationResult: this.validationService.getValidationDetails(this.view.id, Number(this.validationId)),
-                }).pipe(
-                    tap((r: {attributes: Attribute[], rules: Rule[], validationResult: ValidationResult}) => {
-                        this.loadingService.startLoading();
-                        this.attributes = r.attributes;
-                        this.rules = r.rules;
-                        this.validationResult = r.validationResult;
-                        const itemIds: number[] = r.validationResult.errors.map((e: ValidationError) => e.itemId);
-                        this.itemService.getItemsByIds(this.view.id, itemIds)
-                            .pipe(
-                                map((r: PaginableApiResponse<Item[]>) => r.payload),
-                                tap((i: Item[]) => {
-                                    this.items = i;
-                                }),
-                                finalize(() => {
-                                    this.loading = false;
-                                    this.loadingService.stopLoading();
-                                })
-                            ).subscribe();
-                    }),
-                    catchError((e: Error) => {
-                        this.loading = false;
-                        return throwError(e);
-                    }),
-                    finalize(() => {
-                        this.loadingService.stopLoading();
-                    })
-                ).subscribe();
+            tap((v: View | undefined) => {
+                if (v) {
+                    this.view = v;
+                    forkJoin({
+                        attributes: this.attributeService.getAllAttributesByView(v.id)
+                            .pipe(map((r: PaginableApiResponse<Attribute[]>) => assertDefinedReturn(r.payload))),
+                        rules: this.ruleService.getAllRulesByView(v.id),
+                        validationResult: this.validationService.getValidationDetails(this.view.id, Number(this.validationId)),
+                    }).pipe(
+                        tap((r: { attributes: Attribute[], rules: Rule[], validationResult: ValidationResult }) => {
+                            this.loadingService.startLoading();
+                            this.attributes = r.attributes;
+                            this.rules = r.rules;
+                            this.validationResult = r.validationResult;
+                            const itemIds: number[] = r.validationResult.errors.map((e: ValidationError) => e.itemId);
+                            this.itemService.getItemsByIds(v.id, itemIds)
+                                .pipe(
+                                    map((r2: PaginableApiResponse<Item[]>) => assertDefinedReturn(r2.payload)),
+                                    tap((i: Item[]) => {
+                                        this.items = i;
+                                    }),
+                                    finalize(() => {
+                                        this.loading = false;
+                                        this.loadingService.stopLoading();
+                                    })
+                                ).subscribe();
+                        }),
+                        catchError((e: Error) => {
+                            this.loading = false;
+                            return throwError(e);
+                        }),
+                        finalize(() => {
+                            this.loadingService.stopLoading();
+                        })
+                    ).subscribe();
+                }
             })
         ).subscribe();
     }
@@ -127,14 +131,16 @@ export class ViewValidationDetailsPageComponent implements OnInit, OnDestroy, Af
     onValidationResultEvent($event: ValidationResultTableComponentEvent) {
         switch ($event.type) {
             case 'modification':
-                forkJoin([
-                    this.itemService.saveTableItems(this.view.id, $event.modifiedItems)
-                ]).pipe(
-                    tap((r: [ApiResponse]) => {
-                        toNotifications(this.notificationService, r[0]);
-                        this.reload();
-                    })
-                ).subscribe();
+                if (this.view && $event.modifiedItems) {
+                    forkJoin([
+                        this.itemService.saveTableItems(this.view.id, $event.modifiedItems)
+                    ]).pipe(
+                        tap((r: [ApiResponse]) => {
+                            toNotifications(this.notificationService, r[0]);
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             case 'reload':
                 this.reload();

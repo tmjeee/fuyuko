@@ -28,9 +28,9 @@ export class ViewAttributeValidationRangeSummaryWidgetComponent extends Dashboar
    }
 
    data: any;
-   r: Reporting_ViewAttributeValidationRangeSummary;
-   views: View[];
-   selectedView: View;
+   r?: Reporting_ViewAttributeValidationRangeSummary;
+   views: View[] = [];
+   selectedView?: View;
 
    columns: any[] = ['validation name', 'total attribute warnings', 'total attribute errors'];
    options: any = {
@@ -51,7 +51,11 @@ export class ViewAttributeValidationRangeSummaryWidgetComponent extends Dashboar
    type: ChartType = ChartType.BarChart;
 
    static info(): DashboardWidgetInfo {
-      return { id: 'view-attribute-validation-range-summary-widget', name: 'view-attribute-validation-range-summary-widget', type: ViewAttributeValidationRangeSummaryWidgetComponent };
+      return {
+          id: 'view-attribute-validation-range-summary-widget',
+          name: 'view-attribute-validation-range-summary-widget',
+          type: ViewAttributeValidationRangeSummaryWidgetComponent
+      };
    }
 
    ngOnInit(): void {
@@ -72,25 +76,27 @@ export class ViewAttributeValidationRangeSummaryWidgetComponent extends Dashboar
    }
 
    reload() {
-      this.viewAttributeValidateRangeSummaryWidgetService
-          .getViewAttributesValidationRangeSummary(this.selectedView.id)
-          .pipe(
-              tap((r: Reporting_ViewAttributeValidationRangeSummary) => {
-                  this.r = r;
-                  const d: any = [];
+       if (this.selectedView) {
+           this.viewAttributeValidateRangeSummaryWidgetService
+               .getViewAttributesValidationRangeSummary(this.selectedView.id)
+               .pipe(
+                   tap((r: Reporting_ViewAttributeValidationRangeSummary) => {
+                       this.r = r;
+                       const d: any = [];
 
-                  if (r && r.ranges && r.ranges.length) {
-                      r.ranges.forEach((r: {
-                          validationId: number,
-                          validationName: string,
-                          totalAttributeErrors: number,
-                          totalAttributeWarnings: number
-                      }) => {
-                          d.push([r.validationName, r.totalAttributeWarnings, r.totalAttributeErrors]);
-                      });
-                  }
-                  this.data = d;
-              })
-          ).subscribe();
+                       if (r && r.ranges && r.ranges.length) {
+                           r.ranges.forEach((r: {
+                               validationId: number,
+                               validationName: string,
+                               totalAttributeErrors: number,
+                               totalAttributeWarnings: number
+                           }) => {
+                               d.push([r.validationName, r.totalAttributeWarnings, r.totalAttributeErrors]);
+                           });
+                       }
+                       this.data = d;
+                   })
+               ).subscribe();
+       }
    }
 }

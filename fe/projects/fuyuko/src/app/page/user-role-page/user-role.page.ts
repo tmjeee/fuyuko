@@ -23,9 +23,9 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class UserRolePageComponent implements OnInit {
 
-  groupSearchByRole: (role: Role) => GroupSearchFn;
+  groupSearchByRole!: (role: Role) => GroupSearchFn;
 
-  ready: boolean;
+  ready = false;
 
   allRoles: Role[];
 

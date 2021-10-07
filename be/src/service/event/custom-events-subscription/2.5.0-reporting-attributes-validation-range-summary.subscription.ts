@@ -393,8 +393,8 @@ const httpAction: any[] = [
             `, [viewId]);
 
             if (q1 && q1.length) {
-                let viewId: number;
-                let viewName: string;
+                let viewId = undefined;
+                let viewName = undefined;
                 
                 const ranges = [];
                 for (const qi of q1) {
@@ -482,10 +482,10 @@ const mountRoute = (v1AppRouter: Router, registry: Registry) => {
 };
 
 const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `attributes-validation-range-summary-subscription`,
-    (v1AppRouter: Router, registry: Registry): Promise<void> => {
+    async (v1AppRouter: Router, registry: Registry): Promise<void> => {
         // perform db and router related setup
         mountRoute(v1AppRouter, registry);
-        return null;
+        return undefined;
     }
 );
 

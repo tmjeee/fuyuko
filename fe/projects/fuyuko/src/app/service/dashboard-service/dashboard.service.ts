@@ -11,6 +11,7 @@ import {map} from 'rxjs/operators';
 import {DASHBOARD_STRATEGIES} from '../../component/dashboard-component/strategies';
 import {DASHBOARD_WIDGET_INFOS} from '../../component/dashboard-component/widgets';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {assertDefinedReturn} from "../../utils/common.util";
 
 const URL_GET_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard`;
 const URL_SAVE_DASHBOARD_FORMAT = () => `${config().api_host_url}/user/:userId/dashboard/save`;
@@ -54,7 +55,7 @@ export class DashboardService {
         return this.httpClient
             .get<ApiResponse<{data: string}>>(URL_GET_DASHBOARD_FORMAT().replace(':userId', String(myself.id)))
             .pipe(
-                map((r: ApiResponse<{data: string}>) => r.payload),
+                map((r: ApiResponse<{data: string}>) => assertDefinedReturn(r.payload)),
                 map((r: {data: string}) => {
                     const d = (r.data ? r.data.trim() : r.data);
                     if (d) {

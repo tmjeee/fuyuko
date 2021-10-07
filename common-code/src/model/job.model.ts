@@ -21,6 +21,6 @@ export interface Job {
 }
 
 export interface JobAndLogs {
-    job: Job;
+    job?: Job;
     logs: JobLog[];
 }

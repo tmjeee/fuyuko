@@ -5,7 +5,8 @@ import {DASHBOARD_WIDGET_INFOS} from '../widgets';
 
 export type StickInTypesArgs = SerializedDashboardWidgetInstanceFormat |
                                SerializedDashboardWidgetInstanceFormat[] |
-                               SerializedDashboardWidgetInstanceFormat[][];
+                               SerializedDashboardWidgetInstanceFormat[][] |
+                               undefined;
 
 export const stickInTypes = (a: StickInTypesArgs): StickInTypesArgs => {
     if (Array.isArray(a)) {
@@ -20,14 +21,15 @@ export const stickInTypes = (a: StickInTypesArgs): StickInTypesArgs => {
         return arr;
     } else  {
         const d: SerializedDashboardWidgetInstanceFormat =  a as SerializedDashboardWidgetInstanceFormat;
-        const wi: DashboardWidgetInfo = DASHBOARD_WIDGET_INFOS.find((i: DashboardWidgetInfo) => i.id === d.typeId);
+        const wi: DashboardWidgetInfo | undefined =
+            DASHBOARD_WIDGET_INFOS.find((i: DashboardWidgetInfo) => i.id === d.typeId);
         if (wi) {
             (d as any).type = wi.type;
             return d;
         } else {
             console.error(
                 `DashboardWidgetInstance instanceId ${d.instanceId} of typeId ${d.typeId} is an invalid entry, cannot identify the type`);
-            return null;
+            return undefined;
         }
     }
 };

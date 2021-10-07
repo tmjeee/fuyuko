@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {View} from '@fuyuko-common/model/view.model';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {tap} from 'rxjs/operators';
@@ -23,15 +23,15 @@ export interface CustomBulkEditInputFormComponentEvent {
    templateUrl: './custom-bulk-edit-input-form.component.html',
    styleUrls: ['./custom-bulk-edit-input-form.component.scss']
 })
-export class CustomBulkEditInputFormComponent {
+export class CustomBulkEditInputFormComponent implements OnInit, OnChanges {
 
-   @Input() customBulkEdit: CustomBulkEdit;
-   @Input() validateFn: CustomBulkEditFormValidateFn;
-   @Input() view: View;
+   @Input() customBulkEdit!: CustomBulkEdit;
+   @Input() validateFn!: CustomBulkEditFormValidateFn;
+   @Input() view!: View;
 
    @Output() events: EventEmitter<CustomBulkEditInputFormComponentEvent>;
 
-   validationResult: CustomBulkEditScriptValidateResult;
+   validationResult?: CustomBulkEditScriptValidateResult;
 
    formGroup: FormGroup;
 
@@ -99,11 +99,13 @@ export class CustomBulkEditInputFormComponent {
    }
 
    async onFileUpload($event: Event, input: CustomBulkEditScriptInput) {
-      const fileList: FileList = ($event.target as HTMLInputElement).files;
-      const file: File = fileList[0];
+      const fileList = ($event.target as HTMLInputElement).files;
+      const file = fileList && fileList.length ? fileList[0] : undefined;
 
-      const fileDataObject: FileDataObject = await fromFileToFileDataObject(file);
-      this.formGroup.controls[input.name].setValue(fileDataObject);
+      if (file) {
+         const fileDataObject: FileDataObject = await fromFileToFileDataObject(file);
+         this.formGroup.controls[input.name].setValue(fileDataObject);
+      }
    }
 
 }

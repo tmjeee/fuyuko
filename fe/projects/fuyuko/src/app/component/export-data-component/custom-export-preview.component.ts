@@ -15,16 +15,16 @@ export interface CustomExportPreviewComponentEvent {
 })
 export class CustomExportPreviewComponent {
 
-    @Input() view: View;
-    @Input() customDataExport: CustomDataExport;
-    @Input() inputValues: ExportScriptInputValue[];
-    @Input() previewFn: CustomExportPreviewFn;
+    @Input() view!: View;
+    @Input() customDataExport!: CustomDataExport;
+    @Input() inputValues!: ExportScriptInputValue[];
+    @Input() previewFn!: CustomExportPreviewFn;
 
     @Output() events: EventEmitter<CustomExportPreviewComponentEvent>;
 
-    preview: ExportScriptPreview;
-    datasource: {[key: string]: string}[];
-    ready: boolean;
+    preview?: ExportScriptPreview;
+    datasource: {[key: string]: string}[] = [];
+    ready = false ;
 
 
     constructor() {
@@ -41,17 +41,18 @@ export class CustomExportPreviewComponent {
         this.previewFn(this.view, this.customDataExport, this.inputValues).pipe(
             tap((r: ExportScriptPreview) => {
                 this.preview = r;
-                for (const row of this.preview.rows) {
-                    const o = this.preview.columns.reduce((o: {[k: string]: string}, col: string) => {
-                        o[col] = row[col];
-                        return o;
-                    }, {});
-                    this.datasource.push(o);
+                if (this.preview && this.preview.rows && this.preview.columns) {
+                    for (const row of this.preview.rows) {
+                        const o = this.preview.columns.reduce((o: { [k: string]: string }, col: string) => {
+                            o[col] = row[col];
+                            return o;
+                        }, {});
+                        this.datasource.push(o);
+                    }
+                    this.events.emit({
+                        preview: this.preview
+                    });
                 }
-                this.events.emit({
-                    preview: this.preview
-                });
-                this.ready = true;
             }),
             finalize(() => this.ready = true)
         ).subscribe();

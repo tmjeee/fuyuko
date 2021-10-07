@@ -173,8 +173,8 @@ const appInitializer = (settingsService: SettingsService,
       reload(httpClient, () => {
         authService.asObservable()
             .pipe(
-                tap((u: User) => {
-                  if (u == null) {  // logout
+                tap((u: User | undefined) => {
+                  if (!u) {  // logout
                     viewService.destroy();
                     settingsService.destroy();
                   } else {          // login

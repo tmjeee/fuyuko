@@ -23,10 +23,11 @@ import {MatRadioChange} from '@angular/material/radio';
 import {tap} from 'rxjs/operators';
 import {ValidationError, ValidationResult} from '@fuyuko-common/model/validation.model';
 import {Rule} from '@fuyuko-common/model/rule.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 export class ValidationResultTableDataSource extends DataSource<TableItem> {
 
-    subject: BehaviorSubject<TableItem[]> = new BehaviorSubject([]);
+    subject: BehaviorSubject<TableItem[]> = new BehaviorSubject([] as TableItem[]);
 
     connect(collectionViewer: CollectionViewer): Observable<TableItem[]> {
         return this.subject.asObservable();
@@ -77,19 +78,19 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
     counter = -1;
 
     @Output() events: EventEmitter<ValidationResultTableComponentEvent>;
-    @Input() itemAndAttributeSet: TableItemAndAttributeSet;
-    @Input() observable: Observable<Item>;
-    @Input() rules: Rule[];
-    @Input() validationResult: ValidationResult;
+    @Input() itemAndAttributeSet!: TableItemAndAttributeSet;
+    @Input() observable?: Observable<Item | undefined>;
+    @Input() rules: Rule[] = [];
+    @Input() validationResult!: ValidationResult;
 
-    subscription: Subscription;
+    subscription?: Subscription;
 
     pendingSavingItems: Map<number, TableItem>;
 
     datasource: ValidationResultTableDataSource;
 
-    displayedColumns: string[]; // the attribute ids
-    childrenDisplayedColumns: string[];
+    displayedColumns!: string[]; // the attribute ids
+    childrenDisplayedColumns!: string[];
 
     selectionModel: SelectionModel<TableItem>;
 
@@ -101,7 +102,7 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
     constructor(private changeDetectorRef: ChangeDetectorRef) {
         this.filterOptionsVisible = false;
         this.events = new EventEmitter();
-        this.selectionModel = new SelectionModel(false, []);
+        this.selectionModel = new SelectionModel(false, [] as TableItem[]);
         this.datasource = new ValidationResultTableDataSource();
         this.pendingSavingItems = new Map();
         this.rowInfoMap = new Map();
@@ -127,7 +128,7 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
         if (this.observable) {
             this.subscription = this.observable
                 .pipe(
-                    tap((i: Item) => {
+                    tap((i: Item | undefined) => {
                         if (i) {
                             this.handleExternalItemChange(i);
                         }
@@ -147,7 +148,7 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
     }
 
     handleExternalItemChange(i: Item) {
-        const t: TableItem = this.itemAndAttributeSet.tableItems.find((ti: TableItem) => ti.id === i.id);
+        const t: TableItem | undefined = this.itemAndAttributeSet.tableItems.find((ti: TableItem) => ti.id === i.id);
         if (t) {
             this.selectionModel.select(t);
             this.changeDetectorRef.detectChanges();
@@ -157,13 +158,13 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
     populateDisplayColumns()  {
         const columns: string[] = this.itemAndAttributeSet.attributes
             .sort((a: Attribute, b: Attribute) => {
-                const x = this.attributeInfoMap.get(a.id).order;
-                const y = this.attributeInfoMap.get(b.id).order;
+                const x = this.attributeInfoMap.get(a.id)?.order ?? 0;
+                const y = this.attributeInfoMap.get(b.id)?.order ?? 0;
                 return x - y;
             })
             .filter((a: Attribute) => {
-                const attInfo: AttributeInfo = this.attributeInfoMap.get(a.id);
-                return (!attInfo.hidden);
+                const attInfo: AttributeInfo | undefined = this.attributeInfoMap.get(a.id);
+                return (attInfo && !attInfo.hidden);
             })
             .map((a: Attribute) => {
                 return '' + a.id;
@@ -195,14 +196,14 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
 
     onDataEditEvent($event: ItemValueAndAttribute, tableItem: TableItem) {
         const val: Value = $event.itemValue;
-        const value: ItemValTypes = val.val;
+        const value: ItemValTypes | undefined = val.val;
         const att: Attribute = $event.attribute;
 
         tableItem[att.id] = val;
         if (!this.pendingSavingItems.has(tableItem.id)) {
             this.pendingSavingItems.set(tableItem.id, {...tableItem});
         }
-        this.pendingSavingItems.get(tableItem.id)[$event.attribute.id] = val;
+        assertDefinedReturn(this.pendingSavingItems.get(tableItem.id))[$event.attribute.id] = val;
     }
 
     onItemEditEvent($event: ItemEditorComponentEvent, tableItem: TableItem) {
@@ -213,11 +214,11 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
         switch ($event.type) {
             case 'name':
                 tableItem.name = eventTableItem.name;
-                this.pendingSavingItems.get(tableItem.id).name = eventTableItem.name;
+                assertDefinedReturn(this.pendingSavingItems.get(tableItem.id)).name = eventTableItem.name;
                 break;
             case 'description':
                 tableItem.description = eventTableItem.description;
-                this.pendingSavingItems.get(tableItem.id).description = eventTableItem.description;
+                assertDefinedReturn(this.pendingSavingItems.get(tableItem.id)).description = eventTableItem.description;
                 break;
         }
     }
@@ -248,14 +249,15 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
-        this.rowInfoMap.get(item.id).expanded = !this.rowInfoMap.get(item.id).expanded;
+        assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded =
+            !assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 
     isRowExpanded(item: TableItem): boolean {
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
-        return this.rowInfoMap.get(item.id).expanded;
+        return assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 
     isChildRow(index: number, item: TableItem): boolean {
@@ -296,8 +298,11 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
     }
 
     onAttributeFilteringChanged($event: MatCheckboxChange, attribute: Attribute) {
-        this.attributeInfoMap.get(attribute.id).hidden = !$event.checked;
-        this.populateDisplayColumns();
+        const a = this.attributeInfoMap.get(attribute.id);
+        if (a) {
+            a.hidden = !$event.checked;
+            this.populateDisplayColumns();
+        }
     }
 
     getItemValue(tableItem: TableItem, attribute: Attribute) {

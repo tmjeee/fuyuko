@@ -26,11 +26,11 @@ export class GlobalMissingAttributeValuesWidgetComponent extends DashboardWidget
         super(dashboardWidgetService);
     }
 
-    i: Reporting_ItemsWithMissingAttributeInfo;
+    i?: Reporting_ItemsWithMissingAttributeInfo;
     types: Type[] = ['Item', 'Attribute'];
     selectedType: Type = 'Item';
 
-    data: any[];
+    data: any[] = [];
     chartType: ChartType = ChartType.PieChart;
     options: any = {
         title: `Number of ${this.selectedType} with missing values`,
@@ -49,7 +49,11 @@ export class GlobalMissingAttributeValuesWidgetComponent extends DashboardWidget
     };
 
     static info(): DashboardWidgetInfo {
-        return { id: 'global-missing-attribute-values-widget', name: 'global-missing-attribute-values-widget', type: GlobalMissingAttributeValuesWidgetComponent };
+        return {
+            id: 'global-missing-attribute-values-widget',
+            name: 'global-missing-attribute-values-widget',
+            type: GlobalMissingAttributeValuesWidgetComponent
+        };
     }
 
     ngOnInit(): void {
@@ -70,20 +74,22 @@ export class GlobalMissingAttributeValuesWidgetComponent extends DashboardWidget
 
     reload() {
         const d: any = [];
-        switch (this.selectedType) {
-            case 'Item': {
-                this.i.views.forEach((v: Reporting_ViewWithMissingAttribute) => {
-                    d.push([v.viewName, v.totalItemsWithMissingAttributes]);
-                });
-                this.data = d;
-                break;
-            }
-            case 'Attribute': {
-                this.i.views.forEach((v: Reporting_ViewWithMissingAttribute) => {
-                    d.push([v.viewName, v.totalMissingAttributes]);
-                });
-                this.data = d;
-                break;
+        if (this.i) {
+            switch (this.selectedType) {
+                case 'Item': {
+                    this.i.views.forEach((v: Reporting_ViewWithMissingAttribute) => {
+                        d.push([v.viewName, v.totalItemsWithMissingAttributes]);
+                    });
+                    this.data = d;
+                    break;
+                }
+                case 'Attribute': {
+                    this.i.views.forEach((v: Reporting_ViewWithMissingAttribute) => {
+                        d.push([v.viewName, v.totalMissingAttributes]);
+                    });
+                    this.data = d;
+                    break;
+                }
             }
         }
         this.options = {

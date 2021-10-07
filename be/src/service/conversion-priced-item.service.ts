@@ -59,7 +59,7 @@ class ConversionPricedItemService {
         for (const i in item) {
             if (item.hasOwnProperty(i) && !isNaN(Number(i))) {
                 const value: Value = item[i];
-                const val2: ItemValue2 = itemValueRevert(value);
+                const val2: ItemValue2 | undefined = itemValueRevert(value);
                 if (val2) {
                     item2.values.push(val2);
                 }

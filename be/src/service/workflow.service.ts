@@ -411,7 +411,7 @@ class WorkflowService {
                                 WHERE WORKFLOW_ID = ?
                             `, [workflowId]);
                         });
-                        const attributeIds = q.reduce((a, c, i, arr) => {
+                        const attributeIds = q.reduce((a: number[], c, i, arr) => {
                             a.push(c.ATTRIBUTE_ID)
                             return a;
                         }, []);

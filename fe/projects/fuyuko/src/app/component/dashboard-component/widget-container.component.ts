@@ -22,12 +22,12 @@ import {User} from '@fuyuko-common/model/user.model';
 })
 export class WidgetContainerComponent  implements OnInit, AfterViewInit {
 
-    @Input() currentUser: User;
-    @Input() dashboardWidgetInstance: DashboardWidgetInstance;
+    @Input() currentUser!: User;
+    @Input() dashboardWidgetInstance!: DashboardWidgetInstance;
 
-    @ViewChild('container', {read: ViewContainerRef, static: true}) container: ViewContainerRef;
+    @ViewChild('container', {read: ViewContainerRef, static: true}) container!: ViewContainerRef;
 
-    componentRef: ComponentRef<DashboardWidget>;
+    componentRef?: ComponentRef<DashboardWidget>;
 
     constructor(private componentFactoryResolver: ComponentFactoryResolver, private dashboardWidgetService: DashboardWidgetService) { }
 

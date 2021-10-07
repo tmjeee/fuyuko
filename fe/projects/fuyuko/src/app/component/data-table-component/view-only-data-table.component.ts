@@ -6,6 +6,7 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {RowInfo} from './data-table.component';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {assertDefinedReturn} from "../../utils/common.util";
 
 
 class ViewOnlyDataTableDatasource implements DataSource<TableItem> {
@@ -13,7 +14,7 @@ class ViewOnlyDataTableDatasource implements DataSource<TableItem> {
     private subject: BehaviorSubject<TableItem[]>;
 
     constructor() {
-        this.subject = new BehaviorSubject([]);
+        this.subject = new BehaviorSubject([] as TableItem[]);
     }
 
     connect(collectionViewer: CollectionViewer): Observable<TableItem[] | ReadonlyArray<TableItem>> {
@@ -44,14 +45,14 @@ class ViewOnlyDataTableDatasource implements DataSource<TableItem> {
 })
 export class ViewOnlyDataTableComponent implements OnInit, OnChanges {
 
-    @Input() attributes: Attribute[];
-    @Input() items: Item[];
+    @Input() attributes: Attribute[] = [];
+    @Input() items: Item[] = [];
 
-    tableItems: TableItem[];
-    datasource: ViewOnlyDataTableDatasource;
-    displayColumns: string[];
-    childrenDisplayColumns: string[];
-    rowInfoMap: Map<number, RowInfo>;   // item id as key
+    tableItems!: TableItem[];
+    datasource!: ViewOnlyDataTableDatasource;
+    displayColumns!: string[];
+    childrenDisplayColumns!: string[];
+    rowInfoMap!: Map<number, RowInfo>;   // item id as key
 
 
     ngOnInit(): void {
@@ -68,8 +69,10 @@ export class ViewOnlyDataTableComponent implements OnInit, OnChanges {
     reload() {
         this.rowInfoMap = new Map();
         this.datasource = new ViewOnlyDataTableDatasource();
-        this.displayColumns = ['expansion', 'name', 'description'].concat(...this.attributes.map((a: Attribute) => ('' + a.id)));
-        this.childrenDisplayColumns = ['children-expansion', 'name', 'description'].concat(...this.attributes.map((a: Attribute) => ('' + a.id)));
+        this.displayColumns = ['expansion', 'name', 'description']
+            .concat(...this.attributes.map((a: Attribute) => ('' + a.id)));
+        this.childrenDisplayColumns = ['children-expansion', 'name', 'description']
+            .concat(...this.attributes.map((a: Attribute) => ('' + a.id)));
         this.tableItems = toTableItem(this.items);
         this.tableItems.forEach((t: TableItem) => {
             this.rowInfoMap.set(t.id, {
@@ -86,21 +89,22 @@ export class ViewOnlyDataTableComponent implements OnInit, OnChanges {
 
     isAnyParentRowExpanded(item: TableItem) {
         const b = this.rowInfoMap.get(item.rootParentId);
-        return b.expanded;
+        return b?.expanded ?? false;
     }
 
     rowClicked(item: TableItem) {
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
-        this.rowInfoMap.get(item.id).expanded = !this.rowInfoMap.get(item.id).expanded;
+        assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded =
+            !assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 
     isRowExpanded(item: TableItem): boolean {
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
-        return this.rowInfoMap.get(item.id).expanded;
+        return assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 }
 

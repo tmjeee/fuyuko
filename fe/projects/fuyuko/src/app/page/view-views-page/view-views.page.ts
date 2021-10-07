@@ -8,6 +8,7 @@ import {NotificationsService} from 'angular2-notifications';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {LoadingService} from '../../service/loading-service/loading.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class ViewViewsPageComponent implements OnInit {
 
     done: boolean;
 
-    views: View[];
+    views: View[] = [];
 
     constructor(private viewService: ViewService,
                 private notificationService: NotificationsService,
@@ -50,20 +51,22 @@ export class ViewViewsPageComponent implements OnInit {
     onViewTableEvent($event: ViewTableComponentEvent) {
         switch ($event.type) {
             case 'UPDATE':
-                combineLatest([
-                    this.viewService.saveViews($event.updatedViews),
-                    this.viewService.deleteViews($event.deletedViews)
-                ]).pipe(
-                   tap((r: [ApiResponse, ApiResponse]) => {
-                       if ($event.updatedViews.length) {
-                           toNotifications(this.notificationService, r[0]);
-                       }
-                       if ($event.deletedViews.length) {
-                           toNotifications(this.notificationService, r[1]);
-                       }
-                       this.reload();
-                   }),
-                ).subscribe();
+                if ($event.updatedViews && $event.deletedViews) {
+                    combineLatest([
+                        this.viewService.saveViews($event.updatedViews),
+                        this.viewService.deleteViews($event.deletedViews)
+                    ]).pipe(
+                        tap((r: [ApiResponse, ApiResponse]) => {
+                            if (assertDefinedReturn($event.updatedViews).length) {
+                                toNotifications(this.notificationService, r[0]);
+                            }
+                            if (assertDefinedReturn($event.deletedViews).length) {
+                                toNotifications(this.notificationService, r[1]);
+                            }
+                            this.reload();
+                        }),
+                    ).subscribe();
+                }
                 break;
             case 'RELOAD':
                 this.reload();

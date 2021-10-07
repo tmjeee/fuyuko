@@ -152,7 +152,7 @@ class CategoryService {
      *  === updateCategory ===
      *  ======================
      */
-    async updateCategory(viewId: number, parentCategoryId: number, c: UpdateCategoryInput): Promise<string[]> {
+    async updateCategory(viewId: number, parentCategoryId: number | undefined, c: UpdateCategoryInput): Promise<string[]> {
         const errors: string[] = await doInDbConnection(async(conn: Connection) => {
             const errors: string[] = [];
             // make sure this category id is valid
@@ -214,11 +214,11 @@ class CategoryService {
      *  === addCategory ===
      *  ===================
      */
-    async _addCategory(conn: Connection, viewId: number, parentCategoryId: number, c: AddCategoryInput): Promise<string[]> {
+    async _addCategory(conn: Connection, viewId: number, parentCategoryId: number | undefined, c: AddCategoryInput): Promise<string[]> {
         const errors: string[] = [];
         const qc: QueryA = await conn.query(
-            `SELECT COUNT(*) AS COUNT FROM TBL_VIEW_CATEGORY WHERE NAME=? AND VIEW_ID=? AND STATUS=? AND ${parentCategoryId>0 ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}`,
-            parentCategoryId>0 ? [c.name, viewId, ENABLED, parentCategoryId] : [c.name, viewId, ENABLED]);
+            `SELECT COUNT(*) AS COUNT FROM TBL_VIEW_CATEGORY WHERE NAME=? AND VIEW_ID=? AND STATUS=? AND ${(parentCategoryId && parentCategoryId>0) ? 'PARENT_ID=?' : 'PARENT_ID IS NULL'}`,
+            (parentCategoryId && parentCategoryId > 0) ? [c.name, viewId, ENABLED, parentCategoryId] : [c.name, viewId, ENABLED]);
         if (qc[0].COUNT <= 0) {
             const q: QueryResponse = await conn.query(`INSERT INTO TBL_VIEW_CATEGORY (NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID) VALUES (?,?,?,?,?)`,
                 [c.name, c.description, ENABLED, viewId, (parentCategoryId && parentCategoryId > 0 ? parentCategoryId : null)]);
@@ -240,7 +240,7 @@ class CategoryService {
         } as AddCategoryEvent);
         return errors;
     };
-    async addCategory(viewId: number, parentId: number, c: AddCategoryInput): Promise<string[]> {
+    async addCategory(viewId: number, parentId: number | undefined, c: AddCategoryInput): Promise<string[]> {
         return await doInDbConnection(async(conn: Connection) => {
             await this._addCategory(conn, viewId, parentId, c);
         });
@@ -314,7 +314,7 @@ class CategoryService {
                        ID, NAME, DESCRIPTION, STATUS, VIEW_ID, PARENT_ID, CREATION_DATE, LAST_UPDATE 
                    FROM TBL_VIEW_CATEGORY WHERE ID=?
            `, categoryId);
-            let category: Category = null;
+            let category: Category | undefined = undefined;
             if (q && q.length) {
                 const c: Category = {
                     id: q[0].ID,
@@ -338,7 +338,7 @@ class CategoryService {
      *  === getViewCategoryByName() ===
      *  ===============================
      */
-    async getViewCategoryByName(viewId: number, categoryName: string, parentCategoryId?: number): Promise<Category> {
+    async getViewCategoryByName(viewId: number, categoryName: string, parentCategoryId?: number): Promise<Category|undefined> {
         const q: QueryA = await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(
                 parentCategoryId ?
@@ -359,7 +359,7 @@ class CategoryService {
             return q;
         });
 
-        let category: Category = null;
+        let category: Category | undefined = undefined;
         if (q && q.length) {
             const c: Category = {
                 id: q[0].ID,
@@ -421,7 +421,7 @@ class CategoryService {
      *  === getViewCategories() ===
      *  ===========================
      */
-    async getViewCategories(viewId: number, parentCategoryId: number = null): Promise<Category[]> {
+    async getViewCategories(viewId: number, parentCategoryId: number | undefined = undefined): Promise<Category[]> {
         const q: QueryA = await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(`
                 SELECT 
@@ -460,7 +460,7 @@ class CategoryService {
      *  === getViewCategoriesWithItems() ===
      *  ====================================
      */
-    async getViewCategoriesWithItems(viewId: number, parentCategoryId: number = null): Promise<CategoryWithItems[]> {
+    async getViewCategoriesWithItems(viewId: number, parentCategoryId: number | undefined = undefined): Promise<CategoryWithItems[]> {
         const q: QueryA = await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(`
                 SELECT 
@@ -708,7 +708,7 @@ class CategoryService {
      * === updateCategoryHierarchy() ===
      * =================================
      */
-    async updateCategoryHierarchy(categoryId: number, parentId: number): Promise<string[]> {
+    async updateCategoryHierarchy(categoryId: number, parentId?: number): Promise<string[]> {
         return await doInDbConnection(async (conn: Connection) => {
             const errors: string[] = [];
             const q1: QueryA = await conn.query(`

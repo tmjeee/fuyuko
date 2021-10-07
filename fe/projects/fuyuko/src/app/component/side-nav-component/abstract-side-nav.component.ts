@@ -7,7 +7,7 @@ import {OnInit, Directive } from '@angular/core';
 // tslint:disable-next-line:directive-class-suffix
 export abstract class AbstractSideNavComponent implements OnInit {
 
-    routeSideNavData: string;
+    routeSideNavData?: string;
 
     constructor(protected route: ActivatedRoute, protected router: Router) {
     }
@@ -23,8 +23,8 @@ export abstract class AbstractSideNavComponent implements OnInit {
             ).subscribe();
     }
 
-    findSideNavData(r: ActivatedRouteSnapshot[]): string {
-        let result: string = null;
+    findSideNavData(r: ActivatedRouteSnapshot[]): string | undefined {
+        let result: string | undefined;
         for (const rr of r) {
             result = rr.data.sideNav;
             if (!result) {

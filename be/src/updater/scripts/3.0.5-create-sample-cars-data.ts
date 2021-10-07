@@ -129,7 +129,7 @@ const runImport = async () => {
         const year = fileSegments[2];
         const name = `${make}_${model}_${year}`;
 
-        let item: Item = await getItemByName(view.id, name);
+        let item: Item | undefined = await getItemByName(view.id, name);
         let primaryImage = false;
         if (!item) {  //  item not already exists
             item = createNewItem(-1, attributes);
@@ -149,41 +149,41 @@ const runImport = async () => {
             checkErrors(errors, `Failed to create item ${name} for Cars view`);
             item = await getItemByName(view.id, item.name);
             if (!item) {
-                throw new Error(`Failed to create item ${item.name}`);
+                throw new Error(`Failed to create item ${item!.name}`);
             }
             primaryImage = true;
 
 
-            let makeCategory: Category = await getViewCategoryByName(view.id, make);
+            let makeCategory: Category | undefined = await getViewCategoryByName(view.id, make);
             if (!makeCategory) {
-                const err: string[] = await addCategory(view.id, null, { name: make, description: make, children: []} as AddCategoryInput);
+                const err: string[] = await addCategory(view.id, undefined, { name: make, description: make, children: []} as AddCategoryInput);
                 checkErrors(err, `Failed to create category ${make}`);
                 makeCategory = await getViewCategoryByName(view.id, make);
                 checkNotNull(makeCategory, `Failed to find newly created category ${make}`);
             }
-            let yearCategory: Category = await getViewCategoryByName(view.id, year, makeCategory.id);
+            let yearCategory: Category | undefined = await getViewCategoryByName(view.id, year, makeCategory!.id);
             if (!yearCategory) {
-                const err: string[] = await addCategory(view.id, makeCategory.id, { name: `${year}`, description: `${year}`, children: []} as AddCategoryInput);
+                const err: string[] = await addCategory(view.id, makeCategory!.id, { name: `${year}`, description: `${year}`, children: []} as AddCategoryInput);
                 checkErrors(err, `Failed to create category ${year} under parent category ${make}`);
-                yearCategory = await getViewCategoryByName(view.id, year, makeCategory.id);
+                yearCategory = await getViewCategoryByName(view.id, year, makeCategory!.id);
                 checkNotNull(yearCategory, `Failed to find newly created category ${year} under parent category ${make}`);
             }
-            let modelCategory: Category = await getViewCategoryByName(view.id, model, yearCategory.id);
+            let modelCategory: Category | undefined = await getViewCategoryByName(view.id, model, yearCategory!.id);
             if (!modelCategory) {
-                const err: string[] = await addCategory(view.id, yearCategory.id, { name: model, description: model, children: []} as AddCategoryInput);
+                const err: string[] = await addCategory(view.id, yearCategory!.id, { name: model, description: model, children: []} as AddCategoryInput);
                 checkErrors(err, `Failed to create category ${model} under parent category ${year} under parent category ${make}`);
-                modelCategory = await getViewCategoryByName(view.id, model, yearCategory.id);
+                modelCategory = await getViewCategoryByName(view.id, model, yearCategory!.id);
                 checkNotNull(modelCategory, `Failed to find newly created category ${model} under parent category ${year} under parent category ${make}`);
             }
 
-            const err1: string[] = await addItemToViewCateogry(makeCategory.id, item.id);
-            checkErrors(err1, `Failed to add item ${item.name} to category ${makeCategory.name}`);
+            const err1: string[] = await addItemToViewCateogry(makeCategory!.id, item.id);
+            checkErrors(err1, `Failed to add item ${item.name} to category ${makeCategory!.name}`);
 
-            const err2: string[] = await addItemToViewCateogry(yearCategory.id, item.id);
-            checkErrors(err2, `Failed to add item ${item.name} to category ${yearCategory.name} under parent category ${makeCategory.name}`);
+            const err2: string[] = await addItemToViewCateogry(yearCategory!.id, item.id);
+            checkErrors(err2, `Failed to add item ${item.name} to category ${yearCategory!.name} under parent category ${makeCategory!.name}`);
 
-            const err3: string[] = await addItemToViewCateogry(modelCategory.id, item.id);
-            checkErrors(err3, `Failed to add item ${item.name} to category ${modelCategory.name} under parent Category ${yearCategory.name} under parent Category ${makeCategory.name}`);
+            const err3: string[] = await addItemToViewCateogry(modelCategory!.id, item.id);
+            checkErrors(err3, `Failed to add item ${item.name} to category ${modelCategory!.name} under parent Category ${yearCategory!.name} under parent Category ${makeCategory!.name}`);
 
 
             const r: boolean = await addItemToPricingStructure(view.id, pricingStructure.id, item.id);
@@ -218,9 +218,9 @@ const runImport = async () => {
            validateClauses: [
                {
                   id: -1,
-                  attributeId: makeAttribute.id,
-                  attributeName: makeAttribute.name,
-                  attributeType: makeAttribute.type,
+                  attributeId: makeAttribute!.id,
+                  attributeName: makeAttribute!.name,
+                  attributeType: makeAttribute!.type,
                   operator: 'not empty'
                } as ValidateClause
            ]
@@ -235,9 +235,9 @@ const runImport = async () => {
             validateClauses: [
                 {
                     id: -1,
-                    attributeId: modelAttribute.id,
-                    attributeName: modelAttribute.name,
-                    attributeType: modelAttribute.type,
+                    attributeId: modelAttribute!.id,
+                    attributeName: modelAttribute!.name,
+                    attributeType: modelAttribute!.type,
                     operator: 'not empty'
                 } as ValidateClause
             ]
@@ -252,9 +252,9 @@ const runImport = async () => {
             validateClauses: [
                 {
                     id: -1,
-                    attributeId: yearAttribute.id,
-                    attributeName: yearAttribute.name,
-                    attributeType: yearAttribute.type,
+                    attributeId: yearAttribute!.id,
+                    attributeName: yearAttribute!.name,
+                    attributeType: yearAttribute!.type,
                     operator: 'not empty'
                 } as ValidateClause
             ]

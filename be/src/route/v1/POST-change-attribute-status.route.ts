@@ -56,8 +56,11 @@ const httpAction: any[] = [
             if (ws && ws.length > 0) {
                 for (const w of ws) {
                     const att = await getAttributeInView(viewId, attributeId)
-                    const workflowTriggerResults = await triggerAttributeWorkflow([att], w.workflowDefinition.id, workflowAction);
-                    payload.push(...workflowTriggerResults);
+                    if (att) {
+                        const workflowTriggerResults = await triggerAttributeWorkflow(viewId, [att], w.workflowDefinition.id, workflowAction);
+                        payload.push(...workflowTriggerResults);
+                    }
+                    // todo: give warning when no att can be found
                 }
                 const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
                     messages: [{

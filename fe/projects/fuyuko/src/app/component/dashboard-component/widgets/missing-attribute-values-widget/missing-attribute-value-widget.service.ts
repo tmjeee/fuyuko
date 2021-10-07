@@ -18,7 +18,7 @@ export class MissingAttributeValueWidgetService {
         return this.httpClient
             .get<ApiResponse<Reporting_ItemsWithMissingAttributeInfo>>(URL_GET_MISSING_ATTRIBUTE_VALUES())
             .pipe(
-                map((r: ApiResponse<Reporting_ItemsWithMissingAttributeInfo>) => r.payload)
+                map((r: ApiResponse<Reporting_ItemsWithMissingAttributeInfo>) => r.payload!)
             )
             ;
     }

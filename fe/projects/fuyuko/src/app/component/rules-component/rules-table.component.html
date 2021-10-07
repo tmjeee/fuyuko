@@ -35,13 +35,15 @@
         <div class="validate-clauses-section">
           <div>Validate</div>
           <div *ngIf="!rule?.validateClauses || rule?.validateClauses?.length === 0" class="validate-clauses">No validate clause(s)</div>
-          <ul *ngIf="rule?.validateClauses?.length > 0" class="validate-clauses">
+          <ul *ngIf="rule?.validateClauses?.length ?? 0 > 0" class="validate-clauses">
             <ng-container *ngFor="let validateClause of rule.validateClauses">
               <li class="validate-clause" [attr.test-panel-validate-clause-attribute]="validateClause.attributeName">
                 {{validateClause.attributeName}}
                 {{validateClause.operator}}
-                <ul *ngFor="let condition of validateClause?.condition">
-                  <li>{{condition | itemAttributeValueAsString:findAttribute(validateClause.attributeId)}}</li>
+                <ul *ngFor="let condition of validateClause?.condition ?? []">
+                  <li>
+                    {{  condition | itemAttributeValueAsString:findAttribute(validateClause.attributeId)!  }}
+                  </li>
                 </ul>
               </li>
             </ng-container>
@@ -51,13 +53,13 @@
         <div class="when-clauses-section">
           <div>When</div>
           <div *ngIf="!rule?.whenClauses || rule?.whenClauses?.length === 0">No when clause(s)</div>
-          <ul *ngIf="rule?.whenClauses?.length > 0" class="when-clauses">
+          <ul *ngIf="rule?.whenClauses?.length ?? 0 > 0" class="when-clauses">
             <ng-container *ngFor="let whenClause of rule.whenClauses">
               <li class="when-clause" [attr.test-panel-when-clause-attribute]="whenClause.attributeName">
                 {{whenClause.attributeName}}
                 {{whenClause.operator}}
-                <ul *ngFor="let condition of whenClause?.condition">
-                  <li>{{condition | itemAttributeValueAsString:findAttribute(whenClause.attributeId)}}</li>
+                <ul *ngFor="let condition of whenClause?.condition ?? []">
+                  <li>{{condition | itemAttributeValueAsString:findAttribute(whenClause.attributeId)!}}</li>
                 </ul>
               </li>
             </ng-container>

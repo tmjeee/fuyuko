@@ -6,22 +6,22 @@ import {ResponseStatusScalar} from "../custom-types/custom-types";
 
 @ObjectType()
 class GqlResponseMessage {
-    @Field(_ => ResponseStatusScalar) status: ResponseStatus;
-    @Field() message: string;
+    @Field(_ => ResponseStatusScalar) status!: ResponseStatus;
+    @Field() message?: string;
 };
 
 export const createGqlResponseClass = <P>(cls: ClassType<P>): ClassType<ApiResponse<P>> => {
 
 
     @ObjectType({ isAbstract: true })
-    class GqlResponse {
+    class GqlApiResponse implements ApiResponse<P> {
         @Field(of => [GqlResponseMessage])
-        messages: GqlResponseMessage[]
+        messages!: GqlResponseMessage[]
 
         @Field(type => cls)
-        payload: P;
+        payload?: P;
     }
 
-    return GqlResponse;
+    return GqlApiResponse;
 }
 

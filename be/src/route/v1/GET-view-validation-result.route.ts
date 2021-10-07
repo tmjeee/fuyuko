@@ -31,8 +31,8 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const validationId: number = Number(req.params.validationId);
 
-        const _r: ValidationResult = await getViewValidationResult(viewId, validationId);
-        const apiResponse: ApiResponse<ValidationResult> = {
+        const _r: ValidationResult | undefined = await getViewValidationResult(viewId, validationId);
+        const apiResponse: ApiResponse<ValidationResult | undefined> = {
             messages: [{
                 status: 'SUCCESS',
                 message: `Validation result retrieved`,

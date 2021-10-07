@@ -10,6 +10,7 @@ import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_GET_CUSTOM_BULK_EDITS = () => `${config().api_host_url}/custom-bulk-edits`;
 const URL_POST_CUSTOM_BULK_EDIT_PREVIEW = () => `${config().api_host_url}/view/:viewId/custom-bulk-edit/:customBulkEditId/preview`;
@@ -29,7 +30,7 @@ export class CustomBulkEditService {
                 .replace(':viewId', String(v.id))
                 .replace(':customBulkEditId', String(c.id)), {
                     values: i
-                }).pipe(map((r: ApiResponse<CustomBulkEditScriptValidateResult>) => r.payload));
+                }).pipe(map((r: ApiResponse<CustomBulkEditScriptValidateResult>) => assertDefinedReturn(r.payload)));
     }
 
     preview(v: View, c: CustomBulkEdit, i: CustomBulkEditScriptInputValue[]): Observable<CustomBulkEditScriptPreview> {
@@ -38,21 +39,22 @@ export class CustomBulkEditService {
                 .replace(':viewId', String(v.id))
                 .replace(':customBulkEditId', String(c.id)), {
                     values: i
-                }).pipe(map((r: ApiResponse<CustomBulkEditScriptPreview>) => r.payload));
+                }).pipe(map((r: ApiResponse<CustomBulkEditScriptPreview>) => assertDefinedReturn(r.payload)));
     }
 
-    submit(v: View, c: CustomBulkEdit, p: CustomBulkEditScriptPreview, i: CustomBulkEditScriptInputValue[]): Observable<CustomBulkEditScriptJobSubmissionResult>{
+    submit(v: View, c: CustomBulkEdit, p: CustomBulkEditScriptPreview, i: CustomBulkEditScriptInputValue[]):
+        Observable<CustomBulkEditScriptJobSubmissionResult>{
         return this.httpClient.post<ApiResponse<CustomBulkEditScriptValidateResult>>(
             URL_POST_CUSTOM_BULK_EDIT_SUBMIT_JOB()
                 .replace(':viewId', String(v.id))
                 .replace(':customBulkEditId', String(c.id)), {
                     values: i,
                     preview: p
-                }).pipe(map((r: ApiResponse<CustomBulkEditScriptJobSubmissionResult>) => r.payload));
+                }).pipe(map((r: ApiResponse<CustomBulkEditScriptJobSubmissionResult>) => assertDefinedReturn(r.payload)));
     }
 
     getAllCustomBulkEdits(): Observable<CustomBulkEdit[]> {
         return this.httpClient.get<ApiResponse<CustomBulkEdit[]>>(
-            URL_GET_CUSTOM_BULK_EDITS()).pipe(map((r: ApiResponse<CustomBulkEdit[]>) => r.payload));
+            URL_GET_CUSTOM_BULK_EDITS()).pipe(map((r: ApiResponse<CustomBulkEdit[]>) => assertDefinedReturn(r.payload)));
     }
 }

@@ -11,6 +11,7 @@ import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.com
 import {createNewItem} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import config from '../../utils/config.util';
 import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/carousel.component';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 export interface DataListComponentEvent {
     type: 'modification' | 'reload' | 'favourite' | 'unfavourite';
@@ -35,8 +36,8 @@ export class DataListComponent {
     counter: number;
 
     @Input() enableSearch: boolean;
-    @Input() itemAndAttributeSet: ItemAndAttributeSet;
-    @Input() favouritedItemIds: number[];
+    @Input() itemAndAttributeSet!: ItemAndAttributeSet;
+    @Input() favouritedItemIds: number[] = [];
 
     @Output() events: EventEmitter<DataListComponentEvent>;
     @Output() searchEvents: EventEmitter<DataListSearchComponentEvent>;
@@ -85,12 +86,12 @@ export class DataListComponent {
 
     delete($event: MouseEvent) {
         const i: Item[] = this.selectionModel.selected;
-        for (const _i of i) {
-            if (_i.id > 0) { // delete of persisted item only
-                this.pendingDeletion.push(_i);
+        for (const i2 of i) {
+            if (i2.id > 0) { // delete of persisted item only
+                this.pendingDeletion.push(i2);
             }
-            this.pendingSaving = this.pendingSaving.filter((i: Item) => i.id != _i.id);
-            const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === _i.id);
+            this.pendingSaving = this.pendingSaving.filter((i3: Item) => i3.id !== i2.id);
+            const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === i2.id);
             if (index !== -1) {
                 this.itemAndAttributeSet.items.splice(index, 1);
             }
@@ -162,7 +163,7 @@ export class DataListComponent {
     }
 
     onAttributeDataChange($event: ItemValueAndAttribute, item: Item) {
-        const i: Item = this.pendingSaving.find((tmpI: Item) => tmpI.id === item.id);
+        const i: Item | undefined = this.pendingSaving.find((tmpI: Item) => tmpI.id === item.id);
         if (!i) {
             this.pendingSaving.push({
                 id: item.id,
@@ -175,7 +176,7 @@ export class DataListComponent {
             } as Item);
         }
         // save in both the pendingSaving's copy and the original
-        i[$event.attribute.id] = $event.itemValue;
+        assertDefinedReturn(i)[$event.attribute.id] = $event.itemValue;
         item[$event.attribute.id] = $event.itemValue;
     }
 

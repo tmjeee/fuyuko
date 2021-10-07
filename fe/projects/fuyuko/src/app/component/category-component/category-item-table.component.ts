@@ -3,6 +3,7 @@ import {CollectionViewer, DataSource, SelectionModel} from '@angular/cdk/collect
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {CategorySimpleItem} from '@fuyuko-common/model/category.model';
+import {assertDefinedReturn} from "../../utils/common.util";
 
 export interface RowInfo {
     item: CategorySimpleItem;
@@ -11,7 +12,7 @@ export interface RowInfo {
 
 export class CategoryItemTableDatasource extends DataSource<CategorySimpleItem> {
 
-    subject: BehaviorSubject<CategorySimpleItem[]> = new BehaviorSubject([]);
+    subject: BehaviorSubject<CategorySimpleItem[]> = new BehaviorSubject([] as CategorySimpleItem[]);
 
     connect(collectionViewer: CollectionViewer): Observable<CategorySimpleItem[] | ReadonlyArray<CategorySimpleItem>> {
         return this.subject.asObservable();
@@ -47,8 +48,8 @@ export class CategoryItemTableComponent implements OnInit, OnChanges {
 
     datasource: CategoryItemTableDatasource;
 
-    @Input() categorySimpleItems: CategorySimpleItem[];
-    @Input() actions: Action[];
+    @Input() categorySimpleItems: CategorySimpleItem[] = [];
+    @Input() actions: Action[] = [];
     @Output() events: EventEmitter<CategoryItemTableComponentEvent>;
 
 
@@ -119,7 +120,7 @@ export class CategoryItemTableComponent implements OnInit, OnChanges {
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { item, expanded: false } as RowInfo);
         }
-        return this.rowInfoMap.get(item.id).expanded;
+        return assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 
 
@@ -127,7 +128,8 @@ export class CategoryItemTableComponent implements OnInit, OnChanges {
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { item, expanded: false } as RowInfo);
         }
-        this.rowInfoMap.get(item.id).expanded = !this.rowInfoMap.get(item.id).expanded;
+        assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded =
+            !assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 
     onActionClicked($event: MouseEvent, action: Action) {

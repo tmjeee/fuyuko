@@ -35,7 +35,7 @@ export interface PricingStructureItemWithPrice {  // pricing structure item
     creationDate: Date;
     lastUpdate: Date;
 
-    parentId: number;
+    parentId?: number;
     children: PricingStructureItemWithPrice[];
 }
 

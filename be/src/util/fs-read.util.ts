@@ -8,7 +8,7 @@ export interface FsReadResult  {
 
 export const fsRead = (fs.read as any)[util.promisify.custom] =
     (fd:number, buf: Buffer, offset: number, length: number, position: number) => new Promise<FsReadResult>((res, rej) => {
-        fs.read(fd, buf, offset, length, position, (err: Error, bytesRead: number, buffer: Buffer) => {
+        fs.read(fd, buf, offset, length, position, (err: NodeJS.ErrnoException | null, bytesRead: number, buffer: Buffer) => {
             if (err)
                 rej(err)
             else

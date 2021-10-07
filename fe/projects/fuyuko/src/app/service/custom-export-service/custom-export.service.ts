@@ -11,6 +11,7 @@ import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {assertDefinedReturn} from "../../utils/common.util";
 
 const URL_GET_ALL_CUSTOM_EXPORTS = () => `${config().api_host_url}/custom-exports`;
 const URL_POST_CUSTOM_EXPORT_VALIDATE_INPUTS = () => `${config().api_host_url}/view/:viewId/custom-export/:customExportId/validate-input`;
@@ -28,7 +29,7 @@ export class CustomExportService {
                 .replace(':viewId', String(v.id))
                 .replace(':customExportId', String(c.id)), {
                 values: i
-            }).pipe(map((r: ApiResponse<ExportScriptValidateResult>) => r.payload));
+            }).pipe(map((r: ApiResponse<ExportScriptValidateResult>) => assertDefinedReturn(r.payload)));
     }
 
     preview(v: View, c: CustomDataExport, i: ExportScriptInputValue[]): Observable<ExportScriptPreview> {
@@ -38,7 +39,7 @@ export class CustomExportService {
                 .replace(':customExportId', String(c.id)), {
                 values: i
             }).pipe(
-                map((r: ApiResponse<ExportScriptPreview>) => r.payload)
+                map((r: ApiResponse<ExportScriptPreview>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -50,7 +51,7 @@ export class CustomExportService {
                 values: i,
                 preview: p
             }).pipe(
-                map((r: ApiResponse<ExportScriptJobSubmissionResult>) => r.payload)
+                map((r: ApiResponse<ExportScriptJobSubmissionResult>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -58,7 +59,7 @@ export class CustomExportService {
         return this.httpClient
             .get<ApiResponse<CustomDataExport[]>>(URL_GET_ALL_CUSTOM_EXPORTS())
             .pipe(
-                map((r: ApiResponse<CustomDataExport[]>) => r.payload)
+                map((r: ApiResponse<CustomDataExport[]>) => assertDefinedReturn(r.payload))
             );
     }
 }

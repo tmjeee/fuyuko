@@ -28,7 +28,7 @@ export const runJob = async (viewId: number, dataImportId: number, priceDataItem
     } as ImportPriceJobEvent);
     
     
-    (async ()=>{
+    await (async ()=>{
         await jobLogger.logInfo(`starting job ${name}`);
         try {
             const errors: string[] = await setPrices(priceDataItems, newLoggingCallback(jobLogger));

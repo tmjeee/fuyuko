@@ -44,6 +44,7 @@ import {
 import {Rule, ValidateClause, WhenClause} from '@fuyuko-common/model/rule.model';
 import {checkErrors} from '../script-util';
 import { Category } from '@fuyuko-common/model/category.model';
+import {PartialBy} from "@fuyuko-common/model/types";
 
 
 export const profiles = [UPDATER_PROFILE_TEST_DATA];
@@ -99,7 +100,7 @@ const INSERT_DATA = async () => {
 
         // === SELF REGISTRATIONS
         for (let i = 1; i < 100; i++) {
-            const r: {errors: string[], registrationId: number, email: string, username: string} = await selfRegister(`self${i}`, `self${i}@gmail.com`, `self${i}-firstname`, `self${i}-lastname`, hashedPassword(`test`));
+            const r: {errors: string[], registrationId?: number, email: string, username: string} = await selfRegister(`self${i}`, `self${i}@gmail.com`, `self${i}-firstname`, `self${i}-lastname`, hashedPassword(`test`));
             checkErrors(r.errors, `error creating self registration`);
         }
 
@@ -239,20 +240,62 @@ const INSERT_VIEW_DATA = async (viewId: number, viewGroupId: number, editGroupId
     ]);
     checkErrors(errors, `Failed to save attributes`);
     const viewAttributes: Attribute[] = await getAttributesInView(viewId);
-    const viewStringAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `string attribute`);
-    const viewTextAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `text attribute`);
-    const viewNumberAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `number attribute`);
-    const viewDateAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `date attribute`);
-    const viewCurrencyAttribute:Attribute = viewAttributes.find((a: Attribute) => a.name === `currency attribute`);
-    const viewVolumeAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `volume attribute`);
-    const viewDimensionAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `dimension attribute`);
-    const viewAreaAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `area attribute`);
-    const viewLengthAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `length attribute`);
-    const viewWidthAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `width attribute`);
-    const viewHeightAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `height attribute`);
-    const viewWeightAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `weight attribute`);
-    const viewSelectAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `select attribute`);
-    const viewDoubleselectAttribute: Attribute = viewAttributes.find((a: Attribute) => a.name === `doubleselect attribute`);
+    const viewStringAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `string attribute`);
+    if (!viewStringAttribute) {
+       throw new Error(`Unable to find attribute 'string attribute' in view ${viewId}`);
+    }
+    const viewTextAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `text attribute`);
+    if (!viewTextAttribute) {
+        throw new Error(`Unable to find attribute 'text attribute' in view ${viewId}`);
+    }
+    const viewNumberAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `number attribute`);
+    if (!viewNumberAttribute) {
+        throw new Error(`Unable to find attribute 'number attribute' in view ${viewId}`);
+    }
+    const viewDateAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `date attribute`);
+    if (!viewDateAttribute) {
+        throw new Error(`Unable to find attribute 'date attribute' in view ${viewId}`);
+    }
+    const viewCurrencyAttribute:Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `currency attribute`);
+    if (!viewCurrencyAttribute) {
+        throw new Error(`Unable to find attribute 'currency attribute' in view ${viewId}`);
+    }
+    const viewVolumeAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `volume attribute`);
+    if (!viewVolumeAttribute) {
+        throw new Error(`Unable to find attribute 'volume attribute' in view ${viewId}`);
+    }
+    const viewDimensionAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `dimension attribute`);
+    if (!viewDimensionAttribute) {
+        throw new Error(`Unable to find attribute 'dimension attribute' in view ${viewId}`);
+    }
+    const viewAreaAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `area attribute`);
+    if (!viewAreaAttribute) {
+        throw new Error(`Unable to find attribute 'area attribute' in view ${viewId}`);
+    }
+    const viewLengthAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `length attribute`);
+    if (!viewLengthAttribute) {
+        throw new Error(`Unable to find attribute 'length attribute' in view ${viewId}`);
+    }
+    const viewWidthAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `width attribute`);
+    if (!viewWidthAttribute) {
+        throw new Error(`Unable to find attribute 'width attribute' in view ${viewId}`);
+    }
+    const viewHeightAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `height attribute`);
+    if (!viewHeightAttribute) {
+        throw new Error(`Unable to find attribute 'height attribute' in view ${viewId}`);
+    }
+    const viewWeightAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `weight attribute`);
+    if (!viewWeightAttribute) {
+        throw new Error(`Unable to find attribute 'weight attribute' in view ${viewId}`);
+    }
+    const viewSelectAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `select attribute`);
+    if (!viewSelectAttribute) {
+        throw new Error(`Unable to find attribute 'select attribute' in view ${viewId}`);
+    }
+    const viewDoubleselectAttribute: Attribute | undefined = viewAttributes.find((a: Attribute) => a.name === `doubleselect attribute`);
+    if (!viewDoubleselectAttribute) {
+        throw new Error(`Unable to find attribute 'doubleselect attribute' in view ${viewId}`);
+    }
 
     // === PRICING STRUCTURE
     errors = await addOrUpdatePricingStructures([
@@ -285,12 +328,12 @@ const INSERT_VIEW_DATA = async (viewId: number, viewGroupId: number, editGroupId
     checkErrors(errors, `Failed to link group Id ${partnerGroupId} with pricing structure ${ps2.id}`);
 
     // items
-    await createManyItems(conn, ps1.id, viewId, viewStringAttribute, viewTextAttribute, viewNumberAttribute, viewDateAttribute, viewCurrencyAttribute,
-        viewVolumeAttribute, viewDimensionAttribute, viewAreaAttribute, viewLengthAttribute, viewWidthAttribute, viewHeightAttribute, viewWeightAttribute,
-        viewSelectAttribute, viewDoubleselectAttribute);
+    await createManyItems(conn, ps1.id, viewId, viewStringAttribute, viewTextAttribute!, viewNumberAttribute!, viewDateAttribute!, viewCurrencyAttribute!,
+        viewVolumeAttribute!, viewDimensionAttribute!, viewAreaAttribute!, viewLengthAttribute!, viewWidthAttribute!, viewHeightAttribute!, viewWeightAttribute!,
+        viewSelectAttribute!, viewDoubleselectAttribute!);
 
     // rules
-    await createManyRules(conn, viewId, viewStringAttribute.id, viewTextAttribute.id);
+    await createManyRules(conn, viewId, viewStringAttribute!.id, viewTextAttribute!.id);
 };
 
 const createManyRules = async(conn: Connection, viewId: number, att1Id: number, att2Id: number) => {
@@ -357,110 +400,112 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
        id: -1,
        name: `Item-1`,
        description: `Item-1 Description`,
-       parentId: null,
+       parentId: undefined,
        images: [],
        children: [
            {
                id: -1,
                name: `Item-1-1`,
                description: `Item-1-1 Description`,
+               images: [],
                children: []
-           } as Item,
+           } as PartialBy<Item, 'creationDate' | 'lastUpdate'>,
            {
                id: -1,
                name: `Item-1-2`,
                description: `Item-1-2 Description`,
+               images: [],
                children: []
-           }
+           } as PartialBy<Item, 'creationDate' | 'lastUpdate'>,
        ]
-    } as Item);
+    } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-1 failed to be created`);
 
     errors = await addOrUpdateItem(viewId, {
         id: -1,
         name: `Item-2`,
         description: `Item-2 Description`,
-        parentId: null,
+        parentId: undefined,
         images: [],
         children: []
-    } as Item);
+    } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-2 failed to be created`);
 
     errors = await addOrUpdateItem(viewId, {
         id: -1,
         name: `Item-3`,
         description: `Item-3 Description`,
-        parentId: null,
+        parentId: undefined,
         images: [],
         children: []
-    } as Item);
+    } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-3 failed to be created`);
 
     errors = await addOrUpdateItem(viewId, {
         id: -1,
         name: `Item-4`,
         description: `Item-4 Description`,
-        parentId: null,
+        parentId: undefined,
         images: [],
         children: []
-    } as Item);
+    } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-4 failed to be created`);
 
     errors = await addOrUpdateItem(viewId, {
         id: -1,
         name: `Item-5`,
         description: `Item-5 Description`,
-        parentId: null,
+        parentId: undefined,
         images: [],
         children: []
-    } as Item);
+    } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-5 failed to be created`);
 
     errors = await addOrUpdateItem(viewId, {
         id: -1,
         name: `Item-6`,
         description: `Item-6 Description`,
-        parentId: null,
+        parentId: undefined,
         images: [],
         children: []
-    } as Item);
+    } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-6 failed to be created`);
 
     errors = await addOrUpdateItem(viewId, {
         id: -1,
         name: `Item-7`,
         description: `Item-7 Description`,
-        parentId: null,
+        parentId: undefined,
         images: [],
         children: []
-    } as Item);
+    } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-7 failed to be created`);
 
-    const item1: Item = await getItemByName(viewId, `Item-1`);
+    const item1: Item | undefined = await getItemByName(viewId, `Item-1`);
     if (!item1) {
         throw new Error(`Failed to retrieve Item-1 from view id ${viewId}`);
     }
-    const item2: Item = await getItemByName(viewId, `Item-2`);
+    const item2: Item | undefined = await getItemByName(viewId, `Item-2`);
     if (!item2) {
         throw new Error(`Failed to retrieve Item-2 from view id ${viewId}`);
     }
-    const item3: Item = await getItemByName(viewId, `Item-3`);
+    const item3: Item | undefined = await getItemByName(viewId, `Item-3`);
     if (!item3) {
         throw new Error(`Failed to retrieve Item-3 for view id ${viewId}`);
     }
-    const item4: Item = await getItemByName(viewId, `Item-4`);
+    const item4: Item | undefined = await getItemByName(viewId, `Item-4`);
     if (!item4) {
         throw new Error(`Failed to retrieve Item-4 for view id ${viewId}`);
     }
-    const item5: Item = await getItemByName(viewId, `Item-5`);
+    const item5: Item | undefined = await getItemByName(viewId, `Item-5`);
     if (!item5) {
         throw new Error(`Failed to retrieve Item-5 for view id ${viewId}`);
     }
-    const item6: Item = await getItemByName(viewId, `Item-6`);
+    const item6: Item | undefined = await getItemByName(viewId, `Item-6`);
     if (!item6) {
         throw new Error(`Failed to retrieve Item-6 for view id ${viewId}`);
     }
-    const item7: Item = await getItemByName(viewId, `Item-7`);
+    const item7: Item | undefined = await getItemByName(viewId, `Item-7`);
     if (!item7) {
         throw new Error(`Failed to retrieve Item-7 for view id ${viewId}`);
     }
@@ -637,7 +682,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
 
 
     // set up categories
-    errors = await addCategory(viewId, null,
+    errors = await addCategory(viewId, undefined,
         {
             name: 'Category-1',
             description: 'Category 1 description',
@@ -673,9 +718,12 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         },
     );
     checkErrors(errors, `Errors creating Category-1`);
-    const category1: Category = await getViewCategoryByName(viewId, `Category-1`);
+    const category1: Category | undefined = await getViewCategoryByName(viewId, `Category-1`);
+    if (!category1) {
+        throw new Error(`Failed to get category with name Category-1`);
+    }
 
-    errors = await addCategory(viewId, null,
+    errors = await addCategory(viewId, undefined,
         {
             name: 'Category-2',
             description: 'Category 2 description',
@@ -693,16 +741,16 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
             ]
         });
     checkErrors(errors, `Error creating category-2`);
-    const category2: Category = await getViewCategoryByName(viewId, `Category-2`);
+    const category2: Category | undefined = await getViewCategoryByName(viewId, `Category-2`);
 
-    errors = await addCategory(viewId, null,
+    errors = await addCategory(viewId, undefined,
         {
             name: 'Category-3',
             description: 'Category-3',
             children: []
         });
     checkErrors(errors, `Error creating category-3`);
-    const category3: Category = await getViewCategoryByName(viewId, `Category-3`);
+    const category3: Category | undefined = await getViewCategoryByName(viewId, `Category-3`);
 
 
     errors = await addItemToViewCateogry(category1.id, item1.id);

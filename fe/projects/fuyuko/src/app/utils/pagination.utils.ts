@@ -10,9 +10,9 @@ export const toQuery = (limitOffset?: LimitOffset): string => {
 };
 
 export class Pagination {
-    limit: number;
-    offset: number;
-    total: number;
+    limit!: number;
+    offset!: number;
+    total!: number;
 
     private readonly INC: number = DEFAULT_LIMIT;
     pageSizeOptions: number[] = [5, 10, 30, 50, 100];

@@ -15,12 +15,12 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_ADMIN])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
-        const limitOffset: LimitOffset = toLimitOffset(req);
+        const limitOffset = toLimitOffset(req);
 
-        const filterByUserId: number = req.query.userId ? req.query.userId : null;
-        const filterByCategory: AuditCategory = req.query.category ? req.query.category : null;
-        const filterByLevel: Level = req.query.level ? req.query.level : null;
-        const filterByLogs: string = req.query.logs ? req.query.logs : null;
+        const filterByUserId: number = req.query.userId ? req.query.userId : undefined;
+        const filterByCategory: AuditCategory = req.query.category ? req.query.category : undefined;
+        const filterByLevel: Level = req.query.level ? req.query.level : undefined;
+        const filterByLogs: string = req.query.logs ? req.query.logs : undefined;
 
         const total: number = await getAuditLogsCount(filterByUserId, filterByCategory, filterByLevel, filterByLogs);
         const auditLogs: AuditLog[] = await getAuditLogs(filterByUserId, filterByCategory, filterByLevel, filterByLogs, limitOffset);

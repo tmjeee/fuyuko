@@ -15,7 +15,7 @@
                                  [searchFieldHint]="'Search group'"
                                  [searchFieldLabel]="'Search group to link to pricing structure'"
                                  [searchFieldPlaceholder]="'Search group to link to pricing structure'"
-                                 [groupSearchFn]="groupSearchFnsMap.get(pricingStructureGroupAssociation.pricingStructure.id)"
+                                 [groupSearchFn]="groupSearchFnsMap.get(pricingStructureGroupAssociation.pricingStructure.id)!"
                                  (events)="onGroupTableEvent($event, pricingStructureGroupAssociation.pricingStructure)">
                 </app-group-table>
             </div>

@@ -21,18 +21,18 @@ const URL_USER_AVATAR = () => `${config().api_host_url}/user/:userId/avatar`;
 })
 export class AvatarComponent implements OnInit, OnDestroy {
 
-  @Input() user: UserWithoutGroupAndTheme;
+  @Input() user?: UserWithoutGroupAndTheme;
   @Input() width: string;
   @Input() height: string;
   @Input() editable: boolean;
-  @Input() allPredefinedAvatars: GlobalAvatar[];
+  @Input() allPredefinedAvatars: GlobalAvatar[] = [];
 
   @Output() events: EventEmitter<AvatarComponentEvent>;
 
   dialogOpened: boolean;
   d: number;
 
-  subscription: Subscription;
+  subscription?: Subscription;
 
   constructor(private matDialog: MatDialog,
               private globalCommunicationService: GlobalCommunicationService) {
@@ -55,7 +55,9 @@ export class AvatarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      this.subscription.unsubscribe();
+      if (this.subscription) {
+          this.subscription.unsubscribe();
+      }
   }
 
   reload() {

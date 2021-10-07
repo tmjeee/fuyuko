@@ -19,10 +19,10 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class PartnerDataTablePageComponent implements OnInit {
 
-    loading: boolean; // loading the data table
-    attributes: Attribute[];
-    pricedItems: PricedItem[];
-    tablePricedItems: TablePricedItem[];
+    loading = true; // loading the data table
+    attributes: Attribute[] = [];
+    pricedItems: PricedItem[] = [];
+    tablePricedItems: TablePricedItem[] = [];
 
     pricingStructures: PricingStructure[];
 
@@ -35,17 +35,19 @@ export class PartnerDataTablePageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const myself: User = this.authService.myself();
-        this.loadingService.startLoading();
-        this.partnerService.getPartnerPricingStructures(myself.id)
-            .pipe(
-                tap((ps: PricingStructure[]) => {
-                    this.pricingStructures = ps;
-                }),
-                finalize(() => {
-                    this.loadingService.stopLoading();
-                })
-            ).subscribe();
+        const myself: User | undefined = this.authService.myself();
+        if (myself) {
+            this.loadingService.startLoading();
+            this.partnerService.getPartnerPricingStructures(myself.id)
+                .pipe(
+                    tap((ps: PricingStructure[]) => {
+                        this.pricingStructures = ps;
+                    }),
+                    finalize(() => {
+                        this.loadingService.stopLoading();
+                    })
+                ).subscribe();
+        }
     }
 
 
@@ -61,7 +63,7 @@ export class PartnerDataTablePageComponent implements OnInit {
                 }),
                 concatMap((_) => {
                     return this.attributeService.getAllAttributesByView(pricingStructure.viewId)
-                        .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
+                        .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload ?? []));
                 }),
                 tap((a: Attribute[]) => {
                     this.attributes = a;

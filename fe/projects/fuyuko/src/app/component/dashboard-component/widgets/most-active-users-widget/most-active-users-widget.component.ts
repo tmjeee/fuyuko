@@ -26,7 +26,7 @@ export class MostActiveUsersWidgetComponent extends DashboardWidget implements O
     uid: string = uuid();
 
     type: ChartType;
-    mostActiveUsers: Reporting_MostActiveUsers;
+    mostActiveUsers?: Reporting_MostActiveUsers;
     data: any[][] = [];
     options: any = {
         title: 'Most Active Users',

@@ -1,9 +1,11 @@
 import {operatorNeedsItemValue} from './attribute-operators.util';
 import {hasItemValues} from './ui-item-value-getter.util';
 import {ItemValueOperatorAndAttributeWithId} from '../component/rules-component/rule-editor.component';
+import {PartialBy} from '@fuyuko-common/model/types';
 
 
-export const isItemValueOperatorAndAttributeWithIdValid = (i: ItemValueOperatorAndAttributeWithId): boolean => {
+export const isItemValueOperatorAndAttributeWithIdValid =
+    (i: PartialBy<ItemValueOperatorAndAttributeWithId, 'operator' | 'attribute'>): boolean => {
     if (i) {
         if (!i.attribute) {
             return false;

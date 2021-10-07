@@ -20,7 +20,7 @@ describe('item-image.service', () => {
     beforeAll(async () => {
         await setupTestDatabase();
         await setupBeforeAll2();
-        item1 = await getItemByName(viewId, 'Item-1');
+        item1 = await getItemByName(viewId, 'Item-1') as Item;
     }, JASMINE_TIMEOUT);
     
 
@@ -34,13 +34,13 @@ describe('item-image.service', () => {
         expect(content).toBeDefined();
         expect(content2).toBeDefined();
         
-        const i: Item = await getItemById(viewId, item1.id);
-        const im: ItemImage = await i.images.find((img: ItemImage) => img.primary);
+        const i: Item = await getItemById(viewId, item1.id) as Item;
+        const im = await i.images.find((img: ItemImage) => img.primary);
         
         expect(im).toBeDefined();
-        expect(im.mimeType).toBeDefined();
-        expect(im.primary).toBe(true);
-        expect(im.id).toBe(imageId);
+        expect(im!.mimeType).toBeDefined();
+        expect(im!.primary).toBe(true);
+        expect(im!.id).toBe(imageId);
     });
     
     it('add and remove item image', async () => {
@@ -49,19 +49,19 @@ describe('item-image.service', () => {
         
         expect(r1).toBeTrue();
 
-        const i1: Item = await getItemById(viewId, item1.id);
-        const im1: ItemImage = await i1.images.find((img: ItemImage) => img.primary);
+        const i1: Item = await getItemById(viewId, item1.id) as Item;
+        const im1 = await i1.images.find((img: ItemImage) => img.primary);
         
         expect(im1).toBeDefined();
-        expect(im1.name).toBe('xxxx');
+        expect(im1!.name).toBe('xxxx');
         
-        const r2 = await deleteItemImage(item1.id, im1.id);
+        const r2 = await deleteItemImage(item1.id, im1!.id);
 
         expect(r2).toBeTrue();
 
-        const i2: Item = await getItemById(viewId, item1.id);
-        const im2: ItemImage = await i2.images.find((img: ItemImage) => img.id == im1.id);
+        const i2: Item = await getItemById(viewId, item1.id) as Item;
+        const im2 = await i2.images.find((img: ItemImage) => img.id == im1!.id);
 
-        expect(im2).toBeFalsy();
+        expect(im2!).toBeFalsy();
     });
 });

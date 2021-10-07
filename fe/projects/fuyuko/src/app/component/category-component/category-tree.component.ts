@@ -11,9 +11,9 @@ export interface TreeNode {
     type: 'category' | 'item';                      // is this node an item or category
     isCurrentlyInExpandedState: boolean;            // is this node expanded?
 
-    currentCategoryWithItems: CategoryWithItems;    // current selected node  as category (if it is a category)
+    currentCategoryWithItems?: CategoryWithItems;   // current selected node  as category (if it is a category)
     categoriesWithItems: CategoryWithItems[];       // all categories
-    currentItem: {                                  // current selected node as item (if it is an item)
+    currentItem?: {                                 // current selected node as item (if it is an item)
         id: number,
         name: string,
         description: string,
@@ -47,12 +47,12 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
 
     @Input() categoriesWithItems: CategoryWithItems[];
     @Input() includeItems: boolean;
-    @Input() selectedCategoryId: number;
+    @Input() selectedCategoryId?: number;
     @Output() events: EventEmitter<CategoryTreeComponentEvent>;
     @Output() dragDropEvents: EventEmitter<CategoryTreeComponentDragDropEvent>;
 
-    currentlySelectedTreeNode: TreeNode;
-    currentlyDragEnterTreeNode: TreeNode;
+    currentlySelectedTreeNode?: TreeNode;
+    currentlyDragEnterTreeNode?: TreeNode;
 
     tmp: Set<number>;  // store the id of category that is expanded
     treeNodeNeesExpanding: TreeNode[] = []; // keeps the TreeNode that needs expanding
@@ -62,6 +62,7 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
     dataSource: MatTreeFlatDataSource<CategoryWithItems | CategorySimpleItem, TreeNode>;
 
     constructor() {
+        this.categoriesWithItems = [];
         this.tmp = new Set();
         this.includeItems = true;
         this.events = new EventEmitter<CategoryTreeComponentEvent>();
@@ -80,9 +81,12 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
                    type: isCategory ? 'category' : 'item',
                    expandable: (() => {
                        return this.includeItems ?
-                           ((((categoryWithItems as CategoryWithItems).children && !!(categoryWithItems as CategoryWithItems).children.length) ||
-                               ((categoryWithItems as CategoryWithItems).items && !!(categoryWithItems as CategoryWithItems).items.length))) :
-                           ((((categoryWithItems as CategoryWithItems).children && !!(categoryWithItems as CategoryWithItems).children.length)));
+                           ((((categoryWithItems as CategoryWithItems).children &&
+                                   !!(categoryWithItems as CategoryWithItems).children.length) ||
+                               ((categoryWithItems as CategoryWithItems).items &&
+                                   !!(categoryWithItems as CategoryWithItems).items.length))) :
+                           ((((categoryWithItems as CategoryWithItems).children &&
+                               !!(categoryWithItems as CategoryWithItems).children.length)));
                    })(),
                    isCurrentlyInExpandedState: (() => {
                        if (isCategory) {
@@ -92,9 +96,13 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
                            return false;
                        }
                    })(),
-                   currentCategoryWithItems: (categoryWithItems as CategoryWithItems).children ? (categoryWithItems as CategoryWithItems) : null,
+                   currentCategoryWithItems:
+                       (categoryWithItems as CategoryWithItems).children ?
+                           (categoryWithItems as CategoryWithItems) : undefined,
                    categoriesWithItems: this.categoriesWithItems,
-                   currentItem: (categoryWithItems as CategoryWithItems).children ?  null : categoryWithItems as CategorySimpleItem
+                   currentItem:
+                       (categoryWithItems as CategoryWithItems).children ?
+                           undefined : categoryWithItems as CategorySimpleItem
                 };
                 if (this.tmp.has(categoryWithItems.id)) {
                    this.treeNodeNeesExpanding.push(treeNode);
@@ -145,7 +153,7 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
 
     onTreeNodeClicked($event: MouseEvent, node: TreeNode) {
         this.currentlySelectedTreeNode = node;
-        this.selectedCategoryId = node.currentCategoryWithItems ? node.currentCategoryWithItems.id : null;
+        this.selectedCategoryId = node.currentCategoryWithItems ? node.currentCategoryWithItems.id : undefined;
         this.events.emit({
            type: 'node-selected',
            node
@@ -154,32 +162,31 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
 
     isTreeNodeSelected(node: TreeNode): boolean {
         if (node.type === 'category') {
-            return (this.selectedCategoryId &&
+            return !!(this.selectedCategoryId &&
                 this.selectedCategoryId &&
                 node &&
                 node.currentCategoryWithItems &&
-                this.selectedCategoryId == node?.currentCategoryWithItems?.id);
+                this.selectedCategoryId === node?.currentCategoryWithItems?.id);
         } else if (node.type === 'item') {
             return (this.currentlySelectedTreeNode === node);
         }
+        return false;
     }
 
     onDrop($event: CdkDragDrop<any, any>) {
-        this.currentlyDragEnterTreeNode = null;
+        this.currentlyDragEnterTreeNode = undefined;
         const sourceItem: TreeNode = $event.item.data;
         const dropItem: TreeNode = $event.container.data;
-        if (sourceItem.currentCategoryWithItems.id == dropItem.currentCategoryWithItems.id) {
+        if (sourceItem.currentCategoryWithItems?.id === dropItem.currentCategoryWithItems?.id) {
             // try to move a category into itself, not possible
             return;
         }
-        /*
         this.dragDropEvents.emit({
            type: 'drop',
            sourceItem,
            destinationItem: dropItem
         } as CategoryTreeComponentDragDropEvent);
-         */
-        console.log(`**** on drop, drop ${sourceItem.currentCategoryWithItems.name}  into ${dropItem.currentCategoryWithItems.name}`);
+        console.log(`**** on drop, drop ${sourceItem.currentCategoryWithItems?.name}  into ${dropItem.currentCategoryWithItems?.name}`);
     }
 
     onEnter($event: CdkDragEnter<any>) {
@@ -189,7 +196,7 @@ export class CategoryTreeComponent implements OnInit, OnChanges {
 
     onExit($event: CdkDragExit<any>) {
         console.log(`***** drag drop on exit ${$event.container.data.name}`);
-        this.currentlyDragEnterTreeNode = null;
+        this.currentlyDragEnterTreeNode = undefined;
     }
 
     isCurrentDragEnterTreeNode(n: TreeNode): boolean {

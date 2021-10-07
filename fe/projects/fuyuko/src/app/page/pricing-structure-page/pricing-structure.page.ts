@@ -20,10 +20,10 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class PricingStructurePageComponent implements OnInit  {
 
-    loading: boolean;
-    views: View[];
+    loading = true;
+    views: View[] = [];
     pricingStructureInput: PricingStructureInput;
-    fetchFn: (pricingStructureId: number, limitOffset?: LimitOffset) => Observable<PricingStructureWithItems>;
+    fetchFn!: (pricingStructureId: number, limitOffset?: LimitOffset) => Observable<PricingStructureWithItems>;
 
     constructor(private pricingStructureService: PricingStructureService,
                 private router: Router,
@@ -32,12 +32,12 @@ export class PricingStructurePageComponent implements OnInit  {
                 private notificationService: NotificationsService) {
         this.pricingStructureInput = {
             pricingStructures: [],
-            currentPricingStructure: null
-        } as PricingStructureInput;
+            currentPricingStructure: undefined
+        };
     }
 
     ngOnInit(): void {
-        this.reload(null);
+        this.reload(undefined);
         this.fetchFn = (pricingStructureId: number, limitOffset?: LimitOffset): Observable<PricingStructureWithItems> => {
             this.loadingService.startLoading();
             return this.pricingStructureService.pricingStructureWithItems(pricingStructureId, limitOffset).pipe(
@@ -46,7 +46,7 @@ export class PricingStructurePageComponent implements OnInit  {
         };
     }
 
-    reload(pricingStructure: PricingStructure) {
+    reload(pricingStructure?: PricingStructure) {
         this.loading = true;
         this.loadingService.startLoading();
         forkJoin([
@@ -74,40 +74,48 @@ export class PricingStructurePageComponent implements OnInit  {
     onPricingStructureTableEvent($event: PricingStructureEvent) {
         switch ($event.type) {
             case 'delete-pricing-structure':
-                this.pricingStructureService
-                    .deletePricingStructure($event.pricingStructure)
-                    .pipe(tap((r: ApiResponse) => {
-                        toNotifications(this.notificationService, r);
-                        this.reload(null);
-                    }))
-                    .subscribe();
+                if ($event.pricingStructure) {
+                    this.pricingStructureService
+                        .deletePricingStructure($event.pricingStructure)
+                        .pipe(tap((r: ApiResponse) => {
+                            toNotifications(this.notificationService, r);
+                            this.reload(undefined);
+                        }))
+                        .subscribe();
+                }
                 break;
             case 'new-pricing-structure':
-                this.pricingStructureService
-                    .newPricingStructure($event.pricingStructure)
-                    .pipe(tap((r: ApiResponse) => {
-                        toNotifications(this.notificationService, r);
-                        this.reload($event.pricingStructure);
-                    }))
-                    .subscribe();
+                if ($event.pricingStructure) {
+                    this.pricingStructureService
+                        .newPricingStructure($event.pricingStructure)
+                        .pipe(tap((r: ApiResponse) => {
+                            toNotifications(this.notificationService, r);
+                            this.reload($event.pricingStructure);
+                        }))
+                        .subscribe();
+                }
                 break;
             case 'edit-pricing-structure':
-                this.pricingStructureService
-                    .updatePricingStructure($event.pricingStructure)
-                    .pipe(tap((r: ApiResponse) => {
-                        toNotifications(this.notificationService, r);
-                        this.reload($event.pricingStructure);
-                    }))
-                    .subscribe();
+                if ($event.pricingStructure) {
+                    this.pricingStructureService
+                        .updatePricingStructure($event.pricingStructure)
+                        .pipe(tap((r: ApiResponse) => {
+                            toNotifications(this.notificationService, r);
+                            this.reload($event.pricingStructure);
+                        }))
+                        .subscribe();
+                }
                 break;
             case 'edit-pricing-item':
-                this.pricingStructureService
-                    .editPricingStructureItem($event.pricingStructure.id, $event.pricingStructureItem)
-                    .pipe(tap((r: ApiResponse) => {
-                        toNotifications(this.notificationService, r);
-                        this.reload($event.pricingStructure);
-                    }))
-                    .subscribe();
+                if ($event.pricingStructure && $event.pricingStructureItem) {
+                    this.pricingStructureService
+                        .editPricingStructureItem($event.pricingStructure.id, $event.pricingStructureItem)
+                        .pipe(tap((r: ApiResponse) => {
+                            toNotifications(this.notificationService, r);
+                            this.reload($event.pricingStructure);
+                        }))
+                        .subscribe();
+                }
                 break;
         }
     }

@@ -7,7 +7,7 @@ import {
     vFnHasAnyUserRoles
 } from './common-middleware';
 import {Fields, Files, File} from 'formidable';
-import {multipartParse} from '../../service';
+import {multipartParse, SaveUserAvatarResult} from '../../service';
 import {Registry} from '../../registry';
 import {param} from 'express-validator';
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
@@ -33,16 +33,16 @@ const httpAction: any[] = [
         const customAvatarFile: File = p.files.customAvatarFile as File;
 
 
-        const r: {userAvatarId: number, errors: string[]} = await saveUserAvatar(userId, {globalAvatarName, customAvatarFile});
+        const r: SaveUserAvatarResult = await saveUserAvatar(userId, {globalAvatarName, customAvatarFile});
         if (r.errors && r.errors.length) {
             const apiResponse: UserAvatarResponse = {
                 messages: [{
                     status: 'ERROR',
                     message: r.errors.join(', '),
                 }],
-                payload: {
+                payload: r.userAvatarId ? {
                     userAvatarId: r.userAvatarId
-                }
+                } : undefined
             };
             res.status(400).json(apiResponse);
         } else {
@@ -51,9 +51,9 @@ const httpAction: any[] = [
                     status: 'SUCCESS',
                     message: `UserId ${userId}, Avatar updated`,
                 }],
-                payload: {
+                payload: r.userAvatarId ? {
                     userAvatarId: r.userAvatarId
-                }
+                }: undefined
             };
             res.status(200).json(apiReponse);
         }

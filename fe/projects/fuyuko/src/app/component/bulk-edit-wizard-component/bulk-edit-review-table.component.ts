@@ -7,10 +7,13 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import uuid from 'uuid';
 
 export class BulkEditReviewTableDataSource extends DataSource<BulkEditTableItem> {
-    private subject: BehaviorSubject<BulkEditTableItem[]> = new BehaviorSubject([]);
+
+    private subject: BehaviorSubject<BulkEditTableItem[]> = new BehaviorSubject([] as BulkEditTableItem[]);
+
     connect(collectionViewer: CollectionViewer): Observable<BulkEditTableItem[] | ReadonlyArray<BulkEditTableItem>> {
         return this.subject.asObservable();
     }
+
     disconnect(collectionViewer: CollectionViewer): void {
         this.subject.complete();
     }
@@ -30,9 +33,9 @@ export class BulkEditReviewTableDataSource extends DataSource<BulkEditTableItem>
 })
 export class BulkEditReviewTableComponent implements OnInit {
 
-    @Input() changeAttributes: Attribute[];
-    @Input() whenAttributes: Attribute[];
-    @Input() bulkEditTableItem: BulkEditTableItem[];
+    @Input() changeAttributes: Attribute[] = [];
+    @Input() whenAttributes: Attribute[] = [];
+    @Input() bulkEditTableItem: BulkEditTableItem[] = [];
     attributeHeaderColumns: string[];
     changeOldNewValuesHeaderColumns: string[];
     displayedColumns: string[];

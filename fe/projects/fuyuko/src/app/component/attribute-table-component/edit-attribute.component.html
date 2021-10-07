@@ -174,7 +174,7 @@
             <div class="select-attribute-type-options">
                 <app-single-select  #singleSelectComponent
                                     [rootFormGroup]="formGroupCommon"
-                                    [pairs]="attribute.pair1">
+                                    [pairs]="attribute.pair1 ?? []">
                 </app-single-select>
             </div>
         </ng-container>
@@ -183,8 +183,8 @@
             <div class="doubleselect-attribute-type-options">
                 <app-double-select #doubleSelectComponent
                                    [rootFormGroup]="formGroupCommon"
-                                   [pairs1]="attribute.pair1"
-                                   [pairs2]="attribute.pair2">
+                                   [pairs1]="attribute.pair1 ?? []"
+                                   [pairs2]="attribute.pair2 ?? []">
                 </app-double-select>
             </div>
         </ng-container>

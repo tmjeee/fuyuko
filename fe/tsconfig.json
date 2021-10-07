@@ -14,7 +14,7 @@
     "importHelpers": true,
     "target": "es2015",
     "strict": true,
-    "strictNullChecks": false,
+    // "strictNullChecks": true,
     "paths": {                                /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
         "@fuyuko-common/*": ["../common-code/src/*"],
         "@fuyuko-workflow/*": ["../wf/src/*"]
@@ -26,5 +26,8 @@
       "es2018",
       "dom"
     ]
-  }
+  },
+  "exclude": [
+    "./node_modules/*"
+  ]
 }

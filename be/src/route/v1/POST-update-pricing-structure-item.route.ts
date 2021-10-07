@@ -58,7 +58,7 @@ const httpAction: any[] = [
                 offset: 0
             });
             for (const w of ws) {
-                const workflowTriggerResults = await triggerPriceWorkflow(pricedItems, w.workflowDefinition.id, 'Update');
+                const workflowTriggerResults = await triggerPriceWorkflow(viewId, pricedItems, w.workflowDefinition.id, 'Update');
                 payload.push(...workflowTriggerResults);
                 workfowTriggered = true;
             }

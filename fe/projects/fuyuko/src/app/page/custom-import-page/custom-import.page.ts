@@ -19,8 +19,8 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class CustomImportPageComponent implements OnInit, OnDestroy{
 
-   customDataImports: CustomDataImport[];
-   ready: boolean;
+   customDataImports: CustomDataImport[] = [];
+   ready = false ;
    customImportValidateFn: CustomImportValidateFn;
    customImportPreviewFn: CustomImportPreviewFn;
    customImportSubmitFn: CustomImportSubmitFn;

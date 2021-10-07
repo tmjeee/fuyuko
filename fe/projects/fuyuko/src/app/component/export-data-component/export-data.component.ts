@@ -19,17 +19,20 @@ import {convertToString} from '@fuyuko-common/shared-utils/ui-item-value-convert
 import {MatSelectChange} from '@angular/material/select';
 import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import {OPERATORS_WITHOUT_CONFIGURATBLE_VALUES} from '@fuyuko-common/model/operator.model';
+import {PartialBy} from '@fuyuko-common/model/types';
+import {assertDefinedReturn} from '../../utils/common.util';
+import {Item, PricedItem} from '@fuyuko-common/model/item.model';
 
 export type ViewAttributeFn = (viewId: number) => Observable<Attribute[]>;
 export type ViewPricingStructureFn = (viewId: number) => Observable<PricingStructure[]>;
 export type PreviewExportFn = (exportType: DataExportType, viewId: number, attributes: Attribute[],
                                filter: ItemValueOperatorAndAttribute[],
                                ps?: PricingStructure /* only available when exportType === 'PRICE' */)
-    => Observable<AttributeDataExport | ItemDataExport | PriceDataExport>;
+    => Observable<AttributeDataExport | ItemDataExport | PriceDataExport> | undefined;
 export type SubmitExportJobFn = (exportType: DataExportType, viewId: number,
                                  attributes: Attribute[],
                                  dataExport: AttributeDataExport | ItemDataExport | PriceDataExport,
-                                 filter: ItemValueOperatorAndAttribute[]) => Observable<Job>;
+                                 filter: ItemValueOperatorAndAttribute[]) => Observable<Job> | undefined;
 
 
 @Component({
@@ -39,11 +42,11 @@ export type SubmitExportJobFn = (exportType: DataExportType, viewId: number,
 })
 export class ExportDataComponent implements OnInit {
 
-    @Input() views: View[];
-    @Input() viewAttributesFn: ViewAttributeFn;
-    @Input() viewPricingStructuresFn: ViewPricingStructureFn;
-    @Input() previewExportFn: PreviewExportFn;
-    @Input() submitExportJobFn: SubmitExportJobFn;
+    @Input() views: View[] = [];
+    @Input() viewAttributesFn!: ViewAttributeFn;
+    @Input() viewPricingStructuresFn!: ViewPricingStructureFn;
+    @Input() previewExportFn!: PreviewExportFn;
+    @Input() submitExportJobFn!: SubmitExportJobFn;
 
 
     // 1: select view
@@ -57,25 +60,25 @@ export class ExportDataComponent implements OnInit {
     exportTypeFormControl: FormControl;
     pricingStructureFormControl: FormControl;
     currentAttributeSelectionOption: string;
-    allAttributes: Attribute[];
-    allPricingStructures: PricingStructure[];
-    selectedExportType: DataExportType;
-    selectedPricingStructure: PricingStructure;
+    allAttributes: Attribute[] = [];
+    allPricingStructures: PricingStructure[] = [];
+    selectedExportType?: DataExportType;
+    selectedPricingStructure?: PricingStructure;
 
     // 3: items filtering
     thirdFormGroup: FormGroup;
     itemFilterCounter = 1;
-    itemValueOperatorAndAttributeList: ItemValueOperatorAndAttribute[];
+    itemValueOperatorAndAttributeList: PartialBy<ItemValueOperatorAndAttribute, 'attribute' | 'operator' | 'itemValue'>[];
 
     // 4. review export
     fourthFormGroup: FormGroup;
     fourthFormReady: boolean;
-    dataExport: AttributeDataExport | ItemDataExport | PriceDataExport;
+    dataExport?: AttributeDataExport | ItemDataExport | PriceDataExport;
 
 
     // 5: submit job
     fifthFormGroup: FormGroup;
-    job: Job;
+    job?: Job;
     jobSubmitted: boolean;
 
     constructor(private formBuilder: FormBuilder,
@@ -114,15 +117,28 @@ export class ExportDataComponent implements OnInit {
         this.thirdFormGroup = formBuilder.group({ });
 
         this.fourthFormReady = false;
-        this.dataExport = null;
+        this.dataExport = undefined;
         this.fourthFormGroup = formBuilder.group({});
 
         this.jobSubmitted = false;
-        this.job = null;
+        this.job = undefined;
         this.fifthFormGroup = formBuilder.group({ });
     }
 
     ngOnInit(): void {
+    }
+
+    dataExportAsAttributes(): Attribute[] {
+        const attDataExport = this.dataExport as AttributeDataExport;
+        return (attDataExport ? attDataExport.attributes ?? [] : []);
+    }
+    dataExportAsItems(): Item[] {
+        const itemDataExport = this.dataExport as ItemDataExport;
+        return (itemDataExport ? itemDataExport.items ?? [] : []);
+    }
+    dataExportAsPricedItems(): PricedItem[] {
+        const priceDataExport = this.dataExport as PriceDataExport;
+        return (priceDataExport ? priceDataExport.pricedItems ?? [] : []);
     }
 
 
@@ -180,9 +196,8 @@ export class ExportDataComponent implements OnInit {
         const viewId: number = view.id;
 
         // figure out attributes (from step 2)
-        let att: Attribute[] = null;
+        const att: Attribute[] = [];
         if (this.currentAttributeSelectionOption  === 'selection') {
-            att = [];
             const fg: FormGroup = this.secondFormGroup.get('attributes') as FormGroup;
             for (const [, c] of Object.entries(fg.controls)) {
                 const a: Attribute = (c as any).internalData;
@@ -193,10 +208,10 @@ export class ExportDataComponent implements OnInit {
         }
 
         // figure out item filters (from step 3)
-        const f: ItemValueOperatorAndAttribute[] = this.itemValueOperatorAndAttributeList;
-        const ps: PricingStructure = this.selectedExportType === 'PRICE' ? this.selectedPricingStructure : null;
-        this.previewExportFn(exportType, viewId, att, f, ps).pipe(
-            tap((dataExport: AttributeDataExport | ItemDataExport | PriceDataExport) => {
+        const f  = this.itemValueOperatorAndAttributeList;
+        const ps: PricingStructure | undefined = this.selectedExportType === 'PRICE' ? this.selectedPricingStructure : undefined;
+        this.previewExportFn(exportType, viewId, att, f as ItemValueOperatorAndAttribute[], ps)?.pipe(
+            tap((dataExport: AttributeDataExport | ItemDataExport | PriceDataExport ) => {
                 this.dataExport = dataExport;
                 this.fourthFormReady = true;
             })
@@ -213,9 +228,8 @@ export class ExportDataComponent implements OnInit {
         const viewId: number = view.id;
 
         // figure out attributes (from step 2)
-        let att: Attribute[] = null;
+        const att: Attribute[] = [];
         if (this.currentAttributeSelectionOption  === 'selection') {
-            att = [];
             const fg: FormGroup = this.secondFormGroup.get('attributes') as FormGroup;
             for (const [, c] of Object.entries(fg.controls)) {
                 const a: Attribute = (c as any).internalData;
@@ -224,46 +238,51 @@ export class ExportDataComponent implements OnInit {
         }
 
         // figure out item filters (from step 3)
-        const f: ItemValueOperatorAndAttribute[] = this.itemValueOperatorAndAttributeList;
+        const f = this.itemValueOperatorAndAttributeList;
 
 
         this.jobSubmitted = false;
-        const ps: PricingStructure = this.selectedExportType === 'PRICE' ? this.selectedPricingStructure : null;
-        this.submitExportJobFn(exportType, viewId, att, this.dataExport, f).pipe(
-            tap((j: Job) => {
-                this.job = j;
-                this.jobSubmitted = true;
-            })
-        ).subscribe();
+        // const ps: PricingStructure | undefined = this.selectedExportType === 'PRICE' ? this.selectedPricingStructure : undefined;
+        if (this.dataExport) {
+            this.submitExportJobFn(exportType, viewId, att, this.dataExport, f as ItemValueOperatorAndAttribute[])?.pipe(
+                tap((j: Job) => {
+                    this.job = j;
+                    this.jobSubmitted = true;
+                })
+            ).subscribe();
+        }
     }
 
     onFifthFormSubmit(stepper: MatHorizontalStepper) {
         stepper.reset();
     }
 
-    onAttributeOperatorEvent($event: ItemValueOperatorAndAttribute, orig: ItemValueOperatorAndAttribute) {
+    onAttributeOperatorEvent($event: ItemValueOperatorAndAttribute,
+                             orig: PartialBy<ItemValueOperatorAndAttribute, 'attribute' | 'operator' | 'itemValue'>) {
         const id = (orig as any).id;
         const g: FormGroup = this.thirdFormGroup.get('' + id) as FormGroup;
         (g.get('attribute') as FormControl).setValue($event.attribute);
         (g.get('operator') as FormControl).setValue($event.operator);
         (g.get('itemValue') as FormControl).setValue($event.attribute ? convertToString($event.attribute, $event.itemValue) : undefined);
         this.thirdFormGroup.updateValueAndValidity();
-        const _i: ItemValueOperatorAndAttribute = this.itemValueOperatorAndAttributeList.find((i: ItemValueOperatorAndAttribute) => (i as any).id === id);
-        if (_i) {
-            _i.attribute = $event.attribute;
-            _i.operator = $event.operator;
-            _i.itemValue = $event.itemValue;
+        const i2 = this.itemValueOperatorAndAttributeList.find(
+                (i: PartialBy<ItemValueOperatorAndAttribute, 'attribute' | 'operator' | 'itemValue'>) =>
+                    (i as any).id === id);
+        if (i2) {
+            i2.attribute = $event.attribute;
+            i2.operator = $event.operator;
+            i2.itemValue = $event.itemValue;
         }
     }
 
     onAddItemFilter($event: MouseEvent) {
         const id = this.itemFilterCounter++;
-        const i: ItemValueOperatorAndAttribute = {
+        const i: PartialBy<ItemValueOperatorAndAttribute, 'attribute' | 'operator' | 'itemValue'> = {
             id,
-            attribute: null,
-            operator: null,
-            itemValue: null
-        } as ItemValueOperatorAndAttribute;
+            attribute: undefined,
+            operator: undefined,
+            itemValue: undefined
+        } as any;
         this.itemValueOperatorAndAttributeList.push(i);
         const g: FormGroup = this.formBuilder.group({
             attribute: this.formBuilder.control(null, [Validators.required]),
@@ -275,9 +294,12 @@ export class ExportDataComponent implements OnInit {
         this.thirdFormGroup.updateValueAndValidity();
     }
 
-    onDeleteItemFilter($event: MouseEvent, itemValueOperatorAndAttribute: ItemValueOperatorAndAttribute) {
+    onDeleteItemFilter($event: MouseEvent,
+                       itemValueOperatorAndAttribute: PartialBy<ItemValueOperatorAndAttribute, 'attribute' | 'operator' | 'itemValue'>) {
         this.itemValueOperatorAndAttributeList =
-            this.itemValueOperatorAndAttributeList.filter((i: ItemValueOperatorAndAttribute) => i !== itemValueOperatorAndAttribute);
+            this.itemValueOperatorAndAttributeList
+                .filter((i: PartialBy<ItemValueOperatorAndAttribute, 'attribute' | 'operator' | 'itemValue'>) =>
+                    i !== itemValueOperatorAndAttribute);
         this.thirdFormGroup.removeControl('' + (itemValueOperatorAndAttribute as any).id);
         this.thirdFormGroup.updateValueAndValidity();
     }
@@ -307,7 +329,7 @@ export class ExportDataComponent implements OnInit {
     }
 
     formControlForAttribute(attribute: Attribute): FormControl {
-        return this.secondFormGroup.get('attributes').get('' + attribute.id) as FormControl;
+        return assertDefinedReturn(this.secondFormGroup.get('attributes')).get('' + attribute.id) as FormControl;
     }
 
 
@@ -320,7 +342,7 @@ export class ExportDataComponent implements OnInit {
         const fcItemValue: FormControl = fg.controls.itemValue as FormControl;
 
         if (!OPERATORS_WITHOUT_CONFIGURATBLE_VALUES.includes(fcOperator.value)) {
-            if (fcItemValue.value == null || fcItemValue.value == undefined || fcItemValue.value.toString().trim() == '') {
+            if (fcItemValue.value == null || fcItemValue.value === undefined || fcItemValue.value.toString().trim() === '') {
                 return {
                     filterInvalid: true
                 };

@@ -24,7 +24,7 @@ const httpAction: any[] = [
 
         const html: string = new showdown.Converter()
             .makeHtml(text);
-        const ft: FileTypeResult = await filetype.fromBuffer(Buffer.from(html));
+        const ft: FileTypeResult | undefined = await filetype.fromBuffer(Buffer.from(html));
 
         res.status(200).contentType(ft ? ft.mime : 'text/html').end(html);
     }

@@ -3,6 +3,7 @@ import {Item2, ItemValue2, PricedItem2} from '../server-side-model/server-side.m
 
 import {itemValueRevert as itemValueRevert } from './conversion-item-value.service';
 import {itemValTypesConvert as itemValueTypesConvert} from './conversion-item-value-types.service';
+import {PartialBy} from "@fuyuko-common/model/types";
 
 
 class ConversionItemService {
@@ -12,11 +13,12 @@ class ConversionItemService {
      *  =======================
      */
     itemsConvert(item2s: Item2[]): Item[] {
-        return (item2s ? (item2s as []).map(itemConvert): []);
+        return (item2s ? (item2s as [])
+            .map(itemConvert): []);
     }
     itemConvert(item2: Item2): Item {
         if (!!!item2) {
-            return null;
+            return item2;
         }
         const item: Item = {
             id: item2.id,
@@ -50,7 +52,7 @@ class ConversionItemService {
     itemsRevert(items: Item[]): Item2[] {
         return (items ? (items as []).map(itemRevert) : []);
     }
-    itemRevert(item: Item): Item2 {
+    itemRevert(item: PartialBy<Item, 'creationDate' | 'lastUpdate'>): Item2 {
         const item2: Item2 = {
             id: item.id,
             name: item.name,
@@ -68,9 +70,9 @@ class ConversionItemService {
         for (const i in item) {
             if (item.hasOwnProperty(i) && !isNaN(Number(i))) {
                 const value: Value = item[i];
-                const val: ItemValTypes = value.val;
+                const val: ItemValTypes | undefined = value.val;
 
-                const val2: ItemValue2 = itemValueRevert(value);
+                const val2: ItemValue2 | undefined = itemValueRevert(value);
                 if (val2) {
                     item2.values.push(val2);
                 }

@@ -22,16 +22,16 @@ export class ActivatePageComponent implements OnInit {
     formControlPassword: FormControl;
     formControlConfirmPassword: FormControl;
 
-    code: string;
-    status: 'ERROR' | 'SUCCESS';
+    code!: string;
+    status: 'ERROR' | 'SUCCESS' | undefined;
     message: string;
-    invitation: Invitation;
+    invitation?: Invitation;
     errorStateMatcher: ErrorStateMatcher = new MyErrorStateMatcher();
 
     constructor(private formBuilder: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private activationService: ActivationService) {
-        this.status = null;
+        this.status = undefined;
         this.message = '';
         this.formControlEmail = this.formBuilder.control('', [Validators.required, Validators.email]);
         this.formControlUsername = this.formBuilder.control('', [Validators.required]);
@@ -74,7 +74,7 @@ export class ActivatePageComponent implements OnInit {
                         this.invitation = i;
                         this.formControlEmail.setValue(i.email);
                         this.status = 'SUCCESS';
-                        this.message = 'Activate code is valid'
+                        this.message = 'Activate code is valid';
                     } else {
                         this.status = 'ERROR';
                         this.message = 'Bad code';

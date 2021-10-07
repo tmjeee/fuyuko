@@ -7,7 +7,7 @@
         <mat-card-content>
             <div class="content">
                 <app-rule-editor
-                        *ngIf="viewReady"
+                        *ngIf="viewReady && rule"
                         [rule]="rule"
                         [attributes]="attributes"
                         (events)="onRuleEditorEvent($event)">

@@ -9,7 +9,7 @@ import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 
 export class InternalDataSource extends DataSource<PricedItem> {
 
-   subject: BehaviorSubject<PricedItem[]>;
+   subject?: BehaviorSubject<PricedItem[]>;
 
    connect(collectionViewer: CollectionViewer): Observable<PricedItem[] | ReadonlyArray<PricedItem>> {
       if (!this.subject) {
@@ -22,7 +22,7 @@ export class InternalDataSource extends DataSource<PricedItem> {
       if (this.subject) {
          this.subject.complete();
       }
-      this.subject = null;
+      this.subject = undefined;
    }
 
    update(priceDataItems: PricedItem[]) {
@@ -40,9 +40,9 @@ export class InternalDataSource extends DataSource<PricedItem> {
 })
 export class ViewOnlyPriceTableComponent implements OnInit {
 
-   @Input() attributes: Attribute[];
-   @Input() pricedItems: PricedItem[];
-   @Input() pricingStructure: PricingStructure;
+   @Input() attributes: Attribute[] = [];
+   @Input() pricedItems: PricedItem[] = [];
+   @Input() pricingStructure!: PricingStructure;
 
    dataSource: InternalDataSource;
    displayedColumns: string[];

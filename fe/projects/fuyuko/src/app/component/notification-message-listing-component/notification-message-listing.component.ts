@@ -9,7 +9,7 @@ import {Messages} from '@fuyuko-common/model/notification-listing.model';
 })
 export class NotificationMessageListingComponent {
 
-    @Input() messages: Messages;
+    @Input() messages?: Messages;
 
     hasMessages(): boolean {
         return !!(this.messages && (

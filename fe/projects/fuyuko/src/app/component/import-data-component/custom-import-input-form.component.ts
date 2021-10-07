@@ -25,13 +25,13 @@ export interface CustomImportInputFormComponentEvent {
 })
 export class CustomImportInputFormComponent implements OnInit, OnChanges{
 
-   @Input() customDataImport: CustomDataImport;
-   @Input() validateFn: CustomImportValidateFn;
-   @Input() view: View;
+   @Input() customDataImport!: CustomDataImport;
+   @Input() validateFn!: CustomImportValidateFn;
+   @Input() view!: View;
 
    @Output() events: EventEmitter<CustomImportInputFormComponentEvent>;
 
-   validationResult: ImportScriptValidateResult;
+   validationResult?: ImportScriptValidateResult;
 
    formGroup: FormGroup;
 
@@ -96,10 +96,12 @@ export class CustomImportInputFormComponent implements OnInit, OnChanges{
    }
 
    async onFileUpload($event: Event, input: ImportScriptInput) {
-      const fileList: FileList = ($event.target as HTMLInputElement).files;
-      const file: File = fileList[0];
+      const fileList: FileList | null = ($event.target as HTMLInputElement).files;
+      const file: File | undefined = fileList && fileList.length ? fileList[0] : undefined;
 
-      const fileDataObject: FileDataObject = await fromFileToFileDataObject(file);
-      this.formGroup.controls[input.name].setValue(fileDataObject);
+      if (file) {
+          const fileDataObject: FileDataObject = await fromFileToFileDataObject(file);
+          this.formGroup.controls[input.name].setValue(fileDataObject);
+      }
    }
 }

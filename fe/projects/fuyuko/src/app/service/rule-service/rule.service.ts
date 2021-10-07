@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import config from '../../utils/config.util';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 const URL_GET_ALL_RULES_BY_VIEW = () => `${config().api_host_url}/view/:viewId/rules`;
@@ -23,7 +24,7 @@ export class RuleService {
     return this.httpClient
         .get<ApiResponse<Rule[]>>(URL_GET_ALL_RULES_BY_VIEW().replace(':viewId', `${viewId}`))
         .pipe(
-            map((r: ApiResponse<Rule[]>) => r.payload)
+            map((r: ApiResponse<Rule[]>) => assertDefinedReturn(r.payload))
         );
   }
 
@@ -33,7 +34,7 @@ export class RuleService {
             .replace(':viewId', String(viewId))
             .replace(':ruleId', String(ruleId)))
         .pipe(
-            map((r: ApiResponse<Rule>) => r.payload)
+            map((r: ApiResponse<Rule>) => assertDefinedReturn(r.payload))
         );
   }
 

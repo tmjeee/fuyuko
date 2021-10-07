@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {View} from '@fuyuko-common/model/view.model';
 import {finalize, tap} from 'rxjs/operators';
 import {
@@ -19,19 +19,18 @@ export interface CustomBulkEditPreviewComponentEvent {
    templateUrl: './custom-bulk-edit-preview.component.html',
    styleUrls: ['./custom-bulk-edit-preview.component.scss']
 })
-export class CustomBulkEditPreviewComponent {
+export class CustomBulkEditPreviewComponent implements OnInit {
 
-   @Input() view: View;
-   @Input() customBulkEdit: CustomBulkEdit;
-   @Input() inputValues: CustomBulkEditScriptInputValue[];
-   @Input() previewFn: CustomBulkEditPreviewFn;
+   @Input() view!: View;
+   @Input() customBulkEdit!: CustomBulkEdit;
+   @Input() inputValues: CustomBulkEditScriptInputValue[] = [];
+   @Input() previewFn!: CustomBulkEditPreviewFn;
 
    @Output() events: EventEmitter<CustomBulkEditPreviewComponentEvent>;
 
-   preview: CustomBulkEditScriptPreview;
-   datasource: {[key: string]: string}[];
-   ready: boolean;
-
+   preview?: CustomBulkEditScriptPreview;
+   datasource!: {[key: string]: string}[];
+   ready!: boolean;
 
    constructor() {
       this.events = new EventEmitter<CustomBulkEditPreviewComponentEvent>();
@@ -47,16 +46,18 @@ export class CustomBulkEditPreviewComponent {
       this.previewFn(this.view, this.customBulkEdit, this.inputValues).pipe(
           tap((r: CustomBulkEditScriptPreview) => {
              this.preview = r;
-             for (const row of this.preview.rows) {
-                const o = this.preview.columns.reduce((o: {[k: string]: string}, col: string) => {
-                   o[col] = row[col];
-                   return o;
-                }, {});
-                this.datasource.push(o);
+             if (this.preview) {
+                for (const row of this.preview.rows ?? []) {
+                   const o = (this.preview.columns ?? []).reduce((o: { [k: string]: string }, col: string) => {
+                      o[col] = row[col];
+                      return o;
+                   }, {});
+                   this.datasource.push(o);
+                }
+                this.events.emit({
+                   preview: this.preview
+                });
              }
-             this.events.emit({
-                preview: this.preview
-             });
              this.ready = true;
           }),
           finalize(() => this.ready = true)

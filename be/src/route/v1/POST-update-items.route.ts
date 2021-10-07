@@ -60,7 +60,7 @@ const httpAction: any[] = [
         if (ws && ws.length > 0) {
             for (const w of ws) {
                 if (w.type === 'Item') {  // handle Item
-                    const workflowTriggerResult = await triggerItemWorkflow(items, w.workflowDefinition.id, 'Update');
+                    const workflowTriggerResult = await triggerItemWorkflow(viewId, items, w.workflowDefinition.id, 'Update');
                     payload.push(...workflowTriggerResult);
                     itemWorkflowTriggered = true;
                 }

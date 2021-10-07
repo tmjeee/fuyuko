@@ -22,9 +22,9 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
         const validationId: number = Number(req.params.validationId);
-        const validationLogId: number = req.params.validationLogId ? Number(req.params.validationLogId) : null;
-        const order: string = req.params.order ? req.params.order : null;
-        const limit: number = req.params.limit ? Number(req.params.limit) : null;
+        const validationLogId: number | undefined = req.params.validationLogId ? Number(req.params.validationLogId) : undefined;
+        const order: string | undefined = req.params.order ? req.params.order : undefined;
+        const limit: number | undefined = req.params.limit ? Number(req.params.limit) : undefined;
         const _r: ValidationLogResult = await getViewValidationResultLog(viewId, validationId, validationLogId, order as any, limit);
         const apiResponse: ApiResponse<ValidationLogResult> = {
             messages: [{

@@ -1,26 +1,33 @@
 
+export const DEFAULT_DIMENSION_UNIT = 'cm';
 export const DIMENSION_UNITS: DimensionUnits[] = ['mm', 'cm', 'm'];
 export type DimensionUnits = 'mm' | 'cm' | 'm';
 
+export const DEFAULT_VOUMNE_UNIT = 'l';
 export const VOLUME_UNITS: VolumeUnits[] = ['l', 'ml'];
 export type VolumeUnits = 'l' | 'ml';
 
+export const DEFAULT_AREA_UNIT = 'cm2';
 export const AREA_UNITS: AreaUnits[] = ['cm2', 'mm2', 'm2'];
 export type AreaUnits = 'cm2' | 'mm2' | 'm2';
 
+export const DEFAULT_WIDTH_UNIT = 'cm';
 export const WIDTH_UNITS: WidthUnits[] = ['mm', 'cm', 'm'];
 export type WidthUnits = 'mm' | 'cm' | 'm';
 
+export const DEFAULT_LENGTH_UNIT = 'cm';
 export const LENGTH_UNITS: LengthUnits[] = ['mm', 'cm', 'm'];
 export type LengthUnits = 'mm' | 'cm' | 'm';
 
+export const DEFAULT_HEIGHT_UNIT = 'cm';
 export const HEIGHT_UNITS: HeightUnits[] = ['mm', 'cm', 'm'];
 export type HeightUnits = 'mm' | 'cm' | 'm';
 
+export const DEFAULT_WEIGHT_UNIT = 'kg';
 export const WEIGHT_UNITS: WeightUnits[] = ['kg', 'g'];
 export type WeightUnits = 'kg' | 'g';
 
-
+export const DEFAULT_COUNTRY_CURRENCY_UNIT = 'AUD';
 export const COUNTRY_CURRENCY_UNITS: CountryCurrencyUnits[] = [
   'AED' ,
   'AFN' ,

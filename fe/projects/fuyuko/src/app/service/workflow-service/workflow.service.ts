@@ -15,6 +15,7 @@ import {map} from 'rxjs/operators';
 import {View} from '@fuyuko-common/model/view.model';
 import {toQuery} from '../../utils/pagination.utils';
 import {DEFAULT_LIMIT, DEFAULT_OFFSET, LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_ALL_WORKFLOW_DEFINITIONS = () => `${config().api_host_url}/workflow/definitions`;
 const URL_CREATE_WORKFLOW = () => `${config().api_host_url}/workflow/workflow`;
@@ -25,7 +26,7 @@ const URL_WORKFLOW_INSTANCE_TASK_FOR_USER_BY_STATUS = (userId: number, status: W
     `${config().api_host_url}/workflow-instance/user/${userId}/status/${status}?${toQuery(limitOffset)}`;
 const URL_GET_WORKFLOW_INSTANCE_TASK_BY_ID = (workflowInstanceTaskId: number) =>
     `${config().api_host_url}/workflow-instance/task/${workflowInstanceTaskId}`;
-const URL_GET_WORKFLOW_INSTANCE_COMMENTS = (workflowInstanceId: number, limitOffset: LimitOffset) =>
+const URL_GET_WORKFLOW_INSTANCE_COMMENTS = (workflowInstanceId: number, limitOffset?: LimitOffset) =>
     `${config().api_host_url}/workflow-instance/${workflowInstanceId}/comments${toQuery(limitOffset)}`;
 const URL_POST_CONTINUE_USER_WORKFLOW_INSTANCE = (userId: number, workflowInstanceId: number) =>
     `${config().api_host_url}/workflow-instance/${workflowInstanceId}/user/${userId}/continue`;
@@ -42,7 +43,7 @@ export class WorkflowService {
         return this.httpClient
             .get<ApiResponse<WorkflowDefinition[]>>(URL_ALL_WORKFLOW_DEFINITIONS())
             .pipe(
-                map((r: ApiResponse<View[]>) => r.payload)
+                map((r: ApiResponse<View[]>) => assertDefinedReturn(r.payload))
             )
         ;
     }

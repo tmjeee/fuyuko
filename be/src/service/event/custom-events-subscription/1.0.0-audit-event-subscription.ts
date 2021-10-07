@@ -304,7 +304,7 @@ const d: any = {
         await auditLogInfo(`${msg}`, 'USER');
     },
     SaveUserAvatarEvent: async (evt: SaveUserAvatarEvent) => {
-        const msg = `save user avatar, userId - ${evt.userId}, globalAvatarName - ${evt.avatar.globalAvatarName}, filename - ${evt.avatar.customAvatarFile.name}, result - ${evt.result}`;
+        const msg = `save user avatar, userId - ${evt.userId}, globalAvatarName - ${evt.avatar.globalAvatarName}, filename - ${evt.avatar.customAvatarFile?.name}, result - ${evt.result}`;
         await auditLogInfo(`${msg}`, 'USER');
     },
     GetGlobalAvatarContentByNameEvent: async (evt: GetGlobalAvatarContentByNameEvent) => {
@@ -838,8 +838,8 @@ const d: any = {
 };
 
 const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `sample-event-subscription`, 
-    (v1AppRouter: Router, registry: Registry): Promise<void> => {
-        return null
+    async (v1AppRouter: Router, registry: Registry): Promise<void> => {
+        return undefined;
     }
 );
 export default s;

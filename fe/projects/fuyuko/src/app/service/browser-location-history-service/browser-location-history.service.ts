@@ -30,7 +30,7 @@ export class BrowserLocationHistoryService {
         sessionStorage.removeItem(LAST_URL_KEY);
     }
 
-    retrieveLastUrl(): string {
-        return sessionStorage.getItem(LAST_URL_KEY);
+    retrieveLastUrl(): string | undefined {
+        return sessionStorage.getItem(LAST_URL_KEY) ?? undefined;
     }
 }

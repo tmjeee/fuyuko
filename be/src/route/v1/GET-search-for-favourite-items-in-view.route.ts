@@ -40,7 +40,7 @@ const httpAction: any[] = [
         const userId: number = Number(req.params.userId);
         const searchType: ItemSearchType = req.params.searchType as ItemSearchType;
         const search: string = req.params.search;
-        const limitOffset: LimitOffset = toLimitOffset(req);
+        const limitOffset = toLimitOffset(req);
 
         let allItems: Item[] = [];
         let total: number;

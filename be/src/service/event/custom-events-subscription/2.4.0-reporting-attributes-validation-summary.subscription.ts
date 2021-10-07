@@ -419,10 +419,10 @@ const httpAction: any[] = [
                         } as any);
                     }
                     if (i.LEVEL == 'WARN') {
-                        acc.get(attributeId).warnings = i.COUNT;
+                        acc.get(attributeId)!.warnings = i.COUNT;
                     }
                     if (i.LEVEL == 'ERROR') {
-                        acc.get(attributeId).errors = i.COUNT;
+                        acc.get(attributeId)!.errors = i.COUNT;
                     }
                     return acc;
                 }, new Map());
@@ -467,10 +467,10 @@ const mountRoute = (v1AppRouter: Router, registry: Registry) => {
 };
 
 const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `attributes-validation-summary-subscription`,
-    (v1AppRouter: Router, registry: Registry): Promise<void> => {
+    async (v1AppRouter: Router, registry: Registry): Promise<void> => {
         // perform db and router related setup
         mountRoute(v1AppRouter, registry);
-        return null;
+        return undefined;
     }
 );
 

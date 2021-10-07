@@ -23,9 +23,9 @@ export class UserActivationPageComponent implements OnInit {
 
     pendingUserSearchFn: UserSearchFn;
 
-    ready: boolean;
-    pendingUsers: SelfRegistration[];
-    actionTypes: ActionType[];
+    ready = false;
+    pendingUsers: SelfRegistration[] = [];
+    actionTypes: ActionType[] = [];
 
 
     constructor(private notificationService: NotificationsService,

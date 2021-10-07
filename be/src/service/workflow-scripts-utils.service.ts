@@ -178,7 +178,7 @@ class WorkflowScriptsUtilsService {
                 INNER JOIN TBL_USER AS U ON U.ID = S.APPROVER_USER_ID
                 WHERE S.APPROVAL_STAGE = ? AND S.WORKFLOW_STATE = ? AND S.WORKFLOW_INSTANCE_ID = ? 
             `, [approvalStage, state.state.name, workflowInstanceId])
-            return q1.reduce((acc, i) => {
+            return q1.reduce((acc: string[], i) => {
                 acc.push(i.USERNAME);
                 return acc;
             }, []);

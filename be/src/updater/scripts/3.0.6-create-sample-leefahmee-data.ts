@@ -18,6 +18,7 @@ import {Rule, ValidateClause} from '@fuyuko-common/model/rule.model';
 import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import {Group, GROUP_ADMIN, GROUP_PARTNER} from '@fuyuko-common/model/group.model';
 import {Status} from '@fuyuko-common/model/status.model';
+import {size} from "lodash";
 
 export const profiles = [UPDATER_PROFILE_LEEFAHMEE_DATA];
 
@@ -448,7 +449,7 @@ const runImport = async () => {
 
     // create categories
     for (const category of CATEGORIES) {
-        await addCategory(view.id, null, {
+        await addCategory(view.id, undefined, {
             name: category,
             description: category,
             children: []
@@ -508,8 +509,14 @@ const runImport = async () => {
     checkErrors(errors2, `Failed to link group ${partnerGroup.name} with Id ${partnerGroupId} with pricing structure ${pricingStructure.id}`);
 
     // create items & images for all files
-    const sizeAttribute: Attribute = await getAttributeInViewByName(view.id, 'Size');
-    const cartonAttribute: Attribute = await getAttributeInViewByName(view.id, 'Carton');
+    const sizeAttribute: Attribute | undefined = await getAttributeInViewByName(view.id, 'Size');
+    if (!sizeAttribute) {
+        throw new Error(`Unable to get attribute Size in view ${view.id}`);
+    }
+    const cartonAttribute: Attribute | undefined = await getAttributeInViewByName(view.id, 'Carton');
+    if (!cartonAttribute) {
+        throw new Error(`Unable to get attribute Carton in view ${view.id}`);
+    }
     const pathToAssetsDir: string = Path.join(__dirname, '../assets/leefahmee-data-images');
     for (const m of MAPPING) {
         const errs: string[] = await addItem(view.id, {
@@ -521,52 +528,52 @@ const runImport = async () => {
         } as Item);
         checkErrors(errs, `Failed to create item ${m.name}`);
 
-        const item: Item = await getItemByName(view.id, m.name);
+        const item: Item | undefined = await getItemByName(view.id, m.name);
         checkNotNull(item, `Cannot find item ${m.name}`);
 
         switch(m.category) {
            case CATEGORY_NOODLE: {
-               const err: string[] = await addItemToViewCateogry(categoryNoodle.id, item.id);
-               checkErrors(err, `Failed to add item ${item.name} to category ${categoryNoodle.name}`);
+               const err: string[] = await addItemToViewCateogry(categoryNoodle!.id, item!.id);
+               checkErrors(err, `Failed to add item ${item!.name} to category ${categoryNoodle!.name}`);
                break;
            }
            case CATEGORY_RICE_VERMICELLI: {
-               const err: string[] = await addItemToViewCateogry(categoryRiceVermicelli.id, item.id);
-               checkErrors(err, `Failed to add item ${item.name} to category ${categoryNoodle.name}`);
+               const err: string[] = await addItemToViewCateogry(categoryRiceVermicelli!.id, item!.id);
+               checkErrors(err, `Failed to add item ${item!.name} to category ${categoryNoodle!.name}`);
                break;
            }
            case CATEGORY_DRIED_NOODLE: {
-               const err: string[] = await addItemToViewCateogry(categoryDriedNoodle.id, item.id);
-               checkErrors(err, `Failed to add item ${item.name} to category ${categoryNoodle.name}`);
+               const err: string[] = await addItemToViewCateogry(categoryDriedNoodle!.id, item!.id);
+               checkErrors(err, `Failed to add item ${item!.name} to category ${categoryNoodle!.name}`);
                break;
            }
            case CATEGORY_MEAL_BOX: {
-               const err: string[] = await addItemToViewCateogry(categoryMealBox.id, item.id);
-               checkErrors(err, `Failed to add item ${item.name} to category ${categoryNoodle.name}`);
+               const err: string[] = await addItemToViewCateogry(categoryMealBox!.id, item!.id);
+               checkErrors(err, `Failed to add item ${item!.name} to category ${categoryNoodle!.name}`);
                break;
            }
            case CATEGORY_NOODLE_SNACK: {
-               const err: string[] = await addItemToViewCateogry(categoryNoodleSnack.id, item.id);
-               checkErrors(err, `Failed to add item ${item.name} to category ${categoryNoodle.name}`);
+               const err: string[] = await addItemToViewCateogry(categoryNoodleSnack!.id, item!.id);
+               checkErrors(err, `Failed to add item ${item!.name} to category ${categoryNoodle!.name}`);
                break;
            }
            case CATEGORY_FOURWAY_SNACK: {
-               const err: string[] = await addItemToViewCateogry(categoryFourwaySnack.id, item.id);
-               checkErrors(err, `Failed to add item ${item.name} to category ${categoryNoodle.name}`);
+               const err: string[] = await addItemToViewCateogry(categoryFourwaySnack!.id, item!.id);
+               checkErrors(err, `Failed to add item ${item!.name} to category ${categoryNoodle!.name}`);
                break;
            }
         }
 
 
-        const r: boolean = await addItemToPricingStructure(view.id, pricingStructure.id, item.id);
-        checkTrue(r, `Failed to add item ${item.name} with id ${item.id} to pricing structure ${pricingStructure.name} with id ${pricingStructure.id}`);
+        const r: boolean = await addItemToPricingStructure(view.id, pricingStructure.id, item!.id);
+        checkTrue(r, `Failed to add item ${item!.name} with id ${item!.id} to pricing structure ${pricingStructure.name} with id ${pricingStructure.id}`);
 
         // set item pricing
         const errs2: string[] = await setPrices([{
             pricingStructureId: pricingStructure.id,
-            item: {price: m.price, itemId: item.id, country: m.country}
+            item: {price: m.price, itemId: item!.id, country: m.country}
         }]);
-        checkErrors(errs2, `Failed to set price for item id ${item.id} named ${item.name}`);
+        checkErrors(errs2, `Failed to set price for item id ${item!.id} named ${item!.name}`);
 
 
         let i = 0;
@@ -574,7 +581,7 @@ const runImport = async () => {
             i++
             const filePath = Path.join(pathToAssetsDir, img);
             const r: boolean = await addItemImage(
-                item.id,
+                item!.id,
                 img,
                 await util.promisify(fs.readFile)(filePath),
                 i === 0);

@@ -6,6 +6,7 @@ import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_BULK_EDIT = () => `${config().api_host_url}/view/:viewId/preview-bulk-edit`;
 
@@ -23,6 +24,6 @@ export class BulkEditService {
             URL_BULK_EDIT().replace(':viewId', String(viewId)), {
             changeClauses,
             whenClauses
-        }).pipe(map((r: ApiResponse<BulkEditPackage>) => r.payload));
+        }).pipe(map((r: ApiResponse<BulkEditPackage>) => assertDefinedReturn(r.payload)));
     }
 }

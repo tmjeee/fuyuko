@@ -20,7 +20,7 @@ export class ViewAttributeValidationSummaryWidgetService {
                 .replace(':viewId', String(viewId)))
             .pipe(
                 take(1),
-                map((r: ApiResponse<Reporting_ViewAttributeValidationSummary>) => r.payload)
+                map((r: ApiResponse<Reporting_ViewAttributeValidationSummary>) => r.payload!)
             );
     }
 

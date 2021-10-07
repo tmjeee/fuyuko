@@ -483,7 +483,7 @@ const httpAction_userVisitsInsignt: any[] = [
             for (let i = 0; i < 10; i++) {
                 const d = `${_m.date()}-${_m.month() + 1}-${_m.year()}`;
                 if (dailyMap.has(d)) {
-                    daily.push(dailyMap.get(d));
+                    daily.push(dailyMap.get(d)!);
                 } else {
                     daily.push({date: d, count: 0});
                 }
@@ -522,7 +522,7 @@ const httpAction_userVisitsInsignt: any[] = [
             for (let i = 0; i < 10; i++) {
                 const d = `${_m.weeks()}-${_m.year()}`;
                 if (weeklyMap.has(d)) {
-                    weekly.push(weeklyMap.get(d));
+                    weekly.push(weeklyMap.get(d)!);
                 } else {
                     weekly.push({date: d, count: 0});
                 }
@@ -559,7 +559,7 @@ const httpAction_userVisitsInsignt: any[] = [
             for (let i = 0; i < 10; i++) {
                 const d = `${_m.month() + 1}-${_m.year()}`;
                 if (monthlyMap.has(d)) {
-                    monthly.push(monthlyMap.get(d));
+                    monthly.push(monthlyMap.get(d)!);
                 } else {
                     monthly.push({date: d, count: 0});
                 }
@@ -596,7 +596,7 @@ const httpAction_userVisitsInsignt: any[] = [
             for (let i = 0; i < 10; i++) {
                 const d = `${_m.year()}`;
                 if (yearlyMap.has(d)) {
-                    yearly.push(yearlyMap.get(d));
+                    yearly.push(yearlyMap.get(d)!);
                 } else {
                     yearly.push({date: d, count: 0});
                 }

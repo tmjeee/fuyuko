@@ -36,20 +36,20 @@ describe('item-filtering.service', () => {
     beforeAll(async () => {
         await setupTestDatabase();
         await setupBeforeAll2();
-        stringAtt = await getAttributeInViewByName(viewId, 'string attribute');
-        textAtt = await getAttributeInViewByName(viewId, 'text attribute');
-        numberAtt = await getAttributeInViewByName(viewId, 'number attribute');
-        dateAtt = await getAttributeInViewByName(viewId, 'date attribute');
-        currencyAtt = await getAttributeInViewByName(viewId, 'currency attribute');
-        volumeAtt = await getAttributeInViewByName(viewId, 'volume attribute');
-        dimensionAtt = await getAttributeInViewByName(viewId, 'dimension attribute');
-        areaAtt = await getAttributeInViewByName(viewId, 'area attribute');
-        lengthAtt = await getAttributeInViewByName(viewId, 'length attribute');
-        widthAtt = await getAttributeInViewByName(viewId, 'width attribute');
-        heightAtt = await getAttributeInViewByName(viewId, 'height attribute');
-        weightAtt = await getAttributeInViewByName(viewId, 'weight attribute');
-        selectAtt = await getAttributeInViewByName(viewId, 'select attribute');
-        doubleSelectAtt = await getAttributeInViewByName(viewId, 'doubleselect attribute');
+        stringAtt = await getAttributeInViewByName(viewId, 'string attribute') as Attribute;
+        textAtt = await getAttributeInViewByName(viewId, 'text attribute') as Attribute;
+        numberAtt = await getAttributeInViewByName(viewId, 'number attribute') as Attribute;
+        dateAtt = await getAttributeInViewByName(viewId, 'date attribute') as Attribute;
+        currencyAtt = await getAttributeInViewByName(viewId, 'currency attribute') as Attribute;
+        volumeAtt = await getAttributeInViewByName(viewId, 'volume attribute') as Attribute;
+        dimensionAtt = await getAttributeInViewByName(viewId, 'dimension attribute') as Attribute;
+        areaAtt = await getAttributeInViewByName(viewId, 'area attribute') as Attribute;
+        lengthAtt = await getAttributeInViewByName(viewId, 'length attribute') as Attribute;
+        widthAtt = await getAttributeInViewByName(viewId, 'width attribute') as Attribute;
+        heightAtt = await getAttributeInViewByName(viewId, 'height attribute') as Attribute;
+        weightAtt = await getAttributeInViewByName(viewId, 'weight attribute') as Attribute;
+        selectAtt = await getAttributeInViewByName(viewId, 'select attribute') as Attribute;
+        doubleSelectAtt = await getAttributeInViewByName(viewId, 'doubleselect attribute') as Attribute;
     }, JASMINE_TIMEOUT);
 
     // string

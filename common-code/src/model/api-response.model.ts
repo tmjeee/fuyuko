@@ -3,7 +3,7 @@ import {User} from "./user.model";
 
 export interface ApiResponseMessage {
    status: ResponseStatus;
-   message: string;
+   message?: string;
 }
 
 // this is used in express response
@@ -18,7 +18,7 @@ export interface PaginableApiResponse<P=void> extends ApiResponse<P>{
    total: number;
 }
 
-export interface UserAvatarResponse extends ApiResponse<{userAvatarId: number}> {
+export interface UserAvatarResponse extends ApiResponse<{userAvatarId: number} | undefined> {
 }
 
 export interface LoginResponse extends ApiResponse<{jwtToken: string, user: User, theme: string}>{
@@ -27,6 +27,6 @@ export interface LoginResponse extends ApiResponse<{jwtToken: string, user: User
 export interface RegistrationResponse extends ApiResponse<{registrationId: number, username: string, email: string}>{
 }
 
-export interface ScheduleValidationResponse extends ApiResponse<{validationId: number}> {
+export interface ScheduleValidationResponse extends ApiResponse<{validationId: number} | undefined> {
 }
 

@@ -21,12 +21,12 @@ import {Workflow} from '@fuyuko-common/model/workflow.model';
 })
 export class EditAttributePageComponent implements OnInit, OnDestroy {
 
-    subscription: Subscription;
-    currentView: View;
-    attribute: Attribute;
+    subscription?: Subscription;
+    currentView?: View;
+    attribute?: Attribute;
 
-    viewLoading: boolean;
-    attributeLoading: boolean;
+    viewLoading = true;
+    attributeLoading = true;
 
     workflows: Workflow[] = [];  // workflows for edit attributes (if active and available)
 
@@ -48,7 +48,7 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
         this.subscription = this.viewService
             .asObserver()
             .pipe(
-                map((v: View) => {
+                map((v: View | undefined) => {
                     if (v) {
                         this.currentView = v;
                         this.reload();
@@ -64,7 +64,7 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
                 }),
                 tap((g: ApiResponse<Workflow[]> | undefined) => {
                     if (g) {
-                        this.workflows = g.payload;
+                        this.workflows = g.payload ?? [];
                     }
                     this.viewLoading = false;
                     this.loadingService.stopLoading();
@@ -82,12 +82,14 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
     async onEditAttributeEvent($event: EditAttributeComponentEvent) {
         switch ($event.type) {
             case 'update':
-                this.attributeService.updateAttribute(this.currentView, $event.attribute).pipe(
-                    tap((_: ApiResponse) => {
-                        toNotifications(this.notificationService, _);
-                        this.reload();
-                    })
-                ).subscribe();
+                if (this.currentView && $event.attribute) {
+                    this.attributeService.updateAttribute(this.currentView, $event.attribute).pipe(
+                        tap((_: ApiResponse) => {
+                            toNotifications(this.notificationService, _);
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             case 'cancel':
                 await this.router.navigate(['/view-layout', {outlets: {primary: ['attributes'], help: ['view-help'] }}]);
@@ -96,18 +98,20 @@ export class EditAttributePageComponent implements OnInit, OnDestroy {
     }
 
     reload() {
-        const attributeId: string = this.route.snapshot.paramMap.get('attributeId');
-        this.attributeLoading = true;
-        this.loadingService.startLoading();
-        this.attributeService.getAttributeByView(this.currentView.id, Number(attributeId)).pipe(
-            tap((a: Attribute) => {
-                this.attribute = a;
-                this.attributeLoading = false;
-            }),
-            finalize(() => {
-                this.attributeLoading = false;
-                this.loadingService.stopLoading();
-            })
-        ).subscribe();
+        const attributeId: string | null = this.route.snapshot.paramMap.get('attributeId');
+        if (this.currentView) {
+            this.attributeLoading = true;
+            this.loadingService.startLoading();
+            this.attributeService.getAttributeByView(this.currentView.id, Number(attributeId)).pipe(
+                tap((a: Attribute) => {
+                    this.attribute = a;
+                    this.attributeLoading = false;
+                }),
+                finalize(() => {
+                    this.attributeLoading = false;
+                    this.loadingService.stopLoading();
+                })
+            ).subscribe();
+        }
     }
 }

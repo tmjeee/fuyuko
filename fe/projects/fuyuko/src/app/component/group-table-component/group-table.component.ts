@@ -29,18 +29,18 @@ export interface Action {
 })
 export class GroupTableComponent implements OnInit, OnChanges {
 
-  @Input() searchFieldPlaceholder: string;
-  @Input() searchFieldHint: string;
-  @Input() searchFieldLabel: string;
+  @Input() searchFieldPlaceholder!: string;
+  @Input() searchFieldHint!: string;
+  @Input() searchFieldLabel!: string;
 
-  @Input() groups: Group[];
-  @Input() groupSearchFn: GroupSearchFn;
+  @Input() groups: Group[] = [];
+  @Input() groupSearchFn!: GroupSearchFn;
 
   @Input() actions: Action[];
   @Output() events: EventEmitter<GroupTableComponentEvent>;
 
   formControlGroupSearch: FormControl;
-  groupSearchResult: Observable<Group[]>;
+  groupSearchResult!: Observable<Group[]>;
   dataSource: GroupTableComponentDataSource;
   displayedColumns: string[] = ['name', 'description', 'status'];
 
@@ -100,7 +100,7 @@ export class GroupTableComponent implements OnInit, OnChanges {
 
 class GroupTableComponentDataSource extends DataSource<Group> {
 
-  private subject: BehaviorSubject<Group[]> = new BehaviorSubject([]);
+  private subject: BehaviorSubject<Group[]> = new BehaviorSubject([] as Group[]);
 
   update(g: Group[]) {
     this.subject.next(g);

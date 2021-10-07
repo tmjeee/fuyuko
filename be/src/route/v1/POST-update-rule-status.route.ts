@@ -51,7 +51,7 @@ const httpAction: any[] = [
             const rule = await getRule(viewId, ruleId);
             if (ws && ws.length > 0) {
                 for (const w of ws) {
-                    const workflowTriggerResults = await triggerRuleWorklow([rule], w.workflowDefinition.id, workflowAction);
+                    const workflowTriggerResults = await triggerRuleWorklow(viewId, [rule], w.workflowDefinition.id, workflowAction);
                     payload.push(...workflowTriggerResults);
                 }
                 const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {

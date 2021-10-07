@@ -19,8 +19,8 @@ export interface ItemEditorComponentEvent {
 })
 export class ItemEditorComponent {
 
-  @Input() item: Item | TableItem;
-  @Input() type: Type;
+  @Input() item!: Item | TableItem;
+  @Input() type!: Type;
 
   @Output() events: EventEmitter<ItemEditorComponentEvent>;
 

@@ -525,10 +525,10 @@ const mountRoute = (v1AppRouter: Router, registry: Registry) => {
 };
 
 const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `missing-attribute-values-subscription`,
-    (v1AppRouter: Router, registry: Registry): Promise<void> => {
+    async (v1AppRouter: Router, registry: Registry): Promise<void> => {
         // perform db and router related setup
         mountRoute(v1AppRouter, registry);
-        return null;
+        return undefined;
     }
 );
 

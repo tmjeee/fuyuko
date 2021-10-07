@@ -18,7 +18,7 @@ class ConversionItemValueTypesService {
                 const k: string = entry.key;
                 const t: string = entry.dataType;
                 const v: string = entry.value;
-                let _v: string | number = null;
+                let _v: string | number | undefined = undefined;
                 if (k) {
                     switch (t) {
                         case 'string':

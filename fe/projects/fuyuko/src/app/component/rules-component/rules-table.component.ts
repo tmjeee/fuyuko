@@ -5,7 +5,7 @@ import {Attribute} from '@fuyuko-common/model/attribute.model';
 
 export interface RulesTableComponentEvent {
   type: 'add' | 'edit' | 'delete' | 'enable' | 'disable' ;
-  rule: Rule; // available for all types except for 'add'
+  rule?: Rule; // available for all types except for 'add'
 }
 
 @Component({
@@ -47,11 +47,11 @@ export class RulesTableComponent {
   onAddRule($event: MouseEvent) {
     this.events.emit({
       type: 'add',
-      rule: null,
+      rule: undefined,
     } as RulesTableComponentEvent);
   }
 
-  findAttribute(attributeId: number): Attribute {
+  findAttribute(attributeId: number | undefined): Attribute | undefined {
     return this.attributes.find((a: Attribute) => a.id === attributeId);
   }
 

@@ -20,8 +20,8 @@ export class SettingsComponent implements OnInit, OnChanges {
     formControlOpenSideNav: FormControl;
     formControlOpenSubSideNav: FormControl;
 
-    @Input() settings: Settings;
-    @Input() user: User;
+    @Input() settings!: Settings;
+    @Input() user!: User;
     @Output() events: EventEmitter<SettingsComponentEvent>;
 
     constructor(private formBuilder: FormBuilder) {

@@ -10,6 +10,7 @@ import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-respon
 import {DEFAULT_LIMIT, DEFAULT_OFFSET, LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toQuery} from '../../utils/pagination.utils';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 const URL_GET_ITEMS = (limitOffset?: LimitOffset) => `${config().api_host_url}/view/:viewId/items/:itemIds?${toQuery(limitOffset)}`;
@@ -135,7 +136,7 @@ export class ItemService {
           .replace(':viewId', String(viewId))
           .replace(':userId', String(userId)))
           .pipe(
-            map((r: ApiResponse<number[]>) => r.payload)
+            map((r: ApiResponse<number[]>) => assertDefinedReturn(r.payload))
           );
   }
 

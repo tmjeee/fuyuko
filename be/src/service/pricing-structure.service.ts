@@ -89,7 +89,10 @@ class PricingStructureService {
                         description: i.R_DESCRIPTION
                     };
                     r.set(roleKey, role);
-                    g.get(groupKey).roles.push(role);
+                    const group = g.get(groupKey);
+                    if (group) {
+                        group.roles.push(role);
+                    }
                 }
                 return a;
             }, []);
@@ -162,7 +165,10 @@ class PricingStructureService {
                         description: i.R_DESCRIPTION
                     };
                     r.set(roleKey, role);
-                    g.get(groupKey).roles.push(role);
+                    const group = g.get(groupKey);
+                    if (group) {
+                        group.roles.push(role);
+                    }
                 }
                 return a;
             }, []);
@@ -254,7 +260,10 @@ class PricingStructureService {
                         roles: []
                     };
                     g.set(groupKey, group)
-                    m.get(pricingStructureKey).groups.push(group);
+                    const pricingStructureGroupAssociation = m.get(pricingStructureKey);
+                    if (pricingStructureGroupAssociation) {
+                        pricingStructureGroupAssociation.groups.push(group);
+                    }
                 };
 
                 if (i.R_ID && !r.has(roleKey)) {
@@ -264,7 +273,10 @@ class PricingStructureService {
                         description: i.R_DESCRIPTION
                     };
                     r.set(roleKey, role);
-                    g.get(groupKey).roles.push(role);
+                    const group = g.get(groupKey);
+                    if (group) {
+                        group.roles.push(role);
+                    }
                 }
                 return a;
             }, []);

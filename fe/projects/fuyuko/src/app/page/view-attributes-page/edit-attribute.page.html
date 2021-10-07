@@ -19,7 +19,9 @@
                     </div>
                 </app-static-notice>
 
-                <app-edit-attribute [attribute]="attribute" (events)="onEditAttributeEvent($event)">
+                <app-edit-attribute *ngIf="attribute"
+                                    [attribute]="attribute"
+                                    (events)="onEditAttributeEvent($event)">
                 </app-edit-attribute>
             </div>
 

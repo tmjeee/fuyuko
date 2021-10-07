@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserManagementService} from '../../service/user-management-service/user-management.service';
 import {Group} from '@fuyuko-common/model/group.model';
-import {combineAll, finalize, flatMap, map, mergeAll, tap} from 'rxjs/operators';
+import {combineAll, finalize, flatMap, map, mergeAll, mergeMap, tap} from 'rxjs/operators';
 import {User} from '@fuyuko-common/model/user.model';
 import {Action, UserSearchFn, UserTableComponentEvent} from '../../component/user-table-component/user-table.component';
 import {Observable, of} from 'rxjs';
@@ -22,11 +22,11 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class UserGroupPageComponent implements OnInit {
 
-  userSearchFn: (group: Group) => UserSearchFn;
+  userSearchFn!: (group: Group) => UserSearchFn;
 
-  groupsReady: boolean;
-  groupsUsersReady: boolean;
-  allGroups: Group[];
+  groupsReady = false;
+  groupsUsersReady = false ;
+  allGroups: Group[] = [];
 
   groupsSelectionModel: SelectionModel<Group>;
 
@@ -147,13 +147,13 @@ export class UserGroupPageComponent implements OnInit {
           })
           .afterClosed()
           .pipe(
-              flatMap((g: Group) => {
+              mergeMap((g: Group) => {
                   if (g) {
                      return this.userManagementService.updateGroup(g);
                   }
-                  return of(null);
+                  return of(undefined);
               }),
-              tap((r: ApiResponse) => {
+              tap((r: ApiResponse | undefined) => {
                   if (r) {
                       toNotifications(this.notificationsService, r);
                       if (isApiResponseSuccess(r)) {

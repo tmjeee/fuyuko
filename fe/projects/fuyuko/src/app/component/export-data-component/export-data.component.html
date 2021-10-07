@@ -86,7 +86,7 @@
                     <div class="item-filtering" *ngFor="let itemValueOperatorAndAttribute of itemValueOperatorAndAttributeList; let i = index">
                         <app-attribute-operator-editor [attributes]="allAttributes"
                                                        [attr.test-attribute-operator-editor-step3]="i"
-                                                       [itemValueOperatorAndAttribute]="itemValueOperatorAndAttribute"
+                                                       [itemValueOperatorAndAttribute]="itemValueOperatorAndAttribute!"
                                                        (events)="onAttributeOperatorEvent($event, itemValueOperatorAndAttribute)">
                         </app-attribute-operator-editor>
                         <div class="delete-item-filtering">
@@ -114,23 +114,22 @@
                 </ng-container>
                 <ng-container *ngIf="fourthFormReady">
                     <div class="content step-4">
-                        {{dataExport.type}}
-                        <ng-container *ngIf="dataExport.type === 'ITEM'">
-                            <app-view-only-data-table [attributes]="dataExport.attributes"
+                        <ng-container *ngIf="dataExport?.type === 'ITEM'">
+                            <app-view-only-data-table [attributes]="dataExport?.attributes ?? []"
                                                       [attr.test-table-step4-item]="''"
-                                                      [items]="dataExport.items">
+                                                      [items]="dataExportAsItems()">
                             </app-view-only-data-table>
                         </ng-container>
-                        <ng-container *ngIf="dataExport.type === 'ATTRIBUTE'">
-                            <app-view-only-attribute-table [attributes]="dataExport.attributes"
+                        <ng-container *ngIf="dataExport?.type === 'ATTRIBUTE'">
+                            <app-view-only-attribute-table [attributes]="dataExportAsAttributes()"
                                                            [attr.test-table-step4-attribute]="''">
                             </app-view-only-attribute-table>
                         </ng-container>
-                        <ng-container *ngIf="dataExport.type === 'PRICE'">
-                            <app-view-only-price-table [attributes]="dataExport.attributes"
+                        <ng-container *ngIf="dataExport?.type === 'PRICE'">
+                            <app-view-only-price-table [attributes]="dataExportAsAttributes()"
                                                        [attr.test-table-step4-price]="''"
-                                                       [pricingStructure]="selectedPricingStructure"
-                                                       [pricedItems]="dataExport.pricedItems">
+                                                       [pricingStructure]="selectedPricingStructure!"
+                                                       [pricedItems]="dataExportAsPricedItems()">
                             </app-view-only-price-table>
                         </ng-container>
                     </div>
@@ -152,7 +151,7 @@
                        Submitting data export job ...
                     </ng-container>
                     <ng-container *ngIf="jobSubmitted">
-                        Data export job submitted, job Id {{job.id}}
+                        Data export job submitted, job Id {{job?.id}}
                     </ng-container>
                 </div>
                 <div class="controls">

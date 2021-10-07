@@ -18,14 +18,14 @@ import {View} from '@fuyuko-common/model/view.model';
 export class CustomImportSubmitJobComponent implements OnInit {
 
 
-    @Input() view: View;
-    @Input() customDataImport: CustomDataImport;
-    @Input() inputValues: ImportScriptInputValue[];
-    @Input() preview: ImportScriptPreview;
-    @Input() submitFn: CustomImportSubmitFn;
+    @Input() view!: View;
+    @Input() customDataImport!: CustomDataImport;
+    @Input() inputValues: ImportScriptInputValue[] = [];
+    @Input() preview!: ImportScriptPreview;
+    @Input() submitFn!: CustomImportSubmitFn;
 
-    ready: boolean;
-    result: ImportScriptJobSubmissionResult;
+    ready = false ;
+    result?: ImportScriptJobSubmissionResult;
 
 
     constructor() {}

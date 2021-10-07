@@ -25,10 +25,10 @@ export type CustomImportSubmitFn =
 })
 export class CustomImportWizardComponent implements OnInit {
 
-    @Input() customDataImports: CustomDataImport[];
-    @Input() customInputFormValidateFn: CustomImportValidateFn;
-    @Input() customImportPreviewFn: CustomImportPreviewFn;
-    @Input() customImportSubmitFn: CustomImportSubmitFn;
+    @Input() customDataImports: CustomDataImport[] = [];
+    @Input() customInputFormValidateFn!: CustomImportValidateFn;
+    @Input() customImportPreviewFn!: CustomImportPreviewFn;
+    @Input() customImportSubmitFn!: CustomImportSubmitFn;
 
     step1Ready: boolean;
     firstStepFormGroup: FormGroup;
@@ -49,7 +49,7 @@ export class CustomImportWizardComponent implements OnInit {
     step5Ready: boolean;
     fifthStepFormGroup: FormGroup;
 
-    @ViewChild('stepper') stepper: MatStepper;
+    @ViewChild('stepper') stepper!: MatStepper;
 
     constructor(private formBuilder: FormBuilder) {
 

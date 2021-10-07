@@ -60,7 +60,7 @@ const httpAction: any[] = [
                 for (const w of ws) {
                     const items = await getItemsByIds(viewId, itemIds, false, {limit: Number.MAX_VALUE, offset: 0});
                     if (items.length) {
-                       const workflowTriggerResult = await triggerItemWorkflow(items, w.workflowDefinition.id, workflowAction);
+                       const workflowTriggerResult = await triggerItemWorkflow(viewId, items, w.workflowDefinition.id, workflowAction);
                        payload.push(...workflowTriggerResult);
                        itemWorkflowTriggered = true;
                     }

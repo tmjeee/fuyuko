@@ -34,7 +34,7 @@
 
 
     <div class="no-pricings" *ngIf="pricingStructure && !pricingStructureWithItems"> No Pricings </div>
-    <ng-container *ngIf="pricingStructureWithItems">
+    <ng-container *ngIf="pricingStructure && pricingStructureWithItems">
 
         <div class="pricing-structure-items">
             <div class="content">

@@ -10,12 +10,13 @@ import {map} from 'rxjs/operators';
 })
 export class JobDetailsComponent implements OnChanges, OnDestroy, OnInit {
 
-    @Input() job: Job;
+    @Input() job!: Job;
     @Input() fetch: boolean;
-    @Input() fetchFn: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
+    @Input() fetchFn!: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
 
     timeoutHandler: any;
     logs: JobLog[];
+    jobTemp?: Job;
 
     constructor() {
         this.fetch = false;
@@ -28,13 +29,15 @@ export class JobDetailsComponent implements OnChanges, OnDestroy, OnInit {
     ngOnInit(): void {
         // one time fetch
         if (this.fetchFn) {
-            const lastLogId = (this.logs && this.logs.length > 0) ? this.logs[this.logs.length - 1].id : undefined;
-            this.fetchFn(this.job.id, lastLogId).pipe(
-                map((l: JobAndLogs) => {
-                    this.logs.push(...l.logs);
-                    this.job = l.job;
-                })
-            ).subscribe();
+            const lastLogId = (this.logs && this.logs.length > 0) ? this.logs[this.logs.length - 1].id : 1;
+            if (this.job) {
+                this.fetchFn(this.job.id, lastLogId).pipe(
+                    map((l: JobAndLogs) => {
+                        this.logs.push(...l.logs);
+                        this.jobTemp = l.job;
+                    })
+                ).subscribe();
+            }
         }
         this.scheduleJobLogsFetch();
     }
@@ -46,16 +49,18 @@ export class JobDetailsComponent implements OnChanges, OnDestroy, OnInit {
     scheduleJobLogsFetch() {
         this.timeoutHandler = setTimeout(() => {
             if (this.fetchFn && this.fetch) {
-                const lastLogId = (this.logs && this.logs.length > 0) ? this.logs[this.logs.length - 1].id : undefined;
-                this.fetchFn(this.job.id, lastLogId).pipe(
-                    map((l: JobAndLogs) => {
-                        this.logs.push(...l.logs);
-                        this.job = l.job;
-                        if (this.job && this.jobHasMoreLogs(this.job)) {
-                            this.scheduleJobLogsFetch();
-                        }
-                    })
-                ).subscribe();
+                const lastLogId = (this.logs && this.logs.length > 0) ? this.logs[this.logs.length - 1].id : 1;
+                if (this.jobTemp) {
+                    this.fetchFn(this.jobTemp.id, lastLogId).pipe(
+                        map((l: JobAndLogs) => {
+                            this.logs.push(...l.logs);
+                            this.jobTemp = l.job;
+                            if (this.jobTemp && this.jobHasMoreLogs(this.jobTemp)) {
+                                this.scheduleJobLogsFetch();
+                            }
+                        })
+                    ).subscribe();
+                }
             }
         }, 1000);
 

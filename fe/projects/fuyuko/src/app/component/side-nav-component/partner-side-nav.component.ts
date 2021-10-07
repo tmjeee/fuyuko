@@ -18,6 +18,6 @@ export class PartnerSideNavComponent extends  AbstractSideNavComponent {
     }
 
     logout($event: MouseEvent) {
-        this.logoutEvent.emit(null);
+        this.logoutEvent.emit(undefined);
     }
 }

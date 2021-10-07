@@ -29,7 +29,7 @@ const SQL_2 = `${SQL_1} AND ID=?`
  * === getViewValidationResultLog ===
  * ==============================
  */
-export const getViewValidationResultLog = async (viewId: number, validationId: number, validationLogId: number = null, order: 'before' | 'after' = 'after', limit: number = 100): Promise<ValidationLogResult> => {
+export const getViewValidationResultLog = async (viewId: number, validationId: number, validationLogId?: number, order: 'before' | 'after' = 'after', limit: number = 100): Promise<ValidationLogResult> => {
     // logs of this validation
     const progress: Progress = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`SELECT PROGRESS FROM TBL_VIEW_VALIDATION WHERE VIEW_ID=? AND ID=?`, [viewId, validationId]);
@@ -93,8 +93,8 @@ export const getViewValidationResultLog = async (viewId: number, validationId: n
         logs.push(validationLog);
     }
 
-    const batchFirstValidationLogId = (logs && logs.length ? logs[0].id : null);
-    const batchLastValidationLogId = (logs && logs.length ? logs[logs.length-1].id : null);
+    const batchFirstValidationLogId = (logs && logs.length ? logs[0].id : undefined);
+    const batchLastValidationLogId = (logs && logs.length ? logs[logs.length-1].id : undefined);
 
     const {min: min, max: max} = await doInDbConnection(async (conn: Connection) => {
         const q: QueryA = await conn.query(`
@@ -111,8 +111,8 @@ export const getViewValidationResultLog = async (viewId: number, validationId: n
         progress,
         max, min,
         batchSize: limit,
-        batchHasMoreAfter: (progress === 'IN_PROGRESS' || (batchLastValidationLogId < max)),
-        batchHasMoreBefore: (batchFirstValidationLogId > min),
+        batchHasMoreAfter: (progress === 'IN_PROGRESS' || (batchLastValidationLogId && (batchLastValidationLogId < max))),
+        batchHasMoreBefore: (batchFirstValidationLogId && (batchFirstValidationLogId > min)),
         logs
     } as ValidationLogResult;
 }
@@ -124,7 +124,7 @@ export const getViewValidationResultLog = async (viewId: number, validationId: n
  *  === getViewValidationResult ===
  *  ===============================
  */
-export const getViewValidationResult = async (viewId: number, validationId: number): Promise<ValidationResult> => {
+export const getViewValidationResult = async (viewId: number, validationId: number): Promise<ValidationResult|undefined> => {
 
     const m_validationResult: Map<string /* validationId */, ValidationResult> = new Map();
     const m_validationError: Map<string /* validationErrorId */, ValidationError> = new Map();
@@ -158,7 +158,7 @@ export const getViewValidationResult = async (viewId: number, validationId: numb
                 progress : qq1.V_PROGRESS,
                 creationDate : qq1.V_CREATION_DATE,
                 lastUpdate : qq1.V_LAST_UPDATE,
-                logResult: null,
+                logResult: undefined,
                 errors: []
             };
             m_validationResult.set(m_validationResult_key, validationResult);
@@ -195,7 +195,10 @@ export const getViewValidationResult = async (viewId: number, validationId: numb
                         message: q.E_MESSAGE,
                     };
                     m_validationError.set(m_validationError_key, validationError);
-                    m_validationResult.get(m_validationResult_key).errors.push(validationError);
+                    const validationResult  = m_validationResult.get(m_validationResult_key);
+                    if (validationResult) {
+                        validationResult.errors.push(validationError);
+                    }
                 }
             }
 
@@ -206,7 +209,7 @@ export const getViewValidationResult = async (viewId: number, validationId: numb
     }
 
     const r: ValidationResult[] = validationResults;
-    const _r: ValidationResult = (r && r.length ? r[0] : null);
+    const _r: ValidationResult | undefined = (r && r.length ? r[0] : undefined);
     fireEvent({
        type: "GetViewValidationResultEvent",
        viewId, validationId, result: _r

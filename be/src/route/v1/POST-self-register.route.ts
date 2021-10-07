@@ -6,7 +6,7 @@ import {validateMiddlewareFn} from './common-middleware';
 
 import {Registry} from '../../registry';
 import {RegistrationResponse} from '@fuyuko-common/model/api-response.model';
-import {selfRegister} from '../../service';
+import {selfRegister, SelfRegisterResult} from '../../service';
 
 const httpAction = [
     [
@@ -24,18 +24,18 @@ const httpAction = [
         const lastName: string = req.body.lastName;
         const password: string = req.body.password;
 
-        const r: {errors: string[], registrationId: number, email: string, username: string} = await selfRegister(username, email, firstName, lastName, password);
+        const r: SelfRegisterResult = await selfRegister(username, email, firstName, lastName, password);
         if (r.errors && r.errors.length) {
             const apiResponse: RegistrationResponse = {
                 messages: [{
                     status: 'ERROR',
                     message: r.errors.join(', '),
                 }],
-                payload: {
+                payload: r.registrationId ? {
                     registrationId: r.registrationId,
                     email: r.email,
                     username: r.username,
-                }
+                } : undefined
             };
             res.status(200).json(apiResponse);
         } else {
@@ -44,11 +44,11 @@ const httpAction = [
                     status: 'SUCCESS',
                     message: `User ${username} (${email}) registered, activation is required before account is activated`,
                 }],
-                payload: {
+                payload: r.registrationId ? {
                     registrationId: r.registrationId,
                     email: r.email,
                     username: r.username,
-                }
+                } : undefined
             };
             res.status(200).json(apiResponse);
         }

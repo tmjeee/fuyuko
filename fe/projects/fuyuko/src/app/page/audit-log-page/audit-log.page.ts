@@ -13,8 +13,8 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class AuditLogPageComponent implements OnInit {
 
-    findAuditLogsFn: FindAuditLogsFn;
-    findUsersFn: FindUsersFn;
+    findAuditLogsFn!: FindAuditLogsFn;
+    findUsersFn!: FindUsersFn;
 
 
     constructor(private auditLogService: AuditLogService,

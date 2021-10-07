@@ -13,13 +13,13 @@ const httpAction: any[] = [
     [],
     validateMiddlewareFn,
     async (req: Request, res: Response, next: NextFunction) => {
-        let user: User = null;
+        let user: User | undefined = undefined;
         const jwtToken: string = req.headers['x-auth-jwt'] as string;
         if (jwtToken) {
             const jwtPayload: JwtPayload = decodeJwtToken(jwtToken);
             user = jwtPayload.user;
+            await logout(user);
         }
-        await logout(user);
         const apiResponse: ApiResponse = {
             messages: [{
                 status: 'SUCCESS',

@@ -11,6 +11,7 @@ import {
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 @Component({
@@ -34,26 +35,26 @@ export class WorkflowInstanceTasksPageComponent implements OnInit {
     }
 
     loadWorkflowInstancePendingTasks(limitOffset: LimitOffset): Observable<WorkflowInstanceTask[]> {
-        const myself = this.authService.myself();
+        const myself = assertDefinedReturn(this.authService.myself());
         return this.workflowService.getWorkflowInstanceTaskForUserByStatus(myself.id, 'PENDING')
             .pipe(
-                map(r => r.payload),
+                map(r => assertDefinedReturn(r.payload)),
             );
     }
 
     loadWorkflowInstanceActionedTasks(limitOffset: LimitOffset): Observable<WorkflowInstanceTask[]> {
-        const myself = this.authService.myself();
+        const myself = assertDefinedReturn(this.authService.myself());
         return this.workflowService.getWorkflowInstanceTaskForUserByStatus(myself.id, 'ACTIONED')
             .pipe(
-                map(r => r.payload),
+                map(r => assertDefinedReturn(r.payload)),
             );
     }
 
     loadWorkflowInstanceExpiredTasks(limitOffset: LimitOffset): Observable<WorkflowInstanceTask[]> {
-        const myself = this.authService.myself();
+        const myself = assertDefinedReturn(this.authService.myself());
         return this.workflowService.getWorkflowInstanceTaskForUserByStatus(myself.id, 'EXPIRED')
             .pipe(
-                map(r => r.payload),
+                map(r => assertDefinedReturn(r.payload)),
             );
     }
 

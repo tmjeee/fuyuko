@@ -17,7 +17,7 @@ export interface EditAttributeComponentEvent {
 })
 export class EditAttributeComponent implements OnChanges {
 
-    @Input() attribute: Attribute;
+    @Input() attribute!: Attribute;
 
     @Output() events: EventEmitter<EditAttributeComponentEvent>;
 
@@ -58,12 +58,12 @@ export class EditAttributeComponent implements OnChanges {
     formGroupLengthAttribtue: FormGroup;
     formControlLengthAttributeFormat: FormControl;
 
-    @ViewChild('singleSelectComponent') singleSelectComponent: SingleSelectComponent;
+    @ViewChild('singleSelectComponent') singleSelectComponent!: SingleSelectComponent;
 
 
-    isFormValid: boolean;
+    // isFormValid: boolean;
 
-    currentSelectedAttributeType: string;
+    currentSelectedAttributeType: string | undefined;
 
     constructor(private formBuilder: FormBuilder) {
         this.events = new EventEmitter<EditAttributeComponentEvent>();
@@ -175,7 +175,7 @@ export class EditAttributeComponent implements OnChanges {
                 // done in double-select-component.ts upon initialization
                 this.attribute = {...this.attribute};
                 this.attribute.pair2 = [
-                    {id: -1, key1: '', key2:'', value: '', }
+                    {id: -1, key1: '', key2: '', value: '', }
                 ];
                 break;
         }

@@ -43,7 +43,7 @@ const httpAction: any[] = [
         const payload: WorkflowTriggerResult[] = [];
         if (ws && ws.length > 0) {
             for (const w of ws) {
-                const workflowTriggerResults = await triggerAttributeWorkflow(atts, w.workflowDefinition.id, workflowAction);
+                const workflowTriggerResults = await triggerAttributeWorkflow(viewId, atts, w.workflowDefinition.id, workflowAction);
                 payload.push(...workflowTriggerResults);
             }
             const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {

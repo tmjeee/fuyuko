@@ -9,9 +9,9 @@ import {Rule} from '@fuyuko-common/model/rule.model';
 
 interface Node {
     i: Item;
-    r: Rule;
+    r?: Rule;
     rs: Rule[];
-    e: ValidationError;
+    e?: ValidationError;
     es: ValidationError[];
     isItem: boolean;
     isError: boolean;
@@ -25,21 +25,21 @@ const findValidationErrors = (i: Item, vr: ValidationResult): ValidationError[] 
     return err;
 };
 
-const findRule = (rId: number, rules: Rule[]): Rule => {
+const findRule = (rId: number, rules: Rule[]): Rule | undefined => {
    return rules.find((r: Rule) => r.id === rId);
 };
 
 const createNode = (i: Item, vr: ValidationResult, rules: Rule[]): Node => {
     const n: Node = {
         i,
-        r: null,
+        r: undefined,
         rs: [],
         name: i ? i.name : 'unknown item',
         isItem: true,
         isError: false,
         isRule: false,
         es: [],
-        e: null,
+        e: undefined,
         children: []
     };
     if (vr && i) { // add rule and errors as children
@@ -48,7 +48,7 @@ const createNode = (i: Item, vr: ValidationResult, rules: Rule[]): Node => {
         for (const errr of err) {
             // add rule as children
             if (!m.has(errr.ruleId)) {
-               const r: Rule = findRule(errr.ruleId, rules);
+               const r: Rule | undefined = findRule(errr.ruleId, rules);
                const rn: Node = {
                    i,
                    r,
@@ -57,7 +57,7 @@ const createNode = (i: Item, vr: ValidationResult, rules: Rule[]): Node => {
                    isError: false,
                    isRule: true,
                    isItem: false,
-                   e: null,
+                   e: undefined,
                    es: [],
                    children: []
                };
@@ -68,7 +68,7 @@ const createNode = (i: Item, vr: ValidationResult, rules: Rule[]): Node => {
                n.children.push(rn);
             }
             // add error as children of rule
-            const rr: Rule = findRule(errr.ruleId, rules);
+            const rr: Rule | undefined = findRule(errr.ruleId, rules);
             const nn: Node = {
                 i,
                 name: `Validation Error #${errr.id}`,
@@ -82,8 +82,11 @@ const createNode = (i: Item, vr: ValidationResult, rules: Rule[]): Node => {
                 children: []
             };
             n.es.push(errr);
-            m.get(errr.ruleId).es.push(errr);
-            m.get(errr.ruleId).children.push(nn);
+            const node = m.get(errr.ruleId);
+            if (node) {
+                node.es.push(errr);
+                node.children.push(nn);
+            }
         }
     }
     return n;
@@ -128,10 +131,10 @@ export class DataSource extends MatTreeFlatDataSource<Node, Flattened> {
 
 export interface ValidationResultTreeComponentEvent {
     type: 'selection-item-changed' | 'selection-error-changed' | 'selection-rule-changed';
-    rule: Rule;                     // available when 'selection-error-changed' | 'selection-rule-changed'
-    item: Item;                     // available when 'selection-item-changed' | 'selection-rule-changed' | 'selection-error-changed
-    errors: ValidationError[];      // available when 'selection-item-changed' | 'selection-rule-changed' | 'selection-error-changed
-    error: ValidationError;         // available when 'selection-error-changed'
+    rule?: Rule;                     // available when 'selection-error-changed' | 'selection-rule-changed'
+    item?: Item;                     // available when 'selection-item-changed' | 'selection-rule-changed' | 'selection-error-changed
+    errors: ValidationError[];       // available when 'selection-item-changed' | 'selection-rule-changed' | 'selection-error-changed
+    error?: ValidationError;          // available when 'selection-error-changed'
 }
 
 @Component({
@@ -141,15 +144,15 @@ export interface ValidationResultTreeComponentEvent {
 })
 export class ValidationResultTreeComponent implements OnInit, OnDestroy {
 
-    @Input() items: Item[];
-    @Input() rules: Rule[];
-    @Input() validationResult: ValidationResult;
-    @Input() observable: Observable<Item>;
+    @Input() items: Item[] = [];
+    @Input() rules: Rule[] = [];
+    @Input() validationResult!: ValidationResult;
+    @Input() observable?: Observable<Item | undefined>;
     @Output() event: EventEmitter<ValidationResultTreeComponentEvent>;
 
-    selected: Flattened;
+    selected?: Flattened;
 
-    subscription: Subscription;
+    subscription?: Subscription;
 
     treeControl: FlatTreeControl<Flattened>;
     treeFlattener: MatTreeFlattener<Node, Flattened>;
@@ -176,24 +179,24 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
     // navigate down the hierarchy of each ns (Flattened[]), and see if any of it or its children has n (Flattened) with itemId,
     // if so return that node (Flattened). This is used to find if a parent tree item has an itemId in itself or its
     // children / decendent
-    private returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(ns: Flattened[], itemId: number) {
+    private returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(ns: Flattened[], itemId: number): Flattened | undefined {
         for (const n of ns) {
             if (n.node.i && n.node.i.id === itemId) {
                 return n;
             }
             const children: Flattened[] = this.treeControl.getDescendants(n);
             if (children) {
-                const d: Flattened = this.returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(children, itemId);
+                const d: Flattened | undefined = this.returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(children, itemId);
                 if (d) {
                     return d;
                 }
             }
         }
-        return null;
+        return undefined;
     }
 
     handleExternalItemChange(i: Item) {
-        const f: Flattened = this.returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(this.treeControl.dataNodes, i.id);
+        const f: Flattened | undefined = this.returnFlattenedIfItemIdInAnyOfFlattenedHierarchy(this.treeControl.dataNodes, i.id);
         if (f && this.selected !== f) {
             this.selected = f;
             this.treeControl.expand(f);
@@ -205,10 +208,10 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
         if (n.node.isItem) {
             this.event.emit({
                 type: 'selection-item-changed',
-                rule: null,
+                rule: undefined,
                 item: n.node.i,
                 errors: n.node.es,
-                error: null
+                error: undefined
             });
         } else if (n.node.isRule) {
             this.event.emit({
@@ -216,7 +219,7 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
                 rule: n.node.r,
                 item: n.node.i,
                 errors: n.node.es,
-                error: null
+                error: undefined,
             });
         } else if (n.node.isError) {
             this.event.emit({
@@ -241,7 +244,7 @@ export class ValidationResultTreeComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         if (this.observable) {
             this.subscription = this.observable.pipe(
-                tap((i: Item) => {
+                tap((i: Item | undefined) => {
                     if (i) {
                         this.handleExternalItemChange(i);
                     }

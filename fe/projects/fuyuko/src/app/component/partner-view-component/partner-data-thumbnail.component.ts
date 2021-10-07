@@ -15,13 +15,13 @@ const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImage
 })
 export class PartnerDataThumbnailComponent {
 
-    @Input() attributes: Attribute[];
-    @Input() pricedItems: PricedItem[];
+    @Input() attributes: Attribute[] = [];
+    @Input() pricedItems: PricedItem[] = [];
 
-    @ViewChild('sideNav', {static: true}) sideNav: MatSidenav;
+    @ViewChild('sideNav', {static: true}) sideNav!: MatSidenav;
 
     showMoreMap: Map<number, boolean>; /* <item id, can show more> */
-    selectedPricedItem: PricedItem;
+    selectedPricedItem?: PricedItem;
 
     constructor() {
         this.showMoreMap = new Map();
@@ -57,7 +57,7 @@ export class PartnerDataThumbnailComponent {
     showMore($event: MouseEvent, item: Item) {
         $event.preventDefault();
         $event.stopImmediatePropagation();
-        const showMore: boolean = this.isShowMore(item);
+        const showMore: boolean = !!this.isShowMore(item);
         this.showMoreMap.set(item.id, !showMore);
     }
 

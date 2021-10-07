@@ -14,8 +14,8 @@ import {reload} from './utils/config.util';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  theme: Theme;
-  themeSubscription: Subscription;
+  theme?: Theme;
+  themeSubscription?: Subscription;
 
   constructor(private themeService: ThemeService,
               private httpClient: HttpClient,

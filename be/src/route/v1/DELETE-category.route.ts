@@ -25,7 +25,7 @@ export const invocation = async (viewId: number, categoryId: number) => {
     const payload: WorkflowTriggerResult[] = [];
     if (ws && ws.length > 0) {
         for (const w of ws) {
-            const workflowTriggerResult = await triggerCategoryWorkflow([category], null,  w.workflowDefinition.id, workflowAction);
+            const workflowTriggerResult = await triggerCategoryWorkflow(viewId, [category], null,  w.workflowDefinition.id, workflowAction);
             payload.push(...workflowTriggerResult);
         }
         const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {

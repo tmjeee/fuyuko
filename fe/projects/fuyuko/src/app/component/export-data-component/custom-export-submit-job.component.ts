@@ -17,14 +17,14 @@ import {CustomExportSubmitFn} from './custom-export-wizard.component';
 })
 export class CustomExportSubmitJobComponent implements OnInit {
 
-    @Input() view: View;
-    @Input() customDataExport: CustomDataExport;
-    @Input() inputValues: ExportScriptInputValue[];
-    @Input() preview: ExportScriptPreview;
-    @Input() submitFn: CustomExportSubmitFn;
+    @Input() view!: View;
+    @Input() customDataExport!: CustomDataExport;
+    @Input() inputValues!: ExportScriptInputValue[];
+    @Input() preview!: ExportScriptPreview;
+    @Input() submitFn!: CustomExportSubmitFn;
 
-    ready: boolean;
-    result: ExportScriptJobSubmissionResult;
+    ready = false;
+    result?: ExportScriptJobSubmissionResult;
 
 
     constructor() {}

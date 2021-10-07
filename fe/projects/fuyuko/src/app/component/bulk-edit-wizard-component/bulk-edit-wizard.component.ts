@@ -27,10 +27,11 @@ import {Job, JobAndLogs} from '@fuyuko-common/model/job.model';
 import {Observable} from 'rxjs';
 
 export interface BulkEditWizardComponentEvent {
-    type: 'error',
-    message?: string,                   // when type is 'error'
+    type: 'error';
+    message?: string;                   // when type is 'error'
 };
-export type GetPreviewFn = (view: View, changeClauses: ItemValueAndAttribute[], whereClauses: ItemValueOperatorAndAttribute[]) => Observable<BulkEditPackage>;
+export type GetPreviewFn = (view: View, changeClauses: ItemValueAndAttribute[], whereClauses: ItemValueOperatorAndAttribute[]) =>
+    Observable<BulkEditPackage>;
 export type GetJobLogsFn = (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
 export type ScheduleBulkEditJobFn = (view: View, bulkEditPage: BulkEditPackage) => Observable<Job>;
 
@@ -43,29 +44,29 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     editable: boolean;  // when in third steps, all other steps are not editable
 
-    @ViewChild('stepper') stepper: MatStepper;
+    @ViewChild('stepper') stepper!: MatStepper;
 
     // first step (predefined condition)
-    formGroupFirstStep: FormGroup;
-    changeClauses: ItemValueAndAttribute[];
-    whereClauses: ItemValueOperatorAndAttribute[];
+    formGroupFirstStep!: FormGroup;
+    changeClauses: ItemValueAndAttribute[] = [];
+    whereClauses: ItemValueOperatorAndAttribute[] = [];
 
     // second step
-    formGroupSecondStep: FormGroup;
+    formGroupSecondStep!: FormGroup;
     secondStepReady: boolean;
-    bulkEditPackage: BulkEditPackage;
-    bulkEditTableItems: BulkEditTableItem[];
+    bulkEditPackage?: BulkEditPackage;
+    bulkEditTableItems: BulkEditTableItem[] = [];
 
     // third step
-    formGroupThirdStep: FormGroup;
-    job: Job;  // bulk edit job
-    fetchFn: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
+    formGroupThirdStep!: FormGroup;
+    job?: Job;  // bulk edit job
+    fetchFn!: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
 
-    @Input() view: View;
-    @Input() attributes: Attribute[];
-    @Input() getPreviewFn: GetPreviewFn;
-    @Input() getJobLogsFn: GetJobLogsFn;
-    @Input() scheduleBulkEditJobFn: ScheduleBulkEditJobFn;
+    @Input() view!: View;
+    @Input() attributes: Attribute[] = [];
+    @Input() getPreviewFn!: GetPreviewFn;
+    @Input() getJobLogsFn!: GetJobLogsFn;
+    @Input() scheduleBulkEditJobFn!: ScheduleBulkEditJobFn;
     @Output() events: EventEmitter<BulkEditWizardComponentEvent>;
 
     constructor(private formBuilder: FormBuilder) {
@@ -221,13 +222,14 @@ export class BulkEditWizardComponent implements OnInit, OnChanges {
 
     onSecondStepSubmit() {
         this.editable = false;
-        this.scheduleBulkEditJobFn(this.view, this.bulkEditPackage)
-            .pipe(
-                tap((j: Job) => {
-                    console.log('****************************** onSecondStepSubmit ', j);
-                    this.job = j;
-                })
-            ).subscribe();
+        if (this.bulkEditPackage) {
+            this.scheduleBulkEditJobFn(this.view, this.bulkEditPackage)
+                .pipe(
+                    tap((j: Job) => {
+                        this.job = j;
+                    })
+                ).subscribe();
+        }
     }
 
     onThirdStepSubmit() {

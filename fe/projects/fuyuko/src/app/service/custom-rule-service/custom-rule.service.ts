@@ -5,6 +5,7 @@ import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_GET_ALL_CUSTOM_RULES = () => `${config().api_host_url}/custom-rules`;
 const URL_GET_CUSTOM_RULES_BY_VIEW = () => `${config().api_host_url}/view/:viewId/custom-rules`;
@@ -22,7 +23,7 @@ export class CustomRuleService {
         return this.httpClient
             .get<ApiResponse<CustomRule[]>>(URL_GET_ALL_CUSTOM_RULES())
             .pipe(
-                map((r: ApiResponse<CustomRule[]>) => r.payload)
+                map((r: ApiResponse<CustomRule[]>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -31,7 +32,7 @@ export class CustomRuleService {
             .get<ApiResponse<CustomRuleForView[]>>(URL_GET_CUSTOM_RULES_BY_VIEW()
                 .replace(':viewId', String(viewId)))
             .pipe(
-                map((r: ApiResponse<CustomRuleForView[]>) => r.payload)
+                map((r: ApiResponse<CustomRuleForView[]>) => assertDefinedReturn(r.payload))
             );
     }
 

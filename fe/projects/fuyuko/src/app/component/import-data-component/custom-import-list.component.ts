@@ -47,7 +47,7 @@ export interface CustomImportListComponentEvent {
 })
 export class CustomImportListComponent implements OnInit {
 
-    @Input() customDataImports: CustomDataImport[];
+    @Input() customDataImports: CustomDataImport[] = [];
     @Output() events: EventEmitter<CustomImportListComponentEvent>;
 
     dataSource: InternalDataSource;
@@ -57,7 +57,7 @@ export class CustomImportListComponent implements OnInit {
     formGroup: FormGroup;
     formControl: FormControl;
 
-    expandedCustomDataImport: CustomDataImport; // customDataImport that is row expanded
+    expandedCustomDataImport?: CustomDataImport; // customDataImport that is row expanded
 
     constructor(private formBuilder: FormBuilder) {
         this.formControl = this.formBuilder.control('');
@@ -72,12 +72,13 @@ export class CustomImportListComponent implements OnInit {
 
     isRowExpanded(customDataImport: CustomDataImport): boolean {
         const b =  this.expandedCustomDataImport && this.expandedCustomDataImport.id === customDataImport.id;
-        return b;
+        return !!b;
     }
 
     masterRowClicked(customDataImport: CustomDataImport) {
-        if (this.expandedCustomDataImport && this.expandedCustomDataImport.id === customDataImport.id) { // already expanded, click on same item toggle expansion
-            this.expandedCustomDataImport = null;
+        if (this.expandedCustomDataImport && this.expandedCustomDataImport.id === customDataImport.id) {
+            // already expanded, click on same item toggle expansion
+            this.expandedCustomDataImport = undefined;
         } else {
             this.expandedCustomDataImport = customDataImport;
         }

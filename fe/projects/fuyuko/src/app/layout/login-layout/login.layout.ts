@@ -7,7 +7,7 @@ import {BackgroundImage, BackgroundImageService} from '../../service/background-
 })
 export class LoginLayoutComponent implements OnInit, OnDestroy {
 
-  backgroundImage: BackgroundImage;
+  backgroundImage!: BackgroundImage;
   handler: any;
 
   allCachedImages: HTMLImageElement[] = [];

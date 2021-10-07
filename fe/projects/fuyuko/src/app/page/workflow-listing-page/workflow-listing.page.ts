@@ -14,6 +14,7 @@ import {combineLatest} from 'rxjs';
 import {WorkflowDefinition} from '@fuyuko-common/model/workflow.model';
 import {LoadingService} from '../../service/loading-service/loading.service';
 import {AttributeService} from '../../service/attribute-service/attribute.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 @Component({
@@ -28,12 +29,13 @@ export class WorkflowListingPageComponent implements OnInit {
                 private loadingService: LoadingService,
                 private notificationService: NotificationsService) { }
 
-    views: View[];
-    workflowDefinitions: WorkflowDefinition[];
+    views: View[] = [];
+    workflowDefinitions: WorkflowDefinition[] = [];
 
-    @ViewChild('workflowComponent') workflowComponent: WorkflowComponent;
+    @ViewChild('workflowComponent') workflowComponent!: WorkflowComponent;
 
-    createWorkflowFn: CreateWorkflowFn = (r) => {
+    createWorkflowFn: CreateWorkflowFn = (r1) => {
+        const r = assertDefinedReturn(r1);
         this.loadingService.startLoading();
         this.workflowService.createWorkflow(
             r.workflowName, r.view.id, r.workflowAction, r.workflowType, r.workflowDefinition.id, r.workflowAttributeIds)
@@ -53,7 +55,7 @@ export class WorkflowListingPageComponent implements OnInit {
                 tap(apiResponse => {
                     // toNotifications(this.notificationService, apiResponse);
                 }),
-                map(apiResponse => apiResponse.payload),
+                map(apiResponse => assertDefinedReturn(apiResponse.payload)),
                 finalize(() => this.loadingService.stopLoading())
             );
     }
@@ -62,7 +64,7 @@ export class WorkflowListingPageComponent implements OnInit {
         this.loadingService.stopLoading();
         return this.attributeService.getAllAttributesByView(view.id, { offset: 0, limit: Number.MAX_SAFE_INTEGER })
             .pipe(
-               map(paginableApiResponse => paginableApiResponse.payload),
+               map(paginableApiResponse => assertDefinedReturn(paginableApiResponse.payload)),
                finalize(() => this.loadingService.stopLoading())
             );
     }

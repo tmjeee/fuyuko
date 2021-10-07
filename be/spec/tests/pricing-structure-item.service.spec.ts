@@ -25,7 +25,7 @@ describe('pricing-structure-item', () => {
         view = await getViewByName('Test View 1');
         pricingStructure = await getPricingStructureByName(view.id, 'Pricing Structure #1');
         pricingStructure2 = await getPricingStructureByName(view.id, 'Pricing Structure #2');
-        item = await getItemByName(view.id, 'Item-1');
+        item = await getItemByName(view.id, 'Item-1') as Item;
     }, JASMINE_TIMEOUT);
 
     it('test setPrices', async () => {
@@ -42,12 +42,12 @@ describe('pricing-structure-item', () => {
         expect(errs.length).toBe(0);
 
         const p: PricingStructureItemWithPrice[] = await getAllPricingStructureItemsWithPrice(1);
-        const i: PricingStructureItemWithPrice = p.find((_p: PricingStructureItemWithPrice) => _p.itemId == item.id);
+        const i = p.find((_p: PricingStructureItemWithPrice) => _p.itemId == item.id);
 
         expect(i).toBeTruthy();
-        expect(i.itemId).toBe(item.id);
-        expect(i.price).toBe(10.10);
-        expect(i.country).toBe('AED');
+        expect(i!.itemId).toBe(item.id);
+        expect(i!.price).toBe(10.10);
+        expect(i!.country).toBe('AED');
     });
 
     it('test addItemToPricingStructure and getPricingStructureItem', async () => {

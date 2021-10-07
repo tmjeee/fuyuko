@@ -6,7 +6,7 @@ import {
     ItemMetadataEntry2,
     ItemValue2,
 } from '../server-side-model/server-side.model';
-import {Item, ItemImage, ItemSearchType, ItemValTypes, Value} from '@fuyuko-common/model/item.model';
+import {Item, ItemImage, ItemSearchType, ItemValTypes, PartialItem, Value} from '@fuyuko-common/model/item.model';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {LIMIT_OFFSET} from '../util/utils';
 import {itemValueRevert} from './conversion-item-value.service';
@@ -26,6 +26,7 @@ import {
     UpdateItemValueEvent
 } from './event/event.service';
 import {View} from "@fuyuko-common/model/view.model";
+import {PartialBy} from "@fuyuko-common/model/types";
 
 //////////////////////// SQLs //////////////////////////////////////////////////////////////////
 
@@ -99,16 +100,16 @@ const SQL_FAV_ITEMS_INNER_COUNT = (ext: string) => `
 `;
 
 
-const SQL_1_A = (limitoffset: LimitOffset) => SQL_INNER('', limitoffset);
+const SQL_1_A = (limitoffset?: LimitOffset) => SQL_INNER('', limitoffset);
 const SQL_1_A_COUNT = () => SQL_COUNT('');
 
-const SQL_1_B = (limitoffset: LimitOffset) => SQL_INNER(`AND I.PARENT_ID IS NULL`, limitoffset);
+const SQL_1_B = (limitoffset?: LimitOffset) => SQL_INNER(`AND I.PARENT_ID IS NULL`, limitoffset);
 const SQL_1_B_COUNT = () => SQL_COUNT(`AND I.PARENT_ID IS NULL`);
 
-const SQL_2_A = (limitoffset: LimitOffset) => SQL_INNER(`AND I.ID IN ?`, limitoffset);
+const SQL_2_A = (limitoffset?: LimitOffset) => SQL_INNER(`AND I.ID IN ?`, limitoffset);
 const SQL_2_A_COUNT = () => SQL_COUNT(`AND I.ID IN ?`);
 
-const SQL_2_B = (limitoffset: LimitOffset) => SQL_INNER(`AND I.ID IN ? AND I.PARENT_ID IS NULL`, limitoffset);
+const SQL_2_B = (limitoffset?: LimitOffset) => SQL_INNER(`AND I.ID IN ? AND I.PARENT_ID IS NULL`, limitoffset);
 const SQL_2_B_COUNT = () => SQL_COUNT(`AND I.ID IN ? AND I.PARENT_ID IS NULL`);
 
 const SQL_SEARCH = (limitOffset?: LimitOffset) => ` 
@@ -145,7 +146,7 @@ const SQL_SEARCH_COUNT = () => `
     ) 
 `;
 
-const SQL_FAV_ITEMS = (limitoffset: LimitOffset) => SQL_FAV_ITEMS_INNER(`AND I.PARENT_ID IS NULL`, limitoffset);
+const SQL_FAV_ITEMS = (limitoffset?: LimitOffset) => SQL_FAV_ITEMS_INNER(`AND I.PARENT_ID IS NULL`, limitoffset);
 const SQL_FAV_ITEMS_COUNT = () => SQL_FAV_ITEMS_INNER_COUNT(``);
 const SQL_FAV_ITEMS_SEARCH = (limitOffset?: LimitOffset) => ` 
     SELECT DISTINCT
@@ -264,7 +265,10 @@ class ItemService {
     // === updateItemValue(...) ===
     // ============================
     async updateItemValue(viewId: number, itemId: number, value: Value) {
-        const itemValue: ItemValue2 = itemValueRevert(value);
+        const itemValue: ItemValue2 | undefined = itemValueRevert(value);
+        if (!itemValue) {
+            throw Error(`invalid item value, unable to convert value ${value} for item id ${itemId}`);
+        }
         await this.updateItemValue2(viewId, itemId, itemValue);
         fireEvent({
             type: "UpdateItemValueEvent",
@@ -375,7 +379,7 @@ class ItemService {
         const errors: string[] = [];
         const name: string = item2.name;
         const description: string = item2.description;
-        const parentId: number = item2.parentId ? item2.parentId : null;
+        const parentId: number | undefined = item2.parentId ? item2.parentId : undefined;
 
         const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=? AND STATUS='ENABLED' `, [name, viewId]);
         if (qq[0].COUNT > 0) { // item with name already exists in view
@@ -414,7 +418,7 @@ class ItemService {
     // === addOrUpdateItem(...) ===
     // ============================
 
-    async addOrUpdateItem(viewId: number, item: Item): Promise<string[]> {
+    async addOrUpdateItem(viewId: number, item: PartialItem ): Promise<string[]> {
         const item2: Item2 = itemRevert(item);
         const errors: string[] = await this.addOrUpdateItem2(viewId, item2);
 
@@ -725,17 +729,20 @@ class ItemService {
     // ============================
     // === getItemById(...) ===
     // ============================
-    async getItemById(viewId: number, itemId: number): Promise<Item> {
-        const item2: Item2 = await this.getItem2ById(viewId, itemId);
-        const item: Item = itemConvert(item2);
+    async getItemById(viewId: number, itemId: number): Promise<Item | undefined> {
+        const item2: Item2 | undefined = await this.getItem2ById(viewId, itemId);
+        if (item2) {
+            const item: Item = itemConvert(item2);
 
-        fireEvent({
-            type: "GetItemByIdEvent",
-            viewId, itemId, item
-        } as GetItemByIdEvent);
-        return item;
+            fireEvent({
+                type: "GetItemByIdEvent",
+                viewId, itemId, item
+            } as GetItemByIdEvent);
+            return item;
+        }
+        return undefined;
     }
-    async getItem2ById(viewId: number, itemId: number): Promise<Item2> {
+    async getItem2ById(viewId: number, itemId: number): Promise<Item2 | undefined> {
 
         const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(`
@@ -783,18 +790,23 @@ class ItemService {
     // ============================
     // === getItemByName(...) ===
     // ============================
-    async getItemByName(viewId: number, itemName: string): Promise<Item> {
-        const item2: Item2 = await this.getItem2ByName(viewId, itemName);
-        const item: Item = (item2 ? itemConvert(item2) : undefined);
+    async getItemByName(viewId: number, itemName: string): Promise<Item | undefined> {
+        const item2: Item2 | undefined = await this.getItem2ByName(viewId, itemName);
+        if (item2) {
+            const item: Item | undefined = (item2 ? itemConvert(item2) : undefined);
 
-        fireEvent({
-            type: "GetItemByNameEvent",
-            viewId, itemName, item
-        } as GetItemByNameEvent);
+            if (item) {
+                fireEvent({
+                    type: "GetItemByNameEvent",
+                    viewId, itemName, item
+                } as GetItemByNameEvent);
+            }
 
-        return item;
+            return item;
+        }
+        return undefined;
     };
-    async getItem2ByName(viewId: number, itemName: string): Promise<Item2> {
+    async getItem2ByName(viewId: number, itemName: string): Promise<Item2 | undefined> {
 
         const item2s: Item2[] = await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(`
@@ -927,7 +939,7 @@ class ItemService {
             const attributeType: string = c.A_TYPE;
 
             const valueId: number = c.V_ID;
-            const valueMapKey: string = valueId ? `${itemId}_${attributeId}_${valueId}` : undefined;
+            const valueMapKey: string | undefined = valueId ? `${itemId}_${attributeId}_${valueId}` : undefined;
 
             const metadataId: number = c.M_ID;
             const metaMapKey = valueId ? `${itemId}_${attributeId}_${valueId}_${metadataId}` : undefined;
@@ -936,7 +948,7 @@ class ItemService {
             const entryMapKey = `${itemId}_${attributeId}_${metadataId}_${entryId}`;
 
             const imageId: number = c.IMG_ID;
-            const imgMapKey: string = imageId ? `${itemId}_${imageId}` : undefined;
+            const imgMapKey: string | undefined = imageId ? `${itemId}_${imageId}` : undefined;
 
             if (!itemMap.has(itemMapKey)) {
                 const item: Item2 = {
@@ -964,8 +976,10 @@ class ItemService {
                     primary: !!c.IMG_PRIMARY,
                 } as ItemImage;
                 imgMap.set(imgMapKey, img);
-                const item: Item2 = itemMap.get(itemMapKey);
-                item.images.push(img);
+                const item2 = itemMap.get(itemMapKey);
+                if (item2) {
+                    item2.images.push(img);
+                }
             }
 
             if (valueMapKey && !valueMap.has(valueMapKey)) {
@@ -975,8 +989,10 @@ class ItemService {
                     metadatas: []
                 } as ItemValue2;
                 valueMap.set(valueMapKey, itemValue);
-                const item: Item2 = itemMap.get(itemMapKey);
-                item.values.push(itemValue);
+                const item2 = itemMap.get(itemMapKey);
+                if (item2) {
+                    item2.values.push(itemValue);
+                }
             }
 
             if (metaMapKey && !metaMap.has(metaMapKey)) {
@@ -988,8 +1004,12 @@ class ItemService {
                     entries: []
                 } as ItemMetadata2;
                 metaMap.set(metaMapKey, itemMetadata);
-                const value: ItemValue2 = valueMap.get(valueMapKey);
-                value.metadatas.push(itemMetadata);
+                if (valueMapKey) {
+                    const itemValue2 = valueMap.get(valueMapKey);
+                    if (itemValue2) {
+                        itemValue2.metadatas.push(itemMetadata);
+                    }
+                }
             }
 
             if (!entMap.has(entryMapKey)) {
@@ -1001,8 +1021,10 @@ class ItemService {
                 };
                 entMap.set(entryMapKey, entry);
                 if(metaMapKey) {
-                    const meta: ItemMetadata2 = metaMap.get(metaMapKey); // item value metas
-                    meta.entries.push(entry);
+                    const itemMetadata2 = metaMap.get(metaMapKey);  // item value metas
+                    if (itemMetadata2) {
+                        itemMetadata2.entries.push(entry);
+                    }
                 }
             }
 

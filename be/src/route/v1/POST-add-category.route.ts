@@ -17,6 +17,7 @@ import {
     WorkflowTriggerResult
 } from '@fuyuko-common/model/workflow.model';
 import {Category} from '@fuyuko-common/model/category.model';
+import {PartialBy} from "@fuyuko-common/model/types";
 
 
 const httpAction: any[] = [
@@ -33,7 +34,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const name: string = req.body.name;
         const description: string = req.body.description;
-        const parentId: number = req.body.parentId ? Number(req.body.parentId) : null;
+        const parentId: number | undefined = req.body.parentId ? Number(req.body.parentId) : undefined;
 
         const workflowAction: WorkflowInstanceAction = 'Update';
         const workflowType: WorkflowInstanceType = 'Category';
@@ -42,16 +43,14 @@ const httpAction: any[] = [
         const ws: Workflow[] = await getWorkflowByViewActionAndType(viewId, workflowAction, workflowType);
         const payload: WorkflowTriggerResult[] = [];
         if (ws && ws.length > 0) {
-            const newCategory: Category = {
+            const newCategory: PartialBy<Category, 'id' | 'creationDate' | 'lastUpdate'> = {
                 id: undefined,
                 name, description,
                 status: 'ENABLED',
                 children: [],
-                creationDate:  undefined,
-                lastUpdate: undefined
             };
             for (const w of ws) {
-                const workflowTriggerResult = await triggerCategoryWorkflow([newCategory], parentId, w.workflowDefinition.id, workflowAction);
+                const workflowTriggerResult = await triggerCategoryWorkflow(viewId, [newCategory], parentId, w.workflowDefinition.id, workflowAction);
                 payload.push(...workflowTriggerResult);
             }
             const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {

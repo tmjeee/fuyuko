@@ -461,10 +461,10 @@ const mountRoute = (v1AppRegistry: Router, registry: Registry) => {
 }
 
 const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `reporting-view-validation-range-summary-subscription`,
-    (v1AppRouter: Router, registry: Registry): Promise<void> => {
+    async (v1AppRouter: Router, registry: Registry): Promise<void> => {
         // perform db and router related setup
         mountRoute(v1AppRouter, registry);
-        return null;
+        return undefined;
     }
 );
 

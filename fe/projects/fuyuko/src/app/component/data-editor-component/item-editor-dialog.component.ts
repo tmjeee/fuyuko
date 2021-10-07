@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {Item} from '@fuyuko-common/model/item.model';
 import {Type} from './item-editor.component';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 @Component({
@@ -14,9 +15,9 @@ export class ItemEditorDialogComponent {
   type: Type;
   item: Item;
 
-  formGroup: FormGroup;
-  formControlName: FormControl;
-  formControlDescription: FormControl;
+  formGroup!: FormGroup;
+  formControlName?: FormControl;
+  formControlDescription?: FormControl;
 
   constructor(private matDialogRef: MatDialogRef<ItemEditorDialogComponent>,
               private formBuilder: FormBuilder,
@@ -39,9 +40,9 @@ export class ItemEditorDialogComponent {
   onSubmit() {
     const item: Item = {...this.item};
     if (this.type === 'name') {
-      item.name = this.formControlName.value;
+      item.name = assertDefinedReturn(this.formControlName).value;
     } else if (this.type === 'description') {
-      item.description = this.formControlDescription.value;
+      item.description = assertDefinedReturn(this.formControlDescription).value;
     }
     this.matDialogRef.close( item );
   }

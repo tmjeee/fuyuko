@@ -31,7 +31,7 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
     } as ExportAttributeJobEvent);
     
     
-    (async ()=>{
+    await (async ()=>{
 
         await jobLogger.logInfo(`starting job ${name}`);
 
@@ -95,12 +95,12 @@ export const runJob = async (viewId: number, attributes: Attribute[]): Promise<J
 }
 
 
-const pair1ToCsv = (pair1s: Pair1[]): string => {
+const pair1ToCsv = (pair1s: Pair1[] | null | undefined): string => {
     const r: string =  (pair1s || []).map((p: Pair1) => `${p.key}=${p.value}`).join('|');
     return (r ? r : '');
 }
 
-const pair2ToCsv = (pair2s: Pair2[]): string => {
+const pair2ToCsv = (pair2s: Pair2[] | null | undefined): string => {
     const r: string =  (pair2s || []).map((p: Pair2) => `${p.key1}=${p.key2}=${p.value}`).join('|');
     return (r ? r : '');
 }

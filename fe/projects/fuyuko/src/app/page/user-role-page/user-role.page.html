@@ -22,7 +22,7 @@
                 searchFieldPlaceholder="Group Name to add to role"
                 searchFieldHint="Search from auto suggest group to add to role"
                 searchFieldLabel="Search for a group to add to role."
-                [groups]="allRoleGroups.get(role)"
+                [groups]="allRoleGroups.get(role) ?? []"
                 [actions]="actions"
                 [groupSearchFn]="groupSearchByRole(role)"
                 (events)="onRoleGroupTableEvent($event, role)">

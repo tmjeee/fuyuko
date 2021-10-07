@@ -44,8 +44,8 @@ class AuditService {
      * === getAuditLogs ===
      * ====================
      */
-    async getAuditLogsCount(filterByUserId: number = null, filterByCategory: AuditCategory = null,
-                                            filterByLevel: Level = null, filterByLogs: string = null): Promise<number> {
+    async getAuditLogsCount(filterByUserId?: number, filterByCategory?: AuditCategory,
+                            filterByLevel?: Level, filterByLogs?: string): Promise<number> {
         const sqlParams: any[] = [];
 
         const sqlFilterByUserId = filterByUserId ? filterByUserId == -1 ? ` AND USER_ID IS NULL` : ` AND USER_ID=? ` : ``;
@@ -76,8 +76,8 @@ class AuditService {
         });
         return q[0].COUNT;
     };
-    async getAuditLogs(filterByUserId: number = null, filterByCategory: AuditCategory = null,
-                                       filterByLevel: Level = null, filterByLogs: string = null, limitOffset: LimitOffset): Promise<AuditLog[]> {
+    async getAuditLogs(filterByUserId?: number, filterByCategory?: AuditCategory,
+                       filterByLevel?: Level, filterByLogs?: string, limitOffset?: LimitOffset): Promise<AuditLog[]> {
         const sqlParams: any[] = [];
 
         const sqlFilterByUserId = filterByUserId ? filterByUserId == -1 ? ` AND AL.USER_ID IS NULL` : ` AND U.ID=? ` : ``;

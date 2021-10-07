@@ -19,9 +19,9 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class PricingStructurePartnerAssociationPageComponent implements OnInit {
 
-    loading: boolean;
-    pricingStructureGroupAssociations: PricingStructureGroupAssociation[];
-    groupSearchFnsMap: Map<number /* pricingStructureId */, GroupSearchFn>;
+    loading = true;
+    pricingStructureGroupAssociations: PricingStructureGroupAssociation[] = [];
+    groupSearchFnsMap!: Map<number /* pricingStructureId */, GroupSearchFn>;
 
     constructor(private userManagementService: UserManagementService,
                 private notificationsService: NotificationsService,
@@ -40,9 +40,9 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
             .pipe(
                 tap((r: PricingStructureGroupAssociation[]) => {
                     this.pricingStructureGroupAssociations = r;
-                    for (const _r of r) {
-                        this.groupSearchFnsMap.set(_r.pricingStructure.id, (group: string): Observable<Group[]> => {
-                            return this.userManagementService.findGroupsNotAssociatedWithPricingStructure(_r.pricingStructure.id, group);
+                    for (const r2 of r) {
+                        this.groupSearchFnsMap.set(r2.pricingStructure.id, (group: string): Observable<Group[]> => {
+                            return this.userManagementService.findGroupsNotAssociatedWithPricingStructure(r2.pricingStructure.id, group);
                         });
                     }
                     this.loading = false;
@@ -62,10 +62,14 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
                     .pipe(
                         tap((r: ApiResponse) => {
                             const g: Group = $event.group;
-                            const a: PricingStructureGroupAssociation = this.pricingStructureGroupAssociations.find((a: PricingStructureGroupAssociation) => a.pricingStructure.id === $event.pricingStructure.id);
+                            const a: PricingStructureGroupAssociation | undefined =
+                                this.pricingStructureGroupAssociations.find((
+                                    a2: PricingStructureGroupAssociation) => a2.pricingStructure.id === $event.pricingStructure.id);
                             this.userManagementService.findGroupsAssociatedWithPricingStructure($event.pricingStructure.id, '').pipe(
-                                tap((g: Group[]) => {
-                                    a.groups = g;
+                                tap((g2: Group[]) => {
+                                    if (a) {
+                                        a.groups = g2;
+                                    }
                                 })
                             ).subscribe();
                             toNotifications(this.notificationsService, r);
@@ -77,10 +81,14 @@ export class PricingStructurePartnerAssociationPageComponent implements OnInit {
                 this.pricingStructureService.unlinkPricingStructureGroup($event.pricingStructure.id, $event.group.id).pipe(
                     tap((r: ApiResponse) => {
                         const g: Group = $event.group;
-                        const a: PricingStructureGroupAssociation = this.pricingStructureGroupAssociations.find((a: PricingStructureGroupAssociation) => a.pricingStructure.id === $event.pricingStructure.id);
+                        const a: PricingStructureGroupAssociation | undefined =
+                            this.pricingStructureGroupAssociations.find(
+                                (a2: PricingStructureGroupAssociation) => a2.pricingStructure.id === $event.pricingStructure.id);
                         this.userManagementService.findGroupsAssociatedWithPricingStructure($event.pricingStructure.id, '').pipe(
-                            tap((g: Group[]) => {
-                                a.groups = g;
+                            tap((g2: Group[]) => {
+                                if (a) {
+                                    a.groups = g2;
+                                }
                             })
                         ).subscribe();
                         toNotifications(this.notificationsService, r);

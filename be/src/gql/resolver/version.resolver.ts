@@ -6,7 +6,7 @@ import {createGqlResponseClass} from "../util/gql-utils";
 
 @ObjectType()
 export class VersionOutputPayload {
-    @Field() test: string;
+    @Field() test!: string;
 }
 
 @ObjectType()

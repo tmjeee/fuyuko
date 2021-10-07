@@ -20,7 +20,7 @@ class UserTableDataSource implements DataSource<User> {
 
   constructor() { }
 
-  subject: BehaviorSubject<User[]> = new BehaviorSubject([]);
+  subject: BehaviorSubject<User[]> = new BehaviorSubject([] as User[]);
 
   update(users: User[]) {
     this.subject.next(users);
@@ -48,20 +48,20 @@ export interface Action {
 })
 export class UserTableComponent implements OnInit, OnChanges {
 
-  @Input() searchFieldPlaceholder: string;
-  @Input() searchFieldLabel: string;
-  @Input() searchFieldHint: string;
+  @Input() searchFieldPlaceholder!: string;
+  @Input() searchFieldLabel!: string;
+  @Input() searchFieldHint!: string;
 
   @Input() actions: Action[] = [];
-  @Input() users: User[];
-  @Input() userSearchFn: UserSearchFn;
+  @Input() users: User[] = [];
+  @Input() userSearchFn!: UserSearchFn;
   @Output() events: EventEmitter<UserTableComponentEvent> = new EventEmitter();
 
 
-  dataSource: UserTableDataSource;
+  dataSource!: UserTableDataSource;
 
-  formControlUserSearch: FormControl;
-  userSearchResult: Observable<User[]>;
+  formControlUserSearch!: FormControl;
+  userSearchResult!: Observable<User[]>;
 
   displayedColumns: string[] = ['username', 'firstName', 'lastName', 'email', 'actions'];
 

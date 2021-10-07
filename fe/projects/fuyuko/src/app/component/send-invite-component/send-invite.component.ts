@@ -23,13 +23,13 @@ export class SendInviteComponent implements OnInit {
   selectedGroups: Group[];
   formControlGroup: FormControl;
   formControlEmail: FormControl;
-  filteredGroups: Observable<Group[]>;
+  filteredGroups!: Observable<Group[]>;
 
-  @Input() groupSearchFn: GroupSearchFn;
+  @Input() groupSearchFn!: GroupSearchFn;
   @Output() events: EventEmitter<SendInviteComponentEvent>;
 
-  @ViewChild('chipList', { static: true }) matChipList: MatChipList;
-  @ViewChild('chipInput', { static: true }) chipInput: ElementRef;
+  @ViewChild('chipList', { static: true }) matChipList!: MatChipList;
+  @ViewChild('chipInput', { static: true }) chipInput!: ElementRef;
 
   constructor(private formBuilder: FormBuilder) {
     this.selectedGroups = [];
@@ -43,7 +43,8 @@ export class SendInviteComponent implements OnInit {
       .valueChanges
       .pipe(
         startWith(''),
-        filter<string>((v: string | Group) => (v) && (typeof v === 'string')),
+        // filter((v: string | Group) => ((v) && (typeof v === 'string'))),
+        filter(v => (v && (typeof v === 'string'))),
         switchMap((v: string) => {
           return this.groupSearchFn(v);
         })
@@ -58,7 +59,7 @@ export class SendInviteComponent implements OnInit {
 
   onGroupSelected($event: MatAutocompleteSelectedEvent) {
     const g: Group = $event.option.value;
-    const gFound: Group = this.selectedGroups.find((grp: Group) => grp.id === g.id);
+    const gFound: Group | undefined = this.selectedGroups.find((grp: Group) => grp.id === g.id);
     if (!gFound) {
       this.selectedGroups.push(g);
     }

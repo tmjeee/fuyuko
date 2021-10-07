@@ -43,7 +43,7 @@ const URL_DOWNLOAD = () => `${config().api_host_url}/data-export/:dataExportId`;
 })
 export class ExportArtifactsComponent implements OnChanges {
 
-    @Input() dataExportArtifacts: DataExportArtifact[];
+    @Input() dataExportArtifacts: DataExportArtifact[] = [];
     @Output() events: EventEmitter<ExportArtifactsComponentEvent>;
 
     dataSource: InternalDataSource;

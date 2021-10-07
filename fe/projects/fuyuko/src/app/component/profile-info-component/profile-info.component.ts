@@ -23,7 +23,7 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
   formControlLastName: FormControl;
   formControlEmail: FormControl;
 
-  @Input() user: User;
+  @Input() user!: User;
   @Output() events: EventEmitter<ProfileInfoComponentEvent>;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService) {

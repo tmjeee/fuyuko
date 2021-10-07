@@ -27,7 +27,7 @@ const httpAction: any[] = [
                 status: 'SUCCESS',
                 message: `Attribute retrieved successfully`,
             }],
-            payload: (attr && attr.length > 0 ? attr[0] : null)
+            payload: (attr && attr.length > 0 ? attr[0] : undefined)
         };
         res.status(200).json(apiResponse);
     }

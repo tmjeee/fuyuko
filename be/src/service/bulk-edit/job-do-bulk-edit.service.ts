@@ -80,13 +80,13 @@ export const run = async (jobLogger: JobLogger, viewId: number, bulkEditPackage:
 // ===== helper functions ===========
 const u = async (conn: Connection, jobLogger: JobLogger, viewId: number, bulkEditItems: BulkEditItem[]) => {
     for (const bulkEditItem of bulkEditItems) {
-        jobLogger.logInfo(`Working on item ${bulkEditItem.id}`);
+        await jobLogger.logInfo(`Working on item ${bulkEditItem.id}`);
         const itemId: number = bulkEditItem.id;
         const vs: Value[] = Object.values(bulkEditItem.changes).map((_ => _.new));
 
         for (const v of vs) {
             await updateItemValue(viewId, itemId, v);
-            jobLogger.logInfo(`Changed attribute ${v.attributeId} value for item ${itemId} to ${convertToDebugString(v.val)}`)
+            await jobLogger.logInfo(`Changed attribute ${v.attributeId} value for item ${itemId} to ${convertToDebugString(v.val)}`)
         }
 
         const children: BulkEditItem[] = bulkEditItem.children;

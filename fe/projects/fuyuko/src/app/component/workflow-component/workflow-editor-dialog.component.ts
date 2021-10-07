@@ -52,6 +52,7 @@ export class WorkflowEditorDialogComponent {
                             views: View[],
                             getAttributesByViewFn: GetAttributesByViewFn,
                             workflowDefinitions: WorkflowDefinition[] }) {
+        this.selectAllAttributes = false;
         this.views = matData.views;
         this.viewAttributes = [];
         this.workflowDefinitions = matData.workflowDefinitions;

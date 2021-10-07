@@ -68,6 +68,14 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "development": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/fuyuko/src/environments/environment.ts",
+                  "with": "projects/fuyuko/src/environments/environment.dev.ts"
+                }
+              ]
             }
           }
         },

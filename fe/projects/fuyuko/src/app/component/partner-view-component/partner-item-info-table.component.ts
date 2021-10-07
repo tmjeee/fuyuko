@@ -29,7 +29,7 @@ export class InternalDataSource implements DataSource<InternalDataSourceEntryTyp
 })
 export class PartnerItemInfoTableComponent implements OnInit, OnChanges {
 
-   @Input() tablePricedItem: TablePricedItem | PricedItem;
+   @Input() tablePricedItem!: TablePricedItem | PricedItem;
    dataSource: InternalDataSource;
 
    constructor() {
