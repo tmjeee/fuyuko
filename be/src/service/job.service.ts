@@ -56,7 +56,7 @@ class JobService {
 
             const q: QueryA = await conn.query(sql, params);
 
-            let jobAndLogs: JobAndLogs = null;
+            let jobAndLogs: JobAndLogs | undefined = undefined;
             if (q.length > 0) {
                 jobAndLogs = q.reduce((acc: JobAndLogs, i: QueryI) => {
 
@@ -82,7 +82,7 @@ class JobService {
                     acc.logs.push(log);
 
                     return acc;
-                }, { job: null, logs: []} as JobAndLogs);
+                }, { job: undefined, logs: [] } );
             } else {
                 const q: QueryA = await conn.query(J_SQL, jobId);
                 jobAndLogs = {
@@ -94,7 +94,7 @@ class JobService {
                         creationDate: q[0].J_CREATION_DATE,
                         progress: q[0].J_PROGRESS,
                         lastUpdate: q[0].J_LAST_UPDATE
-                    } as Job : null,
+                    } as Job : undefined,
                     logs: []
                 };
             }

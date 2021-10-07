@@ -14,7 +14,7 @@ export interface PaginationComponentEvent {
 })
 export class PaginationComponent {
 
-   @Input() pagination: Pagination;
+   @Input() pagination!: Pagination;
    @Output() events: EventEmitter<PaginationComponentEvent>;
 
    constructor() {

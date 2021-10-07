@@ -9,6 +9,6 @@ import {NewNotification} from '@fuyuko-common/model/notification.model';
 })
 export class NotificationMessagesComponent {
 
-    @Input() messages: NewNotification[];
+    @Input() messages: NewNotification[] = [];
 
 }

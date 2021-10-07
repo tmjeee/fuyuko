@@ -33,7 +33,7 @@ const q2_count: string = `
                 WHERE A.VIEW_ID = ? AND A.STATUS='ENABLED' AND A.ID IN ?
 `;
 
-const q1 = (limitOffset: LimitOffset) => `
+const q1 = (limitOffset?: LimitOffset) => `
                 SELECT
                     A.ID AS A_ID
                 FROM TBL_VIEW_ATTRIBUTE AS A
@@ -41,7 +41,7 @@ const q1 = (limitOffset: LimitOffset) => `
                 ${LIMIT_OFFSET(limitOffset)}
 `;
 
-const q2 = (limitOffset: LimitOffset) => `
+const q2 = (limitOffset?: LimitOffset) => `
                 SELECT
                     A.ID AS A_ID
                 FROM TBL_VIEW_ATTRIBUTE AS A
@@ -182,9 +182,9 @@ class AttributeService {
     // =================================
     // === getAttributeInViewByName ===
     // =================================
-    async getAttributeInViewByName(viewId: number, attributeName: string): Promise<Attribute> {
-        const attribute2: Attribute2 = await this.getAttribute2InViewByName(viewId, attributeName);
-        let attribute: Attribute = null;
+    async getAttributeInViewByName(viewId: number, attributeName: string): Promise<Attribute|undefined> {
+        const attribute2 = await this.getAttribute2InViewByName(viewId, attributeName);
+        let attribute = undefined;
         if (attribute2) {
             attribute =  attributeConvert(attribute2);
         }
@@ -194,7 +194,7 @@ class AttributeService {
         } as GetAttributeInViewByNameEvent);
         return attribute;
     }
-    async getAttribute2InViewByName(viewId: number, attributeName: string): Promise<Attribute2> {
+    async getAttribute2InViewByName(viewId: number, attributeName: string): Promise<Attribute2|undefined> {
         return doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(q_byName(), [viewId, attributeName, ENABLED]);
             if (q && q.length > 0) {
@@ -209,7 +209,7 @@ class AttributeService {
                 } as Attribute2;
                 return att;
             }
-            return null;
+            return undefined;
         });
     }
 
@@ -217,9 +217,9 @@ class AttributeService {
     // ============================
     // === getAttributeInView ====
     // ============================
-    async getAttributeInView(viewId: number, attributeId: number): Promise<Attribute> {
+    async getAttributeInView(viewId: number, attributeId: number): Promise<Attribute|undefined> {
         const attributes: Attribute[] = await getAttributesInView(viewId, [attributeId]);
-        let attribute: Attribute = null;
+        let attribute = undefined;
         if (attributes && attributes.length) {
             attribute = attributes[0];
         }
@@ -295,7 +295,10 @@ class AttributeService {
                         entries: []
                     } as AttributeMetadata2;
                     m.set(mK, met);
-                    a.get(aK).metadatas.push(met);
+                    const attribute2 = a.get(aK);
+                    if (attribute2) {
+                        attribute2.metadatas.push(met);
+                    }
                 }
 
                 const eK: string = `${attributeId}_${metadataId}_${entryId}`;
@@ -305,7 +308,10 @@ class AttributeService {
                         key: i.E_KEY,
                         value: i.E_VALUE
                     } as AttributeMetadataEntry2;
-                    m.get(mK).entries.push(ent);
+                    const attributeMetadata2 = m.get(mK);
+                    if (attributeMetadata2) {
+                        attributeMetadata2.entries.push(ent);
+                    }
                 }
                 return acc;
             }, []);
@@ -429,7 +435,10 @@ class AttributeService {
                         entries: []
                     } as AttributeMetadata2;
                     m.set(mK, met);
-                    a.get(aK).metadatas.push(met);
+                    const attribute2 = a.get(aK);
+                    if (attribute2) {
+                        attribute2.metadatas.push(met);
+                    }
                 }
 
                 const eK: string = `${attributeId}_${metadataId}_${entryId}`;
@@ -439,7 +448,10 @@ class AttributeService {
                         key: i.E_KEY,
                         value: i.E_VALUE
                     } as AttributeMetadataEntry2;
-                    m.get(mK).entries.push(ent);
+                    const attributeMetadata2 = m.get(mK);
+                    if (attributeMetadata2) {
+                        attributeMetadata2.entries.push(ent);
+                    }
                 }
                 return acc;
             }, []);

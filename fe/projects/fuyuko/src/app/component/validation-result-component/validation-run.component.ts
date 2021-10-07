@@ -19,7 +19,7 @@ export interface ValidationRunComponentEvent {
 })
 export class ValidationRunComponent {
 
-   @Input() view: View;
+   @Input() view!: View;
    @Output() events: EventEmitter<ValidationRunComponentEvent>;
 
    constructor(private notificationsService: NotificationsService,
@@ -41,7 +41,7 @@ export class ValidationRunComponent {
             height: `90vh`,
             data: {}
       }).afterClosed().pipe(
-          tap((r: {name: string, description: string}) => {
+          tap((r: {name: string, description: string} | undefined) => {
               if (r) { // not cancelled
                this.events.emit({
                   name: r.name,

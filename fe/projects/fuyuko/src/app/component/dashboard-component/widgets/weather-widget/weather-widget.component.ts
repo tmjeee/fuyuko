@@ -50,7 +50,7 @@ export class WeatherWidgetComponent extends DashboardWidget implements OnInit, O
         }
     ];
 
-    currentLocation: Location;
+    currentLocation!: Location;
 
     id = WeatherWidgetComponent.info().id;
     name = WeatherWidgetComponent.info().name;
@@ -82,11 +82,14 @@ export class WeatherWidgetComponent extends DashboardWidget implements OnInit, O
     }
 
     f(d: Document, s: string, id: string) {
-        let js: HTMLScriptElement, fjs: HTMLElement = d.getElementsByTagName(s)[0] as HTMLElement;
+        let js: HTMLScriptElement;
+        const fjs: HTMLElement = d.getElementsByTagName(s)[0] as HTMLElement;
         js = d.createElement(s) as HTMLScriptElement;
         js.id = id;
         (js as HTMLScriptElement).src = 'https://weatherwidget.io/js/widget.min.js';
-        fjs.parentNode.insertBefore(js, fjs);
+        if (fjs && fjs.parentNode) {
+            fjs.parentNode.insertBefore(js, fjs);
+        }
     }
 
     onLocationChange($event: MatSelectChange) {

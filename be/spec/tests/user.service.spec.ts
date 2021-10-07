@@ -108,17 +108,17 @@ describe('user.service', () => {
         expect(r1).toBe(true);
 
         const users1: User[] = await getUsersByStatus('DISABLED');
-        const user1: User = users1.find((u: User) => u.id == viewer1.id);
+        const user1 = users1.find((u: User) => u.id == viewer1.id);
         expect(user1).toBeTruthy();
-        expect(user1.username).toBe(viewer1.username);
+        expect(user1!.username).toBe(viewer1.username);
 
         const r2: boolean = await changeUserStatus(viewer1.id, 'ENABLED');
         expect(r2).toBe(true);
 
         const users2: User[] = await getUsersByStatus('ENABLED');
-        const user2: User = users2.find((u: User) => u.id == viewer1.id);
+        const user2 = users2.find((u: User) => u.id == viewer1.id);
         expect(user2).toBeTruthy();
-        expect(user2.username).toBe(viewer1.username);
+        expect(user2!.username).toBe(viewer1.username);
     });
 
     it ('test addUserToGroup and deleteUserFromGroup and getUsersInGroup', async function () {
@@ -127,15 +127,15 @@ describe('user.service', () => {
         expect(err1.length).toBe(0);
 
         const users1: User[] = await getUsersInGroup(adminGroup.id);
-        const user1: User = users1.find((u: User) => u.id == viewer1.id);
+        const user1 = users1.find((u: User) => u.id == viewer1.id);
         expect(user1).toBeTruthy();
-        expect(user1.id).toBe(viewer1.id);
+        expect(user1!.id).toBe(viewer1.id);
 
         const err2: string[] = await deleteUserFromGroup(viewer1.id, adminGroup.id);
         expect(err2.length).toBe(0);
 
         const users2: User[] = await getUsersInGroup(adminGroup.id);
-        const user2: User = users2.find((u: User) => u.id == viewer1.id);
+        const user2 = users2.find((u: User) => u.id == viewer1.id);
         expect(user2).toBeFalsy();
     });
 

@@ -4,7 +4,6 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CollectionViewer} from '@angular/cdk/collections';
-import {NgChanges} from '../../utils/types.util';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {Pagination} from '../../utils/pagination.utils';
 import {tap} from 'rxjs/operators';
@@ -12,7 +11,7 @@ import {PaginationComponentEvent} from '../pagination-component/pagination.compo
 
 export class InternalDataSource implements DataSource<WorkflowInstanceTask> {
 
-    private subject = new BehaviorSubject([]);
+    private subject = new BehaviorSubject<WorkflowInstanceTask[]>([]);
 
     connect(collectionViewer: CollectionViewer): Observable<WorkflowInstanceTask[] | ReadonlyArray<WorkflowInstanceTask>> {
         return this.subject.asObservable();
@@ -48,14 +47,14 @@ export type WorkflowInstanceTasksFn = (limitOffset: LimitOffset) => Observable<W
 })
 export class WorkflowInstanceTaskTableComponent implements OnInit {
 
-   @Input() workflowInstanceTasksFn: WorkflowInstanceTasksFn;
+   @Input() workflowInstanceTasksFn!: WorkflowInstanceTasksFn;
    @Input() allowViewButton: boolean;
    @Output() events: EventEmitter<WorkflowInstanceTaskTableComponentEvent>;
 
    pagination: Pagination;
 
    columnsToDisplay: string[] = ['name', 'workflowInstanceName', 'taskTitle', 'workflowState',
-       'approverUsername', 'creationDate'];
+       'approverUsername', 'approvalStage', 'creationDate'];
    rowExpandMap = new Map<number /* workflowInstanceTask id */, boolean /* is expanded */>();
    dataSource: InternalDataSource;
 

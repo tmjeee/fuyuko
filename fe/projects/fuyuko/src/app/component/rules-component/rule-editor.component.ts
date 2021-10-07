@@ -7,6 +7,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {isItemValueOperatorAndAttributeWithIdValid} from '../../utils/item-value-operator-attribute.util';
 import {OperatorType} from '@fuyuko-common/model/operator.model';
 import {ItemValTypes, Value} from '@fuyuko-common/model/item.model';
+import {PartialBy} from '@fuyuko-common/model/types';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 export interface ItemValueOperatorAndAttributeWithId {
     id: number;
@@ -28,8 +30,8 @@ export interface RuleEditorComponentEvent {
 export class RuleEditorComponent implements OnChanges {
 
     formGroup: FormGroup;
-    validateClauses: ItemValueOperatorAndAttributeWithId[];
-    whenClauses: ItemValueOperatorAndAttributeWithId[];
+    validateClauses: PartialBy<ItemValueOperatorAndAttributeWithId, 'attribute' | 'operator'>[];
+    whenClauses: PartialBy<ItemValueOperatorAndAttributeWithId, 'attribute' | 'operator'>[];
 
     formControlName: FormControl;
     formControlDescription: FormControl;
@@ -37,12 +39,12 @@ export class RuleEditorComponent implements OnChanges {
 
     counter: number;
 
-    @Input() attributes: Attribute[];
-    @Input() rule: Rule;
+    @Input() attributes: Attribute[] = [];
+    @Input() rule!: Rule;
 
     @Output() events: EventEmitter<RuleEditorComponentEvent>;
 
-    subscription: Subscription;
+    // subscription: Subscription;
     ruleLevels: RuleLevel[];
 
     constructor(private route: ActivatedRoute,
@@ -113,75 +115,78 @@ export class RuleEditorComponent implements OnChanges {
                 this.validateClauses = [];
                 this.rule.validateClauses.forEach((ruleValidateClause: ValidateClause) => {
                     const rId: number = ruleValidateClause.id;
-                    const attribute: Attribute = this.attributes.find(
+                    const attribute: Attribute | undefined = this.attributes.find(
                         (a: Attribute) => a.id === ruleValidateClause.attributeId);
                     const operator: OperatorType = ruleValidateClause.operator;
-                    const itemValue: Value[] = ruleValidateClause.condition.map((c: ItemValTypes) => ({ attributeId: attribute.id, val: c }));
-                    //    { attributeId: attribute.id, val: ruleValidateClause.condition} as Value;
+                    if (attribute) {
+                        const itemValue: Value[] = ruleValidateClause.condition
+                            .map((c: ItemValTypes) => ({attributeId: attribute.id, val: c}));
+                        //    { attributeId: attribute.id, val: ruleValidateClause.condition} as Value;
 
-                    this.validateClauses.push({
-                        id: rId,
-                        attribute,
-                        operator,
-                        itemValue
-                    } as ItemValueOperatorAndAttributeWithId);
+                        this.validateClauses.push({
+                            id: rId,
+                            attribute,
+                            operator,
+                            itemValue
+                        } as ItemValueOperatorAndAttributeWithId);
+                    }
                 });
             }
             if (this.rule.whenClauses) {
                 this.whenClauses = [];
                 this.rule.whenClauses.forEach((whenClause: WhenClause) => {
                     const rId: number = whenClause.id;
-                    const attribute: Attribute = this.attributes.find(
+                    const attribute: Attribute | undefined = this.attributes.find(
                         (a: Attribute) => a.id === whenClause.attributeId);
                     const operator: OperatorType = whenClause.operator;
-                    const itemValue: Value[] =  whenClause.condition.map((v: ItemValTypes) => ({ attributeId: attribute.id, val: v }));
-                    //    { attributeId: attribute.id, val: whenClause.condition } as Value;
+                    if (attribute) {
+                        const itemValue: Value[] = whenClause.condition.map((v: ItemValTypes) => ({
+                            attributeId: attribute.id,
+                            val: v
+                        }));
+                        //    { attributeId: attribute.id, val: whenClause.condition } as Value;
 
-                    this.whenClauses.push({
-                        id: rId,
-                        attribute,
-                        operator,
-                        itemValue
-                    } as ItemValueOperatorAndAttributeWithId);
+                        this.whenClauses.push({
+                            id: rId,
+                            attribute,
+                            operator,
+                            itemValue
+                        } as ItemValueOperatorAndAttributeWithId);
+                    }
                 });
             }
         }
     }
 
     onAddRuleValidation($event: MouseEvent) {
-        const attribute: Attribute = null;
-        const operator: OperatorType = null;
-        const itemValue: Value[] = [];
-
         this.validateClauses.push({
             id: this.counter--,
-            attribute,
-            operator,
-            itemValue
-        } as ItemValueOperatorAndAttributeWithId);
+            attribute: undefined,
+            operator: undefined,
+            itemValue: []
+        });
         this.formGroup.updateValueAndValidity();
     }
 
-    onDeleteRuleValidation($event: MouseEvent, index: number, validateClause: ItemValueOperatorAndAttributeWithId) {
+    onDeleteRuleValidation($event: MouseEvent, index: number,
+                           validateClause: PartialBy<ItemValueOperatorAndAttributeWithId, 'attribute' | 'operator'>) {
         this.validateClauses.splice(index, 1);
         this.formGroup.updateValueAndValidity();
     }
 
     onAddRuleWhen($event: MouseEvent) {
-        const attribute: Attribute = null;
-        const operator: OperatorType = null;
-        const itemValue: Value[] = [];
 
         this.whenClauses.push({
             id: this.counter--,
-            attribute,
-            operator,
-            itemValue
-        } as ItemValueOperatorAndAttributeWithId);
+            attribute: undefined,
+            operator: undefined,
+            itemValue: [],
+        });
         this.formGroup.updateValueAndValidity();
     }
 
-    onDeleteRuleWhen($event: MouseEvent, index: number, whenClause: ItemValueOperatorAndAttributeWithId) {
+    onDeleteRuleWhen($event: MouseEvent, index: number,
+                     whenClause: PartialBy<ItemValueOperatorAndAttributeWithId, 'attribute' | 'operator'>) {
         this.whenClauses.splice(index, 1);
         this.formGroup.updateValueAndValidity();
     }
@@ -192,23 +197,24 @@ export class RuleEditorComponent implements OnChanges {
             name: this.formControlName.value,
             description: this.formControlDescription.value,
             level: this.formControlRuleLevel.value,
-            validateClauses: this.validateClauses.reduce((acc: ValidateClause[], g: ItemValueOperatorAndAttributeWithId) => {
+            status: 'ENABLED',
+            validateClauses: this.validateClauses.reduce((acc: ValidateClause[], g: PartialBy<ItemValueOperatorAndAttributeWithId, 'attribute' | 'operator'>) => {
                 acc.push({
                     id: g.id,
-                    attributeId: g.attribute.id,
-                    attributeName: g.attribute.name,
-                    attributeType: g.attribute.type,
+                    attributeId: assertDefinedReturn(g.attribute).id,
+                    attributeName: assertDefinedReturn(g.attribute).name,
+                    attributeType: assertDefinedReturn(g.attribute).type,
                     operator: g.operator,
                     condition: g.itemValue.map((v: Value) => v.val)
                 } as ValidateClause);
                 return acc;
             }, []),
-            whenClauses: this.whenClauses.reduce((acc: WhenClause[], g: ItemValueOperatorAndAttributeWithId) => {
+            whenClauses: this.whenClauses.reduce((acc: WhenClause[], g: PartialBy<ItemValueOperatorAndAttributeWithId, 'attribute' | 'operator'>) => {
                 acc.push({
                     id: g.id,
-                    attributeId: g.attribute.id,
-                    attributeName: g.attribute.name,
-                    attributeType: g.attribute.type,
+                    attributeId: assertDefinedReturn(g.attribute).id,
+                    attributeName: assertDefinedReturn(g.attribute).name,
+                    attributeType: assertDefinedReturn(g.attribute).type,
                     operator: g.operator,
                     condition: g.itemValue.map((v: Value) => v.val)
                 } as ValidateClause);
@@ -248,5 +254,9 @@ export class RuleEditorComponent implements OnChanges {
         this.events.emit({
             type: 'cancel',
         } as RuleEditorComponentEvent);
+    }
+
+    cast(a: Omit<ItemValueOperatorAndAttributeWithId, 'attribute' | 'operator'> & Partial<Pick<ItemValueOperatorAndAttributeWithId, 'attribute' | 'operator'>>) {
+        return a as ItemValueOperatorAndAttributeWithId;
     }
 }

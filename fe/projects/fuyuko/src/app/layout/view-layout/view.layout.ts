@@ -18,11 +18,11 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implements  OnInit, OnDestroy {
 
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
-  currentView: View;
+  currentView?: View;
 
-  allViews: View[];
+  allViews: View[] = [];
 
   ready: boolean;
 
@@ -34,6 +34,7 @@ export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implement
               protected viewService: ViewService,
               loadingService: LoadingService) {
     super(appNotificationService, authService, settingsService, route, router, loadingService);
+    this.ready = false;
   }
 
 
@@ -51,7 +52,7 @@ export class ViewLayoutComponent extends AbstractGenSubLayoutComponent implement
             this.subscription = this.viewService
                 .asObserver()
                 .pipe(
-                    map((v: View) => {
+                    map((v: View | undefined) => {
                         if (v) {
                             this.currentView = this.allViews ? this.allViews.find((vv: View) => vv.id === v.id) : undefined;
                         } else if (!this.currentView && this.allViews.length) {

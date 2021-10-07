@@ -16,7 +16,6 @@ import {
 import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toLimitOffset} from "../../util/utils";
-import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {
     getAllPricingStructureItemsWithPrice,
     getAllPricingStructureItemsWithPriceCount, getPricingStructureById
@@ -34,7 +33,7 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const pricingStructureId: number = Number(req.params.pricingStructureId);
-        const limitOffset: LimitOffset = toLimitOffset(req);
+        const limitOffset = toLimitOffset(req);
 
         const ps: PricingStructure = await getPricingStructureById(pricingStructureId);
         const total: number = await getAllPricingStructureItemsWithPriceCount(pricingStructureId);

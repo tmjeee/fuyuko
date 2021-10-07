@@ -25,9 +25,9 @@ export class ViewValidationRangeSummaryWidgetComponent extends DashboardWidget i
        super(dashboardWidgetService);
     }
 
-    selectedView: View;
+    selectedView?: View;
     views: View[] = [];
-    r: Reporting_ViewValidationRangeSummary;
+    r?: Reporting_ViewValidationRangeSummary;
 
     data: any[] = [];
     columns: any[] = ['validation name', 'success', 'error', 'warning'];
@@ -50,7 +50,11 @@ export class ViewValidationRangeSummaryWidgetComponent extends DashboardWidget i
     type: ChartType = ChartType.BarChart;
 
     static info(): DashboardWidgetInfo {
-        return { id: 'view-validation-range-summary-widget', name: 'view-validation-range-summary-widget', type: ViewValidationRangeSummaryWidgetComponent };
+        return {
+            id: 'view-validation-range-summary-widget',
+            name: 'view-validation-range-summary-widget',
+            type: ViewValidationRangeSummaryWidgetComponent
+        };
     }
 
     ngOnInit(): void {
@@ -73,25 +77,27 @@ export class ViewValidationRangeSummaryWidgetComponent extends DashboardWidget i
     }
 
     reload() {
-        this.viewValidationRangeSummaryWidgetService
-            .getViewValidationRangeSummary(this.selectedView.id)
-            .pipe(
-                tap((r: Reporting_ViewValidationRangeSummary) => {
-                    this.r = r;
-                    const d: any[] = [];
-                    if (this.r && this.r.range && this.r.range.length) {
-                        for (const _r of r.range) {
-                            d.push([
-                                _r.validationName,
-                                Math.abs(_r.totalItems - _r.totalWithWarnings - _r.totalWithErrors),
-                                (_r.totalWithErrors),
-                                (_r.totalWithWarnings)
-                            ]);
+        if (this.selectedView) {
+            this.viewValidationRangeSummaryWidgetService
+                .getViewValidationRangeSummary(this.selectedView.id)
+                .pipe(
+                    tap((r: Reporting_ViewValidationRangeSummary) => {
+                        this.r = r;
+                        const d: any[] = [];
+                        if (this.r && this.r.range && this.r.range.length) {
+                            for (const _r of r.range) {
+                                d.push([
+                                    _r.validationName,
+                                    Math.abs(_r.totalItems - _r.totalWithWarnings - _r.totalWithErrors),
+                                    (_r.totalWithErrors),
+                                    (_r.totalWithWarnings)
+                                ]);
+                            }
                         }
-                    }
-                    this.data = d;
-                })
-            ).subscribe();
+                        this.data = d;
+                    })
+                ).subscribe();
+        }
     }
 
 }

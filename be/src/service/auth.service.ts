@@ -227,12 +227,14 @@ class AuthService {
                             roles: []
                         } as Group);
                     }
-                    const group: Group = acc.get(g.G_ID);
-                    group.roles.push({
-                        id: g.R_ID,
-                        name: g.R_NAME,
-                        description: g.R_DESCRIPTION
-                    } as Role);
+                    const group: Group | undefined = acc.get(g.G_ID);
+                    if (group) {
+                        group.roles.push({
+                            id: g.R_ID,
+                            name: g.R_NAME,
+                            description: g.R_DESCRIPTION
+                        } as Role);
+                    }
                     return acc;
                 }, new Map<number, Group>()).values()];
 

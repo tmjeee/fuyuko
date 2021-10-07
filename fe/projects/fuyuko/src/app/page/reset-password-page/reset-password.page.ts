@@ -13,9 +13,9 @@ import {NotificationsService} from 'angular2-notifications';
 })
 export class ResetPasswordPageComponent implements OnInit {
 
-    status: 'SUCCESS' | 'ERROR';
-    message: string;
-    code: string;
+    status?: 'SUCCESS' | 'ERROR';
+    message?: string;
+    code: string | null = null;
 
     disabled: boolean;
 
@@ -43,11 +43,13 @@ export class ResetPasswordPageComponent implements OnInit {
     }
 
     onPasswordEvent($event: PasswordComponentEvent) {
-        this.authService.forgotPasswordReset(this.code, $event.password).pipe(
-            tap((r: ApiResponse) => {
-                toNotifications(this.notificationsService, r);
-            })
-        ).subscribe();
+        if (this.code) {
+            this.authService.forgotPasswordReset(this.code, $event.password).pipe(
+                tap((r: ApiResponse) => {
+                    toNotifications(this.notificationsService, r);
+                })
+            ).subscribe();
+        }
     }
 
 }

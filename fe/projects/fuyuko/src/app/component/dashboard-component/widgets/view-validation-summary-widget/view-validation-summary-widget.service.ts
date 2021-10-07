@@ -19,7 +19,7 @@ export class ViewValidationSummaryWidgetService {
             .get<ApiResponse<Reporting_ViewValidationSummary>>(URL_GET_VIEW_VALIDATION_SUMMARY().replace(':viewId', String(viewId)))
             .pipe(
                 take(1),
-                map((r: ApiResponse<Reporting_ViewValidationSummary>) => r.payload)
+                map((r: ApiResponse<Reporting_ViewValidationSummary>) => r.payload!)
             );
     }
 

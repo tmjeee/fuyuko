@@ -12,7 +12,7 @@ export class ProfilingInterceptor implements HttpInterceptor {
       .pipe(
         tap((e: HttpEvent<any>) => {
           if (e instanceof HttpResponse) {
-            const url: string = (e as HttpResponse<any>).url;
+            const url: string | null = (e as HttpResponse<any>).url;
             const endTime: number = new Date().getTime();
             const method: string = req.method;
             const totalTime = endTime - startTime;

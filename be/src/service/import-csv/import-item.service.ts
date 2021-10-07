@@ -53,7 +53,7 @@ export const preview = async (viewId: number, itemDataCsvFile: File): Promise<Im
 
         // note: itemDataCsvFile.path is the full path to the uploaded file / artifact itself
         const content: Buffer  = await util.promisify(fs.readFile)(itemDataCsvFile.path);
-        const fileTypeResult: FileTypeResult = await fileType.fromBuffer(content);
+        const fileTypeResult: FileTypeResult | undefined = await fileType.fromBuffer(content);
 
         let mimeType = undefined;
         let isZip = false;
@@ -83,10 +83,10 @@ export const preview = async (viewId: number, itemDataCsvFile: File): Promise<Im
                 if (!file) { // file can be null
                     continue;
                 }
-                const jszipObject: JSZip.JSZipObject = jszip.file(file);
+                const jszipObject: JSZip.JSZipObject | null = jszip.file(file);
                 if (jszipObject &&  !jszipObject.dir) {
                     const b: Buffer = await jszipObject.async('nodebuffer');
-                    const ft: fileType.FileTypeResult = await fileType.fromBuffer(b);
+                    const ft: fileType.FileTypeResult | undefined = await fileType.fromBuffer(b);
                     if (ft && ft.mime.startsWith('image/')) { // image
                         // this is the image inside the zip
                         await conn.query(`INSERT INTO TBL_DATA_IMPORT_FILE (DATA_IMPORT_ID, NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?)`,
@@ -192,8 +192,8 @@ const __preview = async (context: Context, bufferInfo: BufferInfo): Promise<Item
     for (const csvItem of csvItems) {
         csvItemLineNumber++;
         const itemsMapKey: string = `${csvItem.name}`;
-        const itemsParentMapKey: string = csvItem.parentName ? `${csvItem.parentName}` : undefined;
-        const parentItem: Item = itemsMap.get(itemsParentMapKey);
+        const itemsParentMapKey: string |undefined = csvItem.parentName ? `${csvItem.parentName}` : undefined;
+        const parentItem: Item | undefined = itemsParentMapKey ? itemsMap.get(itemsParentMapKey) : undefined;
         const children: Item[] = [];
         const i: Item = {
            id: context.counter--,
@@ -210,7 +210,10 @@ const __preview = async (context: Context, bufferInfo: BufferInfo): Promise<Item
         }
         itemsMap.set(itemsMapKey, i);
         if (itemsParentMapKey && itemsMap.has(itemsParentMapKey)) {
-            itemsMap.get(itemsParentMapKey).children.push(i);
+            const itm = itemsMap.get(itemsParentMapKey);
+            if (itm) {
+                itm.children.push(i);
+            }
         }
 
         for (const pname of Object.keys(csvItem)) {
@@ -239,7 +242,7 @@ const __preview = async (context: Context, bufferInfo: BufferInfo): Promise<Item
                     switch(k) {
                         case 'attId': {
                             const attId: number = Number(v);
-                            const att: Attribute = context.attributeByIdMap.get(attId);
+                            const att: Attribute | undefined = context.attributeByIdMap.get(attId);
                             if (att) {
                                 i[attId] = createNewItemValue(att, valueInString);
                             } else {
@@ -252,7 +255,7 @@ const __preview = async (context: Context, bufferInfo: BufferInfo): Promise<Item
                         }
                         case 'attName': {
                             const attName: string = String(v);
-                            const att: Attribute = context.attributeByNameMap.get(attName);
+                            const att: Attribute | undefined = context.attributeByNameMap.get(attName);
                             if (att) {
                                 const attId: number = att.id;
                                 i[attId] = createNewItemValue(att, valueInString);
@@ -350,7 +353,7 @@ const createNewItemValue = (a: Attribute, csvValueFormat: string) => {
 
 
 interface BufferInfo {
-    fileName: string;  // eg. file name of a csv or zip file
-    entryName: string; // eg. the path name in a zip file, else falsy
-    content: Buffer;   // the actual content
+    fileName: string;   // eg. file name of a csv or zip file
+    entryName?: string; // eg. the path name in a zip file, else undefied
+    content: Buffer;    // the actual content
 }

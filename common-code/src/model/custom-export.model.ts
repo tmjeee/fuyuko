@@ -43,8 +43,8 @@ export type ExportScriptJobSubmissionResult = {valid: boolean, messages: NewNoti
 export interface ExportScriptPreview {
     proceed: boolean;
     messages?: NewNotification[];
-    columns?: string[];
-    rows?: {[column: string]: string}[];
+    columns: string[];
+    rows: {[column: string]: string}[];
 };
 
 export interface ExportScriptInput {

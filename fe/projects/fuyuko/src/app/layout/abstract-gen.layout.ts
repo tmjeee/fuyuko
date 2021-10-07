@@ -14,22 +14,22 @@ import {LoadingService} from '../service/loading-service/loading.service';
 // tslint:disable-next-line:directive-class-suffix
 export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
 
-  loading: boolean;
+  loading!: boolean;
 
-  routeSubSideNavData: string;
+  routeSubSideNavData?: string;
 
-  subSideBarOpened: boolean ;
+  subSideBarOpened: boolean;
   sideNavOpened: boolean;
   helpNavOpened: boolean;
 
-  myself: User;
-  notifications: AppNotification[];
+  myself?: User;
+  notifications: AppNotification[] = [];
 
-  authServiceSubscription: Subscription;
-  notificationServiceSubscription: Subscription;
-  routerEventSubscription: Subscription;
+  authServiceSubscription?: Subscription;
+  notificationServiceSubscription?: Subscription;
+  routerEventSubscription?: Subscription;
 
-  settings: Settings;
+  settings?: Settings;
 
   constructor(protected notificationService: AppNotificationService,
               protected authService: AuthService,
@@ -37,26 +37,31 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
               protected router: Router,
               protected route: ActivatedRoute,
               protected loadingService: LoadingService) {
+      this.subSideBarOpened = false;
+      this.sideNavOpened = false;
+      this.helpNavOpened = false;
   }
 
 
   ngOnInit(): void {
     this.loading = true;
-    this.loadingService.startLoading();
-    const u: User = this.authService.myself();
-    this.settingsService.getSettings(u).pipe(
-        tap((s: Settings) => {
-          this.settings = s;
-          this.helpNavOpened = this.settings.openHelpNav;
-          this.sideNavOpened = this.settings.openSideNav;
-          this.subSideBarOpened = this.settings.openSubSideNav;
-          this.loading = false;
-        }),
-        finalize(() => {
-            this.loading = false;
-            this.loadingService.stopLoading();
-        })
-    ).subscribe();
+    const u: User | undefined = this.authService.myself();
+    if (u) {
+        this.loadingService.startLoading();
+        this.settingsService.getSettings(u).pipe(
+            tap((s: Settings) => {
+                this.settings = s;
+                this.helpNavOpened = this.settings.openHelpNav;
+                this.sideNavOpened = this.settings.openSideNav;
+                this.subSideBarOpened = this.settings.openSubSideNav;
+                this.loading = false;
+            }),
+            finalize(() => {
+                this.loading = false;
+                this.loadingService.stopLoading();
+            })
+        ).subscribe();
+    }
     this.routeSubSideNavData = this.findSubSideNavData([this.route.snapshot]);
     this.routerEventSubscription = this.router.events
       .pipe(
@@ -67,7 +72,7 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
       ).subscribe();
     this.authServiceSubscription = this.authService.asObservable()
       .pipe(
-        map((p: User) => {
+        map((p: User | undefined) => {
           if (p) {
               this.myself = p;
               this.notificationService.retrieveNotifications(this.myself);
@@ -117,8 +122,8 @@ export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
   }
 
 
-  findSubSideNavData(r: ActivatedRouteSnapshot[]): string {
-    let result: string = null;
+  findSubSideNavData(r: ActivatedRouteSnapshot[]): string | undefined {
+    let result: string | undefined;
     for (const rr of r) {
       result = rr.data.subSideNav;
       if (!result) {

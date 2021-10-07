@@ -18,8 +18,8 @@ export interface ViewEditorComponentEvent {
 })
 export class ViewEditorComponent {
 
-    @Input() view: View;
-    @Input() type: Type;
+    @Input() view!: View;
+    @Input() type!: Type;
 
     @Output() events: EventEmitter<ViewEditorComponentEvent>;
 

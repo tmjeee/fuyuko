@@ -14,11 +14,11 @@ const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImage
 })
 export class PartnerDataListComponent {
 
-    @Input() attributes: Attribute[];
-    @Input() pricedItems: PricedItem[];
-    @ViewChild('sideNav', {static: true}) sideNav: MatSidenav;
+    @Input() attributes: Attribute[] = [];
+    @Input() pricedItems: PricedItem[] = [];
+    @ViewChild('sideNav', {static: true}) sideNav!: MatSidenav;
 
-    selectedPricedItem: PricedItem;
+    selectedPricedItem?: PricedItem;
 
     getCarouselImages(item: Item): CarouselItemImage[] {
         if (item && item.images) {
@@ -32,14 +32,14 @@ export class PartnerDataListComponent {
         return [];
     }
 
-    onItemClicked($event: Event, item: PricedItem) {
+    async onItemClicked($event: Event, item: PricedItem) {
         $event.stopImmediatePropagation();
         this.selectedPricedItem = item;
-        this.sideNav.open();
+        await this.sideNav.open();
     }
 
 
-    onCloseSideNav($event: MouseEvent) {
-        this.sideNav.close();
+    async onCloseSideNav($event: MouseEvent) {
+        await this.sideNav.close();
     }
 }

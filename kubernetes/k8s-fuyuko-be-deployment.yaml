@@ -21,8 +21,6 @@ spec:
         - name: kubernetes-fuyuko-be
           image: tmjee/fuyuko-be:latest
           imagePullPolicy: Always
-          #command: ["/bin/bash", "-c"]
-          #args: ["node src/app.js --db-host=\"\"fuyuko-do-user-7502297-0.a.db.ondigitalocean.com\"\" --db-port=25060  --db-user=\"\"admin\"\" --db-password=\"\"bdeooevyqbi0ltj7\"\""]
           ports:
             - containerPort: 8888
               name: fuyuko-be-port

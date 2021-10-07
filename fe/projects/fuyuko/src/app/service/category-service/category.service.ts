@@ -8,6 +8,7 @@ import {combineAll, map, reduce, tap} from 'rxjs/operators';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toQuery} from '../../utils/pagination.utils';
 import {isApiResponseSuccess} from '../common.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_GET_CATEGORIES_WITH_ITEMS = () => `${config().api_host_url}/view/:viewId/categories-with-items`;
 const URL_GET_CATEGORY_ITEMS_IN_CATEGORY =  (limitOffset?: LimitOffset) => `${config().api_host_url}/view/:viewId/category/:categoryId/category-simple-items-in-category?${toQuery(limitOffset)}`;
@@ -25,7 +26,7 @@ export class CategoryService {
 
     constructor(private httpClient: HttpClient) { }
 
-    updateCategoryHierarchy(viewId: number, categoryId: number, parentId: number = null): Observable<ApiResponse> {
+    updateCategoryHierarchy(viewId: number, categoryId: number, parentId?: number): Observable<ApiResponse> {
         return this.httpClient.post<ApiResponse>(
             URL_POST_UPDATE_CATEGORY_HIERARCHY()
                 .replace(':viewId', String(viewId))
@@ -39,7 +40,7 @@ export class CategoryService {
             URL_GET_CATEGORIES_WITH_ITEMS().replace(':viewId', String(viewId)))
             .pipe(
                 map((r: ApiResponse<CategoryWithItems[]>) => {
-                    return r.payload;
+                    return assertDefinedReturn(r.payload);
                 })
             );
     }

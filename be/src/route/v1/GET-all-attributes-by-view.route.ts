@@ -26,10 +26,10 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
 
         const viewId: number = Number(req.params.viewId);
-        const limitOffset: LimitOffset = toLimitOffset(req);
+        const limitOffset = toLimitOffset(req);
 
         const total: number = await getTotalAttributesInView(viewId);
-        const attr: Attribute[] = await getAttributesInView(viewId, null, limitOffset);
+        const attr: Attribute[] = await getAttributesInView(viewId, undefined, limitOffset);
 
         const apiResponse: PaginableApiResponse<Attribute[]> = {
             messages: [{

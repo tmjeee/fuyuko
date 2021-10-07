@@ -16,6 +16,6 @@ export class ViewValidationRangeSummaryWidgetService {
     getViewValidationRangeSummary(viewId: number): Observable<Reporting_ViewValidationRangeSummary> {
         return this.httpClient
             .get<ApiResponse<Reporting_ViewValidationRangeSummary>>(URL_GET_VIEW_VALIDATION_SUMMARY().replace(':viewId', String(viewId)))
-            .pipe(map((r: ApiResponse<Reporting_ViewValidationRangeSummary>) => r.payload));
+            .pipe(map((r: ApiResponse<Reporting_ViewValidationRangeSummary>) => r.payload!));
     }
 }

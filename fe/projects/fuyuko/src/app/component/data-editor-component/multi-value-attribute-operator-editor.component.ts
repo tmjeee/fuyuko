@@ -27,6 +27,7 @@ import {
     setItemTextValue, setItemVolumeValue, setItemWidthValue
 } from '@fuyuko-common/shared-utils/ui-item-value-setter.util';
 import {ItemValueOperatorAndAttributeWithId} from '../rules-component/rule-editor.component';
+import {PartialBy} from '@fuyuko-common/model/types';
 
 
 @Component({
@@ -36,22 +37,22 @@ import {ItemValueOperatorAndAttributeWithId} from '../rules-component/rule-edito
 })
 export class MultiValueAttributeOperatorEditorComponent implements OnInit {
 
-    @Input() attributes: Attribute[];
-    @Input() itemValueOperatorAndAttributeWithId: ItemValueOperatorAndAttributeWithId;
+    @Input() attributes: Attribute[] = [];
+    @Input() itemValueOperatorAndAttributeWithId!: PartialBy<ItemValueOperatorAndAttributeWithId, 'attribute' | 'operator'>;
     operators: OperatorType[];
 
     @Output() events: EventEmitter<ItemValueOperatorAndAttributeWithId>;
 
     DATE_FORMAT = DATE_FORMAT;
 
-    attribute: Attribute;
-    operator: OperatorType;
-    itemValues: Value[];
+    attribute!: Attribute;
+    operator?: OperatorType;
+    itemValues: Value[] = [];
 
-    formGroup: FormGroup;
-    formControlAttribute: FormControl;
-    formControlOperator: FormControl;
-    formArray: FormArray; // array of formGroup (with formControl, fromControl2, formControl3 and formControl4)
+    formGroup!: FormGroup;
+    formControlAttribute!: FormControl;
+    formControlOperator!: FormControl;
+    formArray!: FormArray; // array of formGroup (with formControl, fromControl2, formControl3 and formControl4)
 
 
     constructor(private formBuilder: FormBuilder) {
@@ -62,7 +63,7 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
     controlsInFormArray(): FormGroup[] {
         return this.formArray.controls as FormGroup[];
     }
-    
+
     formControlInFormGroup(formGroup: FormGroup, k: string): FormControl {
         return formGroup.controls[k] as FormControl;
     }
@@ -82,7 +83,7 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
         this.reload();
     }
 
-    w(itemValue: Value) {
+    w(itemValue: Value | undefined) {
         const fg: FormGroup = this.formBuilder.group({});
         this.formArray.push(fg);
         switch (this.attribute.type) {
@@ -154,7 +155,7 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
                 let k = '';
                 if (itemValue && itemValue.val) {
                     const itemValueType: SelectValue = itemValue.val as SelectValue;
-                    k = itemValueType.key;
+                    k = itemValueType.key ?? '';
                 }
                 const formControl: FormControl = this.formBuilder.control(k, [Validators.required]);
                 fg.addControl('formControl', formControl);
@@ -165,8 +166,8 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
                 let k2 = '';
                 if (itemValue && itemValue.val) {
                     const itemValueType: DoubleSelectValue = itemValue.val as DoubleSelectValue;
-                    k1 = itemValueType.key1;
-                    k2 = itemValueType.key2;
+                    k1 = itemValueType.key1 ?? '';
+                    k2 = itemValueType.key2 ?? '';
                 }
                 const formControl: FormControl = this.formBuilder.control(k1, [Validators.required]);
                 const formControl2: FormControl = this.formBuilder.control(k2, [Validators.required]);
@@ -200,7 +201,7 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
                         this.w(itemValue);
                     }
                 } else { // just so there is a condition value
-                    this.w(null);
+                    this.w(undefined);
                 }
             }
         }
@@ -209,7 +210,7 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
     onAttributeSelectionChange($event: MatSelectChange) {
         this.attribute = $event.value;
         this.operators = [];
-        this.operator = null;
+        this.operator = undefined;
         this.itemValues = [];
         this.formArray.clear();
         this.reload();
@@ -340,7 +341,8 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
                             break;
                         }
                         case 'doubleselect': {
-                            setItemDoubleSelectValue(this.attribute, itemValue, fg.controls.formControl.value, fg.controls.formControl2.value);
+                            setItemDoubleSelectValue(this.attribute, itemValue, fg.controls.formControl.value,
+                                fg.controls.formControl2.value);
                             break;
                         }
                     }
@@ -357,7 +359,7 @@ export class MultiValueAttributeOperatorEditorComponent implements OnInit {
     }
 
     addConditionValue($event: MouseEvent) {
-        this.w(null);
+        this.w(undefined);
     }
 
     removeConditionValue($event: MouseEvent, index: number) {

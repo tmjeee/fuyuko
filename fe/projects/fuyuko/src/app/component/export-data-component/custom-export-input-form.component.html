@@ -1,6 +1,6 @@
 <div class="custom-export-input-form">
 
-    <app-notification-messages [messages]="validationResult?.messages" [attr.test-notifications]="''">
+    <app-notification-messages [messages]="validationResult?.messages ?? []" [attr.test-notifications]="''">
     </app-notification-messages>
 
 

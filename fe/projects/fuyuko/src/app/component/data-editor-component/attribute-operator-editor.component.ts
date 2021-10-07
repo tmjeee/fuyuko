@@ -37,6 +37,8 @@ import {
     WidthUnits, WEIGHT_UNITS,
 } from '@fuyuko-common/model/unit.model';
 import moment from 'moment';
+import {assertDefinedReturn} from '../../utils/common.util';
+import {PartialBy} from '@fuyuko-common/model/types';
 
 @Component({
     selector: 'app-attribute-operator-editor',
@@ -45,17 +47,17 @@ import moment from 'moment';
 })
 export class AttributeOperatorEditorComponent implements OnInit {
 
-    @Input() attributes: Attribute[];
-    @Input() itemValueOperatorAndAttribute: ItemValueOperatorAndAttribute;
+    @Input() attributes: Attribute[] = [];
+    @Input() itemValueOperatorAndAttribute!: PartialBy<ItemValueOperatorAndAttribute, 'attribute' | 'itemValue' | 'operator'>;
     operators: OperatorType[];
 
     @Output() events: EventEmitter<ItemValueOperatorAndAttribute>;
 
     DATE_FORMAT = DATE_FORMAT;
 
-    attribute: Attribute;
-    operator: OperatorType;
-    itemValue: Value;
+    attribute?: Attribute;
+    operator?: OperatorType;
+    itemValue?: Value;
 
     currencyUnits: CountryCurrencyUnits[];
     volumeUnits: VolumeUnits[];
@@ -66,13 +68,13 @@ export class AttributeOperatorEditorComponent implements OnInit {
     heightUnits: HeightUnits[];
     weightUnits: WeightUnits[];
 
-    formGroup: FormGroup;
-    formControlAttribute: FormControl;
-    formControlOperator: FormControl;
-    formControl: FormControl;
-    formControl2: FormControl;
-    formControl3: FormControl;
-    formControl4: FormControl;
+    formGroup!: FormGroup;
+    formControlAttribute!: FormControl;
+    formControlOperator!: FormControl;
+    formControl?: FormControl;
+    formControl2?: FormControl;
+    formControl3?: FormControl;
+    formControl4?: FormControl;
 
 
     constructor(private formBuilder: FormBuilder) {
@@ -110,13 +112,13 @@ export class AttributeOperatorEditorComponent implements OnInit {
         this.formControlOperator = this.formBuilder.control('', [Validators.required]);
         this.formGroup.setControl('attribute', this.formControlAttribute);
         this.formGroup.setControl('operator', this.formControlOperator);
-        this.formControl = null;
-        this.formControl2 = null;
-        this.formControl3 = null;
-        this.formControl4 = null;
+        this.formControl = undefined;
+        this.formControl2 = undefined;
+        this.formControl3 = undefined;
+        this.formControl4 = undefined;
         if (this.attribute) {
             this.formControlAttribute.setValue(
-                this.attributes.find((a: Attribute) => a.id === this.attribute.id));
+                this.attributes.find((a: Attribute) => a.id === this.attribute?.id));
             this.operators = operatorsForAttribute(this.attribute);
 
             if (this.operators && this.operator && (this.operators.find((o: OperatorType) => o === this.operator))) {
@@ -135,7 +137,7 @@ export class AttributeOperatorEditorComponent implements OnInit {
                     }
                     case 'date': {
                         const dateInString = this.itemValue ? convertToString(this.attribute, this.itemValue) : '';
-                        let m: moment.Moment = null;
+                        let m: moment.Moment | undefined;
                         if (dateInString) {
                             m = moment(dateInString, this.attribute.format ? this.attribute.format : DATE_FORMAT);
                         }
@@ -203,7 +205,7 @@ export class AttributeOperatorEditorComponent implements OnInit {
                         let k = '';
                         if (this.itemValue && this.itemValue.val) {
                             const itemValueType: SelectValue = this.itemValue.val as SelectValue;
-                            k = itemValueType.key;
+                            k = itemValueType.key ?? '';
                         }
                         this.formControl = this.formBuilder.control(k, [Validators.required]);
                         this.formGroup.addControl('formControl', this.formControl);
@@ -214,8 +216,8 @@ export class AttributeOperatorEditorComponent implements OnInit {
                         let k2 = '';
                         if (this.itemValue && this.itemValue.val) {
                             const itemValueType: DoubleSelectValue = this.itemValue.val as DoubleSelectValue;
-                            k1 = itemValueType.key1;
-                            k2 = itemValueType.key2;
+                            k1 = itemValueType.key1 ?? '';
+                            k2 = itemValueType.key2 ?? '';
                         }
                         this.formControl = this.formBuilder.control(k1, [Validators.required]);
                         this.formControl2 = this.formBuilder.control(k2, [Validators.required]);
@@ -231,19 +233,19 @@ export class AttributeOperatorEditorComponent implements OnInit {
     onAttributeSelectionChange($event: MatSelectChange) {
         this.attribute = $event.value;
         this.operators = [];
-        this.operator = null;
-        this.itemValue = null;
-        this.formControl = null;
-        this.formControl2 = null;
-        this.formControl3 = null;
-        this.formControl4 = null;
+        this.operator = undefined;
+        this.itemValue = undefined;
+        this.formControl = undefined;
+        this.formControl2 = undefined;
+        this.formControl3 = undefined;
+        this.formControl4 = undefined;
         this.reload();
         this.emitEvent();
     }
 
     onOperatorSelectionChange($event: MatSelectChange) {
         this.operator = $event.value;
-        this.itemValue = null;
+        this.itemValue = undefined;
         this.reload();
         this.emitEvent();
     }
@@ -254,6 +256,9 @@ export class AttributeOperatorEditorComponent implements OnInit {
     }
 
     onValueChange() {
+        if (!this.attribute) {
+           return;
+        }
         if (!this.itemValue) {
             this.itemValue = createNewItemValue(this.attribute);
         }
@@ -272,31 +277,40 @@ export class AttributeOperatorEditorComponent implements OnInit {
                     setItemDateValue(this.attribute, this.itemValue, this.formControl.value);
                     break;
                 case 'currency':
-                    setItemCurrencyValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                    setItemCurrencyValue(this.attribute, this.itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'area':
-                    setItemAreaValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                    setItemAreaValue(this.attribute, this.itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'volume':
-                    setItemVolumeValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                    setItemVolumeValue(this.attribute, this.itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'width':
-                    setItemWidthValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                    setItemWidthValue(this.attribute, this.itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'length':
-                    setItemLengthValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                    setItemLengthValue(this.attribute, this.itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'height': {
-                    setItemHeightValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                    setItemHeightValue(this.attribute, this.itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 }
                 case 'weight': {
-                    setItemWeightValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                    setItemWeightValue(this.attribute, this.itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 }
                 case 'dimension': {
-                    setItemDimensionValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value,
-                        this.formControl3.value, this.formControl4.value);
+                    setItemDimensionValue(this.attribute, this.itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value,
+                        assertDefinedReturn(this.formControl3).value,
+                        assertDefinedReturn(this.formControl4).value);
                     break;
                 }
                 case 'select': {
@@ -304,7 +318,8 @@ export class AttributeOperatorEditorComponent implements OnInit {
                     break;
                 }
                 case 'doubleselect': {
-                    setItemDoubleSelectValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                    setItemDoubleSelectValue(this.attribute, this.itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 }
             }
@@ -313,6 +328,9 @@ export class AttributeOperatorEditorComponent implements OnInit {
     }
 
     emitEvent() {
+        if (!this.attribute) {
+           return;
+        }
         const attribute: Attribute = this.formControlAttribute.value;
         const operator: OperatorType = this.formControlOperator.value;
         const itemValue: Value = createNewItemValue(this.attribute);
@@ -331,31 +349,40 @@ export class AttributeOperatorEditorComponent implements OnInit {
                     setItemDateValue(this.attribute, itemValue, this.formControl.value);
                     break;
                 case 'currency':
-                    setItemCurrencyValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
+                    setItemCurrencyValue(this.attribute, itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'area':
-                    setItemAreaValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
+                    setItemAreaValue(this.attribute, itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'volume':
-                    setItemVolumeValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
+                    setItemVolumeValue(this.attribute, itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'width':
-                    setItemWidthValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
+                    setItemWidthValue(this.attribute, itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'length':
-                    setItemLengthValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
+                    setItemLengthValue(this.attribute, itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 case 'height': {
-                    setItemHeightValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
+                    setItemHeightValue(this.attribute, itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 }
                 case 'weight': {
-                    setItemWeightValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
+                    setItemWeightValue(this.attribute, itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 }
                 case 'dimension': {
-                    setItemDimensionValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value,
-                        this.formControl3.value, this.formControl4.value);
+                    setItemDimensionValue(this.attribute, itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value,
+                        assertDefinedReturn(this.formControl3).value,
+                        assertDefinedReturn(this.formControl4).value);
                     break;
                 }
                 case 'select': {
@@ -363,7 +390,8 @@ export class AttributeOperatorEditorComponent implements OnInit {
                     break;
                 }
                 case 'doubleselect': {
-                    setItemDoubleSelectValue(this.attribute, itemValue, this.formControl.value, this.formControl2.value);
+                    setItemDoubleSelectValue(this.attribute, itemValue, this.formControl.value,
+                        assertDefinedReturn(this.formControl2).value);
                     break;
                 }
             }

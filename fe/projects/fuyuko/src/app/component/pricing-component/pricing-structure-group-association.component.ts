@@ -22,10 +22,10 @@ export interface PricingStructureGroupAssociationComponentEvent {
 })
 export class PricingStructureGroupAssociationComponent implements OnInit {
 
-   actions: Action[];
+   actions: Action[] = [];
 
-   @Input() pricingStructureGroupAssociations: PricingStructureGroupAssociation[];
-   @Input() groupSearchFnsMap: Map<number /* pricingStructureId */, GroupSearchFn>;
+   @Input() pricingStructureGroupAssociations: PricingStructureGroupAssociation[] = [];
+   @Input() groupSearchFnsMap!: Map<number /* pricingStructureId */, GroupSearchFn>;
 
    @Output() events: EventEmitter<PricingStructureGroupAssociationComponentEvent>;
 

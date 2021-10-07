@@ -27,7 +27,7 @@ const httpAction: any[] = [
    v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
    async(req: Request, res: Response, next: NextFunction) => {
         const viewId: number = Number(req.params.viewId);
-        const limitOffset: LimitOffset = toLimitOffset(req);
+        const limitOffset = toLimitOffset(req);
 
         const allItems: Item[] = await getAllItemsInView(viewId, true, limitOffset);
         const allItemsTotal: number = await getAllItemsInViewCount(viewId, true);

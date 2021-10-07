@@ -63,14 +63,14 @@ const _preview = async (viewId: number, dataImportId: number, content: Buffer): 
     const infos: Message[] = [];
     const warnings: Message[] = [];
 
-    const items: PriceDataItem[] = (await Promise.all(csvPrices.map(async (c: CsvPrice) => {
+    const items: (PriceDataItem | null)[] = (await Promise.all(csvPrices.map(async (c: CsvPrice) => {
 
         const pricingStructureFormat: string = c.pricingStructureFormat ? c.pricingStructureFormat.trim() : c.pricingStructureFormat;
         const itemFormat: string = c.itemFormat ? c.itemFormat.trim() : c.itemFormat;
 
 
-        let ps: PricingStructure = null;
-        let psViewId: number = null;
+        let ps: PricingStructure | undefined = undefined;
+        let psViewId: number | undefined = undefined;
         if (pricingStructureFormat) {
             const token: string[] = pricingStructureFormat.split('=');
             if (token.length == 2) {
@@ -137,17 +137,17 @@ const _preview = async (viewId: number, dataImportId: number, content: Buffer): 
         if (psViewId !== viewId) {
             errors.push({
                 title: `Pricing structure does not belongs to view`,
-                messsage: `Pricing structure ${ps.id} does not belong to the view with id ${viewId}`
+                messsage: `Pricing structure ${ps!.id} does not belong to the view with id ${viewId}`
             } as Message);
             return null;
         }
 
-        const pricingStructureId: number = ps.id;
-        const pricingStructureName: string = ps.name;
+        const pricingStructureId: number = ps!.id;
+        const pricingStructureName: string = ps!.name;
 
 
-        let itemId: number = null;
-        let itemViewId: number = null;
+        let itemId: number | undefined = undefined;
+        let itemViewId: number | undefined = undefined;
         if (itemFormat) {
             const token: string[] = itemFormat.split('=');
             if (token.length == 2) {
@@ -220,7 +220,7 @@ const _preview = async (viewId: number, dataImportId: number, content: Buffer): 
             }
         }
 
-        const view: View = await getViewById(ps.viewId);
+        const view: View = await getViewById(ps!.viewId);
 
         return {
             pricingStructureId,

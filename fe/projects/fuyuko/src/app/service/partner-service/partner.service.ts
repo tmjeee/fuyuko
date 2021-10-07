@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {PricedItem} from '@fuyuko-common/model/item.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_PARTNER_PRICING_STRUCTURES = () => `${config().api_host_url}/user/:userId/partner-pricing-structures`;
 const URL_PARTNER_PRICE_ITEMS = () => `${config().api_host_url}/pricingStructure/:pricingStructureId/pricedItems`;
@@ -21,7 +22,7 @@ export class PartnerService {
         return this.httpClient
             .get<ApiResponse<PricingStructure[]>>(URL_PARTNER_PRICING_STRUCTURES().replace(':userId', String(userId)))
             .pipe(
-                map((r: ApiResponse<PricingStructure[]>) => r.payload)
+                map((r: ApiResponse<PricingStructure[]>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -29,7 +30,7 @@ export class PartnerService {
         return this.httpClient
             .get<ApiResponse<PricedItem[]>>(URL_PARTNER_PRICE_ITEMS().replace(':pricingStructureId', String(pricingStructureId)))
             .pipe(
-                map((r: ApiResponse<PricedItem[]>) => r.payload)
+                map((r: ApiResponse<PricedItem[]>) => assertDefinedReturn(r.payload))
             );
     }
 

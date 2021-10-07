@@ -14,11 +14,11 @@ import {MatSelectChange} from '@angular/material/select';
 })
 export class ViewSelectorComponent implements OnInit, OnDestroy {
 
-    private subscription: Subscription;
+    private subscription?: Subscription;
 
-    currentView: View;
+    currentView?: View;
 
-    allViews: View[];
+    allViews: View[] = [];
 
     ready: boolean;
     formControlView: FormControl;
@@ -31,9 +31,11 @@ export class ViewSelectorComponent implements OnInit, OnDestroy {
         this.formControlView = this.formBuilder.control(null);
         this.events = new EventEmitter<View>();
         this.setCurrentActiveView = true;
+        this.ready = false;
     }
 
     ngOnInit(): void {
+        this.ready = false;
         this.viewService
             .getAllViews()
             .pipe(
@@ -46,7 +48,7 @@ export class ViewSelectorComponent implements OnInit, OnDestroy {
                         this.subscription = this.viewService
                             .asObserver()
                             .pipe(
-                                map((v: View) => {
+                                map((v: View | undefined) => {
                                     if (v) {
                                         this.currentView = this.allViews ? this.allViews.find((vv: View) => vv.id === v.id) : undefined;
                                         this.formControlView.setValue(this.currentView);

@@ -27,10 +27,10 @@ export type CustomBulkEditSubmitFn  =
 })
 export class CustomBulkEditWizardComponent {
 
-    @Input() customBulkEdits: CustomBulkEdit[];
-    @Input() customBulkEditFormValidateFn: CustomBulkEditFormValidateFn;
-    @Input() customBulkEditPreviewFn: CustomBulkEditPreviewFn;
-    @Input() customBulkEditSubmitFn: CustomBulkEditSubmitFn;
+    @Input() customBulkEdits!: CustomBulkEdit[];
+    @Input() customBulkEditFormValidateFn!: CustomBulkEditFormValidateFn;
+    @Input() customBulkEditPreviewFn!: CustomBulkEditPreviewFn;
+    @Input() customBulkEditSubmitFn!: CustomBulkEditSubmitFn;
 
     step1Ready: boolean;
     firstStepFormGroup: FormGroup;
@@ -51,7 +51,7 @@ export class CustomBulkEditWizardComponent {
     step5Ready: boolean;
     fifthStepFormGroup: FormGroup;
 
-    @ViewChild('stepper') stepper: MatStepper;
+    @ViewChild('stepper') stepper!: MatStepper;
 
     constructor(private formBuilder: FormBuilder) {
 

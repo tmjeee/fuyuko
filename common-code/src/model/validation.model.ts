@@ -10,7 +10,7 @@ export interface CustomValidationContext {
     validationId: () => number;
     itemId: () => number;
     item: () => Item;
-    attribute: (attributeId: number) => Attribute;
+    attribute: (attributeId: number) => Attribute | null | undefined;
     reportError: (attributeId: number, message: string) => void;
 }
 
@@ -50,7 +50,7 @@ export interface ValidationResult {
     progress: Progress;
     creationDate: Date;
     lastUpdate: Date;
-    logResult: ValidationLogResult;
+    logResult?: ValidationLogResult;
     errors: ValidationError[];
 }
 

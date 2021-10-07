@@ -5,7 +5,7 @@
             <mat-card-subtitle>Edit rule in curent view</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div class="content" *ngIf="viewReady">
+            <div class="content" *ngIf="viewReady && rule">
                 <app-rule-editor
                         [rule]="rule"
                         [attributes]="attributes"

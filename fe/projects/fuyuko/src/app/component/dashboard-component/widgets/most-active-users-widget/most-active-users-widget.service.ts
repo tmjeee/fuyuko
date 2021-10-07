@@ -18,7 +18,7 @@ export class MostActiveUsersWidgetService {
         return this.httpClient.get<ApiResponse<Reporting_MostActiveUsers>>(URL_GET_MOST_ACTIVE_USERS())
             .pipe(
                 take(1),
-                map((r: ApiResponse<Reporting_MostActiveUsers>) => r.payload)
+                map((r: ApiResponse<Reporting_MostActiveUsers>) => r.payload!)
             );
     }
 

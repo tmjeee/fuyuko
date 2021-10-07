@@ -23,11 +23,11 @@ export class UserPeoplePageComponent implements OnInit {
   inactiveUserSearchFn: UserSearchFn;
   activeUserSearchFn: UserSearchFn;
 
-  ready: boolean;
-  activeUsers: User[];
-  inactiveUsers: User[];
-  activeUsersActionTypes: ActionType[];
-  inactiveUsersActionTypes: ActionType[];
+  ready = false ;
+  activeUsers: User[] = [];
+  inactiveUsers: User[] = [];
+  activeUsersActionTypes: ActionType[] = [];
+  inactiveUsersActionTypes: ActionType[] = [];
 
   constructor(private userManagementService: UserManagementService,
               private notificationService: NotificationsService,

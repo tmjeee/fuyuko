@@ -25,9 +25,9 @@ export class MissingAttributeValueWidgetComponent extends DashboardWidget implem
         super(dashboardWidgetService);
     }
 
-    i: Reporting_ItemsWithMissingAttributeInfo;
-    data: any[];
-    selectedView: Reporting_ViewWithMissingAttribute;
+    i?: Reporting_ItemsWithMissingAttributeInfo;
+    data: any[] = [];
+    selectedView?: Reporting_ViewWithMissingAttribute;
     options = {
         title: `Number of missing values in view`,
         is3D: true,
@@ -66,25 +66,27 @@ export class MissingAttributeValueWidgetComponent extends DashboardWidget implem
         this.selectedView = $event.value;
 
         const d: any[] = [];
-        this.selectedView.items.map((i: Reporting_ItemWithMissingAttribute) => {
-            d.push([i.itemName, i.totalMissingAttributes]);
-        });
-        this.data = d;
+        if (this.selectedView) {
+            this.selectedView.items.map((i: Reporting_ItemWithMissingAttribute) => {
+                d.push([i.itemName, i.totalMissingAttributes]);
+            });
+            this.data = d;
 
-        this.options = {
-            title: `Number of missing values in ${this.selectedView.viewName}`,
-            is3D: true,
-            width: 800,
-            height: 400,
-            legend: {
-                position: 'bottom'
-            },
-            hAxis: {
-                title: this.selectedView.viewName,
-            },
-            vAxis: {
-                title: `Number of missing values`
-            }
-        };
+            this.options = {
+                title: `Number of missing values in ${this.selectedView.viewName}`,
+                is3D: true,
+                width: 800,
+                height: 400,
+                legend: {
+                    position: 'bottom'
+                },
+                hAxis: {
+                    title: this.selectedView.viewName,
+                },
+                vAxis: {
+                    title: `Number of missing values`
+                }
+            };
+        }
     }
 }

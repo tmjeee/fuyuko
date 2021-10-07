@@ -14,6 +14,7 @@ import {HttpClient} from '@angular/common/http';
 import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from "../../utils/common.util";
 
 const URL_PREVIEW_ATTRIBUTES = () => `${config().api_host_url}/view/:viewId/export/attributes/preview`;
 const URL_PREVIEW_ITEMS = () => `${config().api_host_url}/view/:viewId/export/items/preview`;
@@ -34,7 +35,7 @@ export class ExportDataService {
 
     previewExportFn(exportType: DataExportType, viewId: number, attributes: Attribute[],
                     filter: ItemValueOperatorAndAttribute[], ps?: PricingStructure):
-        Observable<AttributeDataExport | ItemDataExport | PriceDataExport> {
+        Observable<AttributeDataExport | ItemDataExport | PriceDataExport > | undefined {
 
         switch (exportType) {
             case 'ATTRIBUTE': {
@@ -43,7 +44,7 @@ export class ExportDataService {
                     {
                         attributes,
                         filter
-                    }).pipe(map((r: ApiResponse<AttributeDataExport>) => r.payload));
+                    }).pipe(map((r: ApiResponse<AttributeDataExport>) => assertDefinedReturn(r.payload)));
                 break;
             }
             case 'ITEM': {
@@ -51,34 +52,36 @@ export class ExportDataService {
                     {
                         attributes,
                         filter
-                    }).pipe(map((r: ApiResponse<ItemDataExport>) => r.payload));
+                    }).pipe(map((r: ApiResponse<ItemDataExport>) => assertDefinedReturn(r.payload)));
                 break;
             }
             case 'PRICE': {
-                return this.httpClient.post<ApiResponse<PriceDataExport>>(URL_PREVIEW_PRICES()
-                        .replace(':viewId', String(viewId)).replace(':pricingStructureId', String(ps.id)),
-                    {
-                        attributes,
-                        filter,
-                        pricingStructureId: ps.id
-                    }).pipe(map((r: ApiResponse<PriceDataExport>) => r.payload));
+                if (ps) {
+                    return this.httpClient.post<ApiResponse<PriceDataExport>>(URL_PREVIEW_PRICES()
+                            .replace(':viewId', String(viewId)).replace(':pricingStructureId', String(ps.id)),
+                        {
+                            attributes,
+                            filter,
+                            pricingStructureId: ps.id
+                        }).pipe(map((r: ApiResponse<PriceDataExport>) => assertDefinedReturn(r.payload)));
+                }
                 break;
             }
         }
 
-        return null;
+        return undefined;
     }
 
     submitExportJobFn(exportType: DataExportType, viewId: number, attributes: Attribute[],
                       dataExport: AttributeDataExport | ItemDataExport | PriceDataExport,
-                      filter: ItemValueOperatorAndAttribute[]): Observable<Job> {
+                      filter: ItemValueOperatorAndAttribute[]): Observable<Job> | undefined {
         switch (exportType) {
             case 'ATTRIBUTE': {
                 const attributeDataExport: AttributeDataExport = dataExport as AttributeDataExport;
                 return this.httpClient.post<ApiResponse<Job>>(URL_SCHEDULE_ATTRIBUTES_EXPORT().replace(':viewId', String(viewId)),
                     {
                         attributes: attributeDataExport.attributes
-                    }).pipe(map((r: ApiResponse<Job>) => r.payload));
+                    }).pipe(map((r: ApiResponse<Job>) => assertDefinedReturn(r.payload)));
                 break;
             }
             case 'ITEM': {
@@ -87,7 +90,7 @@ export class ExportDataService {
                     {
                         attributes: itemDataExport.attributes,
                         items: itemDataExport.items
-                    }).pipe(map((r: ApiResponse<Job>) => r.payload));
+                    }).pipe(map((r: ApiResponse<Job>) => assertDefinedReturn(r.payload)));
                 break;
             }
             case 'PRICE': {
@@ -98,11 +101,11 @@ export class ExportDataService {
                     .replace(':pricingStructureId', String(pricingStructureId)), {
                     attributes: priceDataExport.attributes,
                     pricedItems: priceDataExport.pricedItems
-                }).pipe(map((r: ApiResponse<Job>) => r.payload));
+                }).pipe(map((r: ApiResponse<Job>) => assertDefinedReturn(r.payload)));
                 break;
             }
         }
-        return null;
+        return undefined;
     }
 
 }

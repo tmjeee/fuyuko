@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CustomDataImport} from '@fuyuko-common/model/custom-import.model';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {MatRadioChange} from '@angular/material/radio';
@@ -47,9 +47,9 @@ export interface CustomExportListComponentEvent {
       ]),
    ],
 })
-export class CustomExportListComponent {
+export class CustomExportListComponent implements OnInit {
 
-   @Input() customDataExports: CustomDataExport[];
+   @Input() customDataExports: CustomDataExport[] = [];
    @Output() events: EventEmitter<CustomExportListComponentEvent>;
 
    dataSource: InternalDataSource;
@@ -59,7 +59,7 @@ export class CustomExportListComponent {
    formGroup: FormGroup;
    formControl: FormControl;
 
-   expandedCustomDataImport: CustomDataExport; // customDataExport that is row expanded
+   expandedCustomDataImport?: CustomDataExport; // customDataExport that is row expanded
 
    constructor(private formBuilder: FormBuilder) {
       this.formControl = this.formBuilder.control('');
@@ -74,12 +74,13 @@ export class CustomExportListComponent {
 
    isRowExpanded(customDataImport: CustomDataImport): boolean {
       const b =  this.expandedCustomDataImport && this.expandedCustomDataImport.id === customDataImport.id;
-      return b;
+      return !!b;
    }
 
    masterRowClicked(customDataImport: CustomDataImport) {
-      if (this.expandedCustomDataImport && this.expandedCustomDataImport.id === customDataImport.id) { // already expanded, click on same item toggle expansion
-         this.expandedCustomDataImport = null;
+      if (this.expandedCustomDataImport && this.expandedCustomDataImport.id === customDataImport.id) {
+         // already expanded, click on same item toggle expansion
+         this.expandedCustomDataImport = undefined;
       } else {
          this.expandedCustomDataImport = customDataImport;
       }

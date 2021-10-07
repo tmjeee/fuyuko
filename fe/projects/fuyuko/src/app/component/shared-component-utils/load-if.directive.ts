@@ -18,7 +18,7 @@ import {GlobalCommunicationService} from '../../service/global-communication-ser
 })
 export class LoadIfDirective implements OnInit, OnDestroy {
 
-    private subscription: Subscription;
+    private subscription?: Subscription;
 
     constructor(private viewContainerRef: ViewContainerRef,
                 private templateRef: TemplateRef<any>,
@@ -45,6 +45,8 @@ export class LoadIfDirective implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscription && this.subscription.unsubscribe();
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 }

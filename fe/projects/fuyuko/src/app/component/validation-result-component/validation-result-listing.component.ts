@@ -15,8 +15,8 @@ export interface ValidationResultListingComponentEvent {
 })
 export class ValidationResultListingComponent {
 
-    @Input() view: View;
-    @Input() validations: Validation[];
+    @Input() view!: View;
+    @Input() validations: Validation[] = [];
     @Output() events: EventEmitter<ValidationResultListingComponentEvent>;
 
     constructor(private router: Router) {

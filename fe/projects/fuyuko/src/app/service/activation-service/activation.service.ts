@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
 import {map} from 'rxjs/operators';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_GET_INVITATION_BY_CODE = () => `${config().api_host_url}/invitations/:code`;
 const URL_ACTIVATE_BY_CODE = () => `${config().api_host_url}/activate-invitation/:code`;
@@ -19,7 +20,7 @@ export class ActivationService {
         return this.httpClient
             .get<ApiResponse<Invitation>>(URL_GET_INVITATION_BY_CODE().replace(':code', code))
             .pipe(
-                map((r: ApiResponse<Invitation>) => r.payload)
+                map((r: ApiResponse<Invitation>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -33,7 +34,7 @@ export class ActivationService {
                 password
             })
             .pipe(
-                map((r: ApiResponse<Activation>) => r.payload)
+                map((r: ApiResponse<Activation>) => assertDefinedReturn(r.payload))
             );
     }
 }

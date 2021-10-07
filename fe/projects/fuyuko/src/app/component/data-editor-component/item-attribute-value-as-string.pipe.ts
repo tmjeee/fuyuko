@@ -18,7 +18,7 @@ import {convertToString } from '@fuyuko-common/shared-utils/ui-item-value-conver
   name: 'itemAttributeValueAsString'
 })
 export class ItemAttributeValueAsStringPipe implements PipeTransform {
-  transform(value: Value | ItemValTypes, ...args: Attribute[]): string {
+  transform(value: Value | ItemValTypes | undefined, ...args: Attribute[]): string {
     if (!value) {
       return '';
     }

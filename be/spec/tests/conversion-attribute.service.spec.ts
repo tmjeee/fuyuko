@@ -364,15 +364,15 @@ describe(`conversion-attribute.service.spec`, () => {
         expect(attribute.format).toBeFalsy();
         expect(attribute.showCurrencyCountry).toBeFalsy();
         expect(attribute.pair1).toBeDefined();
-        expect(attribute.pair1.length).toBe(4);
-        expect(attribute.pair1[0].key).toBe('key1');
-        expect(attribute.pair1[0].value).toBe('value1');
-        expect(attribute.pair1[1].key).toBe('key2');
-        expect(attribute.pair1[1].value).toBe('value2');
-        expect(attribute.pair1[2].key).toBe('key3');
-        expect(attribute.pair1[2].value).toBe('value3');
-        expect(attribute.pair1[3].key).toBe('key4');
-        expect(attribute.pair1[3].value).toBe('value4');
+        expect(attribute.pair1!.length).toBe(4);
+        expect(attribute.pair1![0].key).toBe('key1');
+        expect(attribute.pair1![0].value).toBe('value1');
+        expect(attribute.pair1![1].key).toBe('key2');
+        expect(attribute.pair1![1].value).toBe('value2');
+        expect(attribute.pair1![2].key).toBe('key3');
+        expect(attribute.pair1![2].value).toBe('value3');
+        expect(attribute.pair1![3].key).toBe('key4');
+        expect(attribute.pair1![3].value).toBe('value4');
         expect(attribute.pair2).toBeFalsy()
 
     });
@@ -408,25 +408,25 @@ describe(`conversion-attribute.service.spec`, () => {
         expect(attribute.format).toBeFalsy();
         expect(attribute.showCurrencyCountry).toBeFalsy();
         expect(attribute.pair1).toBeDefined();
-        expect(attribute.pair1.length).toBe(2);
-        expect(attribute.pair1[0].key).toBe('key1');
-        expect(attribute.pair1[0].value).toBe('value1');
-        expect(attribute.pair1[1].key).toBe('key2');
-        expect(attribute.pair1[1].value).toBe('value2');
+        expect(attribute.pair1!.length).toBe(2);
+        expect(attribute.pair1![0].key).toBe('key1');
+        expect(attribute.pair1![0].value).toBe('value1');
+        expect(attribute.pair1![1].key).toBe('key2');
+        expect(attribute.pair1![1].value).toBe('value2');
         expect(attribute.pair2).toBeDefined();
-        expect(attribute.pair2.length).toBe(4);
-        expect(attribute.pair2[0].key1).toBe('key1');
-        expect(attribute.pair2[0].key2).toBe('kkey1');
-        expect(attribute.pair2[0].value).toBe('vvalue1');
-        expect(attribute.pair2[1].key1).toBe('key1');
-        expect(attribute.pair2[1].key2).toBe('kkey2');
-        expect(attribute.pair2[1].value).toBe('vvalue2');
-        expect(attribute.pair2[2].key1).toBe('key2');
-        expect(attribute.pair2[2].key2).toBe('kkey3');
-        expect(attribute.pair2[2].value).toBe('vvalue3');
-        expect(attribute.pair2[3].key1).toBe('key2');
-        expect(attribute.pair2[3].key2).toBe('kkey4');
-        expect(attribute.pair2[3].value).toBe('vvalue4');
+        expect(attribute.pair2!.length).toBe(4);
+        expect(attribute.pair2![0].key1).toBe('key1');
+        expect(attribute.pair2![0].key2).toBe('kkey1');
+        expect(attribute.pair2![0].value).toBe('vvalue1');
+        expect(attribute.pair2![1].key1).toBe('key1');
+        expect(attribute.pair2![1].key2).toBe('kkey2');
+        expect(attribute.pair2![1].value).toBe('vvalue2');
+        expect(attribute.pair2![2].key1).toBe('key2');
+        expect(attribute.pair2![2].key2).toBe('kkey3');
+        expect(attribute.pair2![2].value).toBe('vvalue3');
+        expect(attribute.pair2![3].key1).toBe('key2');
+        expect(attribute.pair2![3].key2).toBe('kkey4');
+        expect(attribute.pair2![3].value).toBe('vvalue4');
     });
 
     it (`[string] revert works`, () => {

@@ -46,6 +46,7 @@ export class StockTradingWidgetComponent extends DashboardWidget implements OnIn
         fjs.parentNode.insertBefore(s, fjs);
          */
         setTimeout(() => {
+            // tslint:disable-next-line:no-unused-expression
             new TradingView.widget(
                 {
                     width: 980,

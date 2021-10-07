@@ -5,6 +5,7 @@ import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_ALL_VIEWS = () => `${config().api_host_url}/views`;
 const URL_UPDATE_VIEW = () => `${config().api_host_url}/views/update`;
@@ -14,10 +15,10 @@ const URL_GET_VIEW_BY_ID = () => `${config().api_host_url}/view/:viewId`;
 @Injectable()
 export class ViewService {
 
-  private subject: BehaviorSubject<View>;
+  private subject: BehaviorSubject<View | undefined>;
 
   constructor(private httpClient: HttpClient) {
-    this.subject = new BehaviorSubject<View>(null);
+    this.subject = new BehaviorSubject<View | undefined>(undefined);
   }
 
   init() {
@@ -37,7 +38,7 @@ export class ViewService {
   destroy() {
   }
 
-  asObserver(): Observable<View> {
+  asObserver(): Observable<View | undefined> {
     return this.subject.asObservable();
   }
 
@@ -50,7 +51,7 @@ export class ViewService {
       return this.httpClient
           .get<ApiResponse<View[]>>(URL_ALL_VIEWS())
           .pipe(
-              map((r: ApiResponse<View[]>) => r.payload)
+              map((r: ApiResponse<View[]>) => assertDefinedReturn(r.payload))
           );
   }
 

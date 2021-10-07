@@ -87,15 +87,15 @@ class PricedItemService {
      *  === getPricedItem ===
      *  ==============================
      */
-    async getPricedItem(pricedItemId: number): Promise<PricedItem> {
-        const pricedItem2: PricedItem2 = await this.getPricedItem2(pricedItemId);
+    async getPricedItem(pricedItemId: number): Promise<PricedItem | undefined> {
+        const pricedItem2: PricedItem2 | undefined = await this.getPricedItem2(pricedItemId);
         if (pricedItem2) {
             const pricedItems: PricedItem[] = pricedItemsConvert([pricedItem2]);
             return pricedItems[0];
         }
-        return null;
+        return undefined;
     }
-    async getPricedItem2(priceItemId: number): Promise<PricedItem2> {
+    async getPricedItem2(priceItemId: number): Promise<PricedItem2 | undefined> {
         const item2s: PricedItem2[] = await doInDbConnection(async (conn: Connection) => {
             const q: QueryA = await conn.query(`
                 SELECT
@@ -144,7 +144,7 @@ class PricedItemService {
         if (item2s && item2s.length) {
             return item2s[0];
         }
-        return null;
+        return undefined;
     }
 
 
@@ -334,8 +334,10 @@ class PricedItemService {
                     primary: c.IMG_PRIMARY,
                 } as ItemImage;
                 imgMap.set(imgMapKey, img);
-                const item: Item2 = itemMap.get(itemMapKey);
-                item.images.push(img);
+                const item: Item2 | undefined = itemMap.get(itemMapKey);
+                if (item) {
+                    item.images.push(img);
+                }
             }
 
             if (!valueMap.has(valueMapKey)) {
@@ -345,8 +347,10 @@ class PricedItemService {
                     metadatas: []
                 } as ItemValue2;
                 valueMap.set(valueMapKey, itemValue);
-                const item: Item2 = itemMap.get(itemMapKey);
-                item.values.push(itemValue);
+                const item: Item2 | undefined = itemMap.get(itemMapKey);
+                if (item) {
+                    item.values.push(itemValue);
+                }
             }
 
             if (!metaMap.has(metaMapKey)) {
@@ -358,8 +362,10 @@ class PricedItemService {
                     entries: []
                 } as ItemMetadata2;
                 metaMap.set(metaMapKey, itemMetadata);
-                const value: ItemValue2 = valueMap.get(valueMapKey);
-                value.metadatas.push(itemMetadata);
+                const value: ItemValue2 | undefined = valueMap.get(valueMapKey);
+                if (value) {
+                    value.metadatas.push(itemMetadata);
+                }
             }
 
             if (!entMap.has(entryMapKey)) {
@@ -370,8 +376,10 @@ class PricedItemService {
                     dataType: c.E_DATA_TYPE
                 };
                 entMap.set(entryMapKey, entry);
-                const meta: ItemMetadata2 = metaMap.get(metaMapKey);
-                meta.entries.push(entry);
+                const meta: ItemMetadata2 | undefined = metaMap.get(metaMapKey);
+                if (meta) {
+                    meta.entries.push(entry);
+                }
             }
 
             return acc;

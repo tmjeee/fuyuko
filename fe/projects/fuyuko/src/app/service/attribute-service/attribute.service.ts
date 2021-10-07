@@ -8,8 +8,10 @@ import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-respon
 import {map} from 'rxjs/operators';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toQuery} from '../../utils/pagination.utils';
+import {assertDefinedReturn} from '../../utils/common.util';
 
-const URL_ALL_ATTRIBUTES_BY_VIEW = (limitOffset: LimitOffset) => `${config().api_host_url}/attributes/view/:viewId?${toQuery(limitOffset)}`;
+const URL_ALL_ATTRIBUTES_BY_VIEW = (limitOffset?: LimitOffset) =>
+    `${config().api_host_url}/attributes/view/:viewId?${toQuery(limitOffset)}`;
 const URL_ATTRIBUTE_BY_VIEW = () => `${config().api_host_url}/attribute/:attributeId/view/:viewId`;
 const URL_SEARCH_ALL_ATTRIBUTES_BY_VIEW = () => `${config().api_host_url}/attributes/view/:viewId/search/:attribute`;
 const URL_ADD_ATTRIBUTE_TO_VIEW = () => `${config().api_host_url}/view/:viewId/attributes/add`;
@@ -33,7 +35,7 @@ export class AttributeService {
           .get<ApiResponse<Attribute>>(URL_ATTRIBUTE_BY_VIEW()
               .replace(':viewId', String(viewId)).replace(':attributeId', String(attributeId)))
           .pipe(
-              map((r: ApiResponse<Attribute>) => r.payload)
+              map((r: ApiResponse<Attribute>) => assertDefinedReturn(r.payload))
           );
   }
 
@@ -51,7 +53,7 @@ export class AttributeService {
             .replace(':viewId', String(viewId))
             .replace(':attribute', search))
         .pipe(
-            map((r: ApiResponse<Attribute[]>) => r.payload)
+            map((r: ApiResponse<Attribute[]>) => assertDefinedReturn(r.payload))
         );
   }
 

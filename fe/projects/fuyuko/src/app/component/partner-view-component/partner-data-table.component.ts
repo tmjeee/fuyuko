@@ -6,10 +6,11 @@ import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import {MatSidenav} from '@angular/material/sidenav';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 export class DataTableDataSource extends DataSource<TablePricedItem> {
 
-    subject: BehaviorSubject<TablePricedItem[]> = new BehaviorSubject([]);
+    subject: BehaviorSubject<TablePricedItem[]> = new BehaviorSubject([] as TablePricedItem[]);
 
     connect(collectionViewer: CollectionViewer): Observable<TablePricedItem[]> {
         return this.subject.asObservable();
@@ -51,18 +52,18 @@ export interface AttributeInfo {
 })
 export class PartnerDataTableComponent implements OnInit {
 
-    @Input() attributes: Attribute[];
-    @Input() tablePricedItems: TablePricedItem[];
-    selectedTablePricedItem: TablePricedItem;
+    @Input() attributes: Attribute[] = [];
+    @Input() tablePricedItems: TablePricedItem[] = [];
+    selectedTablePricedItem?: TablePricedItem;
 
-    @ViewChild('sideNav', {static: true}) sideNav: MatSidenav;
+    @ViewChild('sideNav', {static: true}) sideNav!: MatSidenav;
 
     rowInfoMap: Map<number, RowInfo>;   // item id as key
     attributeInfoMap: Map<number, AttributeInfo>; // attribute id as key
 
 
-    displayedColumns: string[]; // the attribute ids
-    childrenDisplayedColumns: string[];
+    displayedColumns!: string[]; // the attribute ids
+    childrenDisplayedColumns!: string[];
 
     datasource: DataTableDataSource;
 
@@ -93,13 +94,13 @@ export class PartnerDataTableComponent implements OnInit {
     populateDisplayColumns()  {
         const columns: string[] = this.attributes
             .sort((a: Attribute, b: Attribute) => {
-                const x = this.attributeInfoMap.get(a.id).order;
-                const y = this.attributeInfoMap.get(b.id).order;
+                const x = this.attributeInfoMap.get(a.id) ? assertDefinedReturn(this.attributeInfoMap.get(a.id)).order : 0;
+                const y = this.attributeInfoMap.get(b.id) ? assertDefinedReturn(this.attributeInfoMap.get(b.id)).order : 0;
                 return x - y;
             })
             .filter((a: Attribute) => {
-                const attInfo: AttributeInfo = this.attributeInfoMap.get(a.id);
-                return (!attInfo.hidden);
+                const attInfo: AttributeInfo | undefined = this.attributeInfoMap.get(a.id);
+                return (attInfo ? !attInfo.hidden : false);
             })
             .map((a: Attribute) => {
                 return '' + a.id;
@@ -113,14 +114,14 @@ export class PartnerDataTableComponent implements OnInit {
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
-        return this.rowInfoMap.get(item.id).expanded;
+        return assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 
     rowClicked(item: TablePricedItem) {
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
-        this.rowInfoMap.get(item.id).expanded = !this.rowInfoMap.get(item.id).expanded;
+        assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded = !assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 
 

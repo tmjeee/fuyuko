@@ -1,14 +1,14 @@
 
 <div class="custom-import-preview">
     <table *ngIf="ready" mat-table [dataSource]="datasource">
-        <ng-container *ngFor="let column of preview.columns">
+        <ng-container *ngFor="let column of preview?.columns ?? []">
             <ng-container [matColumnDef]="column">
                 <th mat-header-cell *matHeaderCellDef>{{column}}</th>
                 <td mat-cell *matCellDef="let row" [attr.test-column]="column">{{row[column]}}</td>
             </ng-container>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="preview.columns"></tr>
-        <tr mat-row *matRowDef="let row; columns: preview.columns; let i = index" [attr.test-row-index]="i"></tr>
+        <tr mat-header-row *matHeaderRowDef="preview?.columns ?? []"></tr>
+        <tr mat-row *matRowDef="let row; columns: preview?.columns ?? []; let i = index" [attr.test-row-index]="i"></tr>
     </table>
 </div>

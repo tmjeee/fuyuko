@@ -19,7 +19,7 @@ export class GlobalMissingAttributeValuesWidgetService {
             .get<ApiResponse<Reporting_ItemsWithMissingAttributeInfo>>(URL_GET_MISSING_ATTRIBUTE_VALUES())
             .pipe(
                 take(1),
-                map((r: ApiResponse<Reporting_ItemsWithMissingAttributeInfo>) => r.payload)
+                map((r: ApiResponse<Reporting_ItemsWithMissingAttributeInfo>) => r.payload!)
             )
             ;
     }

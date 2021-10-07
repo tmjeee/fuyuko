@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse, ScheduleValidationResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_GET_ALL_VALIDATIONS = () => `${config().api_host_url}/view/:viewId/validations`;
 const URL_GET_VALIDATION_DETAILS = () => `${config().api_host_url}/view/:viewId/validation/:validationId`;
@@ -20,7 +21,7 @@ export class ValidationService {
         return this.httpClient
             .get<ApiResponse<Validation[]>>(URL_GET_ALL_VALIDATIONS().replace(':viewId', String(viewId)))
             .pipe(
-                map((r: ApiResponse<Validation[]>) => r.payload)
+                map((r: ApiResponse<Validation[]>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -34,7 +35,7 @@ export class ValidationService {
                 .replace(':order', order)
                 .replace(':limit', String(limit))
             ).pipe(
-                map((r: ApiResponse<ValidationLogResult>) => r.payload)
+                map((r: ApiResponse<ValidationLogResult>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -44,7 +45,7 @@ export class ValidationService {
                 .replace(':viewId', String(viewId))
                 .replace(':validationId', String(validationId)))
             .pipe(
-                map((r: ApiResponse<ValidationResult>) => r.payload)
+                map((r: ApiResponse<ValidationResult>) => assertDefinedReturn(r.payload))
             );
     }
 

@@ -44,10 +44,10 @@ import {getAllItemsInView, getRules} from "../";
  * === scheduleValidation ===
  * ==========================
  */
-export interface ScheduleValidationResult { validationId: number, errors: string[] };
+export interface ScheduleValidationResult { validationId?: number, errors: string[] };
 export const scheduleValidation = async (viewId: number, name: string, description: string):Promise<ScheduleValidationResult> => {
     const r: {validationId: number, errors: string[]} = await doInDbConnection(async (conn: Connection) => {
-        let validationId: number = null;
+        let validationId: number | undefined = undefined;
         const errors: string[] = [];
         const q: QueryResponse = await conn.query(`
             
@@ -191,9 +191,17 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
             let wr  = true;
             await i(currentContext, `Validating itemId ${item.id} against ruleId ${rule.id} in viewId ${viewId}`);
             for (const whenClause of rule.whenClauses) {
-                const att: Attribute = as.find((a: Attribute) => a.id === whenClause.attributeId);
+                const att: Attribute | undefined = as.find((a: Attribute) => a.id === whenClause.attributeId);
+                if (!att) {
+                    await i(currentContext, `Unable to find when clause attribute id ${whenClause.attributeId}`);
+                    continue;
+                }
                 const value: Value = item[whenClause.attributeId];
-                const i1: ItemValTypes = value ? value.val : createNewItemValue(att).val;
+                const i1: ItemValTypes | undefined = value ? value.val : createNewItemValue(att).val;
+                if (!i1) {
+                    await i(currentContext, `Attribute value for attribute ${whenClause.attributeId} is not defined`);
+                    continue;
+                }
                 const i2: ItemValTypes[] = whenClause.condition;
                 const op: OperatorType = whenClause.operator;
                 currentContext.attribute = att;
@@ -226,9 +234,17 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
                 let vr = true;
 
                 for (const validateClause of rule.validateClauses) {
-                    const att: Attribute = as.find((a: Attribute) => a.id === validateClause.attributeId);
+                    const att: Attribute | undefined = as.find((a: Attribute) => a.id === validateClause.attributeId);
+                    if (!att) {
+                        await i(currentContext, `Unable to find validate clause attribute id ${validateClause.attributeId}`);
+                        continue;
+                    }
                     const value: Value = item[validateClause.attributeId];
-                    const i1: ItemValTypes = value ? value.val : createNewItemValue(att).val;
+                    const i1: ItemValTypes | undefined = value ? value.val : createNewItemValue(att).val;
+                    if (!i1) {
+                        await i(currentContext, `Attribute value for attribute ${validateClause.attributeId} is not defined`);
+                        continue;
+                    }
                     const i2: ItemValTypes[] = validateClause.condition;
                     const op: OperatorType = validateClause.operator;
                     currentContext.attribute = att;
@@ -377,7 +393,7 @@ const match = (context: Context, attribute: Attribute, actualItemAttributeValueT
             const a2 = conditionValueType as DateValue;
             const format: string = attribute.format ? attribute.format : DATE_FORMAT;
             const m1: moment.Moment = moment(a1.value, format);
-            const m2: moment.Moment = a2 ? moment(a2.value, format) : null;
+            const m2: moment.Moment | undefined = a2 ? moment(a2.value, format) : undefined;
 
             try {
                 return compareDate(m2, m1, op);

@@ -18,11 +18,11 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class ViewValidationPageComponent implements OnInit, OnDestroy {
 
-    view: View; // current active view
-    validations: Validation[];
-    subscription: Subscription;
+    view?: View; // current active view
+    validations: Validation[] = [];
+    subscription?: Subscription;
 
-    loading: boolean;
+    loading = true;
 
     constructor(private viewService: ViewService,
                 private notificationsService: NotificationsService,
@@ -35,7 +35,7 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
         this.loadingService.startLoading();
         this.subscription = this.viewService.asObserver()
             .pipe(
-                tap((v: View) => {
+                tap((v: View | undefined) => {
                     this.view = v;
                     if (v) {
                         this._reload();
@@ -59,14 +59,16 @@ export class ViewValidationPageComponent implements OnInit, OnDestroy {
 
     onValidationRun($event: ValidationRunComponentEvent) {
         if ($event) {
-            this.validationService
-                .scheduleValidation(this.view.id, $event.name, $event.description)
-                .pipe(
-                    tap((r: ScheduleValidationResponse) => {
-                        toNotifications(this.notificationsService, r);
-                    })
-                ).subscribe()
-            ;
+            if (this.view) {
+                this.validationService
+                    .scheduleValidation(this.view.id, $event.name, $event.description)
+                    .pipe(
+                        tap((r: ScheduleValidationResponse) => {
+                            toNotifications(this.notificationsService, r);
+                        })
+                    ).subscribe()
+                ;
+            }
         }
     }
 

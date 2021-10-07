@@ -17,7 +17,7 @@ export interface WorkflowInstanceTaskDetailComponentEvent {
 export class WorkflowInstanceTaskDetailsComponent {
 
     @Input() disableWorkflowActions = false;
-    @Input() workflowInstanceTask: WorkflowInstanceTask;
+    @Input() workflowInstanceTask!: WorkflowInstanceTask;
     @Output() events: EventEmitter<WorkflowInstanceTaskDetailComponentEvent> = new EventEmitter();
 
 

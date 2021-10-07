@@ -22,8 +22,8 @@ export type ValidationResultLogReloadFn = (event: ValidationResultLogComponentEv
 })
 export class ValidationResultLogComponent {
 
-    @Input() validationResult: ValidationResult;
-    @Input() validationResultLogReloadFn: ValidationResultLogReloadFn;
+    @Input() validationResult!: ValidationResult;
+    @Input() validationResultLogReloadFn?: ValidationResultLogReloadFn;
 
     printf(message: any, width: any): string {
         return sprintf(`%s${width}`, message);
@@ -31,7 +31,7 @@ export class ValidationResultLogComponent {
 
     showPrevious($event: MouseEvent) {
         console.log('******** show previous', this.validationResultLogReloadFn);
-        if (this.validationResultLogReloadFn) {
+        if (this.validationResultLogReloadFn && this.validationResult && this.validationResult.logResult) {
             this.validationResultLogReloadFn({
                 type: 'show-previous',
                 validationLogId: this.validationResult.logResult.batchFirstValidationLogId,
@@ -41,12 +41,14 @@ export class ValidationResultLogComponent {
                 limit: this.validationResult.logResult.batchSize
             } as ValidationResultLogComponentEvent).pipe(
                 tap((r: ValidationLogResult) => {
-                    this.validationResult.logResult.batchHasMoreBefore = r.batchHasMoreBefore;
-                    this.validationResult.logResult.batchTotal = r.batchTotal;
-                    this.validationResult.logResult.batchSize = r.batchSize;
-                    this.validationResult.logResult.batchFirstValidationLogId = r.batchFirstValidationLogId;
-                    this.validationResult.logResult.progress = r.progress;
-                    this.validationResult.logResult.logs.unshift(...r.logs);
+                    if (this.validationResult.logResult) {
+                        this.validationResult.logResult.batchHasMoreBefore = r.batchHasMoreBefore;
+                        this.validationResult.logResult.batchTotal = r.batchTotal;
+                        this.validationResult.logResult.batchSize = r.batchSize;
+                        this.validationResult.logResult.batchFirstValidationLogId = r.batchFirstValidationLogId;
+                        this.validationResult.logResult.progress = r.progress;
+                        this.validationResult.logResult.logs.unshift(...r.logs);
+                    }
                 })
             ).subscribe();
         }
@@ -54,7 +56,7 @@ export class ValidationResultLogComponent {
 
     showMore($event: MouseEvent) {
         console.log('******** show more', this.validationResultLogReloadFn);
-        if (this.validationResultLogReloadFn) {
+        if (this.validationResultLogReloadFn && this.validationResult && this.validationResult.logResult) {
             this.validationResultLogReloadFn({
                 type: 'show-more',
                 validationLogId: this.validationResult.logResult.batchLastValidationLogId,
@@ -64,12 +66,14 @@ export class ValidationResultLogComponent {
                 limit: this.validationResult.logResult.batchSize
             } as ValidationResultLogComponentEvent).pipe(
                 tap((r: ValidationLogResult) => {
-                    this.validationResult.logResult.batchHasMoreAfter = r.batchHasMoreAfter;
-                    this.validationResult.logResult.batchTotal = r.batchTotal;
-                    this.validationResult.logResult.batchSize = r.batchSize;
-                    this.validationResult.logResult.batchLastValidationLogId = r.batchLastValidationLogId;
-                    this.validationResult.logResult.progress = r.progress;
-                    this.validationResult.logResult.logs.push(...r.logs);
+                    if (this.validationResult.logResult) {
+                        this.validationResult.logResult.batchHasMoreAfter = r.batchHasMoreAfter;
+                        this.validationResult.logResult.batchTotal = r.batchTotal;
+                        this.validationResult.logResult.batchSize = r.batchSize;
+                        this.validationResult.logResult.batchLastValidationLogId = r.batchLastValidationLogId;
+                        this.validationResult.logResult.progress = r.progress;
+                        this.validationResult.logResult.logs.push(...r.logs);
+                    }
                 })
             ).subscribe();
         }

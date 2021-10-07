@@ -123,7 +123,7 @@ class PricedItemFilteringService {
      */
     async getPricedItemsWithFiltering(viewId: number,
                                       pricingStructureId: number,
-                                      parentItemId: number,
+                                      parentItemId: number | null | undefined,
                                       whenClauses: ItemValueOperatorAndAttribute[]): Promise<PricedItemsWithFilteringResult> {
         return await doInDbConnection(async (conn: Connection) => {
             return this._getPricedItemsWithFiltering(conn, viewId, pricingStructureId, parentItemId, whenClauses);
@@ -132,7 +132,7 @@ class PricedItemFilteringService {
     async _getPricedItemsWithFiltering(conn: Connection,
                                        viewId: number,
                                        pricingStructureId: number,
-                                       parentItemId: number,
+                                       parentItemId: number | null | undefined,
                                        whenClauses: ItemValueOperatorAndAttribute[]): Promise<PricedItemsWithFilteringResult> {
         const r2: PricedItem2sWithFilteringResult = await getPricedItem2sWithFiltering(conn, viewId, pricingStructureId, parentItemId, whenClauses);
         const r: PricedItemsWithFilteringResult = {
@@ -149,7 +149,7 @@ class PricedItemFilteringService {
     async getPricedItem2sWithFiltering(conn: Connection,
                                        viewId: number,
                                        pricingStructureId: number,
-                                       parentItemId: number,
+                                       parentItemId: number | null | undefined,
                                        whenClauses: ItemValueOperatorAndAttribute[]): Promise<PricedItem2sWithFilteringResult> {
 
         const q: QueryA = !!parentItemId ?
@@ -180,18 +180,18 @@ class PricedItemFilteringService {
             const pricingStructureItemId: number = i.PSI_ID;
 
             const iMapKey: string = `${itemId}`;
-            const itemValueMapKey: string = itemId && itemValueId ? `${itemId}_${itemValueId}` : undefined;
-            const itemAttValueMetaMapKey: string = metaId && itemValueId ? `${itemId}_${itemValueId}_${metaId}` : undefined;
-            const itemAttValueMetaEntryMapKey: string = entryId && itemValueId && metaId ? `${itemId}_${attributeId}_${metaId}_${entryId}` : undefined;
-            const itemImageMapKey: string = itemImageId && itemId ? `${itemId}_${itemImageId}` : undefined;
-            const attributeMapKey: string = attributeId ? `${attributeId}` : undefined;
-            const attributeMetadataMapKey: string = attributeId && attributeMetadataId ? `${attributeId}_${attributeMetadataId}` : undefined;
-            const attributeMetadataEntryMapKey: string = attributeId && attributeMetadataId && attributeMetadataEntryId ? `${attributeId}_${attributeMetadataId}_${attributeMetadataEntryId}` : undefined;
-            const priceMapKey: string = pricingStructureItemId && itemId ? `${pricingStructureItemId}_${itemId}` : undefined;
+            const itemValueMapKey = itemId && itemValueId ? `${itemId}_${itemValueId}` : undefined;
+            const itemAttValueMetaMapKey = metaId && itemValueId ? `${itemId}_${itemValueId}_${metaId}` : undefined;
+            const itemAttValueMetaEntryMapKey = entryId && itemValueId && metaId ? `${itemId}_${attributeId}_${metaId}_${entryId}` : undefined;
+            const itemImageMapKey = itemImageId && itemId ? `${itemId}_${itemImageId}` : undefined;
+            const attributeMapKey = attributeId ? `${attributeId}` : undefined;
+            const attributeMetadataMapKey = attributeId && attributeMetadataId ? `${attributeId}_${attributeMetadataId}` : undefined;
+            const attributeMetadataEntryMapKey = attributeId && attributeMetadataId && attributeMetadataEntryId ? `${attributeId}_${attributeMetadataId}_${attributeMetadataEntryId}` : undefined;
+            const priceMapKey = pricingStructureItemId && itemId ? `${pricingStructureItemId}_${itemId}` : undefined;
 
 
             if (!iMap.has(iMapKey)) {
-                const item: PricedItem2 = {
+                const item: PricedItem2 = ({
                     id: i.I_ID,
                     name: i.I_NAME,
                     description: i.I_DESCRIPTION,
@@ -201,7 +201,7 @@ class PricedItemFilteringService {
                     values: [],
                     images: [],
                     children: []
-                } as PricedItem2;
+                } as unknown) as PricedItem2;
                 iMap.set(iMapKey, item);
                 bulkEditItem2s.push(item);
 
@@ -215,8 +215,13 @@ class PricedItemFilteringService {
                     country: i.PSI_COUNTRY
                 };
                 priceMap.set(priceMapKey, p);
-                iMap.get(iMapKey).price = p.price;
-                iMap.get(iMapKey).country = p.country;
+                if (iMapKey) {
+                    const pricedItem2 = iMap.get(iMapKey);
+                    if (pricedItem2) {
+                        pricedItem2.price = p.price;
+                        pricedItem2.country = p.country;
+                    }
+                }
             }
 
             if (itemImageMapKey && !itemImageMap.has(itemImageMapKey)) {
@@ -228,7 +233,12 @@ class PricedItemFilteringService {
                     size: i.IMG_SIZE
                 } as ItemImage;
                 itemImageMap.set(itemImageMapKey, itemImage);
-                iMap.get(iMapKey).images.push(itemImage);
+                if (iMapKey) {
+                    const pricedItem2 = iMap.get(iMapKey);
+                    if (pricedItem2) {
+                        pricedItem2.images.push(itemImage);
+                    }
+                }
             }
 
             if (itemValueMapKey && !itemValueMap.has(itemValueMapKey)) {
@@ -238,7 +248,12 @@ class PricedItemFilteringService {
                     metadatas: []
                 } as ItemValue2;
                 itemValueMap.set(itemValueMapKey, itemValue2);
-                iMap.get(iMapKey).values.push(itemValue2);
+                if (iMapKey) {
+                    const pricedItem2 = iMap.get(iMapKey);
+                    if (pricedItem2) {
+                        pricedItem2.values.push(itemValue2);
+                    }
+                }
             }
 
 
@@ -252,7 +267,12 @@ class PricedItemFilteringService {
                     entries: []
                 } as ItemMetadata2;
                 itemAttValueMetaMap.set(itemAttValueMetaMapKey, meta);
-                itemValueMap.get(itemValueMapKey).metadatas.push(meta);
+                if (itemValueMapKey) {
+                    const itemValue2 = itemValueMap.get(itemValueMapKey);
+                    if (itemValue2) {
+                        itemValue2.metadatas.push(meta);
+                    }
+                }
             }
 
             if (itemAttValueMetaEntryMapKey && !itemAttValueMetaEntryMap.has(itemAttValueMetaEntryMapKey)) {
@@ -263,7 +283,12 @@ class PricedItemFilteringService {
                     dataType: i.IE_DATA_TYPE
                 } as ItemMetadataEntry2;
                 itemAttValueMetaEntryMap.set(itemAttValueMetaEntryMapKey, entry);
-                itemAttValueMetaMap.get(itemAttValueMetaMapKey).entries.push(entry);
+                if(itemAttValueMetaMapKey) {
+                    const itemMetadata2 = itemAttValueMetaMap.get(itemAttValueMetaMapKey);
+                    if (itemMetadata2) {
+                        itemMetadata2.entries.push(entry);
+                    }
+                }
             }
 
             if (attributeMapKey && !attributeMap.has(attributeMapKey)) {
@@ -286,7 +311,12 @@ class PricedItemFilteringService {
                     entries: []
                 } as AttributeMetadata2;
                 attributeMetadataMap.set(attributeMetadataMapKey, m);
-                attributeMap.get(attributeMapKey).metadatas.push(m);
+                if (attributeMapKey) {
+                    const attribute2 = attributeMap.get(attributeMapKey);
+                    if (attribute2) {
+                        attribute2.metadatas.push(m);
+                    }
+                }
             }
 
             if (attributeMetadataEntryMapKey && !attributeMetadataEntryMap.has(attributeMetadataEntryMapKey)) {
@@ -296,7 +326,12 @@ class PricedItemFilteringService {
                     value: i.AME_VALUE
                 } as AttributeMetadataEntry2;
                 attributeMetadataEntryMap.set(attributeMetadataEntryMapKey, e);
-                attributeMetadataMap.get(attributeMetadataMapKey).entries.push(e);
+                if (attributeMetadataMapKey) {
+                    const attributeMetadata2 = attributeMetadataMap.get(attributeMetadataMapKey);
+                    if (attributeMetadata2) {
+                        attributeMetadata2.entries.push(e);
+                    }
+                }
             }
         };
 
@@ -333,172 +368,172 @@ class PricedItemFilteringService {
                         if (m.attributeId === attribute.id) {
                             switch (attribute.type) {
                                 case "string": {
-                                    const eType: ItemMetadataEntry2 = this.findEntry(m.entries, 'type');
-                                    const eValue: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
+                                    const eType = this.findEntry(m.entries, 'type');
+                                    const eValue = this.findEntry(m.entries, 'value');
 
-                                    const v1: string = (value ? (value.val as StringValue).value : null); // from rest API
-                                    const v2: string = eValue ? eValue.value : null; // actual item attribute value
+                                    const v1 = (value ? (value.val as StringValue).value : null); // from rest API
+                                    const v2 = eValue ? eValue.value : null; // actual item attribute value
 
                                     return compareString(v1, v2, operator);
                                 }
                                 case "text": {
-                                    const eValue: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
+                                    const eValue = this.findEntry(m.entries, 'value');
 
-                                    const v1: string = (value ? (value.val as TextValue).value : null); // from rest api
-                                    const v2: string = eValue ? eValue.value : null; // from actual item attribute value
+                                    const v1 = (value ? (value.val as TextValue).value : null); // from rest api
+                                    const v2 = eValue ? eValue.value : null; // from actual item attribute value
 
                                     return compareString(v1, v2, operator);
                                 }
                                 case "number": {
-                                    const eValue: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
+                                    const eValue = this.findEntry(m.entries, 'value');
 
-                                    const v1: number = (value ? (value.val as NumberValue).value : null);
-                                    const v2: number = eValue ? Number(eValue.value) : null;
+                                    const v1 = (value ? (value.val as NumberValue).value : null);
+                                    const v2 = eValue ? Number(eValue.value) : null;
 
                                     return compareNumber(v1, v2, operator);
                                 }
                                 case "area": {
-                                    const eValue: ItemMetadataEntry2 = this.findEntry(m.entries, "value");
-                                    const eUnit: ItemMetadataEntry2 = this.findEntry(m.entries, "unit");
+                                    const eValue = this.findEntry(m.entries, "value");
+                                    const eUnit = this.findEntry(m.entries, "unit");
 
-                                    const v1: number = (value ? (value.val as AreaValue).value : null);
-                                    const u1: AreaUnits = (value ? (value.val as AreaValue).unit : null);
+                                    const v1 = (value ? (value.val as AreaValue).value : null);
+                                    const u1 = (value ? (value.val as AreaValue).unit : null);
 
-                                    const v2: number = eValue ? Number((eValue.value)): null;
-                                    const u2: AreaUnits = eUnit ? (eUnit.value) as AreaUnits : null;
+                                    const v2 = eValue ? Number((eValue.value)): null;
+                                    const u2 = eUnit ? (eUnit.value) as AreaUnits : null;
 
-                                    const vv1: number = convertToCm2(v1, u1);
-                                    const vv2: number = convertToCm2(v2, u2);
+                                    const vv1 = convertToCm2(v1, u1);
+                                    const vv2 = convertToCm2(v2, u2);
 
                                     return compareNumber(vv1, vv2, operator);
                                 }
                                 case "currency": {
-                                    const eValue: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
+                                    const eValue = this.findEntry(m.entries, 'value');
 
-                                    const v1: number = (value ? (value.val as CurrencyValue).value : null);
-                                    const v2: number = eValue ? Number(eValue.value) : null;
+                                    const v1 = (value ? (value.val as CurrencyValue).value : null);
+                                    const v2 = eValue ? Number(eValue.value) : null;
 
                                     return compareNumber(v1, v2, operator);
                                 }
                                 case "date": {
-                                    const eValue: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
+                                    const eValue = this.findEntry(m.entries, 'value');
                                     const format = attribute.format ? attribute.format : DATE_FORMAT;
 
-                                    const v1: moment.Moment = (value ? moment((value.val as DateValue).value, format) : null);
-                                    const v2: moment.Moment = eValue ? (eValue.value ? moment(eValue.value, format) : undefined) : undefined;
+                                    const v1 = (value ? moment((value.val as DateValue).value, format) : null);
+                                    const v2 = eValue ? (eValue.value ? moment(eValue.value, format) : undefined) : undefined;
 
                                     return compareDate(v1, v2, operator);
                                 }
                                 case "dimension": {
-                                    const eH: ItemMetadataEntry2 = this.findEntry(m.entries, 'height');
-                                    const eW: ItemMetadataEntry2 = this.findEntry(m.entries, 'width');
-                                    const eL: ItemMetadataEntry2 = this.findEntry(m.entries, 'length');
-                                    const eU: ItemMetadataEntry2 = this.findEntry(m.entries, 'unit');
+                                    const eH = this.findEntry(m.entries, 'height');
+                                    const eW = this.findEntry(m.entries, 'width');
+                                    const eL = this.findEntry(m.entries, 'length');
+                                    const eU = this.findEntry(m.entries, 'unit');
 
-                                    const h1: number = (value ? ((value.val) as DimensionValue).height : null);
-                                    const w1: number = (value ? ((value.val) as DimensionValue).width : null);
-                                    const l1: number = (value ? ((value.val) as DimensionValue).length : null);
-                                    const u1: DimensionUnits = (value ? ((value.val) as DimensionValue).unit : null);
+                                    const h1 = (value ? ((value.val) as DimensionValue).height : null);
+                                    const w1 = (value ? ((value.val) as DimensionValue).width : null);
+                                    const l1 = (value ? ((value.val) as DimensionValue).length : null);
+                                    const u1 = (value ? ((value.val) as DimensionValue).unit : null);
 
-                                    const h2: number = eH ? Number(eH.value) : null;
-                                    const w2: number = eW ? Number(eW.value) : null;
-                                    const l2: number = eL ? Number(eL.value) : null;
-                                    const u2: DimensionUnits = eU ? (eU.value) as DimensionUnits : null;
+                                    const h2 = eH ? Number(eH.value) : null;
+                                    const w2 = eW ? Number(eW.value) : null;
+                                    const l2 = eL ? Number(eL.value) : null;
+                                    const u2 = eU ? (eU.value) as DimensionUnits : null;
 
                                     return compareDimension(l1, w1, h1, u1, l2, w2, h2, u2, operator);
                                 }
                                 case "height": {
-                                    const eV: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
-                                    const eU: ItemMetadataEntry2 = this.findEntry(m.entries, 'unit');
+                                    const eV = this.findEntry(m.entries, 'value');
+                                    const eU = this.findEntry(m.entries, 'unit');
 
-                                    const v1: number = (value ? (value.val as HeightValue).value : null);
-                                    const u1: HeightUnits = (value ? (value.val as HeightValue).unit : null);
+                                    const v1 = (value ? (value.val as HeightValue).value : null);
+                                    const u1 = (value ? (value.val as HeightValue).unit : null);
 
-                                    const v2: number = eV ? Number(eV.value) : null;
-                                    const u2: HeightUnits = eU ? eU.value as HeightUnits : null;
+                                    const v2 = eV ? Number(eV.value) : null;
+                                    const u2 = eU ? eU.value as HeightUnits : null;
 
-                                    const vv1: number = convertToCm(v1, u1);
-                                    const vv2: number = convertToCm(v2, u2);
+                                    const vv1 = convertToCm(v1, u1);
+                                    const vv2 = convertToCm(v2, u2);
 
                                     return compareNumber(vv1, vv2, operator);
                                 }
                                 case "weight": {
-                                    const eV: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
-                                    const eU: ItemMetadataEntry2 = this.findEntry(m.entries, 'unit');
+                                    const eV = this.findEntry(m.entries, 'value');
+                                    const eU = this.findEntry(m.entries, 'unit');
 
-                                    const v1: number = (value ? (value.val as WeightValue).value : null);
-                                    const u1: WeightUnits = (value ? (value.val as WeightValue).unit : null);
+                                    const v1 = (value ? (value.val as WeightValue).value : null);
+                                    const u1 = (value ? (value.val as WeightValue).unit : null);
 
-                                    const v2: number = eV ? Number(eV.value) : null;
-                                    const u2: WeightUnits = eU ? eU.value as WeightUnits : null;
+                                    const v2 = eV ? Number(eV.value) : null;
+                                    const u2 = eU ? eU.value as WeightUnits : null;
 
-                                    const vv1: number = convertToG(v1, u1);
-                                    const vv2: number = convertToG(v2, u2);
+                                    const vv1 = convertToG(v1, u1);
+                                    const vv2 = convertToG(v2, u2);
 
                                     return compareNumber(vv1, vv2, operator);
                                 }
                                 case "length": {
-                                    const eV: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
-                                    const eU: ItemMetadataEntry2 = this.findEntry(m.entries, 'unit');
+                                    const eV = this.findEntry(m.entries, 'value');
+                                    const eU = this.findEntry(m.entries, 'unit');
 
-                                    const v1: number = (value ? (value.val as LengthValue).value : null);
-                                    const u1: LengthUnits = (value ? (value.val as LengthValue).unit : null);
+                                    const v1 = (value ? (value.val as LengthValue).value : null);
+                                    const u1 = (value ? (value.val as LengthValue).unit : null);
 
-                                    const v2: number = eV ? Number(eV.value) : null;
-                                    const u2: LengthUnits = eU ? eU.value as LengthUnits : null;
+                                    const v2 = eV ? Number(eV.value) : null;
+                                    const u2 = eU ? eU.value as LengthUnits : null;
 
-                                    const vv1: number = convertToCm(v1, u1);
-                                    const vv2: number = convertToCm(v2, u2);
+                                    const vv1 = convertToCm(v1, u1);
+                                    const vv2 = convertToCm(v2, u2);
 
                                     return compareNumber(vv1, vv2, operator);
                                 }
                                 case "volume": {
-                                    const eV: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
-                                    const eU: ItemMetadataEntry2 = this.findEntry(m.entries, 'unit');
+                                    const eV = this.findEntry(m.entries, 'value');
+                                    const eU = this.findEntry(m.entries, 'unit');
 
-                                    const v1: number = (value ? (value.val as VolumeValue).value : null);
-                                    const u1: VolumeUnits = (value ? (value.val as VolumeValue).unit : null);
+                                    const v1 = (value ? (value.val as VolumeValue).value : null);
+                                    const u1 = (value ? (value.val as VolumeValue).unit : null);
 
-                                    const v2: number = eV ? Number(eV.value) : null;
-                                    const u2: VolumeUnits = eU ? eU.value as VolumeUnits : null;
+                                    const v2 = eV ? Number(eV.value) : null;
+                                    const u2 = eU ? eU.value as VolumeUnits : null;
 
-                                    const vv1: number = convertToMl(v1, u1);
-                                    const vv2: number = convertToMl(v2, u2);
+                                    const vv1 = convertToMl(v1, u1);
+                                    const vv2 = convertToMl(v2, u2);
 
                                     return compareNumber(vv1, vv2, operator);
                                 }
                                 case "width": {
-                                    const eV: ItemMetadataEntry2 = this.findEntry(m.entries, 'value');
-                                    const eU: ItemMetadataEntry2 = this.findEntry(m.entries, 'unit');
+                                    const eV = this.findEntry(m.entries, 'value');
+                                    const eU = this.findEntry(m.entries, 'unit');
 
-                                    const v1: number = (value ? (value.val as WidthValue).value : null);
-                                    const u1: WidthUnits = (value ? (value.val as WidthValue).unit : null);
+                                    const v1 = (value ? (value.val as WidthValue).value : null);
+                                    const u1 = (value ? (value.val as WidthValue).unit : null);
 
-                                    const v2: number = eV ? Number(eV.value) : null;
-                                    const u2: WidthUnits = eU ? eU.value as WidthUnits : null;
+                                    const v2 = eV ? Number(eV.value) : null;
+                                    const u2 = eU ? eU.value as WidthUnits : null;
 
-                                    const vv1: number = convertToCm(v1, u1);
-                                    const vv2: number = convertToCm(v2, u2);
+                                    const vv1 = convertToCm(v1, u1);
+                                    const vv2 = convertToCm(v2, u2);
 
                                     return compareNumber(vv1, vv2, operator);
                                 }
                                 case "select": {
 
-                                    const eK: ItemMetadataEntry2 = this.findEntry(m.entries, 'key');
+                                    const eK = this.findEntry(m.entries, 'key');
 
-                                    const k1: string = (value ? (value.val as SelectValue).key : null);
-                                    const k2: string = eK ? eK.value : null;
+                                    const k1 = (value ? (value.val as SelectValue).key : null);
+                                    const k2 = eK ? eK.value : null;
 
                                     return compareString(k1, k2, operator);
                                 }
                                 case "doubleselect": {
-                                    const eOne: ItemMetadataEntry2 = this.findEntry(m.entries, 'key1');
-                                    const eTwo: ItemMetadataEntry2 = this.findEntry(m.entries, 'key2');
+                                    const eOne = this.findEntry(m.entries, 'key1');
+                                    const eTwo = this.findEntry(m.entries, 'key2');
 
-                                    const kOne1: string = (value ? (value.val as DoubleSelectValue).key1 : null);
-                                    const kTwo1: string = (value ? (value.val as DoubleSelectValue).key2 : null);
-                                    const kOne2: string = eOne ? eOne.value : null;
-                                    const kTwo2: string = eTwo ? eTwo.value : null;
+                                    const kOne1 = (value ? (value.val as DoubleSelectValue).key1 : null);
+                                    const kTwo1 = (value ? (value.val as DoubleSelectValue).key2 : null);
+                                    const kOne2 = eOne ? eOne.value : null;
+                                    const kTwo2 = eTwo ? eTwo.value : null;
 
                                     return (compareString(kOne1, kOne2, operator) && compareString(kTwo1, kTwo2, operator));
                                 }
@@ -520,7 +555,7 @@ class PricedItemFilteringService {
 
     // ==== helper functions ======================
 
-    findEntry(entries: ItemMetadataEntry2[], key: string): ItemMetadataEntry2 {
+    findEntry(entries: ItemMetadataEntry2[], key: string): ItemMetadataEntry2 | undefined {
         return entries.find((e: ItemMetadataEntry2) => e.key === key);
     }
 }

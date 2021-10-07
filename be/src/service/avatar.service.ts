@@ -15,7 +15,7 @@ import {
 } from './event/event.service';
 
 
-export interface SaveUserAvatarResult { userAvatarId: number, errors: string[] };
+export interface SaveUserAvatarResult { userAvatarId?: number, errors: string[] };
 export interface AvatarInput { globalAvatarName?: string, customAvatarFile?: File };
 class AvatarService {
     /**
@@ -30,11 +30,11 @@ class AvatarService {
             if (qc[0].COUNT > 0) {
                 errors.push(`Global avatar named ${fileName} already exists`);
             } else {
-                const mimeType: fileType.FileTypeResult = await fileType.fromBuffer(buffer);
+                const mimeType: fileType.FileTypeResult | undefined = await fileType.fromBuffer(buffer);
                 const size = buffer.length;
 
                 const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_AVATAR (NAME, MIME_TYPE, SIZE, CONTENT) VALUES (?, ?, ?, ?)`,
-                    [fileName, mimeType.mime, size, buffer]);
+                    [fileName, (mimeType ? mimeType.mime : ''), size, buffer]);
                 if (q.affectedRows <= 0) {
                     errors.push(`Failed to insert global avatar named ${fileName}`);
                 };
@@ -61,10 +61,11 @@ class AvatarService {
             if (q1[0].COUNT > 0) {
                 errors.push(`Global image with name ${fileName} or tag ${tag} already exists`);
             } else {
-                const mimeType: fileType.FileTypeResult = await fileType.fromBuffer(buffer);
+                const mimeType: fileType.FileTypeResult | undefined = await fileType.fromBuffer(buffer);
                 const size = buffer.length;
 
-                const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_IMAGE (NAME, MIME_TYPE, SIZE, CONTENT, TAG) VALUES (?,?,?,?,?)`, [fileName, mimeType.mime, size, buffer, tag]);
+                const q: QueryResponse = await conn.query(`INSERT INTO TBL_GLOBAL_IMAGE (NAME, MIME_TYPE, SIZE, CONTENT, TAG) VALUES (?,?,?,?,?)`,
+                    [fileName, (mimeType ? mimeType.mime : ''), size, buffer, tag]);
                 if (q.affectedRows <= 0) {
                     errors.push(`Failed to insert global image ${fileName}`);
                 }
@@ -86,7 +87,7 @@ class AvatarService {
      */
     async saveUserAvatar(userId: number, avatar: AvatarInput): Promise<SaveUserAvatarResult> {
         const errors: string[] = [];
-        let userAvatarId: number;
+        let userAvatarId: number | undefined = undefined;
         if (avatar.globalAvatarName && avatar.customAvatarFile) {
             errors.push(`globalAvatarName and customAvatarFile cannot be supplied together picked on`);
         } else if (avatar.globalAvatarName) {
@@ -96,7 +97,6 @@ class AvatarService {
                     const globalAvatarId: number = q1[0].ID;
                     const qCount: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT, ID FROM TBL_USER_AVATAR WHERE USER_ID = ? GROUP BY ID`, [userId]);
                     let q: QueryResponse;
-                    let userAvatarId: number;
                     if (qCount.length && qCount[0].COUNT > 0) {
                         q = await conn.query(`UPDATE TBL_USER_AVATAR SET GLOBAL_AVATAR_ID = ?, MIME_TYPE = ?, SIZE = ?, CONTENT =? WHERE USER_ID = ?`,
                             [globalAvatarId, null, null, null, userId]);
@@ -112,21 +112,21 @@ class AvatarService {
             });
         } else if (avatar.customAvatarFile) {
             await doInDbConnection(async (conn: Connection) => {
-                const name: string = avatar.customAvatarFile.name;
-                const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(avatar.customAvatarFile.path));
-                const ft: fileType.FileTypeResult = await fileType.fromBuffer(buffer);
+                const name: string = avatar.customAvatarFile!.name;
+                const buffer: Buffer = Buffer.from(await util.promisify(fs.readFile)(avatar.customAvatarFile!.path));
+                const ft: fileType.FileTypeResult | undefined = await fileType.fromBuffer(buffer);
                 const qCount: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT, ID FROM TBL_USER_AVATAR WHERE USER_ID = ? GROUP BY ID`, [userId]);
                 let q: QueryResponse;
                 if (qCount.length && qCount[0].COUNT > 0) {
                     q = await conn.query(`UPDATE TBL_USER_AVATAR SET NAME=?, GLOBAL_AVATAR_ID = ?, MIME_TYPE = ?, SIZE = ?, CONTENT =? WHERE USER_ID = ?`,
-                        [name, null, ft.mime, buffer.length, buffer, userId]);
+                        [name, null, (ft ? ft.mime : ''), buffer.length, buffer, userId]);
                     userAvatarId = qCount[0].ID;
                     if (q.affectedRows <= 0) {
                         errors.push(`Failed to update user id ${userId} avatar`);
                     }
                 } else {
                     q = await conn.query(`INSERT INTO TBL_USER_AVATAR (NAME, USER_ID, GLOBAL_AVATAR_ID, MIME_TYPE, SIZE, CONTENT) VALUES (?,?,?,?,?,?) `,
-                        [name, userId, null, ft.mime, buffer.length, buffer]);
+                        [name, userId, null, (ft ? ft.mime : ''), buffer.length, buffer]);
                     userAvatarId = q.insertId;
                     if (q.affectedRows <= 0) {
                         errors.push(`Failed to add user id ${userId} avatar`);

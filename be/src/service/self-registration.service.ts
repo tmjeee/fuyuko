@@ -12,7 +12,7 @@ import {
 } from './event/event.service';
 
 
-export interface SelfRegisterResult { errors: string[], registrationId: number, email: string, username: string};
+export interface SelfRegisterResult { errors: string[], registrationId?: number, email: string, username: string};
 export interface ApproveSelfRegistrationResult {username: string, email: string, errors: string[]};
 
 class SelfRegistrationService {
@@ -38,7 +38,7 @@ class SelfRegistrationService {
                 errors.push(`username ${username} or ${email} is already taken`);
                 return {
                     errors,
-                    registrationId: null,
+                    registrationId: undefined,
                     email,
                     username,
                 };
@@ -62,7 +62,7 @@ class SelfRegistrationService {
             errors.push(`Unable to insert into DB ( Username ${username} or ${email} )`);
             const selfRegisterResult: SelfRegisterResult = {
                 errors,
-                registrationId: null,
+                registrationId: undefined,
                 email,
                 username,
             };

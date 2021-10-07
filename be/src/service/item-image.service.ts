@@ -191,7 +191,7 @@ class ItemImageService {
      */
      async addItemImage(itemId: number, fileName: string, image: Buffer, primaryImage?: boolean ): Promise<boolean> {
 
-        const ft: fileType.FileTypeResult = await fileType.fromBuffer(image);
+        const ft: fileType.FileTypeResult | undefined = await fileType.fromBuffer(image);
 
         const q: QueryResponse = await doInDbConnection(async (conn: Connection) => {
             if (primaryImage) {
@@ -199,7 +199,7 @@ class ItemImageService {
             }
             return await conn.query(`
                 INSERT INTO TBL_ITEM_IMAGE (ITEM_ID, \`PRIMARY\`, MIME_TYPE, NAME, SIZE, CONTENT) VALUES (?,?,?,?,?,?)
-            `, [itemId, primaryImage ? primaryImage : false, ft.mime, fileName,  image.length, image]);
+            `, [itemId, primaryImage ? primaryImage : false, (ft ? ft.mime : ''), fileName,  image.length, image]);
         });
         const r: boolean = (q.affectedRows > 0);
 

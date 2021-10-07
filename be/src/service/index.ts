@@ -129,7 +129,7 @@ import {eventsAsObservable, fireEvent, EventType, AllEvents, IncomingHttpEvent, 
     UpdateUserEvent, UpdateUserSettingsEvent, ValidationEvent, VerifyJwtTokenEvent, newEventSubscriptionRegistry}
     from "./event/event.service";
 
-import { getAllWorkflowDefinition, getWorkflowByView, addWorkflow, getWorkflowByViewActionAndType, getWorkflowInstanceTasksById,
+import { getWorkflowById, getWorkflowInstanceById, getAllWorkflowDefinition, getWorkflowByView, addWorkflow, getWorkflowByViewActionAndType, getWorkflowInstanceTasksById,
     getWorkflowInstanceTasksForUserCount, getWorkflowInstanceComments, postWorkflowInstanceComment, getWorkflowInstanceTasksForUser,
     getWorkflowInstanceCommentsCount, updateWorkflowStatus }
     from './workflow.service'

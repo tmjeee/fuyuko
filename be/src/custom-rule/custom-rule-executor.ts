@@ -51,7 +51,7 @@ const createCustomValidationContext = async (validationId: number, customRuleId:
                 `, ['FAILED', validationId]);
             });
         },
-        attribute: (attributeId: number): Attribute => {
+        attribute: (attributeId: number): Attribute | null | undefined => {
             return attributes.find((a: Attribute) => a.id === attributeId);
         },
         item: (): Item => {

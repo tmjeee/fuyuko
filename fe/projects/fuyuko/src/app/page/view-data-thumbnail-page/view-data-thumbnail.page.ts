@@ -21,6 +21,7 @@ import {PaginationComponentEvent} from '../../component/pagination-component/pag
 import {LoadingService} from '../../service/loading-service/loading.service';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {AuthService} from '../../service/auth-service/auth.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 export type DataListTypes = 'ALL' | 'FAVOURITE';
 
@@ -31,15 +32,15 @@ export type DataListTypes = 'ALL' | 'FAVOURITE';
 export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
 
 
-  itemAndAttributeSet: ItemAndAttributeSet;
-  favouritedItemIds: number[];
-  done: boolean;
+  itemAndAttributeSet?: ItemAndAttributeSet;
+  favouritedItemIds: number[] = [];
+  done = false;
 
 
-  search: string;
-  searchType: ItemSearchType;
-  currentView: View;
-  subscription: Subscription;
+  search!: string;
+  searchType!: ItemSearchType;
+  currentView?: View;
+  subscription?: Subscription;
 
   pagination: Pagination;
   formControlDataListTypes: FormControl;
@@ -59,7 +60,7 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.search = '';
     this.searchType = 'basic';
-    this.subscription = this.viewService.asObserver().subscribe((currentView: View) => {
+    this.subscription = this.viewService.asObserver().subscribe((currentView: View | undefined) => {
       this.currentView = currentView;
       if (this.currentView) {
         this.reload();
@@ -83,8 +84,8 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
   reload() {
     this.done = false;
     this.loadingService.startLoading();
-    const viewId = this.currentView.id;
-    const userId = this.authService.myself().id;
+    const viewId = assertDefinedReturn(this.currentView).id;
+    const userId = assertDefinedReturn(this.authService.myself()).id;
     combineLatest([
       this.attributeService.getAllAttributesByView(viewId)
           .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
@@ -104,13 +105,13 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
       // favourite item ids
       this.itemService.getFavouriteItemIds(viewId, userId)
     ]).pipe(
-      map( (r: [Attribute[], PaginableApiResponse<Item[]>, number[]]) => {
-        const attributes: Attribute[] = r[0];
-        const items: Item[] = r[1].payload;
+      map( (r: [Attribute[] | undefined, PaginableApiResponse<Item[]>, number[]]) => {
+        const attributes: Attribute[] | undefined = r[0];
+        const items: Item[] | undefined = r[1].payload;
         this.pagination.update(r[1]);
         this.itemAndAttributeSet = {
-          attributes,
-          items,
+          attributes: attributes ?? [],
+          items: items ?? [],
         };
         this.favouritedItemIds = r[2];
         this.done = true;
@@ -127,8 +128,8 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
     switch ($event.type) {
       case 'modification':
         combineLatest([
-          this.itemService.saveItems(this.currentView.id, $event.modifiedItems),
-          this.itemService.deleteItems(this.currentView.id, $event.deletedItems)
+          this.itemService.saveItems(assertDefinedReturn(this.currentView).id, $event.modifiedItems),
+          this.itemService.deleteItems(assertDefinedReturn(this.currentView).id, $event.deletedItems)
         ]).subscribe((r: [ApiResponse, ApiResponse]) => {
           if ($event.modifiedItems.length) {
             toNotifications(this.notificationService, r[0]);
@@ -154,31 +155,37 @@ export class ViewDataThumbnailPageComponent implements OnInit, OnDestroy {
   onCarouselEvent($event: CarouselComponentEvent) {
     switch ($event.type) {
       case 'delete': {
-        this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
-            tap((r: ApiResponse) => {
-              toNotifications(this.notificationService, r);
-              this.reload();
-            })
-        ).subscribe();
+        if ($event.image) {
+          this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
+              tap((r: ApiResponse) => {
+                toNotifications(this.notificationService, r);
+                this.reload();
+              })
+          ).subscribe();
+        }
         break;
       }
       case 'markAsPrimary': {
-        this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
-           tap((r: ApiResponse) => {
-             toNotifications(this.notificationService, r);
-             this.reload();
-           })
-        ).subscribe();
+        if ($event.image) {
+          this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
+              tap((r: ApiResponse) => {
+                toNotifications(this.notificationService, r);
+                this.reload();
+              })
+          ).subscribe();
+        }
         break;
       }
       case 'upload': {
+        if ($event.file) {
           this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
               tap((r: ApiResponse) => {
                 toNotifications(this.notificationService, r);
                 this.reload();
               })
           ).subscribe();
-          break;
+        }
+        break;
       }
     }
   }

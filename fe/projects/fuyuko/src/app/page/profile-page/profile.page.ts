@@ -24,15 +24,15 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
 
-  ready: boolean;
-  avatarsReady: boolean;
-  allPredefinedAvatars: GlobalAvatar[];
-  myself: User;
-  allThemes: Theme[];
+  ready = false ;
+  avatarsReady = false ;
+  allPredefinedAvatars: GlobalAvatar[] = [];
+  myself?: User;
+  allThemes: Theme[] = [];
 
   formControlTheme: FormControl;
 
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
   constructor(private avatarService: AvatarService,
               private themeService: ThemeService,
@@ -59,7 +59,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     ).subscribe();
     this.subscription = this.authService.asObservable()
       .pipe(
-        map((myself: User) => {
+        map((myself: User | undefined) => {
           this.myself = myself;
 
           if (this.myself) { // myself can be null after logged out callback
@@ -86,13 +86,15 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   onThemeSelectionChanged(event: MatSelectChange) {
     const theme: Theme = event.value as Theme;
     this.themeService.setTheme(theme);
-    this.myself.theme = theme.theme.toString();
     this.formControlTheme.setValue(theme);
-    this.authService.saveTheme(this.myself, this.myself.theme).pipe(
-        tap((_: User) => {
-            this.notificationsService.success('Success', 'Theme changed');
-        })
-    ).subscribe();
+    if (this.myself) {
+        this.myself.theme = theme.theme.toString();
+        this.authService.saveTheme(this.myself, this.myself.theme).pipe(
+            tap((_: User) => {
+                this.notificationsService.success('Success', 'Theme changed');
+            })
+        ).subscribe();
+    }
   }
 
   onAvatarComponentEvent(event: AvatarComponentEvent) {
@@ -101,35 +103,39 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       this.globalCommunicationService.reloadAvatar();
       toNotifications(this.notificationsService, r);
     };
-    if (avatar instanceof File) {
+    if (avatar instanceof File && this.myself) {
       this.avatarService.saveUserCustomAvatar(this.myself.id, avatar)
           .pipe( tap(f.bind(this) as (r: UserAvatarResponse) => void)).subscribe();
-    } else if (avatar) { // not falsy
+    } else if (avatar && this.myself) { // not falsy
       this.avatarService.saveUserAvatar(this.myself.id, avatar.name)
           .pipe(tap(f.bind(this) as (r: UserAvatarResponse) => void)).subscribe();
     }
   }
 
   onProfileInfoEvent(event: ProfileInfoComponentEvent) {
-    this.myself.firstName = event.firstName;
-    this.myself.lastName = event.lastName;
-    this.myself.email = event.email;
-    this.authService
-        .saveMyself(this.myself)
-        .pipe(
-            tap((_: User) => {
-              this.notificationsService.success('Success', 'Profile information updated');
-            })
-        ).subscribe();
+      if (this.myself) {
+          this.myself.firstName = event.firstName;
+          this.myself.lastName = event.lastName;
+          this.myself.email = event.email;
+          this.authService
+              .saveMyself(this.myself)
+              .pipe(
+                  tap((_: User) => {
+                      this.notificationsService.success('Success', 'Profile information updated');
+                  })
+              ).subscribe();
+      }
   }
 
   onPasswordEvent(event: PasswordComponentEvent) {
-    this.authService
-        .savePassword(this.myself, event.password)
-        .pipe(
-            tap((_) => {
-              this.notificationsService.success('Success', 'Password updated');
-            })
-        ).subscribe();
+      if (this.myself) {
+          this.authService
+              .savePassword(this.myself, event.password)
+              .pipe(
+                  tap((_) => {
+                      this.notificationsService.success('Success', 'Password updated');
+                  })
+              ).subscribe();
+      }
   }
 }

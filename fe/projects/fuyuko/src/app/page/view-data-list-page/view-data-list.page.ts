@@ -17,6 +17,7 @@ import {PaginationComponentEvent} from '../../component/pagination-component/pag
 import {LoadingService} from '../../service/loading-service/loading.service';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {AuthService} from '../../service/auth-service/auth.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 export type DataListTypes = 'ALL' | 'FAVOURITE';
 
@@ -26,14 +27,14 @@ export type DataListTypes = 'ALL' | 'FAVOURITE';
 })
 export class ViewDataListPageComponent implements OnInit, OnDestroy {
 
-  itemAndAttributeSet: ItemAndAttributeSet;
-  favouritedItemIds: number[];
-  done: boolean;
+  itemAndAttributeSet?: ItemAndAttributeSet;
+  favouritedItemIds: number[] = [];
+  done = false;
 
-  search: string;
-  searchType: ItemSearchType;
-  currentView: View;
-  subscription: Subscription;
+  search!: string;
+  searchType!: ItemSearchType;
+  currentView?: View;
+  subscription?: Subscription;
 
   pagination: Pagination;
   formControlDataListTypes: FormControl;
@@ -53,7 +54,7 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.search = '';
     this.searchType = 'basic';
-    this.subscription = this.viewService.asObserver().subscribe((currentView: View) => {
+    this.subscription = this.viewService.asObserver().subscribe((currentView: View | undefined) => {
       this.currentView = currentView;
       if (this.currentView) {
         this.reload();
@@ -77,35 +78,36 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   reload() {
     this.done = false;
     this.loadingService.startLoading();
-    const viewId = this.currentView.id;
-    const userId = this.authService.myself().id;
+    const viewId = assertDefinedReturn(this.currentView).id;
+    const userId = assertDefinedReturn(this.authService.myself()).id;
     combineLatest([
         this.attributeService.getAllAttributesByView(viewId)
             .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
         (this.search && this.searchType) ?
             // search
             (this.formControlDataListTypes.value === 'ALL' ?
-              this.itemService.searchForItems(viewId, this.searchType, this.search, this.pagination.limitOffset()) :    // search for all items
-              this.itemService.searchForFavouriteItems(viewId, userId, this.searchType,           // search for favourite items
+              // search for all items
+              this.itemService.searchForItems(viewId, this.searchType, this.search, this.pagination.limitOffset()) :
+              // search for favourite items
+              this.itemService.searchForFavouriteItems(viewId, userId, this.searchType,
                   this.search, this.pagination.limitOffset()))
-
             :
 
             // non-search
             (this.formControlDataListTypes.value === 'ALL' ?
-              this.itemService.getAllItems(viewId, this.pagination.limitOffset()) :                                     // get all items
+              this.itemService.getAllItems(viewId, this.pagination.limitOffset()) :  // get all items
               this.itemService.getFavouriteItems(viewId, userId, this.pagination.limitOffset()))  // get favourite items
         ,
         // favourite item ids
         this.itemService.getFavouriteItemIds(viewId, userId)
     ]).pipe(
-        map( (r: [Attribute[], PaginableApiResponse<Item[]>, number[]]) => {
-          const attributes: Attribute[] = r[0];
-          const items: Item[] = r[1].payload;
+        map( (r: [Attribute[] | undefined, PaginableApiResponse<Item[]>, number[]]) => {
+          const attributes: Attribute[] | undefined = r[0];
+          const items: Item[] | undefined = r[1].payload;
           this.pagination.update(r[1]);
           this.itemAndAttributeSet = {
-            attributes,
-            items,
+            attributes: attributes ?? [],
+            items: items ?? [],
           };
           this.favouritedItemIds = r[2];
           this.done = true;
@@ -126,18 +128,20 @@ export class ViewDataListPageComponent implements OnInit, OnDestroy {
   onDataListEvent($event: DataListComponentEvent) {
     switch ($event.type) {
       case 'modification':
-        combineLatest([
-          this.itemService.saveItems(this.currentView.id, $event.modifiedItems),
-          this.itemService.deleteItems(this.currentView.id, $event.deletedItems)
-        ]).subscribe((r: [ApiResponse, ApiResponse]) => {
-          if ($event.modifiedItems.length) {
-            toNotifications(this.notificationService, r[0]);
-          }
-          if ($event.deletedItems.length) {
-            toNotifications(this.notificationService, r[1]);
-          }
-          this.reload();
-        });
+        if (this.currentView) {
+          combineLatest([
+            this.itemService.saveItems(this.currentView.id, $event.modifiedItems),
+            this.itemService.deleteItems(this.currentView.id, $event.deletedItems)
+          ]).subscribe((r: [ApiResponse, ApiResponse]) => {
+            if ($event.modifiedItems.length) {
+              toNotifications(this.notificationService, r[0]);
+            }
+            if ($event.deletedItems.length) {
+              toNotifications(this.notificationService, r[1]);
+            }
+            this.reload();
+          });
+        }
         break;
       case 'reload':
         this.reload();

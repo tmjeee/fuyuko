@@ -45,7 +45,7 @@ export class DataThumbnailComponent implements OnInit {
   pendingDeletion: Item[];
 
   @Input() enableSearch: boolean;
-  @Input() itemAndAttributeSet: ItemAndAttributeSet;
+  @Input() itemAndAttributeSet!: ItemAndAttributeSet;
   @Input() favouritedItemIds: number[];
 
   constructor(private matDialog: MatDialog) {
@@ -89,7 +89,7 @@ export class DataThumbnailComponent implements OnInit {
   showMore($event: MouseEvent, item: Item) {
     $event.preventDefault();
     $event.stopImmediatePropagation();
-    const showMore: boolean = this.isShowMore(item);
+    const showMore = this.isShowMore(item);
     this.showMoreMap.set(item.id, !showMore);
   }
 
@@ -121,7 +121,7 @@ export class DataThumbnailComponent implements OnInit {
   }
 
   onDataEditorEvent($event: ItemValueAndAttribute, item: Item) {
-    let i: Item = this.pendingSaving.find((tmpI: Item) => tmpI.id === item.id);
+    let i: Item | undefined = this.pendingSaving.find((tmpI: Item) => tmpI.id === item.id);
     if (!i) {
       i = {
         id: item.id,
@@ -167,12 +167,12 @@ export class DataThumbnailComponent implements OnInit {
 
   delete($event: MouseEvent) {
     const i: Item[] = this.selectionModel.selected;
-    for (const _i of i) {
-      if (_i.id > 0) { // delete of persisted item only
-        this.pendingDeletion.push(_i);
+    for (const i2 of i) {
+      if (i2.id > 0) { // delete of persisted item only
+        this.pendingDeletion.push(i2);
       }
-      this.pendingSaving = this.pendingSaving.filter((i: Item) => i.id != _i.id);
-      const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === _i.id);
+      this.pendingSaving = this.pendingSaving.filter((i3: Item) => i3.id !== i2.id);
+      const index = this.itemAndAttributeSet.items.findIndex((tmpI: Item) => tmpI.id === i2.id);
       if (index !== -1) {
         this.itemAndAttributeSet.items.splice(index, 1);
       }

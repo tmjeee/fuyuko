@@ -13,19 +13,20 @@ import {RuleEditorComponentEvent} from '../../component/rules-component/rule-edi
 import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
 import {LoadingService} from '../../service/loading-service/loading.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
 export class AbstractRulePageComponent implements OnInit, OnDestroy {
 
-    subscription: Subscription;
+    subscription?: Subscription;
 
-    currentView: View;
-    attributes: Attribute[];
-    rule: Rule;
+    currentView?: View;
+    attributes: Attribute[] = [];
+    rule?: Rule;
 
-    viewReady: boolean;
-    ruleReady: boolean;
+    viewReady = false ;
+    ruleReady = false ;
 
     constructor(protected viewService: ViewService,
                 protected route: ActivatedRoute,
@@ -42,7 +43,7 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
         this.subscription = this.viewService
             .asObserver()
             .pipe(
-                tap((currentView: View) => {
+                tap((currentView: View | undefined) => {
                     if (currentView) {
                         this.currentView = currentView;
                         this.reload();
@@ -63,13 +64,13 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
     }
 
     reload() {
-        this.ruleReady = false;
-        const ruleId: string = this.route.snapshot.paramMap.get('ruleId');
-        if (ruleId) {
+        const ruleId: string | null = this.route.snapshot.paramMap.get('ruleId');
+        if (ruleId && this.currentView) {
+            this.ruleReady = false;
             this.loadingService.startLoading();
             zip(
                 this.attributeService.getAllAttributesByView(this.currentView.id)
-                    .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
+                    .pipe(map((r: PaginableApiResponse<Attribute[]>) => assertDefinedReturn(r.payload))),
                 this.ruleService.getRuleByView(this.currentView.id, Number(ruleId))
             ).pipe(
                 tap((r: [Attribute[], Rule]) => {
@@ -81,37 +82,37 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                     this.loadingService.stopLoading();
                 })
             ).subscribe();
-        } else {
+        } else if (this.currentView) {
             this.loadingService.startLoading();
             combineLatest([
                 this.attributeService.getAllAttributesByView(this.currentView.id)
-                    .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
+                    .pipe(map((r: PaginableApiResponse<Attribute[]>) => assertDefinedReturn(r.payload))),
             ]).pipe(
                 tap((r: [Attribute[]]) => {
                     this.attributes = r[0];
                     this.rule = {
                         id: -1,
                         name: '',
-                        status: null,
-                        level: null,
+                        status: undefined,
+                        level: undefined,
                         description: '',
                         validateClauses: [{
                            id: -1,
-                           attributeId: null,
-                           attributeName: null,
-                           attributeType: null,
-                           operator: null,
+                           attributeId: undefined,
+                           attributeName: undefined,
+                           attributeType: undefined,
+                           operator: undefined,
                            condition: []
                         }],
                         whenClauses: [{
                             id: -1,
-                            attributeId: null,
-                            attributeName: null,
-                            attributeType: null,
-                            operator: null,
+                            attributeId: undefined,
+                            attributeName: undefined,
+                            attributeType: undefined,
+                            operator: undefined,
                             condition: []
                         }]
-                    };
+                    } as any; // todo: needs improvement
                 }),
                 finalize(() => {
                     this.ruleReady = true;
@@ -127,7 +128,7 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                 await this.router.navigate(['/view-layout', {outlets: {primary: ['rules'], help: ['view-help'] }}]);
                 break;
             case 'update':
-                if ($event.rule.id) { // existing
+                if ($event.rule && $event.rule.id && this.currentView) { // existing
                     this.ruleService.updateRule(this.currentView.id, $event.rule)
                         .pipe(
                             tap((_: ApiResponse) => {
@@ -135,7 +136,7 @@ export class AbstractRulePageComponent implements OnInit, OnDestroy {
                                 setTimeout(() => this.reload());
                             })
                         ).subscribe();
-                } else { // new
+                } else if ($event.rule && this.currentView) { // new
                     this.ruleService.addRule(this.currentView.id, $event.rule)
                         .pipe(
                             tap((_: ApiResponse) => {

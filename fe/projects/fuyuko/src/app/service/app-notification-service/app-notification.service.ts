@@ -7,6 +7,7 @@ import {map, tap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_POST_CREATE_USER_NOTIFICATION = () => `${config().api_host_url}/user/:userId/notification`;
 const URL_GET_USER_NOTIFICATIONS = () => `${config().api_host_url}/user/:userId/notifications`;
@@ -18,7 +19,7 @@ export class AppNotificationService implements OnDestroy {
 
   constructor(private authService: AuthService,
               private httpClient: HttpClient) {
-        this.subject = new BehaviorSubject(null);
+        this.subject = new BehaviorSubject([] as AppNotification[]);
   }
 
   asObservable(): Observable<AppNotification[]> {
@@ -49,14 +50,14 @@ export class AppNotificationService implements OnDestroy {
           .get<ApiResponse<AppNotification[]>>(URL_GET_USER_NOTIFICATIONS()
               .replace(':userId', String(user.id)))
           .pipe(
-              map((r: ApiResponse<AppNotification[]>) => r.payload)
+              map((r: ApiResponse<AppNotification[]>) => assertDefinedReturn(r.payload))
           );
   }
 
   ngOnDestroy(): void {
       if (this.subject) {
         this.subject.complete();
-        this.subject = null;
+        this.subject = new BehaviorSubject<AppNotification[]>([]);
       }
   }
 }

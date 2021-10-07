@@ -24,7 +24,7 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const jobId = Number(req.params.jobId);
-        const lastLogId = req.params.lastLogId ? Number(req.params.lastLogId) : null;
+        const lastLogId = req.params.lastLogId ? Number(req.params.lastLogId) : undefined;
         const jobAndLogs: JobAndLogs = await getJobDetailsById(jobId, lastLogId);
         const apiResponse: ApiResponse<JobAndLogs> = {
             messages: [{

@@ -7,7 +7,7 @@ import {RuleService} from '../../service/rule-service/rule.service';
 import {Rule} from '@fuyuko-common/model/rule.model';
 import {RulesTableComponentEvent} from '../../component/rules-component/rules-table.component';
 import {CounterService} from '../../service/counter-service/counter.service';
-import {combineAll, finalize, flatMap, map, tap} from 'rxjs/operators';
+import {combineAll, finalize, flatMap, map, mergeMap, tap} from 'rxjs/operators';
 import {combineLatest, of, Subscription} from 'rxjs';
 import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toNotifications} from '../../service/common.service';
@@ -17,6 +17,7 @@ import {CustomRuleService} from '../../service/custom-rule-service/custom-rule.s
 import {CustomRule, CustomRuleForView} from '@fuyuko-common/model/custom-rule.model';
 import {CustomRuleTableComponentEvent} from '../../component/rules-component/custom-rule-table.component';
 import {LoadingService} from '../../service/loading-service/loading.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 @Component({
@@ -28,16 +29,16 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class ViewRulesPageComponent implements OnInit, OnDestroy {
 
-    currentView: View;
-    attributes: Attribute[];
-    rules: Rule[];
-    customRules: CustomRule[];
-    customRulesForView: CustomRuleForView[];
+    currentView?: View;
+    attributes: Attribute[] = [];
+    rules: Rule[] = [];
+    customRules: CustomRule[] = [];
+    customRulesForView: CustomRuleForView[] = [];
 
-    subscription: Subscription;
+    subscription?: Subscription;
 
-    viewReady: boolean;
-    rulesReady: boolean;
+    viewReady = false;
+    rulesReady = false;
 
     constructor(private viewService: ViewService,
                 private router: Router,
@@ -55,7 +56,7 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
         this.subscription = this.viewService
             .asObserver()
             .pipe(
-                map((currentView: View) => {
+                map((currentView: View | undefined) => {
                     if (currentView) {
                         this.currentView = currentView;
                         this.w();
@@ -77,25 +78,27 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
 
     private w() {
         this.rulesReady = false;
-        this.loadingService.startLoading();
-        combineLatest([
-            this.attributeService.getAllAttributesByView(this.currentView.id)
-                .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload)),
-            this.ruleService.getAllRulesByView(this.currentView.id),
-            this.customRuleService.getAllCustomRules(),
-            this.customRuleService.getCustomRulesByView(this.currentView.id),
-        ]).pipe(
-            map((r: [Attribute[], Rule[], CustomRule[], CustomRuleForView[]]) => {
-                this.attributes = r[0];
-                this.rules = r[1];
-                this.customRules = r[2];
-                this.customRulesForView = r[3];
-            }),
-            finalize(() => {
-                this.rulesReady = true;
-                this.loadingService.stopLoading();
-            })
-        ).subscribe();
+        if (this.currentView) {
+            this.loadingService.startLoading();
+            combineLatest([
+                this.attributeService.getAllAttributesByView(this.currentView.id)
+                    .pipe(map((r: PaginableApiResponse<Attribute[]>) => assertDefinedReturn(r.payload))),
+                this.ruleService.getAllRulesByView(this.currentView.id),
+                this.customRuleService.getAllCustomRules(),
+                this.customRuleService.getCustomRulesByView(this.currentView.id),
+            ]).pipe(
+                map((r: [Attribute[], Rule[], CustomRule[], CustomRuleForView[]]) => {
+                    this.attributes = r[0];
+                    this.rules = r[1];
+                    this.customRules = r[2];
+                    this.customRulesForView = r[3];
+                }),
+                finalize(() => {
+                    this.rulesReady = true;
+                    this.loadingService.stopLoading();
+                })
+            ).subscribe();
+        }
     }
 
     reload() {
@@ -116,39 +119,51 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
                 }]);
                 break;
             case 'edit':
-                await this.router.navigate(['/view-layout', {
-                    outlets: {
-                        primary: ['edit-rule', `${$event.rule.id}`],
-                        help: ['view-help']
-                    }
-                }]);
+                if ($event.rule) {
+                    await this.router.navigate(['/view-layout', {
+                        outlets: {
+                            primary: ['edit-rule', `${$event.rule.id}`],
+                            help: ['view-help']
+                        }
+                    }]);
+                }
                 break;
             case 'delete':
-                this.ruleService.deleteRule(this.currentView.id, $event.rule)
-                    .pipe(
-                        map((r: ApiResponse) => {
-                            toNotifications(this.notificationService, r);
-                            this.reload();
-                        })
-                    ).subscribe();
+                if ($event.rule) {
+                    if (this.currentView) {
+                        this.ruleService.deleteRule(this.currentView.id, $event.rule)
+                            .pipe(
+                                map((r: ApiResponse) => {
+                                    toNotifications(this.notificationService, r);
+                                    this.reload();
+                                })
+                            ).subscribe();
+                    }
+                }
                 break;
             case 'enable':
-                this.ruleService.enableRule(this.currentView.id, $event.rule)
-                    .pipe(
-                        map((r: ApiResponse) => {
-                            toNotifications(this.notificationService, r);
-                            this.reload();
-                        })
-                    ).subscribe();
+                if ($event.rule) {
+                    if (this.currentView) {
+                        this.ruleService.enableRule(this.currentView.id, $event.rule)
+                            .pipe(
+                                map((r: ApiResponse) => {
+                                    toNotifications(this.notificationService, r);
+                                    this.reload();
+                                })
+                            ).subscribe();
+                    }
+                }
                 break;
             case 'disable':
-                this.ruleService.disableRule(this.currentView.id, $event.rule)
-                    .pipe(
-                        map((r: ApiResponse) => {
-                            toNotifications(this.notificationService, r);
-                            this.reload();
-                        })
-                    ).subscribe();
+                if ($event.rule && this.currentView) {
+                    this.ruleService.disableRule(this.currentView.id, $event.rule)
+                        .pipe(
+                            map((r: ApiResponse) => {
+                                toNotifications(this.notificationService, r);
+                                this.reload();
+                            })
+                        ).subscribe();
+                }
                 break;
         }
     }
@@ -156,67 +171,79 @@ export class ViewRulesPageComponent implements OnInit, OnDestroy {
     onCustomRuleTableEvent($event: CustomRuleTableComponentEvent) {
         switch ($event.type) {
             case 'add': {
-                const rules: CustomRule[] = $event.customRules;
-                let apiResponse: ApiResponse = null;
-                this.customRuleService.addCustomRuleToView(this.currentView.id, rules)
-                    .pipe(
-                        flatMap((_: ApiResponse) => {
-                            apiResponse = _;
-                            return [this.customRuleService.getCustomRulesByView(this.currentView.id)];
-                        }),
-                        combineAll(),
-                        tap((r: CustomRuleForView[][]) => {
-                            this.customRulesForView = r[0];
-                            toNotifications(this.notificationService, apiResponse);
-                        })
-                    ).subscribe();
+                if (this.currentView) {
+                    const rules: CustomRule[] = $event.customRules ?? [];
+                    let apiResponse: ApiResponse;
+                    this.customRuleService.addCustomRuleToView(this.currentView.id, rules)
+                        .pipe(
+                            mergeMap((_: ApiResponse) => {
+                                apiResponse = _;
+                                return [this.customRuleService.getCustomRulesByView(
+                                    assertDefinedReturn(this.currentView).id)];
+                            }),
+                            combineAll(),
+                            tap((r: CustomRuleForView[][]) => {
+                                this.customRulesForView = r[0];
+                                toNotifications(this.notificationService, apiResponse);
+                            })
+                        ).subscribe();
+                }
                 break;
             }
             case 'delete': {
-                const rules: CustomRuleForView[] = $event.customRulesForView;
-                let apiResponse: ApiResponse;
-                this.customRuleService.removeCustomRuleFromView(this.currentView.id, rules)
-                    .pipe(
-                        map((_: ApiResponse) => {
-                            apiResponse = _;
-                            return this.customRuleService.getCustomRulesByView(this.currentView.id);
-                        }),
-                        combineAll(),
-                        tap((r: CustomRuleForView[][]) => {
-                            this.customRulesForView = r[0];
-                            toNotifications(this.notificationService, apiResponse);
-                        })
-                    ).subscribe();
+                if (this.currentView) {
+                    const rules: CustomRuleForView[] = $event.customRulesForView ?? [];
+                    let apiResponse: ApiResponse;
+                    this.customRuleService.removeCustomRuleFromView(this.currentView.id, rules)
+                        .pipe(
+                            map((_: ApiResponse) => {
+                                apiResponse = _;
+                                return this.customRuleService.getCustomRulesByView(
+                                    assertDefinedReturn(this.currentView).id);
+                            }),
+                            combineAll(),
+                            tap((r: CustomRuleForView[][]) => {
+                                this.customRulesForView = r[0];
+                                toNotifications(this.notificationService, apiResponse);
+                            })
+                        ).subscribe();
+                }
                 break;
             }
             case 'enabled': {
-                const rules: CustomRuleForView[] = $event.customRulesForView;
-                this.customRuleService.enableCustomRuleInView(this.currentView.id, rules)
-                    .pipe(
-                        map((_: ApiResponse[]) => {
-                            return this.customRuleService.getCustomRulesByView(this.currentView.id);
-                        }),
-                        combineAll(),
-                        tap((r: CustomRuleForView[][]) => {
-                            this.customRulesForView = r[0];
-                            this.notificationService.success('Enabled', `Custom rule(s) enabled`);
-                        })
-                    ).subscribe();
+                if (this.currentView) {
+                    const rules: CustomRuleForView[] = $event.customRulesForView ?? [];
+                    this.customRuleService.enableCustomRuleInView((this.currentView).id, rules)
+                        .pipe(
+                            map((_: ApiResponse[]) => {
+                                return this.customRuleService.getCustomRulesByView(
+                                    assertDefinedReturn(this.currentView).id);
+                            }),
+                            combineAll(),
+                            tap((r: CustomRuleForView[][]) => {
+                                this.customRulesForView = r[0];
+                                this.notificationService.success('Enabled', `Custom rule(s) enabled`);
+                            })
+                        ).subscribe();
+                }
                 break;
             }
             case 'disabled': {
-                const rules: CustomRuleForView[] = $event.customRulesForView;
-                this.customRuleService.disableCustomRuleInView(this.currentView.id, rules)
-                    .pipe(
-                        map((_) => {
-                            return this.customRuleService.getCustomRulesByView(this.currentView.id);
-                        }),
-                        combineAll(),
-                        tap((r: CustomRuleForView[][]) => {
-                            this.customRulesForView = r[0];
-                            this.notificationService.success('Deleted', `Custom rule(s) disabled`);
-                        })
-                    ).subscribe();
+                if (this.currentView) {
+                    const rules: CustomRuleForView[] = $event.customRulesForView ?? [];
+                    this.customRuleService.disableCustomRuleInView(this.currentView.id, rules)
+                        .pipe(
+                            map((_) => {
+                                return this.customRuleService.getCustomRulesByView(
+                                    assertDefinedReturn(this.currentView).id);
+                            }),
+                            combineAll(),
+                            tap((r: CustomRuleForView[][]) => {
+                                this.customRulesForView = r[0];
+                                this.notificationService.success('Deleted', `Custom rule(s) disabled`);
+                            })
+                        ).subscribe();
+                }
                 break;
             }
         }

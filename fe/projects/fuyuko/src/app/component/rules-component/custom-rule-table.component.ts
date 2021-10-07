@@ -17,12 +17,13 @@ export interface CustomRuleTableComponentEvent {
 export class CustomRuleTableComponent implements OnInit {
 
 
-    @Input() allCustomRules: CustomRule[];
-    @Input() customRulesInView: CustomRuleForView[];
+    @Input() allCustomRules: CustomRule[] = [];
+    @Input() customRulesInView: CustomRuleForView[] = [];
     @Output() events: EventEmitter<CustomRuleTableComponentEvent>;
-    mainControlsHidden: boolean;
 
-    formGroupAllCustomRules: FormGroup;
+    mainControlsHidden!: boolean;
+
+    formGroupAllCustomRules!: FormGroup;
 
     constructor(private formBuilder: FormBuilder) {
         this.events = new EventEmitter<CustomRuleTableComponentEvent>();

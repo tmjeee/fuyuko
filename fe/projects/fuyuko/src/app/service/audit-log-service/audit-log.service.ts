@@ -17,7 +17,7 @@ export class AuditLogService {
     constructor(private httpClient: HttpClient) {
     }
 
-    findAuditLogs(category: AuditCategory, level: Level, userId: number, log: string, limitOffset?: LimitOffset):
+    findAuditLogs(category: AuditCategory, level: Level, userId: number | undefined, log: string, limitOffset?: LimitOffset):
         Observable<PaginableApiResponse<AuditLog[]>> {
 
         const qCategory = category ? `&category=${category}` : ``;

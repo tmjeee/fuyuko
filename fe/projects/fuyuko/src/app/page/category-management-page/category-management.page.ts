@@ -17,6 +17,7 @@ import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-respon
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {toNotifications} from '../../service/common.service';
 import {LoadingService} from '../../service/loading-service/loading.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 @Component({
    templateUrl: './category-management.page.html',
@@ -24,18 +25,18 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class CategoryManagementPageComponent implements OnInit {
 
-   loading: boolean;
-   categoriesWithItems: CategoryWithItems[];
-   view: View;
+   loading!: boolean;
+   categoriesWithItems: CategoryWithItems[] = [];
+   view?: View;
 
-   getCategoriesWithItemsFn: GetCategoriesWithItemsFn;
-   getCategorySimpleItemsInCatgoryFn: GetCategorySimpleItemsInCategoryFn;
-   getCategorySimpleItemsNotInCategoryFn: GetCategorySimpleItemsNotInCategoryFn;
-   addCategoryFn: AddCategoryFn;
-   editCategoryFn: EditCategoryFn;
-   deleteCategoryFn: DeleteCategoryFn;
-   addItemsToCategoryFn: AddItemsToCategoryFn;
-   removeItemsFromCategoryFn: RemoveItemsFromCategoryFn;
+   getCategoriesWithItemsFn!: GetCategoriesWithItemsFn;
+   getCategorySimpleItemsInCatgoryFn!: GetCategorySimpleItemsInCategoryFn;
+   getCategorySimpleItemsNotInCategoryFn!: GetCategorySimpleItemsNotInCategoryFn;
+   addCategoryFn!: AddCategoryFn;
+   editCategoryFn!: EditCategoryFn;
+   deleteCategoryFn!: DeleteCategoryFn;
+   addItemsToCategoryFn!: AddItemsToCategoryFn;
+   removeItemsFromCategoryFn!: RemoveItemsFromCategoryFn;
 
 
    constructor(private viewService: ViewService,
@@ -60,46 +61,53 @@ export class CategoryManagementPageComponent implements OnInit {
       };
 
       this.addItemsToCategoryFn = (categoryId: number, items: CategorySimpleItem[]): Observable<ApiResponse> => {
-          return this.categoryService.addItemsToCategory(this.view.id, categoryId, items);
+            return this.categoryService.addItemsToCategory(
+                assertDefinedReturn(this.view).id, categoryId, items);
       };
 
       this.removeItemsFromCategoryFn = (categoryId: number, items: CategorySimpleItem[]): Observable<ApiResponse> => {
-          return this.categoryService.removeItemsFromCategory(this.view.id, categoryId, items);
+          return this.categoryService.removeItemsFromCategory(
+              assertDefinedReturn(this.view).id, categoryId, items);
       };
 
       this.addCategoryFn = (parentCategoryId: number, name: string, description: string): Observable<ApiResponse> => {
-        return this.categoryService.addCategory(this.view.id, parentCategoryId, name, description)
+        return this.categoryService.addCategory(
+            assertDefinedReturn(this.view).id, parentCategoryId, name, description)
             .pipe(
                 tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
             );
       };
 
       this.editCategoryFn = (categoryId: number, name: string, description: string): Observable<ApiResponse> => {
-          return this.categoryService.updateCategory(this.view.id, -1, categoryId, name, description)
+          return this.categoryService.updateCategory(
+              assertDefinedReturn(this.view).id, -1, categoryId, name, description)
               .pipe(
                   tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
               );
       };
 
       this.deleteCategoryFn = (categoryId: number): Observable<ApiResponse> => {
-          return this.categoryService.deleteCategory(this.view.id, categoryId)
+          return this.categoryService.deleteCategory(
+              assertDefinedReturn(this.view).id, categoryId)
               .pipe(
                   tap((r: ApiResponse) => toNotifications(this.notificationsService, r))
               );
       };
 
-      this.getCategorySimpleItemsInCatgoryFn = (viewId: number, categoryId: number, limitOffset?: LimitOffset): Observable<PaginableApiResponse<CategorySimpleItem[]>> => {
+      this.getCategorySimpleItemsInCatgoryFn = (viewId: number, categoryId: number, limitOffset?: LimitOffset):
+          Observable<PaginableApiResponse<CategorySimpleItem[]>> => {
           return this.categoryService.getCategorySimpleItemsInCategory(viewId, categoryId, limitOffset);
       };
 
-      this.getCategorySimpleItemsNotInCategoryFn = (viewId: number, categoryId: number, limitOffset?: LimitOffset): Observable<PaginableApiResponse<CategorySimpleItem[]>> => {
+      this.getCategorySimpleItemsNotInCategoryFn = (viewId: number, categoryId: number, limitOffset?: LimitOffset):
+          Observable<PaginableApiResponse<CategorySimpleItem[]>> => {
           return this.categoryService.getCategorySimpleItemsNotInCategory(viewId, categoryId, limitOffset);
       };
 
       this.loading = true;
       this.loadingService.startLoading();
       this.viewService.asObserver().pipe(
-         tap((v: View) => {
+         tap((v: View | undefined) => {
             this.view = v;
             this.loading = false;
          }),
@@ -114,9 +122,9 @@ export class CategoryManagementPageComponent implements OnInit {
        switch ($event.type) {
           case 'drop': {
               this.categoryService.updateCategoryHierarchy(
-                  this.view.id,
-                  $event.sourceItem.currentCategoryWithItems.id,
-                  $event.destinationItem.currentCategoryWithItems.id)
+                  assertDefinedReturn(this.view).id,
+                  assertDefinedReturn($event.sourceItem.currentCategoryWithItems).id,
+                  $event.destinationItem?.currentCategoryWithItems?.id)
                   .pipe(
                       tap((r: ApiResponse) => {
                           toNotifications(this.notificationsService, r);
@@ -127,8 +135,8 @@ export class CategoryManagementPageComponent implements OnInit {
           }
            case 'move-to-root': {
                this.categoryService.updateCategoryHierarchy(
-                   this.view.id,
-                   $event.sourceItem.currentCategoryWithItems.id)
+                   assertDefinedReturn(this.view).id,
+                   assertDefinedReturn($event.sourceItem.currentCategoryWithItems).id)
                    .pipe(
                        tap((r: ApiResponse) => {
                            toNotifications(this.notificationsService, r);

@@ -35,7 +35,7 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
         jobId: jobLogger.jobId
     } as ExportItemJobEvent);
 
-    (async ()=>{
+    await (async ()=>{
         try {
             // id,name,description,att1,att2,att3,att4,att5
             const headers: string[] = ['id', 'name', 'description', 'image'];

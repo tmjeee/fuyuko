@@ -19,6 +19,7 @@ import {JobsService} from '../../service/jobs-service/jobs.service';
 import {BulkEditService} from '../../service/bulk-edit-service/bulk-edit.service';
 import {NotificationsService} from 'angular2-notifications';
 import {LoadingService} from '../../service/loading-service/loading.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 @Component({
@@ -27,14 +28,14 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class BulkEditPageComponent implements OnInit, OnDestroy {
 
-  attributes: Attribute[];
-  allViews: View[];
+  attributes: Attribute[] = [];
+  allViews: View[] = [];
 
-  currentView: View;
-  subscription: Subscription;
-  getJobLogsFn: GetJobLogsFn;
-  getPreviewFn: GetPreviewFn;
-  scheduleBulkEditJobFn: ScheduleBulkEditJobFn;
+  currentView?: View;
+  subscription?: Subscription;
+  getJobLogsFn!: GetJobLogsFn;
+  getPreviewFn!: GetPreviewFn;
+  scheduleBulkEditJobFn!: ScheduleBulkEditJobFn;
 
 
   constructor(private viewService: ViewService,
@@ -51,7 +52,8 @@ export class BulkEditPageComponent implements OnInit, OnDestroy {
               finalize(() => this.loadingService.stopLoading())
           );
       };
-      this.getPreviewFn = (view: View, changeClauses: ItemValueAndAttribute[], whereClauses: ItemValueOperatorAndAttribute[]): Observable<BulkEditPackage> => {
+      this.getPreviewFn = (view: View, changeClauses: ItemValueAndAttribute[],
+                           whereClauses: ItemValueOperatorAndAttribute[]): Observable<BulkEditPackage> => {
           this.loadingService.startLoading();
           return this.bulkEditService.previewBuilEdit(view.id, changeClauses, whereClauses).pipe(
               finalize(() => this.loadingService.stopLoading()));
@@ -70,13 +72,13 @@ export class BulkEditPageComponent implements OnInit, OnDestroy {
             map(() => {
                 this.subscription = this.viewService.asObserver()
                     .pipe(
-                        map((v: View) => {
+                        map((v: View | undefined) => {
                             if (v) {
                                 this.loadingService.startLoading();
                                 this.currentView = this.allViews ? this.allViews.find((vv: View) => vv.id === v.id) : undefined;
-                                this.subscription = this.attributeService.getAllAttributesByView(this.currentView.id)
+                                this.subscription = this.attributeService.getAllAttributesByView(v.id)
                                     .pipe(
-                                        map((r: PaginableApiResponse<Attribute[]>) => r.payload),
+                                        map((r: PaginableApiResponse<Attribute[]>) => assertDefinedReturn(r.payload)),
                                         map((a: Attribute[]) => {
                                             this.attributes = a;
                                         }),

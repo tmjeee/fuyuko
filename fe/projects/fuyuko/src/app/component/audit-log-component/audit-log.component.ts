@@ -12,7 +12,7 @@ import {PaginationComponentEvent} from '../pagination-component/pagination.compo
 import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 
 export type FindAuditLogsFn =
-    (category: AuditCategory, level: Level, userId: number, log: string, limitOffset: LimitOffset) =>
+    (category: AuditCategory, level: Level, userId: number | undefined, log: string, limitOffset: LimitOffset) =>
         Observable<PaginableApiResponse<AuditLog[]>>;
 export type FindUsersFn = (username: string) => Observable<User[]>;
 
@@ -41,8 +41,8 @@ export class AuditLogDataSource extends DataSource<AuditLog> {
 })
 export class AuditLogComponent implements OnInit {
 
-   @Input() findAuditLogsFn: FindAuditLogsFn;
-   @Input() findUsersFn: FindUsersFn;
+   @Input() findAuditLogsFn!: FindAuditLogsFn;
+   @Input() findUsersFn!: FindUsersFn;
 
 
    AUDIT_CATEGORIES: AuditCategory[] = [...AUDIT_CATEGORIES];
@@ -54,9 +54,9 @@ export class AuditLogComponent implements OnInit {
    formControlLogSearch: FormControl;
 
    filteredUsers: Observable<User[]> = of([]);
-   dataSource: AuditLogDataSource;
+   dataSource!: AuditLogDataSource;
    displayedColumns: string[];
-   pagination: Pagination;
+   pagination!: Pagination;
    usernameDisplayWith: (value: any) => string;
 
 
@@ -95,9 +95,9 @@ export class AuditLogComponent implements OnInit {
         const user: User = this.formControlUsernameSearch.value;
         const log: string = this.formControlLogSearch.value;
 
-        this.findAuditLogsFn(category, level, (user ? user.id : null), log, this.pagination.limitOffset()).pipe(
+        this.findAuditLogsFn(category, level, (user ? user.id : undefined), log, this.pagination.limitOffset()).pipe(
             tap((r: PaginableApiResponse<AuditLog[]>) => {
-                this.dataSource.update(r.payload);
+                this.dataSource.update( r.payload ?? []);
                 this.pagination.update({
                     limit: r.limit,
                     offset: r.offset,

@@ -19,14 +19,15 @@ export type GetAttributesByViewFn = (view: View) => Observable<Attribute[]>;
 })
 export class WorkflowComponent {
 
-    @Input() views: View[];
-    @Input() workflowDefinitions: WorkflowDefinition[];
-    selectedView: View;
+    @Input() views: View[] = [];
+    @Input() workflowDefinitions: WorkflowDefinition[] = [];
+    selectedView?: View;
 
-    @Input() createWorkflowFn: CreateWorkflowFn;
-    @Input() getWorkflowsByViewFn: GetWorkflowsByViewFn;
-    @Input() getAttributesByViewFn: GetAttributesByViewFn;
-    currentViewWorkflows: Workflow[];
+    @Input() createWorkflowFn!: CreateWorkflowFn;
+    @Input() getWorkflowsByViewFn!: GetWorkflowsByViewFn;
+    @Input() getAttributesByViewFn!: GetAttributesByViewFn;
+
+    currentViewWorkflows: Workflow[] = [];
 
     constructor(private matDialog: MatDialog) { }
 

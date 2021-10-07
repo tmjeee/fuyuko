@@ -1,7 +1,7 @@
 <div class="workflow-instance-task-table">
     <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <th mat-header-cell *matHeaderCellDef>Workflow Instance Task Name</th>
             <td mat-cell *matCellDef="let workflowInstanceTask">{{workflowInstanceTask.name}}</td>
         </ng-container>
         <ng-container matColumnDef="workflowInstanceName">
@@ -19,6 +19,10 @@
         <ng-container matColumnDef="approverUsername">
             <th mat-header-cell *matHeaderCellDef>Approver Username</th>
             <td mat-cell *matCellDef="let workflowInstanceTask">{{workflowInstanceTask.approver.username}}</td>
+        </ng-container>
+        <ng-container matColumnDef="approvalStage">
+            <th mat-header-cell *matHeaderCellDef>Approval Stage</th>
+            <td mat-cell *matCellDef="let workflowInstanceTask">{{workflowInstanceTask.approvalStage}}</td>
         </ng-container>
         <ng-container matColumnDef="creationDate">
             <th mat-header-cell *matHeaderCellDef>Creation Date</th>

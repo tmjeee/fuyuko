@@ -17,6 +17,7 @@ import {User} from '@fuyuko-common/model/user.model';
  * </div>
  */
 @Directive({
+    // tslint:disable-next-line:directive-selector
     selector: '[security]'
 })
 export class SecurityDirective {
@@ -35,7 +36,7 @@ export class SecurityDirective {
 
     @Input() set securityAllOfRoles(roleNames: string[]) {
         if (roleNames && roleNames.length > 0) {
-            const myself: User = this.authService.myself();
+            const myself: User | undefined = this.authService.myself();
             if (myself && myself.groups && myself.groups.length) {
                 for (const g of myself.groups) {
                     if (g.roles) {
@@ -56,7 +57,7 @@ export class SecurityDirective {
 
     @Input() set securityAnyRole(roleNames: string[]) {
         if (roleNames && roleNames.length > 0) {
-            const myself: User = this.authService.myself();
+            const myself: User | undefined = this.authService.myself();
             if (myself && myself.groups) {
                 for (const g of myself.groups) {
                     if (g.roles) {
@@ -76,7 +77,7 @@ export class SecurityDirective {
 
     @Input() set securityNoneOfRoles(roleNames: string[]) {
         if (roleNames && roleNames.length > 0) {
-            const myself: User = this.authService.myself();
+            const myself: User | undefined = this.authService.myself();
             if (myself && myself.groups) {
                 for (const g of myself.groups) {
                     if (g.roles) {

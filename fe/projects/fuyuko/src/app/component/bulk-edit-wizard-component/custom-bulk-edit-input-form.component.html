@@ -1,6 +1,6 @@
 <div class="custom-bulk-edit-input-form">
 
-    <app-notification-messages [messages]="validationResult?.messages" [attr.test-notifications]="''">
+    <app-notification-messages [messages]="validationResult?.messages ?? []" [attr.test-notifications]="''">
     </app-notification-messages>
 
     <ng-container *ngIf="customBulkEdit?.inputs">

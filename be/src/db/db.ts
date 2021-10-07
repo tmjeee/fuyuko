@@ -33,7 +33,7 @@ export type QueryResponse  = {
 };
 
 
-let cfg: { pool: Pool} = { pool: null};
+const cfg: { pool?: Pool} = { pool: undefined };
 export const reset = async () => {
     const poolConfig: PoolConfig = {
         connectionLimit: config["db-connection-limit"],
@@ -54,7 +54,7 @@ const getConn = async (): Promise<PoolConnection> => {
     if (!cfg.pool) {
         await reset();
     }
-    return cfg.pool.getConnection();
+    return cfg.pool!.getConnection();
 };
 
 

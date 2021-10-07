@@ -17,7 +17,7 @@
                 </div>
                 <div>
                     <div class="table-container" *ngIf="viewType === 'table'" fxLayout="column">
-                        <app-data-table [itemAndAttributeSet]="tableItemAndAttributeSet"
+                        <app-data-table [itemAndAttributeSet]="tableItemAndAttributeSet!"
                                         [favouritedItemIds]="favouritedItemIds"
                                         fxFlex="1 1 auto"
                                         [enableSearch]="false"
@@ -27,7 +27,7 @@
                         </app-data-table>
                     </div>
                     <div class="thumbnail-container" *ngIf="viewType === 'thumbnail'">
-                        <app-data-thumbnail [itemAndAttributeSet]="itemAndAttributeSet"
+                        <app-data-thumbnail [itemAndAttributeSet]="itemAndAttributeSet!"
                                             [enableSearch]="false"
                                             (events)="onThumbnailEvent($event)"
                                             (carouselEvents)="onThumbnailCarouselEvent($event)"
@@ -35,7 +35,7 @@
                         </app-data-thumbnail>
                     </div>
                     <div class="list-container" *ngIf="viewType === 'list'">
-                        <app-data-list [itemAndAttributeSet]="itemAndAttributeSet"
+                        <app-data-list [itemAndAttributeSet]="itemAndAttributeSet!"
                                        [enableSearch]="false"
                                        (events)="onListEvent($event)"
                                        (searchEvents)="onListSearchEvent($event)"
@@ -51,7 +51,7 @@
                                    (carouselEvent)="onItemInfoCarouselEvent($event)"
                                    (itemEditorEvent)="onItemInfoItemEditorEvent($event)"
                                    (dataEditorEvent)="onItemInfoDataEditorEvent($event)"
-                                   [item]="item">
+                                   [item]="item!">
                     </app-item-info>
                 </div>
             </ng-container>

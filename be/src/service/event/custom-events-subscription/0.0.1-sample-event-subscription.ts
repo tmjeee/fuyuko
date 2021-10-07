@@ -333,9 +333,9 @@ const d: any = {
 };
 
 const s: EventSubscriptionRegistry = newEventSubscriptionRegistry(d, `audit-event-subscription`, 
-    (v1AppRouter: Router, registry: Registry): Promise<void> => {
+    async (v1AppRouter: Router, registry: Registry): Promise<void> => {
         // perform db and router related setup
-        return null;
+        return undefined;
     }
 );
 

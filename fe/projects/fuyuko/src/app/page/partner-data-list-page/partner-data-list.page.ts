@@ -18,13 +18,13 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class PartnerDataListPageComponent implements OnInit {
 
-    @ViewChild('sideNav', { static: true }) sideNav: MatSidenav;
+    @ViewChild('sideNav', { static: true }) sideNav!: MatSidenav;
 
     loading: boolean; // loading the data list
-    attributes: Attribute[];
-    pricedItems: PricedItem[];
+    attributes: Attribute[] = [];
+    pricedItems: PricedItem[] = [];
 
-    pricingStructures: PricingStructure[];
+    pricingStructures: PricingStructure[] = [];
 
     constructor(private partnerService: PartnerService,
                 private authService: AuthService,
@@ -38,17 +38,19 @@ export class PartnerDataListPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const myself: User = this.authService.myself();
-        this.loadingService.startLoading();
-        this.partnerService.getPartnerPricingStructures(myself.id)
-            .pipe(
-                tap((ps: PricingStructure[]) => {
-                    this.pricingStructures = ps;
-                }),
-                finalize(() => {
-                    this.loadingService.stopLoading();
-                })
-            ).subscribe();
+        const myself: User | undefined = this.authService.myself();
+        if (myself) {
+            this.loadingService.startLoading();
+            this.partnerService.getPartnerPricingStructures(myself.id)
+                .pipe(
+                    tap((ps: PricingStructure[]) => {
+                        this.pricingStructures = ps;
+                    }),
+                    finalize(() => {
+                        this.loadingService.stopLoading();
+                    })
+                ).subscribe();
+        }
     }
 
 
@@ -63,7 +65,8 @@ export class PartnerDataListPageComponent implements OnInit {
                 }),
                 concatMap((_) => {
                     return this.attributeService.getAllAttributesByView(pricingStructure.viewId)
-                        .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
+                        .pipe(map((r: PaginableApiResponse<Attribute[]>) =>
+                            r.payload ?? []));
                 }),
                 tap((a: Attribute[]) => {
                     this.attributes = a;

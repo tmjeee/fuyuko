@@ -25,9 +25,9 @@ export class ViewValidationSummaryWidgetComponent extends DashboardWidget implem
       super(dashboardWidgetService);
    }
 
-   selectedView: View;
+   selectedView?: View;
    views: View[] = [];
-   r: Reporting_ViewValidationSummary;
+   r?: Reporting_ViewValidationSummary;
 
    data: any[] = [];
 
@@ -72,19 +72,21 @@ export class ViewValidationSummaryWidgetComponent extends DashboardWidget implem
    }
 
    reload() {
-       this.viewValidationSummaryWidgetService
-           .getViewValidationSummary(this.selectedView.id)
-           .pipe(
-               tap((r: Reporting_ViewValidationSummary) => {
-                   this.r = r;
-                   const d: any[] = [];
-                   if (this.r && r.totalWithWarnings && r.totalWithErrors && r.totalItems) {
-                       d.push(['Successful', Math.abs(this.r.totalItems - this.r.totalWithErrors - this.r.totalWithWarnings)]);
-                       d.push(['Errors', this.r.totalWithErrors]);
-                       d.push(['Warnings', this.r.totalWithWarnings]);
-                   }
-                   this.data = d;
-               })
-           ).subscribe();
+       if (this.selectedView) {
+           this.viewValidationSummaryWidgetService
+               .getViewValidationSummary(this.selectedView.id)
+               .pipe(
+                   tap((r: Reporting_ViewValidationSummary) => {
+                       this.r = r;
+                       const d: any[] = [];
+                       if (this.r && r.totalWithWarnings && r.totalWithErrors && r.totalItems) {
+                           d.push(['Successful', Math.abs(this.r.totalItems - this.r.totalWithErrors - this.r.totalWithWarnings)]);
+                           d.push(['Errors', this.r.totalWithErrors]);
+                           d.push(['Warnings', this.r.totalWithWarnings]);
+                       }
+                       this.data = d;
+                   })
+               ).subscribe();
+       }
    }
 }

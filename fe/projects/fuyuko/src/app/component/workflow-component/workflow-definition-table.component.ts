@@ -8,7 +8,7 @@ import {NgChanges} from '../../utils/types.util';
 
 class InternalDataSource extends DataSource<WorkflowDefinition> {
 
-    private subject = new BehaviorSubject([]);
+    private subject = new BehaviorSubject<WorkflowDefinition[]>([] as WorkflowDefinition[]);
 
     connect(collectionViewer: CollectionViewer): Observable<WorkflowDefinition[] | ReadonlyArray<WorkflowDefinition>> {
         return this.subject.asObservable();

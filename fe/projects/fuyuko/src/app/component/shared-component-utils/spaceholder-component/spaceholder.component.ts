@@ -122,7 +122,7 @@ export class SpaceholderComponent implements OnInit {
     @Input() width = 'auto';
     @Input() height = '400px';
 
-    imageSource: string;
+    imageSource!: string;
 
     ngOnInit(): void {
         const images = TYPES[this.type];

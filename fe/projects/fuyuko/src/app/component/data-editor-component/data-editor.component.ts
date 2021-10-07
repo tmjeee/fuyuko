@@ -15,7 +15,7 @@ export interface DataEditorComponentEvent {
 })
 export class DataEditorComponent {
 
-  @Input() itemValueAndAttribute: ItemValueAndAttribute;
+  @Input() itemValueAndAttribute!: ItemValueAndAttribute;
   @Output() events: EventEmitter<ItemValueAndAttribute>;
 
   constructor(private matDialog: MatDialog) {

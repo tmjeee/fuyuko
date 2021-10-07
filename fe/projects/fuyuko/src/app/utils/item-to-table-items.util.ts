@@ -73,11 +73,13 @@ export function toItemIgnoreParent(tableItems: TableItem[]): Item[] {
       copyAttrProperties(tableItem, item);
       acc.set(itemId, item);
     } else {
-      const i: Item = acc.get(itemId);
-      i.images = tableItem.images;
-      i.name = tableItem.name;
-      i.description = tableItem.description;
-      copyAttrProperties(tableItem, i);
+      const i: Item | undefined = acc.get(itemId);
+      if (i) {
+        i.images = tableItem.images;
+        i.name = tableItem.name;
+        i.description = tableItem.description;
+        copyAttrProperties(tableItem, i);
+      }
     }
 
     // item's parent
@@ -87,12 +89,14 @@ export function toItemIgnoreParent(tableItems: TableItem[]): Item[] {
         (pi as any).trashable = true;
         acc.set(itemParentId, pi);
       } else {
-        const itemParent: Item = acc.get(itemParentId);
-        const itemIndexInExistingParent: number = itemParent.children.findIndex((i: Item) => i.id === item.id);
-        if (itemIndexInExistingParent === -1) { // doens't exists yet
-          itemParent.children.push(item);
+        const itemParent: Item | undefined = acc.get(itemParentId);
+        if (itemParent) {
+          const itemIndexInExistingParent: number = itemParent.children.findIndex((i: Item) => i.id === item.id);
+          if (itemIndexInExistingParent === -1) { // doens't exists yet
+            itemParent.children.push(item);
+          }
+          (itemParent as any).trashable = false;
         }
-        (itemParent as any).trashable = false;
       }
     }
     return acc;
@@ -121,13 +125,15 @@ export function toItem(tableItems: TableItem[]): Item[] {
       copyAttrProperties(tableItem, item);
       acc.set(itemId, item);
     } else {
-      const i: Item = acc.get(itemId);
-      i.images = tableItem.images;
-      i.name = tableItem.name;
-      i.description = tableItem.description;
-      i.creationDate = tableItem.creationDate;
-      i.lastUpdate = tableItem.lastUpdate;
-      copyAttrProperties(tableItem, i);
+      const i: Item | undefined = acc.get(itemId);
+      if (i) {
+        i.images = tableItem.images;
+        i.name = tableItem.name;
+        i.description = tableItem.description;
+        i.creationDate = tableItem.creationDate;
+        i.lastUpdate = tableItem.lastUpdate;
+        copyAttrProperties(tableItem, i);
+      }
     }
 
     // item's parent
@@ -136,10 +142,12 @@ export function toItem(tableItems: TableItem[]): Item[] {
         const pi: Item = {id: itemParentId, parentId: undefined, children: [item]} as Item;
         acc.set(itemParentId, pi);
       } else {
-        const itemParent: Item = acc.get(itemParentId);
-        const itemIndexInExistingParent: number = itemParent.children.findIndex((i: Item) => i.id === item.id);
-        if (itemIndexInExistingParent === -1) { // doens't exists yet
-          itemParent.children.push(item);
+        const itemParent: Item | undefined = acc.get(itemParentId);
+        if (itemParent) {
+          const itemIndexInExistingParent: number = itemParent.children.findIndex((i: Item) => i.id === item.id);
+          if (itemIndexInExistingParent === -1) { // doens't exists yet
+            itemParent.children.push(item);
+          }
         }
       }
     }
@@ -203,13 +211,15 @@ export function toBulkEditItem(tableItems: BulkEditTableItem[]): BulkEditItem[] 
       copyAttrProperties(tableItem, item);
       acc.set(itemId, item);
     } else {
-      const i: BulkEditItem = acc.get(itemId);
-      i.images = tableItem.images;
-      i.name = tableItem.name;
-      i.whens = tableItem.whens;
-      i.changes = tableItem.changes;
-      i.description = tableItem.description;
-      copyAttrProperties(tableItem, i);
+      const i: BulkEditItem | undefined = acc.get(itemId);
+      if (i) {
+        i.images = tableItem.images;
+        i.name = tableItem.name;
+        i.whens = tableItem.whens;
+        i.changes = tableItem.changes;
+        i.description = tableItem.description;
+        copyAttrProperties(tableItem, i);
+      }
     }
 
     // item's parent
@@ -218,10 +228,12 @@ export function toBulkEditItem(tableItems: BulkEditTableItem[]): BulkEditItem[] 
         const pi: BulkEditItem = {id: itemParentId, parentId: undefined, children: [item]} as BulkEditItem;
         acc.set(itemParentId, pi);
       } else {
-        const itemParent: BulkEditItem = acc.get(itemParentId);
-        const itemIndexInExistingParent: number = itemParent.children.findIndex((i: BulkEditItem) => i.id === item.id);
-        if (itemIndexInExistingParent === -1) { // doens't exists yet
-          itemParent.children.push(item);
+        const itemParent: BulkEditItem | undefined = acc.get(itemParentId);
+        if (itemParent) {
+          const itemIndexInExistingParent: number = itemParent.children.findIndex((i: BulkEditItem) => i.id === item.id);
+          if (itemIndexInExistingParent === -1) { // doens't exists yet
+            itemParent.children.push(item);
+          }
         }
       }
     }
@@ -293,16 +305,18 @@ export function toPricedItem(tableItems: TablePricedItem[]): PricedItem[] {
           copyAttrProperties(tableItem, item);
           acc.set(itemId, item);
         } else {
-          const i: PricedItem = acc.get(itemId);
-          i.id = itemId;
-          i.name = tableItem.name;
-          i.description = tableItem.description;
-          i.images = tableItem.images;
-          i.price = tableItem.price;
-          i.creationDate = tableItem.creationDate;
-          i.lastUpdate = tableItem.lastUpdate;
-          i.country = tableItem.country;
-          copyAttrProperties(tableItem, i);
+          const i: PricedItem | undefined = acc.get(itemId);
+          if (i) {
+            i.id = itemId;
+            i.name = tableItem.name;
+            i.description = tableItem.description;
+            i.images = tableItem.images;
+            i.price = tableItem.price;
+            i.creationDate = tableItem.creationDate;
+            i.lastUpdate = tableItem.lastUpdate;
+            i.country = tableItem.country;
+            copyAttrProperties(tableItem, i);
+          }
         }
 
         // item's parent
@@ -315,10 +329,12 @@ export function toPricedItem(tableItems: TablePricedItem[]): PricedItem[] {
             } as PricedItem;
             acc.set(itemParentId, pi);
           } else {
-            const itemParent: PricedItem = acc.get(itemParentId);
-            const itemIndexInExistingParent: number = itemParent.children.findIndex((i: PricedItem) => i.id === item.id);
-            if (itemIndexInExistingParent === -1) { // doens't exists yet
-              itemParent.children.push(item);
+            const itemParent: PricedItem | undefined = acc.get(itemParentId);
+            if (itemParent) {
+              const itemIndexInExistingParent: number = itemParent.children.findIndex((i: PricedItem) => i.id === item.id);
+              if (itemIndexInExistingParent === -1 && itemParent) { // doens't exists yet
+                itemParent.children.push(item);
+              }
             }
           }
         }
@@ -391,13 +407,15 @@ export function toPricingStructureItemWithPrice(tableItems: TablePricingStructur
       copyAttrProperties(tableItem, item);
       acc.set(itemId, item);
     } else {
-      const i: PricingStructureItemWithPrice = acc.get(itemId);
-      i.itemId = tableItem.itemId;
-      i.itemName = tableItem.itemName;
-      i.itemDescription = tableItem.itemDescription;
-      i.price = tableItem.price;
-      i.country = tableItem.country;
-      copyAttrProperties(tableItem, i);
+      const i: PricingStructureItemWithPrice | undefined = acc.get(itemId);
+      if (i) {
+        i.itemId = tableItem.itemId;
+        i.itemName = tableItem.itemName;
+        i.itemDescription = tableItem.itemDescription;
+        i.price = tableItem.price;
+        i.country = tableItem.country;
+        copyAttrProperties(tableItem, i);
+      }
     }
 
     // item's parent
@@ -410,10 +428,12 @@ export function toPricingStructureItemWithPrice(tableItems: TablePricingStructur
         } as PricingStructureItemWithPrice;
         acc.set(itemParentId, pi);
       } else {
-        const itemParent: PricingStructureItemWithPrice = acc.get(itemParentId);
-        const itemIndexInExistingParent: number = itemParent.children.findIndex((i: PricingStructureItemWithPrice) => i.id === item.id);
-        if (itemIndexInExistingParent === -1) { // doens't exists yet
-          itemParent.children.push(item);
+        const itemParent: PricingStructureItemWithPrice | undefined = acc.get(itemParentId);
+        if (itemParent) {
+          const itemIndexInExistingParent: number = itemParent.children.findIndex((i: PricingStructureItemWithPrice) => i.id === item.id);
+          if (itemIndexInExistingParent === -1) { // doens't exists yet
+            itemParent.children.push(item);
+          }
         }
       }
     }

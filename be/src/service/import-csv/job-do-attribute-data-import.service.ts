@@ -28,7 +28,7 @@ export const runJob = async (viewId: number, attributeDataImportId: number, attr
         jobId: jobLogger.jobId
     } as ImportAttributeJobEvent);
 
-    (async ()=> {
+    await (async ()=> {
         await jobLogger.logInfo(`starting job ${name}`);
         try {
             const effectiveAttributes: Attribute[] = [];

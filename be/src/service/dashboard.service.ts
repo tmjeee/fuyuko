@@ -24,7 +24,7 @@ class DashboardService {
             const errors: string[] = [];
 
             const q: QueryA = await conn.query(`SELECT ID FROM TBL_USER_DASHBOARD WHERE USER_ID=?`, [userId]);
-            let dashboardId: number = null;
+            let dashboardId: number | undefined = undefined;
             if (q && q.length <= 0) { // dashboard not already exists
                 const q2: QueryResponse = await conn.query(`INSERT INTO TBL_USER_DASHBOARD (USER_ID, SERIALIZED_DATA) VALUES (?, NULL)`, [userId]);
                 if (q2.affectedRows <= 0) {

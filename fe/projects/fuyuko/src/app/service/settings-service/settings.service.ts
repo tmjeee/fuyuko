@@ -6,6 +6,7 @@ import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {concatMap, map, tap} from 'rxjs/operators';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 const URL_GET_USER_SETTINGS = () => `${config().api_host_url}/user/:userId/settings`;
@@ -14,7 +15,7 @@ const URL_POST_USER_SETTINGS = () => `${config().api_host_url}/user/:userId/sett
 @Injectable()
 export class SettingsService {
 
-    cachedSettings: Settings;
+    cachedSettings?: Settings;
 
     constructor(private httpClient: HttpClient) { }
 
@@ -34,7 +35,7 @@ export class SettingsService {
         return this.httpClient
             .get<ApiResponse<Settings>>(URL_GET_USER_SETTINGS().replace(':userId', String(u.id)))
             .pipe(
-                map((r: ApiResponse<Settings>) => r.payload),
+                map((r: ApiResponse<Settings>) => assertDefinedReturn(r.payload)),
                 tap((settings: Settings) => (this.cachedSettings = settings))
             );
     }
@@ -47,6 +48,6 @@ export class SettingsService {
 
     // destruction (see appInitializer function in app.module)
     destroy()  {
-        this.cachedSettings = null;
+        this.cachedSettings = undefined;
     }
 }

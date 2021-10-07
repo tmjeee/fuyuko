@@ -18,28 +18,28 @@ import {ValidationResultLogReloadFn} from './validation-result-log.component';
 })
 export  class ValidationResultComponent implements OnInit {
 
-    itemAndAttributeSet: TableItemAndAttributeSet;
+    itemAndAttributeSet!: TableItemAndAttributeSet;
 
-    @Input() items: Item[];
-    @Input() attributes: Attribute[];
-    @Input() validationResult: ValidationResult;
-    @Input() rules: Rule[];
-    @Input() view: View;
-    @Input() validationResultLogReloadFn: ValidationResultLogReloadFn;
+    @Input() items: Item[] = [];
+    @Input() attributes: Attribute[] = [];
+    @Input() validationResult!: ValidationResult;
+    @Input() rules: Rule[] = [];
+    @Input() view!: View;
+    @Input() validationResultLogReloadFn!: ValidationResultLogReloadFn;
 
     @Output() events: EventEmitter<ValidationResultTableComponentEvent>;
 
-    treeItemChangeEvents: BehaviorSubject<Item>; // for tree  @input
-    tableItemChangeEvents: BehaviorSubject<Item>; // for table and console @Input
+    treeItemChangeEvents: BehaviorSubject<Item | undefined>; // for tree  @input
+    tableItemChangeEvents: BehaviorSubject<Item | undefined>; // for table and console @Input
     validationErrorChangeEvents: BehaviorSubject<ValidationError[]>; // for console @Input
 
-    tableItems: TableItem[];
+    tableItems!: TableItem[];
 
     constructor() {
         this.events = new EventEmitter<ValidationResultTableComponentEvent>();
-        this.tableItemChangeEvents = new BehaviorSubject<Item>(null);
-        this.treeItemChangeEvents = new BehaviorSubject<Item>(null);
-        this.validationErrorChangeEvents = new BehaviorSubject<ValidationError[]>(null);
+        this.tableItemChangeEvents = new BehaviorSubject<Item | undefined>(undefined);
+        this.treeItemChangeEvents = new BehaviorSubject<Item | undefined>(undefined);
+        this.validationErrorChangeEvents = new BehaviorSubject<ValidationError[]>([]);
     }
 
     ngOnInit(): void {
@@ -50,32 +50,34 @@ export  class ValidationResultComponent implements OnInit {
         };
     }
 
-    private b(items: Item[], itemId: number): Item {
+    private b(items: Item[], itemId: number): Item | undefined {
         for (const i of items) {
             if (i.id === itemId) {
                 return i;
             }
             if (i.children) {
-                const ii: Item = this.b(i.children, itemId);
+                const ii: Item | undefined = this.b(i.children, itemId);
                 if (ii) {
                     return ii;
                 }
             }
         }
-        return null;
+        return undefined;
     }
 
     onValidationResultTableEvent($event: ValidationResultTableComponentEvent) {
         this.events.emit($event);
         switch ($event.type) {
             case 'selection-changed':
-                const tableItems: TableItem[] = $event.modifiedItems;
+                const tableItems: TableItem[] | undefined = $event.modifiedItems;
                 if (tableItems && tableItems.length) {
-                    const it: Item = this.b(this.items, tableItems[0].id);
+                    const it: Item | undefined = this.b(this.items, tableItems[0].id);
                     if (it) {
                         this.fireTreeItemChangeEvent(it);
                         this.fireTableItemChangeEvent(it);
-                        this.fireValidationErrorEvent($event.errors);
+                        if ($event.errors) {
+                            this.fireValidationErrorEvent($event.errors);
+                        }
                     }
                 }
                 break;
@@ -100,11 +102,11 @@ export  class ValidationResultComponent implements OnInit {
         }
     }
 
-    fireTableItemChangeEvent(i: Item) {
+    fireTableItemChangeEvent(i: Item | undefined) {
         this.tableItemChangeEvents.next(i);
     }
 
-    fireTreeItemChangeEvent(i: Item) {
+    fireTreeItemChangeEvent(i: Item | undefined) {
         this.treeItemChangeEvents.next(i);
     }
 

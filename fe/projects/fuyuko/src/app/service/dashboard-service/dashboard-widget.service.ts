@@ -7,6 +7,7 @@ import {Observable} from 'rxjs';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
 import {User} from '@fuyuko-common/model/user.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_GET_WIDGET_DATA = () => `${config().api_host_url}/user/:userId/dashboard-widget-instance/:dashboardWidgetInstanceId`;
 const URL_POST_WIDGET_DATA = () => `${config().api_host_url}/user/:userId/dashboard-widget-instance-data`;
@@ -15,8 +16,9 @@ const URL_POST_WIDGET_DATA = () => `${config().api_host_url}/user/:userId/dashbo
 @Injectable()
 export class DashboardWidgetService {
 
-    widgetInstance: DashboardWidgetInstance;
-    currentUser: User;
+    // these are set in Dashboard Widget Container itself (widget-container.component.ts)
+    widgetInstance!: DashboardWidgetInstance;
+    currentUser!: User;
 
     constructor(private httpClient: HttpClient) {}
 
@@ -33,7 +35,7 @@ export class DashboardWidgetService {
         return this.httpClient
             .get<ApiResponse<DataMap>>(URL_GET_WIDGET_DATA().replace(':userId', String(this.currentUser.id)))
             .pipe(
-                map((r: ApiResponse<DataMap>) => r.payload)
+                map((r: ApiResponse<DataMap>) => assertDefinedReturn(r.payload))
             );
     }
 }

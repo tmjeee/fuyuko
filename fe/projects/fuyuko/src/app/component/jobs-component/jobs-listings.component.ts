@@ -9,8 +9,9 @@ import {Observable} from 'rxjs';
 })
 export class JobsListingsComponent {
 
-    @Input() jobs: Job[];
-    @Input() fetchFn: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
+    @Input() jobs: Job[] = [];
+    @Input() fetchFn!: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
+
     fetchJobs: {[k: number]: boolean} = {};
 
     onExpansionPanelClosed(job: Job) {

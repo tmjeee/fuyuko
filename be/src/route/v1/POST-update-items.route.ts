@@ -1,7 +1,7 @@
 import {NextFunction, Router, Request, Response} from 'express';
 import {Registry} from '../../registry';
 import {
-    aFnAnyTrue,
+    aFnAnyTrue, threadLocalMiddlewareFn,
     v,
     validateJwtMiddlewareFn,
     validateMiddlewareFn,
@@ -13,7 +13,7 @@ import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {
     addOrUpdateItem,
-    getWorkflowByViewActionAndType, triggerAttributeValueWorkflow,
+    getWorkflowByViewActionAndType, threadLocalInit, triggerAttributeValueWorkflow,
     triggerAttributeWorkflow,
     triggerItemWorkflow
 } from '../../service';
@@ -36,6 +36,7 @@ const httpAction: any[] = [
         // body('items.*.parentId').exists()
         // todo: need to check [0].attributeId etc.
     ],
+    threadLocalMiddlewareFn,
     validateMiddlewareFn,
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_EDIT])], aFnAnyTrue),
@@ -59,7 +60,7 @@ const httpAction: any[] = [
         if (ws && ws.length > 0) {
             for (const w of ws) {
                 if (w.type === 'Item') {  // handle Item
-                    const workflowTriggerResult = await triggerItemWorkflow(items, w.workflowDefinition.id, 'Update');
+                    const workflowTriggerResult = await triggerItemWorkflow(viewId, items, w.workflowDefinition.id, 'Update');
                     payload.push(...workflowTriggerResult);
                     itemWorkflowTriggered = true;
                 }
@@ -110,6 +111,12 @@ const httpAction: any[] = [
                     message: 'Workflow instance has been triggered to create attribute, workflow instance needs to be completed for actual creation to take place',
                 })
             }
+            const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
+                messages,
+                payload,
+            };
+            res.status(200).json(apiResponse);
+            return;
         }
 
 

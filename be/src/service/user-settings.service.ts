@@ -3,11 +3,12 @@ import {Connection} from 'mariadb';
 import {doInDbConnection, QueryA, QueryResponse} from '../db';
 import {fireEvent, GetSettingsEvent, UpdateUserSettingsEvent} from './event/event.service';
 
-export const DEFAULT_SETTINGS: Settings = new Settings();
-DEFAULT_SETTINGS.id = 0;
-DEFAULT_SETTINGS.openHelpNav = false;
-DEFAULT_SETTINGS.openSideNav = true;
-DEFAULT_SETTINGS.openSubSideNav = true;
+export const DEFAULT_SETTINGS: Settings = new Settings({
+    id: 0,
+    openHelpNav: false,
+    openSideNav: true,
+    openSubSideNav: true
+});
 
 export type UpdateUserSettingsInput = _UpdateUserSettingsInput;
 export interface _UpdateUserSettingsInput { [key: string]: any }
@@ -51,7 +52,12 @@ class UserSettingsService {
     async getSettings(userId: number): Promise<Settings> {
         const settings: Settings = await doInDbConnection(async (conn: Connection) => {
             await this.createSettingsIfNotExists(userId, conn);
-            const s = new Settings();
+            const s: {
+                id: number;
+                openHelpNav: boolean;
+                openSideNav: boolean;
+                openSubSideNav: boolean;
+            } = { ...DEFAULT_SETTINGS };
             const q1: QueryA = await conn.query(`SELECT ID, USER_ID, SETTING, VALUE, TYPE FROM TBL_USER_SETTING WHERE USER_ID=?`, [userId]);
             for (const q of q1) {
                 switch (q.TYPE) {
@@ -69,7 +75,7 @@ class UserSettingsService {
                         break;
                 }
             }
-            return s;
+            return new Settings(s);
         });
         fireEvent({
             type: "GetSettingsEvent",

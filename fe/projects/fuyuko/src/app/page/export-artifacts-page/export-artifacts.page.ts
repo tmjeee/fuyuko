@@ -15,8 +15,8 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class ExportArtifactsPageComponent implements OnInit {
 
-    ready: boolean;
-    dataExportArtifacts: DataExportArtifact[];
+    ready = false ;
+    dataExportArtifacts: DataExportArtifact[] = [];
 
     constructor(private exportArtifactService: ExportArtifactService,
                 private notificationsService: NotificationsService,

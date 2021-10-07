@@ -1,6 +1,6 @@
 <div class="workflow-instance-task-details-page">
 
-    <ng-container *ngIf="ready">
+    <ng-container *ngIf="ready && workflowInstanceTask">
         <app-workflow-instance-task-details
                 [disableWorkflowActions]="disableWorkflowActions"
                 (events)="onWorkflowInstanceTaskDetailsEvent($event)"

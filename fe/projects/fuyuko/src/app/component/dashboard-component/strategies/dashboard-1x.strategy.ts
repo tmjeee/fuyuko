@@ -19,12 +19,15 @@ export class DashboardStrategy1x implements DashboardStrategy {
     }
     addDashboardWidgetInstances(serializeInstanceFormats: SerializedDashboardWidgetInstanceFormat[]) {
         serializeInstanceFormats.forEach((t: SerializedDashboardWidgetInstanceFormat) => {
-            const dashboardWidgetInfo: DashboardWidgetInfo = DASHBOARD_WIDGET_INFOS.find((dwi: DashboardWidgetInfo) => dwi.id === t.typeId);
-            this.dashboardWidgetInstances.push({
-                instanceId: t.instanceId,
-                typeId: t.typeId,
-                type: dashboardWidgetInfo.type
-            } as DashboardWidgetInstance);
+            const dashboardWidgetInfo: DashboardWidgetInfo | undefined =
+                DASHBOARD_WIDGET_INFOS.find((dwi: DashboardWidgetInfo) => dwi.id === t.typeId);
+            if (dashboardWidgetInfo) {
+                this.dashboardWidgetInstances.push({
+                    instanceId: t.instanceId,
+                    typeId: t.typeId,
+                    type: dashboardWidgetInfo.type
+                });
+            }
         });
     }
     removeDashboardWidgetInstances(instanceIds: string[]) {
@@ -53,8 +56,8 @@ export class DashboardStrategy1x implements DashboardStrategy {
         const x: SerializedDashboardFormat = JSON.parse(data);
         const r: SerializedDashboardWidgetInstanceFormat[] = x.instances;
         if (r) {
-            const _r: StickInTypesArgs = stickInTypes(r);
-            this.addDashboardWidgetInstances(_r as SerializedDashboardWidgetInstanceFormat[]);
+            const r2: StickInTypesArgs = stickInTypes(r);
+            this.addDashboardWidgetInstances(r2 as SerializedDashboardWidgetInstanceFormat[]);
         }
     }
 }

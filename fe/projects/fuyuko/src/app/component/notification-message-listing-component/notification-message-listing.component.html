@@ -2,7 +2,7 @@
     <mat-list *ngIf="hasMessages()">
         <ng-container *ngIf="hasInfos()">
             <h3 mat-subheader>Information</h3>
-            <mat-list-item *ngFor="let info of messages.infos">
+            <mat-list-item *ngFor="let info of messages?.infos ?? []">
                 <mat-icon mat-list-icon></mat-icon>
                 <h4 mat-line>{{info.title}}</h4>
                 <p mat-line>{{info.messsage}}</p>
@@ -11,7 +11,7 @@
 
         <ng-container *ngIf="hasWarnings()">
             <h3 mat-subheader>Warnings</h3>
-            <mat-list-item *ngFor="let warn of messages.warnings">
+            <mat-list-item *ngFor="let warn of messages?.warnings ?? []">
                 <mat-icon mat-list-icon></mat-icon>
                 <h4 mat-line>{{warn.title}}</h4>
                 <p mat-line>{{warn.messsage}}</p>
@@ -20,7 +20,7 @@
 
         <ng-container *ngIf="hasErrors()">
             <h3 mat-subheader>Errors</h3>
-            <mat-list-item *ngFor="let error of messages.errors">
+            <mat-list-item *ngFor="let error of messages?.errors ?? []">
                 <mat-icon mat-list-icon></mat-icon>
                 <h4 mat-line>{{error.title}}</h4>
                 <p mat-line>{{error.messsage}}</p>

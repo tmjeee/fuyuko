@@ -37,13 +37,10 @@ abstract class AbstractItemValueConverter implements ItemValueConverters {
       return this._check(a, i, (y, z) => this._convertToCsv(y, z));
   }
   private _check(a: Attribute, i: ItemValTypes, callback: (a: Attribute, i: ItemValTypes) => string) {
-    if (i) {
       if (a.type !== i.type) {
         throw new Error(`incompatible types attribute type ${a.type} item value type ${i.type}`);
       }
       return callback(a, i);
-    }
-    return undefined;
   }
   protected abstract _convertToString(a: Attribute, i: ItemValTypes): string;
   protected abstract _convertToCsv(a: Attribute, i: ItemValTypes): string;
@@ -111,7 +108,7 @@ class DateItemValueConverter extends AbstractItemValueConverter {
   }
   protected _convertToString(a: Attribute, i: DateValue): string {
     if (i.value) {
-      let m: moment.Moment;
+      let m: moment.Moment | undefined = undefined;
       if (typeof i.value === 'string') {
         m = moment(i.value, a.format ? a.format : DATE_FORMAT);
       } else if (moment.isMoment(i.value)) {
@@ -324,7 +321,7 @@ class SelectItemValueConverter extends AbstractItemValueConverter {
     return `{type: ${i.type} key: ${i.key}}`;
   }
   protected _convertToString(a: Attribute, i: SelectValue): string {
-    const p: Pair1 = a.pair1.find((pp: Pair1) => pp.key === i.key);
+    const p: Pair1 | undefined = a.pair1 ? a.pair1.find((pp: Pair1) => pp.key === i.key) : undefined;
     return `${p ? p.value : ''}`;
   }
   protected _convertToCsv(a: Attribute, i: SelectValue): string {
@@ -343,8 +340,8 @@ class DoubleSelectItemValueConverter extends AbstractItemValueConverter {
     return `{type: ${i.type} key1: ${i.key1} key2: ${i.key2}}`;
   }
   protected _convertToString(a: Attribute, i: DoubleSelectValue): string {
-    const p1: Pair1 = a.pair1.find((p: Pair1) => p.key === i.key1);
-    const p2: Pair2 = a.pair2.find((p: Pair2) => p.key2 === i.key2);
+    const p1: Pair1 | undefined = (a && a.pair1) ? a.pair1.find((p: Pair1) => p.key === i.key1) : undefined;
+    const p2: Pair2 | undefined = (a && a.pair2) ? a.pair2.find((p: Pair2) => p.key2 === i.key2) : undefined;
     return `${p1 ? p1.value : ''} - ${p2 ? p2.value : ''}`;
   }
   protected _convertToCsv(a: Attribute, i: DoubleSelectValue): string {
@@ -380,7 +377,7 @@ export const itemConverter = (a: Attribute): AbstractItemValueConverter => {
 };
 
 export const itemConverterByType = (t: string): AbstractItemValueConverter => {
-  let typeConverter: AbstractItemValueConverter;
+  let typeConverter: AbstractItemValueConverter | undefined = undefined;
   switch (t) {
     case 'string':
       typeConverter = STRING_ITEM_CONVERTER;
@@ -432,15 +429,15 @@ export const itemConverterByType = (t: string): AbstractItemValueConverter => {
 };
 
 export const convertToCsv = (a: Attribute, i: Value | ItemValTypes): string => {
-  const v: ItemValTypes = isItemValueType(i) ? i : (isItemValue(i) ? i.val : undefined);
+  const v: ItemValTypes | undefined = isItemValueType(i) ? i : (isItemValue(i) ? i.val : undefined);
   const typeConverter: AbstractItemValueConverter = itemConverter(a);
-  return typeConverter.convertToCsv(a, v);
+  return v ? typeConverter.convertToCsv(a, v) : '';
 };
 
 export const convertToString = (a: Attribute, i: Value | ItemValTypes): string => {
-  const v: ItemValTypes = isItemValueType(i) ? i : (isItemValue(i) ? i.val : undefined);
+  const v: ItemValTypes | undefined = isItemValueType(i) ? i : (isItemValue(i) ? i.val : undefined);
   const typeConverter: AbstractItemValueConverter = itemConverter(a);
-  return typeConverter.convertToString(a, v);
+  return v ? typeConverter.convertToString(a, v) : '';
 };
 
 export const convertToDebugStrings = (i: Value[] | ItemValTypes[]): string => {
@@ -451,10 +448,15 @@ export const convertToDebugStrings = (i: Value[] | ItemValTypes[]): string => {
   return s;
 }
 
-export const convertToDebugString = (i: Value | ItemValTypes): string => {
-  const v: ItemValTypes = isItemValueType(i) ? i : (isItemValue(i) ? i.val : undefined);
-  const typeConverter: AbstractItemValueConverter = itemConverterByType(v.type);
-  return typeConverter.convertToDebugString(v);
+export const convertToDebugString = (i: Value | ItemValTypes | undefined): string => {
+  if (i) {
+    const v: ItemValTypes | undefined = isItemValueType(i) ? i : (isItemValue(i) ? i.val : undefined);
+    if (v) {
+      const typeConverter: AbstractItemValueConverter = itemConverterByType(v.type);
+      return typeConverter.convertToDebugString(v);
+    }
+  }
+  return 'undefined';
 };
 
 

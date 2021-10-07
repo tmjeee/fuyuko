@@ -10,9 +10,9 @@ import {LoadingService} from '../../service/loading-service/loading.service';
     styleUrls: ['./jobs.page.scss']
 })
 export class JobsPageComponent implements OnInit {
-    ready: boolean;
-    jobs: Job[];
-    fetchFn: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
+    ready = false;
+    jobs: Job[] = [];
+    fetchFn!: (jobId: number, lastLogId: number) => Observable<JobAndLogs>;
 
     constructor(private jobService: JobsService,
                 private loadingService: LoadingService) {

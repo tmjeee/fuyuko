@@ -30,7 +30,7 @@ constructor(protected dashboardWidgetService: DashboardWidgetService,
 
    data: any[][] = [];
 
-   userVisitsInsight: {
+   userVisitsInsight?: {
        daily: {date: string, count: number}[],
        weekly: {date: string, count: number}[],
        monthly: {date: string, count: number}[],
@@ -78,30 +78,32 @@ constructor(protected dashboardWidgetService: DashboardWidgetService,
 
    reload() {
        const d: any[][] = [];
-       switch (this.period) {
-           case 'daily': {
-               this.userVisitsInsight.daily.map((i: {date: string, count: number}) => {
-                   d.push([i.date, i.count]);
-               });
-               break;
-           }
-           case 'weekly': {
-               this.userVisitsInsight.weekly.map((i: {date: string, count: number}) => {
-                   d.push([i.date, i.count]);
-               });
-               break;
-           }
-           case 'monthly': {
-               this.userVisitsInsight.monthly.map((i: {date: string, count: number}) => {
-                   d.push([i.date, i.count]);
-               });
-               break;
-           }
-           case 'yearly': {
-               this.userVisitsInsight.yearly.map((i: {date: string, count: number}) => {
-                   d.push([i.date, i.count]);
-               });
-               break;
+       if (this.userVisitsInsight) {
+           switch (this.period) {
+               case 'daily': {
+                   this.userVisitsInsight.daily.map((i: { date: string, count: number }) => {
+                       d.push([i.date, i.count]);
+                   });
+                   break;
+               }
+               case 'weekly': {
+                   this.userVisitsInsight.weekly.map((i: { date: string, count: number }) => {
+                       d.push([i.date, i.count]);
+                   });
+                   break;
+               }
+               case 'monthly': {
+                   this.userVisitsInsight.monthly.map((i: { date: string, count: number }) => {
+                       d.push([i.date, i.count]);
+                   });
+                   break;
+               }
+               case 'yearly': {
+                   this.userVisitsInsight.yearly.map((i: { date: string, count: number }) => {
+                       d.push([i.date, i.count]);
+                   });
+                   break;
+               }
            }
        }
        this.data = d;

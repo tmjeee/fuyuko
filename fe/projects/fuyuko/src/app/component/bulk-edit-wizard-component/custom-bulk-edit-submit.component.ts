@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {View} from '@fuyuko-common/model/view.model';
 import {finalize, tap} from 'rxjs/operators';
 import {
@@ -14,16 +14,16 @@ import {CustomBulkEditSubmitFn} from './custom-bulk-edit-wizard.component';
     templateUrl: './custom-bulk-edit-submit.component.html',
     styleUrls: ['./custom-bulk-edit-submit.component.scss']
 })
-export class CustomBulkEditSubmitJobComponent {
+export class CustomBulkEditSubmitJobComponent implements OnInit {
 
-    @Input() view: View;
-    @Input() customBulkEdit: CustomBulkEdit;
-    @Input() inputValues: CustomBulkEditScriptInputValue[];
-    @Input() preview: CustomBulkEditScriptPreview;
-    @Input() submitFn: CustomBulkEditSubmitFn;
+    @Input() view!: View;
+    @Input() customBulkEdit!: CustomBulkEdit;
+    @Input() inputValues: CustomBulkEditScriptInputValue[] = [];
+    @Input() preview!: CustomBulkEditScriptPreview;
+    @Input() submitFn!: CustomBulkEditSubmitFn;
 
-    ready: boolean;
-    result: CustomBulkEditScriptJobSubmissionResult;
+    ready!: boolean;
+    result?: CustomBulkEditScriptJobSubmissionResult;
 
 
     constructor() {}

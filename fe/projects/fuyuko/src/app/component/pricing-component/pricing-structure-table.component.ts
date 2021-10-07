@@ -19,6 +19,7 @@ import {View} from '@fuyuko-common/model/view.model';
 import {Pagination} from '../../utils/pagination.utils';
 import {PaginationComponentEvent} from '../pagination-component/pagination.component';
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 export interface RowInfo {
@@ -29,11 +30,11 @@ export interface RowInfo {
 
 export class PricingStructureItemsTableDataSource extends DataSource<TablePricingStructureItemWithPrice> {
 
-    private subject: BehaviorSubject<TablePricingStructureItemWithPrice[]>;
+    private subject!: BehaviorSubject<TablePricingStructureItemWithPrice[]>;
 
     connect(collectionViewer: CollectionViewer):
         Observable<TablePricingStructureItemWithPrice[] | ReadonlyArray<TablePricingStructureItemWithPrice>> {
-        this.subject = new BehaviorSubject<TablePricingStructureItemWithPrice[]>([]);
+        this.subject = new BehaviorSubject<TablePricingStructureItemWithPrice[]>([] as TablePricingStructureItemWithPrice[]);
         return this.subject.asObservable();
     }
 
@@ -56,7 +57,7 @@ export interface PricingStructureEvent {
 
 export interface PricingStructureInput {
     pricingStructures: PricingStructure[];
-    currentPricingStructure: PricingStructure;
+    currentPricingStructure?: PricingStructure;
 }
 
 
@@ -74,15 +75,15 @@ export interface PricingStructureInput {
 })
 export class PricingStructureTableComponent implements OnInit, OnChanges {
 
-    @Input() pricingStructureInput: PricingStructureInput;
-    @Input() fetchFn: (pricingStructureId: number, limitOffset?: LimitOffset) => Observable<PricingStructureWithItems>;
+    @Input() pricingStructureInput!: PricingStructureInput;
+    @Input() fetchFn!: (pricingStructureId: number, limitOffset?: LimitOffset) => Observable<PricingStructureWithItems>;
     @Input() views: View[];
     @Output() events: EventEmitter<PricingStructureEvent>;
 
     // currently selected ones
-    pricingStructure: PricingStructure;
-    pricingStructureWithItems: PricingStructureWithItems;
-    tablePricingStructureItemsWithPrice: TablePricingStructureItemWithPrice[];
+    pricingStructure?: PricingStructure;
+    pricingStructureWithItems?: PricingStructureWithItems;
+    tablePricingStructureItemsWithPrice?: TablePricingStructureItemWithPrice[];
 
     pagination: Pagination;
 
@@ -105,17 +106,19 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         const simpleChange: SimpleChange = changes.pricingStructureInput;
         if (simpleChange.currentValue) {
-            const ps: PricingStructure = (simpleChange.currentValue as PricingStructureInput).currentPricingStructure;
-            this.pricingStructure = (ps ? this.pricingStructureInput.pricingStructures.find((p) => p.id === ps.id) : null);
-            this.reload(this.pricingStructure);
+            const ps: PricingStructure | undefined = (simpleChange.currentValue as PricingStructureInput).currentPricingStructure;
+            this.pricingStructure = (ps ? this.pricingStructureInput.pricingStructures.find((p) => p.id === ps.id) : undefined);
+            if (this.pricingStructure) {
+                this.reload(this.pricingStructure);
+            }
         }
     }
 
-    viewForPricingStructure(pricingStructure: PricingStructure): View {
+    viewForPricingStructure(pricingStructure: PricingStructure): View | undefined {
         if (pricingStructure && pricingStructure.viewId) {
             return this.views.find((v: View) => v.id === pricingStructure.viewId);
         }
-        return null;
+        return undefined;
     }
 
     onPricingStructureSelectionChanged($event: MatSelectChange) {
@@ -133,15 +136,17 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
                     tap((p: PricingStructureWithItems) => {
                         if (p && p.items) {
                             this.pricingStructureWithItems = p;
-                            this.pricingStructureWithItems.items.payload.forEach((item: PricingStructureItemWithPrice) => {
+                            (this.pricingStructureWithItems.items.payload ?? []).forEach((item: PricingStructureItemWithPrice) => {
                                 this.rowInfoMap.set(item.id, { tableItem: item, expanded: false } as RowInfo);
                             });
                             this.tablePricingStructureItemsWithPrice =
-                                toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items.payload);
+                                toTablePricingStructureItemWithPrice(this.pricingStructureWithItems.items.payload ?? []);
                             this.pagination.update(p.items);
-                            setTimeout(() => {
-                                this.dataSource.update([...this.tablePricingStructureItemsWithPrice]);
-                            });
+                            if (this.tablePricingStructureItemsWithPrice) {
+                                setTimeout(() => {
+                                    this.dataSource.update([...assertDefinedReturn(this.tablePricingStructureItemsWithPrice)]);
+                                });
+                            }
                         }
                     })
                 ).subscribe();
@@ -220,28 +225,30 @@ export class PricingStructureTableComponent implements OnInit, OnChanges {
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
-        return this.rowInfoMap.get(item.id).expanded;
+        return assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 
     isChildRow(index: number, item: TablePricingStructureItemWithPrice): boolean {
         return !!item.parentId;
     }
 
-    isAnyParentRowExpanded(item: TablePricingStructureItemWithPrice) {
+    isAnyParentRowExpanded(item: TablePricingStructureItemWithPrice): boolean {
         const b = this.rowInfoMap.get(item.rootParentId);
-        return b.expanded;
+        return b ? b.expanded : false;
     }
 
     rowClicked(item: TablePricingStructureItemWithPrice) {
         if (!this.rowInfoMap.has(item.id)) {
             this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
         }
-        this.rowInfoMap.get(item.id).expanded = !this.rowInfoMap.get(item.id).expanded;
+        assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded =
+            !assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
     }
 
     onPaginationEvent($event: PaginationComponentEvent) {
         this.pagination.updateFromPageEvent($event.pageEvent);
-        this.reload(this.pricingStructure);
-
+        if (this.pricingStructure) {
+            this.reload(this.pricingStructure);
+        }
     }
 }

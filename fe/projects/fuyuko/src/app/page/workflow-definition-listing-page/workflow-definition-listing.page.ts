@@ -10,7 +10,7 @@ import {LoadingService} from '../../service/loading-service/loading.service';
    styleUrls: ['./workflow-definition-listing.page.scss']
 })
 export class WorkflowDefinitionListingPageComponent implements OnInit {
-    workflowDefinitions: WorkflowDefinition[];
+    workflowDefinitions: WorkflowDefinition[] = [];
 
     constructor(private workflowService: WorkflowService,
                 private loadingService: LoadingService) { }

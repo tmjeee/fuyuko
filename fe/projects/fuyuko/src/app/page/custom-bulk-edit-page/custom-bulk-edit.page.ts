@@ -20,11 +20,11 @@ import {CustomBulkEditService} from '../../service/custom-bulk-edit-service/cust
 })
 export class CustomBulkEditPageComponent implements OnInit {
 
-    customBulkEdits: CustomBulkEdit[];
-    ready: boolean;
-    customBulkEditValidateFn: CustomBulkEditFormValidateFn;
-    customBulkEditPreviewFn: CustomBulkEditPreviewFn;
-    customBulkEditSubmitFn: CustomBulkEditSubmitFn;
+    customBulkEdits: CustomBulkEdit[] = [];
+    ready = false ;
+    customBulkEditValidateFn!: CustomBulkEditFormValidateFn;
+    customBulkEditPreviewFn!: CustomBulkEditPreviewFn;
+    customBulkEditSubmitFn!: CustomBulkEditSubmitFn;
 
     constructor(private customBulkEditService: CustomBulkEditService,
                 private loadingService: LoadingService) {

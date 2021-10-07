@@ -83,7 +83,7 @@ class ConversionRuleService {
         const r = [];
         if (vals) {
             for (const val of vals) {
-                let i: WhenClauseMetadata2 | ValidateClauseMetadata2 = null;
+                let i: WhenClauseMetadata2 | ValidateClauseMetadata2 | undefined = undefined;
                 switch (val.type) {
                     case 'string': {
                         const v: StringValue = val as StringValue;
@@ -502,7 +502,7 @@ class ConversionRuleService {
                 const k: string = entry.key;
                 const t: string = entry.dataType;
                 const v: string = entry.value;
-                let _v: string | number = null;
+                let _v: string | number | undefined = undefined;
                 switch (t) {
                     case 'string':
                         _v = String(v);

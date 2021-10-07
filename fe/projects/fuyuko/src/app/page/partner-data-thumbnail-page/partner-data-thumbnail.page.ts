@@ -18,9 +18,9 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class PartnerDataThumbnailPageComponent implements OnInit {
 
-   loading: boolean; // loading the data thumbnail
-   attributes: Attribute[];
-   pricedItems: PricedItem[];
+   loading = true; // loading the data thumbnail
+   attributes: Attribute[] = [];
+   pricedItems: PricedItem[] = [];
 
    pricingStructures: PricingStructure[];
 
@@ -33,13 +33,15 @@ export class PartnerDataThumbnailPageComponent implements OnInit {
    }
 
    ngOnInit(): void {
-      const myself: User = this.authService.myself();
-      this.partnerService.getPartnerPricingStructures(myself.id)
-          .pipe(
-              tap((ps: PricingStructure[]) => {
-                 this.pricingStructures = ps;
-              })
-          ).subscribe();
+      const myself: User | undefined = this.authService.myself();
+      if (myself) {
+          this.partnerService.getPartnerPricingStructures(myself.id)
+              .pipe(
+                  tap((ps: PricingStructure[]) => {
+                      this.pricingStructures = ps;
+                  })
+              ).subscribe();
+      }
    }
 
 
@@ -54,7 +56,7 @@ export class PartnerDataThumbnailPageComponent implements OnInit {
               }),
               concatMap((_) => {
                   return this.attributeService.getAllAttributesByView(pricingStructure.viewId)
-                      .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload));
+                      .pipe(map((r: PaginableApiResponse<Attribute[]>) => r.payload ?? []));
               }),
               tap((a: Attribute[]) => {
                   this.attributes = a;

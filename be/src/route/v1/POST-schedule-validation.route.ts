@@ -5,6 +5,7 @@ import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import { param, body } from 'express-validator';
 import {scheduleValidation} from '../../service';
 import {ScheduleValidationResponse} from '@fuyuko-common/model/api-response.model';
+import {ScheduleValidationResult} from "../../service/validation/run-validation.service";
 
 
 // CHECKED
@@ -24,7 +25,7 @@ const httpAction: any[] = [
         const name = req.body.name;
         const description = req.body.description;
 
-        const r: {validationId: number, errors: string[]} = await scheduleValidation(viewId, name, description);
+        const r: ScheduleValidationResult = await scheduleValidation(viewId, name, description);
 
         if (r.errors && r.errors.length) {
             const apiResponse: ScheduleValidationResponse = {
@@ -32,9 +33,9 @@ const httpAction: any[] = [
                     status: 'ERROR',
                     message: r.errors.join(', '),
                 }],
-                payload: {
+                payload: r.validationId ? {
                     validationId: r.validationId
-                }
+                } : undefined
             };
             res.status(400).json(apiResponse);
         } else {
@@ -43,9 +44,9 @@ const httpAction: any[] = [
                     status: 'SUCCESS',
                     message: `Validation with id ${r.validationId} scheduled`,
                 }],
-                payload: {
+                payload: r.validationId ? {
                     validationId: r.validationId
-                }
+                } : undefined
             };
             res.status(200).json(apiResponse);
         }

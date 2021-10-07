@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {WorkflowService} from '../../service/workflow-service/workflow.service';
-import {finalize, map, switchMap, tap} from 'rxjs/operators';
+import {concat, concatMap, finalize, map, switchMap, tap} from 'rxjs/operators';
 import {
     ContinueWorkflowResult,
     WorkflowInstanceComment,
@@ -17,6 +17,7 @@ import {DEFAULT_LIMIT, DEFAULT_OFFSET, LimitOffset} from '@fuyuko-common/model/l
 import {AuthService} from '../../service/auth-service/auth.service';
 import {toNotifications} from '../../service/common.service';
 import {NotificationsService} from 'angular2-notifications';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 @Component({
    templateUrl: './workflow-instance-task-details.page.html',
@@ -25,17 +26,17 @@ import {NotificationsService} from 'angular2-notifications';
 export class WorkflowInstanceTaskDetailsPageComponent implements OnInit {
 
    ready = false;
-   workflowInstanceTask: WorkflowInstanceTask;
-   workflowInstanceComments: WorkflowInstanceComment[];
-   workflowInstanceTaskId: number;
-   getCommentFn: GetCommentsFn;
+   workflowInstanceTask?: WorkflowInstanceTask;
+   workflowInstanceComments: WorkflowInstanceComment[] = [];
+   // workflowInstanceTaskId: number;
+   getCommentFn!: GetCommentsFn;
    limitOffset: LimitOffset = { limit: DEFAULT_LIMIT, offset: DEFAULT_OFFSET };
 
-   continueWorkflowResult: ContinueWorkflowResult;
+   continueWorkflowResult?: ContinueWorkflowResult;
    disableWorkflowActions = false;
 
    @ViewChild('workflowInstanceCommentsComponent')
-   workflowInstanceCommentsComponent: WorkflowInstanceCommentsComponent;
+   workflowInstanceCommentsComponent!: WorkflowInstanceCommentsComponent;
 
    constructor(private activatedRoute: ActivatedRoute,
                private workflowService: WorkflowService,
@@ -48,7 +49,7 @@ export class WorkflowInstanceTaskDetailsPageComponent implements OnInit {
        // todo: catch error and invalid taskId
 
        this.getCommentFn = (workflowInstanceId: number, limitOffset: LimitOffset) => {
-           return this.workflowService.getWorkflowInstanceComments(this.workflowInstanceTask.workflowInstance.id);
+           return this.workflowService.getWorkflowInstanceComments(workflowInstanceId, limitOffset);
        };
 
        this.workflowService.getWorkflowInstanceTaskById(taskId)
@@ -57,7 +58,13 @@ export class WorkflowInstanceTaskDetailsPageComponent implements OnInit {
               map(workflowInstanceTask => {
                  this.workflowInstanceTask = workflowInstanceTask;
                  console.log('********************** workflowInstanceTask', workflowInstanceTask);
+                 return workflowInstanceTask;
               }),
+              // concatMap( workflowInstanceTask => {
+              //     const workflowId = workflowInstanceTask.workflowInstance.id;
+              //
+              //     return this.workflowService.getWorkflowIn
+              // })
               finalize( () => {
                   this.ready = true;
               }),
@@ -68,7 +75,7 @@ export class WorkflowInstanceTaskDetailsPageComponent implements OnInit {
       // todo: trigger continue workflow
        if ($event.type === 'WorkflowAction') {
            const workflowInstanceId = $event.workflowInstanceTask.workflowInstance.id;
-           const user = this.authService.myself();
+           const user = assertDefinedReturn(this.authService.myself());
            const userId = user.id;
            const username = user.username;
            const stateName = $event.workflowInstanceTask.workflowInstance.currentWorkflowState;
@@ -90,7 +97,7 @@ export class WorkflowInstanceTaskDetailsPageComponent implements OnInit {
     onCommentEvent($event: WorkflowInstanceCommentsComponentEvent) {
        if ($event.type === 'SubmitComment') {
            const workflowInstanceId = $event.workflowInstanceId;
-           const userId = this.authService.myself().id;
+           const userId = assertDefinedReturn(this.authService.myself()).id;
            const comment = $event.comment;
            this.workflowService.addComment(workflowInstanceId, userId, comment)
                .pipe(

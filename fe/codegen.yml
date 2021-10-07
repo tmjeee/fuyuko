@@ -1,0 +1,16 @@
+schema: './../be/dist/be/src/schema.gql'
+documents:
+  - ./projects/fuyuko/src/app/gql/*.graphql.ts
+generates:
+  ./projects/fuyuko/src/app/generated/generated-graphql-types.gql.ts:
+    plugins:
+      - typescript
+      - add:
+          content:
+            "
+              import {ResponseStatus} from '@fuyuko-common/model/api-response-status.model';
+            "
+      - typescript-operations
+    config:
+      scalars:
+        ResponseStatus: ResponseStatus

@@ -1,8 +1,8 @@
 <div class="dashboard-page" [attr.test-page-title]="'dashboard'" [attr.test-page-ready]="''+(!loading)">
     <app-dashboard
             *ngIf="!loading"
-            [data]="data"
-            [currentUser]="currentUser"
+            [data]="data!"
+            [currentUser]="currentUser!"
             [dashboardWidgetInfos]="dashboardWidgetInfos"
             [strategies]="strategies"
             [initialStrategy]="selectedStrategy"

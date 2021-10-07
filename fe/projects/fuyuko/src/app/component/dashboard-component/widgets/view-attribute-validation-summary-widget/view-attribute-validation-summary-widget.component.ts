@@ -25,9 +25,9 @@ export class ViewAttributeValidationSummaryWidgetComponent extends DashboardWidg
     }
 
     data: any;
-    r: Reporting_ViewAttributeValidationSummary;
-    views: View[];
-    selectedView: View;
+    r?: Reporting_ViewAttributeValidationSummary;
+    views: View[] = [];
+    selectedView?: View;
 
     columns: any[] = ['attribute name', 'warning', 'errors'];
     options: any = {
@@ -48,7 +48,11 @@ export class ViewAttributeValidationSummaryWidgetComponent extends DashboardWidg
     type: ChartType = ChartType.BarChart;
 
     static info(): DashboardWidgetInfo {
-        return { id: 'view-attribute-validation-summary-widget', name: 'view-attribute-validation-summary-widget', type: ViewAttributeValidationSummaryWidgetComponent };
+        return {
+            id: 'view-attribute-validation-summary-widget',
+            name: 'view-attribute-validation-summary-widget',
+            type: ViewAttributeValidationSummaryWidgetComponent
+        };
     }
 
     ngOnInit(): void {
@@ -65,21 +69,23 @@ export class ViewAttributeValidationSummaryWidgetComponent extends DashboardWidg
 
 
     reload() {
-        this.viewAttributeValidationSummaryWidgetService.getViewValidationSummary(this.selectedView.id)
-            .pipe(
-                tap((r: Reporting_ViewAttributeValidationSummary) => {
-                    this.r = r;
-                    const d: any = [];
-                    if (r && r.attributes && r.attributes.length) {
-                        r.attributes.forEach((a: {
-                            attributeId: number, attributeName: string, errors: number, warnings: number
-                        }) => {
-                            d.push([a.attributeName, a.warnings, a.errors]);
-                        });
-                    }
-                    this.data = d;
-                })
-            ).subscribe();
+        if (this.selectedView) {
+            this.viewAttributeValidationSummaryWidgetService.getViewValidationSummary(this.selectedView.id)
+                .pipe(
+                    tap((r: Reporting_ViewAttributeValidationSummary) => {
+                        this.r = r;
+                        const d: any = [];
+                        if (r && r.attributes && r.attributes.length) {
+                            r.attributes.forEach((a: {
+                                attributeId: number, attributeName: string, errors: number, warnings: number
+                            }) => {
+                                d.push([a.attributeName, a.warnings, a.errors]);
+                            });
+                        }
+                        this.data = d;
+                    })
+                ).subscribe();
+        }
     }
 
 

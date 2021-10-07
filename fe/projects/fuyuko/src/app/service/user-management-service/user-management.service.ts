@@ -8,6 +8,7 @@ import {HttpClient} from '@angular/common/http';
 import {ApiResponse, PaginableApiResponse, RegistrationResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
 import {SelfRegistration} from '@fuyuko-common/model/self-registration.model';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_ALL_ROLES = () => `${config().api_host_url}/roles`;
 const URL_ALL_GROUPS_WITHOUT_ROLE = () => `${config().api_host_url}/groups/no-role/:roleName/:groupName`;
@@ -45,7 +46,7 @@ export class UserManagementService {
     return this.httpClient
         .get<ApiResponse<Role[]>>(URL_ALL_ROLES())
         .pipe(
-            map((r: ApiResponse<Role[]>) => r.payload)
+            map((r: ApiResponse<Role[]>) => assertDefinedReturn(r.payload))
         );
   }
 
@@ -54,7 +55,7 @@ export class UserManagementService {
         .replace(':roleName', roleName)
         .replace(':groupName', groupName), {})
         .pipe(
-            map((r: ApiResponse<Group[]>) => r.payload)
+            map((r: ApiResponse<Group[]>) => assertDefinedReturn(r.payload))
         );
   }
 
@@ -62,7 +63,7 @@ export class UserManagementService {
     return this.httpClient
         .get<PaginableApiResponse<Group[]>>(`${URL_ALL_GROUPS_WITH_ROLE()}`.replace(':roleName', roleName), {})
         .pipe(
-            map((r: PaginableApiResponse<Group[]>) => r.payload)
+            map((r: PaginableApiResponse<Group[]>) => assertDefinedReturn(r.payload))
         );
   }
 
@@ -95,7 +96,7 @@ export class UserManagementService {
               .replace(':pricingStructureId', String(pricingStructureId))
               .replace(':groupName', groupName))
           .pipe(
-              map((r: ApiResponse<Group[]>) => r.payload)
+              map((r: ApiResponse<Group[]>) => assertDefinedReturn(r.payload))
           );
   }
 
@@ -105,7 +106,7 @@ export class UserManagementService {
               .replace(`:pricingStructureId`, String(pricingStructureId))
               .replace(`:groupName`, groupName))
           .pipe(
-              map((r: ApiResponse<Group[]>) => r.payload)
+              map((r: ApiResponse<Group[]>) => assertDefinedReturn(r.payload))
           );
   }
 
@@ -118,13 +119,13 @@ export class UserManagementService {
     return this.httpClient
         .get<ApiResponse<Group[]>>(URL_GET_SEARCH_GROUP_BY_NAME().replace(':groupName', groupName))
         .pipe(
-            map((r: ApiResponse<Group[]>) => r.payload)
+            map((r: ApiResponse<Group[]>) => assertDefinedReturn(r.payload))
         );
   }
 
   getAllGroups(): Observable<Group[]> {
     return this.httpClient.get<PaginableApiResponse<Group[]>>(URL_ALL_GROUPS()).pipe(
-        map((p: PaginableApiResponse<Group[]>) => p.payload),
+        map((p: PaginableApiResponse<Group[]>) => assertDefinedReturn(p.payload)),
     );
   }
 
@@ -132,7 +133,7 @@ export class UserManagementService {
     return this.httpClient
         .get<ApiResponse<User[]>>(URL_ALL_USERS_IN_GROUP().replace(':groupId', String(grp.id)))
         .pipe(
-            map((r: ApiResponse<User[]>) => r.payload)
+            map((r: ApiResponse<User[]>) => assertDefinedReturn(r.payload))
         );
   }
 
@@ -142,7 +143,7 @@ export class UserManagementService {
             .replace(':groupId', String(group.id))
             .replace(':username', username))
           .pipe(
-              map((r: ApiResponse<User[]>) => r.payload)
+              map((r: ApiResponse<User[]>) => assertDefinedReturn(r.payload))
           );
   }
 
@@ -164,7 +165,7 @@ export class UserManagementService {
         .get<ApiResponse<SelfRegistration[]>>(
             URL_GET_SEARCH_SELF_REGISTRATION_BY_USERNAME().replace(':username', userName))
         .pipe(
-            map((r: ApiResponse<SelfRegistration[]>) => r.payload)
+            map((r: ApiResponse<SelfRegistration[]>) => assertDefinedReturn(r.payload))
         );
   }
 
@@ -175,7 +176,7 @@ export class UserManagementService {
             .replace(':status', 'ENABLED')
             .replace(':username', userName)
         ).pipe(
-            map((r: ApiResponse<User[]>) => r.payload)
+            map((r: ApiResponse<User[]>) => assertDefinedReturn(r.payload))
         );
   }
 
@@ -186,7 +187,7 @@ export class UserManagementService {
             .replace(':status', 'DISABLED')
             .replace(':username', userName)
         ).pipe(
-            map((r: ApiResponse<User[]>) => r.payload)
+            map((r: ApiResponse<User[]>) => assertDefinedReturn(r.payload))
         );
   }
 
@@ -200,14 +201,14 @@ export class UserManagementService {
         .get<ApiResponse<User[]>>(
             URL_GET_USERS_BY_STATUS().replace(':status', 'ENABLED'))
         .pipe(
-            map((r: ApiResponse<User[]>) => r.payload)
+            map((r: ApiResponse<User[]>) => assertDefinedReturn(r.payload))
         );
   }
 
   getAllInactiveUsers(): Observable<User[]> {
     return this.httpClient
         .get<ApiResponse<User[]>>(URL_GET_USERS_BY_STATUS().replace(':status', 'DISABLED'))
-        .pipe(map((r: ApiResponse<User[]>) => r.payload));
+        .pipe(map((r: ApiResponse<User[]>) => assertDefinedReturn(r.payload)));
   }
 
   // ========= self registration
@@ -221,7 +222,7 @@ export class UserManagementService {
       return this.httpClient
           .get<ApiResponse<SelfRegistration[]>>(URL_GET_SELF_REGISTRATION())
           .pipe(
-              map((r: ApiResponse<SelfRegistration[]>) => r.payload)
+              map((r: ApiResponse<SelfRegistration[]>) => assertDefinedReturn(r.payload))
           );
   }
 

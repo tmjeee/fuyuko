@@ -20,6 +20,7 @@ import {PaginationComponentEvent} from '../../component/pagination-component/pag
 import {LoadingService} from '../../service/loading-service/loading.service';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {FormBuilder, FormControl} from '@angular/forms';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 export type DataListTypes = 'ALL' | 'FAVOURITE';
@@ -30,16 +31,16 @@ export type DataListTypes = 'ALL' | 'FAVOURITE';
 })
 export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
 
-  itemAndAttributeSet: TableItemAndAttributeSet;
+  itemAndAttributeSet?: TableItemAndAttributeSet;
   favouritedItemIds: number[];
-  done: boolean;
+  done = false;
 
 
   pagination: Pagination;
-  search: string;
-  searchType: ItemSearchType;
-  currentView: View;
-  subscription: Subscription;
+  search!: string;
+  searchType!: ItemSearchType;
+  currentView?: View;
+  subscription?: Subscription;
   formControlDataListTypes: FormControl;
 
   constructor(private attributeService: AttributeService,
@@ -57,7 +58,7 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.search = '';
     this.searchType = 'basic';
-    this.subscription = this.viewService.asObserver().subscribe((currentView: View) => {
+    this.subscription = this.viewService.asObserver().subscribe((currentView: View | undefined) => {
       this.currentView = currentView;
       if (this.currentView) {
         this.reload();
@@ -81,8 +82,8 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   reload() {
     this.done = false;
     this.loadingService.startLoading();
-    const viewId = this.currentView.id;
-    const userId = this.authService.myself().id;
+    const viewId = assertDefinedReturn(this.currentView).id;
+    const userId = assertDefinedReturn(this.authService.myself()).id;
     forkJoin([
       // all attributes in view
       this.attributeService.getAllAttributesByView(viewId)
@@ -92,15 +93,17 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
       (this.search && this.searchType) ?
           // search in view
           (this.formControlDataListTypes.value === 'ALL' ?
-            this.itemService.searchForItems(viewId, this.searchType, this.search, this.pagination.limitOffset()) :          // search for all items
-            this.itemService.searchForFavouriteItems(viewId, userId,                                  // search for favourite items
-                this.searchType, this.search, this.pagination.limitOffset()))
+            // search for all items
+            this.itemService.searchForItems(viewId, this.searchType, this.search, this.pagination.limitOffset()) :
+            // search for favourite items
+            this.itemService.searchForFavouriteItems(viewId, userId, this.searchType, this.search,
+                this.pagination.limitOffset()))
 
           :
 
           // non - search in view
           (this.formControlDataListTypes.value === 'ALL' ?
-            this.itemService.getAllItems(viewId, this.pagination.limitOffset()) :                                           // get all items
+            this.itemService.getAllItems(viewId, this.pagination.limitOffset()) :  // get all items
             this.itemService.getFavouriteItems(viewId, userId, this.pagination.limitOffset()))       // get all favourite items
       ,
 
@@ -108,14 +111,14 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
       // all favourite item ids of this user in view
       this.itemService.getFavouriteItemIds(viewId, userId)
     ]).pipe(
-      map( (r: [Attribute[], PaginableApiResponse<Item[]>, number[]]) => {
-       const attributes: Attribute[] = r[0];
-       const items: Item[] = r[1].payload;
+      map( (r: [Attribute[] | undefined, PaginableApiResponse<Item[]>, number[]]) => {
+       const attributes: Attribute[] | undefined = r[0];
+       const items: Item[] | undefined = r[1].payload;
        this.pagination.update(r[1]);
-       const tableItems: TableItem[] = toTableItem(items);
+       const tableItems: TableItem[] = toTableItem(items ?? []);
        this.itemAndAttributeSet = {
-         attributes,
-         tableItems,
+         attributes: attributes ?? [],
+         tableItems: tableItems ?? [],
        };
        this.favouritedItemIds = r[2];
        this.done = true;
@@ -131,13 +134,13 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   onDataTableEvent($event: DataTableComponentEvent) {
     const o: Observable<ApiResponse>[] = [];
     if ($event.newItems && $event.newItems.length) {
-        o.push(this.itemService.saveTableItems(this.currentView.id, $event.newItems));
+        o.push(this.itemService.saveTableItems(assertDefinedReturn(this.currentView).id, $event.newItems));
     }
     if ($event.modifiedItems && $event.modifiedItems.length) {
-        o.push(this.itemService.saveItems(this.currentView.id, $event.modifiedItems as any));
+        o.push(this.itemService.saveItems(assertDefinedReturn(this.currentView).id, $event.modifiedItems as any));
     }
     if ($event.deletedItems && $event.deletedItems.length) {
-        o.push(this.itemService.deleteTableItems(this.currentView.id, $event.deletedItems));
+        o.push(this.itemService.deleteTableItems(assertDefinedReturn(this.currentView).id, $event.deletedItems));
     }
     switch ($event.type) {
       case 'modification': {
@@ -155,9 +158,9 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
       }
       case 'favourite': {
           this.itemService.addFavouriteItems(
-              this.currentView.id,
-              this.authService.myself().id,
-              $event.favouritedItems.map((i: TableItem) => i.id))
+              assertDefinedReturn(this.currentView).id,
+              assertDefinedReturn(this.authService.myself()).id,
+              ($event.favouritedItems ?? []).map((i: TableItem) => i.id))
               .pipe(
                   tap((r: ApiResponse) => {
                      toNotifications(this.notificationService, r);
@@ -168,9 +171,9 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
       }
       case 'unfavourite': {
           this.itemService.removeFavouriteItems(
-              this.currentView.id,
-              this.authService.myself().id,
-              $event.favouritedItems.map((i: TableItem) => i.id))
+              assertDefinedReturn(this.currentView).id,
+              assertDefinedReturn(this.authService.myself()).id,
+              ($event.favouritedItems ?? []).map((i: TableItem) => i.id))
               .pipe(
                   tap((r: ApiResponse) => {
                       toNotifications(this.notificationService, r);
@@ -191,28 +194,34 @@ export class ViewDataTabularPageComponent implements OnInit, OnDestroy {
   onCarouselEvent($event: CarouselComponentEvent) {
     switch ($event.type) {
       case 'upload':
-          this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
-              tap((r: ApiResponse) => {
-                toNotifications(this.notificationService, r);
-                this.reload();
-              })
-          ).subscribe();
+          if ($event.file) {
+              this.itemService.uploadItemImage($event.itemId, $event.file).pipe(
+                  tap((r: ApiResponse) => {
+                      toNotifications(this.notificationService, r);
+                      this.reload();
+                  })
+              ).subscribe();
+          }
           break;
       case 'markAsPrimary':
-        this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
-            tap((r: ApiResponse) => {
-              toNotifications(this.notificationService, r);
-              this.reload();
-            })
-        ).subscribe();
-        break;
+          if ($event.image) {
+              this.itemService.markItemImageAsPrimary($event.itemId, $event.image.id).pipe(
+                  tap((r: ApiResponse) => {
+                      toNotifications(this.notificationService, r);
+                      this.reload();
+                  })
+              ).subscribe();
+          }
+          break;
       case 'delete':
-        this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
-            tap((r: ApiResponse) => {
-              toNotifications(this.notificationService, r);
-              this.reload();
-            })
-        ).subscribe();
+        if ($event.image) {
+            this.itemService.deleteItemImage($event.itemId, $event.image.id).pipe(
+                tap((r: ApiResponse) => {
+                    toNotifications(this.notificationService, r);
+                    this.reload();
+                })
+            ).subscribe();
+        }
         break;
     }
   }

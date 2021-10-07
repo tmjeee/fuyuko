@@ -8,7 +8,7 @@ import {NgChanges} from '../../utils/types.util';
 
 export class InternalDataSource extends DataSource<Workflow> {
 
-   private subject = new BehaviorSubject([]);
+   private subject = new BehaviorSubject<Workflow[]>([]);
    hasData = false;
 
    connect(collectionViewer: CollectionViewer): Observable<Workflow[] | ReadonlyArray<Workflow>> {
@@ -44,7 +44,7 @@ export class WorkflowTableComponent implements OnChanges {
    columnsToDisplay: string[] = ['workflowDefinition', 'workflowName', 'workflowAction' , 'workflowType'];
    dataSource = new InternalDataSource();
 
-   @Input() workflows: Workflow[];
+   @Input() workflows: Workflow[] = [];
 
    private rowExpandedMap = new Map<string, boolean>();
 

@@ -69,7 +69,7 @@ export class ThemeService {
   private subject: BehaviorSubject<Theme>;
 
   constructor() {
-    this.subject = new BehaviorSubject(ALL_THEMES_MAP.get(Themes.THEME_PINK_BLUEGREY_DARK));
+    this.subject = new BehaviorSubject(ALL_THEMES_MAP.get(Themes.THEME_PINK_BLUEGREY_DARK) ?? ALL_THEMES[0]);
   }
 
   allThemes(): Theme[] {
@@ -79,7 +79,7 @@ export class ThemeService {
   setTheme(theme: Theme | string) {
     if (theme) {
       if (typeof theme === 'string') {
-        const t: Theme = ALL_THEMES.find((t: Theme) => t.theme.toString() === theme);
+        const t: Theme | undefined = ALL_THEMES.find((t1: Theme) => t1.theme.toString() === theme);
         if (t) {
           this.subject.next(t);
         }

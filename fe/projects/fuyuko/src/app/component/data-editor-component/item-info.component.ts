@@ -22,8 +22,8 @@ export interface DataEditorEvent {
 })
 export class ItemInfoComponent {
 
-   @Input() item: Item;
-   @Input() attributes: Attribute[];
+   @Input() item!: Item;
+   @Input() attributes: Attribute[] = [];
 
    @Output() dataEditorEvent: EventEmitter<DataEditorEvent>;
    @Output() itemEditorEvent: EventEmitter<ItemEditorComponentEvent>;
@@ -45,6 +45,7 @@ export class ItemInfoComponent {
             imageUrl: URL_GET_ITEM_IMAGE().replace(':itemImageId', `${i.id}`)
          } as CarouselItemImage));
       }
+      return [];
    }
 
    onItemDataChange($event: ItemEditorComponentEvent) {

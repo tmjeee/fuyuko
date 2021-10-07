@@ -115,12 +115,12 @@ const _preview = async (viewId: number, dataImportId: number, content: Buffer): 
     } as AttributeDataImport;
 }
 
-const toPair1 = async (pair1: string): Promise<Pair1[]> => {
-    const o: Pair1[] = await readPair1Csv(pair1);
+const toPair1 = async (pair1: string | undefined): Promise<Pair1[]> => {
+    const o: Pair1[] = pair1 ? await readPair1Csv(pair1) : [];
     return o;
 }
 
-const toPair2 = async (pair2: string): Promise<Pair2[]> => {
-    return await readPair2Csv(pair2);
+const toPair2 = async (pair2: string | undefined): Promise<Pair2[]> => {
+    return pair2 ? await readPair2Csv(pair2) : [];
 }
 

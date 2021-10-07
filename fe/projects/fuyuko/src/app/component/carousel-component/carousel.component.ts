@@ -33,7 +33,7 @@ export interface CarouselComponentEvent {
 export class CarouselComponent implements OnInit, AfterViewInit, OnChanges  {
 
   @Input() images: CarouselItemImage[];
-  @Input() itemId: number;
+  @Input() itemId!: number;
   @Input() allowEdit: boolean;
   @Input() imageWidth: string;
   @Input() imageHeight: string;
@@ -50,10 +50,10 @@ export class CarouselComponent implements OnInit, AfterViewInit, OnChanges  {
     }  as CarouselItemImage
   ];
 
-  currentImage: CarouselItemImage;
+  currentImage!: CarouselItemImage;
   currentIndex: number;
 
-  @ViewChild('image') elementRef: ElementRef;
+  @ViewChild('image') elementRef!: ElementRef;
 
   constructor(private matDialog: MatDialog) {
     this.allowEdit = true;

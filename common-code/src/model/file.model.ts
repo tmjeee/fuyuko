@@ -1,16 +1,13 @@
 export class FileDataObject {
-    constructor(fileDataObject?: FileDataObject) {
-        if (fileDataObject) {
-            this.name = fileDataObject.name;
-            this.size = fileDataObject.size;
-            this.type = fileDataObject.type;
-            this.data = fileDataObject.data;
-        }
+    constructor(public name: string,
+                public size: number,
+                public type: string,
+                public data: string /* string of array of number eg. `[1,2,3,5]`*/) {
+        this.name = name;
+        this.size = size;
+        this.type = type;
+        this.data = data;
     }
-    name: string;
-    size: number;
-    type: string;
-    data: string; // string of array of number eg. `[1,2,3,4]`
     getDataAsBuffer(): Buffer {
         const b: Buffer = Buffer.from(new Uint8Array(JSON.parse(this.data)).buffer);
         return b;

@@ -15,10 +15,12 @@ import {ItemImageDialogComponent} from './item-image-dialog.component';
 import {tap} from 'rxjs/operators';
 import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/carousel.component';
 import config from '../../utils/config.util';
+import {assertDefinedReturn} from '../../utils/common.util';
+import * as _ from 'lodash';
 
 export class DataTableDataSource extends DataSource<TableItem> {
 
-  subject: BehaviorSubject<TableItem[]> = new BehaviorSubject([]);
+  subject: BehaviorSubject<TableItem[]> = new BehaviorSubject([] as TableItem[]);
 
   connect(collectionViewer: CollectionViewer): Observable<TableItem[]> {
     return this.subject.asObservable();
@@ -78,7 +80,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Output() events: EventEmitter<DataTableComponentEvent>;
   @Output() searchEvents: EventEmitter<ItemSearchComponentEvent>;
   @Output() carouselEvent: EventEmitter<CarouselComponentEvent>;
-  @Input() itemAndAttributeSet: TableItemAndAttributeSet;
+  @Input() itemAndAttributeSet!: TableItemAndAttributeSet;
   @Input() enableSearch: boolean;
   @Input() favouritedItemIds: number[];
 
@@ -88,8 +90,8 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   datasource: DataTableDataSource;
 
-  displayedColumns: string[]; // the attribute ids
-  childrenDisplayedColumns: string[];
+  displayedColumns!: string[]; // the attribute ids
+  childrenDisplayedColumns!: string[];
 
   selectionModel: SelectionModel<TableItem>;
 
@@ -105,7 +107,7 @@ export class DataTableComponent implements OnInit, OnChanges {
     this.events = new EventEmitter();
     this.searchEvents = new EventEmitter();
     this.carouselEvent = new EventEmitter();
-    this.selectionModel = new SelectionModel(true, []);
+    this.selectionModel = new SelectionModel(true, [] as TableItem[]);
     this.datasource = new DataTableDataSource();
 
     this.pendingSavingModifiedItems = new Map();
@@ -143,13 +145,15 @@ export class DataTableComponent implements OnInit, OnChanges {
   populateDisplayColumns()  {
     const columns: string[] = this.itemAndAttributeSet.attributes
       .sort((a: Attribute, b: Attribute) => {
-        const x = this.attributeInfoMap.get(a.id).order;
-        const y = this.attributeInfoMap.get(b.id).order;
+        const aV = this.attributeInfoMap.get(a.id);
+        const bV = this.attributeInfoMap.get(b.id);
+        const x = aV ? aV.order : 0;
+        const y = bV ? bV.order : 0;
         return x - y;
       })
       .filter((a: Attribute) => {
-        const attInfo: AttributeInfo = this.attributeInfoMap.get(a.id);
-        return (!attInfo.hidden);
+        const attInfo: AttributeInfo | undefined = this.attributeInfoMap.get(a.id);
+        return (attInfo ? !attInfo.hidden : true);
       })
       .map((a: Attribute) => {
         return '' + a.id;
@@ -200,9 +204,9 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   onItemEditEvent($event: ItemEditorComponentEvent, tableItem: TableItem) {
     const eventTableItem: TableItem = $event.item as TableItem;
-    let ti: TableItem = this.pendingSavingNewItems.has(tableItem.id) ? this.pendingSavingNewItems.get(tableItem.id) : null;
+    let ti: TableItem | undefined = this.pendingSavingNewItems.has(tableItem.id) ? this.pendingSavingNewItems.get(tableItem.id) : undefined;
     if (!ti && !this.pendingSavingModifiedItems.has(tableItem.id)) {
-      ti = (tableItem.id, {
+      ti = ({
         id: tableItem.id,
         name: tableItem.name,
         description: tableItem.description,
@@ -217,26 +221,29 @@ export class DataTableComponent implements OnInit, OnChanges {
     } else if (!ti && this.pendingSavingModifiedItems.has(tableItem.id)) {
       ti = this.pendingSavingModifiedItems.get(tableItem.id);
     }
-    switch ($event.type) {
-      case 'name':
-        tableItem.name = eventTableItem.name;
-        ti.name = eventTableItem.name;
-        break;
-      case 'description':
-        tableItem.description = eventTableItem.description;
-        ti.description = eventTableItem.description;
-        break;
+    if (ti) {
+      switch ($event.type) {
+        case 'name':
+          tableItem.name = eventTableItem.name;
+          ti.name = eventTableItem.name;
+          break;
+        case 'description':
+          tableItem.description = eventTableItem.description;
+          ti.description = eventTableItem.description;
+          break;
+      }
     }
   }
 
   onDataEditEvent($event: ItemValueAndAttribute, tableItem: TableItem) {
      const val: Value = $event.itemValue;
-     const value: ItemValTypes = val.val;
+     const value: ItemValTypes | undefined = val.val;
      const att: Attribute = $event.attribute;
 
-     let ti: TableItem = this.pendingSavingNewItems.has(tableItem.id) ? this.pendingSavingNewItems.get(tableItem.id) : null;
+     let ti: TableItem | undefined =
+         this.pendingSavingNewItems.has(tableItem.id) ? this.pendingSavingNewItems.get(tableItem.id) : undefined;
      if (!ti && !this.pendingSavingModifiedItems.has(tableItem.id)) {
-       ti = (tableItem.id, {
+       ti = ({
          id: tableItem.id,
          name: tableItem.name,
          description: tableItem.description,
@@ -246,12 +253,12 @@ export class DataTableComponent implements OnInit, OnChanges {
          images: tableItem.images,
          lastUpdate: tableItem.lastUpdate,
          creationDate: tableItem.creationDate,
-       } as TableItem);
+       });
        this.pendingSavingModifiedItems.set(tableItem.id, ti);
      } else if (!ti && this.pendingSavingModifiedItems.has(tableItem.id)) {
        ti = this.pendingSavingModifiedItems.get(tableItem.id);
      }
-     ti[$event.attribute.id] = val;
+     assertDefinedReturn(ti)[$event.attribute.id] = val;
      tableItem[att.id] = val;
   }
 
@@ -275,10 +282,10 @@ export class DataTableComponent implements OnInit, OnChanges {
     newItem.description = ``;
     newItem.depth = parentItem.depth + 1;
 
-    const f = (tableItem: TableItem) => {
+    const f = (tableItem: TableItem | undefined) => {
       if (tableItem) {
         if (tableItem.parentId > 0) {
-          const p: TableItem = this.itemAndAttributeSet.tableItems.find((i: TableItem) => i.id === tableItem.parentId);
+          const p: TableItem | undefined = this.itemAndAttributeSet.tableItems.find((i: TableItem) => i.id === tableItem.parentId);
           f(p);
         }
         this.pendingSavingNewItems.set(tableItem.id, tableItem);
@@ -358,14 +365,14 @@ export class DataTableComponent implements OnInit, OnChanges {
     if (!this.rowInfoMap.has(item.id)) {
       this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
     }
-    this.rowInfoMap.get(item.id).expanded = !this.rowInfoMap.get(item.id).expanded;
+    assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded = !assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
   }
 
   isRowExpanded(item: TableItem): boolean {
     if (!this.rowInfoMap.has(item.id)) {
       this.rowInfoMap.set(item.id, { expanded: false } as RowInfo);
     }
-    return this.rowInfoMap.get(item.id).expanded;
+    return assertDefinedReturn(this.rowInfoMap.get(item.id)).expanded;
   }
 
   isChildRow(index: number, item: TableItem): boolean {
@@ -406,7 +413,10 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onAttributeFilteringChanged($event: MatCheckboxChange, attribute: Attribute) {
-    this.attributeInfoMap.get(attribute.id).hidden = !$event.checked;
+    const attributeInfo = this.attributeInfoMap.get(attribute.id);
+    if (attributeInfo) {
+      attributeInfo.hidden = !$event.checked;
+    }
     this.populateDisplayColumns();
   }
 

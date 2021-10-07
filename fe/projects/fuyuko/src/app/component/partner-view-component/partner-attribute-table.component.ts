@@ -11,7 +11,7 @@ export interface ItemAndAttribute {
 
 export class DataTableDataSource extends DataSource<ItemAndAttribute> {
 
-    subject: BehaviorSubject<ItemAndAttribute[]> = new BehaviorSubject([]);
+    subject: BehaviorSubject<ItemAndAttribute[]> = new BehaviorSubject([] as ItemAndAttribute[]);
 
     connect(collectionViewer: CollectionViewer): Observable<ItemAndAttribute[]> {
         return this.subject.asObservable();
@@ -35,8 +35,8 @@ export class DataTableDataSource extends DataSource<ItemAndAttribute> {
 })
 export class PartnerAttributeTableComponent implements OnInit, OnChanges {
 
-    @Input() item: PricedItem | TablePricedItem;
-    @Input() attributes: Attribute[];
+    @Input() item!: PricedItem | TablePricedItem;
+    @Input() attributes: Attribute[] = [];
 
     dataSource = new DataTableDataSource();
     itemAndAttributes: ItemAndAttribute[] = [];

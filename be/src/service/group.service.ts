@@ -153,7 +153,7 @@ class GroupService {
                     groups.push(g);
                     m.set(groupId, g);
                 }
-                const g: Group = m.get(groupId);
+                const g: Group = m.get(groupId)!;
                 const roleId: number = c.R_ID;
                 const roleName: string = c.R_NAME;
                 const roleDescription: string = c.R_DESCRIPTION;
@@ -215,7 +215,7 @@ class GroupService {
                     groups.push(g);
                     m.set(groupId, g);
                 }
-                const g: Group = m.get(groupId);
+                const g: Group = m.get(groupId)!;
                 const roleId: number = c.R_ID;
                 const roleName: string = c.R_NAME;
                 const roleDescription: string = c.R_DESCRIPTION;
@@ -305,7 +305,7 @@ class GroupService {
                     groups.push(g);
                     m.set(groupId, g);
                 }
-                const g: Group = m.get(groupId);
+                const g: Group = m.get(groupId)!;
                 const roleId: number = c.R_ID;
                 const roleName: string = c.R_NAME;
                 const roleDescription: string = c.R_DESCRIPTION;
@@ -351,7 +351,7 @@ class GroupService {
                     WHERE G.STATUS = 'ENABLED' AND G.NAME=? 
                 `, [groupName]);
 
-            const group: Group = q.reduce((group: Group, c: QueryI, index: number) => {
+            const group: Group | undefined = q.reduce((group: Group | undefined, c: QueryI, index: number) => {
                 const groupId: number = c.G_ID;
                 const groupName: string = c.G_NAME;
                 const groupDescription: string = c.G_DESCRIPTION;
@@ -376,7 +376,7 @@ class GroupService {
                     description: roleDescription
                 } as Role);
                 return group;
-            }, null);
+            }, undefined);
 
             return group;
         });
@@ -411,7 +411,7 @@ class GroupService {
                     WHERE G.STATUS = 'ENABLED' AND G.ID=? 
                 `, [groupId]);
 
-            const group: Group = q.reduce((group: Group, c: QueryI, index: number) => {
+            const group: Group | undefined = q.reduce((group: Group | undefined, c: QueryI, index: number) => {
                 const groupId: number = c.G_ID;
                 const groupName: string = c.G_NAME;
                 const groupDescription: string = c.G_DESCRIPTION;
@@ -436,7 +436,7 @@ class GroupService {
                     description: roleDescription
                 } as Role);
                 return group;
-            }, null);
+            }, undefined);
 
             return group;
         });
@@ -500,7 +500,7 @@ class GroupService {
                     groups.push(g);
                     m.set(groupId, g);
                 }
-                const g: Group = m.get(groupId);
+                const g: Group = m.get(groupId)!;
                 const roleId: number = c.R_ID;
                 const roleName: string = c.R_NAME;
                 const roleDescription: string = c.R_DESCRIPTION;

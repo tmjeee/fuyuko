@@ -243,7 +243,10 @@ class UserService {
                             roles: []
                         });
                         g.set(gKey, group);
-                        u.get(userId).groups.push(group);
+                        const user = u.get(userId);
+                        if (user) {
+                            user.groups.push(group);
+                        }
                     }
 
                     const roleId = i.R_ID;
@@ -255,7 +258,10 @@ class UserService {
                             description: i.R_DESCRIPTION
                         } as Role;
                         r.set(rKey, role);
-                        g.get(gKey).roles.push(role);
+                        const group = g.get(gKey);
+                        if (group) {
+                            group.roles.push(role);
+                        }
                     }
 
                     return acc;
@@ -341,7 +347,10 @@ class UserService {
                             roles: []
                         });
                         g.set(gKey, group);
-                        u.get(userId).groups.push(group);
+                        const user = u.get(userId);
+                        if (user) {
+                            user.groups.push(group);
+                        }
                     }
 
                     const roleId = i.R_ID;
@@ -353,7 +362,10 @@ class UserService {
                             description: i.R_DESCRIPTION
                         } as Role;
                         r.set(rKey, role);
-                        g.get(gKey).roles.push(role);
+                        const group = g.get(gKey);
+                        if (group) {
+                            group.roles.push(role);
+                        }
                     }
 
                     return acc;
@@ -373,10 +385,10 @@ class UserService {
      * === getNoAvatarContent ===
      * ============================
      */
-    private async getNoAvatarContent(conn: Connection): Promise<BinaryContent> {
+    private async getNoAvatarContent(conn: Connection): Promise<BinaryContent | undefined> {
         const q: QueryA = await conn.query('SELECT ID, NAME, MIME_TYPE, SIZE, CONTENT FROM TBL_GLOBAL_IMAGE WHERE TAG = ?',
             ['no-avatar']);
-        let binaryContent = null;
+        let binaryContent = undefined;
         if (q.length > 0) {
             binaryContent = {
                 id: q[0].ID,
@@ -522,7 +534,10 @@ class UserService {
                             roles: []
                         });
                         g.set(gKey, group);
-                        u.get(userId).groups.push(group);
+                        const user = u.get(userId);
+                        if (user) {
+                            user.groups.push(group);
+                        }
                     }
 
                     const roleId = i.R_ID;
@@ -534,7 +549,10 @@ class UserService {
                             description: i.R_DESCRIPTION
                         } as Role;
                         r.set(rKey, role);
-                        g.get(gKey).roles.push(role);
+                        const group = g.get(gKey);
+                        if (group) {
+                            group.roles.push(role);
+                        }
                     }
 
                     return acc;
@@ -620,7 +638,10 @@ class UserService {
                             roles: []
                         });
                         g.set(gKey, group);
-                        u.get(userId).groups.push(group);
+                        const user = u.get(userId);
+                        if (user) {
+                            user.groups.push(group);
+                        }
                     }
 
                     const roleId = i.R_ID;
@@ -632,7 +653,10 @@ class UserService {
                             description: i.R_DESCRIPTION
                         } as Role;
                         r.set(rKey, role);
-                        g.get(gKey).roles.push(role);
+                        const group = g.get(gKey);
+                        if (group) {
+                            group.roles.push(role);
+                        }
                     }
 
                     return acc;
@@ -853,11 +877,14 @@ class UserService {
 
                 const roleId = i.R_ID;
                 if (roleId && groupId) {
-                    r.get(groupId).push({
-                        id: roleId,
-                        name: i.R_NAME,
-                        description: i.R_DESCRIPTION
-                    } as Role);
+                    const roles = r.get(groupId);
+                    if (roles) {
+                        roles.push({
+                            id: roleId,
+                            name: i.R_NAME,
+                            description: i.R_DESCRIPTION
+                        } as Role);
+                    }
                 }
                 return u;
             }, {
@@ -868,7 +895,7 @@ class UserService {
                 theme: null,
                 email: null,
                 groups: []
-            } as User);
+            } as any as User);
 
             return (u.id) ? u : null;
         });
@@ -944,11 +971,14 @@ class UserService {
 
                 const roleId = i.R_ID;
                 if (roleId && groupId) {
-                    r.get(groupId).push({
-                        id: roleId,
-                        name: i.R_NAME,
-                        description: i.R_DESCRIPTION
-                    } as Role);
+                    const roles = r.get(groupId);
+                    if (roles) {
+                        roles.push({
+                            id: roleId,
+                            name: i.R_NAME,
+                            description: i.R_DESCRIPTION
+                        } as Role);
+                    }
                 }
                 return u;
             }, {
@@ -959,7 +989,7 @@ class UserService {
                 theme: null,
                 email: null,
                 groups: []
-            } as User);
+            } as any as User);
 
             return (u.id ? u : null);
         });

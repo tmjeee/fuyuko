@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 export class ViewTableDataSource extends DataSource<View> {
 
-    subject: BehaviorSubject<View[]> = new BehaviorSubject([]);
+    subject: BehaviorSubject<View[]> = new BehaviorSubject([] as View[]);
 
     connect(collectionViewer: CollectionViewer): Observable<View[] | ReadonlyArray<View>> {
         return this.subject.asObservable();
@@ -41,13 +41,13 @@ export class ViewTableComponent implements OnInit {
 
     counter: number;
 
-    @Input() views: View[];
+    @Input() views: View[] = [];
     @Output() events: EventEmitter<ViewTableComponentEvent>;
 
-    dataSource: ViewTableDataSource;
+    dataSource!: ViewTableDataSource;
 
-    @ViewChild('masterCheckbox') masterCheckbox: MatCheckbox;
-    @ViewChildren('checkboxes')checkboxes: QueryList<MatCheckbox>;
+    @ViewChild('masterCheckbox') masterCheckbox!: MatCheckbox;
+    @ViewChildren('checkboxes')checkboxes!: QueryList<MatCheckbox>;
 
     displayedColumns: string[];
 

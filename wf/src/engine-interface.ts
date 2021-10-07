@@ -9,7 +9,7 @@ export interface EngineSerializedData {
 };
 
 export interface Engine {
-    readonly args: Argument | undefined;
+    readonly args: Argument;
     readonly currentState: State | undefined;
     readonly status: EngineStatus;
     startsWith(state: State): Engine;

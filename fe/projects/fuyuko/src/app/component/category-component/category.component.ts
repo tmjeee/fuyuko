@@ -45,36 +45,36 @@ export class CategoryComponent {
 
     loading: boolean;
 
-    @Input() getItemsFn: GetItemsFn;
-    @Input() getAttributesFn: GetAttributesFn;
-    @Input() saveOrUpdateTableItemsFn: SaveOrUpdateTableItemsFn;
-    @Input() markItemImageAsPrimaryFn: MarkItemImageAsPrimaryFn;
-    @Input() deleteItemImageFn: DeleteItemImageFn;
-    @Input() uploadItemImageFn: UploadItemImageFn;
-    @Input() saveItemInfoFn: SaveItemInfoFn;
-    @Input() saveItemAttributeValueFn: SaveItemAttributeValueFn;
-    @Input() saveOrUpdateItemsFn: SaveOrUpdateItemsFn;
-    @Input() getFavouriteItemIdsFn: GetFavouriteItemIdsFn;
-    @Input() addFavouriteItemsFn: AddFavouriteItemsFn;
-    @Input() removeFavouriteItemsFn: RemoveFavouriteItemsFn;
+    @Input() getItemsFn!: GetItemsFn;
+    @Input() getAttributesFn!: GetAttributesFn;
+    @Input() saveOrUpdateTableItemsFn!: SaveOrUpdateTableItemsFn;
+    @Input() markItemImageAsPrimaryFn!: MarkItemImageAsPrimaryFn;
+    @Input() deleteItemImageFn!: DeleteItemImageFn;
+    @Input() uploadItemImageFn!: UploadItemImageFn;
+    @Input() saveItemInfoFn!: SaveItemInfoFn;
+    @Input() saveItemAttributeValueFn!: SaveItemAttributeValueFn;
+    @Input() saveOrUpdateItemsFn!: SaveOrUpdateItemsFn;
+    @Input() getFavouriteItemIdsFn!: GetFavouriteItemIdsFn;
+    @Input() addFavouriteItemsFn!: AddFavouriteItemsFn;
+    @Input() removeFavouriteItemsFn!: RemoveFavouriteItemsFn;
 
-    @Input() viewId: number;
-    @Input() categoriesWithItems: CategoryWithItems[];
+    @Input() viewId!: number;
+    @Input() categoriesWithItems: CategoryWithItems[] = [];
 
     showCategorySidebar: boolean;
 
     viewType: 'table' | 'thumbnail' | 'list'; // when displayType is 'category'
 
     displayType: 'category' | 'item';
-    currentCategoryWithItems: CategoryWithItems;        // when displayType is 'category'
-    currentItem: CategorySimpleItem;                    // when displayType is 'item'
-    paginableApiResponse: PaginableApiResponse<Item[]>;
-    attributes: Attribute[];
+    currentCategoryWithItems?: CategoryWithItems;        // when displayType is 'category'
+    currentItem?: CategorySimpleItem;                    // when displayType is 'item'
+    paginableApiResponse?: PaginableApiResponse<Item[]>;
+    attributes: Attribute[] = [];
 
-    tableItemAndAttributeSet: TableItemAndAttributeSet; // available when displayType is 'category'
-    favouritedItemIds: number[];                        // available when displayType is 'category'
-    itemAndAttributeSet: ItemAndAttributeSet;           // available when displayType is 'category'
-    item: Item;
+    tableItemAndAttributeSet?: TableItemAndAttributeSet; // available when displayType is 'category'
+    favouritedItemIds: number[] = [];                    // available when displayType is 'category'
+    itemAndAttributeSet?: ItemAndAttributeSet;            // available when displayType is 'category'
+    item?: Item;
     pagination: Pagination;
 
     // available when displayType is 'item'
@@ -83,6 +83,8 @@ export class CategoryComponent {
         this.viewType = 'table';
         this.showCategorySidebar = true;
         this.pagination = new Pagination();
+        this.loading = false;
+        this.displayType = 'category';
     }
 
 
@@ -93,7 +95,7 @@ export class CategoryComponent {
                 break;
             }
             case 'modification': {
-                this.saveOrUpdateTableItemsFn($event.modifiedItems, $event.deletedItems)
+                this.saveOrUpdateTableItemsFn($event.modifiedItems ?? [], $event.deletedItems ?? [])
                     .pipe(
                         tap((r: ApiResponse[]) => {
                             this.reload();
@@ -104,10 +106,10 @@ export class CategoryComponent {
             case 'favourite': {
                 this.addFavouriteItemsFn(
                     this.viewId,
-                    $event.favouritedItems.map((i: TableItem) => i.id)
+                    ($event.favouritedItems ?? []).map((i: TableItem) => i.id)
                 ).pipe(
                     tap((r: ApiResponse) => {
-                        const itemIds: number[] = ($event.favouritedItems.map((i: TableItem) => i.id));
+                        const itemIds: number[] = (($event.favouritedItems ?? []).map((i: TableItem) => i.id));
                         itemIds.reduce((favouritedItemIds: number[], itemId: number) => {
                             if (favouritedItemIds.indexOf(itemId) < 0) {
                                 favouritedItemIds.push(itemId);
@@ -122,10 +124,10 @@ export class CategoryComponent {
             case 'unfavourite': {
                 this.removeFavouriteItemsFn(
                     this.viewId,
-                    $event.favouritedItems.map((i: TableItem) => i.id)
+                    ($event.favouritedItems ?? []).map((i: TableItem) => i.id)
                 ).pipe(
                     tap((r: ApiResponse) => {
-                        const itemIds: number[] = ($event.favouritedItems.map((i: TableItem) => i.id));
+                        const itemIds: number[] = (($event.favouritedItems ?? []).map((i: TableItem) => i.id));
                         itemIds.reduce((favouritedItemIds: number[], itemId: number) => {
                             const i = favouritedItemIds.indexOf(itemId);
                             if (i >= 0) {
@@ -144,27 +146,33 @@ export class CategoryComponent {
     onDataTableCarouselEvent($event: CarouselComponentEvent) {
         switch ($event.type) {
             case 'markAsPrimary': {
-                this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
-                    tap((r: ApiResponse) => {
-                       this.reload();
-                    })
-                ).subscribe();
+                if ($event.image) {
+                    this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
             case 'upload': {
-                this.uploadItemImageFn($event.itemId, $event.file).pipe(
-                   tap((r: ApiResponse) => {
-                        this.reload();
-                   })
-                ).subscribe();
+                if ($event.file) {
+                    this.uploadItemImageFn($event.itemId, $event.file).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
             case 'delete': {
-                this.deleteItemImageFn($event.itemId, $event.image).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.image) {
+                    this.deleteItemImageFn($event.itemId, $event.image).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
         }
@@ -177,27 +185,33 @@ export class CategoryComponent {
     onItemInfoCarouselEvent($event: CarouselComponentEvent) {
         switch ($event.type) {
             case 'markAsPrimary': {
-                this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.image) {
+                    this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
             case 'upload': {
-                this.uploadItemImageFn($event.itemId, $event.file).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.file) {
+                    this.uploadItemImageFn($event.itemId, $event.file).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
             case 'delete': {
-                this.deleteItemImageFn($event.itemId, $event.image).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.image) {
+                    this.deleteItemImageFn($event.itemId, $event.image).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
         }
@@ -238,27 +252,33 @@ export class CategoryComponent {
     onThumbnailCarouselEvent($event: CarouselComponentEvent) {
         switch ($event.type) {
             case 'markAsPrimary': {
-                this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.image) {
+                    this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
             case 'upload': {
-                this.uploadItemImageFn($event.itemId, $event.file).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.file) {
+                    this.uploadItemImageFn($event.itemId, $event.file).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
             case 'delete': {
-                this.deleteItemImageFn($event.itemId, $event.image).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.image) {
+                    this.deleteItemImageFn($event.itemId, $event.image).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
         }
@@ -291,27 +311,33 @@ export class CategoryComponent {
     onListCarouselEvent($event: CarouselComponentEvent) {
         switch ($event.type) {
             case 'markAsPrimary': {
-                this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.image) {
+                    this.markItemImageAsPrimaryFn($event.itemId, $event.image).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
             case 'upload': {
-                this.uploadItemImageFn($event.itemId, $event.file).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.file) {
+                    this.uploadItemImageFn($event.itemId, $event.file).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
             case 'delete': {
-                this.deleteItemImageFn($event.itemId, $event.image).pipe(
-                    tap((r: ApiResponse) => {
-                        this.reload();
-                    })
-                ).subscribe();
+                if ($event.image) {
+                    this.deleteItemImageFn($event.itemId, $event.image).pipe(
+                        tap((r: ApiResponse) => {
+                            this.reload();
+                        })
+                    ).subscribe();
+                }
                 break;
             }
         }
@@ -369,9 +395,8 @@ export class CategoryComponent {
                         combineAll() as any,
                         tap((r: [PaginableApiResponse<Item[]>, Attribute[]]) => {
                             this.paginableApiResponse = r[0];
-                            this.item = r[0].payload[0];
+                            this.item = r[0].payload ? r[0].payload[0] : undefined;
                             this.attributes = r[1];
-
                         }),
                         finalize(() => this.loading = false)
                     ).subscribe();

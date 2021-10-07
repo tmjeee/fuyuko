@@ -20,7 +20,7 @@ const httpAction: any[] = [
 
         const viewId: number = Number(req.params.viewId);
         const categoryId: number = Number(req.params.categoryId);
-        const parentId: number = req.params.parentId ? Number(req.params.parentId) : null;
+        const parentId: number | undefined = req.params.parentId ? Number(req.params.parentId) : undefined;
 
         // HANDLE CATEGORY
 

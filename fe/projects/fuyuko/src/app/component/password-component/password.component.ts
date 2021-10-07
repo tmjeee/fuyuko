@@ -3,7 +3,7 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, 
 
 
 export const passwordValidator = () => {
-  return (control: AbstractControl): ValidationErrors => {
+  return (control: AbstractControl): ValidationErrors | null => {
     const formGroup: FormGroup = control as FormGroup;
     const formControlPassword: FormControl = formGroup.controls.password as FormControl;
     const formControlConfirmPassword: FormControl = formGroup.controls.confirmPassword as FormControl;
@@ -29,7 +29,7 @@ export class PasswordComponent implements OnChanges{
   formControlPassword: FormControl;
   formControlConfirmPassword: FormControl;
 
-  @Input() disable: boolean;
+  @Input() disable = false;
   @Output() events: EventEmitter<PasswordComponentEvent>;
 
   constructor(private formBuilder: FormBuilder) {

@@ -5,10 +5,16 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {
   AREA_UNITS,
   COUNTRY_CURRENCY_UNITS,
+  DEFAULT_AREA_UNIT,
+  DEFAULT_COUNTRY_CURRENCY_UNIT,
+  DEFAULT_DIMENSION_UNIT, DEFAULT_HEIGHT_UNIT, DEFAULT_LENGTH_UNIT,
+  DEFAULT_VOUMNE_UNIT, DEFAULT_WEIGHT_UNIT,
+  DEFAULT_WIDTH_UNIT,
   DIMENSION_UNITS,
   HEIGHT_UNITS,
   LENGTH_UNITS,
-  VOLUME_UNITS, WEIGHT_UNITS,
+  VOLUME_UNITS,
+  WEIGHT_UNITS,
   WIDTH_UNITS
 } from '@fuyuko-common/model/unit.model';
 import {Attribute} from '@fuyuko-common/model/attribute.model';
@@ -110,8 +116,8 @@ export class DataEditorDialogComponent {
   readonly heightUnits: string[] = HEIGHT_UNITS;
   readonly weightUnits: string[] = WEIGHT_UNITS;
 
-  pair2Map: Pair2Map;
-  pairs2: {key: string, value: string}[];
+  pair2Map?: Pair2Map;
+  pairs2: {key: string, value: string}[] = [];
 
   constructor(private formBuilder: FormBuilder,
               private matDialogRef: MatDialogRef<DataEditorDialogComponent>,
@@ -233,24 +239,24 @@ export class DataEditorDialogComponent {
       case 'number':
         let numberVal: NumberValue = itemValue.val as NumberValue;
         if (!numberVal) {
-          numberVal = { type: 'number', value: undefined };
+          numberVal = { type: 'number', value: 0 };
           itemValue.val = numberVal;
         }
         this.formControlNumberAttributeValue.setValue(numberVal.value);
         break;
       case 'date':
         let dateVal: DateValue = itemValue.val as DateValue;
+        const m = moment(dateVal.value, attribute.format ? attribute.format : DATE_FORMAT);
         if (!dateVal) {
-          dateVal = { type: 'date', value: undefined };
+          dateVal = { type: 'date', value: m.format(DATE_FORMAT) };
           itemValue.val = dateVal;
         }
-        const m = moment(dateVal.value, attribute.format ? attribute.format : DATE_FORMAT);
         this.formControlDateAttributeValue.setValue(m);
         break;
       case 'currency':
         let currencyVal: CurrencyValue = itemValue.val as CurrencyValue;
         if (!currencyVal) {
-          currencyVal = { type: 'currency', country: undefined, value: undefined };
+          currencyVal = { type: 'currency', country: DEFAULT_COUNTRY_CURRENCY_UNIT, value: 0 };
           itemValue.val = currencyVal;
         }
         this.formControlCurrencyAttributeValue.setValue(currencyVal.value);
@@ -259,7 +265,7 @@ export class DataEditorDialogComponent {
       case 'volume':
         let volumeVal: VolumeValue = itemValue.val as VolumeValue;
         if (!volumeVal) {
-          volumeVal = { type: 'volume', value: undefined, unit: undefined};
+          volumeVal = { type: 'volume', value: 0, unit: DEFAULT_VOUMNE_UNIT};
           itemValue.val = volumeVal;
         }
         this.formControlVolumeAttributeValue.setValue(volumeVal.value);
@@ -268,7 +274,7 @@ export class DataEditorDialogComponent {
       case 'dimension':
         let dimensionVal: DimensionValue = itemValue.val as DimensionValue;
         if (!dimensionVal) {
-          dimensionVal = { type: 'dimension', length: undefined, width: undefined, height: undefined, unit: undefined};
+          dimensionVal = { type: 'dimension', length: 0, width: 0, height: 0, unit: DEFAULT_DIMENSION_UNIT};
           itemValue.val = dimensionVal;
         }
         this.formControlDimensionAttributeWidthValue.setValue(dimensionVal.width);
@@ -279,7 +285,7 @@ export class DataEditorDialogComponent {
       case 'area':
         let areaVal: AreaValue = itemValue.val as AreaValue;
         if (!areaVal) {
-          areaVal = { type: 'area', value: undefined, unit: undefined};
+          areaVal = { type: 'area', value: 0, unit: DEFAULT_AREA_UNIT};
           itemValue.val = areaVal;
         }
         this.formControlAreaAttributeValue.setValue(areaVal.value);
@@ -288,7 +294,7 @@ export class DataEditorDialogComponent {
       case 'width':
         let widthVal: WidthValue = itemValue.val as WidthValue;
         if (!widthVal) {
-          widthVal = { type: 'width', value: undefined, unit: undefined };
+          widthVal = { type: 'width', value: 0, unit: DEFAULT_WIDTH_UNIT };
           itemValue.val = widthVal;
         }
         this.formControlWidthAttributeValue.setValue(widthVal.value);
@@ -297,7 +303,7 @@ export class DataEditorDialogComponent {
       case 'length':
         let lengthVal: LengthValue = itemValue.val as LengthValue;
         if (!lengthVal) {
-          lengthVal = { type: 'length', value: undefined, unit: undefined };
+          lengthVal = { type: 'length', value: 0, unit: DEFAULT_LENGTH_UNIT };
           itemValue.val = lengthVal;
         }
         this.formControlLengthAttributeValue.setValue(lengthVal.value);
@@ -306,7 +312,7 @@ export class DataEditorDialogComponent {
       case 'height':
         let heightVal: HeightValue = itemValue.val as HeightValue;
         if (!heightVal) {
-          heightVal = { type: 'height', value: undefined, unit: undefined};
+          heightVal = { type: 'height', value: 0, unit: DEFAULT_HEIGHT_UNIT};
           itemValue.val = heightVal;
         }
         this.formControlHeightAttributeValue.setValue(heightVal.value);
@@ -315,7 +321,7 @@ export class DataEditorDialogComponent {
       case 'weight':
         let weightVal: WeightValue = itemValue.val as WeightValue;
         if (!weightVal) {
-          weightVal = { type: 'weight', value: undefined, unit: undefined };
+          weightVal = { type: 'weight', value: 0, unit: DEFAULT_WEIGHT_UNIT };
           itemValue.val = weightVal;
         }
         this.formControlWeightAttributeValue.setValue(weightVal.value);
@@ -418,7 +424,7 @@ export class DataEditorDialogComponent {
   onDoubleSelectPair1Change($event: MatOptionSelectionChange) {
     if ($event && $event.source && $event.source.value && $event.isUserInput) {
       const pair1Key: string = $event.source.value;
-      this.pairs2 = this.pair2Map[pair1Key];
+      this.pairs2 = this.pair2Map ? this.pair2Map[pair1Key] : [];
     }
   }
 }

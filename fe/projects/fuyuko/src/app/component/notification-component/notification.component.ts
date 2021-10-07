@@ -16,10 +16,10 @@ export class NotificationComponent implements OnInit, OnChanges {
   readonly widthOffsetOfDialog: number = 25;
   readonly heightOffsetOfDialog: number = 30;
 
-  @Input() notifications: AppNotification[];
-  noOfNewNotifications: number;
+  @Input() notifications: AppNotification[] = [];
 
-  dialogAlreadyOpen: boolean;
+  noOfNewNotifications = 0;
+  dialogAlreadyOpen = false;
 
   constructor(private matDialog: MatDialog,
               private notificationService: AppNotificationService) {}

@@ -8,7 +8,7 @@ import {View} from '@fuyuko-common/model/view.model';
 
 class AttributeTableDataSource extends DataSource<Attribute> {
 
-  private subject: BehaviorSubject<Attribute[]> = new BehaviorSubject(null);
+  private subject: BehaviorSubject<Attribute[]> = new BehaviorSubject([] as Attribute[]);
 
   connect(collectionViewer: CollectionViewer): Observable<Attribute[] | ReadonlyArray<Attribute>> {
     return this.subject.asObservable();
@@ -42,7 +42,7 @@ export class AttributeTableComponent implements OnChanges {
   @Input() searchFieldLabel: string;
   @Input() searchFieldHint: string;
   @Input() searchFieldPlaceholder: string;
-  @Input() view: View;
+  @Input() view: View | undefined = undefined;
   @Input() attributes: Attribute[];
 
   @Output() events: EventEmitter<AttributeTableComponentEvent>;
@@ -52,6 +52,10 @@ export class AttributeTableComponent implements OnChanges {
   displayedColumns: string[] = ['name', 'type', 'description', 'creationDate', 'lastUpdate', 'metadata', 'actions'];
 
   constructor(private formBuilder: FormBuilder) {
+    this.searchFieldLabel = '';
+    this.searchFieldHint = '';
+    this.searchFieldPlaceholder = '';
+    this.attributes = [];
     this.formControlAttributeSearch = this.formBuilder.control('');
     this.dataSource = new AttributeTableDataSource();
     this.events = new EventEmitter();
@@ -85,7 +89,7 @@ export class AttributeTableComponent implements OnChanges {
   onAddAttributeClick($event: MouseEvent) {
     this.events.emit({
       type: 'add',
-      attribute: null,
+      attribute: undefined,
       view: this.view
     } as AttributeTableComponentEvent);
   }

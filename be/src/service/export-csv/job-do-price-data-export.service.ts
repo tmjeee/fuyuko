@@ -33,7 +33,7 @@ export const runJob = async (viewId: number, pricingStructureId: number, attribu
         jobId: jobLogger.jobId
     } as ExportPriceJobEvent);
 
-    (async ()=>{
+    await (async ()=>{
 
         try {
             // id,name,description,price,country,att1,att2,att3

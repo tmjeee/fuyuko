@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
+@use '~@angular/material' as mat;
 @import '~normalize.css/normalize.css';
-@import '~@angular/material/theming';
 @import 'scss/variables';
 @import 'scss/mixins';
 
@@ -54,54 +54,54 @@ html {
 
 
 
-@include mat-core();
+@include mat.core();
 
 .theme-deeppurple-amber-light {
-  @include angular-material-theme($theme-deeppurple-amber-light);
+  @include mat.all-component-themes($theme-deeppurple-amber-light);
   @include mat-theme-to-css-variables($theme-deeppurple-amber-light);
 }
 
 .theme-deeppurple-amber-dark {
-  @include angular-material-theme($theme-deeppurple-amber-dark);
+  @include mat.all-component-themes($theme-deeppurple-amber-dark);
   @include mat-theme-to-css-variables($theme-deeppurple-amber-dark);
 }
 
 .theme-indigo-pink-light {
-  @include angular-material-theme($theme-indigo-pink-light);
+  @include mat.all-component-themes($theme-indigo-pink-light);
   @include mat-theme-to-css-variables($theme-indigo-pink-light);
 }
 
 .theme-indigo-pink-dark {
-  @include angular-material-theme($theme-indigo-pink-dark);
+  @include mat.all-component-themes($theme-indigo-pink-dark);
   @include mat-theme-to-css-variables($theme-indigo-pink-dark);
 }
 
 .theme-pink-bluegrey-light {
-  @include angular-material-theme($theme-pink-bluegrey-light);
+  @include mat.all-component-themes($theme-pink-bluegrey-light);
   @include mat-theme-to-css-variables($theme-pink-bluegrey-light);
 }
 
 .theme-pink-bluegrey-dark {
-  @include angular-material-theme($theme-pink-bluegrey-dark);
+  @include mat.all-component-themes($theme-pink-bluegrey-dark);
   @include mat-theme-to-css-variables($theme-pink-bluegrey-dark);
 }
 
 .theme-purple-green-light {
-  @include angular-material-theme($theme-purple-green-light);
+  @include mat.all-component-themes($theme-purple-green-light);
   @include mat-theme-to-css-variables($theme-purple-green-light);
 }
 
 .theme-purple-green-dark {
-  @include angular-material-theme($theme-purple-green-dark);
+  @include mat.all-component-themes($theme-purple-green-dark);
   @include mat-theme-to-css-variables($theme-purple-green-dark);
 }
 
 .theme-indigo-lightblue-light {
-  @include angular-material-theme($theme-indigo-lightblue-light);
+  @include mat.all-component-themes($theme-indigo-lightblue-light);
   @include mat-theme-to-css-variables($theme-indigo-lightblue-light);
 }
 
 .theme-indigo-lightblue-dark {
-  @include angular-material-theme($theme-indigo-lightblue-dark);
+  @include mat.all-component-themes($theme-indigo-lightblue-dark);
   @include mat-theme-to-css-variables($theme-indigo-lightblue-dark);
 }

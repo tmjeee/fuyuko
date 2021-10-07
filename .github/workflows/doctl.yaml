@@ -1,3 +1,8 @@
+#
+# Connect to digital ocean kubernetes cluster and run command (this is a template so we can run
+#  more kubectl commands on it)
+#
+
 name: doctl-demo
 on:
   workflow_dispatch:
@@ -21,10 +26,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: '${{github.event.inputs.branchName}}'
-      #- name: setup node
-      #  uses: actions/setup-node@v1
-      #  with:
-      #    node-version: '12.x'
       - name: check permission
         uses: 74th/workflow-permission-action@1.0.0
         with:

@@ -170,7 +170,7 @@
                 <mat-form-field *ngSwitchCase="'dimension'">
                     <mat-label>Unit</mat-label>
                     <input matInput type="text" [ngStyle]="{visibility: 'hidden'}">
-                    <mat-select [attr.test-mat-select-field-dimension-unit]="''" [formControl]="formControl4" (selectionChange)="onValueChange()">
+                    <mat-select [attr.test-mat-select-field-dimension-unit]="''" [formControl]="formControl4!" (selectionChange)="onValueChange()">
                         <mat-option *ngFor="let dimensionUnit of dimensionUnits" [value]="dimensionUnit" [attr.test-mat-select-option-field-dimension-unit]="dimensionUnit">
                             {{dimensionUnit}}
                         </mat-option>

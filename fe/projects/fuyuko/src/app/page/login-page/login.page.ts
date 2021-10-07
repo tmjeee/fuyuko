@@ -17,7 +17,7 @@ import {isApiResponseSuccess, toNotifications} from '../../service/common.servic
 })
 export class LoginPageComponent implements OnInit, AfterViewInit {
 
-  ready: boolean;
+  ready = false ;
 
   formGroup: FormGroup;
   formControlUsername: FormControl;
@@ -51,7 +51,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
       .pipe(
         map((u: LoginResponse) => {
           if (isApiResponseSuccess(u)) {
-            const lastUrl: string = this.browserLocationHistoryService.retrieveLastUrl();
+            const lastUrl: string | undefined = this.browserLocationHistoryService.retrieveLastUrl();
             this.browserLocationHistoryService.clearStoredLastUrl();
             if (!!lastUrl) {
               location.href = lastUrl;

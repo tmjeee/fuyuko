@@ -18,7 +18,7 @@ import {SelfRegistration} from '@fuyuko-common/model/self-registration.model';
 
 export type UserSearchFn = (username: string) => Observable<User[] | SelfRegistration[]>;
 
-export interface TableEntry { id: number, username: string, firstName: string, lastName: string };
+export interface TableEntry { id: number; username: string; firstName: string; lastName: string; }
 
 export interface UserSearchTableComponentEvent {
   type: string;
@@ -27,7 +27,7 @@ export interface UserSearchTableComponentEvent {
 
 class UserSearchTableDataSource implements DataSource<TableEntry> {
 
-  subject: BehaviorSubject<TableEntry[]> = new BehaviorSubject([]);
+  subject: BehaviorSubject<TableEntry[]> = new BehaviorSubject([] as TableEntry[]);
 
   update(users: TableEntry[]) {
     this.subject.next(users);
@@ -56,13 +56,13 @@ export interface ActionType {
 })
 export class UserSearchTableComponent implements OnInit, OnChanges {
 
-  @Input() searchFieldPlaceholder: string;
-  @Input() searchFieldLabel: string;
-  @Input() searchFieldHint: string;
+  @Input() searchFieldPlaceholder!: string;
+  @Input() searchFieldLabel!: string;
+  @Input() searchFieldHint!: string;
 
-  @Input() users: User[] | SelfRegistration[];
-  @Input() userSearchFn: UserSearchFn;
-  @Input() actionTypes: ActionType[];
+  @Input() users: User[] | SelfRegistration[] = [];
+  @Input() userSearchFn!: UserSearchFn;
+  @Input() actionTypes: ActionType[] = [];
   @Output() events: EventEmitter<UserSearchTableComponentEvent> = new EventEmitter();
 
   dataSource: UserSearchTableDataSource;

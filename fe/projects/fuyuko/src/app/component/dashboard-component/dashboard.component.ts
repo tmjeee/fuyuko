@@ -39,24 +39,24 @@ export interface DragAndDropData {
 })
 export class DashboardComponent implements OnInit {
 
-    @Input() currentUser: User;
+    @Input() currentUser!: User;
 
-    @Input() strategies: DashboardStrategy[];
-    @Input() initialStrategy: DashboardStrategy;
+    @Input() strategies: DashboardStrategy[] = [];
+    @Input() initialStrategy!: DashboardStrategy;
 
-    @Input() dashboardWidgetInfos: DashboardWidgetInfo[];
-    @Input() data: string;
+    @Input() dashboardWidgetInfos: DashboardWidgetInfo[] = [];
+    @Input() data!: string;
 
     @Output() events: EventEmitter<DashboardComponentEvent>;
 
-    @ViewChildren('widgetPanel', {read: ViewContainerRef}) widgetPanels: QueryList<ViewContainerRef>;
-    @ViewChildren('widgetContainer', {read: WidgetContainerComponent}) widgetContainers: QueryList<WidgetContainerComponent>;
+    @ViewChildren('widgetPanel', {read: ViewContainerRef}) widgetPanels!: QueryList<ViewContainerRef>;
+    @ViewChildren('widgetContainer', {read: WidgetContainerComponent}) widgetContainers!: QueryList<WidgetContainerComponent>;
 
 
-    prevStrategy: DashboardStrategy;
-    columnIndexes: number[];
-    formControlDashboardStrategySelected: FormControl;
-    formControlWidgetInfoSelected: FormControl;
+    prevStrategy!: DashboardStrategy;
+    columnIndexes: number[] = [];
+    formControlDashboardStrategySelected!: FormControl;
+    formControlWidgetInfoSelected!: FormControl;
 
 
     constructor(private formBuilder: FormBuilder) {
@@ -126,14 +126,14 @@ export class DashboardComponent implements OnInit {
     }
 
     onCloseWidget($event: MouseEvent, widgetInstance: DashboardWidgetInstance) {
-        const c: WidgetContainerComponent = this.widgetContainers.find((comp: WidgetContainerComponent) => {
+        const c: WidgetContainerComponent | undefined = this.widgetContainers.find((comp: WidgetContainerComponent) => {
             return comp.dashboardWidgetInstance.instanceId === widgetInstance.instanceId;
         });
         if (c) {
             c.destroy();
         }
 
-        const itemFound: ViewContainerRef = this.widgetPanels.find((item: ViewContainerRef) => {
+        const itemFound: ViewContainerRef | undefined = this.widgetPanels.find((item: ViewContainerRef) => {
             const element: HTMLElement = item.element.nativeElement;
             const id = element.getAttribute('instanceId');
             return id === widgetInstance.instanceId;
@@ -141,7 +141,9 @@ export class DashboardComponent implements OnInit {
         if (itemFound) {
             itemFound.clear();
             const htmlElement: HTMLElement = itemFound.element.nativeElement;
-            htmlElement.parentElement.removeChild(htmlElement);
+            if (htmlElement.parentElement) {
+                htmlElement.parentElement.removeChild(htmlElement);
+            }
             this.getCurrentStrategy().removeDashboardWidgetInstances([widgetInstance.instanceId]);
         }
     }

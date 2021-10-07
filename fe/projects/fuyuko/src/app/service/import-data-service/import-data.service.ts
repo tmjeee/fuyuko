@@ -11,6 +11,7 @@ import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_PREVIEW_ATTRIBUTES = () => `${config().api_host_url}/view/:viewId/import/attributes/preview`;
 const URL_PREVIEW_PRICES = () => `${config().api_host_url}/view/:viewId/import/prices/preview`;
@@ -36,14 +37,14 @@ export class ImportDataService {
                 formData.set('attributeDataCsvFile', file);
                 return this.httpClient.post<ApiResponse<AttributeDataImport>>(
                     URL_PREVIEW_ATTRIBUTES().replace(':viewId', String(viewId)), formData)
-                    .pipe(map((r: ApiResponse<AttributeDataImport>) => r.payload));
+                    .pipe(map((r: ApiResponse<AttributeDataImport>) => assertDefinedReturn(r.payload)));
             }
             case 'ITEM': {
                 const formData: FormData = new FormData();
                 formData.set('itemDataCsvFile', file);
                 return this.httpClient.post<ApiResponse<ItemDataImport>>(
                     URL_PREVIEW_ITEMS().replace(':viewId', String(viewId)), formData)
-                    .pipe(map((r: ApiResponse<ItemDataImport>) => r.payload));
+                    .pipe(map((r: ApiResponse<ItemDataImport>) => assertDefinedReturn(r.payload)));
 
             }
             case 'PRICE': {
@@ -51,7 +52,7 @@ export class ImportDataService {
                 formData.set('priceDataCsvFile', file);
                 return this.httpClient.post<ApiResponse<PriceDataImport>>(
                     URL_PREVIEW_PRICES().replace(':viewId', String(viewId)), formData)
-                    .pipe(map((r: ApiResponse<PriceDataImport>) => r.payload));
+                    .pipe(map((r: ApiResponse<PriceDataImport>) => assertDefinedReturn(r.payload)));
             }
         }
     }
@@ -65,21 +66,21 @@ export class ImportDataService {
                 return this.httpClient.post<ApiResponse<Job>>(URL_SCHEDULE_ATTRIBUTES().replace(':viewId', String(viewId)), {
                     dataImportId: attributeDataImport.dataImportId,
                     attributes: attributeDataImport.attributes
-                }).pipe(map((r: ApiResponse<Job>) => r.payload));
+                }).pipe(map((r: ApiResponse<Job>) => assertDefinedReturn(r.payload)));
             }
             case 'ITEM': {
                 const itemDataImport: ItemDataImport = dataImport as ItemDataImport;
                 return this.httpClient.post<ApiResponse<Job>>(URL_SCHEDULE_ITEMS().replace(':viewId', String(viewId)), {
                     dataImportId: itemDataImport.dataImportId,
                     items: itemDataImport.items
-                }).pipe(map((r: ApiResponse<Job>) => r.payload));
+                }).pipe(map((r: ApiResponse<Job>) => assertDefinedReturn(r.payload)));
             }
             case 'PRICE': {
                 const priceDataImport: PriceDataImport = dataImport as PriceDataImport;
                 return this.httpClient.post<ApiResponse<Job>>(URL_SCHEDULE_PRICES().replace(':viewId', String(viewId)), {
                     dataImportId: priceDataImport.dataImportId,
                     priceDataItems: priceDataImport.items
-                }).pipe(map((r: ApiResponse<Job>) => r.payload));
+                }).pipe(map((r: ApiResponse<Job>) => assertDefinedReturn(r.payload)));
             }
         }
     }

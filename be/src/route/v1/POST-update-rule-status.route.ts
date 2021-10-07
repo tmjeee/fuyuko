@@ -50,8 +50,10 @@ const httpAction: any[] = [
             const payload: WorkflowTriggerResult[] = [];
             const rule = await getRule(viewId, ruleId);
             if (ws && ws.length > 0) {
-                const workflowTriggerResults = await triggerRuleWorklow([rule], workflowAction);
-                payload.push(...workflowTriggerResults);
+                for (const w of ws) {
+                    const workflowTriggerResults = await triggerRuleWorklow(viewId, [rule], w.workflowDefinition.id, workflowAction);
+                    payload.push(...workflowTriggerResults);
+                }
                 const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {
                     messages: [{
                         status: 'INFO',

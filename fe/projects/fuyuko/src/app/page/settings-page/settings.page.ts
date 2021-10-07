@@ -15,10 +15,10 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class SettingsPageComponent implements OnInit {
 
-  currentUser: User;
+  currentUser?: User;
 
-  ready: boolean;
-  settings: Settings;
+  ready = false;
+  settings?: Settings;
 
   constructor(private authService: AuthService,
               private notificationService: NotificationsService,
@@ -34,26 +34,30 @@ export class SettingsPageComponent implements OnInit {
     this.ready = false;
     this.loadingService.startLoading();
     this.currentUser = this.authService.myself();
-    this.settingsService.getSettings(this.currentUser)
-        .pipe(
-            tap((s: Settings) => {
-              this.settings = s;
-              this.ready = true;
-            }),
-            finalize(() => {
-                this.ready = true;
-                this.loadingService.stopLoading();
-            })
-        ).subscribe();
+    if (this.currentUser) {
+        this.settingsService.getSettings(this.currentUser)
+            .pipe(
+                tap((s: Settings) => {
+                    this.settings = s;
+                    this.ready = true;
+                }),
+                finalize(() => {
+                    this.ready = true;
+                    this.loadingService.stopLoading();
+                })
+            ).subscribe();
+    }
   }
 
   onSettingsEvent($event: SettingsComponentEvent) {
-    this.settingsService.saveSettings(this.currentUser, $event.settings)
-        .pipe(
-            tap((s: Settings) => {
-                this.settings = s;
-                this.notificationService.success('Saved', 'Settings changes save');
-            })
-        ).subscribe();
+      if (this.currentUser) {
+          this.settingsService.saveSettings(this.currentUser, $event.settings)
+              .pipe(
+                  tap((s: Settings) => {
+                      this.settings = s;
+                      this.notificationService.success('Saved', 'Settings changes save');
+                  })
+              ).subscribe();
+      }
   }
 }

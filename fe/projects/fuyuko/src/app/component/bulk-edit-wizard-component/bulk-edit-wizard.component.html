@@ -84,8 +84,8 @@
                 <ng-container *ngIf="secondStepReady">
                     <app-bulk-edit-review-table
                             [attr.test-bulk-edit-review-table]="''"
-                            [whenAttributes]="bulkEditPackage.whenAttributes"
-                            [changeAttributes]="bulkEditPackage.changeAttributes"
+                            [whenAttributes]="bulkEditPackage!.whenAttributes"
+                            [changeAttributes]="bulkEditPackage!.changeAttributes"
                             [bulkEditTableItem]="bulkEditTableItems">
                     </app-bulk-edit-review-table>
                     <form [formGroup]="formGroupSecondStep" (ngSubmit)="onSecondStepSubmit()">

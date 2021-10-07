@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import config from '../../utils/config.util';
 import {ApiResponse, UserAvatarResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 const URL_ALL_GLOBAL_AVATARS = () => `${config().api_host_url}/global/avatars`;
 const URL_SAVE_USER_AVATAR = () => `${config().api_host_url}/user/:userId/avatar`;
@@ -31,7 +32,7 @@ export class AvatarService {
       return this.httpClient
           .get<ApiResponse<GlobalAvatar[]>>(URL_ALL_GLOBAL_AVATARS())
           .pipe(
-              map((r: ApiResponse<GlobalAvatar[]>) => r.payload)
+              map((r: ApiResponse<GlobalAvatar[]>) => assertDefinedReturn(r.payload))
           );
   }
 }

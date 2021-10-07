@@ -15,6 +15,7 @@ import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import {PricingStructureService} from '../../service/pricing-structure-service/pricing-structure.service';
 import {PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {LoadingService} from '../../service/loading-service/loading.service';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 @Component({
     templateUrl: './export.page.html',
@@ -22,12 +23,12 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class ExportPageComponent implements OnInit {
 
-    ready: boolean;
-    allViews: View[];
-    viewAttributeFn: ViewAttributeFn;
-    previewExportFn: PreviewExportFn;
-    submitExportJobFn: SubmitExportJobFn;
-    viewPricingStructuresFn: ViewPricingStructureFn;
+    ready = false;
+    allViews: View[] = [];
+    viewAttributeFn!: ViewAttributeFn;
+    previewExportFn!: PreviewExportFn;
+    submitExportJobFn!: SubmitExportJobFn;
+    viewPricingStructuresFn!: ViewPricingStructureFn;
 
     constructor(private viewService: ViewService,
                 private pricingStrutureService: PricingStructureService,
@@ -40,7 +41,8 @@ export class ExportPageComponent implements OnInit {
         this.loadingService.startLoading();
         this.viewAttributeFn = (viewId: number) => {
            return this.attributeService.getAllAttributesByView(viewId)
-               .pipe( map((r: PaginableApiResponse<Attribute[]>) => r.payload));
+               .pipe( map((r: PaginableApiResponse<Attribute[]>) =>
+                   r.payload ?? []));
         };
 
         this.viewPricingStructuresFn = (viewId: number) => {

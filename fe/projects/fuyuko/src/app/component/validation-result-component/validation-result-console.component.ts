@@ -12,20 +12,20 @@ import {tap} from 'rxjs/operators';
 })
 export class ValidationResultConsoleComponent implements OnInit, OnDestroy {
 
-    @Input() validationResult: ValidationResult;
-    @Input() itemObservable: Observable<Item>;
-    @Input() validationErrorObservable: Observable<ValidationError[]>;
+    @Input() validationResult!: ValidationResult;
+    @Input() itemObservable!: Observable<Item | undefined>;
+    @Input() validationErrorObservable!: Observable<ValidationError[]>;
 
-    itemObservableSubscription: Subscription;
-    validationErrorObservableSubscription: Subscription;
+    itemObservableSubscription?: Subscription;
+    validationErrorObservableSubscription?: Subscription;
 
-    currentItem: Item;
-    currentValidationErrors: ValidationError[];
+    currentItem?: Item;
+    currentValidationErrors: ValidationError[] = [];
 
     ngOnInit(): void {
         if (this.itemObservable) {
             this.itemObservableSubscription = this.itemObservable.pipe(
-               tap((i: Item) => {
+               tap((i: Item | undefined) => {
                    this.currentItem = i;
                })
             ).subscribe();

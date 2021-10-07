@@ -39,6 +39,7 @@ import {
 } from '@fuyuko-common/shared-utils/ui-item-value-setter.util';
 import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import * as numeral from 'numeral';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 @Component({
     selector: 'app-data-editor-no-popup',
@@ -47,12 +48,12 @@ import * as numeral from 'numeral';
 })
 export class DataEditorNoPopupComponent implements OnInit {
 
-    @Input() attributes: Attribute[];
-    @Input() itemValueAndAttribute: ItemValueAndAttribute;
+    @Input() attributes: Attribute[] = [];
+    @Input() itemValueAndAttribute!: ItemValueAndAttribute;
     @Output() events: EventEmitter<ItemValueAndAttribute>;
 
-    attribute: Attribute;
-    itemValue: Value;
+    attribute?: Attribute;
+    itemValue?: Value;
 
     currencyUnits: CountryCurrencyUnits[];
     areaUnits: AreaUnits[];
@@ -64,12 +65,12 @@ export class DataEditorNoPopupComponent implements OnInit {
     weightUnits: WeightUnits[];
 
 
-    formGroup: FormGroup;
-    formControlAttribute: FormControl;
-    formControl: FormControl;
-    formControl2: FormControl;
-    formControl3: FormControl;
-    formControl4: FormControl;
+    formGroup!: FormGroup;
+    formControlAttribute?: FormControl;
+    formControl?: FormControl;
+    formControl2?: FormControl;
+    formControl3?: FormControl;
+    formControl4?: FormControl;
 
     constructor(private formBuilder: FormBuilder) {
         this.events = new EventEmitter();
@@ -104,7 +105,7 @@ export class DataEditorNoPopupComponent implements OnInit {
 
     reload() {
        this.formGroup = this.formBuilder.group({});
-       if (this.attribute) {
+       if (this.attribute && this.itemValue) {
            this.formControlAttribute = this.formBuilder.control(this.attribute, [Validators.required]);
            this.formGroup.addControl('formControlAttribute', this.formControlAttribute);
            switch (this.attribute.type) {
@@ -118,11 +119,13 @@ export class DataEditorNoPopupComponent implements OnInit {
                }
                case 'date': {
                    const dateInString: string = convertToString(this.attribute, this.itemValue);
-                   let m: moment.Moment = null;
+                   let m: moment.Moment;
                    if (dateInString) {
                        m = moment(dateInString, this.attribute.format ? this.attribute.format : DATE_FORMAT);
+                   } else {
+                       m = moment();
                    }
-                   this.formControl = this.formBuilder.control(m, [Validators.required]);
+                   this.formControl = this.formBuilder.control(m.format(DATE_FORMAT), [Validators.required]);
                    this.formGroup.addControl('formControl', this.formControl);
                    break;
                }
@@ -183,10 +186,10 @@ export class DataEditorNoPopupComponent implements OnInit {
                    break;
                }
                case 'select': {
-                   let k = '';
+                   let k = '' ;
                    if (this.itemValue && this.itemValue.val) {
                        const itemValueType: SelectValue = this.itemValue.val as SelectValue;
-                       k = itemValueType.key;
+                       k = itemValueType.key ?? '';
                    }
                    this.formControl = this.formBuilder.control(k, [Validators.required]);
                    this.formGroup.addControl('formControl', this.formControl);
@@ -197,8 +200,8 @@ export class DataEditorNoPopupComponent implements OnInit {
                    let k2 = '';
                    if (this.itemValue && this.itemValue.val) {
                        const itemValueType: DoubleSelectValue = this.itemValue.val as DoubleSelectValue;
-                       k1 = itemValueType.key1;
-                       k2 = itemValueType.key2;
+                       k1 = itemValueType.key1 ?? '';
+                       k2 = itemValueType.key2 ?? '';
                    }
                    this.formControl = this.formBuilder.control(k1, [Validators.required]);
                    this.formControl2 = this.formBuilder.control(k2, [Validators.required]);
@@ -232,50 +235,74 @@ export class DataEditorNoPopupComponent implements OnInit {
 
     private emitEvent() {
         if (this.formGroup /*&& this.formGroup.valid*/) {
-            if (this.attribute) {
+            if (this.attribute && this.itemValue) {
                 switch (this.attribute.type) {
                     case 'string':
-                        setItemStringValue(this.attribute, this.itemValue, this.formControl.value);
+                        setItemStringValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value);
                         break;
                     case 'text':
-                        setItemTextValue(this.attribute, this.itemValue, this.formControl.value);
+                        setItemTextValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value);
                         break;
                     case 'number':
-                        setItemNumberValue(this.attribute, this.itemValue, this.formControl.value);
+                        setItemNumberValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value);
                         break;
                     case 'date':
-                        setItemDateValue(this.attribute, this.itemValue, this.formControl.value);
+                        setItemDateValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value);
                         break;
                     case 'currency':
-                        setItemCurrencyValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                        setItemCurrencyValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value,
+                            assertDefinedReturn(this.formControl2).value);
                         break;
                     case 'area':
-                        setItemAreaValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                        setItemAreaValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value,
+                            assertDefinedReturn(this.formControl2).value);
                         break;
                     case 'volume':
-                        setItemVolumeValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                        setItemVolumeValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value,
+                            assertDefinedReturn(this.formControl2).value);
                         break;
                     case 'width':
-                        setItemWidthValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                        setItemWidthValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value,
+                            assertDefinedReturn(this.formControl2).value);
                         break;
                     case 'length':
-                        setItemLengthValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                        setItemLengthValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value,
+                            assertDefinedReturn(this.formControl2).value);
                         break;
                     case 'height':
-                        setItemHeightValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                        setItemHeightValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value,
+                            assertDefinedReturn(this.formControl2).value);
                         break;
                     case 'weight':
-                        setItemWeightValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                        setItemWeightValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value,
+                            assertDefinedReturn(this.formControl2).value);
                         break;
                     case 'dimension':
-                        setItemDimensionValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value,
-                            this.formControl3.value, this.formControl4.value);
+                        setItemDimensionValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value,
+                            assertDefinedReturn(this.formControl2).value,
+                            assertDefinedReturn(this.formControl3).value,
+                            assertDefinedReturn(this.formControl4).value);
                         break;
                     case 'select':
-                        setItemSelectValue(this.attribute, this.itemValue, this.formControl.value);
+                        setItemSelectValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value);
                         break;
                     case 'doubleselect':
-                        setItemDoubleSelectValue(this.attribute, this.itemValue, this.formControl.value, this.formControl2.value);
+                        setItemDoubleSelectValue(this.attribute, this.itemValue,
+                            assertDefinedReturn(this.formControl).value,
+                            assertDefinedReturn(this.formControl2).value);
                         break;
                 }
             }

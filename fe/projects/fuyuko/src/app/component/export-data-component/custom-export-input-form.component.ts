@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {tap} from 'rxjs/operators';
 import {FileDataObject} from '@fuyuko-common/model/file.model';
@@ -23,15 +23,15 @@ export interface CustomExportInputFormComponentEvent {
     templateUrl: './custom-export-input-form.component.html',
     styleUrls: ['./custom-export-input-form.component.scss']
 })
-export class CustomExportInputFormComponent {
+export class CustomExportInputFormComponent implements OnInit, OnChanges {
 
-    @Input() customDataExport: CustomDataExport;
-    @Input() validateFn: CustomExportValidateFn;
-    @Input() view: View;
+    @Input() customDataExport!: CustomDataExport;
+    @Input() validateFn!: CustomExportValidateFn;
+    @Input() view!: View;
 
     @Output() events: EventEmitter<CustomExportInputFormComponentEvent>;
 
-    validationResult: ExportScriptValidateResult;
+    validationResult?: ExportScriptValidateResult;
 
     formGroup: FormGroup;
 
@@ -97,11 +97,13 @@ export class CustomExportInputFormComponent {
     }
 
     async onFileUpload($event: Event, input: ExportScriptInput) {
-        const fileList: FileList = ($event.target as HTMLInputElement).files;
-        const file: File = fileList[0];
+        const fileList: FileList | null = ($event.target as HTMLInputElement).files;
+        const file: File | undefined = (fileList && fileList.length) ? fileList[0] : undefined;
 
-        const fileDataObject: FileDataObject = await fromFileToFileDataObject(file);
-        this.formGroup.controls[input.name].setValue(fileDataObject);
+        if (file) {
+            const fileDataObject: FileDataObject = await fromFileToFileDataObject(file);
+            this.formGroup.controls[input.name].setValue(fileDataObject);
+        }
     }
 
 }

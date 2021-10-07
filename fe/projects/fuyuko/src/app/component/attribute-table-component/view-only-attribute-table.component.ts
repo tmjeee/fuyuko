@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 
 export class InternalDataSource extends DataSource<Attribute> {
 
-    subject: BehaviorSubject<Attribute[]>;
+    subject!: BehaviorSubject<Attribute[]>;
 
     connect(collectionViewer: CollectionViewer): Observable<Attribute[] | ReadonlyArray<Attribute>> {
         if (!this.subject) {
@@ -39,7 +39,7 @@ export class ViewOnlyAttributeTableComponent implements OnInit, OnChanges {
 
     dataSource: InternalDataSource;
 
-    @Input() attributes: Attribute[];
+    @Input() attributes: Attribute[] = [];
     displayedColumns: string[];
 
     constructor() {

@@ -45,27 +45,27 @@ export interface CategoryManagementComponentTreeDragDropEvent {
 })
 export class CategoryManagementComponent  implements  OnInit, OnChanges {
 
-    treeLoading: boolean;
+    treeLoading!: boolean;
 
-    @Input() viewId: number;
-    @Input() getCategoriesWithItemsFn: GetCategoriesWithItemsFn;
-    @Input() getCategorySimpleItemsInCategoryFn: GetCategorySimpleItemsInCategoryFn;
-    @Input() getCategorySimpleItemsNotInCategoryFn: GetCategorySimpleItemsNotInCategoryFn;
-    @Input() addCategoryFn: AddCategoryFn;
-    @Input() editCategoryFn: EditCategoryFn;
-    @Input() deleteCategoryFn: DeleteCategoryFn;
-    @Input() addItemsToCategoryFn: AddItemsToCategoryFn;
-    @Input() removeItemsFromCategoryFn: RemoveItemsFromCategoryFn;
+    @Input() viewId!: number;
+    @Input() getCategoriesWithItemsFn!: GetCategoriesWithItemsFn;
+    @Input() getCategorySimpleItemsInCategoryFn!: GetCategorySimpleItemsInCategoryFn;
+    @Input() getCategorySimpleItemsNotInCategoryFn!: GetCategorySimpleItemsNotInCategoryFn;
+    @Input() addCategoryFn!: AddCategoryFn;
+    @Input() editCategoryFn!: EditCategoryFn;
+    @Input() deleteCategoryFn!: DeleteCategoryFn;
+    @Input() addItemsToCategoryFn!: AddItemsToCategoryFn;
+    @Input() removeItemsFromCategoryFn!: RemoveItemsFromCategoryFn;
     @Output() categoryTreeDragDropEvents: EventEmitter<CategoryManagementComponentTreeDragDropEvent>;
 
-    selectedTreeNode: TreeNode;
+    selectedTreeNode?: TreeNode;
     categoriesWithItems: CategoryWithItems[];
     addableCategoryTableActions: Action[];
     addableCategoryTableItems: CategorySimpleItem[];
     addableCategoryTableItemsPagination: Pagination;
     removableCategoryTableItems: CategorySimpleItem[];
     removableCategoryTableItemsPagination: Pagination;
-    removeableCategoryTableActions: Action[];
+    removableCategoryTableActions: Action[];
 
     constructor(private matDialog: MatDialog,
                 private changeDetectorRef: ChangeDetectorRef) {
@@ -73,12 +73,14 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
         this.categoryTreeDragDropEvents = new EventEmitter<CategoryManagementComponentTreeDragDropEvent>();
         this.addableCategoryTableItemsPagination = new Pagination();
         this.removableCategoryTableItemsPagination = new Pagination();
-        this.removeableCategoryTableActions = [
+        this.removableCategoryTableActions = [
             {id: 'removeItemFromCategory', name: 'Remove', description: 'Remove items from selected category'}
         ];
         this.addableCategoryTableActions = [
             {id: 'addItemToCategory', name: 'Add', description: 'Add items to selected category'}
         ];
+        this.addableCategoryTableItems = [];
+        this.removableCategoryTableItems = [];
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -120,7 +122,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
         switch ($event.type) {
             case 'node-selected':
                 this.selectedTreeNode = $event.node;
-                const categoryWithItems: CategoryWithItems = $event.node.currentCategoryWithItems;
+                const categoryWithItems: CategoryWithItems | undefined = $event.node.currentCategoryWithItems;
                 if (categoryWithItems) {
                     this.reloadAddableItemsTable(this.viewId, categoryWithItems.id);
                     this.reloadRemoveableItemsTable(this.viewId, categoryWithItems.id);
@@ -135,7 +137,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                 .pipe(
                     tap((r: PaginableApiResponse<CategorySimpleItem[]>) => {
                         this.addableCategoryTableItemsPagination.update(r);
-                        this.addableCategoryTableItems = r.payload;
+                        this.addableCategoryTableItems = r.payload ?? [];
                     })
                 ).subscribe();
         }
@@ -147,7 +149,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                 .pipe(
                     tap((r: PaginableApiResponse<CategorySimpleItem[]>) => {
                         this.removableCategoryTableItemsPagination.update(r);
-                        this.removableCategoryTableItems = r.payload;
+                        this.removableCategoryTableItems = r.payload ?? [];
                     })
                 ).subscribe();
         }
@@ -186,7 +188,7 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
             .open(EditCategoryPopupComponent, {width: '90vw', height: '90vh', data: null})
             .afterClosed().pipe(
             tap((r: {id: number, name: string, description: string}) => {
-                if (r) {
+                if (r && this.selectedTreeNode && this.selectedTreeNode.currentCategoryWithItems) {
                     this.addCategoryFn(this.selectedTreeNode.currentCategoryWithItems.id, r.name, r.description)
                         .pipe(
                             tap((res: ApiResponse) => {
@@ -201,26 +203,29 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
     }
 
     deleteCategory($event: MouseEvent) {
-        this.deleteCategoryFn(this.selectedTreeNode.currentCategoryWithItems.id).pipe(
-            tap((res: ApiResponse) => {
-                if (isApiResponseSuccess(res)) {
-                    this.selectedTreeNode = null;
-                    this.addableCategoryTableItems = [];
-                    this.removableCategoryTableItems = [];
-                    this.addableCategoryTableItemsPagination.reset();
-                    this.removableCategoryTableItemsPagination.reset();
-                    this.reloadTree(this.viewId);
-                }
-            })
-        ).subscribe();
+        if (this.selectedTreeNode && this.selectedTreeNode.currentCategoryWithItems) {
+            this.deleteCategoryFn(this.selectedTreeNode.currentCategoryWithItems.id).pipe(
+                tap((res: ApiResponse) => {
+                    if (isApiResponseSuccess(res)) {
+                        this.selectedTreeNode = undefined;
+                        this.addableCategoryTableItems = [];
+                        this.removableCategoryTableItems = [];
+                        this.addableCategoryTableItemsPagination.reset();
+                        this.removableCategoryTableItemsPagination.reset();
+                        this.reloadTree(this.viewId);
+                    }
+                })
+            ).subscribe();
+        }
     }
 
     editCategory($event: MouseEvent) {
-        const category: Category = this.selectedTreeNode.currentCategoryWithItems;
-        this.matDialog
-            .open(EditCategoryPopupComponent, {width: '90vw', height: '90vh', data: category})
-            .afterClosed().pipe(
-                tap((r: {id: number, name: string, description: string}) => {
+        if (this.selectedTreeNode) {
+            const category: Category | undefined = this.selectedTreeNode.currentCategoryWithItems;
+            this.matDialog
+                .open(EditCategoryPopupComponent, {width: '90vw', height: '90vh', data: category})
+                .afterClosed().pipe(
+                tap((r: { id: number, name: string, description: string }) => {
                     if (r) {
                         this.editCategoryFn(r.id, r.name, r.description).pipe(
                             tap((res: ApiResponse) => {
@@ -231,46 +236,53 @@ export class CategoryManagementComponent  implements  OnInit, OnChanges {
                         ).subscribe();
                     }
                 })
-        ).subscribe();
+            ).subscribe();
+        }
     }
 
     moveCategoryToRoot($event: MouseEvent) {
-        const category: Category = this.selectedTreeNode.currentCategoryWithItems;
-        this.categoryTreeDragDropEvents.emit({
-           sourceItem: this.selectedTreeNode,
-           destinationItem: null,
-           type: 'move-to-root',
-           reloadTreeFn: () => {
-               this.reloadTree(this.viewId);
-           }
-        } as CategoryManagementComponentTreeDragDropEvent);
+        // const category: Category = this.selectedTreeNode.currentCategoryWithItems;
+        if (this.selectedTreeNode) {
+            this.categoryTreeDragDropEvents.emit({
+                sourceItem: this.selectedTreeNode,
+                destinationItem: undefined,
+                type: 'move-to-root',
+                reloadTreeFn: () => {
+                    this.reloadTree(this.viewId);
+                }
+            } as CategoryManagementComponentTreeDragDropEvent);
+        }
     }
 
     onAddableCategoryTableEvent($event: CategoryItemTableComponentEvent) {
        const items: CategorySimpleItem[] = $event.items;
-       const categoryId: number = this.selectedTreeNode.currentCategoryWithItems.id;
-       // add these items to category
-       this.reloadAddableItemsTable(this.viewId, categoryId);
-       this.addItemsToCategoryFn(categoryId, items).pipe(
-           tap((r: ApiResponse) => {
-              // this.reloadTree(this.viewId);
-              this.reloadAddableItemsTable(this.viewId, categoryId);
-              this.reloadRemoveableItemsTable(this.viewId, categoryId);
-           })
-       ).subscribe();
+       if (this.selectedTreeNode && this.selectedTreeNode.currentCategoryWithItems) {
+           const categoryId: number = this.selectedTreeNode.currentCategoryWithItems.id;
+           // add these items to category
+           this.reloadAddableItemsTable(this.viewId, categoryId);
+           this.addItemsToCategoryFn(categoryId, items).pipe(
+               tap((r: ApiResponse) => {
+                   // this.reloadTree(this.viewId);
+                   this.reloadAddableItemsTable(this.viewId, categoryId);
+                   this.reloadRemoveableItemsTable(this.viewId, categoryId);
+               })
+           ).subscribe();
+       }
     }
 
     onRemoveableCategoryTableEvent($event: CategoryItemTableComponentEvent) {
         const items: CategorySimpleItem[] = $event.items;
-        const categoryId: number = this.selectedTreeNode.currentCategoryWithItems.id;
-        // remove these items from category
-        this.removeItemsFromCategoryFn(categoryId, items).pipe(
-            tap((r: ApiResponse) => {
-                // this.reloadTree(this.viewId);
-                this.reloadAddableItemsTable(this.viewId, categoryId);
-                this.reloadRemoveableItemsTable(this.viewId, categoryId);
-            })
-        ).subscribe();
+        if (this.selectedTreeNode && this.selectedTreeNode.currentCategoryWithItems) {
+            const categoryId: number = this.selectedTreeNode.currentCategoryWithItems.id;
+            // remove these items from category
+            this.removeItemsFromCategoryFn(categoryId, items).pipe(
+                tap((r: ApiResponse) => {
+                    // this.reloadTree(this.viewId);
+                    this.reloadAddableItemsTable(this.viewId, categoryId);
+                    this.reloadRemoveableItemsTable(this.viewId, categoryId);
+                })
+            ).subscribe();
+        }
     }
 
     onCategoryTreeDragDropEvents($event: CategoryTreeComponentDragDropEvent) {

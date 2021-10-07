@@ -45,7 +45,7 @@ export class ClockWidgetComponent extends DashboardWidget implements OnInit, Aft
     id = ClockWidgetComponent.info().id;
     name = ClockWidgetComponent.info().name;
 
-    currentLocation: Location;
+    currentLocation!: Location;
 
     static info(): DashboardWidgetInfo {
         return { id: 'clock-widget', name: 'clock-widget', type: ClockWidgetComponent };

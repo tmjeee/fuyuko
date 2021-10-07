@@ -16,6 +16,6 @@ export class ViewAttributeValidationRangeSummaryWidgetService {
         return this.httpClient
             .get<ApiResponse<Reporting_ViewAttributeValidationRangeSummary>>(
                 URL_GET_VIEW_ATTRIBUTE_VALIDATION_SUMMARY().replace(':viewId', String(viewId)))
-            .pipe(map((r: ApiResponse<Reporting_ViewAttributeValidationRangeSummary>) => r.payload));
+            .pipe(map((r: ApiResponse<Reporting_ViewAttributeValidationRangeSummary>) => r.payload!));
     }
 }

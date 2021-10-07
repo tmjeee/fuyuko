@@ -28,23 +28,24 @@ describe('conversion-item-value.service.ts', () => {
 
 
    it ('itemValueRevert', () => {
-       const i: ItemValue2 = itemValueRevert({
+       const i: ItemValue2 | undefined = itemValueRevert({
           attributeId: 1,
           val: {
              type: 'string', value: 'test'
           } as StringValue
        } as Value);
 
-       expect(i.attributeId).toBe(1);
-       expect(i.metadatas.length).toBe(1);
-       expect(i.metadatas[0].attributeId).toBe(1);
-       expect(i.metadatas[0].attributeType).toBe('string');
-       expect(i.metadatas[0].entries.length).toBe(2);
-       expect(i.metadatas[0].entries[0].key).toBe('type');
-       expect(i.metadatas[0].entries[0].value).toBe('string');
-       expect(i.metadatas[0].entries[0].dataType).toBe('string');
-       expect(i.metadatas[0].entries[1].key).toBe('value');
-       expect(i.metadatas[0].entries[1].value).toBe('test');
-       expect(i.metadatas[0].entries[1].dataType).toBe('string');
+       expect(i).toBeDefined();
+       expect(i!.attributeId).toBe(1);
+       expect(i!.metadatas.length).toBe(1);
+       expect(i!.metadatas[0].attributeId).toBe(1);
+       expect(i!.metadatas[0].attributeType).toBe('string');
+       expect(i!.metadatas[0].entries.length).toBe(2);
+       expect(i!.metadatas[0].entries[0].key).toBe('type');
+       expect(i!.metadatas[0].entries[0].value).toBe('string');
+       expect(i!.metadatas[0].entries[0].dataType).toBe('string');
+       expect(i!.metadatas[0].entries[1].key).toBe('value');
+       expect(i!.metadatas[0].entries[1].value).toBe('test');
+       expect(i!.metadatas[0].entries[1].dataType).toBe('string');
    });
 });

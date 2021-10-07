@@ -7,6 +7,7 @@ import {
   VolumeUnits, WeightUnits,
   WidthUnits
 } from './unit.model';
+import {PartialBy} from "./types";
 
 export type ItemSearchType = 'basic' | 'advance';
 
@@ -40,13 +41,15 @@ export interface Item {
   name: string;
   description: string;
   images: ItemImage[];
-  parentId: number;
+  parentId?: number;
   creationDate: Date;
   lastUpdate: Date;
   [attributeId: number]: Value;
 
   children: Item[];
-}
+};
+
+export type PartialItem = PartialBy<Item, 'creationDate' | 'lastUpdate'>;
 
 
 export interface TableItem {
@@ -68,7 +71,7 @@ export interface PricedItem {
   name: string;
   description: string;
   images: ItemImage[];
-  parentId: number;
+  parentId?: number;
   creationDate: Date;
   lastUpdate: Date;
   [attributeId: number]: Value;
@@ -105,7 +108,7 @@ export interface ItemImage {
 
 export interface Value {
   attributeId: number;
-  val: ItemValTypes;
+  val?: ItemValTypes;
 }
 
 export type ItemValTypes = StringValue | TextValue | NumberValue | DateValue |
@@ -184,14 +187,14 @@ export interface WeightValue {
 
 export interface SelectValue {
   type: 'select';
-  key: string;
+  key?: string;
 }
 
 
 export interface DoubleSelectValue {
   type: 'doubleselect';
-  key1: string;
-  key2: string;
+  key1?: string;
+  key2?: string;
 }
 
 

@@ -29,10 +29,10 @@ export class WorkflowInstanceCommentsComponent implements OnInit {
 
     pagination: Pagination;
 
-    @Input() workflowInstanceId: number;
-    @Input() getCommentFn: GetCommentsFn;
+    @Input() workflowInstanceId!: number;
+    @Input() getCommentFn!: GetCommentsFn;
 
-    @ViewChild('textAreaElement') textAreaElementRef: ElementRef<HTMLTextAreaElement>;
+    @ViewChild('textAreaElement') textAreaElementRef!: ElementRef<HTMLTextAreaElement>;
 
     formGroup: FormGroup;
     formControlComment: FormControl;
@@ -67,7 +67,9 @@ export class WorkflowInstanceCommentsComponent implements OnInit {
         this.getCommentFn(this.workflowInstanceId, this.pagination.limitOffset())
             .pipe(
                 map(r => r.payload),
-                tap( comments => this.comments = comments)
+                tap( comments => {
+                    this.comments = comments ?? [];
+                })
             ).subscribe();
     }
 

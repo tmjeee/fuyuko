@@ -11,7 +11,7 @@ class ConversionItemValueService {
         } as Value;
     }
 
-    itemValueRevert(value: Value): ItemValue2 {
+    itemValueRevert(value: Value): ItemValue2 | undefined {
         if (value && value.val) {
             return {
                 id: -1,
@@ -19,7 +19,7 @@ class ConversionItemValueService {
                 metadatas: itemValueTypesRevert(value.val, value.attributeId)
             } as ItemValue2
         }
-        return null;
+        return undefined;
     }
 }
 

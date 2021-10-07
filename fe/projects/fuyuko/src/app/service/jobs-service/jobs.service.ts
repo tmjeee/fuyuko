@@ -6,6 +6,7 @@ import config from '../../utils/config.util';
 import {HttpClient} from '@angular/common/http';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {map} from 'rxjs/operators';
+import {assertDefinedReturn} from '../../utils/common.util';
 
 
 const URL_SCHEDULE_BULK_EDIT_JOB = () => `${config().api_host_url}/view/:viewId/bulk-edit`;
@@ -24,7 +25,7 @@ export class JobsService {
         return this.httpClient
             .get<ApiResponse<Job[]>>(URL_ALL_JOBS())
             .pipe(
-                map((r: ApiResponse<Job[]>) => r.payload)
+                map((r: ApiResponse<Job[]>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -32,14 +33,14 @@ export class JobsService {
         return this.httpClient.post<ApiResponse<Job>>(
             URL_SCHEDULE_BULK_EDIT_JOB().replace(':viewId', `${viewId}`), {
                bulkEditPackage
-            }).pipe(map((r: ApiResponse<Job>) => r.payload));
+            }).pipe(map((r: ApiResponse<Job>) => assertDefinedReturn(r.payload)));
     }
 
     job(jobId: number): Observable<Job> {
         return this.httpClient
             .get<ApiResponse<Job>>(URL_JOB_BY_ID().replace(':jobId', `${jobId}`))
             .pipe(
-                map((r: ApiResponse<Job>) => r.payload)
+                map((r: ApiResponse<Job>) => assertDefinedReturn(r.payload))
             );
     }
 
@@ -52,7 +53,7 @@ export class JobsService {
                     URL_JOB_DETAIL_BY_ID()
                         .replace(':jobId', `${jobId}`)))
             .pipe(
-                map((r: ApiResponse<JobAndLogs>) => r.payload)
+                map((r: ApiResponse<JobAndLogs>) => assertDefinedReturn(r.payload))
             );
     }
 }

@@ -12,7 +12,7 @@
 
     <div class="avatar-section">
       <app-avatar *ngIf="allPredefinedAvatars"
-                  [user]="myself"
+                  [user]="myself!"
                   [editable]="true"
                   [allPredefinedAvatars]="allPredefinedAvatars"
                   (events)="onAvatarComponentEvent($event)"
@@ -24,7 +24,7 @@
     <mat-divider></mat-divider>
 
     <div class="personal-section">
-      <app-profile-info [user]="myself"
+      <app-profile-info [user]="myself!"
                         (events)="onProfileInfoEvent($event)">
       </app-profile-info>
     </div>

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
@@ -46,9 +46,9 @@ export interface CustomBulkEditListComponentEvent {
       ]),
    ],
 })
-export class CustomBulkEditListComponent {
+export class CustomBulkEditListComponent implements OnInit {
 
-   @Input() customBulkEdits: CustomBulkEdit[];
+   @Input() customBulkEdits: CustomBulkEdit[] = [];
    @Output() events: EventEmitter<CustomBulkEditListComponentEvent>;
 
    dataSource: InternalDataSource;
@@ -58,7 +58,7 @@ export class CustomBulkEditListComponent {
    formGroup: FormGroup;
    formControl: FormControl;
 
-   expandedCustomBulkEdit: CustomBulkEdit; // customBulkEdit that is row expanded
+   expandedCustomBulkEdit?: CustomBulkEdit; // customBulkEdit that is row expanded
 
    constructor(private formBuilder: FormBuilder) {
       this.formControl = this.formBuilder.control('');
@@ -73,12 +73,13 @@ export class CustomBulkEditListComponent {
 
    isRowExpanded(customBulkEdit: CustomBulkEdit): boolean {
       const b =  this.expandedCustomBulkEdit && this.expandedCustomBulkEdit.id === customBulkEdit.id;
-      return b;
+      return !!b;
    }
 
    masterRowClicked(customBulkEdit: CustomBulkEdit) {
-      if (this.expandedCustomBulkEdit && this.expandedCustomBulkEdit.id === customBulkEdit.id) { // already expanded, click on same item toggle expansion
-         this.expandedCustomBulkEdit = null;
+      if (this.expandedCustomBulkEdit && this.expandedCustomBulkEdit.id === customBulkEdit.id) {
+         // already expanded, click on same item toggle expansion
+         this.expandedCustomBulkEdit = undefined;
       } else {
          this.expandedCustomBulkEdit = customBulkEdit;
       }

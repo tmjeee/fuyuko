@@ -17,21 +17,28 @@ import {e} from '../logger';
 import {ENABLED} from "@fuyuko-common/model/status.model";
 import {v4 as uuid} from 'uuid';
 import {
-    addOrUpdateRules,
+    addOrUpdatePricingStructures,
+    addOrUpdateRules, changeAttributeStatus, deleteCategory,
     getAllWorkflowDefinition,
     getAttributesInView,
-    getItemById, getPricedItems, getPricingStructureOfPricedItem, getRule,
+    getItemById, getPricedItems, getPricingStructureById, getPricingStructureOfPricedItem, getRule,
     getThreadLocalStore,
-    getViewOfItem, getViewOfPriceItem, getViewOfRule, setPrices,
+    getViewOfItem, getViewOfPriceItem, getViewOfRule, setPrices, updateAttributes,
     updateCategory, updateItem,
-    updateItemValue
+    updateItemValue, updateRuleStatus
 } from './';
+import {updateItemsStatus} from './item.service';
 import {Item, Value} from '@fuyuko-common/model/item.model';
-import {PricingStructureItemWithPrice} from '@fuyuko-common/model/pricing-structure.model';
+import {PricingStructure, PricingStructureItemWithPrice} from '@fuyuko-common/model/pricing-structure.model';
 import {Category} from '@fuyuko-common/model/category.model';
 import {Rule} from '@fuyuko-common/model/rule.model';
-import {getViewCategoryById, getViewOfCategory} from "./category.service";
+import {getParentCategory, getViewCategoryById, getViewOfCategory} from "./category.service";
 import {getPricedItem} from "./priced-item.service";
+import {createNewItemValue} from "@fuyuko-common/shared-utils/ui-item-value-creator.utils";
+import {View} from "@fuyuko-common/model/view.model";
+import {removeItemFromPricingStructure} from "./pricing-structure-item.service";
+import {async} from "rxjs/internal/scheduler/async";
+import {PartialBy} from "@fuyuko-common/model/types";
 
 /**
  * Contains functions to assist
@@ -43,106 +50,124 @@ export const ENGINE_WORKFLOW_ID = `WORKFLOW_ID`;
 export const ENGINE_WORKFLOW_DEFINITION_ID = `WORKFLOW_DEFINITION_ID`;
 export const ENGINE_WORKFLOW_INSTANCE_ID = `WORKFLOW_INSTANCE_ID`;
 
+export interface ItemInfo {
+    viewId: number,
+    item: Item,
+    attributeId: number,
+    value: Value
+};
+
 class WorkflowTriggerService {
-    // === TRIGGER Workflow
-    async triggerAttributeWorkflow(attributes: Attribute[], workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument):
+    // === TRIGGER 'Attribute' Workflow
+    async triggerAttributeWorkflow(viewId: number, attributes: Attribute[], workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument):
         Promise<WorkflowTriggerResult[]> {
-        const viewIdAttMap = await attributes.reduce(async (acc: Promise<Map<number /* viewId */, Attribute[]>>, att: Attribute) => {
-            const map = await acc;
-            await doInDbConnection(async (conn) => {
-                // group the passed in attribute by view
-                const q: QueryA = await conn.query(`SELECT VIEW_ID FROM TBL_VIEW_ATTRIBUTE WHERE ID = ?`, [att.id])
-                if (q.length) {
-                    const viewId = q[0].VIEW_ID;
-                    if (!map.get(viewId)) {
-                        map.set(viewId, [att]);
-                    } else {
-                        map.get(viewId).push(att);
-                    }
-                }
-            })
-            return acc;
-        }, Promise.resolve(new Map()));
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
-        for ( const [viewId, attributes] of viewIdAttMap.entries()) {
-            const oldAttributes = await getAttributesInView(viewId, attributes.map(a => a.id), {limit: Number.MAX_SAFE_INTEGER, offset:0});
-            const newAttributes = [...attributes];
+        for ( const attribute of attributes) {
+            const oldAttribute = attribute.id ?
+                await getAttributesInView(viewId, attributes.map(a => a.id), {limit: Number.MAX_SAFE_INTEGER, offset:0}) :
+                undefined;
+            const newAttribute = [...attributes];
 
             const workflowTriggerResult = await triggerWorkflow(
                viewId, workflowDefinitionId, action, 'Attribute',
-               JSON.stringify(oldAttributes), JSON.stringify(newAttributes),
+               JSON.stringify(oldAttribute), JSON.stringify(newAttribute),
                attributes, args);
             workflowTriggerResults.push(workflowTriggerResult);
         }
         return workflowTriggerResults;
     }
 
-    async triggerAttributeValueWorkflow(itemInfos: { viewId: number, item: Item, attributeId: number, value: Value}[], workflowDefinitionId: number,
+    // === TRIGGER 'AttributeValue' workflow
+    async triggerAttributeValueWorkflow(itemInfos: ItemInfo[],
+                                        workflowDefinitionId: number,
                                         action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
         for (const itemInfo of itemInfos) {
             const item = await getItemById(itemInfo.viewId, itemInfo.item.id);
-            const oldItemInfo: { viewId: number, item: Item, attributeId: number, value: Value } = {
-                viewId: itemInfo.viewId, item, attributeId: itemInfo.attributeId, value: item[itemInfo.attributeId]
+            if (!item) {
+                throw Error(` unable to find item with id ${itemInfo.item.id} in view ${itemInfo.viewId}`);
+            }
+            const oldItemInfo: ItemInfo = {
+                viewId: itemInfo.viewId,
+                item,
+                attributeId: itemInfo.attributeId,
+                value: item[itemInfo.attributeId],
             };
             const workflowTriggerResult = await triggerWorkflow(
-                itemInfo.viewId, workflowDefinitionId, action, 'AttributeValue',
-                JSON.stringify(oldItemInfo), JSON.stringify(itemInfo), [itemInfo.viewId, itemInfo.item.id, itemInfo.value], args);
+                itemInfo.viewId,
+                workflowDefinitionId,
+                action,
+                'AttributeValue',
+                JSON.stringify(oldItemInfo),
+                JSON.stringify(itemInfo),
+                [
+                    itemInfo.viewId,
+                    itemInfo.item,
+                    (itemInfo && itemInfo.value ? itemInfo.value : undefined)
+                ], args);
             workflowTriggerResults.push(workflowTriggerResult);
         }
         return workflowTriggerResults;
     }
-    async triggerCategoryWorkflow(categories: Category[], parentCategoryId: number, workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
+
+    // === TRIGGER 'Category' workflow
+    async triggerCategoryWorkflow(viewId: number, categories: PartialBy<Category, 'id' | 'creationDate' | 'lastUpdate'>[],
+                                  parentCategoryId: number | null | undefined, workflowDefinitionId: number,
+                                  action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
         for (const category of categories) {
-            const view  = await getViewOfCategory(category.id);
-            const oldCategory = await getViewCategoryById(category.id);
-            const workflowTriggerResult = await triggerWorkflow(view.id, workflowDefinitionId, action, 'Category',
-                JSON.stringify(oldCategory), JSON.stringify(category),
-                [view.id, parentCategoryId, { id: category.id, name: category.name, description: category.description }], arguments);
+            const oldCategory = category.id ? await getViewCategoryById(category.id) : undefined;
+            const workflowTriggerResult = await triggerWorkflow(viewId, workflowDefinitionId, action, 'Category',
+                JSON.stringify(oldCategory),
+                JSON.stringify(category),
+                [viewId, parentCategoryId, { id: category.id, name: category.name, description: category.description }], arguments);
             workflowTriggerResults.push(workflowTriggerResult);
         }
         return workflowTriggerResults;
     }
-    async triggerItemWorkflow(items: Item[], workflowDefinitionId: number, action: WorkflowInstanceAction,
+
+    // === TRIGGER 'item' workflow
+    async triggerItemWorkflow(viewId: number, items: Item[], workflowDefinitionId: number, action: WorkflowInstanceAction,
                               args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
         for (const item of items) {
-            const view = await getViewOfItem(item.id);
-            const oldItem = getItemById(view.id, item.id);
+            const oldItem = item.id ? await getItemById(viewId, item.id) : undefined;
 
-            const workflowTriggerResult = await triggerWorkflow(view.id, workflowDefinitionId, action, 'Item',
-                JSON.stringify(oldItem), JSON.stringify(item), [view.id, item], args);
+            const workflowTriggerResult = await triggerWorkflow(viewId, workflowDefinitionId, action, 'Item',
+                JSON.stringify(oldItem), JSON.stringify(item), [viewId, item], args);
             workflowTriggerResults.push(workflowTriggerResult);
         }
         return workflowTriggerResults;
     }
-    async triggerPriceWorkflow(priceItems: PricingStructureItemWithPrice[], workflowDefinitionId: number, action: WorkflowInstanceAction,
+
+    // === TRIGGER 'priceItem' workflow
+    async triggerPriceWorkflow(viewId: number, priceItems: PricingStructureItemWithPrice[], workflowDefinitionId: number, action: WorkflowInstanceAction,
                                args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
         for (const priceItem of priceItems) {
-            const view = await getViewOfPriceItem(priceItem.id);
-            const oldPriceItem = await getPricedItem(priceItem.id);
+            const oldPriceItem = priceItem.id ? await getPricedItem(priceItem.id) : undefined;
             const pricingStructure = await getPricingStructureOfPricedItem(priceItem.id);
-            const workflowTriggerResult = await triggerWorkflow(view.id, workflowDefinitionId, action, 'Price',
+            const workflowTriggerResult = await triggerWorkflow(viewId, workflowDefinitionId, action, 'Price',
                 JSON.stringify(oldPriceItem), JSON.stringify(priceItem),
                 [pricingStructure.id, {itemId: priceItem.itemId, price: priceItem.price, country: priceItem.country}], arguments);
             workflowTriggerResults.push(workflowTriggerResult);
         }
         return workflowTriggerResults;
     }
-    async triggerRuleWorklow(rules: Rule[], workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
+
+    // === TRIGGER 'rule' workflow
+    async triggerRuleWorklow(viewId: number, rules: Rule[], workflowDefinitionId: number, action: WorkflowInstanceAction, args?: Argument): Promise<WorkflowTriggerResult[]> {
         const workflowTriggerResults: WorkflowTriggerResult[] = [];
         for (const rule of rules) {
-            const view = await getViewOfRule(rule.id);
-            const oldRule = getRule(view.id, rule.id);
-            const workflowTriggerResult = await triggerWorkflow(view.id, workflowDefinitionId, action, 'Rule',
-                JSON.stringify(oldRule), JSON.stringify(rule), [view.id, rule], args);
+            const oldRule = rule.id ? await getRule(viewId, rule.id) : undefined;
+            const workflowTriggerResult = await triggerWorkflow(viewId, workflowDefinitionId, action, 'Rule',
+                JSON.stringify(oldRule), JSON.stringify(rule), [viewId, rule], args);
             workflowTriggerResults.push(workflowTriggerResult);
         }
         return workflowTriggerResults;
     }
 
+    // === TRIGGER generic workflow
     async triggerWorkflow(viewId: number, workflowDefinitionId: number, action: WorkflowInstanceAction,
                           type: WorkflowInstanceType, oldValue: string /* in JSON */, newValue: string /* in JSON */,
                           functionInputs: any[], args?: Argument): Promise<WorkflowTriggerResult> {
@@ -203,7 +228,7 @@ class WorkflowTriggerService {
                 VALUES (?,?,?,?,?,?,?,?,?)
             `, [workflowId, workflowInstanceName, null, functionInputsAsJSON, (engine.currentState?.name ?? null),
                 engine.status, oldValue, newValue, userId]);
-            if (qr2.affectedRows == 0) {
+            if (qr2.affectedRows === 0) {
                 // todo: failed to insert row
                 e(`Failed to insert row in TBL_WORKFLOW_INSTANCE`);
                 const r: WorkflowTriggerError = {
@@ -230,7 +255,7 @@ class WorkflowTriggerService {
                     ENGINE_STATUS = ?
                 WHERE ID = ?
             `, [data, currentState.name , engineStatus, workflowInstanceId]);
-            if (qr3.affectedRows == 0) {
+            if (qr3.affectedRows === 0) {
                // todo: failed to update row
                e(`Failed to update row in TBL_WORKFLOW_INSTANCE`);
                 const r: WorkflowTriggerError = {
@@ -294,9 +319,9 @@ class WorkflowTriggerService {
            const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
            const engine = workflowScript.buildEngine();
            workflowScript.initEngine(engine, {}, data);
-           const oldStateName = (engine as InternalEngine).currentState.name;
+           const oldStateName = (engine as InternalEngine).currentState!.name;
            const engineResponse = await engine.next(args);
-           const currentState = engine.currentState;
+           const currentState = engine.currentState!;
            const engineStatus = engine.status;
            const _data = engine.serializeData();
            const dataAsJSON = JSON.stringify(_data);
@@ -319,7 +344,7 @@ class WorkflowTriggerService {
                type: "workflow-continuation-done",
                workflowInstanceId,
                oldState: oldStateName,
-               newState: (engine as InternalEngine).currentState.name,
+               newState: (engine as InternalEngine).currentState!.name,
                status: (engine as InternalEngine).status
            };
 
@@ -375,13 +400,13 @@ class WorkflowTriggerService {
             const workflowScript: WorkflowScript = await import(`${workflowDefinitionFileFullPath}`);
             const engine = workflowScript.buildEngine();
             workflowScript.initEngine(engine, {}, data);
-            const currentState = engine.currentState;
+            const currentState = engine.currentState!;
 
             const s: StateLike = { state: currentState, args: engine.args }
             const r: CurrentWorkflowStateFound = {
                 type: "workflow-state-found",
                 workflowInstanceId,
-                state: engine.currentState.name,
+                state: engine.currentState!.name,
                 status: engine.status,
                 title: u.getTitle(s),
                 description: u.getDescription(s),
@@ -435,79 +460,126 @@ class WorkflowTriggerService {
         const newValueAsJson = JSON.parse(newValue);
         console.log('***** doing actual action ', workflowType, workflowAction, newValueAsJson);
         switch(workflowType) {
+            /**
+             * ***** doing actual action  Attribute Update [
+                {
+                   id: 1,
+                   name: 'string attribute',
+                   description: 'string attribute description',
+                   type: 'string',
+                   creationDate: '2021-05-30T05:58:42.000Z',
+                   lastUpdate: '2021-05-30T05:58:42.000Z'
+                }
+             ]
+             */
             case 'Attribute': {
+                const attributes: Attribute[] = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
-                        // todo:
+                        await updateAttributes(attributes)
                         break;
                     }
                     case 'Delete': {
-                        // todo:
+                        for (const attribute of attributes) {
+                            await changeAttributeStatus(attribute.id, 'DELETED');
+                        }
                         break;
                     }
                 }
                 break;
             }
             case 'AttributeValue': {
+                const itemInfo: ItemInfo = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
-                        // todo:
+                        await updateItemValue(itemInfo.viewId, itemInfo.item.id,  itemInfo.value)
                         break;
                     }
                     case 'Delete': {
-                        // todo:
+                        const atts = await getAttributesInView(itemInfo.viewId, [itemInfo.attributeId]);
+                        if (atts.length) {
+                            const val = createNewItemValue(atts[0]);
+                            await updateItemValue(itemInfo.viewId, itemInfo.item.id, val);
+                        } else {
+                            e(`Unable to find attribute with id ${itemInfo.attributeId}`);
+                        }
                         break;
                     }
                 }
                 break;
             }
             case 'Category': {
+                const category: Category = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
-                        // todo:
+                        const parentCategory = await getParentCategory(category.id);
+                        const view: View = await getViewOfCategory(category.id);
+                        await updateCategory(view.id, parentCategory.id, { id: category.id, name: category.name, description: category.description});
                         break;
                     }
                     case 'Delete': {
-                        // todo:
+                        const view: View = await getViewOfCategory(category.id);
+                        const msg = await deleteCategory(view.id, category.id);
+                        if (msg && msg.length) {
+                            e(`failed to delete category ${msg.join(',')}`);
+                        }
                         break;
                     }
                 }
                 break;
             }
             case 'Item': {
+                const item: Item = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
+                        const view = await getViewOfItem(item.id);
+                        const msgs = await updateItem(view.id, item);
                         break;
                     }
                     case 'Delete': {
                         // todo:
+                        const msgs = await updateItemsStatus([item.id], 'DELETED');
                         break;
                     }
                 }
                 break;
             }
             case 'Price': {
+                const pricingStructureItemWithPrice: PricingStructureItemWithPrice = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
+                        await setPrices([{
+                            pricingStructureId: pricingStructureItemWithPrice.id,
+                            item: {
+                                itemId: pricingStructureItemWithPrice.itemId,
+                                price: pricingStructureItemWithPrice.price,
+                                country: pricingStructureItemWithPrice.country,
+                            }
+                        }]);
                         break;
                     }
                     case 'Delete': {
                         // todo:
+                        const r = await removeItemFromPricingStructure(pricingStructureItemWithPrice.id, pricingStructureItemWithPrice.itemId);
                         break;
                     }
                 }
                 break;
             }
             case 'Rule': {
+                const rule: Rule = JSON.parse(newValue);
                 switch(workflowAction) {
                     case 'Update': {
                         // todo:
+                        const view = await getViewOfRule(rule.id);
+                        const msgs = await addOrUpdateRules(view.id, [rule]);
                         break;
                     }
                     case 'Delete': {
                         // todo:
+                        const msgs = await updateRuleStatus(rule.id, 'DELETED');
                         break;
                     }
                 }

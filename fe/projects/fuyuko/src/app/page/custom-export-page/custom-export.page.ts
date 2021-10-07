@@ -20,8 +20,8 @@ import {LoadingService} from '../../service/loading-service/loading.service';
 })
 export class CustomExportPageComponent implements OnInit, OnDestroy {
 
-    customDataExports: CustomDataExport[];
-    ready: boolean;
+    customDataExports: CustomDataExport[] = [];
+    ready = false ;
     customExportValidateFn: CustomExportValidateFn;
     customExportPreviewFn: CustomExportPreviewFn;
     customExportSubmitFn: CustomExportSubmitFn;

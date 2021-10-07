@@ -13,7 +13,7 @@
                 <div *ngIf="!treeLoading && categoriesWithItems && !categoriesWithItems.length">No categories</div>
                 <app-category-tree *ngIf="categoriesWithItems"
                                    [includeItems]="false"
-                                   [selectedCategoryId]="selectedTreeNode && selectedTreeNode.currentCategoryWithItems ? (selectedTreeNode.currentCategoryWithItems.id) : null"
+                                   [selectedCategoryId]="selectedTreeNode && selectedTreeNode.currentCategoryWithItems ? (selectedTreeNode.currentCategoryWithItems.id) : undefined"
                                    (events)="onCategoryTreeEvents($event)"
                                    (dragDropEvents)="onCategoryTreeDragDropEvents($event)"
                                    [categoriesWithItems]="categoriesWithItems">
@@ -46,7 +46,7 @@
                         </mat-card-header>
                         <mat-card-content>
                             <app-category-item-table [categorySimpleItems]="removableCategoryTableItems"
-                                                     [actions]="removeableCategoryTableActions"
+                                                     [actions]="removableCategoryTableActions"
                                                      (events)="onRemoveableCategoryTableEvent($event)">
                             </app-category-item-table>
                             <app-pagination [pagination]="removableCategoryTableItemsPagination"

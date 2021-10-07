@@ -3,9 +3,9 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, 
 import {Pair1, Pair2} from '@fuyuko-common/model/attribute.model';
 
 export const uniqueP1KeyValidator = (currentPair: Pair1, pairs: Pair1[], formGroup: FormGroup) =>
-  (c: AbstractControl): ValidationErrors => {
+  (c: AbstractControl): ValidationErrors | null => {
   const count: number = pairs.filter((p: Pair1) => {
-    const v =  (currentPair.id !== p.id && formGroup.get(`p1-k-${p.id}`) &&  formGroup.get(`p1-k-${p.id}`).value === c.value);
+    const v =  (currentPair.id !== p.id && formGroup.get(`p1-k-${p.id}`) &&  formGroup.get(`p1-k-${p.id}`)?.value === c.value);
     return v;
   }).length;
   if (count > 0) {
@@ -15,7 +15,7 @@ export const uniqueP1KeyValidator = (currentPair: Pair1, pairs: Pair1[], formGro
 };
 
 
-export const uniqueP2Key1Validator = (formGroup: FormGroup) => (c: AbstractControl): ValidationErrors => {
+export const uniqueP2Key1Validator = (formGroup: FormGroup) => (c: AbstractControl): ValidationErrors | null => {
   let valid = false;
   Object.keys(formGroup.controls)
     .filter((k: string) => {
@@ -33,9 +33,9 @@ export const uniqueP2Key1Validator = (formGroup: FormGroup) => (c: AbstractContr
 };
 
 export const uniqueP2Key2Validator = (currentPair: Pair2, pairs: Pair2[], formGroup: FormGroup) =>
-  (c: AbstractControl): ValidationErrors => {
+  (c: AbstractControl): ValidationErrors | null => {
   const count: number = pairs.filter((p: Pair2) => {
-    const v =  (currentPair.id !== p.id && formGroup.get(`p2-k2-${p.id}`) && formGroup.get(`p2-k2-${p.id}`).value === c.value);
+    const v =  (currentPair.id !== p.id && formGroup.get(`p2-k2-${p.id}`) && formGroup.get(`p2-k2-${p.id}`)?.value === c.value);
     return v;
   }).length;
   if (count > 0) {
@@ -54,11 +54,11 @@ export class DoubleSelectComponent implements OnInit {
 
   counter = -1;
 
-  @Input() rootFormGroup: FormGroup;
-  @Input() pairs1: Pair1[];
-  @Input() pairs2: Pair2[];
+  @Input() rootFormGroup!: FormGroup;
+  @Input() pairs1!: Pair1[];
+  @Input() pairs2!: Pair2[];
 
-  formGroup: FormGroup;
+  formGroup!: FormGroup;
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -161,7 +161,7 @@ export class DoubleSelectComponent implements OnInit {
     this.formGroup.removeControl(`p2-v-${pair2.id}`);
     this.pairs2 = this.pairs2.filter((p: Pair2) => p.id !== pair2.id);
   }
-  
+
   formControl(k: string): FormControl {
     return this.formGroup.get(k) as FormControl;
   }

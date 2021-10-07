@@ -35,7 +35,7 @@ const httpAction:  any[] = [
         async (req: Request, res: Response, next: NextFunction) => {
             const userId: number = Number(req.params.userId);
             const viewId: number = Number(req.params.viewId);
-            const limitOffset: LimitOffset = toLimitOffset(req);
+            const limitOffset = toLimitOffset(req);
 
             const items: Item[] = await getAllFavouriteItemsInView(viewId, userId, limitOffset);
             const total: number = await getAllFavouriteItemsInViewCount(viewId, userId);

@@ -32,7 +32,7 @@ const httpAction: any[] = [
         const id: number = Number(req.body.id);
         const name: string = req.body.name;
         const description: string = req.body.description;
-        const parentId: number = req.body.parentId ? Number(req.body.parentId) : null;
+        const parentId: number | undefined = req.body.parentId ? Number(req.body.parentId) : undefined;
         const workflowAction = 'Update';
         const workflowType = 'Category';
 
@@ -44,7 +44,7 @@ const httpAction: any[] = [
                 const category = await getViewCategoryById(id);
                 category.name = name;
                 category.description = description;
-                const workflowTriggerResults = await triggerCategoryWorkflow([category], parentId, w.workflowDefinition.id, workflowAction);
+                const workflowTriggerResults = await triggerCategoryWorkflow(viewId, [category], parentId, w.workflowDefinition.id, workflowAction);
                 payload.push(...workflowTriggerResults);
             }
             const apiResponse: ApiResponse<WorkflowTriggerResult[]> = {

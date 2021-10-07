@@ -22,7 +22,7 @@ import {getViewByName, getAttributeInViewByName} from '../../src/service';
 describe('bulk-edit.service', () => {
 
   let view: View;
-  let stringAttribute: Attribute;
+  let stringAttribute!: Attribute;
   let textAttribute: Attribute;
   let numberAttribute: Attribute;
   let dateAttribute: Attribute;
@@ -42,20 +42,20 @@ describe('bulk-edit.service', () => {
           // await setupTestDatabase();
           await setupBeforeAll2();
           view = await getViewByName('Test View 1');
-          stringAttribute = await getAttributeInViewByName(view.id, 'string attribute');
-          textAttribute = await getAttributeInViewByName(view.id, 'text attribute');
-          numberAttribute = await getAttributeInViewByName(view.id, 'number attribute');
-          dateAttribute = await getAttributeInViewByName(view.id, 'date attribute');
-          currencyAttribute = await getAttributeInViewByName(view.id, 'currency attribute');
-          volumeAttribute = await getAttributeInViewByName(view.id, 'volume attribute');
-          dimensionAttribute = await getAttributeInViewByName(view.id, 'dimension attribute');
-          areaAttribute = await getAttributeInViewByName(view.id, 'area attribute');
-          lengthAttribute = await getAttributeInViewByName(view.id, 'length attribute');
-          widthAttribute = await getAttributeInViewByName(view.id, 'width attribute');
-          heightAttribute = await getAttributeInViewByName(view.id, 'height attribute');
-          weightAttribute = await getAttributeInViewByName(view.id, 'weight attribute');
-          selectAttribute = await getAttributeInViewByName(view.id, 'select attribute');
-          doubleSelectAttribute = await getAttributeInViewByName(view.id, 'doubleselect attribute');
+          stringAttribute = (await getAttributeInViewByName(view.id, 'string attribute') as Attribute);
+          textAttribute = await getAttributeInViewByName(view.id, 'text attribute') as Attribute;
+          numberAttribute = await getAttributeInViewByName(view.id, 'number attribute') as Attribute;
+          dateAttribute = await getAttributeInViewByName(view.id, 'date attribute') as Attribute;
+          currencyAttribute = await getAttributeInViewByName(view.id, 'currency attribute') as Attribute;
+          volumeAttribute = await getAttributeInViewByName(view.id, 'volume attribute') as Attribute;
+          dimensionAttribute = await getAttributeInViewByName(view.id, 'dimension attribute') as Attribute;
+          areaAttribute = await getAttributeInViewByName(view.id, 'area attribute') as Attribute;
+          lengthAttribute = await getAttributeInViewByName(view.id, 'length attribute') as Attribute;
+          widthAttribute = await getAttributeInViewByName(view.id, 'width attribute') as Attribute;
+          heightAttribute = await getAttributeInViewByName(view.id, 'height attribute') as Attribute;
+          weightAttribute = await getAttributeInViewByName(view.id, 'weight attribute') as Attribute;
+          selectAttribute = await getAttributeInViewByName(view.id, 'select attribute') as Attribute;
+          doubleSelectAttribute = await getAttributeInViewByName(view.id, 'doubleselect attribute') as Attribute;
       } catch(e) {
           console.error(e);
       }
@@ -397,11 +397,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: stringAttribute.id} as Attribute,
                   itemValue: undefined,
                   operator: 'empty'
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -428,11 +428,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: stringAttribute.id} as Attribute,
                   itemValue: undefined,
                   operator: 'not empty'
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -621,11 +621,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: textAttribute.id} as Attribute,
                   itemValue: undefined,
                   operator: 'empty'
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -648,11 +648,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: textAttribute.id} as Attribute,
                   itemValue: undefined,
                   operator: 'not empty'
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -821,11 +821,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: numberAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -842,11 +842,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: numberAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -1109,11 +1109,11 @@ describe('bulk-edit.service', () => {
                 } as ItemValueAndAttribute,
             ],
             [
-                {
+                ({
                     attribute: {id: dateAttribute.id} as Attribute,
                     operator: 'empty',
                     itemValue: undefined
-                } as ItemValueOperatorAndAttribute
+                } as unknown) as ItemValueOperatorAndAttribute
             ]);
         expect(bulkEditPackage.bulkEditItems).toBeDefined();
         expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -1130,11 +1130,11 @@ describe('bulk-edit.service', () => {
                 } as ItemValueAndAttribute,
             ],
             [
-                {
+                ({
                     attribute: {id: dateAttribute.id} as Attribute,
                     operator: 'not empty',
                     itemValue: undefined
-                } as ItemValueOperatorAndAttribute
+                } as unknown) as ItemValueOperatorAndAttribute
             ]);
         expect(bulkEditPackage.bulkEditItems).toBeDefined();
         expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -1397,11 +1397,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: currencyAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -1418,11 +1418,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: currencyAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -1686,11 +1686,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: volumeAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -1707,11 +1707,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: volumeAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -1974,11 +1974,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: areaAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -1995,11 +1995,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: areaAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -2262,11 +2262,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: lengthAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -2283,11 +2283,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: lengthAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -2550,11 +2550,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: widthAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -2571,11 +2571,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: widthAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -2838,11 +2838,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: heightAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -2859,11 +2859,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: heightAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -3126,11 +3126,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: weightAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -3147,11 +3147,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: weightAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -3414,11 +3414,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: selectAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -3435,11 +3435,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: selectAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
@@ -3510,11 +3510,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: doubleSelectAttribute.id} as Attribute,
                   operator: 'empty',
                   itemValue: undefined,
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(6);
@@ -3531,11 +3531,11 @@ describe('bulk-edit.service', () => {
               } as ItemValueAndAttribute,
           ],
           [
-              {
+              ({
                   attribute: {id: doubleSelectAttribute.id} as Attribute,
                   operator: 'not empty',
                   itemValue: undefined
-              } as ItemValueOperatorAndAttribute
+              } as unknown) as ItemValueOperatorAndAttribute
           ]);
       expect(bulkEditPackage.bulkEditItems).toBeDefined();
       expect(bulkEditPackage.bulkEditItems.length).toBe(1);
