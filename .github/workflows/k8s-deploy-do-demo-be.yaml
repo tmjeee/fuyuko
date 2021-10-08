@@ -60,9 +60,11 @@ jobs:
           node-version: '14.x'
       - name: Build BE
         run: |
-          cd be
+          (cd common
+          npm install)
+          (cd be
           npm install
-          npm run build
+          npm run build)
       - name: Build and push Docker BE
         uses: docker/build-push-action@v2
         with:
