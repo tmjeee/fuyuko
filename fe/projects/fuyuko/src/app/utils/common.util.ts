@@ -7,6 +7,7 @@ export const assertDefined = (a: any, msg: string | undefined = undefined) => {
 
 export const assertDefinedReturn = <T>(a: T | undefined | null, msg: string | undefined = undefined): T => {
     if (a === null || a === undefined) {
+        console.log(new Error().stack);
         throw Error(`Expect ${msg ? msg : a} to be defined`);
     }
     return a;

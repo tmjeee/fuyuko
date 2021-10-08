@@ -25,8 +25,7 @@ const httpAction: any[] = [
             }],
             payload: n
         };
-        res.status(200).json({
-        } as ApiResponse<AppNotification[]>);
+        res.status(200).json(apiResponse);
     }
 ];
 

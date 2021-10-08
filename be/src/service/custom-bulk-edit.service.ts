@@ -1,7 +1,7 @@
 import {CustomDataExport, ExportScript, ExportScriptInput} from '@fuyuko-common/model/custom-export.model';
 import {doInDbConnection, QueryA, QueryI} from '../db';
 import {Connection} from 'mariadb';
-import {CustomBulkEdit} from '@fuyuko-common/model/custom-bulk-edit.model';
+import {CustomBulkEdit, CustomBulkEditScript} from '@fuyuko-common/model/custom-bulk-edit.model';
 import {getCustomBulkEditScriptByName} from '../custom-bulk-edit';
 import {fireEvent, GetAllCustomBulkEditsEvent, GetCustomBulkEditByIdEvent} from './event/event.service';
 
@@ -58,7 +58,7 @@ class CustomBulkEditService {
     // == common functions ==
 
     async p(i: QueryI): Promise<CustomBulkEdit> {
-        const s: ExportScript = await getCustomBulkEditScriptByName(i.NAME);
+        const s: CustomBulkEditScript = await getCustomBulkEditScriptByName(i.NAME);
         const inputs: ExportScriptInput[] = s.inputs();
         const a: CustomBulkEdit = {
             id: i.ID,
