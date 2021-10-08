@@ -60,7 +60,7 @@ jobs:
           node-version: '14.x'
       - name: Build BE
         run: |
-          (cd common
+          (cd common-code
           npm install)
           (cd be
           npm install
