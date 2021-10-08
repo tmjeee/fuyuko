@@ -44,7 +44,7 @@ jobs:
         uses: stefanprodan/kube-tools@v1.5.0
       - name: doctl kubectl setup
         run: |
-          doctl kubernetes cluster kubeconfig save "$DO_CLUSTER_NAME"
+          doctl kubernetes cluster kubeconfig save "${{secrets.DO_CLUSTER_NAME}}"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -54,7 +54,13 @@ jobs:
         with:
           username: ${{secrets.DOCKER_USERNAME}}
           password: ${{secrets.DOCKER_ACCESS_TOKEN}}
-      - name: Build and push BE
+      - name: Build BE
+        uses: actions/setup-node@v1
+        run: |
+          npm run build
+        with:
+          node-version: '14.x'
+      - name: Build and push Docker BE
         uses: docker/build-push-action@v2
         with:
           file: ./be/docker/dockerfile
