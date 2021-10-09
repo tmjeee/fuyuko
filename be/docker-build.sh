@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 
-npm run build
+# npm run build
 
 docker container stop tmjee-fuyuko-be
 docker container rm tmjee-fuyuko-be
