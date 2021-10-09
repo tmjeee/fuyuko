@@ -8,16 +8,17 @@ WORKDIR /usr/src/fuyuko
 COPY tsconfig.json ./
 COPY ./*.json ./
 COPY ./*.sh ./
-COPY ./src ./src
+#COPY ./src ./src
+COPY ./dist ./
 
-RUN apt -y update && \
-    apt -y install apt-utils && \
-    apt -y install vim && \
-    apt -y install mariadb-client-10.1 && \
-    npm install && \
-    npm run build && \
-    chmod u+x *.sh && \
-    set -o vi
+RUN apt -y update
+RUN apt -y install apt-utils
+RUN apt -y install vim
+RUN apt -y install mariadb-client-10.1
+RUN npm install
+#RUN npm run build
+RUN chmod u+x *.sh
+RUN set -o vi
 
 EXPOSE 8888
 
