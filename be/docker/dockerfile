@@ -17,7 +17,8 @@ RUN apt -y install vim
 RUN apt -y install mariadb-client-10.1
 RUN npm install
 #RUN npm run build
-RUN chmod u+x *.sh
+RUN ls -lart
+RUN "chmod u+x *.sh"
 RUN set -o vi
 
 EXPOSE 8888
