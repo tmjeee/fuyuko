@@ -74,8 +74,9 @@ jobs:
           context: ./be
           push: true
           tags: ${{github.event.inputs.dockerImageName}}:${{github.event.inputs.dockerImageVersion}}
-      - name: bash command
+      - name: Kubectl
         uses: actions-hub/kubectl@master
+      - name: bash command
         run: |
           kubectl deploy -f ./kubernetes/k8s-fuyuko-be-deployment.yaml &&
           kubectl get pods &&
