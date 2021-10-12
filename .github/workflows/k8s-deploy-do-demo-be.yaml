@@ -36,8 +36,6 @@ jobs:
         uses: 74th/workflow-permission-action@1.0.0
         with:
           listfile: .github/workflows/super-users
-      - name: Kubectl
-        uses: actions-hub/kubectl@master
       - name: doctl setup
         uses: digitalocean/action-doctl@v2.1.0
         with:
@@ -78,6 +76,6 @@ jobs:
           tags: ${{github.event.inputs.dockerImageName}}:${{github.event.inputs.dockerImageVersion}}
       - name: bash command
         run: |
-          kubectl deploy -f ./kubernetes/k8s-fuyuko-be-deployment.yaml &&
+          kubectl apply -f ./kubernetes/k8s-fuyuko-be-deployment.yaml &&
           kubectl get pods &&
           kubectl get deployment
