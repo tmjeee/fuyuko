@@ -379,7 +379,7 @@ class ItemService {
         const errors: string[] = [];
         const name: string = item2.name;
         const description: string = item2.description;
-        const parentId: number | undefined = item2.parentId ? item2.parentId : undefined;
+        const parentId: number | null = item2.parentId ? item2.parentId : null;
 
         const qq: QueryA = await conn.query(`SELECT COUNT(*) AS COUNT FROM TBL_ITEM WHERE NAME=? AND VIEW_ID=? AND STATUS='ENABLED' `, [name, viewId]);
         if (qq[0].COUNT > 0) { // item with name already exists in view
