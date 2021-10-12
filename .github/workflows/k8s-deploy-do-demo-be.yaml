@@ -62,6 +62,8 @@ jobs:
         run: |
           (cd common-code
           npm install)
+          (cd wf
+          npm install)
           (cd be
           npm install
           npm run build)

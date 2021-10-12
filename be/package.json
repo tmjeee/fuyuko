@@ -7,7 +7,7 @@
     "copy-assets": "cp src/config/config.json dist/be/src/config/ && cp -fr src/updater/assets dist/be/src/updater/",
     "tsc": "npx tsc && npm run copy-assets",
     "start-mem": "node -r module-alias/register -r source-map-support/register --max-old-space-size=8192 -- dist/be/src/app.js",
-    "start": "node -r source-map-support/register -- dist/be/src/app.js",
+    "start": "node -r module-alias/register -r source-map-support/register -- dist/be/src/app.js",
     "preexec": "rm -fr ./dist",
     "exec": "npm run tsc",
     "postexec": "export DEBUG='fuyuko'; npm run start-mem",

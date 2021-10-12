@@ -24,19 +24,19 @@ export const l = (level: Level, msg: string, ...a: any[]) => {
 }
 
 export const d = (msg: string, ...e: any[]) => {
-    log(`[${moment().format('MM-DD-YYYY hh:mm:ss a')}] - [${reqUuid()}] - DEBUG - ${msg}`, ...e);
+    console.log(`[${moment().format('MM-DD-YYYY hh:mm:ss a')}] - [${reqUuid()}] - DEBUG - ${msg}`, ...e);
 }
 
 export const w = (msg: string, ...e: any[]) => {
-    log(`[${moment().format('MM-DD-YYYY hh:mm:ss a')}] - [${reqUuid()}] - WARN - ${msg}`, ...e);
+    console.log(`[${moment().format('MM-DD-YYYY hh:mm:ss a')}] - [${reqUuid()}] - WARN - ${msg}`, ...e);
 }
 
 export const i = (msg: string, ...e: any[]) => {
-    log(`[${moment().format('MM-DD-YYYY hh:mm:ss a')}] - [${reqUuid()}] - INFO - ${msg}`, ...e);
+    console.log(`[${moment().format('MM-DD-YYYY hh:mm:ss a')}] - [${reqUuid()}] - INFO - ${msg}`, ...e);
 };
 
 export const e = (msg: string, ...e: any[]) => {
-    log(`[${moment().format('MM-DD-YYYY hh:mm:ss a')}] - [${reqUuid()}] - ERROR - ${msg}`, ...e);
+    console.log(`[${moment().format('MM-DD-YYYY hh:mm:ss a')}] - [${reqUuid()}] - ERROR - ${msg}`, ...e);
 };
 
 const reqUuid = (): string => {

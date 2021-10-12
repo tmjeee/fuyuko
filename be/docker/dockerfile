@@ -3,13 +3,15 @@ FROM node:14
 
 ENV DEBIAN_FRONTEND noninteractive
 
+EXPOSE 8888
+
 WORKDIR /usr/src/fuyuko
 
 COPY tsconfig.json ./
 COPY ./*.json ./
 COPY ./*.sh ./
 #COPY ./src ./src
-COPY ./dist ./
+COPY ./dist ./dist
 
 RUN apt -y update
 RUN apt -y install apt-utils
@@ -18,7 +20,7 @@ RUN apt -y install mariadb-client-10.1
 RUN npm install
 #RUN npm run build
 RUN ls -lart
-RUN "chmod u+x *.sh"
+RUN chmod u+x ./*.sh
 RUN set -o vi
 
 EXPOSE 8888
