@@ -274,4 +274,5 @@ export const
     isValidForgottenPasswordCode = s.isValidForgottenPasswordCode.bind(s),
     resetForgottenPassword = s.resetForgottenPassword.bind(s),
     forgotPassword = s.forgotPassword.bind(s),
-    logout = s.logout.bind(s), login = s.login.bind(s);
+    logout = s.logout.bind(s),
+    login = s.login.bind(s);

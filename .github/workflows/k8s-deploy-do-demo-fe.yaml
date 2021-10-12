@@ -39,7 +39,7 @@ jobs:
       - name: doctl setup
         uses: digitalocean/action-doctl@v2.1.0
         with:
-          token: ${{env.DO_TOKEN}}
+          token: ${{secrets.DO_TOKEN}}
       - name: kubernetes tools setup
         uses: stefanprodan/kube-tools@v1.5.0
       - name: doctl kubectl setup
@@ -52,8 +52,19 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{env.DOCKER_USERNAME}}
-          password: ${{env.DOCKER_ACCESS_TOKEN}}
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_ACCESS_TOKEN}}
+      - name: Use Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: Build FE
+        run: |
+          (cd common-code
+          npm install)
+          (cd fe
+          npm install
+          npm run build)
       - name: Build and push FE
         uses: docker/build-push-action@v2
         with:
@@ -63,6 +74,6 @@ jobs:
           tags: ${{github.event.inputs.dockerImageName}}:${{github.event.inputs.dockerImageVersion}}
       - name: bash command
         run: |
-          kubectl deploy -f ./kubernetes/k8s-fuyuko-fe-deployment.yaml &&
+          kubectl apply -f ./kubernetes/k8s-fuyuko-fe-deployment.yaml &&
           kubectl get pods &&
           kubectl get deployment
