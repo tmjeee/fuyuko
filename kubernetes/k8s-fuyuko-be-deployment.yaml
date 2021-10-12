@@ -26,7 +26,7 @@ spec:
               name: fuyuko-be-port
           volumeMounts:
             - name: fuyuko-be-config
-              mountPath: /usr/src/fuyuko/dist/config/config.json
+              mountPath: /usr/src/fuyuko/dist/be/src/config/config.json
               subPath: config.json
       volumes:
         - name: fuyuko-be-config
