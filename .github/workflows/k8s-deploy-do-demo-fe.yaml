@@ -44,7 +44,7 @@ jobs:
         uses: stefanprodan/kube-tools@v1.5.0
       - name: doctl kubectl setup
         run: |
-          doctl kubernetes cluster kubeconfig save "$DO_CLUSTER_NAME"
+          doctl kubernetes cluster kubeconfig save "${{secrets.DO_CLUSTER_NAME}}"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
