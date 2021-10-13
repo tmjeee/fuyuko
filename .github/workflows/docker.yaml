@@ -6,6 +6,14 @@ on:
         description: 'Branch or Tag Name'
         required: true
         default: 'master'
+      dockerImageNameFE:
+        description: 'FE docker image name'
+        required: true
+        default: 'tmjee/fuyuko-fe'
+      dockerImageNameBE:
+        description: 'BE docker image name'
+        required: true
+        default: 'tmjee/fuyuko-be'
       dockerVersion:
         description: 'Docker version'
         required: true
@@ -44,14 +52,14 @@ jobs:
       - name: docker build & publish BE
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./be
           push: true
-          tags: tmjee/${{github.event.inputs.dockerVersion}}
+          tags: ${{github.event.inputs.dockerImageNameBE}}:{{github.event.inputs.dockerVersion}}
           file: ./be/docker/dockerfile
       - name: docker build & publish FE
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./fe
           push: true
-          tags: tmjee/${{github.event.inputs.dockerVersion}}
+          tags: ${{github.event.inputs.dockerImageNameFE}}:${{github.event.inputs.dockerVersion}}
           file: ./fe/docker/dockerfile
