@@ -69,7 +69,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: ./fe/docker/dockerfile
-          context: .
+          context: ./fe
           push: true
           tags: ${{github.event.inputs.dockerImageName}}:${{github.event.inputs.dockerImageVersion}}
       - name: bash command

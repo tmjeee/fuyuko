@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 
-npx ng build
+npm run build
 
 docker container stop tmjee-fuyuko-fe
 docker container rm -f tmjee-fuyuko-fe
