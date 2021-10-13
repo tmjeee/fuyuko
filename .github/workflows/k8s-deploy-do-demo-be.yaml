@@ -77,5 +77,10 @@ jobs:
       - name: bash command
         run: |
           kubectl apply -f ./kubernetes/k8s-fuyuko-be-deployment.yaml &&
+          sleep 10 &&
+          kubectl scale --replicas=0 -f ./kubernetes/k8s-fuyuko-be-deployment.yaml &&
+          sleep 10 &&
+          kubectl apply -f ./kubernetes/k8s-fuyuko-be-deployment.yaml &&
+          sleep 10 &&
           kubectl get pods &&
           kubectl get deployment

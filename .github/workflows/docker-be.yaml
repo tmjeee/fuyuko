@@ -46,7 +46,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: ./be/docker/dockerfile
-          context: .
+          context: ./be
           push: true
           tags: ${{github.event.inputs.dockerImageName}}:${{github.event.inputs.dockerImageVersion}}
 

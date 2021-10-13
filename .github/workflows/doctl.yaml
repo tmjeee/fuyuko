@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-20.04
     environment: digitalocean-demo
     env:
-      DO_TOKEN: ${{secrets.DO_TOKEN_R}} 
+      DO_TOKEN: ${{secrets.DO_TOKEN}}
       DO_CLUSTER_NAME: demo-cluster
     defaults:
       run:

@@ -50,7 +50,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'    
+          node-version: '14.x'
       - name: build package
         env: 
           VERSION: "${{github.event.inputs.tagName}}"
