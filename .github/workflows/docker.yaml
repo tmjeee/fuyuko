@@ -21,7 +21,7 @@ on:
 jobs:
   do-build:
     runs-on: ubuntu-20.04
-    environment: 'docker-hub'
+    environment: digitalocean-demo
     defaults:
       run: 
         working-directory: .
