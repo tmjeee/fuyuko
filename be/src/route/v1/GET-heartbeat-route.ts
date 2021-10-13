@@ -4,6 +4,7 @@ import {Registry} from '../../registry';
 import {validateMiddlewareFn} from './common-middleware';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {heartbeat} from '../../service';
+import config from '../../config/config.json';
 
 // CHECKED
 
@@ -18,7 +19,7 @@ const httpAction: any[] = [
         const apiResponse: ApiResponse = {
             messages: [{
                 status: 'SUCCESS',
-                message: `${h.date}`
+                message: `${h.date} - ${config.version} - ${config["git-tag"]} - ${config["git-version"]}`,
             }]
         };
         res.status(200).json(apiResponse);

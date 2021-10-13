@@ -28,6 +28,9 @@ jobs:
       run:
         working-directory: .
     steps:
+      - name: apt install jq
+        run: |
+          sudo apt-get install -y jq
       - name: checkout code
         uses: actions/checkout@v2
         with:
@@ -69,6 +72,10 @@ jobs:
           context: ./fe
           push: true
           tags: ${{github.event.inputs.dockerImageName}}:${{github.event.inputs.dockerImageVersion}}
+      - name: update config file
+        run: |
+          jq '.api_host_url="${{secrets.BE_URL}}"' < ./fe/dist/fuyuko/assets/config.json > config.json;
+          kubectl create configmap fuyuko-fe-config --from-file ./config.json -o yaml --dry-run | kubectl replace -f -
       - name: bash command
         run: |
           kubectl apply -f ./kubernetes/k8s-fuyuko-fe-deployment.yaml &&
