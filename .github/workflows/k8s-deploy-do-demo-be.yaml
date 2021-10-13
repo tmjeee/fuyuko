@@ -58,15 +58,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
-      - name: Build BE
+      - name: Build source
         run: |
-          (cd common-code
-          npm install)
-          (cd wf
-          npm install)
-          (cd be
-          npm install
-          npm run build)
+          chmod +x ./build-source.sh;
+          ./build-source.sh
       - name: Build and push Docker BE
         uses: docker/build-push-action@v2
         with:
