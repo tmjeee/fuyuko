@@ -1,11 +1,3 @@
 node_modules/
-e2e/
 docker/dockerfile
-src/
 .gitignore
-.dockerignore
-angular.json
-browserslist
-docker-build.sh
-docker-run.sh
-*.json
