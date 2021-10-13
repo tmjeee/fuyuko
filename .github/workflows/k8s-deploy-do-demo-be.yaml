@@ -74,11 +74,11 @@ jobs:
           tags: ${{github.event.inputs.dockerImageName}}:${{github.event.inputs.dockerImageVersion}}
       - name: update config file
         run: |
-          jq '.db-host="${{secrets.BE_DB_HOST}}"' < ./be/dist/be/src/config/config.json > config.json;
-          jq '.db-user="${{secrets.BE_DB_USER}}"' < ./be/dist/be/src/config/config.json > config.json;
-          jq '.db-password="${{secrets.BE_DB_PASSWORD}}"' < ./be/dist/be/src/config/config.json > config.json;
-          jq '.db-port="${{secrets.BE_DB_PORT}}"' < ./be/dist/be/src/config/config.json > config.json;
-          jq '.db-database="${{secrets.BE_DB_DATABASE}}"' < ./be/dist/be/src/config/config.json > config.json;
+          jq '."db-host"="${{secrets.BE_DB_HOST}}"' < ./be/dist/be/src/config/config.json > config.json;
+          jq '."db-user"="${{secrets.BE_DB_USER}}"' < ./be/dist/be/src/config/config.json > config.json;
+          jq '."db-password"="${{secrets.BE_DB_PASSWORD}}"' < ./be/dist/be/src/config/config.json > config.json;
+          jq '."db-port"="${{secrets.BE_DB_PORT}}"' < ./be/dist/be/src/config/config.json > config.json;
+          jq '."db-database"="${{secrets.BE_DB_DATABASE}}"' < ./be/dist/be/src/config/config.json > config.json;
           kubectl create configmap fuyuko-fe-config --from-file ./config.json -o yaml --dry-run | kubectl replace -f -
       - name: bash command
         run: |
