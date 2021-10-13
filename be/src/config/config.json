@@ -1,6 +1,7 @@
 {
-  "version": "development",
+  "version": "__GIT_TAG__",
   "git-version": "__GIT_VERSION__",
+  "git-tag": "__GIT_TAG__",
 
   "db-host": "localhost",
   "db-user": "root",

@@ -54,7 +54,7 @@ jobs:
         with:
           context: ./be
           push: true
-          tags: ${{github.event.inputs.dockerImageNameBE}}:{{github.event.inputs.dockerVersion}}
+          tags: ${{github.event.inputs.dockerImageNameBE}}:${{github.event.inputs.dockerVersion}}
           file: ./be/docker/dockerfile
       - name: docker build & publish FE
         uses: docker/build-push-action@v2

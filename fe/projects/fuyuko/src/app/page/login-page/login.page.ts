@@ -8,6 +8,7 @@ import {SettingsService} from '../../service/settings-service/settings.service';
 import {BrowserLocationHistoryService} from '../../service/browser-location-history-service/browser-location-history.service';
 import {LoginResponse} from '@fuyuko-common/model/api-response.model';
 import {isApiResponseSuccess, toNotifications} from '../../service/common.service';
+import config from '../../../assets/config.json';
 
 
 @Component({
@@ -17,6 +18,7 @@ import {isApiResponseSuccess, toNotifications} from '../../service/common.servic
 })
 export class LoginPageComponent implements OnInit, AfterViewInit {
 
+  config = config;
   ready = false ;
 
   formGroup: FormGroup;

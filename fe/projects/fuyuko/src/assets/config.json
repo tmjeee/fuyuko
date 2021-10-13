@@ -1,6 +1,7 @@
 
 {
-  "version": "development",
+  "version": "__GIT_TAG__",
   "git_version": "__GIT_VERSION__",
+  "git_tag": "__GIT_TAG__",
   "api_host_url": "http://127.0.0.1:8888/api/v1"
 }

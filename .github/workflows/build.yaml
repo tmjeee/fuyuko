@@ -41,11 +41,19 @@ jobs:
         run: |
           npm install
           npm run build
+          chmod u+x ./update-files-with-git-hash.sh
+          chmod u+x ./update-files-with-git-tag.sh
+          ./update-files-with-git-hash.sh
+          ./update-files-with-git-tag.sh
       - name: build fe
         working-directory: ./fe
         run: |
-          npm install
+          npm instal
           npm run build
+          chmod u+x ./update-files-with-git-hash.sh
+          chmod u+x ./update-files-with-git-tag.sh
+          ./update-files-with-git-hash.sh
+          ./update-files-with-git-tag.sh
       - name: build wf
         working-directory: ./wf
         run: |
