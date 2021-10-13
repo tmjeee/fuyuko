@@ -48,7 +48,7 @@ jobs:
       - name: build fe
         working-directory: ./fe
         run: |
-          npm instal
+          npm install
           npm run build
           chmod u+x ./update-files-with-git-hash.sh
           chmod u+x ./update-files-with-git-tag.sh
