@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TAG=`git describe --tag --always`
-FILES=( "./dist/fuyuko/assets/config.json" )
+FILES=( "./projects/fuyuko/src/assets/config.json" )
 
 echo "Current tag $TAG"
 

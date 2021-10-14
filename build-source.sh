@@ -32,11 +32,11 @@ echo "BUILD FE"
 cd fe
 npm install
 npm install 'replace-in-file'
-npm run build-prod
 chmod +x ./update-files-with-git-hash.sh
 chmod +x ./update-files-with-git-tag.sh
 ./update-files-with-git-hash.sh
 ./update-files-with-git-tag.sh
+npm run build-prod
 )
 
 echo "DONE BUILD SOURCE"

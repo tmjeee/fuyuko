@@ -12,7 +12,7 @@ const git_hash = () => {
 }
 const replace = async (hash) => {
   await require('replace-in-file')({
-    files: ['./dist/fuyuko/assets/config.json'],
+    files: ['./projects/fuyuko/src/assets/config.json'],
     from: '__GIT_VERSION__',
     to: hash
   });
