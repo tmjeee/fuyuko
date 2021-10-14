@@ -61,6 +61,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
+      - name: Git TAG
+        run: |
+          git describe --tag
       - name: Build source
         run: |
           chmod +x ./build-source.sh;
