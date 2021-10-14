@@ -75,7 +75,7 @@ jobs:
       - name: update config file
         run: |
           jq '."db-host"="${{secrets.BE_DB_HOST}}" | ."db-user"="${{secrets.BE_DB_USER}}" | ."db-password"="${{secrets.BE_DB_PASSWORD}}" | ."db-port"="${{secrets.BE_DB_PORT}}" | ."db-database"="${{secrets.BE_DB_DATABASE}}"' < ./be/dist/be/src/config/config.json > config.json;
-          kubectl create configmap fuyuko-fe-config --from-file ./config.json -o yaml --dry-run | kubectl replace -f -
+          kubectl create configmap fuyuko-be-config --from-file ./config.json -o yaml --dry-run | kubectl replace -f -
       - name: bash command
         run: |
           kubectl apply -f ./kubernetes/k8s-fuyuko-be-deployment.yaml &&
