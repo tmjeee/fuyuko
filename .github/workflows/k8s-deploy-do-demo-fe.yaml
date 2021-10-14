@@ -63,7 +63,7 @@ jobs:
           node-version: '14.x'
       - name: Git TAG
         run: |
-          git describe --tag
+          git describe --tag --always
       - name: Build source
         run: |
           chmod +x ./build-source.sh;
