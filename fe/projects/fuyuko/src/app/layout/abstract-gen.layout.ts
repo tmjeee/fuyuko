@@ -9,10 +9,13 @@ import {User} from '@fuyuko-common/model/user.model';
 import {SettingsService} from '../service/settings-service/settings.service';
 import {Settings} from '@fuyuko-common/model/settings.model';
 import {LoadingService} from '../service/loading-service/loading.service';
+import config from '../../assets/config.json';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
 export class AbstractGenLayoutComponent implements OnInit, OnDestroy {
+
+  config = config;
 
   loading!: boolean;
 
