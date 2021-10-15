@@ -5,6 +5,10 @@ import { param } from "express-validator";
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteItemImage} from "../../service/item-image.service";
 
+export const invocation = () => {
+
+}
+
 // CHECK:
 const httpAction: any[] = [
     [

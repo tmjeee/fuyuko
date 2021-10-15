@@ -32,7 +32,7 @@ import registerGetUsersByStatusRoute from './GET-users-by-status.route';
 import registerDeleteUserByIdRoute from './DELETE-user-by-id.route';
 import registerPostChangeUserStatusRoute from './POST-change-user-status.route';
 import registerGetSelfRegistersRoute from './GET-self-register.route';
-import registerDeleteSelfRegisterRoute from './DELETE-self-register.route';
+import registerDeleteSelfRegistrationRoute from './DELETE-self-registration.route';
 import registerGetAllRolesRoute from './GET-all-roles.route';
 import registerGetAllViewsRoute from './GET-all-views.route';
 import registerPostSaveViewsRoute from './POST-save-view.route';
@@ -192,7 +192,7 @@ const reg = (router: Router, regi: Registry): Router => {
     registerPostAddUserToGroupRoute(v1AppRouter, registry);
     registerDeleteUserFromGroupRoute(v1AppRouter, registry);
     registerGetSelfRegistersRoute(v1AppRouter, registry);
-    registerDeleteSelfRegisterRoute(v1AppRouter, registry);
+    registerDeleteSelfRegistrationRoute(v1AppRouter, registry);
     registerGetUsersByStatusRoute(v1AppRouter, registry);
     registerDeleteUserByIdRoute(v1AppRouter, registry)
     registerPostChangeUserStatusRoute(v1AppRouter, registry);

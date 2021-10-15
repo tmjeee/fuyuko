@@ -5,6 +5,30 @@ import {param, body} from "express-validator";
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteCustomRules} from "../../service/custom-rule.service";
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (viewId: number, customRuleIds: number[]): Promise<ApiResponse> => {
+
+    const errors: string[] = await deleteCustomRules(viewId, customRuleIds);
+
+    if (errors && errors.length) {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'WARN',
+                message: errors.join(', ')
+            }]
+        };
+        return apiResponse;
+    } else {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Custom rule successfully deleted`
+            }]
+        };
+        return apiResponse;
+    }
+}
 
 // CHECKED:
 const httpAction: any[] = [
@@ -20,25 +44,8 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const customRuleIds: number[] = req.body.customRuleIds;
 
-        const errors: string[] = await deleteCustomRules(viewId, customRuleIds);
-
-        if (errors && errors.length) {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'WARN',
-                    message: errors.join(', ')
-                }]
-            };
-            res.status(400).json(apiResponse);
-        } else {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'SUCCESS',
-                    message: `Custom rule successfully deleted`
-                }]
-            };
-            res.status(200).json(apiResponse);
-        }
+        const apiResponse = await invocation(viewId, customRuleIds);
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

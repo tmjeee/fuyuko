@@ -13,7 +13,25 @@ import {getAttributesInView, getTotalAttributesInView} from "../../service/attri
 import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
 import {toLimitOffset} from "../../util/utils";
-import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
+import {LimitOffset} from "@fuyuko-common/model/limit-offset.model";
+
+export const invocation = async (viewId: number, limitOffset?: LimitOffset): Promise<PaginableApiResponse<Attribute[]>> => {
+
+    const total: number = await getTotalAttributesInView(viewId);
+    const attr: Attribute[] = await getAttributesInView(viewId, undefined, limitOffset);
+
+    const apiResponse: PaginableApiResponse<Attribute[]> = {
+        messages: [{
+            status: 'SUCCESS',
+            message: `Attributes retrival successful`,
+        }],
+        payload: attr,
+        total,
+        limit: limitOffset ? limitOffset.limit : total,
+        offset: limitOffset ? limitOffset.offset : 0
+    };
+    return apiResponse;
+}
 
 // CHECKED
 const httpAction: any[] = [
@@ -28,19 +46,7 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const limitOffset = toLimitOffset(req);
 
-        const total: number = await getTotalAttributesInView(viewId);
-        const attr: Attribute[] = await getAttributesInView(viewId, undefined, limitOffset);
-
-        const apiResponse: PaginableApiResponse<Attribute[]> = {
-            messages: [{
-                status: 'SUCCESS',
-                message: `Attributes retrival successful`,
-            }],
-            payload: attr,
-            total,
-            limit: limitOffset ? limitOffset.limit : total,
-            offset: limitOffset ? limitOffset.offset : 0
-        };
+        const apiResponse = await invocation(viewId, limitOffset);
         res.status(200).json(apiResponse);
     }
 ];

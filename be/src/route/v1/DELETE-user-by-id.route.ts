@@ -11,13 +11,28 @@ import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {check} from 'express-validator';
 import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
 import {deleteUser} from "../../service/user.service";
-import {
-    Workflow,
-    WorkflowInstanceAction,
-    WorkflowInstanceType,
-    WorkflowTriggerResult
-} from '@fuyuko-common/model/workflow.model';
-import {getWorkflowByViewActionAndType, triggerAttributeWorkflow} from '../../service';
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (userId: number): Promise<ApiResponse> => {
+    const r: boolean = await deleteUser(userId);
+    if (r) {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `User ${userId} deleted`
+            }]
+        };
+        return apiResponse;
+    } else {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'ERROR',
+                message: `Failed to delete user with id ${userId}`
+            }]
+        };
+        return apiResponse;
+    }
+}
 
 // CHECKED
 const httpAction: any[] = [
@@ -29,24 +44,9 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_ADMIN])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
         const userId: number = Number(req.params.userId);
-        const r: boolean = await deleteUser(userId);
-        if (r) {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'SUCCESS',
-                    message: `User ${userId} deleted`
-                }]
-            };
-            res.status(200).json(apiResponse);
-        } else {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'ERROR',
-                    message: `Failed to delete user with id ${userId}`
-                }]
-            };
-            res.status(400).json(apiResponse);
-        }
+
+        const apiResponse = await invocation(userId);
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

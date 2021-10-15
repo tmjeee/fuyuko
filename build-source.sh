@@ -20,6 +20,7 @@ cd be
 npm install
 npm install 'replace-in-file'
 npm run build
+npm run generate
 chmod +x ./update-files-with-git-hash.sh
 chmod +x ./update-files-with-git-tag.sh
 ./update-files-with-git-hash.sh
@@ -36,6 +37,7 @@ chmod +x ./update-files-with-git-hash.sh
 chmod +x ./update-files-with-git-tag.sh
 ./update-files-with-git-hash.sh
 ./update-files-with-git-tag.sh
+npm run generate
 npm run build-prod
 )
 

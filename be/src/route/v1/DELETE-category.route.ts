@@ -12,8 +12,9 @@ import {
     WorkflowTriggerResult
 } from '@fuyuko-common/model/workflow.model';
 import {getWorkflowByViewActionAndType, triggerAttributeWorkflow, triggerCategoryWorkflow} from '../../service';
+import {markAsWorkflow, toHttpStatus} from "./aid.";
 
-export const invocation = async (viewId: number, categoryId: number) => {
+export const invocation = async (viewId: number, categoryId: number): Promise<ApiResponse<WorkflowTriggerResult[] | void>> => {
 
     const workflowAction: WorkflowInstanceAction = 'Delete';
     const workflowType: WorkflowInstanceType = 'Category';
@@ -35,7 +36,7 @@ export const invocation = async (viewId: number, categoryId: number) => {
             }],
             payload,
         };
-        return apiResponse;
+        return markAsWorkflow(apiResponse);
     }
 
 
@@ -73,7 +74,8 @@ const httpAction: any[] = [
         const categoryId: number = Number(req.params.categoryId);
 
         const apiResponse = await invocation(viewId, categoryId);
-        res.status(200).json(apiResponse);
+        const httpStatus = toHttpStatus(apiResponse);
+        res.status(httpStatus).json(apiResponse);
     }
 ];
 

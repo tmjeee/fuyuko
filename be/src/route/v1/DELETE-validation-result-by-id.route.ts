@@ -5,6 +5,30 @@ import { param } from "express-validator";
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteValidationResult} from "../../service/validation/validation.service";
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (viewId: number, validationId: number): Promise<ApiResponse> => {
+
+    const r: boolean = await deleteValidationResult(viewId, validationId);
+
+    if (r) {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Deleted validation result for validation id ${validationId} successfully`
+            }]
+        };
+        return apiResponse;
+    } else {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'ERROR',
+                message: `Failed to delete validation result for validation id ${validationId}`
+            }]
+        };
+        return apiResponse;
+    }
+}
 
 // CHECKED
 const httpAction: any[] = [
@@ -19,25 +43,8 @@ const httpAction: any[] = [
       const viewId: number = Number(req.params.viewId);
       const validationId: number = Number(req.params.validationId);
 
-      const r: boolean = await deleteValidationResult(viewId, validationId);
-
-      if (r) {
-         const apiResponse: ApiResponse = {
-            messages: [{
-             status: 'SUCCESS',
-             message: `Deleted validation result for validation id ${validationId} successfully`
-            }]
-         };
-         res.status(200).json(apiResponse);
-      } else {
-          const apiResponse: ApiResponse = {
-               messages: [{
-                   status: 'ERROR',
-                   message: `Failed to delete validation result for validation id ${validationId}`
-               }]
-          };
-         res.status(400).json(apiResponse);
-      }
+      const apiResponse = await invocation(viewId, validationId);
+      res.status(toHttpStatus(apiResponse)).json(apiResponse);
    }
 ];
 

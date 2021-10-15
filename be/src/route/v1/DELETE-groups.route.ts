@@ -5,7 +5,30 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_ADMIN, ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {deleteGroup} from "../../service/group.service";
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toHttpStatus} from "./aid.";
 
+
+export const invocation = async (groupIds: number[]): Promise<ApiResponse> => {
+    const errors: string[] = await deleteGroup(groupIds);
+
+    if (errors && errors.length) {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'ERROR',
+                message: errors.join(', ')
+            }]
+        };
+        return apiResponse;
+    }  else {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Group(s) successfully deleted`
+            }]
+        };
+        return apiResponse;
+    }
+}
 
 const httpAction: any[] = [
     [
@@ -17,25 +40,9 @@ const httpAction: any[] = [
     v([vFnHasAnyUserRoles([ROLE_ADMIN])], aFnAnyTrue),
     async(req: Request, res: Response, next: NextFunction) => {
         const groupIds: number[] = req.body.groupIds;
-        const errors: string[] = await deleteGroup(groupIds);
 
-        if (errors && errors.length) {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'ERROR',
-                    message: errors.join(', ')
-                }]
-            };
-            res.status(400).json(apiResponse);
-        }  else {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'SUCCESS',
-                    message: `Group(s) successfully deleted`
-                }]
-            };
-            res.status(200).json(apiResponse);
-        }
+        const apiResponse = await invocation(groupIds);
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

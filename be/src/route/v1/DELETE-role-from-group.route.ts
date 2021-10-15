@@ -5,6 +5,29 @@ import {check} from "express-validator";
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {ROLE_ADMIN} from '@fuyuko-common/model/role.model';
 import {removeRoleFromGroup} from "../../service/role.service";
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (groupId: number, roleName: string): Promise<ApiResponse> => {
+    const errors: string[] = await removeRoleFromGroup(roleName, groupId);
+
+    if (errors && errors.length) {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'ERROR',
+                message: errors.join(', ')
+            }]
+        };
+        return apiResponse;
+    } else {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Role ${roleName} deleted from group ${groupId}`
+            }]
+        };
+        return apiResponse;
+    }
+}
 
 // CHECKED
 const httpAction: any[] = [
@@ -20,25 +43,8 @@ const httpAction: any[] = [
         const groupId: number = Number(req.params.groupId);
         const roleName: string = req.params.roleName;
 
-        const errors: string[] = await removeRoleFromGroup(roleName, groupId);
-
-        if (errors && errors.length) {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'ERROR',
-                    message: errors.join(', ')
-                }]
-            };
-            res.status(400).json(apiResponse);
-        } else {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'SUCCESS',
-                    message: `Role ${roleName} deleted from group ${groupId}`
-                }]
-            };
-            res.status(200).json(apiResponse);
-        }
+        const apiResponse = await invocation(groupId, roleName);
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

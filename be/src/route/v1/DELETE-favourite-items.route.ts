@@ -12,6 +12,29 @@ import {
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {removeFavouriteItemIds} from "../../service/item.service";
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (viewId: number, userId: number, itemIds: number[]): Promise<ApiResponse> => {
+    const errors: string[] = await removeFavouriteItemIds(userId, itemIds);
+
+    if (errors && errors.length) { // has errors
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'ERROR',
+                message: errors.join(',')
+            }]
+        }
+        return apiResponse;
+    } else {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Successfully remove favourite items`
+            }]
+        };
+        return apiResponse;
+    }
+}
 
 const httpAction: any[] = [
     [
@@ -33,25 +56,8 @@ const httpAction: any[] = [
         const userId: number = Number(req.params.userId);
         const itemIds: number[] = req.body.itemIds;
 
-        const errors: string[] = await removeFavouriteItemIds(userId, itemIds);
-
-        if (errors && errors.length) { // has errors
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'ERROR',
-                    message: errors.join(',')
-                }]
-            }
-            res.status(400).json(apiResponse);
-        } else {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'SUCCESS',
-                    message: `Successfully remove favourite items`
-                }]
-            };
-            res.status(200).json(apiResponse);
-        }
+        const apiResponse = await invocation(viewId, userId, itemIds);
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

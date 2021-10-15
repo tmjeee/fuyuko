@@ -5,6 +5,28 @@ import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import { param } from "express-validator";
 import {removeItemFromViewCategory} from "../../service/category.service";
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (viewId: number, categoryId: number, itemId: number): Promise<ApiResponse> => {
+    const errors: string[] = await removeItemFromViewCategory(categoryId, itemId);
+    if (errors && errors.length) {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'ERROR',
+                message: errors.join(', ')
+            }]
+        };
+        return apiResponse;
+    } else {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Item ${itemId} removed from category ${categoryId} in view ${viewId}`
+            }]
+        };
+        return apiResponse;
+    }
+}
 
 
 const httpAction: any[] = [
@@ -21,24 +43,8 @@ const httpAction: any[] = [
         const categoryId: number = Number(req.params.categoryId);
         const itemId: number = Number(req.params.itemId);
 
-        const errors: string[] = await removeItemFromViewCategory(categoryId, itemId);
-        if (errors && errors.length) {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'ERROR',
-                    message: errors.join(', ')
-                }]
-            };
-            res.status(400).json(apiResponse);
-        } else {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'SUCCESS',
-                    message: `Item ${itemId} removed from category ${categoryId} in view ${viewId}`
-                }]
-            };
-            res.status(200).json(apiResponse);
-        }
+        const apiResponse = await invocation(viewId, categoryId, itemId);
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

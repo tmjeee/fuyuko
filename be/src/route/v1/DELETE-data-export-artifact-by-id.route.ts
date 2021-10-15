@@ -5,6 +5,29 @@ import {aFnAnyTrue, v, validateJwtMiddlewareFn, validateMiddlewareFn, vFnHasAnyU
 import {ROLE_EDIT} from '@fuyuko-common/model/role.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {deleteExportArtifactById} from "../../service/export-artifact.service";
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (dataExportArtifactId: number): Promise<ApiResponse> => {
+    const r: boolean = await deleteExportArtifactById(dataExportArtifactId);
+
+    if (r) {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'SUCCESS',
+                message: `Data Export artifact deleted`
+            }]
+        };
+        return apiResponse;
+    } else {
+        const apiResponse: ApiResponse = {
+            messages: [{
+                status: 'ERROR',
+                message: `Data Export artifact Failed to be deleted`
+            }]
+        };
+        return apiResponse;
+    }
+}
 
 // CHECKED
 const httpAction: any[] = [
@@ -17,25 +40,9 @@ const httpAction: any[] = [
     async (req: Request, res: Response, next: NextFunction) => {
         const dataExportArtifactId: number = Number(req.params.dataExportArtifactId);
 
-        const r: boolean = await deleteExportArtifactById(dataExportArtifactId);
-
-        if (r) {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'SUCCESS',
-                    message: `Data Export artifact deleted`
-                }]
-            };
-            res.status(200).json(apiResponse);
-        } else {
-            const apiResponse: ApiResponse = {
-                messages: [{
-                    status: 'ERROR',
-                    message: `Data Export artifact Failed to be deleted`
-                }]
-            };
-            res.status(400).json(apiResponse);
-        }
+        const apiResponse = await invocation(dataExportArtifactId);
+        const httpStatus = toHttpStatus(apiResponse);
+        res.status(httpStatus).json(apiResponse);
     }
 ];
 
