@@ -37,6 +37,7 @@ import {
 import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import {fireEvent, ValidationEvent} from '../event/event.service';
 import {getAllItemsInView, getRules} from "../";
+import {getItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 
 /**
@@ -196,7 +197,7 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
                     await i(currentContext, `Unable to find when clause attribute id ${whenClause.attributeId}`);
                     continue;
                 }
-                const value: Value = item[whenClause.attributeId];
+                const value: Value | undefined = getItemValue(item, whenClause.attributeId); // item[whenClause.attributeId];
                 const i1: ItemValTypes | undefined = value ? value.val : createNewItemValue(att).val;
                 if (!i1) {
                     await i(currentContext, `Attribute value for attribute ${whenClause.attributeId} is not defined`);
@@ -239,7 +240,7 @@ const _runPredefinedRulesValidation = async (viewId: number, validationId: numbe
                         await i(currentContext, `Unable to find validate clause attribute id ${validateClause.attributeId}`);
                         continue;
                     }
-                    const value: Value = item[validateClause.attributeId];
+                    const value: Value | undefined = getItemValue(item, validateClause.attributeId); // item[validateClause.attributeId];
                     const i1: ItemValTypes | undefined = value ? value.val : createNewItemValue(att).val;
                     if (!i1) {
                         await i(currentContext, `Attribute value for attribute ${validateClause.attributeId} is not defined`);

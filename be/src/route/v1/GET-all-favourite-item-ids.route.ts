@@ -13,6 +13,19 @@ import {
 import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {getAllFavouriteItemIdsInView} from "../../service/item.service";
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (viewId: number, userId: number): Promise<ApiResponse<number[]>> => {
+    const itemIds: number[] = await getAllFavouriteItemIdsInView(viewId, userId);
+    const apiResponse: ApiResponse<number[]> = {
+        messages: [{
+            status: 'SUCCESS',
+            message: `Favourite item ids retrieved`,
+        }],
+        payload: itemIds
+    }
+    return apiResponse;
+}
 
 const httpAction: any[] = [
     [
@@ -33,15 +46,8 @@ const httpAction: any[] = [
         const viewId: number = Number(req.params.viewId);
         const userId: number = Number(req.params.userId);
 
-        const itemIds: number[] = await getAllFavouriteItemIdsInView(viewId, userId);
-        const apiResponse: ApiResponse<number[]> = {
-            messages: [{
-                status: 'SUCCESS',
-                message: `Favourite item ids retrieved`,
-            }],
-            payload: itemIds
-        }
-        res.status(200).json(apiResponse);
+        const apiResponse = await invocation(viewId, userId);
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

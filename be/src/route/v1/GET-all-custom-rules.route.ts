@@ -5,6 +5,19 @@ import {CustomRule} from '@fuyuko-common/model/custom-rule.model';
 import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {getAllCustomRules} from "../../service/custom-rule.service";
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (): Promise<ApiResponse<CustomRule[]>> => {
+    const r: CustomRule[] = await getAllCustomRules();
+    const apiResponse: ApiResponse<CustomRule[]> = {
+        messages: [{
+            status: 'SUCCESS',
+            message: `Custom Rule Retrieval Success`,
+        }],
+        payload: r
+    };
+    return apiResponse;
+}
 
 // CHECKED
 const httpAction: any[] = [
@@ -13,15 +26,8 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
-        const r: CustomRule[] = await getAllCustomRules();
-        const apiResponse: ApiResponse<CustomRule[]> = {
-            messages: [{
-                status: 'SUCCESS',
-                message: `Custom Rule Retrieval Success`,
-            }],
-            payload: r
-        };
-        res.status(200).json(apiResponse);
+        const apiResponse = await invocation();
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

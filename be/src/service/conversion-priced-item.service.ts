@@ -1,6 +1,7 @@
 import {ItemValue2, PricedItem2} from '../server-side-model/server-side.model';
 import {PricedItem, Value} from '@fuyuko-common/model/item.model';
 import {itemValueConvert, itemValueRevert} from './conversion-item-value.service';
+import {setItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 class ConversionPricedItemService {
 
@@ -23,10 +24,15 @@ class ConversionPricedItemService {
             price: p2.price,
             creationDate: p2.creationDate,
             lastUpdate: p2.lastUpdate,
-            children: pricedItemsConvert(p2.children)
+            children: pricedItemsConvert(p2.children),
+            values: []
         };
         p2.values.reduce((p: PricedItem, i: ItemValue2) => {
-            p[i.attributeId] = itemValueConvert(i);
+            const value = itemValueConvert(i);
+            if (value) {
+                p.values.push(value);
+            }
+            // p[i.attributeId] = itemValueConvert(i);
             return p;
         }, p);
         return p;
@@ -56,15 +62,22 @@ class ConversionPricedItemService {
             country: (item as PricedItem).country ? (item as PricedItem).country : undefined
         } as PricedItem2;
 
-        for (const i in item) {
-            if (item.hasOwnProperty(i) && !isNaN(Number(i))) {
-                const value: Value = item[i];
-                const val2: ItemValue2 | undefined = itemValueRevert(value);
-                if (val2) {
-                    item2.values.push(val2);
-                }
+        for (const value of item.values) {
+            const val2: ItemValue2 | undefined = itemValueRevert(value);
+            if (val2) {
+                item2.values.push(val2);
             }
         }
+
+        // for (const i in item) {
+        //     if (item.hasOwnProperty(i) && !isNaN(Number(i))) {
+        //         const value: Value = item[i];
+        //         const val2: ItemValue2 | undefined = itemValueRevert(value);
+        //         if (val2) {
+        //             item2.values.push(val2);
+        //         }
+        //     }
+        // }
         return item2;
     }
 }

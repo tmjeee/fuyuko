@@ -16,11 +16,29 @@ import {toLimitOffset} from "../../util/utils";
 import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {Item} from '@fuyuko-common/model/item.model';
 import {ApiResponse, PaginableApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (viewId: number, userId: number, limitOffset?: LimitOffset): Promise<PaginableApiResponse<Item[]>> => {
+    const items: Item[] = await getAllFavouriteItemsInView(viewId, userId, limitOffset);
+    const total: number = await getAllFavouriteItemsInViewCount(viewId, userId);
+
+    const apiResponse: PaginableApiResponse<Item[]> =  {
+        messages: [{
+            status: "SUCCESS",
+            message: 'Favourite item retrieved',
+        }],
+        payload: items,
+        total,
+        limit: limitOffset ? limitOffset.limit : total,
+        offset: limitOffset ? limitOffset.offset : 0,
+    }
+    return apiResponse;
+}
 
 const httpAction:  any[] = [
-        [
-            param(`userId`).exists().isNumeric(),
-            param(`viewId`).exists().isNumeric(),
+    [
+        param(`userId`).exists().isNumeric(),
+        param(`viewId`).exists().isNumeric(),
         ],
         validateMiddlewareFn,
         validateJwtMiddlewareFn,
@@ -37,20 +55,8 @@ const httpAction:  any[] = [
             const viewId: number = Number(req.params.viewId);
             const limitOffset = toLimitOffset(req);
 
-            const items: Item[] = await getAllFavouriteItemsInView(viewId, userId, limitOffset);
-            const total: number = await getAllFavouriteItemsInViewCount(viewId, userId);
-
-            const apiResponse: PaginableApiResponse<Item[]> =  {
-               messages: [{
-                   status: "SUCCESS",
-                   message: 'Favourite item retrieved',
-               }],
-                payload: items,
-                total,
-                limit: limitOffset ? limitOffset.limit : total,
-                offset: limitOffset ? limitOffset.offset : 0,
-            }
-            res.status(200).json(apiResponse);
+            const apiResponse = await invocation(viewId, userId, limitOffset);
+            res.status(toHttpStatus(apiResponse)).json(apiResponse);
         }
 ];
 

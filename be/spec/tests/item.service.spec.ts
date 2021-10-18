@@ -21,6 +21,7 @@ import {
 import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {JASMINE_TIMEOUT, setupTestDatabase, setupBeforeAll2} from '../helpers/test-helper';
 import {User} from '@fuyuko-common/model/user.model';
+import {getItemValue, setItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 
 describe('item.service', () => {
@@ -299,84 +300,84 @@ describe('item.service', () => {
         expect(item2!.description).toBe(itemName);
         
         // stringAtt
-        expect(item2![stringAtt.id].attributeId).toBe(stringAtt.id);
-        expect((item2![stringAtt.id].val as StringValue).type).toBe('string');
-        expect((item2![stringAtt.id].val as StringValue).value).toBe('xxxxx');
+        expect(getItemValue(item2!, stringAtt.id)!.attributeId).toBe(stringAtt.id);
+        expect((getItemValue(item2!, stringAtt.id)!.val as StringValue).type).toBe('string');
+        expect((getItemValue(item2!, stringAtt.id)!.val as StringValue).value).toBe('xxxxx');
 
         // textAtt: Attribute;
-        expect(item2![textAtt.id].attributeId).toBe(textAtt.id);
-        expect((item2![textAtt.id].val as TextValue).type).toBe('text');
-        expect((item2![textAtt.id].val as TextValue).value).toBe('yyyyy');
+        expect(getItemValue(item2!, textAtt.id)!.attributeId).toBe(textAtt.id);
+        expect((getItemValue(item2!, textAtt.id)!.val as TextValue).type).toBe('text');
+        expect((getItemValue(item2!, textAtt.id)!.val as TextValue).value).toBe('yyyyy');
         
         // numberAtt: Attribute;
-        expect((item2![numberAtt.id].attributeId)).toBe(numberAtt.id);
-        expect((item2![numberAtt.id].val as NumberValue).type).toBe('number');
-        expect((item2![numberAtt.id].val as NumberValue).value).toBe(8888);
+        expect((getItemValue(item2!, numberAtt.id)!.attributeId)).toBe(numberAtt.id);
+        expect((getItemValue(item2!, numberAtt.id)!.val as NumberValue).type).toBe('number');
+        expect((getItemValue(item2!, numberAtt.id)!.val as NumberValue).value).toBe(8888);
 
         // dateAtt: Attribute;
-        expect((item2![dateAtt.id].attributeId)).toBe(dateAtt.id);
-        expect((item2![dateAtt.id].val as DateValue).type).toBe('date');
-        expect((item2![dateAtt.id].val as DateValue).value).toBe('10-12-1999');
+        expect((getItemValue(item2!, dateAtt.id)!.attributeId)).toBe(dateAtt.id);
+        expect((getItemValue(item2!, dateAtt.id)!.val as DateValue).type).toBe('date');
+        expect((getItemValue(item2!, dateAtt.id)!.val as DateValue).value).toBe('10-12-1999');
 
         // currencyAtt: Attribute;
-        expect((item2![currencyAtt.id].attributeId)).toBe(currencyAtt.id);
-        expect((item2![currencyAtt.id].val as CurrencyValue).type).toBe('currency');
-        expect((item2![currencyAtt.id].val as CurrencyValue).value).toBe(88.88);
+        expect((getItemValue(item2!, currencyAtt.id)!.attributeId)).toBe(currencyAtt.id);
+        expect((getItemValue(item2!, currencyAtt.id)!.val as CurrencyValue).type).toBe('currency');
+        expect((getItemValue(item2!, currencyAtt.id)!.val as CurrencyValue).value).toBe(88.88);
 
         // volumeAtt: Attribute;
-        expect((item2![volumeAtt.id].attributeId)).toBe(volumeAtt.id);
-        expect((item2![volumeAtt.id].val as VolumeValue).type).toBe('volume');
-        expect((item2![volumeAtt.id].val as VolumeValue).unit).toBe('ml');
-        expect((item2![volumeAtt.id].val as VolumeValue).value).toBe(88.88);
+        expect((getItemValue(item2!, volumeAtt.id)!.attributeId)).toBe(volumeAtt.id);
+        expect((getItemValue(item2!, volumeAtt.id)!.val as VolumeValue).type).toBe('volume');
+        expect((getItemValue(item2!, volumeAtt.id)!.val as VolumeValue).unit).toBe('ml');
+        expect((getItemValue(item2!, volumeAtt.id)!.val as VolumeValue).value).toBe(88.88);
         
         // dimensionAtt: Attribute;
-        expect((item2![dimensionAtt.id].attributeId)).toBe(dimensionAtt.id);
-        expect((item2![dimensionAtt.id].val as DimensionValue).type).toBe('dimension');
-        expect((item2![dimensionAtt.id].val as DimensionValue).length).toBe(88.88);
-        expect((item2![dimensionAtt.id].val as DimensionValue).width).toBe(99.99);
-        expect((item2![dimensionAtt.id].val as DimensionValue).height).toBe(10.10);
-        expect((item2![dimensionAtt.id].val as DimensionValue).unit).toBe('cm');
+        expect((getItemValue(item2!, dimensionAtt.id)!.attributeId)).toBe(dimensionAtt.id);
+        expect((getItemValue(item2!, dimensionAtt.id)!.val as DimensionValue).type).toBe('dimension');
+        expect((getItemValue(item2!, dimensionAtt.id)!.val as DimensionValue).length).toBe(88.88);
+        expect((getItemValue(item2!, dimensionAtt.id)!.val as DimensionValue).width).toBe(99.99);
+        expect((getItemValue(item2!, dimensionAtt.id)!.val as DimensionValue).height).toBe(10.10);
+        expect((getItemValue(item2!, dimensionAtt.id)!.val as DimensionValue).unit).toBe('cm');
         
         // areaAtt: Attribute;
-        expect((item2![areaAtt.id].attributeId)).toBe(areaAtt.id);
-        expect((item2![areaAtt.id].val as AreaValue).type).toBe('area');
-        expect((item2![areaAtt.id].val as AreaValue).value).toBe(88.88);
-        expect((item2![areaAtt.id].val as AreaValue).unit).toBe('cm2');
+        expect((getItemValue(item2!, areaAtt.id)!.attributeId)).toBe(areaAtt.id);
+        expect((getItemValue(item2!, areaAtt.id)!.val as AreaValue).type).toBe('area');
+        expect((getItemValue(item2!, areaAtt.id)!.val as AreaValue).value).toBe(88.88);
+        expect((getItemValue(item2!, areaAtt.id)!.val as AreaValue).unit).toBe('cm2');
         
         // lengthAtt: Attribute;
-        expect((item2![lengthAtt.id].attributeId)).toBe(lengthAtt.id);
-        expect((item2![lengthAtt.id].val as LengthValue).type).toBe('length');
-        expect((item2![lengthAtt.id].val as LengthValue).value).toBe(88.88);
-        expect((item2![lengthAtt.id].val as LengthValue).unit).toBe('cm');
+        expect((getItemValue(item2!, lengthAtt.id)!.attributeId)).toBe(lengthAtt.id);
+        expect((getItemValue(item2!, lengthAtt.id)!.val as LengthValue).type).toBe('length');
+        expect((getItemValue(item2!, lengthAtt.id)!.val as LengthValue).value).toBe(88.88);
+        expect((getItemValue(item2!, lengthAtt.id)!.val as LengthValue).unit).toBe('cm');
         
         // widthAtt: Attribute;
-        expect((item2![widthAtt.id].attributeId)).toBe(widthAtt.id);
-        expect((item2![widthAtt.id].val as WidthValue).type).toBe('width');
-        expect((item2![widthAtt.id].val as WidthValue).value).toBe(88.88);
-        expect((item2![widthAtt.id].val as WidthValue).unit).toBe('cm');
+        expect((getItemValue(item2!, widthAtt.id)!.attributeId)).toBe(widthAtt.id);
+        expect((getItemValue(item2!, widthAtt.id)!.val as WidthValue).type).toBe('width');
+        expect((getItemValue(item2!, widthAtt.id)!.val as WidthValue).value).toBe(88.88);
+        expect((getItemValue(item2!, widthAtt.id)!.val as WidthValue).unit).toBe('cm');
         
         // heightAtt: Attribute;
-        expect((item2![heightAtt.id].attributeId)).toBe(heightAtt.id);
-        expect((item2![heightAtt.id].val as HeightValue).type).toBe('height');
-        expect((item2![heightAtt.id].val as HeightValue).value).toBe(88.88);
-        expect((item2![heightAtt.id].val as HeightValue).unit).toBe('cm');
+        expect((getItemValue(item2!, heightAtt.id)!.attributeId)).toBe(heightAtt.id);
+        expect((getItemValue(item2!, heightAtt.id)!.val as HeightValue).type).toBe('height');
+        expect((getItemValue(item2!, heightAtt.id)!.val as HeightValue).value).toBe(88.88);
+        expect((getItemValue(item2!, heightAtt.id)!.val as HeightValue).unit).toBe('cm');
         
         // weightAtt: Attribute;
-        expect((item2![weightAtt.id].attributeId)).toBe(weightAtt.id);
-        expect((item2![weightAtt.id].val as WeightValue).type).toBe('weight');
-        expect((item2![weightAtt.id].val as WeightValue).value).toBe(88.88);
-        expect((item2![weightAtt.id].val as WeightValue).unit).toBe('kg');
+        expect((getItemValue(item2!, weightAtt.id)!.attributeId)).toBe(weightAtt.id);
+        expect((getItemValue(item2!, weightAtt.id)!.val as WeightValue).type).toBe('weight');
+        expect((getItemValue(item2!, weightAtt.id)!.val as WeightValue).value).toBe(88.88);
+        expect((getItemValue(item2!, weightAtt.id)!.val as WeightValue).unit).toBe('kg');
         
         // selectAtt: Attribute;
-        expect((item2![selectAtt.id].attributeId)).toBe(selectAtt.id);
-        expect((item2![selectAtt.id].val as SelectValue).type).toBe('select');
-        expect((item2![selectAtt.id].val as SelectValue).key).toBe('key3');
+        expect((getItemValue(item2!, selectAtt.id)!.attributeId)).toBe(selectAtt.id);
+        expect((getItemValue(item2!, selectAtt.id)!.val as SelectValue).type).toBe('select');
+        expect((getItemValue(item2!, selectAtt.id)!.val as SelectValue).key).toBe('key3');
         
         // doubleSelectAtt: Attribute;
-        expect((item2![doubleSelectAtt.id].attributeId)).toBe(doubleSelectAtt.id);
-        expect((item2![doubleSelectAtt.id].val as DoubleSelectValue).type).toBe('doubleselect');
-        expect((item2![doubleSelectAtt.id].val as DoubleSelectValue).key1).toBe('key3');
-        expect((item2![doubleSelectAtt.id].val as DoubleSelectValue).key2).toBe('xkey33');
+        expect((getItemValue(item2!, doubleSelectAtt.id)!.attributeId)).toBe(doubleSelectAtt.id);
+        expect((getItemValue(item2!, doubleSelectAtt.id)!.val as DoubleSelectValue).type).toBe('doubleselect');
+        expect((getItemValue(item2!, doubleSelectAtt.id)!.val as DoubleSelectValue).key1).toBe('key3');
+        expect((getItemValue(item2!, doubleSelectAtt.id)!.val as DoubleSelectValue).key2).toBe('xkey33');
         
         
         // update item
@@ -384,63 +385,63 @@ describe('item.service', () => {
         item2!.description = newItemName;
         
         // stringAtt: Attribute
-        item2![stringAtt.id] = {
+        setItemValue(item2!, stringAtt.id,  {
             attributeId: stringAtt.id,
             val: {
                type: "string",
                value: 'aaaaa' 
             } as StringValue
-        } as Value;
+        } as Value);
         
         // textAtt: Attribute;
-        item2![textAtt.id] = {
+        setItemValue(item2!, textAtt.id,  {
             attributeId: textAtt.id,
             val: {
                type: "text",
                value: 'bbbbb' 
             } as TextValue
-        } as Value;
+        } as Value);
 
         // numberAtt: Attribute;
-        item2![numberAtt.id] = {
+        setItemValue(item2!, numberAtt.id, {
             attributeId: numberAtt.id,
             val: {
                 type: "number",
                 value: 3333
             } as NumberValue
-        };
+        } as Value);
 
         // dateAtt: Attribute;
-        item2![dateAtt.id] = {
+        setItemValue(item2!, dateAtt.id, {
             attributeId: dateAtt.id,
             val: {
                 type: "date",
                 value: '09-03-1980'
             } as DateValue
-        };
+        });
 
         // currencyAtt: Attribute;
-        item2![currencyAtt.id] = {
+        setItemValue(item2!, currencyAtt.id, {
             attributeId: currencyAtt.id,
             val: {
                 type: 'currency',
                 value: 33.33,
                 country: 'MYR'
             } as CurrencyValue
-        };
+        } as Value);
         
         // volumeAtt: Attribute;
-        item2![volumeAtt.id] = {
+        setItemValue(item2!, volumeAtt.id, {
             attributeId: volumeAtt.id,
             val: {
                 type: "volume",
                 value: 33.33,
                 unit: "l"
             } as VolumeValue
-        };
+        } as Value);
         
         // dimensionAtt: Attribute;
-        item2![dimensionAtt.id] = {
+        setItemValue(item2!, dimensionAtt.id, {
             attributeId: dimensionAtt.id,
             val: {
                 type: 'dimension',
@@ -449,76 +450,76 @@ describe('item.service', () => {
                 width: 44.44,
                 height: 55.55
             } as DimensionValue
-        };
+        } as Value);
         
         // areaAtt: Attribute;
-        item2![areaAtt.id] = {
+        setItemValue(item2!, areaAtt.id, {
             attributeId: areaAtt.id,
             val: {
                 type: "area",
                 unit: "m2",
                 value: 33.33 
             } as AreaValue
-        };
+        } as Value);
         
         // lengthAtt: Attribute;
-        item2![lengthAtt.id] = {
+        setItemValue(item2!, lengthAtt.id, {
             attributeId: lengthAtt.id,
             val: {
                type: "length",
                unit: "m",
                value: 33.33 
             } as LengthValue
-        };
+        } as Value);
 
         // widthAtt: Attribute;
-        item2![widthAtt.id] = {
+        setItemValue(item2!, widthAtt.id, {
             attributeId: widthAtt.id,
             val: {
                 type: "width",
                 unit: "m",
                 value: 33.33
             } as WidthValue
-        };
+        } as Value);
 
         // heightAtt: Attribute;
-        item2![heightAtt.id] = {
+        setItemValue(item2!, heightAtt.id, {
             attributeId: heightAtt.id,
             val: {
                type: "height",
                unit: "m",
                value: 33.33
             } as HeightValue
-        };
+        } as Value);
 
         // weightAtt: Attribute;
-        item2![weightAtt.id] = {
+        setItemValue(item2!, weightAtt.id, {
             attributeId: weightAtt.id,
             val: {
                type: "weight",
                unit: "g",
                value: 33.33 
             } as WeightValue
-        };
+        });
         
         // selectAtt: Attribute;
-        item2![selectAtt.id] = {
+        setItemValue(item2!, selectAtt.id, {
             attributeId: selectAtt.id,
             val: {
                type: "select",
                key: 'key5' 
             } as SelectValue
-        };
+        } as Value);
         
         // doubleSelectAtt: Attribute;
-        item2![doubleSelectAtt.id] = {
+        setItemValue(item2!, doubleSelectAtt.id, {
            attributeId: doubleSelectAtt.id,
            val: {
                type: "doubleselect",
                key1: 'key5',
                key2: 'xkey55'
            } 
-        }
+        } as Value);
         await updateItem(viewId, item2);
 
 
@@ -530,84 +531,84 @@ describe('item.service', () => {
         expect(item3.description).toBe(newItemName);
 
         // stringAtt
-        expect(item3[stringAtt.id].attributeId).toBe(stringAtt.id);
-        expect((item3[stringAtt.id].val as StringValue).type).toBe('string');
-        expect((item3[stringAtt.id].val as StringValue).value).toBe('aaaaa');
+        expect(getItemValue(item3, stringAtt.id)!.attributeId).toBe(stringAtt.id);
+        expect((getItemValue(item3, stringAtt.id)!.val as StringValue).type).toBe('string');
+        expect((getItemValue(item3, stringAtt.id)!.val as StringValue).value).toBe('aaaaa');
 
         // textAtt: Attribute;
-        expect(item3[textAtt.id].attributeId).toBe(textAtt.id);
-        expect((item3[textAtt.id].val as TextValue).type).toBe('text');
-        expect((item3[textAtt.id].val as TextValue).value).toBe('bbbbb');
+        expect(getItemValue(item3, textAtt.id)!.attributeId).toBe(textAtt.id);
+        expect((getItemValue(item3, textAtt.id)!.val as TextValue).type).toBe('text');
+        expect((getItemValue(item3, textAtt.id)!.val as TextValue).value).toBe('bbbbb');
 
         // numberAtt: Attribute;
-        expect((item3[numberAtt.id].attributeId)).toBe(numberAtt.id);
-        expect((item3[numberAtt.id].val as NumberValue).type).toBe('number');
-        expect((item3[numberAtt.id].val as NumberValue).value).toBe(3333);
+        expect((getItemValue(item3, numberAtt.id)!.attributeId)).toBe(numberAtt.id);
+        expect((getItemValue(item3, numberAtt.id)!.val as NumberValue).type).toBe('number');
+        expect((getItemValue(item3, numberAtt.id)!.val as NumberValue).value).toBe(3333);
 
         // dateAtt: Attribute;
-        expect((item3[dateAtt.id].attributeId)).toBe(dateAtt.id);
-        expect((item3[dateAtt.id].val as DateValue).type).toBe('date');
-        expect((item3[dateAtt.id].val as DateValue).value).toBe('09-03-1980');
+        expect((getItemValue(item3, dateAtt.id)!.attributeId)).toBe(dateAtt.id);
+        expect((getItemValue(item3, dateAtt.id)!.val as DateValue).type).toBe('date');
+        expect((getItemValue(item3, dateAtt.id)!.val as DateValue).value).toBe('09-03-1980');
 
         // currencyAtt: Attribute;
-        expect((item3[currencyAtt.id].attributeId)).toBe(currencyAtt.id);
-        expect((item3[currencyAtt.id].val as CurrencyValue).type).toBe('currency');
-        expect((item3[currencyAtt.id].val as CurrencyValue).value).toBe(33.33);
+        expect((getItemValue(item3, currencyAtt.id)!.attributeId)).toBe(currencyAtt.id);
+        expect((getItemValue(item3, currencyAtt.id)!.val as CurrencyValue).type).toBe('currency');
+        expect((getItemValue(item3, currencyAtt.id)!.val as CurrencyValue).value).toBe(33.33);
 
         // volumeAtt: Attribute;
-        expect((item3[volumeAtt.id].attributeId)).toBe(volumeAtt.id);
-        expect((item3[volumeAtt.id].val as VolumeValue).type).toBe('volume');
-        expect((item3[volumeAtt.id].val as VolumeValue).unit).toBe('l');
-        expect((item3[volumeAtt.id].val as VolumeValue).value).toBe(33.33);
+        expect((getItemValue(item3, volumeAtt.id)!.attributeId)).toBe(volumeAtt.id);
+        expect((getItemValue(item3, volumeAtt.id)!.val as VolumeValue).type).toBe('volume');
+        expect((getItemValue(item3, volumeAtt.id)!.val as VolumeValue).unit).toBe('l');
+        expect((getItemValue(item3, volumeAtt.id)!.val as VolumeValue).value).toBe(33.33);
 
         // dimensionAtt: Attribute;
-        expect((item3[dimensionAtt.id].attributeId)).toBe(dimensionAtt.id);
-        expect((item3[dimensionAtt.id].val as DimensionValue).type).toBe('dimension');
-        expect((item3[dimensionAtt.id].val as DimensionValue).length).toBe(33.33);
-        expect((item3[dimensionAtt.id].val as DimensionValue).width).toBe(44.44);
-        expect((item3[dimensionAtt.id].val as DimensionValue).height).toBe(55.55);
-        expect((item3[dimensionAtt.id].val as DimensionValue).unit).toBe('m');
+        expect((getItemValue(item3, dimensionAtt.id)!.attributeId)).toBe(dimensionAtt.id);
+        expect((getItemValue(item3, dimensionAtt.id)!.val as DimensionValue).type).toBe('dimension');
+        expect((getItemValue(item3, dimensionAtt.id)!.val as DimensionValue).length).toBe(33.33);
+        expect((getItemValue(item3, dimensionAtt.id)!.val as DimensionValue).width).toBe(44.44);
+        expect((getItemValue(item3, dimensionAtt.id)!.val as DimensionValue).height).toBe(55.55);
+        expect((getItemValue(item3, dimensionAtt.id)!.val as DimensionValue).unit).toBe('m');
 
         // areaAtt: Attribute;
-        expect((item3[areaAtt.id].attributeId)).toBe(areaAtt.id);
-        expect((item3[areaAtt.id].val as AreaValue).type).toBe('area');
-        expect((item3[areaAtt.id].val as AreaValue).value).toBe(33.33);
-        expect((item3[areaAtt.id].val as AreaValue).unit).toBe('m2');
+        expect((getItemValue(item3, areaAtt.id)!.attributeId)).toBe(areaAtt.id);
+        expect((getItemValue(item3, areaAtt.id)!.val as AreaValue).type).toBe('area');
+        expect((getItemValue(item3, areaAtt.id)!.val as AreaValue).value).toBe(33.33);
+        expect((getItemValue(item3, areaAtt.id)!.val as AreaValue).unit).toBe('m2');
 
         // lengthAtt: Attribute;
-        expect((item3[lengthAtt.id].attributeId)).toBe(lengthAtt.id);
-        expect((item3[lengthAtt.id].val as LengthValue).type).toBe('length');
-        expect((item3[lengthAtt.id].val as LengthValue).value).toBe(33.33);
-        expect((item3[lengthAtt.id].val as LengthValue).unit).toBe('m');
+        expect((getItemValue(item3, lengthAtt.id)!.attributeId)).toBe(lengthAtt.id);
+        expect((getItemValue(item3, lengthAtt.id)!.val as LengthValue).type).toBe('length');
+        expect((getItemValue(item3, lengthAtt.id)!.val as LengthValue).value).toBe(33.33);
+        expect((getItemValue(item3, lengthAtt.id)!.val as LengthValue).unit).toBe('m');
 
         // widthAtt: Attribute;
-        expect((item3[widthAtt.id].attributeId)).toBe(widthAtt.id);
-        expect((item3[widthAtt.id].val as WidthValue).type).toBe('width');
-        expect((item3[widthAtt.id].val as WidthValue).value).toBe(33.33);
-        expect((item3[widthAtt.id].val as WidthValue).unit).toBe('m');
+        expect((getItemValue(item3, widthAtt.id)!.attributeId)).toBe(widthAtt.id);
+        expect((getItemValue(item3, widthAtt.id)!.val as WidthValue).type).toBe('width');
+        expect((getItemValue(item3, widthAtt.id)!.val as WidthValue).value).toBe(33.33);
+        expect((getItemValue(item3, widthAtt.id)!.val as WidthValue).unit).toBe('m');
 
         // heightAtt: Attribute;
-        expect((item3[heightAtt.id].attributeId)).toBe(heightAtt.id);
-        expect((item3[heightAtt.id].val as HeightValue).type).toBe('height');
-        expect((item3[heightAtt.id].val as HeightValue).value).toBe(33.33);
-        expect((item3[heightAtt.id].val as HeightValue).unit).toBe('m');
+        expect((getItemValue(item3, heightAtt.id)!.attributeId)).toBe(heightAtt.id);
+        expect((getItemValue(item3, heightAtt.id)!.val as HeightValue).type).toBe('height');
+        expect((getItemValue(item3, heightAtt.id)!.val as HeightValue).value).toBe(33.33);
+        expect((getItemValue(item3, heightAtt.id)!.val as HeightValue).unit).toBe('m');
 
         // weightAtt: Attribute;
-        expect((item3[weightAtt.id].attributeId)).toBe(weightAtt.id);
-        expect((item3[weightAtt.id].val as WeightValue).type).toBe('weight');
-        expect((item3[weightAtt.id].val as WeightValue).value).toBe(33.33);
-        expect((item3[weightAtt.id].val as WeightValue).unit).toBe('g');
+        expect((getItemValue(item3, weightAtt.id)!.attributeId)).toBe(weightAtt.id);
+        expect((getItemValue(item3, weightAtt.id)!.val as WeightValue).type).toBe('weight');
+        expect((getItemValue(item3, weightAtt.id)!.val as WeightValue).value).toBe(33.33);
+        expect((getItemValue(item3, weightAtt.id)!.val as WeightValue).unit).toBe('g');
 
         // selectAtt: Attribute;
-        expect((item3[selectAtt.id].attributeId)).toBe(selectAtt.id);
-        expect((item3[selectAtt.id].val as SelectValue).type).toBe('select');
-        expect((item3[selectAtt.id].val as SelectValue).key).toBe('key5');
+        expect((getItemValue(item3, selectAtt.id)!.attributeId)).toBe(selectAtt.id);
+        expect((getItemValue(item3, selectAtt.id)!.val as SelectValue).type).toBe('select');
+        expect((getItemValue(item3, selectAtt.id)!.val as SelectValue).key).toBe('key5');
 
         // doubleSelectAtt: Attribute;
-        expect((item3[doubleSelectAtt.id].attributeId)).toBe(doubleSelectAtt.id);
-        expect((item3[doubleSelectAtt.id].val as DoubleSelectValue).type).toBe('doubleselect');
-        expect((item3[doubleSelectAtt.id].val as DoubleSelectValue).key1).toBe('key5');
-        expect((item3[doubleSelectAtt.id].val as DoubleSelectValue).key2).toBe('xkey55');
+        expect((getItemValue(item3, doubleSelectAtt.id)!.attributeId)).toBe(doubleSelectAtt.id);
+        expect((getItemValue(item3, doubleSelectAtt.id)!.val as DoubleSelectValue).type).toBe('doubleselect');
+        expect((getItemValue(item3, doubleSelectAtt.id)!.val as DoubleSelectValue).key1).toBe('key5');
+        expect((getItemValue(item3, doubleSelectAtt.id)!.val as DoubleSelectValue).key2).toBe('xkey55');
 
 
 

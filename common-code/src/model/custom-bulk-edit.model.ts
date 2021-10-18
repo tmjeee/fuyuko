@@ -47,8 +47,9 @@ export interface CustomBulkEditScriptPreview {
     rows?: {[column: string]: string}[];
 };
 
+export type CustomBulkEditScriptInputType = 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
 export interface CustomBulkEditScriptInput {
-    type: 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
+    type: CustomBulkEditScriptInputType;
     name: string;
     description: string;
     options?: {key: string, value: string}[];   // only valid when type is select

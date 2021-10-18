@@ -7,6 +7,7 @@ import {
     PricedItem2
 } from '../../src/server-side-model/server-side.model';
 import {setupTestDatabase} from '../helpers/test-helper';
+import {getItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 
 describe(`conversion-priced-item.service.ts`, () => {
@@ -68,16 +69,16 @@ describe(`conversion-priced-item.service.ts`, () => {
         expect(i.lastUpdate).toBe(d);
         expect(i.price).toBe(10.10);
         expect(i.country).toBe('AUD')
-        expect(i[attributeId].attributeId).toBe(attributeId);
-        expect(((i[attributeId].val) as StringValue).type).toBe('string');
-        expect(((i[attributeId].val) as StringValue).value).toBe('test');
+        expect(getItemValue(i, attributeId)!.attributeId).toBe(attributeId);
+        expect(((getItemValue(i, attributeId)!.val) as StringValue).type).toBe('string');
+        expect(((getItemValue(i, attributeId)!.val) as StringValue).value).toBe('test');
         expect(i.children.length).toBe(1);
         expect(i.children[0].name).toBe('name2');
         expect(i.children[0].description).toBe('description2');
         expect(i.children[0].price).toBe(11.10);
         expect(i.children[0].country).toBe('AUD');
-        expect(((i.children[0][attributeId].val) as StringValue).type).toBe('string');
-        expect(((i.children[0][attributeId].val) as StringValue).value).toBe('test2');
+        expect(((getItemValue(i.children[0], attributeId)!.val) as StringValue).type).toBe('string');
+        expect(((getItemValue(i.children[0], attributeId)!.val) as StringValue).value).toBe('test2');
         expect(i.children[0].children.length).toBe(0);
     });
 
@@ -108,22 +109,22 @@ describe(`conversion-priced-item.service.ts`, () => {
                     children: [],
                     price: 11.11,
                     country: 'AUD',
-                    [attributeId]: {
+                    values: [{
                         attributeId,
                         val: {
                             type: 'string',
                             value: 'test2'
                         } as StringValue
-                    } as Value
+                    } as Value]
                 } as PricedItem
             ],
-            [attributeId]: {
+            values: [{
                 attributeId,
                 val: {
                     type: 'string',
                     value: 'test'
                 } as StringValue
-            } as Value,
+            } as Value],
         } as PricedItem) as PricedItem2;
 
         expect(i.name).toBe('name');

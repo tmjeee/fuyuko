@@ -44,7 +44,8 @@ export interface Item {
   parentId?: number;
   creationDate: Date;
   lastUpdate: Date;
-  [attributeId: number]: Value;
+  values: Value[];
+  // [attributeId: number]: Value;
 
   children: Item[];
 };
@@ -61,7 +62,8 @@ export interface TableItem {
   depth: number;
   creationDate: Date;
   lastUpdate: Date;
-  [attributeId: number]: Value;
+  values: Value[];
+  // [attributeId: number]: Value;
 
   rootParentId: number;
 }
@@ -74,7 +76,8 @@ export interface PricedItem {
   parentId?: number;
   creationDate: Date;
   lastUpdate: Date;
-  [attributeId: number]: Value;
+  values: Value[];
+  // [attributeId: number]: Value;
   price: number;
   country: string;
 
@@ -115,84 +118,98 @@ export type ItemValTypes = StringValue | TextValue | NumberValue | DateValue |
   CurrencyValue | VolumeValue | DimensionValue | AreaValue | WidthValue | LengthValue | HeightValue |
   SelectValue | DoubleSelectValue | WeightValue;
 
+export type StringValueType = 'string';
 export interface StringValue {
-  type: 'string';
+  type: StringValueType;
   value: string;
 }
 
+export type TextValueType = 'text';
 export interface TextValue {
-  type: 'text';
+  type: TextValueType;
   value: string;
 }
 
+export type NumberValueType = 'number';
 export interface NumberValue {
-  type: 'number';
+  type: NumberValueType;
   value: number;
 }
 
+export type DateValueType = 'date';
 export interface DateValue {
-  type: 'date';
+  type: DateValueType;
   value: string;
 }
 
+export type CurrencyValueType = 'currency';
 export interface CurrencyValue {
-  type: 'currency';
+  type: CurrencyValueType;
   value: number;
   country: CountryCurrencyUnits;
 }
 
+export type VolumeValueType = 'volume';
 export interface VolumeValue {
-  type: 'volume';
+  type: VolumeValueType;
   value: number;
   unit: VolumeUnits;
 }
 
+export type DimensionValueType = 'dimension';
 export interface DimensionValue {
-  type: 'dimension';
+  type: DimensionValueType;
   length: number;
   width: number;
   height: number;
   unit: DimensionUnits;
 }
 
+export type AreaValueType = 'area';
 export interface AreaValue {
-  type: 'area';
+  type: AreaValueType;
   value: number;
   unit: AreaUnits;
 }
 
+export type WidthValueType = 'width';
 export interface WidthValue {
-  type: 'width';
+  type: WidthValueType;
   value: number;
   unit: WidthUnits;
 }
 
+export type LengthValueType = 'length';
 export interface LengthValue {
-  type: 'length';
+  type: LengthValueType;
   value: number;
   unit: LengthUnits;
 }
 
+export type HeightValueType = 'height';
 export interface HeightValue {
-  type: 'height';
+  type: HeightValueType;
   value: number;
   unit: HeightUnits;
 }
 
+export type WeightValueType = 'weight';
 export interface WeightValue {
-  type: 'weight';
+  type: WeightValueType;
   value: number;
   unit: WeightUnits;
 }
 
+export type SelectValueType = 'select';
 export interface SelectValue {
-  type: 'select';
+  type: SelectValueType;
   key?: string;
 }
 
 
+export type DoubleSelectValueType = 'doubleselect';
 export interface DoubleSelectValue {
-  type: 'doubleselect';
+  type: DoubleSelectValueType;
   key1?: string;
   key2?: string;
 }

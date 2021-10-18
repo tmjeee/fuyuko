@@ -1,18 +1,16 @@
+import 'reflect-metadata';
 import {Service} from "typedi";
-import {Arg, Field, InputType, Mutation, ObjectType, Resolver} from "type-graphql";
+import {Arg, Field, InputType, Int, Mutation, ObjectType, Resolver} from "type-graphql";
 import {invocation} from '../../route/v1/DELETE-user-by-id.route';
 import {createGqlResponseClass} from "../util/gql-utils";
 
 @InputType()
 export class DeleteUserByIdInput {
-   @Field() userId!: number;
+   @Field(_ => Int) userId!: number;
 }
 
 @ObjectType()
-export class DeleteUserByIdOutputPayload {}
-
-@ObjectType()
-export class DeleteUserByIdOutput extends createGqlResponseClass(DeleteUserByIdOutputPayload){
+export class DeleteUserByIdOutput extends createGqlResponseClass(){
 }
 
 
@@ -20,7 +18,7 @@ export class DeleteUserByIdOutput extends createGqlResponseClass(DeleteUserByIdO
 @Resolver()
 export class DeleteUserByIdResolver {
 
-    @Mutation()
+    @Mutation(_ => DeleteUserByIdOutput)
     async deleteUserById(@Arg('input') input: DeleteUserByIdInput): Promise<DeleteUserByIdOutput> {
         const apiResponse = await invocation(input.userId);
         return {

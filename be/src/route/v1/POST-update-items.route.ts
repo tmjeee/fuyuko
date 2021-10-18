@@ -24,6 +24,7 @@ import {
     WorkflowTriggerResult
 } from '@fuyuko-common/model/workflow.model';
 import {ResponseStatus} from '@fuyuko-common/model/api-response-status.model';
+import {deleteItemValue, getItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 // CHECKED
 
@@ -90,10 +91,10 @@ const httpAction: any[] = [
                         if (w.type === 'AttributeValue') { // handle attribute values
                             const attributeIds = w.attributeIds;
                             for (const attributeId of attributeIds) {
-                                const value = item[attributeId];
+                                const value = getItemValue(item, attributeId);
                                 if (value) {
                                     itemAttributeValuesForUpdate.push({ viewId, item, attributeId, value});
-                                    delete effectiveItems[i][attributeId];
+                                    deleteItemValue(effectiveItems[i], attributeId);
                                 }
                             }
                             if (itemAttributeValuesForUpdate.length) {

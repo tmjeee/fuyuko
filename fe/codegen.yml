@@ -9,6 +9,27 @@ generates:
           content:
             "
               import {ResponseStatus} from '@fuyuko-common/model/api-response-status.model';
+              import {NoWorkflowConfiguredType, WorkflowInstanceCreatedType, WorkflowTriggerErrorType} from '@fuyuko-common/model/workflow.model';
+              import {CustomBulkEditScriptInputType} from '@fuyuko-common/model/custom-bulk-edit.model';
+              import {
+                  StringValue, StringValueType,
+                  TextValue, TextValueType,
+                  NumberValue, NumberValueType,
+                  DateValue, DateValueType,
+                  CurrencyValue, CurrencyValueType,
+                  VolumeValue, VolumeValueType,
+                  DimensionValue, DimensionValueType,
+                  AreaValue, AreaValueType,
+                  WidthValue, WidthValueType,
+                  LengthValue, LengthValueType,
+                  HeightValue, HeightValueType,
+                  SelectValue, SelectValueType
+                  DoubleSelectValue, DoubleSelectValueType
+                  WeightValue, WeightValueType
+              } from '@fuyuko-common/model/item.model';
+              import {
+                DimensionUnits, VolumeUnits, AreaUnits, WidthUnits, HeightUnits, WeightUnits, CountryCurrencyUnits
+              } from '@fuyuko-common/model/unit.model';
             "
       - typescript-operations
     config:

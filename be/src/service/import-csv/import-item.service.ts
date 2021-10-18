@@ -34,6 +34,7 @@ import JSZip from 'jszip';
 import {w} from '../../logger';
 import {fireEvent, ImportItemPreviewEvent} from '../event/event.service';
 import {getAttributesInView} from '../index';
+import {setItemValue} from "@fuyuko-common/shared-utils/item.util";
 const uuid = require('uuid');
 const detectCsv = require('detect-csv');
 
@@ -203,6 +204,7 @@ const __preview = async (context: Context, bufferInfo: BufferInfo): Promise<Item
            parentId: parentItem ? parentItem.id : null,
            creationDate: new Date(),
            lastUpdate: new Date(),
+           values: [],
            children
         } as Item;
         if (!!!csvItem.parentName) {
@@ -244,7 +246,8 @@ const __preview = async (context: Context, bufferInfo: BufferInfo): Promise<Item
                             const attId: number = Number(v);
                             const att: Attribute | undefined = context.attributeByIdMap.get(attId);
                             if (att) {
-                                i[attId] = createNewItemValue(att, valueInString);
+                                const value = createNewItemValue(att, valueInString);
+                                setItemValue(i, attId, value);
                             } else {
                                 context.errors.push({
                                    title: `Attribute not found`,
@@ -258,7 +261,8 @@ const __preview = async (context: Context, bufferInfo: BufferInfo): Promise<Item
                             const att: Attribute | undefined = context.attributeByNameMap.get(attName);
                             if (att) {
                                 const attId: number = att.id;
-                                i[attId] = createNewItemValue(att, valueInString);
+                                const value = createNewItemValue(att, valueInString);
+                                setItemValue(i, attId, value);
                             } else {
                                 context.errors.push({
                                     title: `Attribute not found`,

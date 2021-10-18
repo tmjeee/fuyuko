@@ -21,7 +21,7 @@ export const reload = (httpClient: HttpClient, callback?: () => void) => {
        ).subscribe();
 };
 
-const config = (): {[key: string]: string} => {
+const config = (): ConfigType => {
     return currentConfig;
 };
 

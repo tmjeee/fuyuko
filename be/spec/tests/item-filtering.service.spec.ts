@@ -12,6 +12,7 @@ import {
     Value,
     VolumeValue, WeightValue, WidthValue
 } from '@fuyuko-common/model/item.model';
+import {getItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 
 describe('item-filtering.service', () => {
@@ -71,9 +72,9 @@ describe('item-filtering.service', () => {
         expect((r.b)).toBeDefined();
         expect((r.b.length)).toBe(1);
         expect((r.b[0].name)).toBe('Item-1');
-        expect((r.b[0][stringAtt.id].attributeId)).toBe(stringAtt.id)
-        expect((r.b[0][stringAtt.id].val as StringValue).type).toBe('string');
-        expect((r.b[0][stringAtt.id].val as StringValue).value).toBe('some string');
+        expect((getItemValue(r.b[0], stringAtt.id)!.attributeId)).toBe(stringAtt.id)
+        expect((getItemValue(r.b[0], stringAtt.id)!.val as StringValue).type).toBe('string');
+        expect((getItemValue(r.b[0], stringAtt.id)!.val as StringValue).value).toBe('some string');
         expect((r.m)).toBeDefined();
         expect((r.m.size)).toBe(14);
     });
@@ -95,9 +96,9 @@ describe('item-filtering.service', () => {
         expect((r.b)).toBeDefined();
         expect((r.b.length)).toBe(7);
         expect((r.b[0].name)).toBe('Item-1');
-        expect((r.b[0][stringAtt.id].attributeId)).toBe(stringAtt.id)
-        expect((r.b[0][stringAtt.id].val as StringValue).type).toBe('string');
-        expect((r.b[0][stringAtt.id].val as StringValue).value).not.toBe('string');
+        expect((getItemValue(r.b[0], stringAtt.id)!.attributeId)).toBe(stringAtt.id)
+        expect((getItemValue(r.b[0], stringAtt.id)!.val as StringValue).type).toBe('string');
+        expect((getItemValue(r.b[0], stringAtt.id)!.val as StringValue).value).not.toBe('string');
         expect((r.m)).toBeDefined();
         expect((r.m.size)).toBe(14);
     });

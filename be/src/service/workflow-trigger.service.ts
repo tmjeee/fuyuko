@@ -39,6 +39,7 @@ import {View} from "@fuyuko-common/model/view.model";
 import {removeItemFromPricingStructure} from "./pricing-structure-item.service";
 import {async} from "rxjs/internal/scheduler/async";
 import {PartialBy} from "@fuyuko-common/model/types";
+import {getItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 /**
  * Contains functions to assist
@@ -87,12 +88,13 @@ class WorkflowTriggerService {
             if (!item) {
                 throw Error(` unable to find item with id ${itemInfo.item.id} in view ${itemInfo.viewId}`);
             }
-            const oldItemInfo: ItemInfo = {
+            const value = getItemValue(item, itemInfo.attributeId);
+            const oldItemInfo: ItemInfo | undefined = value ? {
                 viewId: itemInfo.viewId,
                 item,
                 attributeId: itemInfo.attributeId,
-                value: item[itemInfo.attributeId],
-            };
+                value
+            }: undefined;
             const workflowTriggerResult = await triggerWorkflow(
                 itemInfo.viewId,
                 workflowDefinitionId,

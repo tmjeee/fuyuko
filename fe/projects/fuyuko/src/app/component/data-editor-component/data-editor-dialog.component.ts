@@ -8,7 +8,7 @@ import {
   DEFAULT_AREA_UNIT,
   DEFAULT_COUNTRY_CURRENCY_UNIT,
   DEFAULT_DIMENSION_UNIT, DEFAULT_HEIGHT_UNIT, DEFAULT_LENGTH_UNIT,
-  DEFAULT_VOUMNE_UNIT, DEFAULT_WEIGHT_UNIT,
+  DEFAULT_VOLUME_UNIT, DEFAULT_WEIGHT_UNIT,
   DEFAULT_WIDTH_UNIT,
   DIMENSION_UNITS,
   HEIGHT_UNITS,
@@ -265,7 +265,7 @@ export class DataEditorDialogComponent {
       case 'volume':
         let volumeVal: VolumeValue = itemValue.val as VolumeValue;
         if (!volumeVal) {
-          volumeVal = { type: 'volume', value: 0, unit: DEFAULT_VOUMNE_UNIT};
+          volumeVal = { type: 'volume', value: 0, unit: DEFAULT_VOLUME_UNIT};
           itemValue.val = volumeVal;
         }
         this.formControlVolumeAttributeValue.setValue(volumeVal.value);

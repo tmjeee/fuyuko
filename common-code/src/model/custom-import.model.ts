@@ -48,15 +48,17 @@ export interface ImportScriptPreview {
     rows?: {[column: string]: string}[];
 };
 
+export type ImportScriptInputType = 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
 export interface ImportScriptInput {
-    type: 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
+    type: ImportScriptInputType,
     name: string;
     description: string;
     options?: {key: string, value: string}[];   // only valid when type is select
 };
 
+export type ImportScriptInputValueType = 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
 export interface ImportScriptInputValue {
-    type: 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
+    type: ImportScriptInputValueType,
     name: string;
     value: string | number | moment.Moment | boolean | FileDataObject
 }

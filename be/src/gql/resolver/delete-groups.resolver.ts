@@ -1,5 +1,6 @@
+import 'reflect-metadata';
 import {Service} from "typedi";
-import {Arg, Field, InputType, Int, ObjectType, Resolver} from "type-graphql";
+import {Arg, Field, InputType, Int, Mutation, ObjectType, Resolver} from "type-graphql";
 import {createGqlResponseClass} from "../util/gql-utils";
 import {invocation} from '../../route/v1/DELETE-groups.route';
 
@@ -9,19 +10,14 @@ export class DeleteGroupsInput {
 }
 
 @ObjectType()
-export class DeleteGroupsOutputPayload {
-
-}
-
-@ObjectType()
-export class DeleteGroupsOutput extends createGqlResponseClass(DeleteGroupsOutputPayload){
-
+export class DeleteGroupsOutput extends createGqlResponseClass(){
 }
 
 @Service()
 @Resolver()
 export class DeleteGroupsResolver {
 
+    @Mutation(_ => DeleteGroupsOutput)
     async deleteGroups(@Arg('input') input: DeleteGroupsInput): Promise<DeleteGroupsOutput> {
         const groupIds = input.groupIds;
         const apiResponse = await invocation(groupIds);

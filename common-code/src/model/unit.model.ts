@@ -3,7 +3,7 @@ export const DEFAULT_DIMENSION_UNIT = 'cm';
 export const DIMENSION_UNITS: DimensionUnits[] = ['mm', 'cm', 'm'];
 export type DimensionUnits = 'mm' | 'cm' | 'm';
 
-export const DEFAULT_VOUMNE_UNIT = 'l';
+export const DEFAULT_VOLUME_UNIT = 'l';
 export const VOLUME_UNITS: VolumeUnits[] = ['l', 'ml'];
 export type VolumeUnits = 'l' | 'ml';
 

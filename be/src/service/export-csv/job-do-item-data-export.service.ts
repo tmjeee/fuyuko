@@ -11,6 +11,7 @@ import {convertToCsv} from '@fuyuko-common/shared-utils/ui-item-value-converters
 import {e} from '../../logger';
 import JSZip from 'jszip';
 import {ExportItemJobEvent, fireEvent} from '../event/event.service';
+import {getItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 const uuid = require('uuid');
 
@@ -75,8 +76,8 @@ export const runJob = async (viewId: number, attributes: Attribute[], items: Ite
                 d.image = (imagePaths.length ? imagePaths.join('|'): '');
 
                 for (const attribute of attributes) {
-                    const v: Value = item[attribute.id]
-                    const val: string = convertToCsv(attribute, v);
+                    const v: Value | undefined = getItemValue(item, attribute.id);
+                    const val: string = v ? convertToCsv(attribute, v) : '';
                     d[attribute.name] = val;
                 }
                 data.push(d);

@@ -47,15 +47,17 @@ export interface ExportScriptPreview {
     rows: {[column: string]: string}[];
 };
 
+export type ExportScriptInputType = 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
 export interface ExportScriptInput {
-    type: 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
+    type: ExportScriptInputType,
     name: string;
     description: string;
     options?: {key: string, value: string}[];   // only valid when type is select
 };
 
+export type ExportScriptInputValueType = 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
 export interface ExportScriptInputValue {
-    type: 'string' | 'number' | 'date' | 'checkbox' | 'select' | 'file';
+    type: ExportScriptInputValueType,
     name: string;
     value: string | number | moment.Moment | boolean | FileDataObject
 }

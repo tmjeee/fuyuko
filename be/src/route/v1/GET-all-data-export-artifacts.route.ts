@@ -5,6 +5,19 @@ import {ROLE_VIEW} from '@fuyuko-common/model/role.model';
 import {DataExportArtifact} from '@fuyuko-common/model/data-export.model';
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
 import {getAllExportArtifacts} from "../../service/export-artifact.service";
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (): Promise<ApiResponse<DataExportArtifact[]>> => {
+    const dataExportArtifact: DataExportArtifact[] = await getAllExportArtifacts();
+    const apiResponse: ApiResponse<DataExportArtifact[]> = {
+        messages:  [{
+            status: 'SUCCESS',
+            message: `Data export artifact retrieved successfully`,
+        }],
+        payload: dataExportArtifact
+    }
+    return apiResponse;
+}
 
 // CHECKED
 const httpAction: any[] = [
@@ -14,15 +27,8 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
-        const dataExportArtifact: DataExportArtifact[] = await getAllExportArtifacts();
-        const apiResponse: ApiResponse<DataExportArtifact[]> = {
-           messages:  [{
-               status: 'SUCCESS',
-               message: `Data export artifact retrieved successfully`,
-           }],
-           payload: dataExportArtifact
-        }
-        res.status(200).json(apiResponse);
+        const apiResponse = await invocation();
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import {Service} from "typedi";
-import {Arg, Field, InputType, Mutation, NonEmptyArray, ObjectType, Resolver} from "type-graphql";
+import {Arg, Field, InputType, Int, Mutation, NonEmptyArray, ObjectType, Resolver, UseMiddleware} from "type-graphql";
 import {createGqlResponseClass} from "../util/gql-utils";
 import {invocation} from '../../route/v1/DELETE-category.route';
 import {WorkflowTriggerResult} from "@fuyuko-common/model/workflow.model";
@@ -9,8 +9,8 @@ import {isWorkflow} from "../../route/v1/aid.";
 
 @InputType()
 export class DeleteCategoryInput {
-    @Field() viewId!: number;
-    @Field() categoryId!: number;
+    @Field(_ => Int) viewId!: number;
+    @Field(_ => Int) categoryId!: number;
 }
 
 @ObjectType()
@@ -28,6 +28,7 @@ export class DeleteCategoryOutput extends createGqlResponseClass(DeleteCategoryO
 export class DeleteCategoryResolver {
 
     @Mutation(_ => DeleteCategoryOutput)
+    @UseMiddleware([])
     async deleteCategory(@Arg('input') input: DeleteCategoryInput): Promise<DeleteCategoryOutput> {
         const apiResponse = await invocation(input.viewId, input.categoryId);
         return {

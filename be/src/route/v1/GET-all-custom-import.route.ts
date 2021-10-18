@@ -7,6 +7,20 @@ import {
 } from '@fuyuko-common/model/custom-import.model';
 import {getAllCustomImports} from "../../service/custom-import.service";
 import {ApiResponse} from '@fuyuko-common/model/api-response.model';
+import {toHttpStatus} from "./aid.";
+
+export const invocation = async (): Promise<ApiResponse<CustomDataImport[]>> => {
+    const r: CustomDataImport[] = await getAllCustomImports();
+
+    const apiResponse: ApiResponse<CustomDataImport[]> = {
+        messages: [{
+            status: 'SUCCESS',
+            message: `Custom Data Import retrieval success`,
+        }],
+        payload: r
+    };
+    return apiResponse;
+}
 
 // CHECKED
 const httpAction: any[] = [
@@ -16,17 +30,8 @@ const httpAction: any[] = [
     validateJwtMiddlewareFn,
     v([vFnHasAnyUserRoles([ROLE_VIEW])], aFnAnyTrue),
     async (req: Request, res: Response, next: NextFunction) => {
-
-        const r: CustomDataImport[] = await getAllCustomImports();
-
-        const apiResponse: ApiResponse<CustomDataImport[]> = {
-            messages: [{
-                status: 'SUCCESS',
-                message: `Custom Data Import retrieval success`,
-            }],
-            payload: r
-        };
-        res.status(200).json(apiResponse);
+        const apiResponse = await invocation();
+        res.status(toHttpStatus(apiResponse)).json(apiResponse);
     }
 ];
 

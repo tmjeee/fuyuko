@@ -1,5 +1,6 @@
+import 'reflect-metadata';
 import {Service} from "typedi";
-import {Arg, Field, InputType, ObjectType, Resolver} from "type-graphql";
+import {Arg, Field, InputType, Mutation, ObjectType, Resolver} from "type-graphql";
 import {invocation} from '../../route/v1/DELETE-remove-item-from-category.route';
 import {createGqlResponseClass} from "../util/gql-utils";
 
@@ -11,13 +12,7 @@ export class DeleteItemFromCategoryInput {
 }
 
 @ObjectType()
-export class DeleteItemFromCategoryOutputPayload {
-
-}
-
-@ObjectType()
-export class DeleteItemFromCategoryOutput extends createGqlResponseClass(DeleteItemFromCategoryOutputPayload){
-
+export class DeleteItemFromCategoryOutput extends createGqlResponseClass(){
 }
 
 
@@ -25,6 +20,7 @@ export class DeleteItemFromCategoryOutput extends createGqlResponseClass(DeleteI
 @Resolver()
 export class DeleteItemFromCategoryResolver {
 
+    @Mutation(_ => DeleteItemFromCategoryOutput)
     async deleteItemFromCategory(@Arg('input') input: DeleteItemFromCategoryInput): Promise<DeleteItemFromCategoryOutput> {
        const apiResponse = await invocation(input.viewId, input.categoryId, input.itemId);
        return {

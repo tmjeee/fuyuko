@@ -162,6 +162,7 @@ import {HotToastModule} from '@ngneat/hot-toast';
 import {WorkflowListingPageComponent} from './page/workflow-listing-page/workflow-listing.page';
 import {WorkflowModule} from './component/workflow-component/workflow.module';
 import {WorkflowService} from './service/workflow-service/workflow.service';
+import {GqlService} from "./service/gql.service";
 
 const appInitializer = (settingsService: SettingsService,
                         authService: AuthService,
@@ -382,6 +383,8 @@ const appInitializer = (settingsService: SettingsService,
     {provide: LoadingService, useClass: LoadingService} as Provider,
     {provide: CustomBulkEditService, useClass: CustomBulkEditService} as Provider,
     {provide: WorkflowService, useClass: WorkflowService} as Provider,
+
+    {provide: GqlService, useClass: GqlService} as Provider,
 
     {provide: APP_INITIALIZER, useFactory: appInitializer,  multi: true,
       deps: [SettingsService, AuthService, ThemeService, ViewService, HttpClient] } as Provider,

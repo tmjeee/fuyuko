@@ -31,6 +31,7 @@ class ConversionItemService {
             children: itemsConvert(item2.children),
             price: (item2 as PricedItem2).price ? (item2 as PricedItem2).price : undefined,
             country: (item2 as PricedItem2).country ? (item2 as PricedItem2).country : undefined,
+            values: [],
         } as Item;
 
         for (const value2 of item2.values) {
@@ -38,8 +39,15 @@ class ConversionItemService {
                 attributeId: value2.attributeId,
                 val: itemValueTypesConvert(value2.metadatas)
             } as Value;
-            item[value2.attributeId] = value;
+            item.values.push(value);
         }
+        // for (const value2 of item2.values) {
+        //     const value: Value = {
+        //         attributeId: value2.attributeId,
+        //         val: itemValueTypesConvert(value2.metadatas)
+        //     } as Value;
+        //     item[value2.attributeId] = value;
+        // }
 
         return item;
     }
@@ -67,17 +75,22 @@ class ConversionItemService {
             country: (item as PricedItem).country ? (item as PricedItem).country : undefined
         } as Item2;
 
-        for (const i in item) {
-            if (item.hasOwnProperty(i) && !isNaN(Number(i))) {
-                const value: Value = item[i];
-                const val: ItemValTypes | undefined = value.val;
-
-                const val2: ItemValue2 | undefined = itemValueRevert(value);
-                if (val2) {
-                    item2.values.push(val2);
-                }
+        for (const value of item.values) {
+            const val2: ItemValue2 | undefined = itemValueRevert(value);
+            if (val2) {
+                item2.values.push(val2);
             }
         }
+        // for (const i in item) {
+        //     if (item.hasOwnProperty(i) && !isNaN(Number(i))) {
+        //         const value: Value = item[i];
+        //         const val: ItemValTypes | undefined = value.val;
+        //         const val2: ItemValue2 | undefined = itemValueRevert(value);
+        //         if (val2) {
+        //             item2.values.push(val2);
+        //         }
+        //     }
+        // }
         return item2;
     }
 }

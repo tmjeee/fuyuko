@@ -155,15 +155,18 @@ export interface WorkflowInstanceTask {
 
 // === WorkflowTriggerResult
 export type WorkflowTriggerResult = NoWorkflowConfigured | WorkflowInstanceCreated | WorkflowTriggerError;
+export type NoWorkflowConfiguredType = 'no-workflow-configured';
+export type WorkflowInstanceCreatedType = 'workflow-instance-created';
+export type WorkflowTriggerErrorType = 'workflow-trigger-error';
 export interface NoWorkflowConfigured {
-    type: 'no-workflow-configured';
+    type: NoWorkflowConfiguredType;
 }
 export interface WorkflowInstanceCreated {
-    type: 'workflow-instance-created'
+    type: WorkflowInstanceCreatedType;
     workflowInstanceId: number;
 }
 export interface WorkflowTriggerError {
-    type: 'workflow-trigger-error',
+    type: WorkflowTriggerErrorType;
     message: string
 }
 
