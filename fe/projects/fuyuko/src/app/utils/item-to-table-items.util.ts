@@ -64,6 +64,7 @@ export function toItemIgnoreParent(tableItems: TableItem[]): Item[] {
       parentId: itemParentId,
       creationDate: tableItem.creationDate,
       lastUpdate: tableItem.lastUpdate,
+      values: [],
       children: [],
     } as Item;
     (item as any).trashable = false;
@@ -117,6 +118,7 @@ export function toItem(tableItems: TableItem[]): Item[] {
       creationDate: tableItem.creationDate,
       lastUpdate: tableItem.lastUpdate,
       parentId: itemParentId,
+      values: [],
       children: []
     } as Item;
 
@@ -297,7 +299,8 @@ export function toPricedItem(tableItems: TablePricedItem[]): PricedItem[] {
           country: tableItem.country,
           creationDate: tableItem.creationDate,
           lastUpdate: tableItem.lastUpdate,
-          children: []
+          children: [],
+          values: [],
         } as PricedItem;
 
         // item

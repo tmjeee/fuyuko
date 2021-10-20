@@ -4,6 +4,7 @@ import {Item, ItemImage, PricedItem} from '@fuyuko-common/model/item.model';
 import config from '../../utils/config.util';
 import {MatSidenav} from '@angular/material/sidenav';
 import {CarouselItemImage} from '../carousel-component/carousel.component';
+import {getItemValue} from '@fuyuko-common/shared-utils/item.util';
 
 
 const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
@@ -14,6 +15,8 @@ const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImage
     styleUrls: ['./partner-data-thumbnail.component.scss']
 })
 export class PartnerDataThumbnailComponent {
+
+    getItemValue = getItemValue;
 
     @Input() attributes: Attribute[] = [];
     @Input() pricedItems: PricedItem[] = [];

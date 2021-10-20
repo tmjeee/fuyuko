@@ -20,6 +20,7 @@ import {Category} from '@fuyuko-common/model/category.model';
 import {Rule, ValidateClause} from '@fuyuko-common/model/rule.model';
 import {PricingStructure} from '@fuyuko-common/model/pricing-structure.model';
 import {Group, GROUP_ADMIN, GROUP_PARTNER} from '@fuyuko-common/model/group.model';
+import {getItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 export const profiles = [UPDATER_PROFILE_CARS_DATA];
 
@@ -137,11 +138,11 @@ const runImport = async () => {
             item.description = `${name} description`;
             for (const attribute of attributes) {
                 if (attribute.name === 'Make') {
-                    setItemStringValue(attribute, item[attribute.id], make);
+                    setItemStringValue(attribute, getItemValue(item, attribute.id)!, make);
                 } else if (attribute.name === 'Model') {
-                    setItemStringValue(attribute, item[attribute.id], model);
+                    setItemStringValue(attribute, getItemValue(item, attribute.id)!, model);
                 } else if (attribute.name === 'Year') {
-                    setItemNumberValue(attribute, item[attribute.id], Number(year));
+                    setItemNumberValue(attribute, getItemValue(item, attribute.id)!, Number(year));
                 }
             }
 

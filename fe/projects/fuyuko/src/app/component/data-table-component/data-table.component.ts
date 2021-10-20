@@ -17,6 +17,7 @@ import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/c
 import config from '../../utils/config.util';
 import {assertDefinedReturn} from '../../utils/common.util';
 import * as _ from 'lodash';
+import {setItemValue, getItemValue} from '@fuyuko-common/shared-utils/item.util';
 
 export class DataTableDataSource extends DataSource<TableItem> {
 
@@ -253,13 +254,16 @@ export class DataTableComponent implements OnInit, OnChanges {
          images: tableItem.images,
          lastUpdate: tableItem.lastUpdate,
          creationDate: tableItem.creationDate,
+         values: [],
        });
        this.pendingSavingModifiedItems.set(tableItem.id, ti);
      } else if (!ti && this.pendingSavingModifiedItems.has(tableItem.id)) {
        ti = this.pendingSavingModifiedItems.get(tableItem.id);
      }
-     assertDefinedReturn(ti)[$event.attribute.id] = val;
-     tableItem[att.id] = val;
+     // assertDefinedReturn(ti)[$event.attribute.id] = val;
+     // tableItem[att.id] = val;
+     setItemValue(assertDefinedReturn(ti), $event.attribute.id, val);
+     setItemValue(tableItem, att.id, val);
   }
 
 
@@ -425,10 +429,11 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   getItemValue(tableItem: TableItem, attribute: Attribute) {
-      let value: Value = tableItem[attribute.id];
+      let value: Value | undefined = getItemValue(tableItem, attribute.id); // tableItem[attribute.id];
       if (!!!value) {
           value = createNewItemValue(attribute, false);
-          tableItem[attribute.id] = value;
+          // tableItem[attribute.id] = value;
+          setItemValue(tableItem, attribute.id, value);
       }
       return value;
   }

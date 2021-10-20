@@ -5,12 +5,15 @@ import {Item} from '@fuyuko-common/model/item.model';
 import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.component';
 import {copyAttrProperties} from '../../utils/item-to-table-items.util';
+import {getItemValue, setItemValue} from '@fuyuko-common/shared-utils/item.util';
 
 @Component({
   templateUrl: './item-data-editor-dialog.component.html',
   styleUrls: ['./item-data-editor-dialog.component.scss']
 })
 export class ItemDataEditorDialogComponent {
+
+  getItemValue = getItemValue;
 
   attributes: Attribute[];
   item: Item;
@@ -37,7 +40,8 @@ export class ItemDataEditorDialogComponent {
 
   onItemAttributeChange($event: ItemValueAndAttribute) {
     this.hasChange = true;
-    this.item[$event.attribute.id] = $event.itemValue;
+    // this.item[$event.attribute.id] = $event.itemValue;
+    setItemValue(this.item, $event.attribute.id, $event.itemValue);
   }
 
   onSubmit($event: MouseEvent) {

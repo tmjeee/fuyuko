@@ -10,6 +10,7 @@ import {
   TextValue,
   VolumeValue, WidthValue, Value
 } from '@fuyuko-common/model/item.model';
+import {getItemValue} from '@fuyuko-common/shared-utils/item.util';
 
 export const hasItemValues = (attribute: Attribute, values: Value[]): boolean => {
   let b = true;
@@ -64,7 +65,8 @@ export const hasItemValue = (attribute: Attribute, value: Value): boolean => {
 };
 
 const internalGetItemValue = (attribute: Attribute, item: TableItem | Item): ItemValTypes | undefined => {
-  const v: ItemValTypes | undefined = item[attribute.id].val;
+  const i: Value | undefined = getItemValue(item, attribute.id);
+  const v: ItemValTypes | undefined = i ? i.val : undefined;
   return v;
 };
 export const getItemStringValue = (attribute: Attribute, item: TableItem | Item): StringValue => {

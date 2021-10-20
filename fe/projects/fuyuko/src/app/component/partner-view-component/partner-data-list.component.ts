@@ -4,6 +4,7 @@ import config from '../../utils/config.util';
 import {Attribute} from '@fuyuko-common/model/attribute.model';
 import {MatSidenav} from '@angular/material/sidenav';
 import {CarouselItemImage} from '../carousel-component/carousel.component';
+import {getItemValue} from '@fuyuko-common/shared-utils/item.util';
 
 const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
 
@@ -13,6 +14,8 @@ const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImage
     styleUrls: ['./partner-data-list.component.scss']
 })
 export class PartnerDataListComponent {
+
+    getItemValue = getItemValue;
 
     @Input() attributes: Attribute[] = [];
     @Input() pricedItems: PricedItem[] = [];

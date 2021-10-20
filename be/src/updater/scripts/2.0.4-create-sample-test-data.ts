@@ -402,12 +402,14 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
        description: `Item-1 Description`,
        parentId: undefined,
        images: [],
+       values: [],
        children: [
            {
                id: -1,
                name: `Item-1-1`,
                description: `Item-1-1 Description`,
                images: [],
+               values: [],
                children: []
            } as PartialBy<Item, 'creationDate' | 'lastUpdate'>,
            {
@@ -415,6 +417,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
                name: `Item-1-2`,
                description: `Item-1-2 Description`,
                images: [],
+               values: [],
                children: []
            } as PartialBy<Item, 'creationDate' | 'lastUpdate'>,
        ]
@@ -427,6 +430,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         description: `Item-2 Description`,
         parentId: undefined,
         images: [],
+        values: [],
         children: []
     } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-2 failed to be created`);
@@ -437,6 +441,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         description: `Item-3 Description`,
         parentId: undefined,
         images: [],
+        values: [],
         children: []
     } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-3 failed to be created`);
@@ -446,6 +451,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         name: `Item-4`,
         description: `Item-4 Description`,
         parentId: undefined,
+        values: [],
         images: [],
         children: []
     } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
@@ -456,6 +462,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         name: `Item-5`,
         description: `Item-5 Description`,
         parentId: undefined,
+        values: [],
         images: [],
         children: []
     } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
@@ -467,6 +474,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         description: `Item-6 Description`,
         parentId: undefined,
         images: [],
+        values: [],
         children: []
     } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-6 failed to be created`);
@@ -477,6 +485,7 @@ const createManyItems = async (conn: Connection, pricingStructureId: number, vie
         description: `Item-7 Description`,
         parentId: undefined,
         images: [],
+        values: [],
         children: []
     } as PartialBy<Item, 'creationDate' | 'lastUpdate'>);
     checkErrors(errors, `Item-7 failed to be created`);

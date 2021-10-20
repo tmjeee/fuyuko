@@ -24,6 +24,7 @@ import {tap} from 'rxjs/operators';
 import {ValidationError, ValidationResult} from '@fuyuko-common/model/validation.model';
 import {Rule} from '@fuyuko-common/model/rule.model';
 import {assertDefinedReturn} from '../../utils/common.util';
+import {setItemValue, getItemValue} from "@fuyuko-common/shared-utils/item.util";
 
 export class ValidationResultTableDataSource extends DataSource<TableItem> {
 
@@ -199,11 +200,12 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
         const value: ItemValTypes | undefined = val.val;
         const att: Attribute = $event.attribute;
 
-        tableItem[att.id] = val;
+        // tableItem[att.id] = val;
+        setItemValue(tableItem, att.id, val);
         if (!this.pendingSavingItems.has(tableItem.id)) {
             this.pendingSavingItems.set(tableItem.id, {...tableItem});
         }
-        assertDefinedReturn(this.pendingSavingItems.get(tableItem.id))[$event.attribute.id] = val;
+        setItemValue(assertDefinedReturn(this.pendingSavingItems.get(tableItem.id)), $event.attribute.id, val);
     }
 
     onItemEditEvent($event: ItemEditorComponentEvent, tableItem: TableItem) {
@@ -306,10 +308,11 @@ export class ValidationResultTableComponent implements OnInit, OnDestroy, OnChan
     }
 
     getItemValue(tableItem: TableItem, attribute: Attribute) {
-        let value: Value = tableItem[attribute.id];
+        let value: Value | undefined = getItemValue(tableItem, attribute.id);
         if (!!!value) {
             value = createNewItemValue(attribute, false);
-            tableItem[attribute.id] = value;
+            // tableItem[attribute.id] = value;
+            setItemValue(tableItem, attribute.id, value);
         }
         return value;
     }

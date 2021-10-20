@@ -38,7 +38,7 @@
         <mat-form-field>
             <mat-label>{{attribute.name}}</mat-label>
             <input type="text" matInput [ngStyle]="{visibility: 'hidden', display: 'block'} ">
-            <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute}"
+            <app-data-editor [itemValueAndAttribute]="{itemValue: getItemValue(item, attribute.id)!, attribute: attribute}"
                              [attr.test-data-editor]="attribute.name"
                              (events)="onAttributeDataChange($event, item)"></app-data-editor>
             <mat-hint>{{attribute.description}}</mat-hint>

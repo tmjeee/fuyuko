@@ -10,6 +10,7 @@ import {ItemEditorComponentEvent} from '../data-editor-component/item-editor.com
 import {createNewItem} from '@fuyuko-common/shared-utils/ui-item-value-creator.utils';
 import config from '../../utils/config.util';
 import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/carousel.component';
+import {setItemValue, getItemValue} from '@fuyuko-common/shared-utils/item.util';
 
 
 export interface DataThumbnailSearchComponentEvent {
@@ -32,6 +33,9 @@ const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImage
   styleUrls: ['./data-thumbnail.component.scss']
 })
 export class DataThumbnailComponent implements OnInit {
+
+  getItemValue = getItemValue;
+
   counter: number;
 
   showMoreMap: Map<number, boolean>; /* <item id, can show more> */
@@ -135,8 +139,10 @@ export class DataThumbnailComponent implements OnInit {
       this.pendingSaving.push(i);
     }
     // save in both the pendingSaving's copy and the original
-    i[$event.attribute.id] = $event.itemValue;
-    item[$event.attribute.id] = $event.itemValue;
+    // i[$event.attribute.id] = $event.itemValue;
+    // item[$event.attribute.id] = $event.itemValue;
+    setItemValue(i, $event.attribute.id, $event.itemValue);
+    setItemValue(item, $event.attribute.id, $event.itemValue);
   }
 
 

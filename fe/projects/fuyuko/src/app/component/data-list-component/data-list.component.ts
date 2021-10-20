@@ -12,6 +12,7 @@ import {createNewItem} from '@fuyuko-common/shared-utils/ui-item-value-creator.u
 import config from '../../utils/config.util';
 import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/carousel.component';
 import {assertDefinedReturn} from '../../utils/common.util';
+import {getItemValue, setItemValue} from '@fuyuko-common/shared-utils/item.util';
 
 export interface DataListComponentEvent {
     type: 'modification' | 'reload' | 'favourite' | 'unfavourite';
@@ -34,6 +35,8 @@ const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImage
 })
 export class DataListComponent {
     counter: number;
+
+    getItemValue = getItemValue;
 
     @Input() enableSearch: boolean;
     @Input() itemAndAttributeSet!: ItemAndAttributeSet;
@@ -176,8 +179,10 @@ export class DataListComponent {
             } as Item);
         }
         // save in both the pendingSaving's copy and the original
-        assertDefinedReturn(i)[$event.attribute.id] = $event.itemValue;
-        item[$event.attribute.id] = $event.itemValue;
+        // assertDefinedReturn(i)[$event.attribute.id] = $event.itemValue;
+        setItemValue(assertDefinedReturn(i), $event.attribute.id, $event.itemValue);
+        // item[$event.attribute.id] = $event.itemValue;
+        setItemValue(item, $event.attribute.id, $event.itemValue);
     }
 
     onCheckboxStateChange($event: MatCheckboxChange, item: Item) {

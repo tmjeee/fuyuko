@@ -5,6 +5,7 @@ import {CarouselComponentEvent, CarouselItemImage} from '../carousel-component/c
 import config from '../../utils/config.util';
 import {ItemEditorComponentEvent} from './item-editor.component';
 import {ItemValueAndAttribute} from '@fuyuko-common/model/item-attribute.model';
+import {getItemValue, setItemValue} from '@fuyuko-common/shared-utils/item.util';
 
 
 const URL_GET_ITEM_IMAGE = () => `${config().api_host_url}/item/image/:itemImageId`;
@@ -21,6 +22,8 @@ export interface DataEditorEvent {
    styleUrls: ['./item-info.component.scss']
 })
 export class ItemInfoComponent {
+
+   getItemValue = getItemValue;
 
    @Input() item!: Item;
    @Input() attributes: Attribute[] = [];
@@ -61,7 +64,8 @@ export class ItemInfoComponent {
    }
 
    onAttributeDataChange($event: ItemValueAndAttribute, item: Item) {
-      this.item[$event.attribute.id] = $event.itemValue;
+      // this.item[$event.attribute.id] = $event.itemValue;
+      setItemValue(this.item, $event.attribute.id, $event.itemValue);
       this.dataEditorEvent.emit({
          item,
          itemValueAndAttribute: $event

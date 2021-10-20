@@ -47,7 +47,7 @@
       <div class="attribute" *ngFor="let attribute of itemAndAttributeSet.attributes; let i = index">
         <ng-container *ngIf="i < 2">
           <mat-label class="mat-caption mat-hint">{{attribute.name}}</mat-label>
-          <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute }"
+          <app-data-editor [itemValueAndAttribute]="{itemValue: getItemValue(item, attribute.id)!, attribute: attribute }"
                            [attr.test-data-editor]="attribute.name"
                             (events)="onDataEditorEvent($event, item)">
           </app-data-editor>
@@ -56,7 +56,7 @@
         <ng-container *ngIf="i >= 2">
           <div *ngIf="isShowMore(item)">
             <mat-label class="mat-caption mat-hint">{{attribute.name}}</mat-label>
-            <app-data-editor [itemValueAndAttribute]="{itemValue: item[attribute.id], attribute: attribute }"
+            <app-data-editor [itemValueAndAttribute]="{itemValue: getItemValue(item, attribute.id)!, attribute: attribute }"
                              [attr.test-data-editor]="attribute.name"
                              (events)="onDataEditorEvent($event, item)">
             </app-data-editor>

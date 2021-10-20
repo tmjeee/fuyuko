@@ -33,7 +33,7 @@
                         <div [attr.test-item-description]="item.name"> {{item.description}} </div>
                         <div> Price: <span [attr.test-item-price]="item.name">{{item.price | currency:item.country}}</span></div>
                         <div *ngFor="let attribute of attributes; let i = index;" [attr.test-item-attribute]="item.name">
-                            {{item[attribute.id] | itemAttributeValueAsString:attribute}}
+                            {{getItemValue(item, attribute.id) | itemAttributeValueAsString:attribute}}
                         </div>
                     </div>
                 </mat-expansion-panel>

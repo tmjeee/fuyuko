@@ -7,6 +7,7 @@ import {createNewItemValue} from '@fuyuko-common/shared-utils/ui-item-value-crea
 import {MatSidenav} from '@angular/material/sidenav';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {assertDefinedReturn} from '../../utils/common.util';
+import {getItemValue, setItemValue} from '@fuyuko-common/shared-utils/item.util';
 
 export class DataTableDataSource extends DataSource<TablePricedItem> {
 
@@ -136,10 +137,11 @@ export class PartnerDataTableComponent implements OnInit {
     }
 
     getItemValue(tableItem: TableItem, attribute: Attribute) {
-        let value: Value = tableItem[attribute.id];
+        let value: Value | undefined = getItemValue(tableItem, attribute.id);
         if (!!!value) {
             value = createNewItemValue(attribute, false);
-            tableItem[attribute.id] = value;
+            // tableItem[attribute.id] = value;
+            setItemValue(tableItem, attribute.id, value);
         }
         return value;
     }

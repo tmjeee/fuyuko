@@ -20,7 +20,7 @@
 
     <div *ngFor="let attribute of attributes; let i = index">
       <mat-label class="mat-hint mat-small">{{attribute.name}}</mat-label>
-      <app-data-editor [itemValueAndAttribute]="{attribute: attribute, itemValue: item[attribute.id]}"
+      <app-data-editor [itemValueAndAttribute]="{attribute: attribute, itemValue: getItemValue(item, attribute.id)!}"
                        [attr.test-data-editor]="attribute.name"
                        (events)="onItemAttributeChange($event)">
       </app-data-editor>

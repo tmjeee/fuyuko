@@ -32,6 +32,7 @@ import {LimitOffset} from '@fuyuko-common/model/limit-offset.model';
 import {LoadingService} from '../../service/loading-service/loading.service';
 import {AuthService} from '../../service/auth-service/auth.service';
 import {assertDefinedReturn} from '../../utils/common.util';
+import { setItemValue } from '@fuyuko-common/shared-utils/item.util';
 
 @Component({
     templateUrl: './category.page.html',
@@ -110,7 +111,8 @@ export class CategoryPageComponent implements OnInit {
             );
         };
         this.saveItemAttributeValueFn = (item: Item, itemValueAndAttribute: ItemValueAndAttribute) => {
-            item[itemValueAndAttribute.attribute.id] = itemValueAndAttribute.itemValue;
+            // item[itemValueAndAttribute.attribute.id] = itemValueAndAttribute.itemValue;
+            setItemValue(item, itemValueAndAttribute.attribute.id, itemValueAndAttribute.itemValue);
             return this.itemService.saveItems(
                 assertDefinedReturn(this.view).id, [item]).pipe(
                 tap((r: ApiResponse) => {

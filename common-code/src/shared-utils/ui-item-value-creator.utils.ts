@@ -1,6 +1,7 @@
 import {Item, TableItem, Value} from '../model/item.model';
 import {Attribute} from '../model/attribute.model';
 import {setItemValue} from './ui-item-value-setter.util';
+import * as itemUtil from './item.util';
 
 export function createNewItem(id: number, attributes: Attribute[], parentId?: number): Item {
     const i: Item = {id, parentId, name: '', description: ''} as Item;
@@ -25,7 +26,8 @@ export function createNewItemValue(a: Attribute, defaultValues: boolean = true):
 export function addAttributesToItem(i: Item | TableItem, attributes: Attribute[]) {
     attributes.forEach((a: Attribute) => {
         const val: Value = { attributeId: a.id, val: undefined } as Value;
-        i[a.id] = val;
+        itemUtil.setItemValue(i, a.id, val);
+        // i[a.id] = val;
         setItemValue(a, val);
     });
 }

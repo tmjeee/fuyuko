@@ -29,11 +29,11 @@
                     <div> Price: <span [attr.test-item-price]="item.name">{{item.price | currency:item.country}}</span></div>
                     <div class="attribute" *ngFor="let attribute of attributes; let i = index">
                         <ng-container *ngIf="i < 2">
-                            {{attribute.name}}: <span [attr.test-attribute-value]="attribute.name">{{item[attribute.id] | itemAttributeValueAsString:attribute}}</span>
+                            {{attribute.name}}: <span [attr.test-attribute-value]="attribute.name">{{getItemValue(item, attribute.id) | itemAttributeValueAsString:attribute}}</span>
                         </ng-container>
                         <ng-container *ngIf="i >= 2">
                             <div *ngIf="isShowMore(item)">
-                                {{attribute.name}}: <span [attr.test-attribute-value]="attribute.name">{{item[attribute.id] | itemAttributeValueAsString:attribute}}</span>
+                                {{attribute.name}}: <span [attr.test-attribute-value]="attribute.name">{{getItemValue(item, attribute.id) | itemAttributeValueAsString:attribute}}</span>
                             </div>
                         </ng-container>
                     </div>
