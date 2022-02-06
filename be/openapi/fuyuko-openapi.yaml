@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: fuyuko-be
+  description: fuyuko be api
+  version: 1.0.0
+servers:
+  - url: 'https'
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+                enum: [INFO, WARN, ERROR, SUCCESS]
+              message:
+                type: string
+    ApiResponse2:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+      properties:
+        payload:
+          type: object
+          properties:
+            test:
+              type: string
+  responses:
+    GenericResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+paths:
+  /v1/api/view/{viewId}/category/{categoryId}:
+    delete:
+      parameters:
+        - in: path
+          name: viewId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: View ID
+        - in: path
+          name: categoryId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Category ID
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericResponse'
+  /v1/api/data-export-artifact/{dataExportArtifactId}:
+    delete:
+      parameters:
+        - in: path
+          name: dataExportArtifactId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericResponse'
+
+
+

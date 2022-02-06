@@ -1,0 +1,20 @@
+openapi: 3.0.3
+components:
+  responses:
+    ApiResponse2:
+      content:
+        application/json:
+          schema:
+            type: object,
+            properties:
+              messages:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    message:
+                      type: string
+              payload:
+                $ref: ''

@@ -13,6 +13,22 @@ import {
 } from '@fuyuko-common/model/workflow.model';
 import {getWorkflowByViewActionAndType, triggerAttributeWorkflow, triggerCategoryWorkflow} from '../../service';
 import {markAsWorkflow, toHttpStatus} from "./aid.";
+import {Header, Delete, Path, Route, Security, SuccessResponse, ValidateError} from "tsoa";
+
+// @Route('v1')
+// export class Controller {
+//     @Security('x-auth-jwt')
+//     @Delete('/view/{viewId}/category/{categoryId}')
+//     @SuccessResponse('400', 'error')
+//     public async deleteCategory(
+//         @Header('Authorization') auth: string,
+//         @Path() viewId: number,
+//         @Path() categoryId: number
+//     ): Promise<ApiResponse<WorkflowTriggerResult[] | void>> {
+//        return await invocation(viewId, categoryId);
+//     }
+//
+// }
 
 export const invocation = async (viewId: number, categoryId: number): Promise<ApiResponse<WorkflowTriggerResult[] | void>> => {
 

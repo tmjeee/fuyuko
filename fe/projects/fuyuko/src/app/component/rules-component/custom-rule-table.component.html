@@ -10,15 +10,16 @@
                         <div fxFlex="1 1 auto" >
                             <div fxLayout="row" fxLayoutGap="20px">
                                 <div fxFlex="0 0 auto" fxLayoutAlign="center">
-                                    <mat-checkbox [formControl]="formControl(customRule)"
-                                                  [attr.test-checkbox-custom-rule]="customRule.name">
+                                    <mat-checkbox
+                                            [formControl]="formControl(customRule)"
+                                            [attr.test-checkbox-custom-rule]="customRule.name">
                                     </mat-checkbox>
                                 </div>
                                 <div fxFlex="1 1 auto" fxLayoutAlign="start">
-                                    {{customRule.name}}
+                                    {{customRule?.name}}
                                 </div>
                                 <div fxFlex="1 1 auto" fxLayoutAlign="start">
-                                    {{customRule.description}}
+                                    {{customRule?.description}}
                                 </div>
                             </div>
                         </div>

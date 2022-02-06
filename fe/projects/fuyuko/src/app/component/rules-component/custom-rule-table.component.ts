@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {CustomRule, CustomRuleForView} from '@fuyuko-common/model/custom-rule.model';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
@@ -14,7 +14,7 @@ export interface CustomRuleTableComponentEvent {
     templateUrl: './custom-rule-table.component.html',
     styleUrls: ['./custom-rule-table.component.scss']
 })
-export class CustomRuleTableComponent implements OnInit {
+export class CustomRuleTableComponent implements OnInit, OnChanges {
 
 
     @Input() allCustomRules: CustomRule[] = [];
@@ -27,15 +27,22 @@ export class CustomRuleTableComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder) {
         this.events = new EventEmitter<CustomRuleTableComponentEvent>();
+        this.formGroupAllCustomRules = this.formBuilder.group({});
     }
 
     ngOnInit(): void {
         this.mainControlsHidden = true;
-        this.formGroupAllCustomRules = this.formBuilder.group({});
-        for (const customRule of this.allCustomRules) {
-            this.formGroupAllCustomRules.setControl(customRule.name, this.formBuilder.control(
-                this.customRulesInView.map((c: CustomRule) => c.name).includes(customRule.name)
-            ));
+        console.log('**** ngOnInit');
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.allCustomRules) {
+            for (const customRule of this.allCustomRules) {
+                this.formGroupAllCustomRules.setControl(customRule.name, this.formBuilder.control(
+                    this.customRulesInView.map((c: CustomRule) => c.name).includes(customRule.name)
+                ));
+            }
+            console.log('**************** formGroup', this.allCustomRules, this.formGroupAllCustomRules);
         }
     }
 
@@ -87,4 +94,5 @@ export class CustomRuleTableComponent implements OnInit {
         });
         this.mainControlsHidden = true;
     }
+
 }
