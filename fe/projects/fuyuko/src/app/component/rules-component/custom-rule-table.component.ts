@@ -42,7 +42,6 @@ export class CustomRuleTableComponent implements OnInit, OnChanges {
                     this.customRulesInView.map((c: CustomRule) => c.name).includes(customRule.name)
                 ));
             }
-            console.log('**************** formGroup', this.allCustomRules, this.formGroupAllCustomRules);
         }
     }
 

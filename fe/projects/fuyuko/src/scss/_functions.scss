@@ -1,0 +1,19 @@
+@use './variables' as gvariables;
+
+@function strip-unit($value) {
+  @return $value / (#{$value} * 0 + 1);
+}
+
+@function pixel-to-em($pixel, $base-font-size: gvariables.$base-font-size) {
+  @if gvariables.$apply-pixel-to-em {
+    @return strip-unit($pixel) / strip-unit($base-font-size) * 1em;
+  }
+  @return $pixel;
+}
+
+@function pixel-to-rem($pixel) {
+  @if gvariables.$apply-pixel-to-em {
+    @return $pixel / gvariables.$base-font-size * 1rem;
+  }
+  @return $pixel;
+}

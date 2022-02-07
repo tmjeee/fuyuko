@@ -69,6 +69,54 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/GenericResponse'
+  /v1/api/view/{viewId}/user/{userId}/remove-favourite-items:
+    delete:
+      parameters:
+        - in: path
+          name: viewId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericResponse'
+  /v1/api/view/{itemId}/image/{itemImageId}:
+    delete:
+      parameters:
+        - in: path
+          name: itemId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - in: path
+          name: itemImageId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericResponse'
+  /v1/api/view/{viewId}/custom-rules:
+    delete:
+      parameters:
+        - in: path
+          name: viewId
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          $ref: '#/components/responses/GenericResponse'
 
 
 
