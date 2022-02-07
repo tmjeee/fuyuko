@@ -43,10 +43,6 @@ import {SharedComponentUtilsModule} from '../shared-component-utils/shared-compo
         ViewOnlyPriceTableComponent,
         ViewOnlyPriceDataItemsTableComponent,
         PricingStructureGroupAssociationComponent,
-    ],
-    entryComponents: [
-        PricingStructurePopupComponent,
-        ItemPricePopupComponent,
     ]
 })
 export class PricingModule {

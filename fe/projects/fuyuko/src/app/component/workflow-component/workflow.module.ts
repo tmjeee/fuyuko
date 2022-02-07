@@ -44,9 +44,6 @@ import {AvatarModule} from '../avatar-component/avatar.module';
         WorkflowInstanceTaskDetailsComponent,
         WorkflowInstanceTaskTableComponent,
         WorkflowInstanceCommentsComponent,
-    ],
-    entryComponents: [
-        WorkflowEditorDialogComponent,
     ]
 })
 export class WorkflowModule {

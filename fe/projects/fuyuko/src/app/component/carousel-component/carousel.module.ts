@@ -23,9 +23,6 @@ import {SharedComponentUtilsModule} from '../shared-component-utils/shared-compo
     exports: [
         CarouselComponent,
         UploadItemImageDialogComponent,
-    ],
-    entryComponents: [
-        UploadItemImageDialogComponent
     ]
 })
 export class CarouselModule {

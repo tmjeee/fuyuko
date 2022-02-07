@@ -24,9 +24,6 @@ import {SharedComponentUtilsModule} from '../shared-component-utils/shared-compo
     exports: [
         AvatarDialogComponent,
         AvatarComponent,
-    ],
-    entryComponents: [
-        AvatarDialogComponent,
     ]
 })
 export class AvatarModule {

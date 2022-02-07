@@ -11,30 +11,28 @@ import {EditAttributeComponent} from "./edit-attribute.component";
 import {SharedComponentUtilsModule} from "../shared-component-utils/shared-component-utils.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppMaterialsModule,
-    SharedComponentUtilsModule,
-  ],
-  declarations: [
-    AttributeTableComponent,
-    SingleSelectComponent,
-    DoubleSelectComponent,
-    ViewOnlyAttributeTableComponent,
-    EditAttributeComponent,
-  ],
-  exports: [
-    AttributeTableComponent,
-    SingleSelectComponent,
-    DoubleSelectComponent,
-    ViewOnlyAttributeTableComponent,
-    EditAttributeComponent,
-  ],
-  entryComponents: [
-  ]
+    imports: [
+        CommonModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppMaterialsModule,
+        SharedComponentUtilsModule,
+    ],
+    declarations: [
+        AttributeTableComponent,
+        SingleSelectComponent,
+        DoubleSelectComponent,
+        ViewOnlyAttributeTableComponent,
+        EditAttributeComponent,
+    ],
+    exports: [
+        AttributeTableComponent,
+        SingleSelectComponent,
+        DoubleSelectComponent,
+        ViewOnlyAttributeTableComponent,
+        EditAttributeComponent,
+    ]
 })
 export class AttributeTableModule {
 

@@ -16,39 +16,36 @@ import {ValidationCreationDialogComponent} from './validation-creation-dialog.co
 import {SharedComponentUtilsModule} from '../shared-component-utils/shared-component-utils.module';
 
 @NgModule({
-   imports: [
-      CommonModule,
-      BrowserAnimationsModule,
-      FormsModule,
-      ReactiveFormsModule,
-      AppMaterialsModule,
-      DataEditorModule,
-      FlexLayoutModule,
-      SharedComponentUtilsModule,
-   ],
-   declarations: [
-       ValidationResultComponent,
-       ValidationResultTreeComponent,
-       ValidationResultConsoleComponent,
-       ValidationResultListingComponent,
-       ValidationResultLogComponent,
-       ValidationResultTableComponent,
-       ValidationRunComponent,
-       ValidationCreationDialogComponent,
-   ],
-   exports: [
-      ValidationResultComponent,
-      ValidationResultTreeComponent,
-      ValidationResultConsoleComponent,
-      ValidationResultListingComponent,
-      ValidationResultLogComponent,
-      ValidationResultTableComponent,
-      ValidationRunComponent,
-      ValidationCreationDialogComponent,
-   ],
-   entryComponents: [
-      ValidationCreationDialogComponent,
-   ]
+    imports: [
+        CommonModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppMaterialsModule,
+        DataEditorModule,
+        FlexLayoutModule,
+        SharedComponentUtilsModule,
+    ],
+    declarations: [
+        ValidationResultComponent,
+        ValidationResultTreeComponent,
+        ValidationResultConsoleComponent,
+        ValidationResultListingComponent,
+        ValidationResultLogComponent,
+        ValidationResultTableComponent,
+        ValidationRunComponent,
+        ValidationCreationDialogComponent,
+    ],
+    exports: [
+        ValidationResultComponent,
+        ValidationResultTreeComponent,
+        ValidationResultConsoleComponent,
+        ValidationResultListingComponent,
+        ValidationResultLogComponent,
+        ValidationResultTableComponent,
+        ValidationRunComponent,
+        ValidationCreationDialogComponent,
+    ]
 })
 export class ValidationResultModule {
 

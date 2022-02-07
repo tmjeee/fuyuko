@@ -17,42 +17,38 @@ import {CarouselModule} from '../carousel-component/carousel.module';
 import {SharedComponentUtilsModule} from '../shared-component-utils/shared-component-utils.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppMaterialsModule,
-    FlexLayoutModule,
-    CarouselModule,
-    SharedComponentUtilsModule,
-  ],
-  declarations: [
-    DataEditorComponent,
-    DataEditorDialogComponent,
-    ItemAttributeValueAsStringPipe,
-    ItemEditorComponent,
-    ItemEditorDialogComponent,
-    DataEditorNoPopupComponent,
-    AttributeOperatorEditorComponent,
-    MultiValueAttributeOperatorEditorComponent,
-    ItemInfoComponent,
-  ],
-  exports: [
-    DataEditorComponent,
-    DataEditorDialogComponent,
-    ItemAttributeValueAsStringPipe,
-    ItemEditorComponent,
-    ItemEditorDialogComponent,
-    DataEditorNoPopupComponent,
-    AttributeOperatorEditorComponent,
-    MultiValueAttributeOperatorEditorComponent,
-    ItemInfoComponent,
-  ],
-  entryComponents: [
-    DataEditorDialogComponent,
-    ItemEditorDialogComponent,
-  ]
+    imports: [
+        CommonModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppMaterialsModule,
+        FlexLayoutModule,
+        CarouselModule,
+        SharedComponentUtilsModule,
+    ],
+    declarations: [
+        DataEditorComponent,
+        DataEditorDialogComponent,
+        ItemAttributeValueAsStringPipe,
+        ItemEditorComponent,
+        ItemEditorDialogComponent,
+        DataEditorNoPopupComponent,
+        AttributeOperatorEditorComponent,
+        MultiValueAttributeOperatorEditorComponent,
+        ItemInfoComponent,
+    ],
+    exports: [
+        DataEditorComponent,
+        DataEditorDialogComponent,
+        ItemAttributeValueAsStringPipe,
+        ItemEditorComponent,
+        ItemEditorDialogComponent,
+        DataEditorNoPopupComponent,
+        AttributeOperatorEditorComponent,
+        MultiValueAttributeOperatorEditorComponent,
+        ItemInfoComponent,
+    ]
 })
 export class DataEditorModule {
 }

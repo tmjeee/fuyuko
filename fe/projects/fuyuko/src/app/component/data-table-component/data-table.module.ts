@@ -14,31 +14,28 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppMaterialsModule,
-    DataEditorModule,
-    ItemSearchModule,
-    CarouselModule,
-    FlexLayoutModule,
-    SharedComponentUtilsModule,
-  ],
-  declarations: [
-    DataTableComponent,
-    ViewOnlyDataTableComponent,
-    ItemImageDialogComponent,
-  ],
-  exports: [
-    DataTableComponent,
-    ViewOnlyDataTableComponent,
-    ItemImageDialogComponent,
-  ],
-  entryComponents: [
-    ItemImageDialogComponent,
-  ]
+    imports: [
+        CommonModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppMaterialsModule,
+        DataEditorModule,
+        ItemSearchModule,
+        CarouselModule,
+        FlexLayoutModule,
+        SharedComponentUtilsModule,
+    ],
+    declarations: [
+        DataTableComponent,
+        ViewOnlyDataTableComponent,
+        ItemImageDialogComponent,
+    ],
+    exports: [
+        DataTableComponent,
+        ViewOnlyDataTableComponent,
+        ItemImageDialogComponent,
+    ]
 })
 export class DataTableModule {
 

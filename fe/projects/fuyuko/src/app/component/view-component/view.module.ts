@@ -29,9 +29,6 @@ import {SharedComponentUtilsModule} from '../shared-component-utils/shared-compo
         ViewEditorComponent,
         ViewEditorDialogComponent,
         ViewSelectorComponent,
-    ],
-    entryComponents: [
-        ViewEditorDialogComponent,
     ]
 })
 export class ViewModule {

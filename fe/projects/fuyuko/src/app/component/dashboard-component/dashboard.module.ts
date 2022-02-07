@@ -38,7 +38,6 @@ import {ViewAttributeValidationRangeSummaryWidgetComponent} from './widgets/view
     declarations: [
         DashboardComponent,
         WidgetContainerComponent,
-
         // dashboard widgets
         ClockWidgetComponent,
         WeatherWidgetComponent,
@@ -55,7 +54,6 @@ import {ViewAttributeValidationRangeSummaryWidgetComponent} from './widgets/view
     exports: [
         DashboardComponent,
         WidgetContainerComponent,
-
         // dashboard widgets
         ClockWidgetComponent,
         WeatherWidgetComponent,
@@ -68,19 +66,6 @@ import {ViewAttributeValidationRangeSummaryWidgetComponent} from './widgets/view
         ViewValidationRangeSummaryWidgetComponent,
         ViewAttributeValidationSummaryWidgetComponent,
         ViewAttributeValidationRangeSummaryWidgetComponent,
-    ],
-    entryComponents: [
-        ClockWidgetComponent,
-        WeatherWidgetComponent,
-        StockTradingWidgetComponent,
-        MostActiveUsersWidgetComponent,
-        UserVisitsInsightWidgetComponent,
-        GlobalMissingAttributeValuesWidgetComponent,
-        MissingAttributeValueWidgetComponent,
-        ViewValidationSummaryWidgetComponent,
-        ViewValidationRangeSummaryWidgetComponent,
-        ViewAttributeValidationSummaryWidgetComponent,
-        ViewAttributeValidationRangeSummaryWidgetComponent,
-    ],
+    ]
 })
 export class DashboardModule {}

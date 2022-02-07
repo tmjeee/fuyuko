@@ -26,9 +26,6 @@ import {SharedComponentUtilsModule} from '../shared-component-utils/shared-compo
         NotificationComponent,
         NotificationDialogComponent,
         NotificationMessagesComponent,
-    ],
-    entryComponents: [
-        NotificationDialogComponent,
     ]
 })
 export class NotificationModule {

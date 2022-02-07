@@ -13,29 +13,26 @@ import {SharedComponentUtilsModule} from '../shared-component-utils/shared-compo
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppMaterialsModule,
-    DataEditorModule,
-    ItemSearchModule,
-    CarouselModule,
-    FlexLayoutModule,
-    SharedComponentUtilsModule,
-  ],
-  declarations: [
-    DataThumbnailComponent,
-    ItemDataEditorDialogComponent,
-  ],
-  exports: [
-    DataThumbnailComponent,
-    ItemDataEditorDialogComponent,
-  ],
-  entryComponents: [
-    ItemDataEditorDialogComponent
-  ]
+    imports: [
+        CommonModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppMaterialsModule,
+        DataEditorModule,
+        ItemSearchModule,
+        CarouselModule,
+        FlexLayoutModule,
+        SharedComponentUtilsModule,
+    ],
+    declarations: [
+        DataThumbnailComponent,
+        ItemDataEditorDialogComponent,
+    ],
+    exports: [
+        DataThumbnailComponent,
+        ItemDataEditorDialogComponent,
+    ]
 })
 export class DataThumbnailModule {
 }

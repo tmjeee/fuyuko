@@ -12,28 +12,26 @@ import {SharedComponentUtilsModule} from '../shared-component-utils/shared-compo
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppMaterialsModule,
-    DataEditorModule,
-    FlexLayoutModule,
-    SharedComponentUtilsModule,
-  ],
-  declarations: [
-    RulesTableComponent,
-    RuleEditorComponent,
-    CustomRuleTableComponent,
-  ],
-  exports: [
-    RulesTableComponent,
-    RuleEditorComponent,
-    CustomRuleTableComponent,
-  ],
-  entryComponents: [
-  ]
+    imports: [
+        CommonModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppMaterialsModule,
+        DataEditorModule,
+        FlexLayoutModule,
+        SharedComponentUtilsModule,
+    ],
+    declarations: [
+        RulesTableComponent,
+        RuleEditorComponent,
+        CustomRuleTableComponent,
+    ],
+    exports: [
+        RulesTableComponent,
+        RuleEditorComponent,
+        CustomRuleTableComponent,
+    ]
 })
 export class RulesModule {
 
