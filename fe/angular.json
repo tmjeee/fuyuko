@@ -90,6 +90,9 @@
           "configurations": {
             "production": {
               "browserTarget": "fuyuko:build:production"
+            },
+            "development": {
+              "browserTarget": "fuyuko:build:development"
             }
           }
         },
