@@ -67,7 +67,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/lodash": "^4.14.175",
     "@types/nanographql": "^2.0.1",
-    "@types/node": "^12.11.1",
+    "@types/node": "^16.11.7",
     "@types/numeral": "^2.0.1",
     "@types/sprintf": "^0.1.0",
     "@types/uuid": "^3.4.5",
