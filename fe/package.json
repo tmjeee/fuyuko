@@ -34,7 +34,7 @@
     "@ngneat/hot-toast": "^4.1.0",
     "@ngneat/overview": "^1.0.0-beta.7",
     "angular-google-charts": "^2.2.2",
-    "angular2-notifications": "^9.0.0",
+    "angular2-notifications": "^12.0.0",
     "animate.css": "^4.1.0",
     "bson": "^4.0.2",
     "buffer": "^5.4.3",
