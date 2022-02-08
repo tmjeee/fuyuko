@@ -61,9 +61,10 @@ export class ExportArtifactsComponent implements OnChanges {
             observe: 'response'
         }).pipe(
             tap((r: HttpResponse<Blob>) =>  {
-                const url = window.URL.createObjectURL(r.body);
-                // window.open(url);
-                window.location.href = url;
+                if (r.body) {
+                    const url = window.URL.createObjectURL(r.body);
+                    window.location.href = url;
+                }
             })
         ).subscribe();
     }
