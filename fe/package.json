@@ -41,7 +41,7 @@
     "core-js": "^2.5.4",
     "graphql": "^15.5.1",
     "loadash": "^1.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.25",
     "nanographql": "^2.0.0",
     "normalize.css": "^8.0.1",
