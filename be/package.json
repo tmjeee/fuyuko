@@ -42,7 +42,7 @@
     "express-formidable": "^1.2.0",
     "express-graphql": "^0.12.0",
     "express-validator": "^6.2.0",
-    "file-type": "^14.6.2",
+    "file-type": "^16.5.4",
     "formidable": "^1.2.1",
     "graphql": "^15.5.1",
     "graphql-upload": "^12.0.0",
