@@ -37,7 +37,7 @@
     "debug": "^4.3.1",
     "del-cli": "^4.0.1",
     "detect-csv": "^1.1.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-async-errors": "^3.1.1",
     "express-formidable": "^1.2.0",
     "express-graphql": "^0.12.0",
